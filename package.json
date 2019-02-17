@@ -1,0 +1,13 @@
+{
+  "name": "refacto",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "clean": "./scripts/clean.sh",
+    "install": "./scripts/install.sh --force",
+    "start": "./scripts/start.sh",
+    "test": "./scripts/test.sh",
+    "test:e2e": "./scripts/e2e.sh"
+  }
+}

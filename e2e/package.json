@@ -1,0 +1,15 @@
+{
+  "name": "refacto-e2e",
+  "private": true,
+  "scripts": {
+    "lint": "neutrino lint",
+    "test": "neutrino test"
+  },
+  "devDependencies": {
+    "@neutrinojs/airbnb": "^8.3.0",
+    "@neutrinojs/jest": "^8.3.0",
+    "@neutrinojs/node": "^8.3.0",
+    "neutrino": "^8.3.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  }
+}

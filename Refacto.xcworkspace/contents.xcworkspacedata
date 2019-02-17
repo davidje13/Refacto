@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "container:backend"
+      name = "backend">
+      <FileRef
+         location = "group:src">
+      </FileRef>
+      <FileRef
+         location = "group:.eslintrc.js">
+      </FileRef>
+      <FileRef
+         location = "group:.neutrinorc.js">
+      </FileRef>
+      <FileRef
+         location = "group:package.json">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:frontend"
+      name = "frontend">
+      <FileRef
+         location = "group:src">
+      </FileRef>
+      <FileRef
+         location = "group:.eslintrc.js">
+      </FileRef>
+      <FileRef
+         location = "group:.neutrinorc.js">
+      </FileRef>
+      <FileRef
+         location = "group:package.json">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:e2e"
+      name = "e2e">
+      <FileRef
+         location = "group:src">
+      </FileRef>
+      <FileRef
+         location = "group:.eslintrc.js">
+      </FileRef>
+      <FileRef
+         location = "group:.neutrinorc.js">
+      </FileRef>
+      <FileRef
+         location = "group:package.json">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "container:scripts">
+   </FileRef>
+   <FileRef
+      location = "container:docs">
+   </FileRef>
+   <FileRef
+      location = "container:.gitignore">
+   </FileRef>
+   <FileRef
+      location = "container:package.json">
+   </FileRef>
+   <FileRef
+      location = "container:README.md">
+   </FileRef>
+</Workspace>
