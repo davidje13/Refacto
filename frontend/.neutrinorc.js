@@ -37,8 +37,32 @@ module.exports = {
     port: process.env.PORT || 5000,
   },
   use: [
-    '@neutrinojs/airbnb',
-    '@neutrinojs/jest',
+    ['@neutrinojs/airbnb', {
+      eslint: {
+        rules: {
+          'arrow-parens': ['error', 'always'],
+          'class-methods-use-this': ['off'],
+          'import/no-named-as-default': ['off'],
+          'jsx-a11y/anchor-is-valid': ['error', {
+            'components': ['Link'],
+            'specialLink': ['to'],
+          }],
+        },
+        baseConfig: {
+          overrides: [{
+            files: ['**/test-helpers/*'],
+            rules: {
+              'import/no-extraneous-dependencies': ['error', {
+                'devDependencies': true,
+              }],
+            },
+          }],
+        },
+      },
+    }],
+    ['@neutrinojs/jest', {
+      setupTestFrameworkScriptFile: '<rootDir>/src/test-helpers/entrypoint',
+    }],
     ['@neutrinojs/react', {
       hot: false,
       html: htmlConfig,

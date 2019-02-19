@@ -9,7 +9,7 @@ LOGS="$BASEDIR/e2e/build";
 mkdir -p "$LOGS";
 
 if [[ -z "$TARGET_HOST" ]]; then
-  PORT="${PORT:-5000}";
+  PORT="${PORT:-5002}";
 
   # Build and launch all-in-one server
   "$BASEDIR/scripts/build.sh";

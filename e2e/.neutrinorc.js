@@ -6,14 +6,17 @@ module.exports = {
     ['@neutrinojs/airbnb', {
       eslint: {
         rules: {
+          'arrow-parens': ['error', 'always'],
           // All sources are test-related, so devDependencies are OK
           'import/no-extraneous-dependencies': ['error', {
             'devDependencies': true,
           }],
-        }
+        },
       },
     }],
-    '@neutrinojs/jest',
+    ['@neutrinojs/jest', {
+      bail: true,
+    }],
     '@neutrinojs/node',
   ],
 };

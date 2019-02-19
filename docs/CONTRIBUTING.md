@@ -34,25 +34,25 @@ install geckodriver /usr/local/bin
 ### Testing frontend only
 
 ```bash
-npm --prefix=frontend test
+npm run test:frontend
 ```
 
 Watch mode:
 
 ```bash
-npm --prefix=frontend test -- --watchAll
+npm run test:frontend -- --watchAll
 ```
 
 ### Testing backend only
 
 ```bash
-npm --prefix=backend test
+npm run test:backend
 ```
 
 Watch mode:
 
 ```bash
-npm --prefix=backend test -- --watchAll
+npm run test:backend -- --watchAll
 ```
 
 ### End-to-end tests only
@@ -63,11 +63,15 @@ To automatically build and run the server, and run tests against it:
 npm run test:e2e
 ```
 
-Run end-to-end tests against an existing server:
+During development, the build time can be significant. An alternative
+is to run the application in the background in watch mode using
+`npm start`, then run the end-to-end tests against that deployment:
 
 ```bash
-TARGET_HOST=http://localhost:8080/ npm run test:e2e
+TARGET_HOST=http://localhost:5000/ npm run test:e2e
 ```
+
+(this can also be used to target external deployments for smoke testing).
 
 Run end-to-end tests with non-headless browsers:
 
@@ -120,6 +124,11 @@ npm install --save-dev selenium-webdriver
 ## Library documentation
 
 - React: <https://reactjs.org/docs/react-api.html>
+- Redux: <https://redux.js.org/api/api-reference>
+- Redux `update`: <https://github.com/kolodny/immutability-helper>
+- React Router: <https://reacttraining.com/react-router/web/api>
 - Jest: <https://jestjs.io/docs/en/api>
+- Enzyme: <https://github.com/airbnb/enzyme>
+- Jest Enzyme Matchers: <https://github.com/FormidableLabs/enzyme-matchers/tree/master/packages/jest-enzyme>
 - Supertest: <https://github.com/visionmedia/supertest> and <https://visionmedia.github.io/superagent/>
 - Selenium: <https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/>

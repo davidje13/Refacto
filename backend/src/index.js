@@ -1,6 +1,10 @@
 import http from 'http';
 import app from './app';
 
+// This file exists mainly to enable hot module replacement.
+// app.js is the main entry point for the application.
+// (changes to index.js will not trigger HMR)
+
 const port = process.env.PORT || 5000;
 
 let activeApp = null;

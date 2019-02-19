@@ -3,7 +3,13 @@ module.exports = {
     tests: 'src',
   },
   use: [
-    '@neutrinojs/airbnb',
+    ['@neutrinojs/airbnb', {
+      eslint: {
+        rules: {
+          'arrow-parens': ['error', 'always'],
+        },
+      },
+    }],
     '@neutrinojs/jest',
     '@neutrinojs/node',
   ],

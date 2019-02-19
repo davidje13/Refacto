@@ -9,19 +9,15 @@ const headless = process.env.HEADLESS !== 'false';
 const chromeOptions = new chrome.Options();
 const firefoxOptions = new firefox.Options();
 
-global.By = webdriver.By;
-
 if (headless) {
   chromeOptions.headless();
   firefoxOptions.headless();
 }
 
-export function buildDriver() {
+export default function buildDriver() {
   return new webdriver.Builder()
     .forBrowser('chrome')
     .setChromeOptions(chromeOptions)
     .setFirefoxOptions(firefoxOptions)
     .build();
 }
-
-export const HOST = process.env.TARGET_HOST || 'http://localhost:5000/';
