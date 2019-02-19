@@ -3,7 +3,6 @@
 ## Running locally
 
 ```bash
-npm install
 npm start
 ```
 

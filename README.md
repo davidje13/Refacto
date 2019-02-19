@@ -9,7 +9,6 @@ simplified code, development, and deployment.
 Requires [Node.js](https://nodejs.org/en/).
 
 ```bash
-npm install
 npm start
 ```
 
