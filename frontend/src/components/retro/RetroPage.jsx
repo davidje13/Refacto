@@ -37,9 +37,9 @@ export class RetroPage extends React.Component {
     const { loading } = this.props;
 
     return (
-      <div className="page-retro">
+      <article className="page-retro">
         {loading ? this.renderLoader() : (<Retro />)}
-      </div>
+      </article>
     );
   }
 }

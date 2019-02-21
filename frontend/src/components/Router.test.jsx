@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import Router from './Router';
 
 describe('Router', () => {
-  it('renders without crashing', () => {
+  it('renders without error', () => {
     const dom = shallow(<Router />);
     expect(dom).toExist();
   });

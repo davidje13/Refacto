@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 import WelcomePage from './WelcomePage';
 
 describe('WelcomePage', () => {
-  it('renders without crashing', () => {
+  it('renders without error', () => {
     const dom = shallow(<WelcomePage />);
     expect(dom).toExist();
   });

@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import WelcomePage from './welcome/WelcomePage';
 import RetroListPage from './retro-list/RetroListPage';
 import RetroPage from './retro/RetroPage';
-import NotFound from './NotFound';
+import NotFound from './not-found/NotFound';
 
 export default () => (
   <Switch>

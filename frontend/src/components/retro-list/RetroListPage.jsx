@@ -29,12 +29,12 @@ export class RetroListPage extends React.Component {
     const { loading } = this.props;
 
     return (
-      <div className="page-retro-list">
+      <article className="page-retro-list">
         <Helmet>
           <title>Retros - Refacto</title>
         </Helmet>
         {loading ? this.renderLoader() : (<RetroList />)}
-      </div>
+      </article>
     );
   }
 }

@@ -25,8 +25,13 @@ export const setActiveRetro = (slug) => (dispatch) => {
 };
 
 const initialState = {
-  slug: '',
-  name: '',
+  retro: {
+    slug: '',
+    name: '',
+    format: '',
+    state: {},
+    items: [],
+  },
   loading: false,
 };
 
@@ -38,7 +43,7 @@ export default (state = initialState, action) => {
       });
     case 'RETRO_SET':
       return update(state, {
-        $merge: action.retro,
+        retro: { $set: action.retro },
         loading: { $set: false },
       });
     case 'RETRO_FAIL_LOAD':

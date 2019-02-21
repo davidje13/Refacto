@@ -3,6 +3,8 @@ function sleep(millis) {
   return new Promise((resolve) => setTimeout(resolve, millis));
 }
 
+const filterSummaryInformation = ({ slug, name }) => ({ slug, name });
+
 export default class InMemoryRetroService {
   constructor(initialData = []) {
     this.data = initialData;
@@ -10,7 +12,7 @@ export default class InMemoryRetroService {
 
   async getRetros() {
     await sleep(300);
-    return this.data;
+    return this.data.map(filterSummaryInformation);
   }
 
   async getRetro(slug) {

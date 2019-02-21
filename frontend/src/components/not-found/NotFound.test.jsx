@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import NotFound from './NotFound';
 
 describe('NotFound', () => {
-  it('renders without crashing', () => {
+  it('renders without error', () => {
     const dom = shallow(<NotFound />);
     expect(dom).toIncludeText('Not Found');
   });
