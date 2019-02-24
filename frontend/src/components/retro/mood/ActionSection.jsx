@@ -16,15 +16,13 @@ function actionItemWithinRange(from, to) {
 export const ActionSection = ({
   title,
   items,
-  range: {
-    from = Number.NEGATIVE_INFINITY,
-    to = Number.POSITIVE_INFINITY,
-  },
+  rangeFrom,
+  rangeTo,
 }) => (
   <section>
     <h3>{title}</h3>
     <ItemColumn
-      items={items.filter(actionItemWithinRange(from, to))}
+      items={items.filter(actionItemWithinRange(rangeFrom, rangeTo))}
       ItemType={ActionItem}
     />
   </section>
@@ -33,10 +31,13 @@ export const ActionSection = ({
 ActionSection.propTypes = {
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   title: PropTypes.string.isRequired,
-  range: PropTypes.shape({
-    from: PropTypes.number,
-    to: PropTypes.number,
-  }).isRequired,
+  rangeFrom: PropTypes.number,
+  rangeTo: PropTypes.number,
+};
+
+ActionSection.defaultProps = {
+  rangeFrom: Number.NEGATIVE_INFINITY,
+  rangeTo: Number.POSITIVE_INFINITY,
 };
 
 forbidExtraProps(ActionSection);

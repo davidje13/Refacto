@@ -8,7 +8,7 @@ import ActionItem from './ActionItem';
 
 describe('ActionSection', () => {
   it('displays a given title', () => {
-    const dom = shallow(<ActionSection title="my title" items={[]} range={{}} />);
+    const dom = shallow(<ActionSection title="my title" items={[]} />);
 
     expect(dom.find('h3')).toHaveText('my title');
   });
@@ -18,7 +18,7 @@ describe('ActionSection', () => {
       makeItem({ category: 'action', message: 'foo' }),
       makeItem({ category: 'action', message: 'bar' }),
     ];
-    const dom = shallow(<ActionSection title="" items={items} range={{}} />);
+    const dom = shallow(<ActionSection title="" items={items} />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
       ItemType: ActionItem,
@@ -31,7 +31,7 @@ describe('ActionSection', () => {
       makeItem({ category: 'nope', message: 'foo' }),
       makeItem({ category: 'action', message: 'bar' }),
     ];
-    const dom = shallow(<ActionSection title="" items={items} range={{}} />);
+    const dom = shallow(<ActionSection title="" items={items} />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
       items: [items[1]],
@@ -44,9 +44,8 @@ describe('ActionSection', () => {
       makeItem({ category: 'action', created: 5 }),
       makeItem({ category: 'action', created: 25 }),
     ];
-    const range = { from: 10, to: 20 };
 
-    const dom = shallow(<ActionSection title="" items={items} range={range} />);
+    const dom = shallow(<ActionSection title="" items={items} rangeFrom={10} rangeTo={20} />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
       items: [items[0]],

@@ -33,17 +33,18 @@ export const MoodRetro = ({
         <ActionSection
           items={items}
           title={`Today (${formatDate(today)})`}
-          range={{ from: today }}
+          rangeFrom={today}
         />
         <ActionSection
           items={items}
           title="Past Week"
-          range={{ from: lastWeek, to: today }}
+          rangeFrom={lastWeek}
+          rangeTo={today}
         />
         <ActionSection
           items={items}
           title="Older"
-          range={{ to: lastWeek }}
+          rangeTo={lastWeek}
         />
       </section>
     </div>
