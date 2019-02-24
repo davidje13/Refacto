@@ -5,14 +5,26 @@ import ActionItem from './ActionItem';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
 
-const ActionSection = ({
+function actionItemWithinRange(from, to) {
+  return (item) => (
+    item.category === 'action' &&
+    item.created >= from &&
+    item.created < to
+  );
+}
+
+export const ActionSection = ({
   title,
   items,
+  range: {
+    from = Number.NEGATIVE_INFINITY,
+    to = Number.POSITIVE_INFINITY,
+  },
 }) => (
   <section>
     <h3>{title}</h3>
     <ItemColumn
-      items={items.filter((item) => (item.category === 'action'))}
+      items={items.filter(actionItemWithinRange(from, to))}
       ItemType={ActionItem}
     />
   </section>
@@ -21,11 +33,12 @@ const ActionSection = ({
 ActionSection.propTypes = {
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   title: PropTypes.string.isRequired,
-};
-
-ActionSection.defaultProps = {
+  range: PropTypes.shape({
+    from: PropTypes.number,
+    to: PropTypes.number,
+  }).isRequired,
 };
 
 forbidExtraProps(ActionSection);
 
-export default ActionSection;
+export default React.memo(ActionSection);

@@ -1,16 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ItemColumn from './ItemColumn';
+import { makeItem } from '../../../test-helpers/dataFactories';
+
+import { ItemColumn } from './ItemColumn';
 
 const Item = () => (<div />);
-
-function makeItem(details) {
-  return Object.assign({
-    uuid: 'my-uuid',
-    created: 0,
-    message: 'my message',
-  }, details);
-}
 
 describe('ItemColumn', () => {
   it('displays all items', () => {

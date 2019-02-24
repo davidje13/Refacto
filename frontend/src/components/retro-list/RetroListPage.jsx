@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import forbidExtraProps from '../../helpers/forbidExtraProps';
+import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
 import RetroList from './RetroList';
 
@@ -39,6 +41,8 @@ export class RetroListPage extends React.Component {
   }
 }
 
+forbidExtraProps(RetroListPage);
+
 const mapStateToProps = (state) => ({
   loading: state.retroList.loading,
 });
@@ -50,4 +54,5 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  mapRouteToProps({}),
 )(RetroListPage);

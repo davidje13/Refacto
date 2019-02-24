@@ -3,21 +3,17 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 
-export default class RetroLink extends React.PureComponent {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-  };
+export const RetroLink = ({ name, slug }) => (
+  <Link to={`/retros/${slug}`}>
+    <div className="retro-link">{name}</div>
+  </Link>
+);
 
-  render() {
-    const { name, slug } = this.props;
-
-    return (
-      <Link to={`/retros/${slug}`}>
-        <div className="retro-link">{name}</div>
-      </Link>
-    );
-  }
-}
+RetroLink.propTypes = {
+  name: PropTypes.string.isRequired,
+  slug: PropTypes.string.isRequired,
+};
 
 forbidExtraProps(RetroLink);
+
+export default React.memo(RetroLink);

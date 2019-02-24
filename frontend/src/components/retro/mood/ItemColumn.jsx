@@ -14,7 +14,7 @@ function sortItems(items) {
   return sorted;
 }
 
-const ItemColumn = ({ items, ItemType, focusedItemUUID }) => (
+export const ItemColumn = ({ items, ItemType, focusedItemUUID }) => (
   <ul>
     {sortItems(items).map((item) => (
       <li key={item.uuid}>

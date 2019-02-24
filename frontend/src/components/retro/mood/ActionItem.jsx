@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
 
-const ActionItem = ({
+export const ActionItem = ({
   item: {
     message,
     done = false,
@@ -20,4 +20,4 @@ ActionItem.propTypes = {
 
 forbidExtraProps(ActionItem, { alsoAllow: ['focused'] });
 
-export default ActionItem;
+export default React.memo(ActionItem);

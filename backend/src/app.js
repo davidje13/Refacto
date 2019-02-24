@@ -3,6 +3,8 @@ import ApiRouter from './routers/ApiRouter';
 import StaticRouter from './routers/StaticRouter';
 import RetroService from './services/InMemoryRetroService';
 
+const now = Date.now();
+
 const retroService = new RetroService([
   {
     slug: 'my-retro',
@@ -15,7 +17,7 @@ const retroService = new RetroService([
       {
         uuid: 'a1',
         category: 'happy',
-        created: 1550614902000,
+        created: now - 199000,
         message: 'This is good.',
         votes: 0,
         done: false,
@@ -23,7 +25,7 @@ const retroService = new RetroService([
       {
         uuid: 'b2',
         category: 'happy',
-        created: 1550614903000,
+        created: now - 198000,
         message: 'This is also good, and popular.',
         votes: 5,
         done: false,
@@ -31,7 +33,7 @@ const retroService = new RetroService([
       {
         uuid: 'c3',
         category: 'meh',
-        created: 1550614904000,
+        created: now - 197000,
         message: 'This is alright and has been discussed.',
         votes: 0,
         done: true,
@@ -39,7 +41,7 @@ const retroService = new RetroService([
       {
         uuid: 'd4',
         category: 'sad',
-        created: 1550614904000,
+        created: now - 196000,
         message: 'This is not ok.',
         votes: 0,
         done: false,
@@ -47,7 +49,7 @@ const retroService = new RetroService([
       {
         uuid: 'e5',
         category: 'action',
-        created: 1550614905000,
+        created: now - 195000,
         message: 'This is an action which has not been done.',
         votes: 0,
         done: false,
@@ -55,10 +57,26 @@ const retroService = new RetroService([
       {
         uuid: 'f6',
         category: 'action',
-        created: 1550614906000,
+        created: now - 194000,
         message: 'This is an action which has been done.',
         votes: 0,
         done: true,
+      },
+      {
+        uuid: 'g7',
+        category: 'action',
+        created: now - (86400000 * 7),
+        message: 'This is an outstanding action from the last retro.',
+        votes: 0,
+        done: false,
+      },
+      {
+        uuid: 'h8',
+        category: 'action',
+        created: now - (86400000 * 8),
+        message: 'This is an outstanding action from the distant past.',
+        votes: 0,
+        done: false,
       },
     ],
   },

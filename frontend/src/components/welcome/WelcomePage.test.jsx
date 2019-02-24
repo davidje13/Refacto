@@ -1,7 +1,8 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { mount, shallow } from 'enzyme';
-import WelcomePage from './WelcomePage';
+
+import { WelcomePage } from './WelcomePage';
 
 describe('WelcomePage', () => {
   it('renders without error', () => {

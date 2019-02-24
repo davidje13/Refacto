@@ -1,7 +1,8 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
-import RetroLink from './RetroLink';
+
+import { RetroLink } from './RetroLink';
 
 describe('RetroLink', () => {
   it('links to the retro slug', () => {

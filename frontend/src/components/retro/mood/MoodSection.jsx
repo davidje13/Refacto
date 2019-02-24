@@ -5,13 +5,13 @@ import MoodItem from './MoodItem';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
 
-const MoodSection = ({
+export const MoodSection = ({
   category,
   items,
   focusedItemUUID,
 }) => (
   <section className={category}>
-    <h2>{category}</h2>
+    <h3>{category}</h3>
     <ItemColumn
       items={items.filter((item) => (item.category === category))}
       ItemType={MoodItem}
@@ -32,4 +32,4 @@ MoodSection.defaultProps = {
 
 forbidExtraProps(MoodSection);
 
-export default MoodSection;
+export default React.memo(MoodSection);

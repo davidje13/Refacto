@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
 
-const MoodItem = ({
+export const MoodItem = ({
   item: {
     message,
     votes = 0,
@@ -28,4 +28,4 @@ MoodItem.defaultProps = {
 
 forbidExtraProps(MoodItem);
 
-export default MoodItem;
+export default React.memo(MoodItem);

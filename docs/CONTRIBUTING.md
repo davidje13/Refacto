@@ -120,6 +120,19 @@ cd e2e
 npm install --save-dev selenium-webdriver
 ```
 
+## Conventions
+
+* All React component files include both a named and default export.
+  The named export is used in testing, and the default export is used
+  in real code. Sometimes these are the same object, but often the
+  default export will include redux or memo wrapping.
+
+## Browser Support
+
+The latest versions of Google Chrome and Mozilla Firefox are supported,
+and the end-to-end tests will run in both if the necessary drivers are
+installed (see [Running tests](#running-tests)).
+
 ## Library documentation
 
 - React: <https://reactjs.org/docs/react-api.html>

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import forbidExtraProps from '../../helpers/forbidExtraProps';
+import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { setActiveRetro } from '../../reducers/activeRetro';
 import Retro from './Retro';
 
@@ -44,9 +46,10 @@ export class RetroPage extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+forbidExtraProps(RetroPage);
+
+const mapStateToProps = (state) => ({
   loading: state.activeRetro.loading,
-  slug: ownProps.match.params.slug,
 });
 
 const mapDispatchToProps = {
@@ -56,4 +59,5 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
+  mapRouteToProps({ slug: 'slug' }),
 )(RetroPage);

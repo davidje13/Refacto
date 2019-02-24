@@ -9,28 +9,25 @@ import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
 const formats = new Map();
 formats.set('mood', MoodRetro);
 
-export class Retro extends React.PureComponent {
-  static propTypes = {
-    retro: propTypesShapeRetro.isRequired,
-  };
+export const Retro = ({ retro }) => {
+  const { name, format } = retro;
 
-  render() {
-    const { retro } = this.props;
-    const { name, format } = retro;
+  const RetroType = formats.get(format) || UnknownRetro;
 
-    const RetroType = formats.get(format) || UnknownRetro;
+  return (
+    <React.Fragment>
+      <Helmet>
+        <title>{name} - Refacto</title>
+      </Helmet>
+      <h1 className="retro-name">{name}</h1>
+      <RetroType retro={retro} />
+    </React.Fragment>
+  );
+};
 
-    return (
-      <React.Fragment>
-        <Helmet>
-          <title>{name} - Refacto</title>
-        </Helmet>
-        <h1 className="retro-name">{name}</h1>
-        <RetroType retro={retro} />
-      </React.Fragment>
-    );
-  }
-}
+Retro.propTypes = {
+  retro: propTypesShapeRetro.isRequired,
+};
 
 forbidExtraProps(Retro);
 

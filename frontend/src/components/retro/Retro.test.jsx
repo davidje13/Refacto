@@ -1,18 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { makeRetro } from '../../test-helpers/dataFactories';
+
 import { Retro } from './Retro';
 import MoodRetro from './mood/MoodRetro';
 import UnknownRetro from './unknown/UnknownRetro';
-
-function makeRetro(details) {
-  return Object.assign({
-    slug: 'my-slug',
-    name: 'my retro name',
-    format: 'my-format',
-    state: {},
-    items: [],
-  }, details);
-}
 
 describe('Retro', () => {
   it('renders the retro name', () => {

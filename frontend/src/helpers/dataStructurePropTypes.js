@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 export const propTypesShapeItem = PropTypes.shape({
   uuid: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
   created: PropTypes.number.isRequired,
   message: PropTypes.string.isRequired,
   votes: PropTypes.number,

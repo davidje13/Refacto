@@ -1,14 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import MoodItem from './MoodItem';
+import { makeItem } from '../../../test-helpers/dataFactories';
 
-function makeItem(details) {
-  return Object.assign({
-    uuid: 'my-uuid',
-    created: 0,
-    message: 'my message',
-  }, details);
-}
+import { MoodItem } from './MoodItem';
 
 describe('MoodItem', () => {
   it('displays the item message', () => {

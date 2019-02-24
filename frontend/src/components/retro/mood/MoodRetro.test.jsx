@@ -1,18 +1,22 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import MoodRetro from './MoodRetro';
+import { makeRetro } from '../../../test-helpers/dataFactories';
 
-const emptyRetro = {
-  slug: 'my-slug',
-  name: 'my retro',
-  format: 'mood',
-  state: {},
-  items: [],
-};
+import { MoodRetro } from './MoodRetro';
+import LocalDateProvider from '../../../time/LocalDateProvider';
+
+const emptyRetro = makeRetro({ format: 'mood' });
 
 describe('MoodRetro', () => {
+  const localDateProvider = new LocalDateProvider(0);
+
   it('renders without error', () => {
-    const dom = shallow(<MoodRetro retro={emptyRetro} />);
+    const dom = shallow((
+      <MoodRetro
+        retro={emptyRetro}
+        localDateProvider={localDateProvider}
+      />
+    ));
     expect(dom).toExist();
   });
 });

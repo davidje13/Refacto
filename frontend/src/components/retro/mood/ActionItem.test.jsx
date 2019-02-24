@@ -1,14 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ActionItem from './ActionItem';
+import { makeItem } from '../../../test-helpers/dataFactories';
 
-function makeItem(details) {
-  return Object.assign({
-    uuid: 'my-uuid',
-    created: 0,
-    message: 'my message',
-  }, details);
-}
+import { ActionItem } from './ActionItem';
 
 describe('ActionItem', () => {
   it('displays the item message', () => {
