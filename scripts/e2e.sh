@@ -2,6 +2,7 @@
 set -e;
 
 BASEDIR="$(dirname "$0")/..";
+BUILDDIR="$BASEDIR/build";
 
 "$BASEDIR/scripts/install.sh";
 
@@ -12,12 +13,15 @@ if [[ -z "$TARGET_HOST" ]]; then
   PORT="${PORT:-5002}";
 
   # Build and launch all-in-one server
-  "$BASEDIR/scripts/build.sh";
+  "$BASEDIR/scripts/build.sh" --keep-deps;
 
-  npm --prefix="$BASEDIR/build" install --production --silent;
+  if [[ ! -d "$BUILDDIR/node_modules" ]]; then
+    echo "Installing production dependencies...";
+    npm --prefix="$BUILDDIR" install --production --silent;
+  fi;
 
   PORT="$PORT" \
-  npm --prefix="$BASEDIR/build" start --silent \
+  npm --prefix="$BUILDDIR" start --silent \
     > "$LOGS/app.log" 2>&1 & APP_PID="$!";
 
   trap "kill '$APP_PID'; false" EXIT;
