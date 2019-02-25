@@ -4,7 +4,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development",
-    "lint": "eslint --format codeframe --ext mjs,jsx,js src",
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src",
     "test": "jest"
   },
   "dependencies": {
