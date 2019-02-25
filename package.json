@@ -8,8 +8,8 @@
     "install": "./scripts/install.sh --force",
     "start": "./scripts/start.sh",
     "test": "./scripts/test.sh",
-    "test:backend": "npm --prefix=backend test --",
-    "test:frontend": "npm --prefix=frontend test --",
+    "test:backend": "npm --prefix=backend test --silent --",
+    "test:frontend": "npm --prefix=frontend test --silent --",
     "test:e2e": "./scripts/e2e.sh"
   }
 }

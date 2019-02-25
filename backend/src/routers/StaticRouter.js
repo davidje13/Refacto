@@ -1,5 +1,4 @@
 import express from 'express';
-import proxy from 'http-proxy-middleware';
 import path from 'path';
 import basedir from '../basedir';
 
@@ -11,7 +10,16 @@ export default class StaticRouter extends express.Router {
 
     if (forwardHost) {
       // Dev mode: forward unknown requests to another service
-      this.use(proxy({ target: forwardHost }));
+      import('http-proxy-middleware')
+        .then(({ default: proxy }) => {
+          this.use(proxy({ target: forwardHost }));
+        })
+        .catch(() => {
+          process.stderr.write((
+            'Failed to apply frontend forwarding ' +
+            '(only API will be available)\n'
+          ));
+        });
     } else {
       const staticDir = path.join(basedir, 'static');
 

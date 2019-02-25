@@ -11,7 +11,7 @@ describe('RetroListPage', () => {
   });
 
   it('triggers a load request when displayed', () => {
-    const reloadRetroList = jest.fn();
+    const reloadRetroList = jest.fn().mockName('reloadRetroList');
     shallow(<RetroListPage reloadRetroList={reloadRetroList} />);
     expect(reloadRetroList).toHaveBeenCalled();
   });

@@ -2,10 +2,10 @@
   "name": "refacto-frontend",
   "private": true,
   "scripts": {
-    "build": "neutrino build",
-    "start": "neutrino start",
-    "lint": "neutrino lint",
-    "test": "neutrino test"
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --mode development",
+    "lint": "eslint --format codeframe --ext mjs,jsx,js src",
+    "test": "jest"
   },
   "dependencies": {
     "classnames": "^2.2.6",
@@ -20,14 +20,20 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "@neutrinojs/airbnb": "^8.3.0",
-    "@neutrinojs/jest": "^8.3.0",
-    "@neutrinojs/react": "^8.3.0",
+    "@neutrinojs/airbnb": "^9.0.0-rc.0",
+    "@neutrinojs/copy": "^9.0.0-rc.0",
+    "@neutrinojs/jest": "^9.0.0-rc.0",
+    "@neutrinojs/react": "^9.0.0-rc.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.9.1",
+    "eslint": "^5.14.1",
+    "jest": "^23.6.0",
     "jest-enzyme": "^7.0.1",
     "jest-fetch-mock": "^2.1.1",
-    "neutrino": "^8.3.0",
-    "timezone-mock": "^1.0.3"
+    "neutrino": "^9.0.0-rc.0",
+    "timezone-mock": "^1.0.3",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.0"
   }
 }

@@ -22,8 +22,9 @@ fi
 install_subproject() {
   local PROJECT="$1";
   if [[ ! -d "$BASEDIR/$PROJECT/node_modules" || "$FORCE" == 'true' ]]; then
+    echo;
     echo "Installing $PROJECT dependencies...";
-    npm --prefix="$BASEDIR/$PROJECT" install;
+    npm --prefix="$BASEDIR/$PROJECT" install --silent;
   fi;
 }
 

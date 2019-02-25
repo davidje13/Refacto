@@ -30,7 +30,7 @@ describe('localDateTracker', () => {
 
   beforeEach(() => {
     timezoneMock.register('UTC');
-    callback = jest.fn(); // .mockName('callback')
+    callback = jest.fn().mockName('callback');
     mockClock = new MockClock();
   });
 

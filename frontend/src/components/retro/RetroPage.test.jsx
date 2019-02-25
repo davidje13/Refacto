@@ -11,7 +11,7 @@ describe('RetroPage', () => {
   });
 
   it('triggers a load request when displayed', () => {
-    const setActiveRetro = jest.fn();
+    const setActiveRetro = jest.fn().mockName('setActiveRetro');
     shallow(<RetroPage slug="abc" setActiveRetro={setActiveRetro} />);
     expect(setActiveRetro).toHaveBeenCalledWith('abc');
   });

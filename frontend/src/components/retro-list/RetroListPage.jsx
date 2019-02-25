@@ -7,6 +7,10 @@ import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
 import RetroList from './RetroList';
 
+const renderLoader = () => (
+  <div className="loader">Loading&hellip;</div>
+);
+
 export class RetroListPage extends React.Component {
   static propTypes = {
     loading: PropTypes.bool,
@@ -21,12 +25,6 @@ export class RetroListPage extends React.Component {
     this.props.reloadRetroList();
   }
 
-  renderLoader() {
-    return (
-      <div className="loader">Loading&hellip;</div>
-    );
-  }
-
   render() {
     const { loading } = this.props;
 
@@ -35,7 +33,7 @@ export class RetroListPage extends React.Component {
         <Helmet>
           <title>Retros - Refacto</title>
         </Helmet>
-        {loading ? this.renderLoader() : (<RetroList />)}
+        {loading ? renderLoader() : (<RetroList />)}
       </article>
     );
   }

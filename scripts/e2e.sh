@@ -14,10 +14,10 @@ if [[ -z "$TARGET_HOST" ]]; then
   # Build and launch all-in-one server
   "$BASEDIR/scripts/build.sh";
 
-  npm --prefix="$BASEDIR/build" install --production;
+  npm --prefix="$BASEDIR/build" install --production --silent;
 
   PORT="$PORT" \
-  npm --prefix="$BASEDIR/build" start \
+  npm --prefix="$BASEDIR/build" start --silent \
     > "$LOGS/app.log" 2>&1 & APP_PID="$!";
 
   trap "kill '$APP_PID'; false" EXIT;
@@ -37,7 +37,7 @@ ANY_E2E='false';
 if which chromedriver > /dev/null; then
   echo 'E2E testing in Chrome...';
   SELENIUM_BROWSER=chrome \
-  npm --prefix="$BASEDIR/e2e" test;
+  npm --prefix="$BASEDIR/e2e" test --silent;
   ANY_E2E='true';
 else
   echo 'Skipping E2E testing in Chrome' >&2;
@@ -52,7 +52,7 @@ fi;
 if which geckodriver > /dev/null; then
   echo 'E2E testing in Firefox...';
   SELENIUM_BROWSER=firefox \
-  npm --prefix="$BASEDIR/e2e" test;
+  npm --prefix="$BASEDIR/e2e" test --silent;
   ANY_E2E='true';
 else
   echo 'Skipping E2E testing in Firefox' >&2;

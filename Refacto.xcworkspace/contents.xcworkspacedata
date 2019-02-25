@@ -8,6 +8,12 @@
          location = "group:src">
       </FileRef>
       <FileRef
+         location = "group:webpack.config.js">
+      </FileRef>
+      <FileRef
+         location = "group:jest.config.js">
+      </FileRef>
+      <FileRef
          location = "group:.eslintrc.js">
       </FileRef>
       <FileRef
@@ -24,6 +30,12 @@
          location = "group:src">
       </FileRef>
       <FileRef
+         location = "group:webpack.config.js">
+      </FileRef>
+      <FileRef
+         location = "group:jest.config.js">
+      </FileRef>
+      <FileRef
          location = "group:.eslintrc.js">
       </FileRef>
       <FileRef
@@ -38,6 +50,12 @@
       name = "e2e">
       <FileRef
          location = "group:src">
+      </FileRef>
+      <FileRef
+         location = "group:webpack.config.js">
+      </FileRef>
+      <FileRef
+         location = "group:jest.config.js">
       </FileRef>
       <FileRef
          location = "group:.eslintrc.js">

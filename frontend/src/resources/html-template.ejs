@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="<%= htmlWebpackPlugin.options.lang %>">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-security-policy" content="
+  base-uri 'self';
+  default-src 'self';
+  object-src 'none';
+  script-src 'self' 'unsafe-eval';
+  style-src 'self' 'unsafe-inline';
+  connect-src 'self';
+  font-src 'self';
+  img-src 'self';
+  form-action 'none';
+">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#000000">
+<title><%= htmlWebpackPlugin.options.title %></title>
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png"/>
+<link rel="manifest" href="/static/manifest.json"/>
+</head>
+<body>
+<noscript>Please enable Javascript!</noscript>
+<div id="<%= htmlWebpackPlugin.options.appMountId %>"></div>
+</body>
+</html>
