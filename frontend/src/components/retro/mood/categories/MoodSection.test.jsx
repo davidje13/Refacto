@@ -1,16 +1,16 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { makeItem } from '../../../test-helpers/dataFactories';
+import { makeItem } from '../../../../test-helpers/dataFactories';
 
 import { MoodSection } from './MoodSection';
-import ItemColumn from './ItemColumn';
 import MoodItem from './MoodItem';
+import ItemColumn from '../ItemColumn';
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {
     const dom = shallow(<MoodSection category="woo" items={[]} />);
 
-    expect(dom.find('h3')).toHaveText('woo');
+    expect(dom.find('h2')).toHaveText('woo');
   });
 
   it('propagates focussed UUID', () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { makeItem } from '../../../test-helpers/dataFactories';
+import { makeItem } from '../../../../test-helpers/dataFactories';
 
 import { ActionItem } from './ActionItem';
 

@@ -1,0 +1,64 @@
+.retro-format-mood .happy {
+  background: #80FF80;
+}
+
+.retro-format-mood .meh {
+  background: #FFFF80;
+}
+
+.retro-format-mood .sad {
+  background: #FF8080;
+}
+
+.retro-format-mood.multi-column h2 {
+  margin-top: 0;
+}
+
+.retro-format-mood.multi-column .columns {
+  display: flex;
+  flex-direction: row;
+  min-height: 50vh;
+}
+
+.retro-format-mood.multi-column .columns > section {
+  padding: 10px;
+  flex: 1;
+}
+
+.retro-format-mood.multi-column section.actions {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.retro-format-mood.multi-column section.actions > h2 {
+  flex: 0 0 100%;
+}
+
+.retro-format-mood.multi-column section.actions > section {
+  flex: 1;
+}
+
+.retro-format-mood.single-column .tab-bar {
+  position: sticky;
+  top: 0;
+}
+
+.retro-format-mood.single-column .tab-control > section {
+  padding: 5px;
+  min-height: 70vh;
+}
+
+.retro-format-mood.single-column .tab-item {
+  font-size: 1.2em;
+  height: 2em;
+}
+
+.retro-format-mood.single-column h2 {
+  display: none;
+}
+
+.retro-format-mood.single-column .actions {
+  background: #EEEEEE;
+}

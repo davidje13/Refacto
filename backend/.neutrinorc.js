@@ -23,3 +23,6 @@ module.exports = {
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };
+
+// known issue: multiple rebuilds on 'npm start' due to:
+// https://github.com/webpack/webpack/issues/2983

@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ItemColumn from './ItemColumn';
 import ActionItem from './ActionItem';
-import forbidExtraProps from '../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
+import ItemColumn from '../ItemColumn';
+import forbidExtraProps from '../../../../helpers/forbidExtraProps';
+import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 
 function actionItemWithinRange(from, to) {
   return (item) => (

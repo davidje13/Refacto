@@ -15,6 +15,7 @@ describe('MoodRetro', () => {
       <MoodRetro
         retro={emptyRetro}
         localDateProvider={localDateProvider}
+        singleColumn={false}
       />
     ));
     expect(dom).toExist();

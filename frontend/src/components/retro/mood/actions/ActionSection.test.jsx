@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { makeItem } from '../../../test-helpers/dataFactories';
+import { makeItem } from '../../../../test-helpers/dataFactories';
 
 import { ActionSection } from './ActionSection';
-import ItemColumn from './ItemColumn';
 import ActionItem from './ActionItem';
+import ItemColumn from '../ItemColumn';
 
 describe('ActionSection', () => {
   it('displays a given title', () => {

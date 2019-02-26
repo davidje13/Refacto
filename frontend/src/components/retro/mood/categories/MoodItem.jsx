@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import forbidExtraProps from '../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
+import forbidExtraProps from '../../../../helpers/forbidExtraProps';
+import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 
 export const MoodItem = ({
   item: {
