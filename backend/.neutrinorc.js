@@ -20,5 +20,6 @@ module.exports = {
     }],
     '@neutrinojs/jest',
     '@neutrinojs/node',
+    (neutrino) => neutrino.config.stats('minimal'),
   ],
 };

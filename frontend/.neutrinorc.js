@@ -49,5 +49,6 @@ module.exports = {
         inline: false, // disable hot reloading
       },
     }],
+    (neutrino) => neutrino.config.stats('minimal'),
   ],
 };
