@@ -7,7 +7,7 @@ import { setLocalDateProvider } from './reducers/time';
 import { setWindowSize } from './reducers/view';
 import localDateTracker from './time/localDateTracker';
 import App from './components/App';
-import './index.css';
+import './index.less'; // eslint-disable-line import/no-unresolved - weird linter bug
 
 localDateTracker((localDateProvider) => {
   store.dispatch(setLocalDateProvider(localDateProvider));

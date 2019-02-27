@@ -7,7 +7,7 @@ import TabControl from '../../common/TabControl';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeRetro } from '../../../helpers/dataStructurePropTypes';
 import LocalDateProvider from '../../../time/LocalDateProvider';
-import './MoodRetro.css';
+import './MoodRetro.less';
 
 const CATEGORIES = ['happy', 'meh', 'sad'];
 

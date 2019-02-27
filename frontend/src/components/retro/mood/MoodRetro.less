@@ -1,0 +1,70 @@
+.retro-format-mood {
+  .happy {
+    background: #80FF80;
+  }
+
+  .meh {
+    background: #FFFF80;
+  }
+
+  .sad {
+    background: #FF8080;
+  }
+
+  &.multi-column {
+    h2 {
+      margin-top: 0;
+    }
+
+    .columns {
+      display: flex;
+      flex-direction: row;
+      min-height: 50vh;
+
+      > section {
+        padding: 10px;
+        flex: 1;
+      }
+    }
+
+    section.actions {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      padding: 10px;
+
+      h2 {
+        flex: 0 0 100%;
+      }
+
+      > section {
+        flex: 1;
+      }
+    }
+  }
+
+  &.single-column {
+    .tab-bar {
+      position: sticky;
+      top: 0;
+    }
+
+    .tab-control > section {
+      padding: 5px;
+      min-height: 70vh;
+    }
+
+    .tab-item {
+      font-size: 1.2em;
+      height: 2em;
+    }
+
+    h2 {
+      display: none;
+    }
+
+    .actions {
+      background: #EEEEEE;
+    }
+  }
+}

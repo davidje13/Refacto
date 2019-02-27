@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import './TabControl.css'; // eslint-disable-line import/no-unresolved - weird linter bug
+import './TabControl.less';
 
 export class TabControl extends React.PureComponent {
   constructor(props) {

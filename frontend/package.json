@@ -30,6 +30,8 @@
     "jest": "^23.6.0",
     "jest-enzyme": "^7.0.1",
     "jest-fetch-mock": "^2.1.1",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "neutrino": "^9.0.0-rc.0",
     "timezone-mock": "^1.0.3",
     "webpack": "^4.29.5",

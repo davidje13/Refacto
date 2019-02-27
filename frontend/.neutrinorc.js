@@ -48,6 +48,19 @@ module.exports = {
         port: process.env.PORT || 5000,
         inline: false, // disable hot reloading
       },
+      style: {
+        test: /\.(css|less)$/,
+        modulesTest: /\.module\.(css|less)$/,
+        loaders: [
+          {
+            loader: 'less-loader',
+            useId: 'less',
+            options: {
+              sourcemap: true,
+            },
+          },
+        ],
+      },
     }],
     (neutrino) => neutrino.config.stats('minimal'),
   ],
