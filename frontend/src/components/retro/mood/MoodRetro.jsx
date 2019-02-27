@@ -9,7 +9,11 @@ import { propTypesShapeRetro } from '../../../helpers/dataStructurePropTypes';
 import LocalDateProvider from '../../../time/LocalDateProvider';
 import './MoodRetro.less';
 
-const CATEGORIES = ['happy', 'meh', 'sad'];
+const CATEGORIES = [
+  { id: 'happy', title: 'Happy' },
+  { id: 'meh', title: 'Meh' },
+  { id: 'sad', title: 'Sad' },
+];
 
 export const MoodRetro = ({
   retro: {
@@ -23,16 +27,16 @@ export const MoodRetro = ({
 }) => {
   if (singleColumn) {
     const tabs = [
-      ...CATEGORIES.map((category) => ({
-        key: category,
-        title: category,
-        className: category,
+      ...CATEGORIES.map(({ id, title }) => ({
+        key: id,
+        title,
+        className: id,
         content: (
           <MoodSection
-            key={category}
+            key={id}
             items={items}
             focusedItemUUID={focusedItemUUID}
-            category={category}
+            category={id}
           />
         ),
       })),
@@ -56,12 +60,12 @@ export const MoodRetro = ({
   return (
     <div className="retro-format-mood multi-column">
       <section className="columns">
-        { CATEGORIES.map((category) => (
+        { CATEGORIES.map(({ id }) => (
           <MoodSection
-            key={category}
+            key={id}
             items={items}
             focusedItemUUID={focusedItemUUID}
-            category={category}
+            category={id}
           />
         )) }
       </section>
