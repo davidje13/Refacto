@@ -16,9 +16,17 @@ class MockClock {
   }
 
   advanceByTime(millis) {
-    this.time += millis;
-    jest.runTimersToTime(millis); // advanceTimersByTime
+    this.advanceWallTimeOnly(millis);
+    this.advanceTickTimeOnly(millis);
   }
+
+  advanceWallTimeOnly(millis) {
+    this.time += millis;
+  }
+
+  advanceTickTimeOnly = (millis) => {
+    jest.runTimersToTime(millis); // advanceTimersByTime
+  };
 }
 
 describe('localDateTracker', () => {
@@ -75,11 +83,39 @@ describe('localDateTracker', () => {
 
     callback.mockClear();
 
-    jest.runTimersToTime(5000); // timer slip
+    mockClock.advanceTickTimeOnly(5000); // timer slip
     mockClock.advanceByTime(95000);
     expect(callback).not.toHaveBeenCalled();
 
     mockClock.advanceByTime(5000);
     expect(callback).toHaveBeenCalled();
+  });
+
+  it('checks periodically in case machine slept', () => {
+    mockClock.set(day2 - 100000);
+    localDateTracker(callback, mockClock);
+
+    callback.mockClear();
+
+    mockClock.advanceWallTimeOnly(95000); // timer slip
+    mockClock.advanceByTime(65000);
+    expect(callback).toHaveBeenCalled();
+
+    callback.mockClear();
+
+    // only trigger if date actually changed
+    mockClock.advanceByTime(65000);
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('stops checking if stop is called', () => {
+    mockClock.set(day2 - 100000);
+    const { stop } = localDateTracker(callback, mockClock);
+
+    callback.mockClear();
+
+    stop();
+    mockClock.advanceByTime(105000);
+    expect(callback).not.toHaveBeenCalled();
   });
 });
