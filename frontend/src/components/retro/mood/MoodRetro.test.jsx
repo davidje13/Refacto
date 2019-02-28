@@ -16,6 +16,8 @@ describe('MoodRetro', () => {
         retro={emptyRetro}
         localDateProvider={localDateProvider}
         singleColumn={false}
+        onAddMoodItem={() => {}}
+        onAddActionItem={() => {}}
       />
     ));
     expect(dom).toExist();

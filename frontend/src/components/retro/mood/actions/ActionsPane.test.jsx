@@ -4,6 +4,7 @@ import { makeItem } from '../../../../test-helpers/dataFactories';
 
 import { ActionsPane } from './ActionsPane';
 import ActionSection from './ActionSection';
+import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 
 describe('ActionsPane', () => {
@@ -18,7 +19,12 @@ describe('ActionsPane', () => {
     jest.spyOn(localDateProvider, 'getMidnightTimestamp')
       .mockImplementation((days = 0) => days * 10);
 
-    dom = shallow(<ActionsPane items={items} localDateProvider={localDateProvider} />);
+    dom = shallow((
+      <ActionsPane
+        items={items}
+        localDateProvider={localDateProvider}
+      />
+    ));
     sections = dom.find(ActionSection);
   });
 
@@ -51,5 +57,21 @@ describe('ActionsPane', () => {
       items,
       rangeTo: -70,
     });
+  });
+
+  it('does not render an input field if no callback is provided', () => {
+    expect(dom.find(ExpandingTextEntry)).not.toExist();
+  });
+
+  it('renders an input field if a callback is provided', () => {
+    dom = shallow((
+      <ActionsPane
+        items={items}
+        localDateProvider={localDateProvider}
+        onAddItem={() => {}}
+      />
+    ));
+
+    expect(dom.find(ExpandingTextEntry)).toExist();
   });
 });

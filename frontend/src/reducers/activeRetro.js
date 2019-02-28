@@ -2,6 +2,15 @@ import update from 'immutability-helper';
 
 const API_BASE = '/api';
 
+const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
+const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
+
+function sanitiseInput(value) {
+  return value
+    .replace(IRRELEVANT_WHITESPACE, ' ')
+    .replace(PADDING, '');
+}
+
 const beginLoad = () => ({
   type: 'RETRO_BEGIN_LOAD',
 });
@@ -24,6 +33,12 @@ export const setActiveRetro = (slug) => (dispatch) => {
     .catch(() => dispatch(loadFailed()));
 };
 
+export const addItem = (category, message) => ({
+  type: 'RETRO_ADD_ITEM',
+  category,
+  message,
+});
+
 const initialState = {
   retro: {
     slug: '',
@@ -34,6 +49,17 @@ const initialState = {
   },
   loading: false,
 };
+
+function makeItem(category, message) {
+  return {
+    uuid: `temp-local-uuid-${Date.now()}`,
+    category,
+    created: Date.now(),
+    message,
+    votes: 0,
+    done: false,
+  };
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -50,6 +76,17 @@ export default (state = initialState, action) => {
       return update(state, {
         loading: { $set: false },
       });
+    case 'RETRO_ADD_ITEM': {
+      const message = sanitiseInput(action.message);
+      if (!message) {
+        return state;
+      }
+      return update(state, {
+        retro: {
+          items: { $push: [makeItem(action.category, message)] },
+        },
+      });
+    }
     default:
       return state;
   }

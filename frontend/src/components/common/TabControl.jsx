@@ -11,11 +11,6 @@ export class TabControl extends React.PureComponent {
     this.state = { activeKey: null };
   }
 
-  setTab = (e) => {
-    e.preventDefault();
-    this.setState({ activeKey: e.target.dataset.key });
-  };
-
   getActive() {
     const { tabs } = this.props;
     const { activeKey } = this.state;
@@ -28,6 +23,11 @@ export class TabControl extends React.PureComponent {
     return tabs[0];
   }
 
+  handleTabClick = (e) => {
+    e.preventDefault();
+    this.setState({ activeKey: e.target.dataset.key });
+  };
+
   render() {
     const { tabs } = this.props;
     const active = this.getActive();
@@ -36,7 +36,7 @@ export class TabControl extends React.PureComponent {
       <li key={key}>
         <button
           type="button"
-          onClick={this.setTab}
+          onClick={this.handleTabClick}
           data-key={key}
           className={classNames('tab-item', className, { active: (key === active.key) })}
         >

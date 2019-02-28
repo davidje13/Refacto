@@ -1,28 +1,126 @@
 .retro-format-mood {
   .happy {
-    background: #80FF80;
+    background: #51C0B1;
+
+    .text-entry {
+      background: #2B9E8E;
+    }
   }
 
   .meh {
-    background: #FFFF80;
+    background: #FEC722;
+
+    .text-entry {
+      background: #FDAF13;
+    }
   }
 
   .sad {
-    background: #FF8080;
+    background: #E34E40;
+
+    .text-entry {
+      background: #D72D25;
+    }
+  }
+
+  .actions {
+    background: #F2EEE2;
+
+    .text-entry {
+      background: #DBD7CB;
+    }
+
+    &.tab-item {
+      background: #DBD7CB;
+    }
+  }
+
+  .columns > section, .tab-control > section {
+    padding: 8px 12px;
+  }
+
+  .tab-bar {
+    position: sticky;
+    top: 0;
+  }
+
+  .tab-control > section {
+    min-height: 70vh;
+  }
+
+  .tab-item {
+    font-size: 0.9em;
+    height: 3em;
+    color: #FFFFFF;
+    outline: none;
+    cursor: pointer;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+
+  .text-entry {
+    border-radius: 4px;
+
+    textarea {
+      padding: 20px 12px;
+      font: 1.1em sans-serif;
+      outline: none;
+
+      &::placeholder {
+        color: #FFFFFF;
+      }
+    }
+
+    button {
+      margin: 8px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 4px;
+      font-size: 1.5em;
+      background: #50E3C2;
+      color: #FFFFFF;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    &.multiline {
+      textarea {
+        padding-bottom: 4px;
+      }
+
+      button {
+        margin-top: 0;
+      }
+    }
+
+    button:disabled {
+      display: none;
+    }
+
+    &:focus-within {
+      background: #FFFFFF;
+
+      &:not(.multiline) {
+        border-radius: 4px;
+        background: #FFFFFF;
+      }
+
+      textarea::placeholder {
+        color: #808080;
+      }
+    }
   }
 
   &.multi-column {
-    h2 {
-      margin-top: 0;
-    }
-
     .columns {
       display: flex;
       flex-direction: row;
       min-height: 50vh;
 
       > section {
-        padding: 10px;
         flex: 1;
       }
     }
@@ -31,9 +129,8 @@
       display: flex;
       flex-wrap: wrap;
       flex-direction: row;
-      padding: 10px;
 
-      h2 {
+      > header {
         flex: 0 0 100%;
       }
 
@@ -44,27 +141,8 @@
   }
 
   &.single-column {
-    .tab-bar {
-      position: sticky;
-      top: 0;
-    }
-
-    .tab-control > section {
-      padding: 5px;
-      min-height: 70vh;
-    }
-
-    .tab-item {
-      font-size: 1.2em;
-      height: 2em;
-    }
-
     h2 {
       display: none;
-    }
-
-    .actions {
-      background: #EEEEEE;
     }
   }
 }

@@ -20,7 +20,9 @@ export const ActionSection = ({
   rangeTo,
 }) => (
   <section>
-    <h3>{title}</h3>
+    <header>
+      <h3>{title}</h3>
+    </header>
     <ItemColumn
       items={items.filter(actionItemWithinRange(rangeFrom, rangeTo))}
       ItemType={ActionItem}

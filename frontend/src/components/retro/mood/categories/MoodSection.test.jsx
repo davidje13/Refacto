@@ -5,6 +5,7 @@ import { makeItem } from '../../../../test-helpers/dataFactories';
 import { MoodSection } from './MoodSection';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
+import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {
@@ -44,5 +45,32 @@ describe('MoodSection', () => {
     expect(dom.find(ItemColumn)).toHaveProp({
       items: [items[1]],
     });
+  });
+
+  it('does not render an input field if no callback is provided', () => {
+    const dom = shallow(<MoodSection category="" items={[]} />);
+
+    expect(dom.find(ExpandingTextEntry)).not.toExist();
+  });
+
+  it('renders an input field if a callback is provided', () => {
+    const dom = shallow(<MoodSection category="" items={[]} onAddItem={() => {}} />);
+
+    expect(dom.find(ExpandingTextEntry)).toExist();
+  });
+
+  it('adds the current category to new items', () => {
+    const onAddItem = jest.fn().mockName('onAddItem');
+    const dom = shallow((
+      <MoodSection
+        category="my-category"
+        items={[]}
+        onAddItem={onAddItem}
+      />
+    ));
+
+    dom.find(ExpandingTextEntry).props().onSubmit('my message');
+
+    expect(onAddItem).toHaveBeenCalledWith('my-category', 'my message');
   });
 });
