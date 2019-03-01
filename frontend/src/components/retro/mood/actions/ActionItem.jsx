@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import './ActionItem.less'; // eslint-disable-line import/no-unresolved - weird linter bug
 
 export const ActionItem = ({
   item: {

@@ -6,6 +6,7 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { setActiveRetro } from '../../reducers/activeRetro';
 import Retro from './Retro';
+import './RetroPage.less';
 
 export class RetroPage extends React.Component {
   static propTypes = {

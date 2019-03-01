@@ -9,14 +9,14 @@ describe('MoodItem', () => {
     const item = makeItem({ message: 'a message here' });
     const dom = shallow(<MoodItem item={item} />);
 
-    expect(dom).toIncludeText('a message here');
+    expect(dom.find('.message')).toHaveText('a message here');
   });
 
   it('displays the vote count', () => {
     const item = makeItem({ votes: 3 });
     const dom = shallow(<MoodItem item={item} />);
 
-    expect(dom).toIncludeText('+3');
+    expect(dom.find('.vote')).toHaveText('3');
   });
 
   it('does not mark items as done or focused by default', () => {

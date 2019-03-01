@@ -7,9 +7,9 @@
   default-src 'self';
   object-src 'none';
   script-src 'self' 'unsafe-eval';
-  style-src 'self' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   connect-src 'self';
-  font-src 'self';
+  font-src 'self' https://fonts.gstatic.com;
   img-src 'self';
   form-action 'none';
 ">
@@ -20,6 +20,7 @@
 <title><%= htmlWebpackPlugin.options.title %></title>
 <link rel="apple-touch-icon" href="/static/apple-touch-icon.png"/>
 <link rel="manifest" href="/static/manifest.json"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese">
 </head>
 <body>
 <noscript>Please enable Javascript!</noscript>

@@ -1,3 +1,6 @@
+@base-padding: 16px;
+@action-header-padding: 24px;
+
 .retro-format-mood {
   .happy {
     background: #51C0B1;
@@ -35,8 +38,37 @@
     }
   }
 
-  .columns > section, .tab-control > section {
-    padding: 8px 12px;
+  .columns > section, .tab-control > section, section.actions {
+    box-sizing: border-box;
+    padding: @base-padding @base-padding (@base-padding + 4px);
+
+    > header {
+      margin: 0 0 @base-padding;
+      text-align: center;
+
+      h2 {
+        font-weight: bolder;
+        margin: 0 0 @base-padding;
+      }
+    }
+  }
+
+  section.actions {
+    > section {
+      box-sizing: border-box;
+    }
+
+    h3 {
+      margin: 0 0 @base-padding;
+    }
+  }
+
+  ul.item-column {
+    list-style: none;
+
+    li {
+      margin: @base-padding 0;
+    }
   }
 
   .tab-bar {
@@ -50,22 +82,31 @@
 
   .tab-item {
     font-size: 0.9em;
-    height: 3em;
+    padding: 0.8em 4px;
+    font-weight: bolder;
     color: #FFFFFF;
     outline: none;
     cursor: pointer;
+
+    transition: margin-top 0.1s ease-out, padding-bottom 0.1s ease-out;
   }
 
-  h2 {
-    margin-top: 0;
+  .tab-item:not(.active) {
+    box-shadow: inset 0 -7px 5px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  .tab-item.active {
+    margin-top: -2px;
+    padding-bottom: calc(0.8em + 2px);
   }
 
   .text-entry {
     border-radius: 4px;
+    transition: background 0.1s ease-out;
 
     textarea {
       padding: 20px 12px;
-      font: 1.1em sans-serif;
+      font-size: 1.1em;
       outline: none;
 
       &::placeholder {
@@ -76,7 +117,6 @@
     button {
       margin: 8px;
       padding: 12px 20px;
-      border: 0;
       border-radius: 4px;
       font-size: 1.5em;
       background: #50E3C2;
@@ -129,13 +169,26 @@
       display: flex;
       flex-wrap: wrap;
       flex-direction: row;
+      padding: 0;
 
       > header {
         flex: 0 0 100%;
+        margin-bottom: (@action-header-padding + 4px);
+
+        h2 {
+          text-align: center;
+          margin: @action-header-padding 0;
+        }
+
+        .text-entry {
+          max-width: 24em;
+          margin: 0 auto;
+        }
       }
 
       > section {
         flex: 1;
+        padding: 0 @base-padding 32px;
       }
     }
   }
@@ -143,6 +196,14 @@
   &.single-column {
     h2 {
       display: none;
+    }
+
+    .tab-control > section {
+      padding-bottom: 100px;
+
+      > section {
+        padding-bottom: 20px;
+      }
     }
   }
 }

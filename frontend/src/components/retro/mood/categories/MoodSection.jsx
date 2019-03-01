@@ -40,16 +40,16 @@ export class MoodSection extends React.PureComponent {
       <section className={category}>
         <header>
           <h2>{category}</h2>
+          { onAddItem ? (
+            <ExpandingTextEntry
+              onSubmit={this.handleAddItem}
+              submitButtonLabel="&#x2713;"
+              submitButtonTitle="Add"
+              placeholder={addItemPlaceholder}
+              clearAfterSubmit
+            />
+          ) : null }
         </header>
-        { onAddItem ? (
-          <ExpandingTextEntry
-            onSubmit={this.handleAddItem}
-            submitButtonLabel="&#x2713;"
-            submitButtonTitle="Add"
-            placeholder={addItemPlaceholder}
-            clearAfterSubmit
-          />
-        ) : null }
         <ItemColumn
           items={items.filter((item) => (item.category === category))}
           ItemType={MoodItem}

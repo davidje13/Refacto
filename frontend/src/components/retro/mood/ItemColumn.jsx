@@ -15,7 +15,7 @@ function sortItems(items) {
 }
 
 export const ItemColumn = ({ items, ItemType, focusedItemUUID }) => (
-  <ul>
+  <ul className="item-column">
     {sortItems(items).map((item) => (
       <li key={item.uuid}>
         <ItemType item={item} focused={item.uuid === focusedItemUUID} />

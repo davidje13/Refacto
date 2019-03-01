@@ -1,0 +1,36 @@
+.mood-item {
+  background: #FFFFFF;
+  padding: 20px 20px;
+  border-radius: 4px;
+  position: relative;
+
+  .message {
+    padding: 0 2.5em;
+  }
+
+  .vote {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 100%;
+    margin-top: -1.25em;
+    background: transparent;
+    font-size: 0.9em;
+    font-weight: bolder;
+    line-height: 1.1;
+    outline: none;
+    cursor: pointer;
+
+    &::before {
+      content: "\2665";
+      display: block;
+      color: #660000;
+    }
+
+    &:focus {
+      box-shadow: 0 0 2px 1px rgba(255, 0, 0, 0.3);
+    }
+  }
+}

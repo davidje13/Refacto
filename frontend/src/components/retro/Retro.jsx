@@ -19,7 +19,9 @@ export const Retro = ({ retro }) => {
       <Helmet>
         <title>{name} - Refacto</title>
       </Helmet>
-      <h1 className="retro-name">{name}</h1>
+      <header>
+        <h1 className="retro-name">{name}</h1>
+      </header>
       <RetroType retro={retro} />
     </React.Fragment>
   );

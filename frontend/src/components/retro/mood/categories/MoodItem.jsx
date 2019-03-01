@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import './MoodItem.less';
 
 export const MoodItem = ({
   item: {
@@ -13,7 +14,14 @@ export const MoodItem = ({
   focused,
 }) => (
   <div className={classNames('mood-item', { done, focused })}>
-    +{votes} {message}
+    <div className="message">{message}</div>
+    <button
+      type="button"
+      title="Agree with this"
+      className="vote"
+    >
+      {votes}
+    </button>
   </div>
 );
 
