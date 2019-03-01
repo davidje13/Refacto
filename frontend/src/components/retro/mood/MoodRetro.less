@@ -3,38 +3,38 @@
 
 .retro-format-mood {
   .happy {
-    background: #51C0B1;
+    background: hsl(172deg, 50%, 55%);
 
     .text-entry {
-      background: #2B9E8E;
+      background: hsl(172deg, 50%, 45%);
     }
   }
 
   .meh {
-    background: #FEC722;
+    background: hsl(45deg, 100%, 55%);
 
     .text-entry {
-      background: #FDAF13;
+      background: hsl(45deg, 100%, 45%);
     }
   }
 
   .sad {
-    background: #E34E40;
+    background: hsl(5deg, 75%, 58%);
 
     .text-entry {
-      background: #D72D25;
+      background: hsl(5deg, 75%, 45%);
     }
   }
 
   .actions {
-    background: #F2EEE2;
+    background: hsl(45deg, 20%, 92%);
 
     .text-entry {
-      background: #DBD7CB;
+      background: hsl(45deg, 20%, 80%);
     }
 
     &.tab-item {
-      background: #DBD7CB;
+      color: #000000;
     }
   }
 
@@ -75,10 +75,6 @@
     position: sticky;
     top: 0;
     z-index: 1;
-  }
-
-  .tab-control > section {
-    min-height: 70vh;
   }
 
   .tab-item {
@@ -200,7 +196,8 @@
     }
 
     .tab-control > section {
-      padding-bottom: 100px;
+      padding-bottom: 192px;
+      min-height: 100vh;
 
       > section {
         padding-bottom: 20px;

@@ -5,6 +5,15 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './TabControl.less';
 
 export class TabControl extends React.PureComponent {
+  static propTypes = {
+    tabs: PropTypes.arrayOf(PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      className: PropTypes.string,
+      content: PropTypes.element.isRequired,
+    })).isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -55,15 +64,6 @@ export class TabControl extends React.PureComponent {
     );
   }
 }
-
-TabControl.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    className: PropTypes.string,
-    content: PropTypes.element.isRequired,
-  })).isRequired,
-};
 
 forbidExtraProps(TabControl);
 

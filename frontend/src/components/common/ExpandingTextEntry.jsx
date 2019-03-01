@@ -21,6 +21,28 @@ function anyModifier(e) {
 }
 
 export class ExpandingTextEntry extends React.PureComponent {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    placeholder: PropTypes.string,
+    defaultValue: PropTypes.string,
+    submitButtonLabel: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string,
+    ]),
+    submitButtonTitle: PropTypes.string,
+    className: PropTypes.string,
+    clearAfterSubmit: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    placeholder: '',
+    defaultValue: '',
+    submitButtonLabel: '',
+    submitButtonTitle: null,
+    className: null,
+    clearAfterSubmit: false,
+  };
+
   constructor(props) {
     super(props);
 
@@ -141,28 +163,6 @@ export class ExpandingTextEntry extends React.PureComponent {
     );
   }
 }
-
-ExpandingTextEntry.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  defaultValue: PropTypes.string,
-  submitButtonLabel: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.string,
-  ]),
-  submitButtonTitle: PropTypes.string,
-  className: PropTypes.string,
-  clearAfterSubmit: PropTypes.bool,
-};
-
-ExpandingTextEntry.defaultProps = {
-  placeholder: '',
-  defaultValue: '',
-  submitButtonLabel: '',
-  submitButtonTitle: null,
-  className: null,
-  clearAfterSubmit: false,
-};
 
 forbidExtraProps(ExpandingTextEntry);
 
