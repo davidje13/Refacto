@@ -39,7 +39,7 @@ npm run test:frontend
 Watch mode:
 
 ```bash
-npm run test:frontend -- --watchAll
+npm run test:frontend:watch
 ```
 
 ### Testing backend only
@@ -51,7 +51,7 @@ npm run test:backend
 Watch mode:
 
 ```bash
-npm run test:backend -- --watchAll
+npm run test:backend:watch
 ```
 
 ### End-to-end tests only

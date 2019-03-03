@@ -1,24 +1,12 @@
+const { baseRules, reactRules, testRules } = require('../eslint.js');
+
 const linter = ['@neutrinojs/airbnb', {
   eslint: {
-    rules: {
-      'arrow-parens': ['error', 'always'],
-      'import/no-named-as-default': ['off'], // conflicts with redux convention
-      'jsx-a11y/anchor-is-valid': ['error', {
-        'components': ['Link'],
-        'specialLink': ['to'],
-      }],
-      'operator-linebreak': ['error', 'after'],
-      'react/destructuring-assignment': ['off'], // conflicts with redux actions
-      'react/jsx-one-expression-per-line': ['off'], // too buggy
-    },
+    rules: Object.assign({}, baseRules, reactRules),
     baseConfig: {
       overrides: [{
         files: ['**/test-helpers/*'],
-        rules: {
-          'import/no-extraneous-dependencies': ['error', {
-            'devDependencies': true,
-          }],
-        },
+        rules: testRules,
       }],
     },
   },

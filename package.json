@@ -9,7 +9,9 @@
     "start": "./scripts/start.sh",
     "test": "./scripts/test.sh",
     "test:backend": "npm --prefix=backend test --silent --",
+    "test:backend:watch": "npm --prefix=backend test --silent -- --watch",
     "test:frontend": "npm --prefix=frontend test --silent --",
+    "test:frontend:watch": "npm --prefix=frontend test --silent -- --watch",
     "test:e2e": "./scripts/e2e.sh"
   }
 }

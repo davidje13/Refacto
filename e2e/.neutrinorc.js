@@ -1,3 +1,5 @@
+const { baseRules, testRules } = require('../eslint.js');
+
 module.exports = {
   options: {
     tests: 'src',
@@ -5,14 +7,8 @@ module.exports = {
   use: [
     ['@neutrinojs/airbnb', {
       eslint: {
-        rules: {
-          'arrow-parens': ['error', 'always'],
-          // All sources are test-related, so devDependencies are OK
-          'import/no-extraneous-dependencies': ['error', {
-            'devDependencies': true,
-          }],
-          'operator-linebreak': ['error', 'after'],
-        },
+        // All sources are test-related
+        rules: Object.assign({}, baseRules, testRules),
       },
     }],
     ['@neutrinojs/jest', {

@@ -1,3 +1,5 @@
+const { baseRules } = require('../eslint.js');
+
 module.exports = {
   options: {
     tests: 'src',
@@ -5,10 +7,7 @@ module.exports = {
   use: [
     ['@neutrinojs/airbnb', {
       eslint: {
-        rules: {
-          'arrow-parens': ['error', 'always'],
-          'operator-linebreak': ['error', 'after'],
-        },
+        rules: baseRules,
       },
     }],
     ['@neutrinojs/copy', {
