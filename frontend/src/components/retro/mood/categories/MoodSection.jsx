@@ -12,12 +12,14 @@ export class MoodSection extends React.PureComponent {
     items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
     addItemPlaceholder: PropTypes.string,
     onAddItem: PropTypes.func,
+    onVote: PropTypes.func,
     focusedItemUUID: PropTypes.string,
   };
 
   static defaultProps = {
     addItemPlaceholder: '',
     onAddItem: null,
+    onVote: null,
     focusedItemUUID: null,
   };
 
@@ -33,6 +35,7 @@ export class MoodSection extends React.PureComponent {
       items,
       addItemPlaceholder,
       onAddItem,
+      onVote,
       focusedItemUUID,
     } = this.props;
 
@@ -54,6 +57,7 @@ export class MoodSection extends React.PureComponent {
           items={items.filter((item) => (item.category === category))}
           ItemType={MoodItem}
           focusedItemUUID={focusedItemUUID}
+          onVote={onVote}
         />
       </section>
     );

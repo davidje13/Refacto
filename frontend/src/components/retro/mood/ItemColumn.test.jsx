@@ -21,19 +21,27 @@ describe('ItemColumn', () => {
     const dom = shallow(<ItemColumn items={[item1, item2]} ItemType={Item} />);
 
     const displayedItems = dom.find(Item);
-    expect(displayedItems.at(0)).toHaveProp('item', item2);
-    expect(displayedItems.at(1)).toHaveProp('item', item1);
+    expect(displayedItems.at(0)).toHaveProp({ item: item2 });
+    expect(displayedItems.at(1)).toHaveProp({ item: item1 });
+  });
+
+  it('passes extra props to the items unchanged', () => {
+    const item = makeItem();
+    const dom = shallow(<ItemColumn items={[item]} ItemType={Item} foo="bar" />);
+
+    const displayedItems = dom.find(Item);
+    expect(displayedItems.at(0)).toHaveProp({ foo: 'bar' });
   });
 
   it('focusses nothing by default', () => {
-    const item = makeItem({});
+    const item = makeItem();
     const dom = shallow(<ItemColumn items={[item]} ItemType={Item} />);
 
-    expect(dom.find(Item)).toHaveProp('focused', false);
+    expect(dom.find(Item)).toHaveProp({ focused: false });
   });
 
   it('focusses the requested item', () => {
-    const item = makeItem({});
+    const item = makeItem();
     const dom = shallow((
       <ItemColumn
         items={[item]}
@@ -42,6 +50,6 @@ describe('ItemColumn', () => {
       />
     ));
 
-    expect(dom.find(Item)).toHaveProp('focused', true);
+    expect(dom.find(Item)).toHaveProp({ focused: true });
   });
 });

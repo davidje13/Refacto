@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
 
 function itemCreatedComparator(a, b) {
@@ -14,11 +13,16 @@ function sortItems(items) {
   return sorted;
 }
 
-export const ItemColumn = ({ items, ItemType, focusedItemUUID }) => (
+export const ItemColumn = ({
+  items,
+  ItemType,
+  focusedItemUUID,
+  ...props
+}) => (
   <ul className="item-column">
     {sortItems(items).map((item) => (
       <li key={item.uuid}>
-        <ItemType item={item} focused={item.uuid === focusedItemUUID} />
+        <ItemType item={item} focused={item.uuid === focusedItemUUID} {...props} />
       </li>
     ))}
   </ul>
@@ -33,7 +37,5 @@ ItemColumn.propTypes = {
 ItemColumn.defaultProps = {
   focusedItemUUID: null,
 };
-
-forbidExtraProps(ItemColumn);
 
 export default ItemColumn;

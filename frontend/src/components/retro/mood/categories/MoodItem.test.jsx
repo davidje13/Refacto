@@ -19,9 +19,25 @@ describe('MoodItem', () => {
     expect(dom.find('.vote')).toHaveText('3');
   });
 
+  it('does not allow voting if no callback is given', () => {
+    const dom = shallow(<MoodItem item={makeItem()} />);
+
+    expect(dom.find('.vote')).toBeDisabled();
+  });
+
+  it('invokes the given callback with the item UUID if voted on', () => {
+    const onVote = jest.fn().mockName('onVote');
+    const item = makeItem({ uuid: 'my-uuid' });
+    const dom = shallow(<MoodItem item={item} onVote={onVote} />);
+
+    expect(dom.find('.vote')).not.toBeDisabled();
+    dom.find('.vote').simulate('click');
+
+    expect(onVote).toHaveBeenCalledWith('my-uuid');
+  });
+
   it('does not mark items as done or focused by default', () => {
-    const item = makeItem({});
-    const dom = shallow(<MoodItem item={item} />);
+    const dom = shallow(<MoodItem item={makeItem()} />);
 
     expect(dom).not.toHaveClassName('done');
     expect(dom).not.toHaveClassName('focused');
@@ -35,8 +51,7 @@ describe('MoodItem', () => {
   });
 
   it('marks the item as focused if specified', () => {
-    const item = makeItem({});
-    const dom = shallow(<MoodItem item={item} focused />);
+    const dom = shallow(<MoodItem item={makeItem()} focused />);
 
     expect(dom).toHaveClassName('focused');
   });

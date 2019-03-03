@@ -5,35 +5,52 @@ import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 import './MoodItem.less';
 
-export const MoodItem = ({
-  item: {
-    message,
-    votes = 0,
-    done = false,
-  },
-  focused,
-}) => (
-  <div className={classNames('mood-item', { done, focused })}>
-    <div className="message">{message}</div>
-    <button
-      type="button"
-      title="Agree with this"
-      className="vote"
-    >
-      {votes}
-    </button>
-  </div>
-);
+export class MoodItem extends React.PureComponent {
+  static propTypes = {
+    item: propTypesShapeItem.isRequired,
+    focused: PropTypes.bool,
+    onVote: PropTypes.func,
+  };
 
-MoodItem.propTypes = {
-  item: propTypesShapeItem.isRequired,
-  focused: PropTypes.bool,
-};
+  static defaultProps = {
+    focused: false,
+    onVote: null,
+  };
 
-MoodItem.defaultProps = {
-  focused: false,
-};
+  handleVote = () => {
+    const { item: { uuid }, onVote } = this.props;
+
+    onVote(uuid);
+  };
+
+  render() {
+    const {
+      item: {
+        message,
+        votes = 0,
+        done = false,
+      },
+      focused,
+      onVote,
+    } = this.props;
+
+    return (
+      <div className={classNames('mood-item', { done, focused })}>
+        <div className="message">{message}</div>
+        <button
+          type="button"
+          title="Agree with this"
+          className="vote"
+          disabled={onVote === null}
+          onClick={this.handleVote}
+        >
+          {votes}
+        </button>
+      </div>
+    );
+  }
+}
 
 forbidExtraProps(MoodItem);
 
-export default React.memo(MoodItem);
+export default MoodItem;

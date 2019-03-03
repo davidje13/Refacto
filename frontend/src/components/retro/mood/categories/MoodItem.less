@@ -23,6 +23,11 @@
     outline: none;
     cursor: pointer;
 
+    &:disabled {
+      color: inherit;
+      cursor: inherit;
+    }
+
     &::before {
       content: "\2665";
       display: block;

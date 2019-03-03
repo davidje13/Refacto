@@ -39,6 +39,11 @@ export const addItem = (category, message) => ({
   message,
 });
 
+export const voteOnItem = (uuid) => ({
+  type: 'RETRO_VOTE_ITEM',
+  uuid,
+});
+
 const initialState = {
   retro: {
     slug: '',
@@ -59,6 +64,21 @@ function makeItem(category, message) {
     votes: 0,
     done: false,
   };
+}
+
+function updateItemByUuid(state, uuid, delta) {
+  const index = state.retro.items.findIndex((item) => (item.uuid === uuid));
+  if (index === -1) {
+    return state;
+  }
+
+  return update(state, {
+    retro: {
+      items: {
+        [index]: delta,
+      },
+    },
+  });
 }
 
 export default (state = initialState, action) => {
@@ -87,6 +107,10 @@ export default (state = initialState, action) => {
         },
       });
     }
+    case 'RETRO_VOTE_ITEM':
+      return updateItemByUuid(state, action.uuid, {
+        votes: { $apply: (votes) => (votes + 1) },
+      });
     default:
       return state;
   }

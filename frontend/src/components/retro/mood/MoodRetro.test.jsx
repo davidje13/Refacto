@@ -18,6 +18,7 @@ describe('MoodRetro', () => {
         singleColumn={false}
         onAddMoodItem={() => {}}
         onAddActionItem={() => {}}
+        onVote={() => {}}
       />
     ));
     expect(dom).toExist();

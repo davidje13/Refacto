@@ -13,7 +13,7 @@ describe('ActionItem', () => {
   });
 
   it('does not mark items as done by default', () => {
-    const item = makeItem({});
+    const item = makeItem();
     const dom = shallow(<ActionItem item={item} />);
 
     expect(dom).not.toHaveClassName('done');
