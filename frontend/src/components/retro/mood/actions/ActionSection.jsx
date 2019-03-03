@@ -18,6 +18,9 @@ export const ActionSection = ({
   items,
   rangeFrom,
   rangeTo,
+  onSetDone,
+  onEdit,
+  onDelete,
 }) => (
   <section>
     <header>
@@ -26,6 +29,9 @@ export const ActionSection = ({
     <ItemColumn
       items={items.filter(actionItemWithinRange(rangeFrom, rangeTo))}
       ItemType={ActionItem}
+      onSetDone={onSetDone}
+      onEdit={onEdit}
+      onDelete={onDelete}
     />
   </section>
 );
@@ -35,11 +41,17 @@ ActionSection.propTypes = {
   title: PropTypes.string.isRequired,
   rangeFrom: PropTypes.number,
   rangeTo: PropTypes.number,
+  onSetDone: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 ActionSection.defaultProps = {
   rangeFrom: Number.NEGATIVE_INFINITY,
   rangeTo: Number.POSITIVE_INFINITY,
+  onSetDone: null,
+  onEdit: null,
+  onDelete: null,
 };
 
 forbidExtraProps(ActionSection);

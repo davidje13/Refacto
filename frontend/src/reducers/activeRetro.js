@@ -50,6 +50,12 @@ export const deleteItem = (uuid) => ({
   uuid,
 });
 
+export const setItemDone = (uuid, done) => ({
+  type: 'RETRO_SET_ITEM_DONE',
+  uuid,
+  done,
+});
+
 export const upvoteItem = (uuid) => ({
   type: 'RETRO_UPVOTE_ITEM',
   uuid,
@@ -146,6 +152,10 @@ export default (state = initialState, action) => {
     }
     case 'RETRO_DELETE_ITEM':
       return removeItemByUuid(state, action.uuid);
+    case 'RETRO_SET_ITEM_DONE':
+      return updateItemByUuid(state, action.uuid, {
+        done: { $set: action.done },
+      });
     case 'RETRO_UPVOTE_ITEM':
       return updateItemByUuid(state, action.uuid, {
         votes: { $apply: (votes) => (votes + 1) },

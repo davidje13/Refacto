@@ -1,6 +1,81 @@
 .action-item {
   background: #FFFFFF;
-  padding: 20px 12px;
+  padding: 16px 24px;
   border-radius: 4px;
-  overflow-wrap: break-word;
+  position: relative;
+
+  &.editing {
+    padding: 0;
+
+    .text-entry {
+      background: none;
+    }
+  }
+
+  .message {
+    padding: 0 2.5rem;
+    overflow-wrap: break-word;
+  }
+
+  .toggle-done {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-top: -1.25rem;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    border: 8px solid hsl(45deg, 20%, 92%);
+    line-height: 1rem;
+    font-weight: bolder;
+    cursor: pointer;
+    border-radius: 1px;
+    outline: none; /* shapes to fit text overflowing box */
+
+    font-size: 0;
+    color: transparent;
+    transition: font-size 0.1s ease-in, color 0.1s ease-in;
+
+    &::before {
+      content: "\2713";
+    }
+
+    &:disabled {
+      cursor: inherit;
+    }
+
+    &:focus {
+      /* fake focus ring to replace outline */
+      box-shadow: 0 0 1px 2px #FFFFFF, 0 0 1px 3px #CC6600;
+    }
+  }
+
+  &.done .toggle-done {
+    transition: font-size 0.1s ease-out;
+    font-size: 2.5em;
+    color: hsl(172deg, 50%, 55%);
+  }
+
+  .edit {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-top: -1.25rem;
+    color: #BBBBBB;
+    font-size: 1.5em;
+    background: none;
+    cursor: pointer;
+    transform: scaleX(-1);
+
+    &:hover {
+      color: #666666;
+    }
+
+    &::before {
+      content: "\270E";
+    }
+  }
 }

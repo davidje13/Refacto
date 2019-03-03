@@ -108,7 +108,7 @@ export class MoodItem extends React.PureComponent {
         { (onEdit === null) ? null : (
           <button
             type="button"
-            title="Edit this"
+            title="Edit"
             className="edit"
             onClick={this.handleBeginEdit}
           />

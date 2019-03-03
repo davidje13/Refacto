@@ -11,6 +11,9 @@ export const ActionsPane = ({
   items,
   localDateProvider,
   onAddItem,
+  onSetDone,
+  onEdit,
+  onDelete,
 }) => {
   const today = localDateProvider.getMidnightTimestamp();
   const lastWeek = localDateProvider.getMidnightTimestamp(-7);
@@ -32,17 +35,26 @@ export const ActionsPane = ({
         items={items}
         title={`Today (${formatDate(today)})`}
         rangeFrom={today}
+        onSetDone={onSetDone}
+        onEdit={onEdit}
+        onDelete={onDelete}
       />
       <ActionSection
         items={items}
         title="Past Week"
         rangeFrom={lastWeek}
         rangeTo={today}
+        onSetDone={onSetDone}
+        onEdit={onEdit}
+        onDelete={onDelete}
       />
       <ActionSection
         items={items}
         title="Older"
         rangeTo={lastWeek}
+        onSetDone={onSetDone}
+        onEdit={onEdit}
+        onDelete={onDelete}
       />
     </section>
   );
@@ -52,10 +64,16 @@ ActionsPane.propTypes = {
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
   onAddItem: PropTypes.func,
+  onSetDone: PropTypes.func,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 ActionsPane.defaultProps = {
   onAddItem: null,
+  onSetDone: null,
+  onEdit: null,
+  onDelete: null,
 };
 
 forbidExtraProps(ActionsPane);

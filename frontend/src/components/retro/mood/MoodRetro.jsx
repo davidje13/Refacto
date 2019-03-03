@@ -12,6 +12,7 @@ import {
   upvoteItem,
   editItem,
   deleteItem,
+  setItemDone,
 } from '../../../reducers/activeRetro';
 import './MoodRetro.less';
 
@@ -35,6 +36,7 @@ export const MoodRetro = ({
   onVoteItem,
   onEditItem,
   onDeleteItem,
+  onSetActionDone,
 }) => {
   const createMoodSection = (category) => (
     <MoodSection
@@ -54,6 +56,9 @@ export const MoodRetro = ({
     <ActionsPane
       items={items}
       onAddItem={onAddActionItem}
+      onSetDone={onSetActionDone}
+      onEdit={onEditItem}
+      onDelete={onDeleteItem}
       localDateProvider={localDateProvider}
     />
   );
@@ -100,6 +105,7 @@ MoodRetro.propTypes = {
   onVoteItem: PropTypes.func.isRequired,
   onEditItem: PropTypes.func.isRequired,
   onDeleteItem: PropTypes.func.isRequired,
+  onSetActionDone: PropTypes.func.isRequired,
 };
 
 forbidExtraProps(MoodRetro);
@@ -115,6 +121,7 @@ const mapDispatchToProps = {
   onVoteItem: upvoteItem,
   onEditItem: editItem,
   onDeleteItem: deleteItem,
+  onSetActionDone: setItemDone,
 };
 
 export default connect(
