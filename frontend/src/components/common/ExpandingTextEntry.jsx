@@ -23,8 +23,11 @@ function anyModifier(e) {
 export class ExpandingTextEntry extends React.PureComponent {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func,
     placeholder: PropTypes.string,
     defaultValue: PropTypes.string,
+    autoFocus: PropTypes.bool,
+    extraOptions: PropTypes.element,
     submitButtonLabel: PropTypes.oneOfType([
       PropTypes.element,
       PropTypes.string,
@@ -35,8 +38,11 @@ export class ExpandingTextEntry extends React.PureComponent {
   };
 
   static defaultProps = {
+    onCancel: null,
     placeholder: '',
     defaultValue: '',
+    autoFocus: false,
+    extraOptions: null,
     submitButtonLabel: '',
     submitButtonTitle: null,
     className: null,
@@ -67,6 +73,10 @@ export class ExpandingTextEntry extends React.PureComponent {
       contentHeight: baseHeight,
       contentHeightMultiline: baseHeight,
     });
+
+    if (this.state.value !== '') {
+      this.updateSize();
+    }
   }
 
   componentWillUnmount() {
@@ -110,14 +120,33 @@ export class ExpandingTextEntry extends React.PureComponent {
     onSubmit(sanitiseInput(value));
   };
 
+  handleCancel = (e) => {
+    const { onCancel } = this.props;
+
+    if (onCancel !== null) {
+      e.preventDefault();
+      onCancel();
+    }
+  };
+
   handleChange = (e) => {
     this.setState({ value: e.target.value });
     this.updateSize();
   };
 
   handleKey = (e) => {
-    if (e.key === 'Enter' && !anyModifier(e)) {
-      this.handleSubmit(e);
+    if (anyModifier(e)) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'Enter':
+        this.handleSubmit(e);
+        break;
+      case 'Escape':
+        this.handleCancel(e);
+        break;
+      default:
     }
   };
 
@@ -137,6 +166,8 @@ export class ExpandingTextEntry extends React.PureComponent {
       className,
       submitButtonLabel,
       submitButtonTitle,
+      autoFocus,
+      extraOptions,
     } = this.props;
 
     const {
@@ -146,7 +177,7 @@ export class ExpandingTextEntry extends React.PureComponent {
       contentHeightMultiline,
     } = this.state;
 
-    const multiline = (contentHeight > baseHeight);
+    const multiline = Boolean(extraOptions) || (contentHeight > baseHeight);
     const height = (multiline ? contentHeightMultiline : contentHeight);
 
     return (
@@ -159,12 +190,15 @@ export class ExpandingTextEntry extends React.PureComponent {
           placeholder={placeholder}
           value={value}
           wrap="soft"
+          autoFocus={autoFocus} /* eslint-disable-line jsx-a11y/no-autofocus */ // passthrough
           onChange={this.handleChange}
           onKeyDown={this.handleKey}
           style={{ height: `${height}px` }}
         />
+        { extraOptions }
         <button
           type="submit"
+          className="submit"
           title={submitButtonTitle}
           disabled={value === ''}
         >

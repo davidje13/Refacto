@@ -13,6 +13,8 @@ export class MoodSection extends React.PureComponent {
     addItemPlaceholder: PropTypes.string,
     onAddItem: PropTypes.func,
     onVote: PropTypes.func,
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func,
     focusedItemUUID: PropTypes.string,
   };
 
@@ -20,6 +22,8 @@ export class MoodSection extends React.PureComponent {
     addItemPlaceholder: '',
     onAddItem: null,
     onVote: null,
+    onEdit: null,
+    onDelete: null,
     focusedItemUUID: null,
   };
 
@@ -36,6 +40,8 @@ export class MoodSection extends React.PureComponent {
       addItemPlaceholder,
       onAddItem,
       onVote,
+      onEdit,
+      onDelete,
       focusedItemUUID,
     } = this.props;
 
@@ -46,7 +52,6 @@ export class MoodSection extends React.PureComponent {
           { onAddItem ? (
             <ExpandingTextEntry
               onSubmit={this.handleAddItem}
-              submitButtonLabel="&#x2713;"
               submitButtonTitle="Add"
               placeholder={addItemPlaceholder}
               clearAfterSubmit
@@ -58,6 +63,8 @@ export class MoodSection extends React.PureComponent {
           ItemType={MoodItem}
           focusedItemUUID={focusedItemUUID}
           onVote={onVote}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       </section>
     );

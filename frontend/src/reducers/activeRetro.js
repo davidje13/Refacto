@@ -39,8 +39,19 @@ export const addItem = (category, message) => ({
   message,
 });
 
-export const voteOnItem = (uuid) => ({
-  type: 'RETRO_VOTE_ITEM',
+export const editItem = (uuid, message) => ({
+  type: 'RETRO_EDIT_ITEM',
+  uuid,
+  message,
+});
+
+export const deleteItem = (uuid) => ({
+  type: 'RETRO_DELETE_ITEM',
+  uuid,
+});
+
+export const upvoteItem = (uuid) => ({
+  type: 'RETRO_UPVOTE_ITEM',
   uuid,
 });
 
@@ -66,8 +77,12 @@ function makeItem(category, message) {
   };
 }
 
+function itemIndexByUuid(state, uuid) {
+  return state.retro.items.findIndex((item) => (item.uuid === uuid));
+}
+
 function updateItemByUuid(state, uuid, delta) {
-  const index = state.retro.items.findIndex((item) => (item.uuid === uuid));
+  const index = itemIndexByUuid(state, uuid);
   if (index === -1) {
     return state;
   }
@@ -77,6 +92,19 @@ function updateItemByUuid(state, uuid, delta) {
       items: {
         [index]: delta,
       },
+    },
+  });
+}
+
+function removeItemByUuid(state, uuid) {
+  const index = itemIndexByUuid(state, uuid);
+  if (index === -1) {
+    return state;
+  }
+
+  return update(state, {
+    retro: {
+      items: { $splice: [[index, 1]] },
     },
   });
 }
@@ -107,7 +135,18 @@ export default (state = initialState, action) => {
         },
       });
     }
-    case 'RETRO_VOTE_ITEM':
+    case 'RETRO_EDIT_ITEM': {
+      const message = sanitiseInput(action.message);
+      if (!message) {
+        return state;
+      }
+      return updateItemByUuid(state, action.uuid, {
+        message: { $set: message },
+      });
+    }
+    case 'RETRO_DELETE_ITEM':
+      return removeItemByUuid(state, action.uuid);
+    case 'RETRO_UPVOTE_ITEM':
       return updateItemByUuid(state, action.uuid, {
         votes: { $apply: (votes) => (votes + 1) },
       });

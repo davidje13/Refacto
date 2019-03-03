@@ -5,7 +5,7 @@
   .happy {
     background: hsl(172deg, 50%, 55%);
 
-    .text-entry {
+    header .text-entry {
       background: hsl(172deg, 50%, 45%);
     }
   }
@@ -13,7 +13,7 @@
   .meh {
     background: hsl(45deg, 100%, 55%);
 
-    .text-entry {
+    header .text-entry {
       background: hsl(45deg, 100%, 45%);
     }
   }
@@ -21,7 +21,7 @@
   .sad {
     background: hsl(5deg, 75%, 58%);
 
-    .text-entry {
+    header .text-entry {
       background: hsl(5deg, 75%, 45%);
     }
   }
@@ -29,7 +29,7 @@
   .actions {
     background: hsl(45deg, 20%, 92%);
 
-    .text-entry {
+    header .text-entry {
       background: hsl(45deg, 20%, 80%);
     }
 
@@ -98,53 +98,77 @@
   }
 
   .text-entry {
-    border-radius: 4px;
-    transition: background 0.1s ease-out;
-
     textarea {
       padding: 20px 12px;
       font-size: 1.1em;
       outline: none;
-
-      &::placeholder {
-        color: #FFFFFF;
-        transition: color 0.1s ease-out;
-      }
     }
 
-    button {
+    .submit, .delete {
       margin: 8px;
       padding: 12px 20px;
       border-radius: 4px;
-      font-size: 1.5em;
-      background: #50E3C2;
-      color: #FFFFFF;
-      font-weight: bold;
-      font-size: 1em;
+      font-size: 0.9em;
       cursor: pointer;
+      white-space: nowrap;
+
+      &:disabled {
+        background: #EEEEEE;
+        color: #AAAAAA;
+      }
+    }
+
+    .submit {
+      font-weight: bold;
+      background: #50E3C2;
+      color: #000000;
+
+      &::before {
+        content: "\2713 ";
+      }
+    }
+
+    .delete {
+      float: left;
+      padding-left: 12px;
+      background: none;
+      color: #CC0000;
+
+      &::before {
+        content: "\1F5D1 ";
+      }
     }
 
     &.multiline {
       textarea {
-        padding-bottom: 4px;
+        padding-bottom: 8px;
       }
 
       button {
         margin-top: 0;
       }
     }
+  }
 
-    button:disabled {
-      display: none;
+  header .text-entry {
+    border-radius: 4px;
+    transition: background 0.1s ease-out;
+
+    textarea::placeholder {
+      color: #FFFFFF;
+      transition: color 0.1s ease-out;
+    }
+
+    .submit {
+      color: #FFFFFF;
+
+      &:disabled {
+        display: none;
+      }
     }
 
     &:focus-within {
       background: #FFFFFF;
-
-      &:not(.multiline) {
-        border-radius: 4px;
-        background: #FFFFFF;
-      }
 
       textarea::placeholder {
         color: #808080;

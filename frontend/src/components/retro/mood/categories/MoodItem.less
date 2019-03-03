@@ -1,23 +1,31 @@
 .mood-item {
   background: #FFFFFF;
-  padding: 20px 20px;
+  padding: 16px;
   border-radius: 4px;
   position: relative;
 
+  &.editing {
+    padding: 0;
+
+    .text-entry {
+      background: none;
+    }
+  }
+
   .message {
-    padding: 0 2.5em;
+    padding: 0 2.5rem;
     overflow-wrap: break-word;
   }
 
   .vote {
     position: absolute;
     top: 50%;
-    left: 12px;
-    width: 2.5em;
-    height: 2.5em;
+    left: 8px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 100%;
-    margin-top: -1.25em;
-    background: transparent;
+    margin-top: -1.25rem;
+    background: none;
     font-size: 0.9em;
     font-weight: bolder;
     line-height: 1.1;
@@ -32,11 +40,33 @@
     &::before {
       content: "\2665";
       display: block;
-      color: #660000;
+      color: #AA3300;
     }
 
     &:focus {
       box-shadow: 0 0 2px 1px rgba(255, 0, 0, 0.3);
+    }
+  }
+
+  .edit {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-top: -1.25rem;
+    color: #BBBBBB;
+    font-size: 1.5em;
+    background: none;
+    cursor: pointer;
+    transform: scaleX(-1);
+
+    &:hover {
+      color: #666666;
+    }
+
+    &::before {
+      content: "\270E";
     }
   }
 }

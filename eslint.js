@@ -13,6 +13,9 @@ module.exports = {
       'components': ['Link'],
       'specialLink': ['to'],
     }],
+    'jsx-a11y/no-autofocus': ['error', {
+      'ignoreNonDOM': false,
+    }],
     'react/destructuring-assignment': ['off'], // conflicts with redux actions
     'react/jsx-one-expression-per-line': ['off'], // too buggy
   },

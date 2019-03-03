@@ -22,7 +22,6 @@ export const ActionsPane = ({
         { onAddItem ? (
           <ExpandingTextEntry
             onSubmit={onAddItem}
-            submitButtonLabel="&#x2713;"
             submitButtonTitle="Add"
             placeholder="Add an action item"
             clearAfterSubmit

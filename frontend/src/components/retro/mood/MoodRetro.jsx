@@ -7,7 +7,12 @@ import TabControl from '../../common/TabControl';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeRetro } from '../../../helpers/dataStructurePropTypes';
 import LocalDateProvider from '../../../time/LocalDateProvider';
-import { addItem, voteOnItem } from '../../../reducers/activeRetro';
+import {
+  addItem,
+  upvoteItem,
+  editItem,
+  deleteItem,
+} from '../../../reducers/activeRetro';
 import './MoodRetro.less';
 
 const CATEGORIES = [
@@ -27,7 +32,9 @@ export const MoodRetro = ({
   localDateProvider,
   onAddMoodItem,
   onAddActionItem,
-  onVote,
+  onVoteItem,
+  onEditItem,
+  onDeleteItem,
 }) => {
   const createMoodSection = (category) => (
     <MoodSection
@@ -35,7 +42,9 @@ export const MoodRetro = ({
       items={items}
       addItemPlaceholder={category.placeholder}
       onAddItem={onAddMoodItem}
-      onVote={onVote}
+      onVote={onVoteItem}
+      onEdit={onEditItem}
+      onDelete={onDeleteItem}
       focusedItemUUID={focusedItemUUID}
       category={category.id}
     />
@@ -88,7 +97,9 @@ MoodRetro.propTypes = {
   localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
   onAddMoodItem: PropTypes.func.isRequired,
   onAddActionItem: PropTypes.func.isRequired,
-  onVote: PropTypes.func.isRequired,
+  onVoteItem: PropTypes.func.isRequired,
+  onEditItem: PropTypes.func.isRequired,
+  onDeleteItem: PropTypes.func.isRequired,
 };
 
 forbidExtraProps(MoodRetro);
@@ -101,7 +112,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   onAddMoodItem: addItem,
   onAddActionItem: (message) => addItem('action', message),
-  onVote: voteOnItem,
+  onVoteItem: upvoteItem,
+  onEditItem: editItem,
+  onDeleteItem: deleteItem,
 };
 
 export default connect(
