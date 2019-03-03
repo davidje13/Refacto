@@ -62,9 +62,11 @@ export class ExpandingTextEntry extends React.PureComponent {
 
     const textarea = this.textareaRef.current;
     const baseHeight = getEmptyHeight(textarea);
-    this.setState({ baseHeight });
-
-    this.updateSize();
+    this.setState({
+      baseHeight,
+      contentHeight: baseHeight,
+      contentHeightMultiline: baseHeight,
+    });
   }
 
   componentWillUnmount() {
@@ -74,12 +76,21 @@ export class ExpandingTextEntry extends React.PureComponent {
   updateSize = () => {
     const textarea = this.textareaRef.current;
 
-    const height = getMultilClassHeights(textarea, textarea.form, 'multiline');
+    if (textarea.value === '') {
+      const { baseHeight } = this.state;
 
-    this.setState({
-      contentHeight: height.withoutClass,
-      contentHeightMultiline: height.withClass,
-    });
+      this.setState({
+        contentHeight: baseHeight,
+        contentHeightMultiline: baseHeight,
+      });
+    } else {
+      const height = getMultilClassHeights(textarea, textarea.form, 'multiline');
+
+      this.setState({
+        contentHeight: height.withoutClass,
+        contentHeightMultiline: height.withClass,
+      });
+    }
   };
 
   handleSubmit = (e) => {
