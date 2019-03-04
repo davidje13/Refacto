@@ -15,7 +15,11 @@ export class MoodSection extends React.PureComponent {
     onVote: PropTypes.func,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
+    onSwitchFocus: PropTypes.func,
+    onSetDone: PropTypes.func,
+    onAddExtraTime: PropTypes.func,
     focusedItemUUID: PropTypes.string,
+    focusedItemTimeout: PropTypes.number,
   };
 
   static defaultProps = {
@@ -24,13 +28,40 @@ export class MoodSection extends React.PureComponent {
     onVote: null,
     onEdit: null,
     onDelete: null,
+    onSwitchFocus: null,
+    onSetDone: null,
+    onAddExtraTime: null,
     focusedItemUUID: null,
+    focusedItemTimeout: 0,
   };
 
   handleAddItem = (message) => {
     const { category, onAddItem } = this.props;
 
     onAddItem(category, message);
+  };
+
+  handleItemSelect = (uuid) => {
+    const { onSwitchFocus, onSetDone, focusedItemUUID } = this.props;
+
+    if (focusedItemUUID !== null && focusedItemUUID !== uuid) {
+      onSetDone(focusedItemUUID, true);
+    }
+    onSwitchFocus(uuid);
+  };
+
+  handleItemCancel = (uuid) => {
+    const { onSwitchFocus, onSetDone } = this.props;
+
+    onSetDone(uuid, false);
+    onSwitchFocus(null);
+  };
+
+  handleItemDone = (uuid) => {
+    const { onSwitchFocus, onSetDone } = this.props;
+
+    onSetDone(uuid, true);
+    onSwitchFocus(null);
   };
 
   render() {
@@ -42,7 +73,9 @@ export class MoodSection extends React.PureComponent {
       onVote,
       onEdit,
       onDelete,
+      onAddExtraTime,
       focusedItemUUID,
+      focusedItemTimeout,
     } = this.props;
 
     return (
@@ -62,9 +95,14 @@ export class MoodSection extends React.PureComponent {
           items={items.filter((item) => (item.category === category))}
           ItemType={MoodItem}
           focusedItemUUID={focusedItemUUID}
+          focusedItemTimeout={focusedItemTimeout}
           onVote={onVote}
           onEdit={onEdit}
           onDelete={onDelete}
+          onSelect={this.handleItemSelect}
+          onAddExtraTime={onAddExtraTime}
+          onCancel={this.handleItemCancel}
+          onDone={this.handleItemDone}
         />
       </section>
     );

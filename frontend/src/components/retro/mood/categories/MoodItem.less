@@ -1,20 +1,16 @@
 .mood-item {
   background: #FFFFFF;
-  padding: 16px;
+  padding: 0;
   border-radius: 4px;
   position: relative;
 
-  &.editing {
-    padding: 0;
-
-    .text-entry {
-      background: none;
-    }
-  }
-
   .message {
-    padding: 0 2.5rem;
+    padding: 16px calc(16px + 2.5rem);
     overflow-wrap: break-word;
+    text-align: inherit;
+    box-sizing: border-box;
+    width: 100%;
+    background: none;
   }
 
   .vote {
@@ -69,4 +65,107 @@
       content: "\270E";
     }
   }
+
+  &.editing .text-entry {
+    background: none;
+  }
+
+  &.done {
+    opacity: 0.35;
+
+    .edit {
+      display: none;
+    }
+
+    &::after {
+      content: "\2713";
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-top: -1.25rem;
+      font-size: 1.5em;
+      text-align: center;
+      line-height: 2.5rem;
+    }
+  }
+
+  &.focused {
+    padding: 20px 8px 8px;
+
+    .vote {
+      top: 8px;
+      left: 8px;
+      margin: 0;
+    }
+
+    .message {
+      font-size: 1.5em;
+      font-weight: bold;
+      padding: 2.5rem 0 20px;
+      text-align: center;
+    }
+
+    .timer {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      text-align: center;
+      font-size: 1em;
+
+      .countdown {
+        line-height: 2.5rem;
+        min-width: 2.5rem;
+        color: #808080;
+      }
+
+      .timeup {
+        color: hsl(172deg, 50%, 45%);
+        font-weight: bolder;
+        font-size: 0.9em;
+      }
+
+      button {
+        background: none;
+        font-size: 0.8em;
+        cursor: pointer;
+        color: #808080;
+      }
+    }
+
+    .cancel, .close {
+      border-radius: 4px;
+      font-size: 0.9em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cancel {
+      padding: 4px 8px;
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: none;
+    }
+
+    .close {
+      padding: 12px 20px;
+      font-weight: bold;
+      background: #50E3C2;
+      color: #000000;
+      float: right;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+}
+
+.has-focused .mood-item:not(.focused):not(.editing):not(.done) {
+  opacity: 0.7;
 }

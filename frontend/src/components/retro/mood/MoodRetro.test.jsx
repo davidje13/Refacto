@@ -21,7 +21,9 @@ describe('MoodRetro', () => {
         onVoteItem={() => {}}
         onEditItem={() => {}}
         onDeleteItem={() => {}}
-        onSetActionDone={() => {}}
+        onSetItemDone={() => {}}
+        onSwitchFocus={() => {}}
+        onAddExtraTime={() => {}}
       />
     ));
     expect(dom).toExist();

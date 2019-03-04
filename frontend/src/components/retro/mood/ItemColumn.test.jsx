@@ -33,14 +33,14 @@ describe('ItemColumn', () => {
     expect(displayedItems.at(0)).toHaveProp({ foo: 'bar' });
   });
 
-  it('focusses nothing by default', () => {
+  it('focuses nothing by default', () => {
     const item = makeItem();
     const dom = shallow(<ItemColumn items={[item]} ItemType={Item} />);
 
     expect(dom.find(Item)).toHaveProp({ focused: false });
   });
 
-  it('focusses the requested item', () => {
+  it('focuses the requested item', () => {
     const item = makeItem();
     const dom = shallow((
       <ItemColumn

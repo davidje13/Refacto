@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
@@ -13,6 +14,8 @@ import {
   editItem,
   deleteItem,
   setItemDone,
+  focusItem,
+  addExtraTime,
 } from '../../../reducers/activeRetro';
 import './MoodRetro.less';
 
@@ -26,6 +29,7 @@ export const MoodRetro = ({
   retro: {
     state: {
       focusedItemUUID = null,
+      focusedItemTimeout = 0,
     },
     items,
   },
@@ -36,8 +40,12 @@ export const MoodRetro = ({
   onVoteItem,
   onEditItem,
   onDeleteItem,
-  onSetActionDone,
+  onSwitchFocus,
+  onAddExtraTime,
+  onSetItemDone,
 }) => {
+  const hasFocused = (focusedItemUUID !== null);
+
   const createMoodSection = (category) => (
     <MoodSection
       key={category.id}
@@ -47,7 +55,11 @@ export const MoodRetro = ({
       onVote={onVoteItem}
       onEdit={onEditItem}
       onDelete={onDeleteItem}
+      onSwitchFocus={onSwitchFocus}
+      onSetDone={onSetItemDone}
+      onAddExtraTime={onAddExtraTime}
       focusedItemUUID={focusedItemUUID}
+      focusedItemTimeout={focusedItemTimeout}
       category={category.id}
     />
   );
@@ -56,11 +68,17 @@ export const MoodRetro = ({
     <ActionsPane
       items={items}
       onAddItem={onAddActionItem}
-      onSetDone={onSetActionDone}
+      onSetDone={onSetItemDone}
       onEdit={onEditItem}
       onDelete={onDeleteItem}
       localDateProvider={localDateProvider}
     />
+  );
+
+  const baseClassName = classNames(
+    'retro-format-mood',
+    singleColumn ? 'single-column' : 'multi-column',
+    { 'has-focused': hasFocused },
   );
 
   if (singleColumn) {
@@ -80,14 +98,14 @@ export const MoodRetro = ({
     ];
 
     return (
-      <div className="retro-format-mood single-column">
+      <div className={baseClassName}>
         <TabControl tabs={tabs} />
       </div>
     );
   }
 
   return (
-    <div className="retro-format-mood multi-column">
+    <div className={baseClassName}>
       <section className="columns">
         { CATEGORIES.map((category) => createMoodSection(category)) }
       </section>
@@ -105,7 +123,9 @@ MoodRetro.propTypes = {
   onVoteItem: PropTypes.func.isRequired,
   onEditItem: PropTypes.func.isRequired,
   onDeleteItem: PropTypes.func.isRequired,
-  onSetActionDone: PropTypes.func.isRequired,
+  onSwitchFocus: PropTypes.func.isRequired,
+  onAddExtraTime: PropTypes.func.isRequired,
+  onSetItemDone: PropTypes.func.isRequired,
 };
 
 forbidExtraProps(MoodRetro);
@@ -121,7 +141,9 @@ const mapDispatchToProps = {
   onVoteItem: upvoteItem,
   onEditItem: editItem,
   onDeleteItem: deleteItem,
-  onSetActionDone: setItemDone,
+  onSetItemDone: setItemDone,
+  onSwitchFocus: focusItem,
+  onAddExtraTime: addExtraTime,
 };
 
 export default connect(

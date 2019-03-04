@@ -33,6 +33,29 @@ export const setActiveRetro = (slug) => (dispatch) => {
     .catch(() => dispatch(loadFailed()));
 };
 
+export const setRetroState = (delta) => ({
+  type: 'RETRO_SET_STATE',
+  delta,
+});
+
+export const focusItem = (uuid) => {
+  const now = Date.now();
+  const timerDuration = 5 * 60 * 1000 + 999;
+
+  return setRetroState({
+    focusedItemUUID: uuid,
+    focusedItemTimeout: now + timerDuration,
+  });
+};
+
+export const addExtraTime = (duration) => {
+  const now = Date.now();
+
+  return setRetroState({
+    focusedItemTimeout: now + duration,
+  });
+};
+
 export const addItem = (category, message) => ({
   type: 'RETRO_ADD_ITEM',
   category,
@@ -129,6 +152,12 @@ export default (state = initialState, action) => {
     case 'RETRO_FAIL_LOAD':
       return update(state, {
         loading: { $set: false },
+      });
+    case 'RETRO_SET_STATE':
+      return update(state, {
+        retro: {
+          state: { $merge: action.delta },
+        },
       });
     case 'RETRO_ADD_ITEM': {
       const message = sanitiseInput(action.message);

@@ -12,6 +12,7 @@ const retroService = new RetroService([
     format: 'mood',
     state: {
       focusedItemUUID: null,
+      focusedItemTimeout: 0,
     },
     items: [
       {
@@ -86,6 +87,7 @@ const retroService = new RetroService([
     format: 'mood',
     state: {
       focusedItemUUID: null,
+      focusedItemTimeout: 0,
     },
     items: [],
   },
