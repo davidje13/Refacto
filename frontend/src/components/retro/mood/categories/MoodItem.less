@@ -10,7 +10,7 @@
     text-align: inherit;
     box-sizing: border-box;
     width: 100%;
-    background: none;
+    cursor: default;
   }
 
   .vote {
@@ -21,13 +21,11 @@
     height: 2.5rem;
     border-radius: 100%;
     margin-top: -1.25rem;
-    background: none;
     font-size: 0.9em;
     font-weight: bolder;
     line-height: 1.1;
     color: #000000;
     outline: none;
-    cursor: pointer;
 
     &:disabled {
       cursor: inherit;
@@ -53,8 +51,6 @@
     margin-top: -1.25rem;
     color: #BBBBBB;
     font-size: 1.5em;
-    background: none;
-    cursor: pointer;
     transform: scaleX(-1);
 
     &:hover {
@@ -94,6 +90,7 @@
 
   &.focused {
     padding: 20px 8px 8px;
+    box-shadow: 0 5px 10px -2px rgba(0, 0, 0, 0.2);
 
     .vote {
       top: 8px;
@@ -128,9 +125,7 @@
       }
 
       button {
-        background: none;
         font-size: 0.8em;
-        cursor: pointer;
         color: #808080;
       }
     }
@@ -138,7 +133,6 @@
     .cancel, .close {
       border-radius: 4px;
       font-size: 0.9em;
-      cursor: pointer;
       white-space: nowrap;
     }
 
@@ -147,7 +141,6 @@
       position: absolute;
       bottom: 8px;
       left: 8px;
-      background: none;
     }
 
     .close {
