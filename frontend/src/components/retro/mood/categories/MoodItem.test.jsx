@@ -1,58 +1,56 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 
 import { MoodItem } from './MoodItem';
 
-describe('MoodItem', () => {
-  it('displays the item message', () => {
-    const item = makeItem({ message: 'a message here' });
-    const dom = shallow(<MoodItem item={item} />);
+describe('MoodItem integration', () => {
+  const item = makeItem({ message: 'a message here', uuid: 'my-uuid', votes: 3 });
 
-    expect(dom.find('.message')).toHaveText('a message here');
+  it('displays the item message', () => {
+    const dom = mount(<MoodItem item={item} />);
+
+    expect(dom.find('.message')).toHaveText(item.message);
   });
 
   it('displays the vote count', () => {
-    const item = makeItem({ votes: 3 });
-    const dom = shallow(<MoodItem item={item} />);
+    const dom = mount(<MoodItem item={item} />);
 
     expect(dom.find('.vote')).toHaveText('3');
   });
 
   it('does not allow voting if no callback is given', () => {
-    const dom = shallow(<MoodItem item={makeItem()} />);
+    const dom = mount(<MoodItem item={makeItem()} />);
 
     expect(dom.find('.vote')).toBeDisabled();
   });
 
   it('invokes the given callback with the item UUID if voted on', () => {
     const onVote = jest.fn().mockName('onVote');
-    const item = makeItem({ uuid: 'my-uuid' });
-    const dom = shallow(<MoodItem item={item} onVote={onVote} />);
+    const dom = mount(<MoodItem item={item} onVote={onVote} />);
 
     expect(dom.find('.vote')).not.toBeDisabled();
     dom.find('.vote').simulate('click');
 
-    expect(onVote).toHaveBeenCalledWith('my-uuid');
+    expect(onVote).toHaveBeenCalledWith(item.uuid);
   });
 
   it('does not mark items as done or focused by default', () => {
-    const dom = shallow(<MoodItem item={makeItem()} />);
+    const dom = mount(<MoodItem item={makeItem()} />);
 
-    expect(dom).not.toHaveClassName('done');
-    expect(dom).not.toHaveClassName('focused');
+    expect(dom.find('.mood-item')).not.toHaveClassName('done');
+    expect(dom.find('.mood-item')).not.toHaveClassName('focused');
   });
 
   it('marks the item as done if specified', () => {
-    const item = makeItem({ done: true });
-    const dom = shallow(<MoodItem item={item} />);
+    const dom = mount(<MoodItem item={makeItem({ done: true })} />);
 
-    expect(dom).toHaveClassName('done');
+    expect(dom.find('.mood-item')).toHaveClassName('done');
   });
 
   it('marks the item as focused if specified', () => {
-    const dom = shallow(<MoodItem item={makeItem()} focused />);
+    const dom = mount(<MoodItem item={makeItem()} focused />);
 
-    expect(dom).toHaveClassName('focused');
+    expect(dom.find('.mood-item')).toHaveClassName('focused');
   });
 });

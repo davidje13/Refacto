@@ -5,7 +5,6 @@ import { TabControl } from './TabControl';
 
 function click(wrapper) {
   wrapper.simulate('click', {
-    preventDefault: () => {},
     target: {
       dataset: { key: wrapper.props()['data-key'] },
     },

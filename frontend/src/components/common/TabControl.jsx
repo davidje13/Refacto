@@ -10,7 +10,7 @@ export class TabControl extends React.PureComponent {
       key: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       className: PropTypes.string,
-      content: PropTypes.element.isRequired,
+      content: PropTypes.node.isRequired,
     })).isRequired,
   };
 
@@ -33,7 +33,6 @@ export class TabControl extends React.PureComponent {
   }
 
   handleTabClick = (e) => {
-    e.preventDefault();
     this.setState({ activeKey: e.target.dataset.key });
   };
 

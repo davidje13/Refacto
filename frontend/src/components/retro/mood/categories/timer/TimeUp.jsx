@@ -11,9 +11,7 @@ export class TimeUp extends React.PureComponent {
     onAddExtraTime: null,
   };
 
-  handleAddExtraTime = (e) => {
-    e.preventDefault();
-
+  handleAddExtraTime = () => {
     const { onAddExtraTime } = this.props;
 
     onAddExtraTime(2 * 60 * 1000 + 999);

@@ -13,6 +13,8 @@ export function makeItem(details = {}) {
     uuid: 'my-uuid',
     category: 'none',
     created: 0,
+    votes: 0,
+    done: false,
     message: 'my message',
   }, details);
 }

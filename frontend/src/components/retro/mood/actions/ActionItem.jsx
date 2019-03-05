@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
+import ItemEditing from '../ItemEditing';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 import './ActionItem.less';
@@ -67,29 +67,14 @@ export class ActionItem extends React.PureComponent {
     const { editing } = this.state;
 
     if (editing) {
-      const extraOptions = (onDelete === null) ? null : (
-        <button
-          type="button"
-          title="Delete"
-          className="delete"
-          onClick={this.handleDelete}
-        >
-          Delete
-        </button>
-      );
-
       return (
-        <div className="action-item editing">
-          <ExpandingTextEntry
-            defaultValue={item.message}
-            autoFocus /* eslint-disable-line jsx-a11y/no-autofocus */ // user triggered this
-            onSubmit={this.handleSaveEdit}
-            onCancel={this.handleCancelEdit}
-            extraOptions={extraOptions}
-            submitButtonLabel="Save"
-            submitButtonTitle="Save changes"
-          />
-        </div>
+        <ItemEditing
+          className="action-item"
+          message={item.message}
+          onSubmit={this.handleSaveEdit}
+          onCancel={this.handleCancelEdit}
+          onDelete={onDelete === null ? null : this.handleDelete}
+        />
       );
     }
 

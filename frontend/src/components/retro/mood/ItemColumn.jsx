@@ -20,11 +20,11 @@ export const ItemColumn = ({
   ...props
 }) => (
   <ul className="item-column">
-    {sortItems(items).map((item) => (
+    { sortItems(items).map((item) => (
       <li key={item.uuid}>
         <ItemType item={item} focused={item.uuid === focusedItemUUID} {...props} />
       </li>
-    ))}
+    )) }
   </ul>
 );
 

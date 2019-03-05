@@ -27,11 +27,8 @@ export class ExpandingTextEntry extends React.PureComponent {
     placeholder: PropTypes.string,
     defaultValue: PropTypes.string,
     autoFocus: PropTypes.bool,
-    extraOptions: PropTypes.element,
-    submitButtonLabel: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.string,
-    ]),
+    extraOptions: PropTypes.node,
+    submitButtonLabel: PropTypes.node,
     submitButtonTitle: PropTypes.string,
     className: PropTypes.string,
     clearAfterSubmit: PropTypes.bool,
@@ -43,7 +40,7 @@ export class ExpandingTextEntry extends React.PureComponent {
     defaultValue: '',
     autoFocus: false,
     extraOptions: null,
-    submitButtonLabel: '',
+    submitButtonLabel: null,
     submitButtonTitle: null,
     className: null,
     clearAfterSubmit: false,
@@ -177,7 +174,7 @@ export class ExpandingTextEntry extends React.PureComponent {
       contentHeightMultiline,
     } = this.state;
 
-    const multiline = Boolean(extraOptions) || (contentHeight > baseHeight);
+    const multiline = (extraOptions !== null) || (contentHeight > baseHeight);
     const height = (multiline ? contentHeightMultiline : contentHeight);
 
     return (
