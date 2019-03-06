@@ -3,9 +3,7 @@ import { Helmet } from 'react-helmet';
 
 export const NotFoundPage = () => (
   <article className="page-not-found">
-    <Helmet>
-      <title>Not Found - Refacto</title>
-    </Helmet>
+    <Helmet title="Not Found - Refacto" />
     <h1>Not Found</h1>
   </article>
 );

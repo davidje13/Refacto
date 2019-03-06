@@ -30,9 +30,7 @@ export class RetroListPage extends React.Component {
 
     return (
       <article className="page-retro-list">
-        <Helmet>
-          <title>Retros - Refacto</title>
-        </Helmet>
+        <Helmet title="Retros - Refacto" />
         {loading ? renderLoader() : (<RetroList />)}
       </article>
     );

@@ -28,9 +28,7 @@ export class RetroPage extends React.Component {
 
     return (
       <React.Fragment>
-        <Helmet>
-          <title>{slug} - Refacto</title>
-        </Helmet>
+        <Helmet title={`${slug} - Refacto`} />
         <div className="loader">Loading&hellip;</div>
       </React.Fragment>
     );
