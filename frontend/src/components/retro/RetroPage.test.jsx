@@ -6,21 +6,21 @@ import Retro from './Retro';
 
 describe('RetroPage', () => {
   it('renders a retro page', () => {
-    const dom = shallow(<RetroPage slug="abc" setActiveRetro={() => {}} />);
+    const dom = shallow(<RetroPage slug="abc" onAppear={() => {}} />);
     expect(dom.find(Retro)).toExist();
   });
 
   it('triggers a load request when displayed', () => {
-    const setActiveRetro = jest.fn().mockName('setActiveRetro');
-    shallow(<RetroPage slug="abc" setActiveRetro={setActiveRetro} />);
-    expect(setActiveRetro).toHaveBeenCalledWith('abc');
+    const onAppear = jest.fn().mockName('onAppear');
+    shallow(<RetroPage slug="abc" onAppear={onAppear} />);
+    expect(onAppear).toHaveBeenCalledWith('abc');
   });
 
   it('displays a loading message and no content while loading', () => {
     const dom = shallow((
       <RetroPage
         slug="abc"
-        setActiveRetro={() => {}}
+        onAppear={() => {}}
         loading
       />
     ));

@@ -10,6 +10,7 @@
     text-align: inherit;
     box-sizing: border-box;
     width: 100%;
+    color: #000000;
     cursor: default;
   }
 
@@ -26,10 +27,6 @@
     line-height: 1.1;
     color: #000000;
     outline: none;
-
-    &:disabled {
-      cursor: inherit;
-    }
 
     &::before {
       content: "\2665";
@@ -161,4 +158,8 @@
 
 .has-focused .mood-item:not(.focused):not(.editing):not(.done) {
   opacity: 0.7;
+}
+
+.archive .mood-item.done {
+  opacity: 1;
 }

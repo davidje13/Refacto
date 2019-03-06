@@ -6,23 +6,18 @@ import RetroList from './RetroList';
 
 describe('RetroListPage', () => {
   it('renders a retro list page', () => {
-    const dom = shallow(<RetroListPage reloadRetroList={() => {}} />);
+    const dom = shallow(<RetroListPage onAppear={() => {}} />);
     expect(dom.find(RetroList)).toExist();
   });
 
   it('triggers a load request when displayed', () => {
-    const reloadRetroList = jest.fn().mockName('reloadRetroList');
-    shallow(<RetroListPage reloadRetroList={reloadRetroList} />);
-    expect(reloadRetroList).toHaveBeenCalled();
+    const onAppear = jest.fn().mockName('onAppear');
+    shallow(<RetroListPage onAppear={onAppear} />);
+    expect(onAppear).toHaveBeenCalled();
   });
 
   it('displays a loading message and no content while loading', () => {
-    const dom = shallow((
-      <RetroListPage
-        loading
-        reloadRetroList={() => {}}
-      />
-    ));
+    const dom = shallow(<RetroListPage onAppear={() => {}} loading />);
     expect(dom).toIncludeText('Loading');
     expect(dom.find(RetroList)).not.toExist();
   });

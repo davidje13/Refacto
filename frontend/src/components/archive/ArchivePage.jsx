@@ -4,14 +4,15 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import { setActiveRetro } from '../../reducers/activeRetro';
-import Retro from './Retro';
-import './RetroPage.less';
+import { setCurrentArchive } from '../../reducers/currentArchive';
+import ArchivedRetro from './ArchivedRetro';
+import './ArchivePage.less';
 
-export class RetroPage extends React.Component {
+export class ArchivePage extends React.Component {
   static propTypes = {
     loading: PropTypes.bool,
     slug: PropTypes.string.isRequired,
+    archiveId: PropTypes.string.isRequired,
     onAppear: PropTypes.func.isRequired,
   };
 
@@ -20,8 +21,8 @@ export class RetroPage extends React.Component {
   };
 
   componentDidMount() {
-    const { onAppear, slug } = this.props;
-    onAppear(slug);
+    const { onAppear, slug, archiveId } = this.props;
+    onAppear(slug, archiveId);
   }
 
   renderLoader() {
@@ -39,25 +40,25 @@ export class RetroPage extends React.Component {
     const { loading } = this.props;
 
     return (
-      <article className="page-retro">
-        {loading ? this.renderLoader() : (<Retro />)}
+      <article className="page-archive">
+        {loading ? this.renderLoader() : (<ArchivedRetro />)}
       </article>
     );
   }
 }
 
-forbidExtraProps(RetroPage);
+forbidExtraProps(ArchivePage);
 
 const mapStateToProps = (state) => ({
-  loading: state.activeRetro.loading,
+  loading: state.currentArchive.loading,
 });
 
 const mapDispatchToProps = {
-  onAppear: setActiveRetro,
+  onAppear: setCurrentArchive,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-  mapRouteToProps({ slug: 'slug' }),
-)(RetroPage);
+  mapRouteToProps({ slug: 'slug', archiveId: 'archiveid' }),
+)(ArchivePage);

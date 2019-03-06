@@ -73,6 +73,8 @@ export class MoodSection extends React.PureComponent {
       onVote,
       onEdit,
       onDelete,
+      onSetDone,
+      onSwitchFocus,
       onAddExtraTime,
       focusedItemUUID,
       focusedItemTimeout,
@@ -99,10 +101,10 @@ export class MoodSection extends React.PureComponent {
           onVote={onVote}
           onEdit={onEdit}
           onDelete={onDelete}
-          onSelect={this.handleItemSelect}
+          onSelect={onSwitchFocus === null ? null : this.handleItemSelect}
           onAddExtraTime={onAddExtraTime}
-          onCancel={this.handleItemCancel}
-          onDone={this.handleItemDone}
+          onCancel={onSwitchFocus === null ? null : this.handleItemCancel}
+          onDone={onSetDone === null ? null : this.handleItemDone}
         />
       </section>
     );

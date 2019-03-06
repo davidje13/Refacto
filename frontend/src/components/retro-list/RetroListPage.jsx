@@ -14,7 +14,7 @@ const renderLoader = () => (
 export class RetroListPage extends React.Component {
   static propTypes = {
     loading: PropTypes.bool,
-    reloadRetroList: PropTypes.func.isRequired,
+    onAppear: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -22,7 +22,8 @@ export class RetroListPage extends React.Component {
   };
 
   componentDidMount() {
-    this.props.reloadRetroList();
+    const { onAppear } = this.props;
+    onAppear();
   }
 
   render() {
@@ -44,7 +45,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  reloadRetroList,
+  onAppear: reloadRetroList,
 };
 
 export default connect(

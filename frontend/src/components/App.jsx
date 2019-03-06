@@ -5,6 +5,7 @@ import Footer from './Footer';
 import WelcomePage from './welcome/WelcomePage';
 import RetroListPage from './retro-list/RetroListPage';
 import RetroPage from './retro/RetroPage';
+import ArchivePage from './archive/ArchivePage';
 import NotFoundPage from './not-found/NotFoundPage';
 
 export const App = () => (
@@ -13,6 +14,7 @@ export const App = () => (
       <Route path="/" exact component={WelcomePage} />
       <Route path="/retros" exact component={RetroListPage} />
       <Route path="/retros/:slug" exact component={RetroPage} />
+      <Route path="/retros/:slug/archives/:archiveid" exact component={ArchivePage} />
       <Route component={NotFoundPage} />
     </Switch>
     <Footer />

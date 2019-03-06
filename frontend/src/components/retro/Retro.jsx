@@ -1,18 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import MoodRetro from './mood/MoodRetro';
-import UnknownRetro from './unknown/UnknownRetro';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
+import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
+import {
+  addItem,
+  upvoteItem,
+  editItem,
+  deleteItem,
+  setItemDone,
+  setRetroState,
+} from '../../reducers/activeRetro';
 
-const formats = new Map();
-formats.set('mood', MoodRetro);
-
-export const Retro = ({ retro }) => {
-  const { name, format } = retro;
-
-  const RetroType = formats.get(format) || UnknownRetro;
+export const Retro = ({ retro, ...passThrough }) => {
+  const { name, state, data } = retro;
 
   return (
     <React.Fragment>
@@ -20,7 +21,7 @@ export const Retro = ({ retro }) => {
       <header>
         <h1 className="retro-name">{name}</h1>
       </header>
-      <RetroType retro={retro} />
+      <RetroFormatPicker retroData={data} retroState={state} {...passThrough} />
     </React.Fragment>
   );
 };
@@ -29,13 +30,17 @@ Retro.propTypes = {
   retro: propTypesShapeRetro.isRequired,
 };
 
-forbidExtraProps(Retro);
-
 const mapStateToProps = (state) => ({
   retro: state.activeRetro.retro,
 });
 
 const mapDispatchToProps = {
+  onAddItem: addItem,
+  onVoteItem: upvoteItem,
+  onEditItem: editItem,
+  onDeleteItem: deleteItem,
+  onSetItemDone: setItemDone,
+  onSetRetroState: setRetroState,
 };
 
 export default connect(

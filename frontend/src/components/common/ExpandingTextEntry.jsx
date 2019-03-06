@@ -71,7 +71,9 @@ export class ExpandingTextEntry extends React.PureComponent {
       contentHeightMultiline: baseHeight,
     });
 
-    if (this.state.value !== '') {
+    const { value } = this.state;
+
+    if (value !== '') {
       this.updateSize();
     }
   }

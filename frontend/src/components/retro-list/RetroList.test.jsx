@@ -12,8 +12,8 @@ describe('RetroList', () => {
 
   it('displays a list of retros', () => {
     const retros = [
-      { slug: 'a', name: 'R1' },
-      { slug: 'b', name: 'R2' },
+      { uuid: 'u1', slug: 'a', name: 'R1' },
+      { uuid: 'u2', slug: 'b', name: 'R2' },
     ];
 
     const dom = shallow(<RetroList retros={retros} />);

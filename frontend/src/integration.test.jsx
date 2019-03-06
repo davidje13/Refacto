@@ -37,6 +37,11 @@ describe('Application', () => {
     expect(dom).toContainMatchingElement('.page-retro');
   });
 
+  it('renders archive page at /retros/id/archives/id', () => {
+    const { dom } = renderApp('/retros/foobar/archives/zigzag');
+    expect(dom).toContainMatchingElement('.page-archive');
+  });
+
   it('renders not found page at unknown urls', () => {
     const { dom } = renderApp('/nope');
     expect(dom).toContainMatchingElement('.page-not-found');

@@ -12,7 +12,7 @@ export const MoodItemPlain = ({
   onEdit,
 }) => (
   <div className={classNames('mood-item', { done: item.done })}>
-    <button type="button" className="message" onClick={onSelect}>
+    <button type="button" className="message" onClick={onSelect} disabled={onSelect === null}>
       { item.message }
     </button>
     <VoteCount votes={item.votes} onVote={onVote} />

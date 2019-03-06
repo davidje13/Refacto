@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { makeRetro } from '../../../test-helpers/dataFactories';
+import { makeRetroData } from '../../../test-helpers/dataFactories';
 
 import { MoodRetro } from './MoodRetro';
 import LocalDateProvider from '../../../time/LocalDateProvider';
 
-const emptyRetro = makeRetro({ format: 'mood' });
+const emptyRetroData = makeRetroData({ format: 'mood' });
 
 describe('MoodRetro', () => {
   const localDateProvider = new LocalDateProvider(0);
@@ -13,17 +13,17 @@ describe('MoodRetro', () => {
   it('renders without error', () => {
     const dom = shallow((
       <MoodRetro
-        retro={emptyRetro}
+        retroData={emptyRetroData}
+        retroState={{}}
         localDateProvider={localDateProvider}
         singleColumn={false}
-        onAddMoodItem={() => {}}
-        onAddActionItem={() => {}}
+        archive={false}
+        onAddItem={() => {}}
         onVoteItem={() => {}}
         onEditItem={() => {}}
         onDeleteItem={() => {}}
         onSetItemDone={() => {}}
-        onSwitchFocus={() => {}}
-        onAddExtraTime={() => {}}
+        onSetRetroState={() => {}}
       />
     ));
     expect(dom).toExist();

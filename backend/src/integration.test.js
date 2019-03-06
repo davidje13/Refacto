@@ -13,10 +13,27 @@ describe('Server', () => {
     });
   });
 
+  describe('/api/slugs/slug', () => {
+    it('responds with a retro UUID', async () => {
+      const response = await request(app)
+        .get('/api/slugs/my-retro')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.uuid).toEqual('r1');
+    });
+
+    it('responds HTTP Not Found for unknown slugs', async () => {
+      await request(app)
+        .get('/api/slugs/nope')
+        .expect(404);
+    });
+  });
+
   describe('/api/retros/retro-id', () => {
     it('responds with retros in JSON format', async () => {
       const response = await request(app)
-        .get('/api/retros/my-retro')
+        .get('/api/retros/r1')
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -26,6 +43,30 @@ describe('Server', () => {
     it('responds HTTP Not Found for unknown IDs', async () => {
       await request(app)
         .get('/api/retros/nope')
+        .expect(404);
+    });
+  });
+
+  describe('/api/retros/retro-id/archives/archive-id', () => {
+    it('responds with retro archives in JSON format', async () => {
+      const response = await request(app)
+        .get('/api/retros/r1/archives/a1')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.data.items.length).toBeGreaterThan(0);
+      expect(response.body.retro.name).toEqual('My Retro');
+    });
+
+    it('responds HTTP Not Found for unknown IDs', async () => {
+      await request(app)
+        .get('/api/retros/r1/archives/nope')
+        .expect(404);
+    });
+
+    it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
+      await request(app)
+        .get('/api/retros/r2/archives/a1')
         .expect(404);
     });
   });

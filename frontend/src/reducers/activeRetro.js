@@ -25,36 +25,26 @@ const loadFailed = () => ({
   error: 'Failed to load retro.',
 });
 
-export const setActiveRetro = (slug) => (dispatch) => {
+export const setActiveRetro = (slug) => async (dispatch) => {
   dispatch(beginLoad());
-  fetch(`${API_BASE}/retros/${slug}`)
-    .then((data) => data.json())
-    .then((data) => dispatch(setData(data)))
-    .catch(() => dispatch(loadFailed()));
+
+  try {
+    const slugInfo = await fetch(`${API_BASE}/slugs/${slug}`)
+      .then((data) => data.json());
+
+    const retroInfo = await fetch(`${API_BASE}/retros/${slugInfo.uuid}`)
+      .then((data) => data.json());
+
+    dispatch(setData(retroInfo));
+  } catch (e) {
+    dispatch(loadFailed());
+  }
 };
 
 export const setRetroState = (delta) => ({
   type: 'RETRO_SET_STATE',
   delta,
 });
-
-export const focusItem = (uuid) => {
-  const now = Date.now();
-  const timerDuration = 5 * 60 * 1000 + 999;
-
-  return setRetroState({
-    focusedItemUUID: uuid,
-    focusedItemTimeout: now + timerDuration,
-  });
-};
-
-export const addExtraTime = (duration) => {
-  const now = Date.now();
-
-  return setRetroState({
-    focusedItemTimeout: now + duration,
-  });
-};
 
 export const addItem = (category, message) => ({
   type: 'RETRO_ADD_ITEM',
@@ -86,11 +76,15 @@ export const upvoteItem = (uuid) => ({
 
 const initialState = {
   retro: {
+    uuid: '',
     slug: '',
     name: '',
-    format: '',
     state: {},
-    items: [],
+    data: {
+      format: '',
+      items: [],
+    },
+    archives: [],
   },
   loading: false,
 };
@@ -107,7 +101,7 @@ function makeItem(category, message) {
 }
 
 function itemIndexByUuid(state, uuid) {
-  return state.retro.items.findIndex((item) => (item.uuid === uuid));
+  return state.retro.data.items.findIndex((item) => (item.uuid === uuid));
 }
 
 function updateItemByUuid(state, uuid, delta) {
@@ -118,8 +112,10 @@ function updateItemByUuid(state, uuid, delta) {
 
   return update(state, {
     retro: {
-      items: {
-        [index]: delta,
+      data: {
+        items: {
+          [index]: delta,
+        },
       },
     },
   });
@@ -133,7 +129,9 @@ function removeItemByUuid(state, uuid) {
 
   return update(state, {
     retro: {
-      items: { $splice: [[index, 1]] },
+      data: {
+        items: { $splice: [[index, 1]] },
+      },
     },
   });
 }
@@ -166,7 +164,9 @@ export default (state = initialState, action) => {
       }
       return update(state, {
         retro: {
-          items: { $push: [makeItem(action.category, message)] },
+          data: {
+            items: { $push: [makeItem(action.category, message)] },
+          },
         },
       });
     }
