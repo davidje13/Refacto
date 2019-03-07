@@ -1,12 +1,21 @@
-const DATE_FORMATTER = new Intl.DateTimeFormat(
-  undefined,
-  { day: 'numeric', month: 'long', year: 'numeric' },
-);
+const DATE_FORMATTER = new Intl.DateTimeFormat(undefined, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 
-const TIME_FORMATTER = new Intl.DateTimeFormat(
-  undefined,
-  { hour: '2-digit', minute: '2-digit' },
-);
+const TIME_FORMATTER = new Intl.DateTimeFormat(undefined, {
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+const DATETIME_FORMATTER = new Intl.DateTimeFormat(undefined, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
 
 function wrap(timestamp) {
   if (typeof timestamp === 'object') {
@@ -21,4 +30,8 @@ export function formatDate(timestamp) {
 
 export function formatTime(timestamp) {
   return TIME_FORMATTER.format(wrap(timestamp));
+}
+
+export function formatDateTime(timestamp) {
+  return DATETIME_FORMATTER.format(wrap(timestamp));
 }

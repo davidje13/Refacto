@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
@@ -13,6 +14,7 @@ export const ArchivedRetro = ({ archive }) => {
       <Helmet title={`${retro.name} [Archive] - Refacto`} />
       <header>
         <h1 className="retro-name">{retro.name} Archive</h1>
+        <Link className="back" to={`/retros/${retro.slug}/archives`}>Archives</Link>
       </header>
       <RetroFormatPicker retroData={data} retroState={{}} archive />
     </React.Fragment>

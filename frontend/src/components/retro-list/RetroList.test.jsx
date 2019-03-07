@@ -7,6 +7,7 @@ import RetroLink from './RetroLink';
 describe('RetroList', () => {
   it('displays a message if there are no retros', () => {
     const dom = shallow(<RetroList retros={[]} />);
+
     expect(dom).toIncludeText('do not have any retros');
   });
 

@@ -5,7 +5,7 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 
 export const RetroLink = ({ name, slug }) => (
   <Link to={`/retros/${slug}`}>
-    <div className="retro-link">{name}</div>
+    <div className="retro-link">{ name }</div>
   </Link>
 );
 
