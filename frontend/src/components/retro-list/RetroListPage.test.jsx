@@ -5,13 +5,14 @@ import { mount } from 'enzyme';
 import { RetroListPage } from './RetroListPage';
 import RetroList from './RetroList';
 
-jest.mock('./RetroList');
+jest.mock('./RetroList', () => () => (<div />));
 
 describe('RetroListPage', () => {
   it('renders a retro list page', () => {
+    const retrosData = { retros: [], error: null };
     const dom = mount((
       <HelmetProvider>
-        <RetroListPage onAppear={() => {}} />
+        <RetroListPage retrosData={retrosData} onAppear={() => {}} />
       </HelmetProvider>
     ));
     expect(dom.find(RetroList)).toExist();

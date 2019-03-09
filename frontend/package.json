@@ -20,6 +20,7 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "@neutrinojs/airbnb": "^9.0.0-rc.0",
     "@neutrinojs/copy": "^9.0.0-rc.0",
     "@neutrinojs/jest": "^9.0.0-rc.0",
@@ -29,7 +30,6 @@
     "eslint": "^5.15.1",
     "jest": "^23.6.0",
     "jest-enzyme": "^7.0.1",
-    "jest-fetch-mock": "^2.1.1",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "neutrino": "^9.0.0-rc.0",

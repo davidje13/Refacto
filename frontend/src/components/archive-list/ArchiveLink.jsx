@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { formatDateTime } from '../../time/formatters';
 
-export const ArchiveLink = ({ slug, uuid, created }) => (
-  <Link to={`/retros/${slug}/archives/${uuid}`}>
+export const ArchiveLink = ({ retroSlug, archiveId, created }) => (
+  <Link to={`/retros/${retroSlug}/archives/${archiveId}`}>
     <div className="archive-link">{ formatDateTime(created) }</div>
   </Link>
 );
 
 ArchiveLink.propTypes = {
-  slug: PropTypes.string.isRequired,
-  uuid: PropTypes.string.isRequired,
+  retroSlug: PropTypes.string.isRequired,
+  archiveId: PropTypes.string.isRequired,
   created: PropTypes.number.isRequired,
 };
 

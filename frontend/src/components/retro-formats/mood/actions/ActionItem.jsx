@@ -32,7 +32,7 @@ export class ActionItem extends React.PureComponent {
   handleSetDone = (done) => {
     const { item, onSetDone } = this.props;
 
-    onSetDone(item.uuid, done);
+    onSetDone(item.id, done);
   };
 
   handleBeginEdit = () => {
@@ -47,13 +47,13 @@ export class ActionItem extends React.PureComponent {
     const { item, onEdit } = this.props;
 
     this.setState({ editing: false });
-    onEdit(item.uuid, message);
+    onEdit(item.id, message);
   };
 
   handleDelete = () => {
     const { item, onDelete } = this.props;
 
-    onDelete(item.uuid);
+    onDelete(item.id);
   };
 
   render() {
@@ -85,7 +85,7 @@ export class ActionItem extends React.PureComponent {
           type="button"
           title={item.done ? 'Mark as not done' : 'Mark as done'}
           className="toggle-done"
-          disabled={onSetDone === null}
+          disabled={!onSetDone}
           onClick={item.done ? this.handleDoneFalse : this.handleDoneTrue}
         />
         { (onEdit === null) ? null : (

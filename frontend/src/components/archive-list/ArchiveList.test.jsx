@@ -17,21 +17,21 @@ describe('ArchiveList', () => {
     const retro = makeRetro({
       slug: 'foo',
       archives: [
-        { uuid: 'a1', created: 10 },
-        { uuid: 'a2', created: 0 },
+        { id: 'a1', created: 10 },
+        { id: 'a2', created: 0 },
       ],
     });
 
     const dom = shallow(<ArchiveList retro={retro} />);
 
     expect(dom.find(ArchiveLink).at(0)).toHaveProp({
-      slug: 'foo',
-      uuid: 'a1',
+      retroSlug: 'foo',
+      archiveId: 'a1',
       created: 10,
     });
     expect(dom.find(ArchiveLink).at(1)).toHaveProp({
-      slug: 'foo',
-      uuid: 'a2',
+      retroSlug: 'foo',
+      archiveId: 'a2',
       created: 0,
     });
     expect(dom).not.toIncludeText('has no archives');
@@ -41,16 +41,16 @@ describe('ArchiveList', () => {
     const retro = makeRetro({
       slug: 'foo',
       archives: [
-        { uuid: 'a1', created: 100 },
-        { uuid: 'a2', created: 0 },
-        { uuid: 'a3', created: 10 },
+        { id: 'a1', created: 100 },
+        { id: 'a2', created: 0 },
+        { id: 'a3', created: 10 },
       ],
     });
 
     const dom = shallow(<ArchiveList retro={retro} />);
 
-    expect(dom.find(ArchiveLink).at(0)).toHaveProp({ uuid: 'a1' });
-    expect(dom.find(ArchiveLink).at(1)).toHaveProp({ uuid: 'a3' });
-    expect(dom.find(ArchiveLink).at(2)).toHaveProp({ uuid: 'a2' });
+    expect(dom.find(ArchiveLink).at(0)).toHaveProp({ archiveId: 'a1' });
+    expect(dom.find(ArchiveLink).at(1)).toHaveProp({ archiveId: 'a3' });
+    expect(dom.find(ArchiveLink).at(2)).toHaveProp({ archiveId: 'a2' });
   });
 });

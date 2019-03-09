@@ -1,5 +1,3 @@
-import update from 'immutability-helper';
-
 const API_BASE = '/api';
 
 const beginLoad = () => ({
@@ -18,33 +16,28 @@ const loadFailed = () => ({
 
 export const reloadRetroList = () => (dispatch) => {
   dispatch(beginLoad());
-  fetch(`${API_BASE}/retros`)
+  global.fetch(`${API_BASE}/retros`)
     .then((data) => data.json())
     .then((data) => dispatch(setData(data.retros)))
     .catch(() => dispatch(loadFailed()));
 };
 
-const initialState = {
-  loading: false,
-  retros: [],
-};
+const initialState = null;
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'RETRO_LIST_BEGIN_LOAD':
-      return update(state, {
-        retros: { $set: [] },
-        loading: { $set: true },
-      });
+      return initialState;
     case 'RETRO_LIST_SET':
-      return update(state, {
-        retros: { $set: action.retros },
-        loading: { $set: false },
-      });
+      return {
+        retros: action.retros,
+        error: null,
+      };
     case 'RETRO_LIST_FAIL_LOAD':
-      return update(state, {
-        loading: { $set: false },
-      });
+      return {
+        retros: null,
+        error: action.error,
+      };
     default:
       return state;
   }

@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
+import { makeRetro, makeArchive } from './test-helpers/dataFactories';
 
 import store from './reducers/store';
 import App from './components/App';
@@ -31,17 +32,35 @@ describe('Application', () => {
   });
 
   it('renders retro list page at /retros/', () => {
+    global.fetch.mockExpect('/api/retros')
+      .andRespondJsonOk({ retros: [] });
+
     const { dom } = renderApp('/retros/');
     expect(dom).toContainMatchingElement('.page-retro-list');
   });
 
   it('renders retro page at /retros/id', () => {
-    const { dom } = renderApp('/retros/foobar');
+    global.fetch.mockExpect('/api/slugs/slug-foobar')
+      .andRespondJsonOk({ id: 'id-foobar' });
+
+    global.fetch.mockExpect('/api/retros/id-foobar')
+      .andRespondJsonOk(makeRetro({ id: 'id-foobar' }));
+
+    const { dom } = renderApp('/retros/slug-foobar');
     expect(dom).toContainMatchingElement('.page-retro');
   });
 
   it('renders archive page at /retros/id/archives/id', () => {
-    const { dom } = renderApp('/retros/foobar/archives/zigzag');
+    global.fetch.mockExpect('/api/slugs/slug-foobar')
+      .andRespondJsonOk({ id: 'id-foobar' });
+
+    global.fetch.mockExpect('/api/retros/id-foobar')
+      .andRespondJsonOk(makeRetro({ id: 'id-foobar' }));
+
+    global.fetch.mockExpect('/api/retros/id-foobar/archives/zigzag')
+      .andRespondJsonOk(makeArchive());
+
+    const { dom } = renderApp('/retros/slug-foobar/archives/zigzag');
     expect(dom).toContainMatchingElement('.page-archive');
   });
 

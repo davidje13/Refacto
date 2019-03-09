@@ -10,7 +10,7 @@ describe('ArchiveLink', () => {
     const context = {};
     const dom = mount((
       <StaticRouter location="/" context={context}>
-        <ArchiveLink slug="bar" uuid="a1" created={0} />
+        <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />
       </StaticRouter>
     ));
 
@@ -21,7 +21,7 @@ describe('ArchiveLink', () => {
   it('displays the time of the archive', () => {
     const dom = mount((
       <StaticRouter location="/" context={{}}>
-        <ArchiveLink slug="bar" uuid="a1" created={0} />
+        <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />
       </StaticRouter>
     ));
 

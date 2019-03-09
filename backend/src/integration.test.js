@@ -14,13 +14,13 @@ describe('Server', () => {
   });
 
   describe('/api/slugs/slug', () => {
-    it('responds with a retro UUID', async () => {
+    it('responds with a retro ID', async () => {
       const response = await request(app)
         .get('/api/slugs/my-retro')
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      expect(response.body.uuid).toEqual('r1');
+      expect(response.body.id).toEqual('r1');
     });
 
     it('responds HTTP Not Found for unknown slugs', async () => {
@@ -55,7 +55,6 @@ describe('Server', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body.data.items.length).toBeGreaterThan(0);
-      expect(response.body.retro.name).toEqual('My Retro');
     });
 
     it('responds HTTP Not Found for unknown IDs', async () => {

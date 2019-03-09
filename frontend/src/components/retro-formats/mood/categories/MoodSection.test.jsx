@@ -14,11 +14,11 @@ describe('MoodSection', () => {
     expect(dom.find('h2')).toHaveText('woo');
   });
 
-  it('propagates focused UUID', () => {
-    const dom = shallow(<MoodSection category="" items={[]} focusedItemUUID="b" />);
+  it('propagates focused ID', () => {
+    const dom = shallow(<MoodSection category="" items={[]} focusedItemId="b" />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
-      focusedItemUUID: 'b',
+      focusedItemId: 'b',
     });
   });
 

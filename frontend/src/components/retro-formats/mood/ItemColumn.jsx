@@ -16,13 +16,13 @@ function sortItems(items) {
 export const ItemColumn = ({
   items,
   ItemType,
-  focusedItemUUID,
+  focusedItemId,
   ...props
 }) => (
   <ul className="item-column">
     { sortItems(items).map((item) => (
-      <li key={item.uuid}>
-        <ItemType item={item} focused={item.uuid === focusedItemUUID} {...props} />
+      <li key={item.id}>
+        <ItemType item={item} focused={item.id === focusedItemId} {...props} />
       </li>
     )) }
   </ul>
@@ -31,11 +31,11 @@ export const ItemColumn = ({
 ItemColumn.propTypes = {
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   ItemType: PropTypes.elementType.isRequired,
-  focusedItemUUID: PropTypes.string,
+  focusedItemId: PropTypes.string,
 };
 
 ItemColumn.defaultProps = {
-  focusedItemUUID: null,
+  focusedItemId: null,
 };
 
 export default ItemColumn;

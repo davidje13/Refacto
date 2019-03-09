@@ -7,18 +7,18 @@ const now = Date.now();
 
 const retroService = new RetroService([
   {
-    uuid: 'r1',
+    id: 'r1',
     slug: 'my-retro',
     name: 'My Retro',
     state: {
-      focusedItemUUID: null,
+      focusedItemId: null,
       focusedItemTimeout: 0,
     },
     data: {
       format: 'mood',
       items: [
         {
-          uuid: 'a1',
+          id: 'a1',
           category: 'happy',
           created: now - 199000,
           message: 'This is good.',
@@ -26,7 +26,7 @@ const retroService = new RetroService([
           done: false,
         },
         {
-          uuid: 'b2',
+          id: 'b2',
           category: 'happy',
           created: now - 198000,
           message: 'This is also good, and popular.',
@@ -34,7 +34,7 @@ const retroService = new RetroService([
           done: false,
         },
         {
-          uuid: 'c3',
+          id: 'c3',
           category: 'meh',
           created: now - 197000,
           message: 'This is alright and has been discussed.',
@@ -42,7 +42,7 @@ const retroService = new RetroService([
           done: true,
         },
         {
-          uuid: 'd4',
+          id: 'd4',
           category: 'sad',
           created: now - 196000,
           message: 'This is not ok.',
@@ -50,7 +50,7 @@ const retroService = new RetroService([
           done: false,
         },
         {
-          uuid: 'e5',
+          id: 'e5',
           category: 'action',
           created: now - 195000,
           message: 'This is an action which has not been done.',
@@ -58,7 +58,7 @@ const retroService = new RetroService([
           done: false,
         },
         {
-          uuid: 'f6',
+          id: 'f6',
           category: 'action',
           created: now - 194000,
           message: 'This is an action which has been done.',
@@ -66,7 +66,7 @@ const retroService = new RetroService([
           done: true,
         },
         {
-          uuid: 'g7',
+          id: 'g7',
           category: 'action',
           created: now - (86400000 * 7),
           message: 'This is an outstanding action from the last retro.',
@@ -74,7 +74,7 @@ const retroService = new RetroService([
           done: false,
         },
         {
-          uuid: 'h8',
+          id: 'h8',
           category: 'action',
           created: now - (86400000 * 8),
           message: 'This is an outstanding action from the distant past.',
@@ -85,13 +85,13 @@ const retroService = new RetroService([
     },
     archives: [
       {
-        uuid: 'a1',
+        id: 'a1',
         created: now - (86400000 * 10),
         data: {
           format: 'mood',
           items: [
             {
-              uuid: 'z9',
+              id: 'z9',
               category: 'happy',
               created: now - (86400000 * 10) - 198000,
               message: 'An archived happy item.',
@@ -99,7 +99,7 @@ const retroService = new RetroService([
               done: false,
             },
             {
-              uuid: 'y8',
+              id: 'y8',
               category: 'sad',
               created: now - (86400000 * 10) - 199000,
               message: 'An archived, completed, sad item.',
@@ -107,7 +107,7 @@ const retroService = new RetroService([
               done: true,
             },
             {
-              uuid: 'x7',
+              id: 'x7',
               category: 'action',
               created: now - (86400000 * 10) - 197000,
               message: 'An archived action.',
@@ -118,7 +118,7 @@ const retroService = new RetroService([
         },
       },
       {
-        uuid: 'b2',
+        id: 'b2',
         created: now - (86400000 * 12),
         data: {
           format: 'mood',
@@ -128,11 +128,11 @@ const retroService = new RetroService([
     ],
   },
   {
-    uuid: 'r2',
+    id: 'r2',
     slug: 'my-second-retro',
     name: 'My Second Retro',
     state: {
-      focusedItemUUID: null,
+      focusedItemId: null,
       focusedItemTimeout: 0,
     },
     data: {
@@ -141,7 +141,7 @@ const retroService = new RetroService([
     },
     archives: [
       {
-        uuid: 'a3',
+        id: 'a3',
         created: now - (86400000 * 10),
         data: {
           format: 'mood',
@@ -151,7 +151,7 @@ const retroService = new RetroService([
     ],
   },
   {
-    uuid: 'r3',
+    id: 'r3',
     slug: 'unknown-retro',
     name: 'An Unknown Retro Format',
     state: {},

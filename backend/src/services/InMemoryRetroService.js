@@ -3,8 +3,8 @@ function sleep(millis) {
   return new Promise((resolve) => setTimeout(resolve, millis));
 }
 
-const filterSummaryInformation = ({ uuid, slug, name }) => ({ uuid, slug, name });
-const filterArchiveSummaryInformation = ({ uuid, created }) => ({ uuid, created });
+const filterSummaryInformation = ({ id, slug, name }) => ({ id, slug, name });
+const filterArchiveSummaryInformation = ({ id, created }) => ({ id, created });
 
 const filterRetroInformation = (retro) => {
   const { archives, ...rest } = retro;
@@ -15,10 +15,6 @@ const filterRetroInformation = (retro) => {
   };
 };
 
-function findArchiveById(retro, uuid) {
-  return retro.archives.find((archive) => (archive.uuid === uuid));
-}
-
 export default class InMemoryRetroService {
   constructor(initialData = []) {
     this.data = initialData;
@@ -28,8 +24,8 @@ export default class InMemoryRetroService {
     return this.data.find((retro) => (retro.slug === slug));
   }
 
-  findRetroById(uuid) {
-    return this.data.find((retro) => (retro.uuid === uuid));
+  findRetroById(id) {
+    return this.data.find((retro) => (retro.id === id));
   }
 
   async getRetroIdForSlug(slug) {
@@ -38,7 +34,7 @@ export default class InMemoryRetroService {
     if (!retro) {
       return null;
     }
-    return retro.uuid;
+    return retro.id;
   }
 
   async getRetroList() {
@@ -61,12 +57,6 @@ export default class InMemoryRetroService {
     if (!retro) {
       return null;
     }
-    const archive = findArchiveById(retro, archiveid);
-    if (!archive) {
-      return null;
-    }
-    return Object.assign({
-      retro: filterSummaryInformation(retro),
-    }, archive);
+    return retro.archives.find((archive) => (archive.id === archiveid)) || null;
   }
 }

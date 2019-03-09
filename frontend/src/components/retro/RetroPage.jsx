@@ -2,51 +2,73 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../common/Loader';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
+import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import { setActiveRetro } from '../../reducers/activeRetro';
+import modifyParameters, { prefixProps } from '../../helpers/modifyParameters';
+import {
+  beginConsumingRetro,
+  endConsumingRetro,
+  setRetroState,
+} from '../../reducers/retro';
+import {
+  addRetroItem,
+  upvoteRetroItem,
+  editRetroItem,
+  deleteRetroItem,
+  setRetroItemDone,
+} from '../../reducers/retroItems';
 import Retro from './Retro';
 import './RetroPage.less';
 
 export class RetroPage extends React.Component {
   static propTypes = {
-    loading: PropTypes.bool,
     slug: PropTypes.string.isRequired,
-    onAppear: PropTypes.func.isRequired,
+    data: PropTypes.shape({
+      retro: propTypesShapeRetro,
+      error: PropTypes.string,
+    }),
   };
 
   static defaultProps = {
-    loading: false,
+    data: null,
   };
 
-  handleAppear = () => {
-    const { onAppear, slug } = this.props;
-    onAppear(slug);
-  };
+  constructor(props) {
+    super(props);
+
+    this.handlers = modifyParameters(this, prefixProps('slug'));
+  }
 
   render() {
-    const { loading, slug } = this.props;
+    const { slug, data } = this.props;
+
     return (
       <article className="page-retro">
         <Loader
-          loading={loading}
+          loading={!data}
           loadingTitle={`${slug} - Refacto`}
           Component={Retro}
-          onAppear={this.handleAppear}
+          retro={data?.retro}
+          {...this.handlers}
         />
       </article>
     );
   }
 }
 
-forbidExtraProps(RetroPage);
-
-const mapStateToProps = (state) => ({
-  loading: state.activeRetro.loading,
+const mapStateToProps = (state, { match }) => ({
+  data: state.retros[match.params.slug] || null,
 });
 
 const mapDispatchToProps = {
-  onAppear: setActiveRetro,
+  onAppear: beginConsumingRetro,
+  onDisappear: endConsumingRetro,
+  onAddItem: addRetroItem,
+  onVoteItem: upvoteRetroItem,
+  onEditItem: editRetroItem,
+  onDeleteItem: deleteRetroItem,
+  onSetItemDone: setRetroItemDone,
+  onSetRetroState: setRetroState,
 };
 
 export default connect(

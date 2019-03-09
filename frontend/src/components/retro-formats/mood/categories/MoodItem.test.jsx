@@ -5,7 +5,7 @@ import { makeItem } from '../../../../test-helpers/dataFactories';
 import { MoodItem } from './MoodItem';
 
 describe('MoodItem integration', () => {
-  const item = makeItem({ message: 'a message here', uuid: 'my-uuid', votes: 3 });
+  const item = makeItem({ message: 'a message here', id: 'my-id', votes: 3 });
 
   it('displays the item message', () => {
     const dom = mount(<MoodItem item={item} />);
@@ -25,14 +25,14 @@ describe('MoodItem integration', () => {
     expect(dom.find('.vote')).toBeDisabled();
   });
 
-  it('invokes the given callback with the item UUID if voted on', () => {
+  it('invokes the given callback with the item ID if voted on', () => {
     const onVote = jest.fn().mockName('onVote');
     const dom = mount(<MoodItem item={item} onVote={onVote} />);
 
     expect(dom.find('.vote')).not.toBeDisabled();
     dom.find('.vote').simulate('click');
 
-    expect(onVote).toHaveBeenCalledWith(item.uuid);
+    expect(onVote).toHaveBeenCalledWith(item.id);
   });
 
   it('does not mark items as done or focused by default', () => {

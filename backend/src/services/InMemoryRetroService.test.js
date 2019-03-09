@@ -6,7 +6,7 @@ describe('InMemoryRetroService', () => {
   beforeEach(() => {
     service = new InMemoryRetroService([
       {
-        uuid: 'r1',
+        id: 'r1',
         slug: 'my-retro',
         name: 'My Retro',
         state: {},
@@ -17,7 +17,7 @@ describe('InMemoryRetroService', () => {
         archives: [],
       },
       {
-        uuid: 'r2',
+        id: 'r2',
         slug: 'my-second-retro',
         name: 'My Second Retro',
         state: { someRetroSpecificState: true },
@@ -28,24 +28,24 @@ describe('InMemoryRetroService', () => {
           ],
         },
         archives: [
-          { uuid: 'a1', created: 123, more: 'foo' },
-          { uuid: 'a2', created: 456, more: 'bar' },
+          { id: 'a1', created: 123, more: 'foo' },
+          { id: 'a2', created: 456, more: 'bar' },
         ],
       },
     ]);
   });
 
   describe('getRetroIdForSlug', () => {
-    it('returns a retro UUID for the given slug', async () => {
-      const uuid = await service.getRetroIdForSlug('my-second-retro');
+    it('returns a retro ID for the given slug', async () => {
+      const id = await service.getRetroIdForSlug('my-second-retro');
 
-      expect(uuid).toEqual('r2');
+      expect(id).toEqual('r2');
     });
 
     it('returns null if the slug is not found', async () => {
-      const uuid = await service.getRetroIdForSlug('nope');
+      const id = await service.getRetroIdForSlug('nope');
 
-      expect(uuid).toEqual(null);
+      expect(id).toEqual(null);
     });
   });
 
@@ -55,7 +55,7 @@ describe('InMemoryRetroService', () => {
 
       expect(retros.length).toEqual(2);
       expect(retros[0]).toEqual({
-        uuid: 'r1',
+        id: 'r1',
         slug: 'my-retro',
         name: 'My Retro',
       });
@@ -63,7 +63,7 @@ describe('InMemoryRetroService', () => {
   });
 
   describe('getRetro', () => {
-    it('returns the requested retro by uuid', async () => {
+    it('returns the requested retro by ID', async () => {
       const retro = await service.getRetro('r2');
 
       expect(retro).not.toBeNull();
@@ -84,10 +84,10 @@ describe('InMemoryRetroService', () => {
 
       expect(retro).not.toBeNull();
       expect(retro.archives.length).toEqual(2);
-      expect(retro.archives[0]).toEqual({ uuid: 'a1', created: 123 });
+      expect(retro.archives[0]).toEqual({ id: 'a1', created: 123 });
     });
 
-    it('returns null if the UUID is not found', async () => {
+    it('returns null if the ID is not found', async () => {
       const retro = await service.getRetro('nope');
 
       expect(retro).toBeNull();
@@ -95,22 +95,11 @@ describe('InMemoryRetroService', () => {
   });
 
   describe('getRetroArchive', () => {
-    it('returns the requested retro archive by uuid', async () => {
+    it('returns the requested retro archive by ID', async () => {
       const archive = await service.getRetroArchive('r2', 'a1');
 
       expect(archive).not.toBeNull();
       expect(archive.created).toEqual(123);
-    });
-
-    it('includes summary retro details', async () => {
-      const archive = await service.getRetroArchive('r2', 'a1');
-
-      expect(archive).not.toBeNull();
-      expect(archive.retro).toEqual({
-        uuid: 'r2',
-        slug: 'my-second-retro',
-        name: 'My Second Retro',
-      });
     });
 
     it('returns null if the archive is not in the retro', async () => {

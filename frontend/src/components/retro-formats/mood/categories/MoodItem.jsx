@@ -40,7 +40,7 @@ export class MoodItem extends React.PureComponent {
 
   handleVote = () => {
     const { item, onVote } = this.props;
-    onVote(item.uuid);
+    onVote(item.id);
   };
 
   handleBeginEdit = () => {
@@ -55,27 +55,27 @@ export class MoodItem extends React.PureComponent {
     this.setState({ editing: false });
 
     const { item, onEdit } = this.props;
-    onEdit(item.uuid, message);
+    onEdit(item.id, message);
   };
 
   handleDelete = () => {
     const { item, onDelete } = this.props;
-    onDelete(item.uuid);
+    onDelete(item.id);
   };
 
   handleSelect = () => {
     const { item, onSelect } = this.props;
-    onSelect(item.uuid);
+    onSelect(item.id);
   };
 
   handleCancelFocus = () => {
     const { item, onCancel } = this.props;
-    onCancel(item.uuid);
+    onCancel(item.id);
   };
 
   handleDone = () => {
     const { item, onDone } = this.props;
-    onDone(item.uuid);
+    onDone(item.id);
   };
 
   render() {

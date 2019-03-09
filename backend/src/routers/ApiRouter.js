@@ -9,7 +9,7 @@ export default class ApiRouter extends express.Router {
       const retroid = await retroService.getRetroIdForSlug(slug);
 
       if (retroid !== null) {
-        res.json({ uuid: retroid });
+        res.json({ id: retroid });
       } else {
         res.status(404).end();
       }

@@ -6,6 +6,8 @@ export class Loader extends React.PureComponent {
   static propTypes = {
     Component: PropTypes.elementType.isRequired,
     loadingTitle: PropTypes.string,
+    loadedTitle: PropTypes.string,
+    title: PropTypes.string,
     loadingMessage: PropTypes.node,
     loading: PropTypes.bool,
     onAppear: PropTypes.func,
@@ -14,6 +16,8 @@ export class Loader extends React.PureComponent {
 
   static defaultProps = {
     loadingTitle: null,
+    loadedTitle: null,
+    title: null,
     loadingMessage: 'Loading\u2026',
     loading: false,
     onAppear: () => {},
@@ -34,6 +38,8 @@ export class Loader extends React.PureComponent {
     const {
       Component,
       loadingTitle,
+      loadedTitle,
+      title,
       loadingMessage,
       loading,
       onAppear,
@@ -41,12 +47,17 @@ export class Loader extends React.PureComponent {
       ...props
     } = this.props;
 
-    if (loading) {
-      let helmet = null;
-      if (loadingTitle !== null) {
-        helmet = (<Helmet title={loadingTitle} />);
-      }
+    let resolvedTitle = (loading ? loadingTitle : loadedTitle);
+    if (resolvedTitle === null) {
+      resolvedTitle = title;
+    }
 
+    let helmet = null;
+    if (resolvedTitle !== null) {
+      helmet = (<Helmet title={resolvedTitle} />);
+    }
+
+    if (loading) {
       return (
         <div className="loader">
           { helmet }
@@ -55,7 +66,12 @@ export class Loader extends React.PureComponent {
       );
     }
 
-    return (<Component {...props} />);
+    return (
+      <React.Fragment>
+        { helmet }
+        <Component {...props} />
+      </React.Fragment>
+    );
   }
 }
 

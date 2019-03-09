@@ -6,43 +6,37 @@ import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
+import { propTypesShapeRetroSummary } from '../../helpers/dataStructurePropTypes';
 import RetroList from './RetroList';
 
-export class RetroListPage extends React.Component {
-  static propTypes = {
-    loading: PropTypes.bool,
-    onAppear: PropTypes.func.isRequired,
-  };
+export const RetroListPage = ({ retrosData, onAppear }) => (
+  <article className="page-retro-list">
+    <Helmet title="Retros - Refacto" />
+    <Loader
+      loading={!retrosData}
+      Component={RetroList}
+      onAppear={onAppear}
+      retros={retrosData?.retros}
+    />
+  </article>
+);
 
-  static defaultProps = {
-    loading: false,
-  };
+RetroListPage.propTypes = {
+  retrosData: PropTypes.shape({
+    retros: PropTypes.arrayOf(propTypesShapeRetroSummary),
+    error: PropTypes.string,
+  }),
+  onAppear: PropTypes.func.isRequired,
+};
 
-  handleAppear = () => {
-    const { onAppear } = this.props;
-    onAppear();
-  };
-
-  render() {
-    const { loading } = this.props;
-
-    return (
-      <article className="page-retro-list">
-        <Helmet title="Retros - Refacto" />
-        <Loader
-          loading={loading}
-          Component={RetroList}
-          onAppear={this.handleAppear}
-        />
-      </article>
-    );
-  }
-}
+RetroListPage.defaultProps = {
+  retrosData: null,
+};
 
 forbidExtraProps(RetroListPage);
 
 const mapStateToProps = (state) => ({
-  loading: state.retroList.loading,
+  retrosData: state.retroList,
 });
 
 const mapDispatchToProps = {

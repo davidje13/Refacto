@@ -45,6 +45,11 @@ module.exports = {
         port: process.env.PORT || 5000,
         inline: false, // disable hot reloading
       },
+      babel: {
+        plugins: [
+          '@babel/plugin-proposal-optional-chaining',
+        ],
+      },
       style: {
         test: /\.(css|less)$/,
         modulesTest: /\.module\.(css|less)$/,

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import ArchiveLink from './ArchiveLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
@@ -28,9 +27,9 @@ export const ArchiveList = ({ retro: { slug, archives } }) => {
       <h1>Retro Archives</h1>
       <Link to={`/retros/${slug}`}>Back to Retro</Link>
       <ul className="archives">
-        { sortArchives(archives).map(({ uuid, created }) => (
-          <li key={uuid}>
-            <ArchiveLink slug={slug} uuid={uuid} created={created} />
+        { sortArchives(archives).map(({ id, created }) => (
+          <li key={id}>
+            <ArchiveLink retroSlug={slug} archiveId={id} created={created} />
           </li>
         )) }
       </ul>
@@ -44,14 +43,4 @@ ArchiveList.propTypes = {
 
 forbidExtraProps(ArchiveList);
 
-const mapStateToProps = (state) => ({
-  retro: state.activeRetro.retro,
-});
-
-const mapDispatchToProps = {
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ArchiveList);
+export default React.memo(ArchiveList);

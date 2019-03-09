@@ -18,7 +18,7 @@ export class MoodSection extends React.PureComponent {
     onSwitchFocus: PropTypes.func,
     onSetDone: PropTypes.func,
     onAddExtraTime: PropTypes.func,
-    focusedItemUUID: PropTypes.string,
+    focusedItemId: PropTypes.string,
     focusedItemTimeout: PropTypes.number,
   };
 
@@ -31,7 +31,7 @@ export class MoodSection extends React.PureComponent {
     onSwitchFocus: null,
     onSetDone: null,
     onAddExtraTime: null,
-    focusedItemUUID: null,
+    focusedItemId: null,
     focusedItemTimeout: 0,
   };
 
@@ -41,26 +41,26 @@ export class MoodSection extends React.PureComponent {
     onAddItem(category, message);
   };
 
-  handleItemSelect = (uuid) => {
-    const { onSwitchFocus, onSetDone, focusedItemUUID } = this.props;
+  handleItemSelect = (id) => {
+    const { onSwitchFocus, onSetDone, focusedItemId } = this.props;
 
-    if (focusedItemUUID !== null && focusedItemUUID !== uuid) {
-      onSetDone(focusedItemUUID, true);
+    if (focusedItemId !== null && focusedItemId !== id) {
+      onSetDone(focusedItemId, true);
     }
-    onSwitchFocus(uuid);
+    onSwitchFocus(id);
   };
 
-  handleItemCancel = (uuid) => {
+  handleItemCancel = (id) => {
     const { onSwitchFocus, onSetDone } = this.props;
 
-    onSetDone(uuid, false);
+    onSetDone(id, false);
     onSwitchFocus(null);
   };
 
-  handleItemDone = (uuid) => {
+  handleItemDone = (id) => {
     const { onSwitchFocus, onSetDone } = this.props;
 
-    onSetDone(uuid, true);
+    onSetDone(id, true);
     onSwitchFocus(null);
   };
 
@@ -76,7 +76,7 @@ export class MoodSection extends React.PureComponent {
       onSetDone,
       onSwitchFocus,
       onAddExtraTime,
-      focusedItemUUID,
+      focusedItemId,
       focusedItemTimeout,
     } = this.props;
 
@@ -96,7 +96,7 @@ export class MoodSection extends React.PureComponent {
         <ItemColumn
           items={items.filter((item) => (item.category === category))}
           ItemType={MoodItem}
-          focusedItemUUID={focusedItemUUID}
+          focusedItemId={focusedItemId}
           focusedItemTimeout={focusedItemTimeout}
           onVote={onVote}
           onEdit={onEdit}

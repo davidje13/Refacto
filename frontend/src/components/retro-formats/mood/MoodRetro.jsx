@@ -20,7 +20,7 @@ const CATEGORIES = [
 export class MoodRetro extends React.PureComponent {
   static propTypes = {
     retroState: PropTypes.shape({
-      focusedItemUUID: PropTypes.string,
+      focusedItemId: PropTypes.string,
       focusedItemTimeout: PropTypes.number,
     }).isRequired,
     retroData: propTypesShapeRetroData.isRequired,
@@ -40,10 +40,10 @@ export class MoodRetro extends React.PureComponent {
     onAddItem('action', message);
   };
 
-  onSwitchFocus = (uuid) => {
+  onSwitchFocus = (id) => {
     const { onSetRetroState } = this.props;
     onSetRetroState({
-      focusedItemUUID: uuid,
+      focusedItemId: id,
       focusedItemTimeout: Date.now() + (5 * 60 * 1000 + 999),
     });
   };
@@ -58,7 +58,7 @@ export class MoodRetro extends React.PureComponent {
   createMoodSection = (category) => {
     const {
       retroState: {
-        focusedItemUUID = null,
+        focusedItemId = null,
         focusedItemTimeout = 0,
       },
       retroData: {
@@ -84,7 +84,7 @@ export class MoodRetro extends React.PureComponent {
         onSwitchFocus={onSetRetroState === null ? null : this.onSwitchFocus}
         onAddExtraTime={onSetRetroState === null ? null : this.onAddExtraTime}
         onSetDone={onSetItemDone}
-        focusedItemUUID={focusedItemUUID}
+        focusedItemId={focusedItemId}
         focusedItemTimeout={focusedItemTimeout}
         category={category.id}
       />
@@ -118,13 +118,13 @@ export class MoodRetro extends React.PureComponent {
   render() {
     const {
       retroState: {
-        focusedItemUUID = null,
+        focusedItemId = null,
       },
       singleColumn,
       archive,
     } = this.props;
 
-    const hasFocused = (focusedItemUUID !== null);
+    const hasFocused = (focusedItemId !== null);
 
     const baseClassName = classNames(
       'retro-format-mood',

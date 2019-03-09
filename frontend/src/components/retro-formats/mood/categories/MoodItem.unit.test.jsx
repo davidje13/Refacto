@@ -8,7 +8,7 @@ import MoodItemFocused from './MoodItemFocused';
 import ItemEditing from '../ItemEditing';
 
 describe('MoodItem', () => {
-  const item = makeItem({ message: 'a message here', uuid: 'my-uuid' });
+  const item = makeItem({ message: 'a message here', id: 'my-id' });
 
   describe('plain', () => {
     it('displays a plain item box', () => {
@@ -32,7 +32,7 @@ describe('MoodItem', () => {
       const dom = shallow(<MoodItem item={item} onVote={onVote} />);
 
       dom.find(MoodItemPlain).props().onVote();
-      expect(onVote).toHaveBeenCalledWith(item.uuid);
+      expect(onVote).toHaveBeenCalledWith(item.id);
     });
 
     it('propagates the onSelect callback if given', () => {
@@ -40,7 +40,7 @@ describe('MoodItem', () => {
       const dom = shallow(<MoodItem item={item} onSelect={onSelect} />);
 
       dom.find(MoodItemPlain).props().onSelect();
-      expect(onSelect).toHaveBeenCalledWith(item.uuid);
+      expect(onSelect).toHaveBeenCalledWith(item.id);
     });
   });
 
@@ -62,7 +62,7 @@ describe('MoodItem', () => {
 
     it('propagates submitted text', () => {
       dom.find(ItemEditing).props().onSubmit('foo');
-      expect(onEdit).toHaveBeenCalledWith(item.uuid, 'foo');
+      expect(onEdit).toHaveBeenCalledWith(item.id, 'foo');
 
       expect(dom.find(ItemEditing)).not.toExist();
       expect(dom.find(MoodItemPlain)).toExist();

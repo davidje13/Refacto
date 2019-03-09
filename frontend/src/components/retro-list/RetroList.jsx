@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import RetroLink from './RetroLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetroSummary } from '../../helpers/dataStructurePropTypes';
@@ -16,8 +15,8 @@ export const RetroList = ({ retros }) => {
     <React.Fragment>
       <h1>Retros</h1>
       <ul className="retros">
-        { retros.map(({ uuid, slug, name }) => (
-          <li key={uuid}>
+        { retros.map(({ id, slug, name }) => (
+          <li key={id}>
             <RetroLink name={name} slug={slug} />
           </li>
         )) }
@@ -32,14 +31,4 @@ RetroList.propTypes = {
 
 forbidExtraProps(RetroList);
 
-const mapStateToProps = (state) => ({
-  retros: state.retroList.retros,
-});
-
-const mapDispatchToProps = {
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RetroList);
+export default RetroList;

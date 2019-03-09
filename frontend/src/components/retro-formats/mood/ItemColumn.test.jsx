@@ -8,16 +8,16 @@ const Item = () => (<div />);
 
 describe('ItemColumn', () => {
   it('displays all items', () => {
-    const item1 = makeItem({ uuid: 'a' });
-    const item2 = makeItem({ uuid: 'b' });
+    const item1 = makeItem({ id: 'a' });
+    const item2 = makeItem({ id: 'b' });
     const dom = shallow(<ItemColumn items={[item1, item2]} ItemType={Item} />);
 
     expect(dom.find(Item).length).toEqual(2);
   });
 
   it('orders items newest-first', () => {
-    const item1 = makeItem({ uuid: 'a', created: 100 });
-    const item2 = makeItem({ uuid: 'b', created: 200 });
+    const item1 = makeItem({ id: 'a', created: 100 });
+    const item2 = makeItem({ id: 'b', created: 200 });
     const dom = shallow(<ItemColumn items={[item1, item2]} ItemType={Item} />);
 
     const displayedItems = dom.find(Item);
@@ -46,7 +46,7 @@ describe('ItemColumn', () => {
       <ItemColumn
         items={[item]}
         ItemType={Item}
-        focusedItemUUID={item.uuid}
+        focusedItemId={item.id}
       />
     ));
 

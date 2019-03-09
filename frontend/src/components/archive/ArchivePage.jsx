@@ -4,36 +4,61 @@ import { connect } from 'react-redux';
 import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import { setCurrentArchive } from '../../reducers/currentArchive';
+import modifyParameters, { prefixProps } from '../../helpers/modifyParameters';
+import {
+  propTypesShapeRetro,
+  propTypesShapeArchive,
+} from '../../helpers/dataStructurePropTypes';
+import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
+import { loadArchive } from '../../reducers/archive';
 import ArchivedRetro from './ArchivedRetro';
 import './ArchivePage.less';
 
 export class ArchivePage extends React.Component {
   static propTypes = {
-    loading: PropTypes.bool,
+    retroData: PropTypes.shape({
+      retro: propTypesShapeRetro,
+      error: PropTypes.string,
+      archives: PropTypes.objectOf(PropTypes.shape({
+        archive: propTypesShapeArchive,
+        error: PropTypes.string,
+      })),
+    }),
     slug: PropTypes.string.isRequired,
     archiveId: PropTypes.string.isRequired,
     onAppear: PropTypes.func.isRequired,
+    onDisappear: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
-    loading: false,
+    retroData: null,
   };
 
-  handleAppear = () => {
-    const { onAppear, slug, archiveId } = this.props;
-    onAppear(slug, archiveId);
-  };
+  constructor(props) {
+    super(props);
+
+    const { onAppear, onDisappear } = props;
+
+    this.handlers = modifyParameters(this, prefixProps('slug', 'archiveId'), {
+      onAppear,
+      onDisappear,
+    });
+  }
 
   render() {
-    const { loading, slug } = this.props;
+    const { retroData, slug, archiveId } = this.props;
+    const archiveData = retroData?.archives[archiveId];
+
     return (
       <article className="page-archive">
         <Loader
-          loading={loading}
+          loading={!archiveData}
           loadingTitle={`${slug} - Refacto`}
           Component={ArchivedRetro}
-          onAppear={this.handleAppear}
+          onAppear={this.handlers.onAppear}
+          onDisappear={this.handlers.onDisappear}
+          retro={retroData?.retro}
+          archive={archiveData?.archive}
         />
       </article>
     );
@@ -42,13 +67,19 @@ export class ArchivePage extends React.Component {
 
 forbidExtraProps(ArchivePage);
 
-const mapStateToProps = (state) => ({
-  loading: state.currentArchive.loading,
+const mapStateToProps = (state, { match }) => ({
+  retroData: state.retros[match.params.slug],
 });
 
-const mapDispatchToProps = {
-  onAppear: setCurrentArchive,
-};
+const mapDispatchToProps = (dispatch) => ({
+  onAppear: async (slug, archiveId) => {
+    await dispatch(beginConsumingRetro(slug));
+    await dispatch(loadArchive(slug, archiveId));
+  },
+  onDisappear: (slug) => {
+    dispatch(endConsumingRetro(slug));
+  },
+});
 
 export default connect(
   mapStateToProps,

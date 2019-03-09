@@ -1,20 +1,22 @@
 import React from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { mount } from 'enzyme';
+import { makeRetro } from '../../test-helpers/dataFactories';
 
 import { RetroPage } from './RetroPage';
 import Retro from './Retro';
 
-jest.mock('./Retro');
+jest.mock('./Retro', () => () => (<div />));
 
 describe('RetroPage', () => {
-  it('renders a retro page', () => {
-    const dom = mount(<RetroPage slug="abc" onAppear={() => {}} />);
-    expect(dom.find(Retro)).toExist();
-  });
+  const data = makeRetro();
 
-  it('triggers a load request when displayed', () => {
-    const onAppear = jest.fn().mockName('onAppear');
-    mount(<RetroPage slug="abc" onAppear={onAppear} />);
-    expect(onAppear).toHaveBeenCalledWith('abc');
+  it('renders a retro page', () => {
+    const dom = mount((
+      <HelmetProvider>
+        <RetroPage slug="abc" data={data} />
+      </HelmetProvider>
+    ));
+    expect(dom.find(Retro)).toExist();
   });
 });
