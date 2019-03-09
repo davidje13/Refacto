@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import store from './reducers/store';
 import { setLocalDateProvider } from './reducers/time';
 import { setWindowSize } from './reducers/view';
@@ -21,10 +22,14 @@ window.addEventListener('resize', updateWindowSize, { passive: true });
 updateWindowSize();
 
 ReactDOM.render(
-  <BrowserRouter>
+  <HelmetProvider>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </BrowserRouter>
     </Provider>
-  </BrowserRouter>,
+  </HelmetProvider>,
   document.getElementById('root'),
 );

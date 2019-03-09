@@ -1,5 +1,6 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { mount } from 'enzyme';
 
@@ -10,11 +11,13 @@ function renderApp(location) {
   const context = {};
 
   const dom = mount((
-    <StaticRouter location={location} context={context}>
+    <HelmetProvider>
       <Provider store={store}>
-        <App />
+        <StaticRouter location={location} context={context}>
+          <App />
+        </StaticRouter>
       </Provider>
-    </StaticRouter>
+    </HelmetProvider>
   ));
 
   return { context, dom };

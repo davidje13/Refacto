@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
+import Helmet from 'react-helmet-async';
 import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';

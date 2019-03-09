@@ -1,4 +1,5 @@
 import React from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { mount } from 'enzyme';
 
 import { RetroListPage } from './RetroListPage';
@@ -8,13 +9,21 @@ jest.mock('./RetroList');
 
 describe('RetroListPage', () => {
   it('renders a retro list page', () => {
-    const dom = mount(<RetroListPage onAppear={() => {}} />);
+    const dom = mount((
+      <HelmetProvider>
+        <RetroListPage onAppear={() => {}} />
+      </HelmetProvider>
+    ));
     expect(dom.find(RetroList)).toExist();
   });
 
   it('triggers a load request when displayed', () => {
     const onAppear = jest.fn().mockName('onAppear');
-    mount(<RetroListPage onAppear={onAppear} />);
+    mount((
+      <HelmetProvider>
+        <RetroListPage onAppear={onAppear} />
+      </HelmetProvider>
+    ));
     expect(onAppear).toHaveBeenCalled();
   });
 });

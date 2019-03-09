@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
+import Helmet from 'react-helmet-async';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeArchive } from '../../helpers/dataStructurePropTypes';
