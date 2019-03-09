@@ -2,14 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { setActiveRetro } from '../../reducers/activeRetro';
 import ArchiveList from './ArchiveList';
-
-const renderLoader = () => (
-  <div className="loader">Loading&hellip;</div>
-);
 
 export class ArchiveListPage extends React.Component {
   static propTypes = {
@@ -22,10 +19,10 @@ export class ArchiveListPage extends React.Component {
     loading: false,
   };
 
-  componentDidMount() {
+  handleAppear = () => {
     const { onAppear, slug } = this.props;
     onAppear(slug);
-  }
+  };
 
   render() {
     const { loading } = this.props;
@@ -33,7 +30,11 @@ export class ArchiveListPage extends React.Component {
     return (
       <article className="page-archive-list">
         <Helmet title="Archives - Refacto" />
-        {loading ? renderLoader() : (<ArchiveList />)}
+        <Loader
+          loading={loading}
+          Component={ArchiveList}
+          onAppear={this.handleAppear}
+        />
       </article>
     );
   }

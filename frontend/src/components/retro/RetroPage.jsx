@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
+import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { setActiveRetro } from '../../reducers/activeRetro';
@@ -19,28 +19,21 @@ export class RetroPage extends React.Component {
     loading: false,
   };
 
-  componentDidMount() {
+  handleAppear = () => {
     const { onAppear, slug } = this.props;
     onAppear(slug);
-  }
-
-  renderLoader() {
-    const { slug } = this.props;
-
-    return (
-      <React.Fragment>
-        <Helmet title={`${slug} - Refacto`} />
-        <div className="loader">Loading&hellip;</div>
-      </React.Fragment>
-    );
-  }
+  };
 
   render() {
-    const { loading } = this.props;
-
+    const { loading, slug } = this.props;
     return (
       <article className="page-retro">
-        {loading ? this.renderLoader() : (<Retro />)}
+        <Loader
+          loading={loading}
+          loadingTitle={`${slug} - Refacto`}
+          Component={Retro}
+          onAppear={this.handleAppear}
+        />
       </article>
     );
   }

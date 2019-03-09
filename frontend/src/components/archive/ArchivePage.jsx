@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
+import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { setCurrentArchive } from '../../reducers/currentArchive';
@@ -20,28 +20,21 @@ export class ArchivePage extends React.Component {
     loading: false,
   };
 
-  componentDidMount() {
+  handleAppear = () => {
     const { onAppear, slug, archiveId } = this.props;
     onAppear(slug, archiveId);
-  }
-
-  renderLoader() {
-    const { slug } = this.props;
-
-    return (
-      <React.Fragment>
-        <Helmet title={`${slug} - Refacto`} />
-        <div className="loader">Loading&hellip;</div>
-      </React.Fragment>
-    );
-  }
+  };
 
   render() {
-    const { loading } = this.props;
-
+    const { loading, slug } = this.props;
     return (
       <article className="page-archive">
-        {loading ? this.renderLoader() : (<ArchivedRetro />)}
+        <Loader
+          loading={loading}
+          loadingTitle={`${slug} - Refacto`}
+          Component={ArchivedRetro}
+          onAppear={this.handleAppear}
+        />
       </article>
     );
   }

@@ -2,14 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
+import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
 import RetroList from './RetroList';
-
-const renderLoader = () => (
-  <div className="loader">Loading&hellip;</div>
-);
 
 export class RetroListPage extends React.Component {
   static propTypes = {
@@ -21,10 +18,10 @@ export class RetroListPage extends React.Component {
     loading: false,
   };
 
-  componentDidMount() {
+  handleAppear = () => {
     const { onAppear } = this.props;
     onAppear();
-  }
+  };
 
   render() {
     const { loading } = this.props;
@@ -32,7 +29,11 @@ export class RetroListPage extends React.Component {
     return (
       <article className="page-retro-list">
         <Helmet title="Retros - Refacto" />
-        {loading ? renderLoader() : (<RetroList />)}
+        <Loader
+          loading={loading}
+          Component={RetroList}
+          onAppear={this.handleAppear}
+        />
       </article>
     );
   }
