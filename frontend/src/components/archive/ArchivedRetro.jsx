@@ -24,4 +24,4 @@ ArchivedRetro.propTypes = {
 
 forbidExtraProps(ArchivedRetro);
 
-export default ArchivedRetro;
+export default React.memo(ArchivedRetro);

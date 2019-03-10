@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../common/Loader';
+import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import { dynamicBind } from '../../helpers/dynamicBind';
 import {
   propTypesShapeRetro,
   propTypesShapeArchive,
@@ -14,56 +14,48 @@ import { loadArchive } from '../../reducers/archive';
 import ArchivedRetro from './ArchivedRetro';
 import './ArchivePage.less';
 
-const addArchivePath = (props) => [props.slug, props.archiveId];
+export const ArchivePage = ({
+  retroData,
+  slug,
+  archiveId,
+  onAppear,
+  onDisappear,
+}) => {
+  const archiveData = retroData?.archives[archiveId];
 
-export class ArchivePage extends React.Component {
-  static propTypes = {
-    retroData: PropTypes.shape({
-      retro: propTypesShapeRetro,
+  useExistenceCallbacks(onAppear, onDisappear, slug, archiveId);
+
+  return (
+    <article className="page-archive">
+      <Loader
+        loading={!archiveData}
+        title={`${retroData?.retro.name || slug} [Archived] - Refacto`}
+        Component={ArchivedRetro}
+        retro={retroData?.retro}
+        archive={archiveData?.archive}
+      />
+    </article>
+  );
+};
+
+ArchivePage.propTypes = {
+  retroData: PropTypes.shape({
+    retro: propTypesShapeRetro,
+    error: PropTypes.string,
+    archives: PropTypes.objectOf(PropTypes.shape({
+      archive: propTypesShapeArchive,
       error: PropTypes.string,
-      archives: PropTypes.objectOf(PropTypes.shape({
-        archive: propTypesShapeArchive,
-        error: PropTypes.string,
-      })),
-    }),
-    slug: PropTypes.string.isRequired,
-    archiveId: PropTypes.string.isRequired,
-    onAppear: PropTypes.func.isRequired,
-    onDisappear: PropTypes.func.isRequired,
-  };
+    })),
+  }),
+  slug: PropTypes.string.isRequired,
+  archiveId: PropTypes.string.isRequired,
+  onAppear: PropTypes.func.isRequired,
+  onDisappear: PropTypes.func.isRequired,
+};
 
-  static defaultProps = {
-    retroData: null,
-  };
-
-  constructor(props) {
-    super(props);
-
-    const { onAppear, onDisappear } = props;
-
-    this.handleAppear = dynamicBind(this, { onAppear }, addArchivePath);
-    this.handleDisappear = dynamicBind(this, { onDisappear }, addArchivePath);
-  }
-
-  render() {
-    const { retroData, slug, archiveId } = this.props;
-    const archiveData = retroData?.archives[archiveId];
-
-    return (
-      <article className="page-archive">
-        <Loader
-          loading={!archiveData}
-          title={`${retroData?.retro.name || slug} [Archived] - Refacto`}
-          Component={ArchivedRetro}
-          onAppear={this.handleAppear}
-          onDisappear={this.handleDisappear}
-          retro={retroData?.retro}
-          archive={archiveData?.archive}
-        />
-      </article>
-    );
-  }
-}
+ArchivePage.defaultProps = {
+  retroData: null,
+};
 
 forbidExtraProps(ArchivePage);
 

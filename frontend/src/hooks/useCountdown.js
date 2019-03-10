@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import useRerender from './useRerender';
 
 // useCountdown(targetTime, [interval, [getTime]])
 // Returns the number of milliseconds remaining until targetTime (quantised by
@@ -45,11 +46,6 @@ function clearSmallTimeout(timeout) {
 
 function quantise(remaining, interval) {
   return (Math.ceil(remaining / interval) - 1) * interval;
-}
-
-function useRerender() {
-  const [renderFrame, setRenderFrame] = useState(0);
-  return () => setRenderFrame(renderFrame + 1);
 }
 
 export default function useCountdown(targetTime, interval = 50, getTime = Date.now) {

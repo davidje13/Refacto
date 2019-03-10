@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 import { Loader } from './Loader';
 
@@ -8,7 +8,7 @@ const Component = () => (<div />);
 describe('Loader', () => {
   it('triggers onAppear when displayed', () => {
     const onAppear = jest.fn().mockName('onAppear');
-    shallow(<Loader Component={Component} onAppear={onAppear} />);
+    mount(<Loader Component={Component} onAppear={onAppear} />);
     expect(onAppear).toHaveBeenCalled();
   });
 
