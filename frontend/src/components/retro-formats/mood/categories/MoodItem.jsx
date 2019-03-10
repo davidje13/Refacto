@@ -5,7 +5,10 @@ import MoodItemFocused from './MoodItemFocused';
 import ItemEditing from '../ItemEditing';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { dynamicBind } from '../../../../helpers/dynamicBind';
 import './MoodItem.less';
+
+const addItemPath = (props) => [props.item.id];
 
 export class MoodItem extends React.PureComponent {
   static propTypes = {
@@ -35,13 +38,23 @@ export class MoodItem extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = { editing: false };
-  }
 
-  handleVote = () => {
-    const { item, onVote } = this.props;
-    onVote(item.id);
-  };
+    this.state = { editing: false };
+
+    const {
+      onVote,
+      onDelete,
+      onSelect,
+      onCancel,
+      onDone,
+    } = props;
+
+    this.handleVote = dynamicBind(this, { onVote }, addItemPath);
+    this.handleDelete = dynamicBind(this, { onDelete }, addItemPath);
+    this.handleSelect = dynamicBind(this, { onSelect }, addItemPath);
+    this.handleCancel = dynamicBind(this, { onCancel }, addItemPath);
+    this.handleDone = dynamicBind(this, { onDone }, addItemPath);
+  }
 
   handleBeginEdit = () => {
     this.setState({ editing: true });
@@ -58,35 +71,12 @@ export class MoodItem extends React.PureComponent {
     onEdit(item.id, message);
   };
 
-  handleDelete = () => {
-    const { item, onDelete } = this.props;
-    onDelete(item.id);
-  };
-
-  handleSelect = () => {
-    const { item, onSelect } = this.props;
-    onSelect(item.id);
-  };
-
-  handleCancelFocus = () => {
-    const { item, onCancel } = this.props;
-    onCancel(item.id);
-  };
-
-  handleDone = () => {
-    const { item, onDone } = this.props;
-    onDone(item.id);
-  };
-
   render() {
     const {
       item,
       focused,
       focusedItemTimeout,
-      onVote,
       onEdit,
-      onDelete,
-      onSelect,
       onAddExtraTime,
     } = this.props;
 
@@ -99,7 +89,7 @@ export class MoodItem extends React.PureComponent {
           message={item.message}
           onSubmit={this.handleSaveEdit}
           onCancel={this.handleCancelEdit}
-          onDelete={onDelete === null ? null : this.handleDelete}
+          onDelete={this.handleDelete.optional()}
         />
       );
     }
@@ -110,8 +100,8 @@ export class MoodItem extends React.PureComponent {
           item={item}
           focusedItemTimeout={focusedItemTimeout}
           onAddExtraTime={onAddExtraTime}
-          onCancel={this.handleCancelFocus}
-          onDone={this.handleDone}
+          onCancel={this.handleCancel.optional()}
+          onDone={this.handleDone.optional()}
         />
       );
     }
@@ -119,9 +109,9 @@ export class MoodItem extends React.PureComponent {
     return (
       <MoodItemPlain
         item={item}
-        onVote={onVote === null ? null : this.handleVote}
-        onEdit={onEdit === null ? null : this.handleBeginEdit}
-        onSelect={onSelect === null ? null : this.handleSelect}
+        onVote={this.handleVote.optional()}
+        onEdit={onEdit ? this.handleBeginEdit : null}
+        onSelect={this.handleSelect.optional()}
       />
     );
   }

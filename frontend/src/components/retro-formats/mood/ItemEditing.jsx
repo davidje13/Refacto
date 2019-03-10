@@ -18,7 +18,7 @@ export const ItemEditing = ({
       submitButtonTitle="Save changes"
       onSubmit={onSubmit}
       onCancel={onCancel}
-      extraOptions={(onDelete === null) ? null : (
+      extraOptions={onDelete && (
         <button type="button" title="Delete" className="delete" onClick={onDelete}>
           Delete
         </button>

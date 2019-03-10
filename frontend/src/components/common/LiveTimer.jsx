@@ -78,7 +78,7 @@ export class LiveTimer extends React.Component {
     const now = getTime();
     this.lastRenderTime = now;
 
-    if (now >= targetTime && Expired !== null) {
+    if (now >= targetTime && Expired) {
       return (<Expired {...props} />);
     }
 

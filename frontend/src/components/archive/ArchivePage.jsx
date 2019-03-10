@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Loader from '../common/Loader';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import modifyParameters, { prefixProps } from '../../helpers/modifyParameters';
+import { dynamicBind } from '../../helpers/dynamicBind';
 import {
   propTypesShapeRetro,
   propTypesShapeArchive,
@@ -13,6 +13,8 @@ import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
 import { loadArchive } from '../../reducers/archive';
 import ArchivedRetro from './ArchivedRetro';
 import './ArchivePage.less';
+
+const addArchivePath = (props) => [props.slug, props.archiveId];
 
 export class ArchivePage extends React.Component {
   static propTypes = {
@@ -39,10 +41,8 @@ export class ArchivePage extends React.Component {
 
     const { onAppear, onDisappear } = props;
 
-    this.handlers = modifyParameters(this, prefixProps('slug', 'archiveId'), {
-      onAppear,
-      onDisappear,
-    });
+    this.handleAppear = dynamicBind(this, { onAppear }, addArchivePath);
+    this.handleDisappear = dynamicBind(this, { onDisappear }, addArchivePath);
   }
 
   render() {
@@ -53,10 +53,10 @@ export class ArchivePage extends React.Component {
       <article className="page-archive">
         <Loader
           loading={!archiveData}
-          loadingTitle={`${slug} - Refacto`}
+          title={`${retroData?.retro.name || slug} [Archived] - Refacto`}
           Component={ArchivedRetro}
-          onAppear={this.handlers.onAppear}
-          onDisappear={this.handlers.onDisappear}
+          onAppear={this.handleAppear}
+          onDisappear={this.handleDisappear}
           retro={retroData?.retro}
           archive={archiveData?.archive}
         />

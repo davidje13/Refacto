@@ -45,7 +45,7 @@ export class MoodSection extends React.PureComponent {
     const { onSwitchFocus, onSetDone, focusedItemId } = this.props;
 
     if (focusedItemId !== null && focusedItemId !== id) {
-      onSetDone(focusedItemId, true);
+      onSetDone?.(focusedItemId, true);
     }
     onSwitchFocus(id);
   };
@@ -53,14 +53,14 @@ export class MoodSection extends React.PureComponent {
   handleItemCancel = (id) => {
     const { onSwitchFocus, onSetDone } = this.props;
 
-    onSetDone(id, false);
+    onSetDone?.(id, false);
     onSwitchFocus(null);
   };
 
   handleItemDone = (id) => {
     const { onSwitchFocus, onSetDone } = this.props;
 
-    onSetDone(id, true);
+    onSetDone?.(id, true);
     onSwitchFocus(null);
   };
 
@@ -84,14 +84,14 @@ export class MoodSection extends React.PureComponent {
       <section className={category}>
         <header>
           <h2>{category}</h2>
-          { onAddItem ? (
+          { onAddItem && (
             <ExpandingTextEntry
               onSubmit={this.handleAddItem}
               submitButtonTitle="Add"
               placeholder={addItemPlaceholder}
               clearAfterSubmit
             />
-          ) : null }
+          ) }
         </header>
         <ItemColumn
           items={items.filter((item) => (item.category === category))}
@@ -101,10 +101,10 @@ export class MoodSection extends React.PureComponent {
           onVote={onVote}
           onEdit={onEdit}
           onDelete={onDelete}
-          onSelect={onSwitchFocus === null ? null : this.handleItemSelect}
+          onSelect={onSwitchFocus && this.handleItemSelect}
           onAddExtraTime={onAddExtraTime}
-          onCancel={onSwitchFocus === null ? null : this.handleItemCancel}
-          onDone={onSetDone === null ? null : this.handleItemDone}
+          onCancel={onSwitchFocus && this.handleItemCancel}
+          onDone={onSetDone && this.handleItemDone}
         />
       </section>
     );

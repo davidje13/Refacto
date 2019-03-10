@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Helmet from 'react-helmet-async';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
@@ -10,7 +9,6 @@ import {
 
 export const ArchivedRetro = ({ retro, archive }) => (
   <React.Fragment>
-    <Helmet title={`${retro.name} [Archive] - Refacto`} />
     <header>
       <h1 className="retro-name">{retro.name} Archive</h1>
       <Link className="back" to={`/retros/${retro.slug}/archives`}>Archives</Link>

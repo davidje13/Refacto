@@ -16,7 +16,7 @@ export const MoodItemPlain = ({
       { item.message }
     </button>
     <VoteCount votes={item.votes} onVote={onVote} />
-    { (onEdit === null) ? null : (
+    { onEdit && (
       <button type="button" title="Edit" className="edit" onClick={onEdit} />
     ) }
   </div>

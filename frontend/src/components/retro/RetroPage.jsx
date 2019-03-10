@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import Loader from '../common/Loader';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import modifyParameters, { prefixProps } from '../../helpers/modifyParameters';
+import { dynamicBind } from '../../helpers/dynamicBind';
+import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
   beginConsumingRetro,
   endConsumingRetro,
@@ -20,6 +21,8 @@ import {
 import Retro from './Retro';
 import './RetroPage.less';
 
+const addRetroPath = (props) => [props.slug];
+
 export class RetroPage extends React.Component {
   static propTypes = {
     slug: PropTypes.string.isRequired,
@@ -27,6 +30,14 @@ export class RetroPage extends React.Component {
       retro: propTypesShapeRetro,
       error: PropTypes.string,
     }),
+    onAppear: PropTypes.func.isRequired,
+    onDisappear: PropTypes.func.isRequired,
+    onAddItem: PropTypes.func.isRequired,
+    onVoteItem: PropTypes.func.isRequired,
+    onEditItem: PropTypes.func.isRequired,
+    onDeleteItem: PropTypes.func.isRequired,
+    onSetItemDone: PropTypes.func.isRequired,
+    onSetRetroState: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -36,7 +47,25 @@ export class RetroPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handlers = modifyParameters(this, prefixProps('slug'));
+    const {
+      onAppear,
+      onDisappear,
+      onAddItem,
+      onVoteItem,
+      onEditItem,
+      onDeleteItem,
+      onSetItemDone,
+      onSetRetroState,
+    } = props;
+
+    this.handleAppear = dynamicBind(this, { onAppear }, addRetroPath);
+    this.handleDisappear = dynamicBind(this, { onDisappear }, addRetroPath);
+    this.handleAddItem = dynamicBind(this, { onAddItem }, addRetroPath);
+    this.handleVoteItem = dynamicBind(this, { onVoteItem }, addRetroPath);
+    this.handleEditItem = dynamicBind(this, { onEditItem }, addRetroPath);
+    this.handleDeleteItem = dynamicBind(this, { onDeleteItem }, addRetroPath);
+    this.handleSetItemDone = dynamicBind(this, { onSetItemDone }, addRetroPath);
+    this.handleSetRetroState = dynamicBind(this, { onSetRetroState }, addRetroPath);
   }
 
   render() {
@@ -46,15 +75,24 @@ export class RetroPage extends React.Component {
       <article className="page-retro">
         <Loader
           loading={!data}
-          loadingTitle={`${slug} - Refacto`}
+          title={`${data?.retro?.name || slug} - Refacto`}
           Component={Retro}
           retro={data?.retro}
-          {...this.handlers}
+          onAppear={this.handleAppear.optional()}
+          onDisappear={this.handleDisappear.optional()}
+          onAddItem={this.handleAddItem.optional()}
+          onVoteItem={this.handleVoteItem.optional()}
+          onEditItem={this.handleEditItem.optional()}
+          onDeleteItem={this.handleDeleteItem.optional()}
+          onSetItemDone={this.handleSetItemDone.optional()}
+          onSetRetroState={this.handleSetRetroState.optional()}
         />
       </article>
     );
   }
 }
+
+forbidExtraProps(RetroPage);
 
 const mapStateToProps = (state, { match }) => ({
   data: state.retros[match.params.slug] || null,

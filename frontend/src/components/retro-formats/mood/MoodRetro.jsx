@@ -81,8 +81,8 @@ export class MoodRetro extends React.PureComponent {
         onVote={onVoteItem}
         onEdit={onEditItem}
         onDelete={onDeleteItem}
-        onSwitchFocus={onSetRetroState === null ? null : this.onSwitchFocus}
-        onAddExtraTime={onSetRetroState === null ? null : this.onAddExtraTime}
+        onSwitchFocus={onSetRetroState && this.onSwitchFocus}
+        onAddExtraTime={onSetRetroState && this.onAddExtraTime}
         onSetDone={onSetItemDone}
         focusedItemId={focusedItemId}
         focusedItemTimeout={focusedItemTimeout}
@@ -106,7 +106,7 @@ export class MoodRetro extends React.PureComponent {
     return (
       <ActionsPane
         items={items}
-        onAddItem={onAddItem === null ? null : this.onAddActionItem}
+        onAddItem={onAddItem && this.onAddActionItem}
         onSetDone={onSetItemDone}
         onEdit={onEditItem}
         onDelete={onDeleteItem}

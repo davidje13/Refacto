@@ -22,14 +22,14 @@ export const ActionsPane = ({
     <section className="actions">
       <header>
         <h2>Action items</h2>
-        { onAddItem ? (
+        { onAddItem && (
           <ExpandingTextEntry
             onSubmit={onAddItem}
             submitButtonTitle="Add"
             placeholder="Add an action item"
             clearAfterSubmit
           />
-        ) : null }
+        ) }
       </header>
       <ActionSection
         items={items}

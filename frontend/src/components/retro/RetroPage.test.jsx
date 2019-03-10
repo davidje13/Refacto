@@ -14,7 +14,18 @@ describe('RetroPage', () => {
   it('renders a retro page', () => {
     const dom = mount((
       <HelmetProvider>
-        <RetroPage slug="abc" data={data} />
+        <RetroPage
+          slug="abc"
+          data={data}
+          onAppear={() => {}}
+          onDisappear={() => {}}
+          onAddItem={() => {}}
+          onVoteItem={() => {}}
+          onEditItem={() => {}}
+          onDeleteItem={() => {}}
+          onSetItemDone={() => {}}
+          onSetRetroState={() => {}}
+        />
       </HelmetProvider>
     ));
     expect(dom.find(Retro)).toExist();

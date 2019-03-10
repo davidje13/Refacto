@@ -122,7 +122,7 @@ export class ExpandingTextEntry extends React.PureComponent {
   handleCancel = (e) => {
     const { onCancel } = this.props;
 
-    if (onCancel !== null) {
+    if (onCancel) {
       e.preventDefault();
       onCancel();
     }

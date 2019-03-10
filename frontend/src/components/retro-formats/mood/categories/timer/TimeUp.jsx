@@ -23,9 +23,9 @@ export class TimeUp extends React.PureComponent {
     return (
       <React.Fragment>
         <p className="timeup">Time&rsquo;s up!</p>
-        { onAddExtraTime ? (
+        { onAddExtraTime && (
           <button type="button" onClick={this.handleAddExtraTime}>+2 more minutes</button>
-        ) : null }
+        ) }
       </React.Fragment>
     );
   }

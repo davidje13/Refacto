@@ -6,8 +6,10 @@ import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import modifyParameters, { prefixProps } from '../../helpers/modifyParameters';
+import { dynamicBind } from '../../helpers/dynamicBind';
 import ArchiveList from './ArchiveList';
+
+const addRetroPath = (props) => [props.slug];
 
 export class ArchiveListPage extends React.Component {
   static propTypes = {
@@ -29,10 +31,8 @@ export class ArchiveListPage extends React.Component {
 
     const { onAppear, onDisappear } = props;
 
-    this.handlers = modifyParameters(this, prefixProps('slug'), {
-      onAppear,
-      onDisappear,
-    });
+    this.handleAppear = dynamicBind(this, { onAppear }, addRetroPath);
+    this.handleDisappear = dynamicBind(this, { onDisappear }, addRetroPath);
   }
 
   render() {
@@ -44,8 +44,8 @@ export class ArchiveListPage extends React.Component {
           loading={!data}
           title={`Archives - ${data?.retro.name || slug} - Refacto`}
           Component={ArchiveList}
-          onAppear={this.handlers.onAppear}
-          onDisappear={this.handlers.onDisappear}
+          onAppear={this.handleAppear}
+          onDisappear={this.handleDisappear}
           retro={data?.retro}
         />
       </article>

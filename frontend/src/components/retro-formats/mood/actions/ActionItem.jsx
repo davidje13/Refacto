@@ -4,7 +4,10 @@ import classNames from 'classnames';
 import ItemEditing from '../ItemEditing';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { dynamicBind } from '../../../../helpers/dynamicBind';
 import './ActionItem.less';
+
+const addItemPath = (props) => [props.item.id];
 
 export class ActionItem extends React.PureComponent {
   static propTypes = {
@@ -25,15 +28,11 @@ export class ActionItem extends React.PureComponent {
 
     this.state = { editing: false };
 
-    this.handleDoneFalse = this.handleSetDone.bind(this, false);
-    this.handleDoneTrue = this.handleSetDone.bind(this, true);
+    const { onSetDone, onDelete } = props;
+
+    this.handleToggleDone = dynamicBind(this, { onSetDone }, ({ item }) => [item.id, !item.done]);
+    this.handleDelete = dynamicBind(this, { onDelete }, addItemPath);
   }
-
-  handleSetDone = (done) => {
-    const { item, onSetDone } = this.props;
-
-    onSetDone(item.id, done);
-  };
 
   handleBeginEdit = () => {
     this.setState({ editing: true });
@@ -50,20 +49,8 @@ export class ActionItem extends React.PureComponent {
     onEdit(item.id, message);
   };
 
-  handleDelete = () => {
-    const { item, onDelete } = this.props;
-
-    onDelete(item.id);
-  };
-
   render() {
-    const {
-      item,
-      onSetDone,
-      onEdit,
-      onDelete,
-    } = this.props;
-
+    const { item, onEdit } = this.props;
     const { editing } = this.state;
 
     if (editing) {
@@ -73,7 +60,7 @@ export class ActionItem extends React.PureComponent {
           message={item.message}
           onSubmit={this.handleSaveEdit}
           onCancel={this.handleCancelEdit}
-          onDelete={onDelete === null ? null : this.handleDelete}
+          onDelete={this.handleDelete.optional()}
         />
       );
     }
@@ -85,10 +72,10 @@ export class ActionItem extends React.PureComponent {
           type="button"
           title={item.done ? 'Mark as not done' : 'Mark as done'}
           className="toggle-done"
-          disabled={!onSetDone}
-          onClick={item.done ? this.handleDoneFalse : this.handleDoneTrue}
+          disabled={!this.handleToggleDone.exists()}
+          onClick={this.handleToggleDone.optional()}
         />
-        { (onEdit === null) ? null : (
+        { onEdit && (
           <button
             type="button"
             title="Edit"
