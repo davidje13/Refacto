@@ -18,6 +18,8 @@ module.exports = {
     }],
     'react/jsx-one-expression-per-line': ['off'], // too buggy
     'react-hooks/rules-of-hooks': ['error'],
+
+    // https://github.com/facebook/react/issues/14920#issuecomment-471328990
     'react-hooks/exhaustive-deps': ['off'], // does not support spread yet
   },
 
