@@ -17,6 +17,8 @@ module.exports = {
       'ignoreNonDOM': false,
     }],
     'react/jsx-one-expression-per-line': ['off'], // too buggy
+    'react-hooks/rules-of-hooks': ['error'],
+    'react-hooks/exhaustive-deps': ['off'], // does not support spread yet
   },
 
   testRules: {

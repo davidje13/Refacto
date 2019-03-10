@@ -2,6 +2,9 @@ const { baseRules, reactRules, testRules } = require('../eslint.js');
 
 const linter = ['@neutrinojs/airbnb', {
   eslint: {
+    plugins: [
+      'react-hooks',
+    ],
     rules: Object.assign({}, baseRules, reactRules),
     baseConfig: {
       overrides: [{

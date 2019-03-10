@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../common/Loader';
+import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
+import useBoundCallback from '../../hooks/useBoundCallback';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import { dynamicBind } from '../../helpers/dynamicBind';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
   beginConsumingRetro,
@@ -21,76 +22,57 @@ import {
 import Retro from './Retro';
 import './RetroPage.less';
 
-const addRetroPath = (props) => [props.slug];
+export const RetroPage = ({
+  slug,
+  data,
+  onAppear,
+  onDisappear,
+  onAddItem,
+  onVoteItem,
+  onEditItem,
+  onDeleteItem,
+  onSetItemDone,
+  onSetRetroState,
+}) => {
+  useExistenceCallbacks(onAppear, onDisappear, slug);
 
-export class RetroPage extends React.Component {
-  static propTypes = {
-    slug: PropTypes.string.isRequired,
-    data: PropTypes.shape({
-      retro: propTypesShapeRetro,
-      error: PropTypes.string,
-    }),
-    onAppear: PropTypes.func.isRequired,
-    onDisappear: PropTypes.func.isRequired,
-    onAddItem: PropTypes.func.isRequired,
-    onVoteItem: PropTypes.func.isRequired,
-    onEditItem: PropTypes.func.isRequired,
-    onDeleteItem: PropTypes.func.isRequired,
-    onSetItemDone: PropTypes.func.isRequired,
-    onSetRetroState: PropTypes.func.isRequired,
-  };
+  return (
+    <article className="page-retro">
+      <Loader
+        loading={!data}
+        title={`${data?.retro?.name || slug} - Refacto`}
+        Component={Retro}
+        retro={data?.retro}
+        onAddItem={useBoundCallback(onAddItem, slug)}
+        onVoteItem={useBoundCallback(onVoteItem, slug)}
+        onEditItem={useBoundCallback(onEditItem, slug)}
+        onDeleteItem={useBoundCallback(onDeleteItem, slug)}
+        onSetItemDone={useBoundCallback(onSetItemDone, slug)}
+        onSetRetroState={useBoundCallback(onSetRetroState, slug)}
+      />
+    </article>
+  );
+};
 
-  static defaultProps = {
-    data: null,
-  };
+RetroPage.propTypes = {
+  slug: PropTypes.string.isRequired,
+  data: PropTypes.shape({
+    retro: propTypesShapeRetro,
+    error: PropTypes.string,
+  }),
+  onAppear: PropTypes.func.isRequired,
+  onDisappear: PropTypes.func.isRequired,
+  onAddItem: PropTypes.func.isRequired,
+  onVoteItem: PropTypes.func.isRequired,
+  onEditItem: PropTypes.func.isRequired,
+  onDeleteItem: PropTypes.func.isRequired,
+  onSetItemDone: PropTypes.func.isRequired,
+  onSetRetroState: PropTypes.func.isRequired,
+};
 
-  constructor(props) {
-    super(props);
-
-    const {
-      onAppear,
-      onDisappear,
-      onAddItem,
-      onVoteItem,
-      onEditItem,
-      onDeleteItem,
-      onSetItemDone,
-      onSetRetroState,
-    } = props;
-
-    this.handleAppear = dynamicBind(this, { onAppear }, addRetroPath);
-    this.handleDisappear = dynamicBind(this, { onDisappear }, addRetroPath);
-    this.handleAddItem = dynamicBind(this, { onAddItem }, addRetroPath);
-    this.handleVoteItem = dynamicBind(this, { onVoteItem }, addRetroPath);
-    this.handleEditItem = dynamicBind(this, { onEditItem }, addRetroPath);
-    this.handleDeleteItem = dynamicBind(this, { onDeleteItem }, addRetroPath);
-    this.handleSetItemDone = dynamicBind(this, { onSetItemDone }, addRetroPath);
-    this.handleSetRetroState = dynamicBind(this, { onSetRetroState }, addRetroPath);
-  }
-
-  render() {
-    const { slug, data } = this.props;
-
-    return (
-      <article className="page-retro">
-        <Loader
-          loading={!data}
-          title={`${data?.retro?.name || slug} - Refacto`}
-          Component={Retro}
-          retro={data?.retro}
-          onAppear={this.handleAppear.optional()}
-          onDisappear={this.handleDisappear.optional()}
-          onAddItem={this.handleAddItem.optional()}
-          onVoteItem={this.handleVoteItem.optional()}
-          onEditItem={this.handleEditItem.optional()}
-          onDeleteItem={this.handleDeleteItem.optional()}
-          onSetItemDone={this.handleSetItemDone.optional()}
-          onSetRetroState={this.handleSetRetroState.optional()}
-        />
-      </article>
-    );
-  }
-}
+RetroPage.defaultProps = {
+  data: null,
+};
 
 forbidExtraProps(RetroPage);
 
