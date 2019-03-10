@@ -14,6 +14,6 @@ TimeRemaining.propTypes = {
   remaining: PropTypes.number.isRequired,
 };
 
-forbidExtraProps(TimeRemaining, { alsoAllow: ['onAddExtraTime'] });
+forbidExtraProps(TimeRemaining);
 
 export default React.memo(TimeRemaining);

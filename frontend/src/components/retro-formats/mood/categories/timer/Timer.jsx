@@ -2,23 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
-import LiveTimer from '../../../../common/LiveTimer';
+import useCountdown from '../../../../../hooks/useCountdown';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
 export const Timer = ({
   targetTime,
   onAddExtraTime,
-}) => (
-  <div className="timer">
-    <LiveTimer
-      targetTime={targetTime}
-      refreshInterval={1000}
-      Counter={TimeRemaining}
-      Expired={TimeUp}
-      onAddExtraTime={onAddExtraTime}
-    />
-  </div>
-);
+}) => {
+  const remaining = useCountdown(targetTime, 1000);
+
+  let component;
+  if (remaining >= 0) {
+    component = (<TimeRemaining remaining={remaining} />);
+  } else {
+    component = (<TimeUp onAddExtraTime={onAddExtraTime} />);
+  }
+
+  return (<div className="timer">{ component }</div>);
+};
 
 Timer.propTypes = {
   targetTime: PropTypes.number.isRequired,
