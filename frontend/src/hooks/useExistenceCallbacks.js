@@ -4,7 +4,7 @@ export default function useExistenceCallbacks(onAppear, onDisappear, ...params) 
   useLayoutEffect(() => {
     onAppear(...params);
     return () => {
-      onDisappear(...params);
+      onDisappear?.(...params);
     };
   }, [onAppear, onDisappear, ...params]);
 }

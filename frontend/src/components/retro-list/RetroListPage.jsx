@@ -3,23 +3,30 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet-async';
 import Loader from '../common/Loader';
+import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
 import { propTypesShapeRetroSummary } from '../../helpers/dataStructurePropTypes';
 import RetroList from './RetroList';
 
-export const RetroListPage = ({ retrosData, onAppear }) => (
-  <article className="page-retro-list">
-    <Helmet title="Retros - Refacto" />
-    <Loader
-      loading={!retrosData}
-      Component={RetroList}
-      onAppear={onAppear}
-      retros={retrosData?.retros}
-    />
-  </article>
-);
+export const RetroListPage = ({
+  retrosData,
+  onAppear,
+}) => {
+  useExistenceCallbacks(onAppear);
+
+  return (
+    <article className="page-retro-list">
+      <Helmet title="Retros - Refacto" />
+      <Loader
+        loading={!retrosData}
+        Component={RetroList}
+        retros={retrosData?.retros}
+      />
+    </article>
+  );
+};
 
 RetroListPage.propTypes = {
   retrosData: PropTypes.shape({
