@@ -10,6 +10,12 @@ import localDateTracker from './time/localDateTracker';
 import App from './components/App';
 import './index.less';
 
+// https://github.com/facebook/react/issues/12906
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line no-console
+  console.info('React.StrictMode is enabled; some lifecycle methods including constructors and render will be double-invoked to check for side-effects');
+}
+
 localDateTracker((localDateProvider) => {
   store.dispatch(setLocalDateProvider(localDateProvider));
 });
