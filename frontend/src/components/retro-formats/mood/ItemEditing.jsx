@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ExpandingTextEntry from '../../common/ExpandingTextEntry';
+import WrappedButton from '../../common/WrappedButton';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 
 export const ItemEditing = ({
@@ -19,9 +20,9 @@ export const ItemEditing = ({
       onSubmit={onSubmit}
       onCancel={onCancel}
       extraOptions={onDelete && (
-        <button type="button" title="Delete" className="delete" onClick={onDelete}>
+        <WrappedButton title="Delete" className="delete" onClick={onDelete}>
           Delete
-        </button>
+        </WrappedButton>
       )}
       autoFocus /* eslint-disable-line jsx-a11y/no-autofocus */ // user triggered this
     />

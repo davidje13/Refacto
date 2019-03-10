@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import VoteCount from './VoteCount';
+import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 
@@ -12,13 +13,16 @@ export const MoodItemPlain = ({
   onEdit,
 }) => (
   <div className={classNames('mood-item', { done: item.done })}>
-    <button type="button" className="message" onClick={onSelect} disabled={onSelect === null}>
+    <WrappedButton className="message" onClick={onSelect}>
       { item.message }
-    </button>
+    </WrappedButton>
     <VoteCount votes={item.votes} onVote={onVote} />
-    { onEdit && (
-      <button type="button" title="Edit" className="edit" onClick={onEdit} />
-    ) }
+    <WrappedButton
+      title="Edit"
+      className="edit"
+      onClick={onEdit}
+      hideIfDisabled
+    />
   </div>
 );
 

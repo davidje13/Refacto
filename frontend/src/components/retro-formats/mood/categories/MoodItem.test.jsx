@@ -10,27 +10,27 @@ describe('MoodItem integration', () => {
   it('displays the item message', () => {
     const dom = mount(<MoodItem item={item} />);
 
-    expect(dom.find('.message')).toHaveText(item.message);
+    expect(dom.find('button.message')).toHaveText(item.message);
   });
 
   it('displays the vote count', () => {
     const dom = mount(<MoodItem item={item} />);
 
-    expect(dom.find('.vote')).toHaveText('3');
+    expect(dom.find('button.vote')).toHaveText('3');
   });
 
   it('does not allow voting if no callback is given', () => {
     const dom = mount(<MoodItem item={makeItem()} />);
 
-    expect(dom.find('.vote')).toBeDisabled();
+    expect(dom.find('button.vote')).toBeDisabled();
   });
 
   it('invokes the given callback with the item ID if voted on', () => {
     const onVote = jest.fn().mockName('onVote');
     const dom = mount(<MoodItem item={item} onVote={onVote} />);
 
-    expect(dom.find('.vote')).not.toBeDisabled();
-    dom.find('.vote').simulate('click');
+    expect(dom.find('button.vote')).not.toBeDisabled();
+    dom.find('button.vote').simulate('click');
 
     expect(onVote).toHaveBeenCalled();
   });

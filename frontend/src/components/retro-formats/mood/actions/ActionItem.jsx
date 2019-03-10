@@ -2,8 +2,8 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ItemEditing from '../ItemEditing';
+import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import useStrippedCallback from '../../../../hooks/useStrippedCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 import './ActionItem.less';
@@ -14,12 +14,12 @@ export const ActionItem = ({
   onEdit,
   onDelete,
 }) => {
-  const handleToggleDone = useStrippedCallback(onSetDone, item.id, !item.done);
+  const handleToggleDone = useBoundCallback(onSetDone, item.id, !item.done);
   const handleDelete = useBoundCallback(onDelete, item.id);
 
   const [editing, setEditing] = useState(false);
-  const handleBeginEdit = useStrippedCallback(setEditing, true);
-  const handleCancelEdit = useStrippedCallback(setEditing, false);
+  const handleBeginEdit = useBoundCallback(setEditing, true);
+  const handleCancelEdit = useBoundCallback(setEditing, false);
   const handleSaveEdit = useCallback((message) => {
     setEditing(false);
     onEdit(item.id, message);
@@ -40,21 +40,18 @@ export const ActionItem = ({
   return (
     <div className={classNames('action-item', { done: item.done })}>
       <div className="message">{ item.message }</div>
-      <button
-        type="button"
+      <WrappedButton
         title={item.done ? 'Mark as not done' : 'Mark as done'}
         className="toggle-done"
-        disabled={!handleToggleDone}
         onClick={handleToggleDone}
       />
-      { onEdit && (
-        <button
-          type="button"
-          title="Edit"
-          className="edit"
-          onClick={handleBeginEdit}
-        />
-      ) }
+      <WrappedButton
+        title="Edit"
+        className="edit"
+        disabled={!onEdit}
+        hideIfDisabled
+        onClick={handleBeginEdit}
+      />
     </div>
   );
 };

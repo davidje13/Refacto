@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
+import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
 
@@ -15,12 +16,12 @@ export const MoodItemFocused = ({
   <div className="mood-item focused">
     <div className="message">{ item.message }</div>
     <VoteCount votes={item.votes} />
-    <button type="button" title="Cancel" className="cancel" onClick={onCancel}>
+    <WrappedButton title="Cancel" className="cancel" onClick={onCancel}>
       Cancel
-    </button>
-    <button type="button" title="Done" className="close" onClick={onDone}>
+    </WrappedButton>
+    <WrappedButton title="Done" className="close" onClick={onDone}>
       Done
-    </button>
+    </WrappedButton>
     <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />
   </div>
 );

@@ -1,36 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import WrappedButton from '../../../../common/WrappedButton';
+import useBoundCallback from '../../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
-export class TimeUp extends React.PureComponent {
-  static propTypes = {
-    onAddExtraTime: PropTypes.func,
-  };
+export const TimeUp = ({ onAddExtraTime }) => {
+  const extraMinutes = 2;
 
-  static defaultProps = {
-    onAddExtraTime: null,
-  };
+  const extraTime = extraMinutes * 60 * 1000 + 999;
+  const handleAddExtraTime = useBoundCallback(onAddExtraTime, extraTime);
+  const extraTimeLabel = `+${extraMinutes} more minutes`;
 
-  handleAddExtraTime = () => {
-    const { onAddExtraTime } = this.props;
+  return (
+    <React.Fragment>
+      <p className="timeup">Time&rsquo;s up!</p>
+      <WrappedButton onClick={handleAddExtraTime} hideIfDisabled>
+        { extraTimeLabel }
+      </WrappedButton>
+    </React.Fragment>
+  );
+};
 
-    onAddExtraTime(2 * 60 * 1000 + 999);
-  };
+TimeUp.propTypes = {
+  onAddExtraTime: PropTypes.func,
+};
 
-  render() {
-    const { onAddExtraTime } = this.props;
-
-    return (
-      <React.Fragment>
-        <p className="timeup">Time&rsquo;s up!</p>
-        { onAddExtraTime && (
-          <button type="button" onClick={this.handleAddExtraTime}>+2 more minutes</button>
-        ) }
-      </React.Fragment>
-    );
-  }
-}
+TimeUp.defaultProps = {
+  onAddExtraTime: null,
+};
 
 forbidExtraProps(TimeUp);
 
-export default TimeUp;
+export default React.memo(TimeUp);

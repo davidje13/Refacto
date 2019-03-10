@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
+import WrappedButton from '../../../common/WrappedButton';
 
 export const VoteCount = ({
   votes,
   onVote,
 }) => (
-  <button
-    type="button"
+  <WrappedButton
     className="vote"
-    title={onVote === null ? `${votes} agree with this` : 'Agree with this'}
-    disabled={onVote === null}
+    title="Agree with this"
+    disabledTitle={`${votes} agree with this`}
     onClick={onVote}
   >
     {votes}
-  </button>
+  </WrappedButton>
 );
 
 VoteCount.propTypes = {
