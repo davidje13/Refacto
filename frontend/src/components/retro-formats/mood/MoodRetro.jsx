@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
+import useMutatedCallback from '../../../hooks/useMutatedCallback';
+import useBoundCallback from '../../../hooks/useBoundCallback';
+import useBoxed from '../../../hooks/useBoxed';
 import nullable from '../../../helpers/nullableProps';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeRetroData } from '../../../helpers/dataStructurePropTypes';
@@ -17,154 +20,132 @@ const CATEGORIES = [
   { id: 'sad', title: 'Sad', placeholder: 'It wasn\u2019t so great that\u2026' },
 ];
 
-export class MoodRetro extends React.PureComponent {
-  static propTypes = {
-    retroState: PropTypes.shape({
-      focusedItemId: PropTypes.string,
-      focusedItemTimeout: PropTypes.number,
-    }).isRequired,
-    retroData: propTypesShapeRetroData.isRequired,
-    singleColumn: PropTypes.bool.isRequired,
-    localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
-    archive: PropTypes.bool.isRequired,
-    onAddItem: nullable(PropTypes.func).isRequired,
-    onVoteItem: nullable(PropTypes.func).isRequired,
-    onEditItem: nullable(PropTypes.func).isRequired,
-    onDeleteItem: nullable(PropTypes.func).isRequired,
-    onSetItemDone: nullable(PropTypes.func).isRequired,
-    onSetRetroState: nullable(PropTypes.func).isRequired,
-  };
+export const MoodRetro = ({
+  retroState: {
+    focusedItemId = null,
+    focusedItemTimeout = 0,
+  },
+  retroData: {
+    items,
+  },
+  singleColumn,
+  localDateProvider,
+  archive,
+  onAddItem,
+  onVoteItem,
+  onEditItem,
+  onDeleteItem,
+  onSetItemDone,
+  onSetRetroState,
+}) => {
+  const handleAddActionItem = useBoundCallback(onAddItem, 'action');
 
-  onAddActionItem = (message) => {
-    const { onAddItem } = this.props;
-    onAddItem('action', message);
-  };
+  const handleAddExtraTime = useMutatedCallback(
+    onSetRetroState,
+    (duration) => [{ focusedItemTimeout: Date.now() + duration }],
+    [],
+  );
 
-  onSwitchFocus = (id) => {
-    const { onSetRetroState } = this.props;
+  const refFocusedItemId = useBoxed(focusedItemId);
+  const handleSwitchFocus = useCallback((id, markPreviousDone) => {
+    const focusedId = refFocusedItemId.current;
+
+    if (markPreviousDone && focusedId !== null && id !== focusedId) {
+      onSetItemDone(focusedId, true);
+    }
+
     onSetRetroState({
       focusedItemId: id,
       focusedItemTimeout: Date.now() + (5 * 60 * 1000 + 999),
     });
-  };
+  }, [onSetRetroState, onSetItemDone, refFocusedItemId]);
 
-  onAddExtraTime = (duration) => {
-    const { onSetRetroState } = this.props;
-    onSetRetroState({
-      focusedItemTimeout: Date.now() + duration,
-    });
-  };
+  const createMoodSection = (category) => (
+    <MoodSection
+      key={category.id}
+      items={items}
+      addItemPlaceholder={category.placeholder}
+      onAddItem={onAddItem}
+      onVote={onVoteItem}
+      onEdit={onEditItem}
+      onDelete={onDeleteItem}
+      onSwitchFocus={onSetRetroState && handleSwitchFocus}
+      onAddExtraTime={handleAddExtraTime}
+      onSetDone={onSetItemDone}
+      focusedItemId={focusedItemId}
+      focusedItemTimeout={focusedItemTimeout}
+      category={category.id}
+    />
+  );
 
-  createMoodSection = (category) => {
-    const {
-      retroState: {
-        focusedItemId = null,
-        focusedItemTimeout = 0,
+  const actionSection = (
+    <ActionsPane
+      items={items}
+      onAddItem={handleAddActionItem}
+      onSetDone={onSetItemDone}
+      onEdit={onEditItem}
+      onDelete={onDeleteItem}
+      localDateProvider={localDateProvider}
+    />
+  );
+
+  const hasFocused = (focusedItemId !== null);
+
+  const baseClassName = classNames(
+    'retro-format-mood',
+    singleColumn ? 'single-column' : 'multi-column',
+    { 'has-focused': hasFocused, archive },
+  );
+
+  if (singleColumn) {
+    const tabs = [
+      ...CATEGORIES.map((category) => ({
+        key: category.id,
+        title: category.title,
+        className: category.id,
+        content: createMoodSection(category),
+      })),
+      {
+        key: 'actions',
+        title: 'Action',
+        className: 'actions',
+        content: actionSection,
       },
-      retroData: {
-        items,
-      },
-      onAddItem,
-      onVoteItem,
-      onEditItem,
-      onDeleteItem,
-      onSetItemDone,
-      onSetRetroState,
-    } = this.props;
-
-    return (
-      <MoodSection
-        key={category.id}
-        items={items}
-        addItemPlaceholder={category.placeholder}
-        onAddItem={onAddItem}
-        onVote={onVoteItem}
-        onEdit={onEditItem}
-        onDelete={onDeleteItem}
-        onSwitchFocus={onSetRetroState && this.onSwitchFocus}
-        onAddExtraTime={onSetRetroState && this.onAddExtraTime}
-        onSetDone={onSetItemDone}
-        focusedItemId={focusedItemId}
-        focusedItemTimeout={focusedItemTimeout}
-        category={category.id}
-      />
-    );
-  };
-
-  createActionSection = () => {
-    const {
-      retroData: {
-        items,
-      },
-      onAddItem,
-      localDateProvider,
-      onEditItem,
-      onDeleteItem,
-      onSetItemDone,
-    } = this.props;
-
-    return (
-      <ActionsPane
-        items={items}
-        onAddItem={onAddItem && this.onAddActionItem}
-        onSetDone={onSetItemDone}
-        onEdit={onEditItem}
-        onDelete={onDeleteItem}
-        localDateProvider={localDateProvider}
-      />
-    );
-  };
-
-  render() {
-    const {
-      retroState: {
-        focusedItemId = null,
-      },
-      singleColumn,
-      archive,
-    } = this.props;
-
-    const hasFocused = (focusedItemId !== null);
-
-    const baseClassName = classNames(
-      'retro-format-mood',
-      singleColumn ? 'single-column' : 'multi-column',
-      { 'has-focused': hasFocused, archive },
-    );
-
-    if (singleColumn) {
-      const tabs = [
-        ...CATEGORIES.map((category) => ({
-          key: category.id,
-          title: category.title,
-          className: category.id,
-          content: this.createMoodSection(category),
-        })),
-        {
-          key: 'actions',
-          title: 'Action',
-          className: 'actions',
-          content: this.createActionSection(),
-        },
-      ];
-
-      return (
-        <div className={baseClassName}>
-          <TabControl tabs={tabs} />
-        </div>
-      );
-    }
+    ];
 
     return (
       <div className={baseClassName}>
-        <section className="columns">
-          { CATEGORIES.map((category) => this.createMoodSection(category)) }
-        </section>
-        { this.createActionSection() }
+        <TabControl tabs={tabs} />
       </div>
     );
   }
-}
+
+  return (
+    <div className={baseClassName}>
+      <section className="columns">
+        { CATEGORIES.map((category) => createMoodSection(category)) }
+      </section>
+      { actionSection }
+    </div>
+  );
+};
+
+MoodRetro.propTypes = {
+  retroState: PropTypes.shape({
+    focusedItemId: PropTypes.string,
+    focusedItemTimeout: PropTypes.number,
+  }).isRequired,
+  retroData: propTypesShapeRetroData.isRequired,
+  singleColumn: PropTypes.bool.isRequired,
+  localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
+  archive: PropTypes.bool.isRequired,
+  onAddItem: nullable(PropTypes.func).isRequired,
+  onVoteItem: nullable(PropTypes.func).isRequired,
+  onEditItem: nullable(PropTypes.func).isRequired,
+  onDeleteItem: nullable(PropTypes.func).isRequired,
+  onSetItemDone: nullable(PropTypes.func).isRequired,
+  onSetRetroState: nullable(PropTypes.func).isRequired,
+};
 
 forbidExtraProps(MoodRetro);
 

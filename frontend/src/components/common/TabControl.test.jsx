@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
 import { TabControl } from './TabControl';
 
@@ -30,7 +30,7 @@ describe('TabControl', () => {
   let headers;
 
   beforeEach(() => {
-    dom = shallow(<TabControl tabs={tabs} />);
+    dom = mount(<TabControl tabs={tabs} />);
     headers = dom.find('button');
   });
 

@@ -1,8 +1,5 @@
-import { useMemo } from 'react';
+import useMutatedCallback from './useMutatedCallback';
 
-export default function useParameterlessCallback(fn, ...replacementParams) {
-  return useMemo(
-    () => fn && (() => fn(...replacementParams)),
-    [fn, ...replacementParams],
-  );
+export default function useParameterlessCallback(fn, ...overrideParams) {
+  return useMutatedCallback(fn, () => overrideParams, overrideParams);
 }

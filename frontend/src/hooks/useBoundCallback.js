@@ -1,8 +1,5 @@
-import { useMemo } from 'react';
+import useMutatedCallback from './useMutatedCallback';
 
 export default function useBoundCallback(fn, ...bound) {
-  return useMemo(
-    () => fn && ((...args) => fn(...bound, ...args)),
-    [fn, ...bound],
-  );
+  return useMutatedCallback(fn, (...args) => [...bound, ...args], bound);
 }
