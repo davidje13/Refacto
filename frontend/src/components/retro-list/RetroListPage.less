@@ -1,5 +1,25 @@
+@import (reference) '../colours.less';
+
 .page-retro-list {
-  p {
-    margin: 64px 32px;
+  ul.retros {
+    margin: 64px 16px 128px;
+    list-style: none;
+    text-align: center;
+
+    li a {
+      display: inline-block;
+      margin: 8px 0;
+      padding: 16px;
+      width: 20rem;
+      max-width: calc(100% - 32px);
+      background: #FFFFFF;
+      color: @green-text-on-white;
+
+      &:active, &:hover, &:focus {
+        color: #FFFFFF;
+        text-decoration: none;
+        background: @green-button-dark;
+      }
+    }
   }
 }

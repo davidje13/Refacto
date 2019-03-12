@@ -23,7 +23,7 @@ describe('Running a retro', () => {
     welcome = await new Welcome(driver).load();
 
     expect(await welcome.getTitle()).toEqual('Refacto');
-    expect(await welcome.getHeaderText()).toContain('This is');
+    expect(await welcome.getHeaderText()).toContain('Refacto');
   });
 
   it('shows a list of retros when requested', async () => {

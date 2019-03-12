@@ -7,7 +7,7 @@ export const WelcomePage = () => (
   <article className="page-welcome">
     <Header
       documentTitle="Refacto"
-      title="This is Refacto"
+      title="Refacto"
     />
     <p>Take a look at the <Link to="/retros/" className="link-retro-list">retros</Link></p>
   </article>
