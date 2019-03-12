@@ -1,0 +1,46 @@
+@import (reference) '../colours.less';
+
+.top-header {
+  padding: 16px 12px;
+  position: relative;
+  box-shadow: 0 4px 3px -5px rgba(0, 0, 0, 0.5);
+  background: @header-back;
+
+  h1 {
+    font-size: 1.5em;
+    line-height: 1.8rem;
+    font-weight: bolder;
+    text-align: center;
+  }
+
+  a {
+    padding: 16px 12px;
+    box-sizing: border-box;
+    line-height: 1.8rem;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    &:link, &:visited {
+      color: #666666;
+    }
+
+    &:active, &:hover, &:focus {
+      background: #DDDDDD;
+      color: #000000;
+      text-decoration: none;
+    }
+  }
+
+  .back {
+    left: 0;
+    right: auto;
+
+    &::before {
+      content: "\2039";
+      padding-right: 4px;
+    }
+  }
+}

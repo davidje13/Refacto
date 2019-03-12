@@ -6,6 +6,6 @@ import { NotFoundPage } from './NotFoundPage';
 describe('NotFoundPage', () => {
   it('displays a message', () => {
     const dom = shallow(<NotFoundPage />);
-    expect(dom).toIncludeText('Not Found');
+    expect(dom).toIncludeText('not found');
   });
 });

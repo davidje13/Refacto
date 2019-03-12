@@ -12,16 +12,13 @@ export const RetroList = ({ retros }) => {
   }
 
   return (
-    <React.Fragment>
-      <h1>Retros</h1>
-      <ul className="retros">
-        { retros.map(({ id, slug, name }) => (
-          <li key={id}>
-            <RetroLink name={name} slug={slug} />
-          </li>
-        )) }
-      </ul>
-    </React.Fragment>
+    <ul className="retros">
+      { retros.map(({ id, slug, name }) => (
+        <li key={id}>
+          <RetroLink name={name} slug={slug} />
+        </li>
+      )) }
+    </ul>
   );
 };
 

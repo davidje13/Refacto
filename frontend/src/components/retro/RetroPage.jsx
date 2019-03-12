@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Header from '../common/Header';
 import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import useBoundCallback from '../../hooks/useBoundCallback';
@@ -19,7 +20,7 @@ import {
   deleteRetroItem,
   setRetroItemDone,
 } from '../../reducers/retroItems';
-import Retro from './Retro';
+import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './RetroPage.less';
 
 export const RetroPage = ({
@@ -36,13 +37,20 @@ export const RetroPage = ({
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug);
 
+  const retroName = data?.retro?.name || slug;
+
   return (
     <article className="page-retro">
+      <Header
+        documentTitle={`${retroName} - Refacto`}
+        title={retroName}
+        links={[{ label: 'Archives', url: `/retros/${slug}/archives` }]}
+      />
       <Loader
         loading={!data}
-        title={`${data?.retro?.name || slug} - Refacto`}
-        Component={Retro}
-        retro={data?.retro}
+        Component={RetroFormatPicker}
+        retroData={data?.retro?.data}
+        retroState={data?.retro?.state}
         onAddItem={useBoundCallback(onAddItem, slug)}
         onVoteItem={useBoundCallback(onVoteItem, slug)}
         onEditItem={useBoundCallback(onEditItem, slug)}

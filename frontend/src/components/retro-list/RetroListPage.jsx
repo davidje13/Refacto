@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Helmet from 'react-helmet-async';
+import Header from '../common/Header';
 import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
@@ -9,6 +9,7 @@ import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
 import { propTypesShapeRetroSummary } from '../../helpers/dataStructurePropTypes';
 import RetroList from './RetroList';
+import './RetroListPage.less';
 
 export const RetroListPage = ({
   retrosData,
@@ -18,7 +19,11 @@ export const RetroListPage = ({
 
   return (
     <article className="page-retro-list">
-      <Helmet title="Retros - Refacto" />
+      <Header
+        documentTitle="Retros - Refacto"
+        title="Retros"
+        backLink={{ label: 'Home', url: '/' }}
+      />
       <Loader
         loading={!retrosData}
         Component={RetroList}

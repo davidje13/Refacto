@@ -1,36 +1,38 @@
+@import (reference) '../../colours.less';
+
 @base-padding: 16px;
 @action-header-padding: 24px;
 
 .retro-format-mood {
   .happy {
-    background: hsl(172deg, 50%, 55%);
+    background: @green-back;
 
     header .text-entry {
-      background: hsl(172deg, 50%, 45%);
+      background: @green-shadow;
     }
   }
 
   .meh {
-    background: hsl(45deg, 100%, 55%);
+    background: @yellow-back;
 
     header .text-entry {
-      background: hsl(45deg, 100%, 45%);
+      background: @yellow-shadow;
     }
   }
 
   .sad {
-    background: hsl(5deg, 75%, 58%);
+    background: @red-back;
 
     header .text-entry {
-      background: hsl(5deg, 75%, 45%);
+      background: @red-shadow;
     }
   }
 
   .actions {
-    background: hsl(45deg, 20%, 92%);
+    background: @beige-back;
 
     header .text-entry {
-      background: hsl(45deg, 20%, 80%);
+      background: @beige-shadow;
     }
 
     &.tab-item {
@@ -118,7 +120,7 @@
 
     .submit {
       font-weight: bold;
-      background: #50E3C2;
+      background: @green-button-back;
       color: #000000;
 
       &::before {
@@ -129,7 +131,7 @@
     .delete {
       float: left;
       padding-left: 12px;
-      color: #CC0000;
+      color: @red-text-on-white;
 
       &::before {
         content: "\1F5D1 ";
@@ -168,7 +170,7 @@
       background: #FFFFFF;
 
       textarea::placeholder {
-        color: #808080;
+        color: @pale-text-on-white;
       }
     }
   }

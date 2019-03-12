@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Helmet from 'react-helmet-async';
+import Header from '../common/Header';
+import './WelcomePage.less';
 
 export const WelcomePage = () => (
   <article className="page-welcome">
-    <Helmet title="Refacto" />
-    <h1>This is Refacto</h1>
+    <Header
+      documentTitle="Refacto"
+      title="This is Refacto"
+    />
     <p>Take a look at the <Link to="/retros/" className="link-retro-list">retros</Link></p>
   </article>
 );

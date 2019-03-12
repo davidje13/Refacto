@@ -1,3 +1,5 @@
+@import (reference) '../../../colours.less';
+
 .mood-item {
   background: #FFFFFF;
   padding: 0;
@@ -31,7 +33,7 @@
     &::before {
       content: "\2665";
       display: block;
-      color: #AA3300;
+      color: @red-icon;
     }
 
     &:focus {
@@ -46,12 +48,13 @@
     width: 2.5rem;
     height: 2.5rem;
     margin-top: -1.25rem;
-    color: #BBBBBB;
+    color: #666666;
     font-size: 1.5em;
     transform: scaleX(-1);
+    opacity: 0.4;
 
     &:hover {
-      color: #666666;
+      opacity: 1;
     }
 
     &::before {
@@ -113,18 +116,18 @@
       .countdown {
         line-height: 2.5rem;
         min-width: 2.5rem;
-        color: #808080;
+        color: @pale-text-on-white;
       }
 
       .timeup {
-        color: hsl(172deg, 50%, 45%);
+        color: @green-text-on-white;
         font-weight: bolder;
         font-size: 0.9em;
       }
 
       button {
         font-size: 0.8em;
-        color: #808080;
+        color: @pale-text-on-white;
       }
     }
 
@@ -144,7 +147,7 @@
     .close {
       padding: 12px 20px;
       font-weight: bold;
-      background: #50E3C2;
+      background: @green-button-back;
       color: #000000;
       float: right;
     }

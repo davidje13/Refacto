@@ -1,0 +1,21 @@
+@import (reference) './colours.less';
+
+body, input, textarea, button {
+  font: 300 1em 'Open Sans', sans-serif;
+  line-height: 1.4;
+}
+
+article {
+  background: @beige-back;
+  border-bottom: 1px solid #FFFFFF; /* prevent background clipping */
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: @link-text;
+}
+
+a:active, a:hover, a:focus {
+  text-decoration: underline;
+  color: @link-text-hover;
+}

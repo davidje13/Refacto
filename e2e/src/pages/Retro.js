@@ -7,7 +7,7 @@ export default class Retro extends Page {
   }
 
   getName() {
-    return this.driver.findElement(By.css('.retro-name'));
+    return this.driver.findElement(By.css('.top-header h1'));
   }
 
   getNameText() {

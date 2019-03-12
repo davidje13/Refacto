@@ -8,6 +8,7 @@ import RetroPage from './retro/RetroPage';
 import ArchiveListPage from './archive-list/ArchiveListPage';
 import ArchivePage from './archive/ArchivePage';
 import NotFoundPage from './not-found/NotFoundPage';
+import './App.less';
 
 export const App = () => (
   <React.Fragment>

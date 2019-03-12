@@ -1,10 +1,15 @@
 import React from 'react';
-import Helmet from 'react-helmet-async';
+import Header from '../common/Header';
+import './NotFoundPage.less';
 
 export const NotFoundPage = () => (
   <article className="page-not-found">
-    <Helmet title="Not Found - Refacto" />
-    <h1>Not Found</h1>
+    <Header
+      documentTitle="Not Found - Refacto"
+      title="Not Found"
+      backLink={{ label: 'Home', url: '/' }}
+    />
+    <p>Sorry, that page was not found.</p>
   </article>
 );
 

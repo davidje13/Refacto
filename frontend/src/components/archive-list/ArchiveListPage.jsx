@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Header from '../common/Header';
 import Loader from '../common/Loader';
 import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
@@ -8,6 +9,7 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import ArchiveList from './ArchiveList';
+import './ArchiveListPage.less';
 
 export const ArchiveListPage = ({
   data,
@@ -17,11 +19,17 @@ export const ArchiveListPage = ({
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug);
 
+  const retroName = data?.retro?.name || slug;
+
   return (
     <article className="page-archive-list">
+      <Header
+        documentTitle={`Archives - ${retroName} - Refacto`}
+        title={`${retroName} Archives`}
+        backLink={{ label: 'Back to Retro', url: `/retros/${slug}` }}
+      />
       <Loader
         loading={!data}
-        title={`Archives - ${data?.retro.name || slug} - Refacto`}
         Component={ArchiveList}
         retro={data?.retro}
       />

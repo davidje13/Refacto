@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Header from '../common/Header';
 import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
@@ -9,9 +10,10 @@ import {
   propTypesShapeRetro,
   propTypesShapeArchive,
 } from '../../helpers/dataStructurePropTypes';
+import { formatDate } from '../../time/formatters';
 import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
 import { loadArchive } from '../../reducers/archive';
-import ArchivedRetro from './ArchivedRetro';
+import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './ArchivePage.less';
 
 export const ArchivePage = ({
@@ -21,18 +23,30 @@ export const ArchivePage = ({
   onAppear,
   onDisappear,
 }) => {
-  const archiveData = retroData?.archives[archiveId];
-
   useExistenceCallbacks(onAppear, onDisappear, slug, archiveId);
+
+  const archiveData = retroData?.archives?.[archiveId];
+
+  const retroName = retroData?.retro?.name || slug;
+  let archiveName = 'Archive';
+  if (archiveData?.archive) {
+    const { created } = archiveData.archive;
+    archiveName = `${formatDate(created)} Archive`;
+  }
 
   return (
     <article className="page-archive">
+      <Header
+        documentTitle={`${archiveName} - ${retroName} - Refacto`}
+        title={`${retroName} (${archiveName})`}
+        backLink={{ label: 'Archives', url: `/retros/${slug}/archives` }}
+      />
       <Loader
         loading={!archiveData}
-        title={`${retroData?.retro.name || slug} [Archived] - Refacto`}
-        Component={ArchivedRetro}
-        retro={retroData?.retro}
-        archive={archiveData?.archive}
+        Component={RetroFormatPicker}
+        retroData={archiveData?.archive?.data}
+        retroState={{}}
+        archive
       />
     </article>
   );

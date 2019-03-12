@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import ArchiveLink from './ArchiveLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
@@ -23,17 +22,13 @@ export const ArchiveList = ({ retro: { slug, archives } }) => {
   }
 
   return (
-    <React.Fragment>
-      <h1>Retro Archives</h1>
-      <Link to={`/retros/${slug}`}>Back to Retro</Link>
-      <ul className="archives">
-        { sortArchives(archives).map(({ id, created }) => (
-          <li key={id}>
-            <ArchiveLink retroSlug={slug} archiveId={id} created={created} />
-          </li>
-        )) }
-      </ul>
-    </React.Fragment>
+    <ul className="archives">
+      { sortArchives(archives).map(({ id, created }) => (
+        <li key={id}>
+          <ArchiveLink retroSlug={slug} archiveId={id} created={created} />
+        </li>
+      )) }
+    </ul>
   );
 };
 

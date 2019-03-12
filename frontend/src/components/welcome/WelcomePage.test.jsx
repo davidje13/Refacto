@@ -1,9 +1,10 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import { mount, shallow } from 'enzyme';
 
 import { WelcomePage } from './WelcomePage';
+
+jest.mock('../common/Header', () => () => (<div />));
 
 describe('WelcomePage', () => {
   it('renders without error', () => {
@@ -14,11 +15,9 @@ describe('WelcomePage', () => {
   it('links to the retro list page', () => {
     const context = {};
     const dom = mount((
-      <HelmetProvider>
-        <StaticRouter location="/" context={context}>
-          <WelcomePage />
-        </StaticRouter>
-      </HelmetProvider>
+      <StaticRouter location="/" context={context}>
+        <WelcomePage />
+      </StaticRouter>
     ));
 
     dom.find('a.link-retro-list').simulate('click', { button: 0 });

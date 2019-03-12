@@ -1,3 +1,5 @@
+@import (reference) '../../../colours.less';
+
 .action-item {
   background: #FFFFFF;
   padding: 16px 24px;
@@ -26,7 +28,7 @@
     margin-top: -1.25rem;
     background: #FFFFFF;
     box-sizing: border-box;
-    border: 8px solid hsl(45deg, 20%, 92%);
+    border: 8px solid @beige-icon;
     line-height: 1rem;
     font-weight: bolder;
     border-radius: 1px;
@@ -49,7 +51,7 @@
   &.done .toggle-done {
     transition: font-size 0.1s ease-out;
     font-size: 2.5em;
-    color: hsl(172deg, 50%, 55%);
+    color: @green-icon;
   }
 
   .edit {
@@ -59,12 +61,13 @@
     width: 2.5rem;
     height: 2.5rem;
     margin-top: -1.25rem;
-    color: #BBBBBB;
+    color: #666666;
     font-size: 1.5em;
     transform: scaleX(-1);
+    opacity: 0.4;
 
     &:hover {
-      color: #666666;
+      opacity: 1;
     }
 
     &::before {
