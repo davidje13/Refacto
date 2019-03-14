@@ -1,6 +1,6 @@
-import express from 'express';
+import Router from '../websocket-express/Router';
 
-export default class ApiRouter extends express.Router {
+export default class ApiRouter extends Router {
   constructor(retroService) {
     super();
 

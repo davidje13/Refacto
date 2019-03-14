@@ -1,4 +1,4 @@
-const { baseRules } = require('../eslint.js');
+const { baseRules, testRules } = require('../eslint.js');
 
 module.exports = {
   options: {
@@ -8,6 +8,12 @@ module.exports = {
     ['@neutrinojs/airbnb', {
       eslint: {
         rules: baseRules,
+        baseConfig: {
+          overrides: [{
+            files: ['**/test-helpers/*'],
+            rules: testRules,
+          }],
+        },
       },
     }],
     ['@neutrinojs/copy', {

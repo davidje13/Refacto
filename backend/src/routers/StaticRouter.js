@@ -1,10 +1,11 @@
 import express from 'express';
 import path from 'path';
+import Router from '../websocket-express/Router';
 import basedir from '../basedir';
 
 const forwardHost = process.env.FORWARD_HOST || null;
 
-export default class StaticRouter extends express.Router {
+export default class StaticRouter extends Router {
   constructor() {
     super();
 
@@ -12,7 +13,7 @@ export default class StaticRouter extends express.Router {
       // Dev mode: forward unknown requests to another service
       import('http-proxy-middleware')
         .then(({ default: proxy }) => {
-          this.use(proxy({ target: forwardHost }));
+          this.useHTTP(proxy({ target: forwardHost }));
         })
         .catch(() => {
           process.stderr.write((
@@ -24,7 +25,7 @@ export default class StaticRouter extends express.Router {
       const staticDir = path.join(basedir, 'static');
 
       // Production mode: all resources are copied into /static
-      this.use(express.static(staticDir));
+      this.useHTTP(express.static(staticDir));
 
       // Single page app: serve index.html for any unknown GET request
       const indexPage = path.join(staticDir, 'index.html');

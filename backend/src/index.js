@@ -12,10 +12,10 @@ const server = http.createServer();
 
 function refreshApp() {
   if (activeApp) {
-    server.removeListener('request', activeApp);
+    activeApp.detach(server);
   }
   activeApp = app; // app import updated by HMR magic
-  server.on('request', activeApp);
+  activeApp.attach(server);
 }
 
 refreshApp();

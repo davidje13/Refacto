@@ -1,10 +1,21 @@
-import request from 'supertest';
+import request from './test-helpers/superwstest';
 import app from './app';
 
 describe('Server', () => {
+  let server;
+
+  beforeEach((done) => {
+    server = app.createServer();
+    server.listen(0, done);
+  });
+
+  afterEach(() => {
+    server.close();
+  });
+
   describe('/api/retros', () => {
     it('responds with retros in JSON format', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/retros')
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -15,7 +26,7 @@ describe('Server', () => {
 
   describe('/api/slugs/slug', () => {
     it('responds with a retro ID', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/slugs/my-retro')
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -24,7 +35,7 @@ describe('Server', () => {
     });
 
     it('responds HTTP Not Found for unknown slugs', async () => {
-      await request(app)
+      await request(server)
         .get('/api/slugs/nope')
         .expect(404);
     });
@@ -32,7 +43,7 @@ describe('Server', () => {
 
   describe('/api/retros/retro-id', () => {
     it('responds with retros in JSON format', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/retros/r1')
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -41,15 +52,31 @@ describe('Server', () => {
     });
 
     it('responds HTTP Not Found for unknown IDs', async () => {
-      await request(app)
+      await request(server)
         .get('/api/retros/nope')
         .expect(404);
     });
   });
 
+  describe('ws://api/retros/retro-id', () => {
+    it('opens a web socket for known retro IDs', async () => {
+      await request(server)
+        .ws('/api/retros/r1')
+        .expect('hi')
+        .close()
+        .expectClosed();
+    });
+
+    it('closes the connection for unknown IDs', async () => {
+      await request(server)
+        .ws('/api/retros/nope')
+        .expectClosed();
+    });
+  });
+
   describe('/api/retros/retro-id/archives/archive-id', () => {
     it('responds with retro archives in JSON format', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/api/retros/r1/archives/a1')
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -58,13 +85,13 @@ describe('Server', () => {
     });
 
     it('responds HTTP Not Found for unknown IDs', async () => {
-      await request(app)
+      await request(server)
         .get('/api/retros/r1/archives/nope')
         .expect(404);
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
-      await request(app)
+      await request(server)
         .get('/api/retros/r2/archives/a1')
         .expect(404);
     });
@@ -72,7 +99,7 @@ describe('Server', () => {
 
   describe('Static content', () => {
     it('responds with index.html for root requests', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/')
         .expect(200)
         .expect('Content-Type', /text\/html/);
@@ -81,7 +108,7 @@ describe('Server', () => {
     });
 
     it('responds with index.html for all unknown requests', async () => {
-      const response = await request(app)
+      const response = await request(server)
         .get('/foobar')
         .expect(200)
         .expect('Content-Type', /text\/html/);

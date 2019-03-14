@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "source-map-support": "^0.5.10"
+    "source-map-support": "^0.5.10",
+    "ws": "^6.2.0"
   },
   "devDependencies": {
     "@neutrinojs/airbnb": "^9.0.0-rc.0",
     "@neutrinojs/copy": "^9.0.0-rc.0",
     "@neutrinojs/jest": "^9.0.0-rc.0",
     "@neutrinojs/node": "^9.0.0-rc.0",
+    "blocking-queue": "0.0.1",
     "eslint": "^5.15.1",
     "http-proxy-middleware": "^0.19.1",
     "jest": "^23.6.0",
