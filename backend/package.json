@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
+    "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "source-map-support": "^0.5.10",
     "ws": "^6.2.0"
   },

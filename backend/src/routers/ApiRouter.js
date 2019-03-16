@@ -1,8 +1,24 @@
+import crypto from 'crypto';
 import Router from '../websocket-express/Router';
+
+class UniqueIdProvider {
+  constructor() {
+    this.shared = crypto.randomBytes(8).toString('hex');
+    this.unique = 0;
+  }
+
+  get() {
+    const id = this.unique;
+    this.unique += 1;
+    return `${this.shared}-${id}`;
+  }
+}
 
 export default class ApiRouter extends Router {
   constructor(retroService) {
     super();
+
+    const idProvider = new UniqueIdProvider();
 
     this.get('/slugs/:slug', async (req, res) => {
       const { slug } = req.params;
@@ -32,48 +48,36 @@ export default class ApiRouter extends Router {
       }
     });
 
-    this.socketListeners = new Map();
-
     this.ws('/retros/:retroid', async (req, ws) => {
       const { retroid } = req.params;
 
-      const retro = await retroService.getRetro(retroid);
-      if (!retro) {
+      const mySourceId = idProvider.get();
+
+      const onChange = (change, { id, sourceId }) => {
+        const message = { change };
+        if (sourceId === mySourceId) {
+          message.id = id;
+        }
+        ws.send(JSON.stringify(message));
+      };
+
+      const subscription = await retroService.subscribeRetro(retroid, onChange);
+
+      if (!subscription) {
         ws.close();
         return;
       }
 
-      let listeners = this.socketListeners.get(retroid);
-      if (!listeners) {
-        listeners = [];
-        this.socketListeners.set(retroid, listeners);
-      }
-      listeners.push(ws);
-
-      ws.on('close', () => {
-        listeners.splice(listeners.indexOf(ws), 1);
-        if (!listeners.length) {
-          this.socketListeners.delete(retroid);
-        }
-      });
+      ws.on('close', subscription.close);
 
       ws.on('message', (msg) => {
         const { change, id } = JSON.parse(msg);
-        // reflect confirmation
-        ws.send(JSON.stringify({ change, id }));
-
-        // notify others (TODO: multi-server support)
-        const msgOut = JSON.stringify({ change });
-        listeners.forEach((listener) => {
-          if (listener !== ws) {
-            listener.send(msgOut);
-          }
-        });
-
-        // TODO: store changes
+        subscription.send(change, { sourceId: mySourceId, id });
       });
 
-      ws.send(JSON.stringify({ change: { $set: retro } }));
+      ws.send(JSON.stringify({
+        change: { $set: subscription.getInitialData() },
+      }));
     });
 
     this.get('/retros/:retroid/archives/:archiveid', async (req, res) => {

@@ -67,12 +67,18 @@ describe('Server', () => {
         .expectClosed();
     });
 
-    it('reflects update requests', async () => {
+    it('reflects update requests and persists changes', async () => {
       await request(server)
-        .ws('/api/retros/r1')
+        .ws('/api/retros/r2')
         .expectJsonMessage()
-        .send(JSON.stringify({ change: { foo: 'bar' }, id: 7 }))
-        .expectJsonMessage(({ change }) => (change.foo === 'bar'))
+        .send(JSON.stringify({ change: { name: { $set: 'bar' } }, id: 7 }))
+        .expectJsonMessage(({ change }) => (change.name.$set === 'bar'))
+        .close()
+        .expectClosed();
+
+      await request(server)
+        .ws('/api/retros/r2')
+        .expectJsonMessage(({ change }) => (change.$set.name === 'bar'))
         .close()
         .expectClosed();
     });
