@@ -42,9 +42,32 @@ function wsRequest(url) {
   };
 
   methods.send = thenDo((ws, msg) => ws.send(msg));
-  methods.expect = thenDo(async (ws, msg) => {
+  methods.expectMessage = thenDo(async (ws, msg = null) => {
     const received = await messages.pop();
-    expect(received).toEqual(msg);
+    if (msg === null) {
+      expect(received).not.toEqual('');
+    } else if (typeof msg === 'function') {
+      const result = msg(received);
+      if (result !== undefined) {
+        expect(result).toBe(true);
+      }
+    } else {
+      expect(received).toEqual(msg);
+    }
+  });
+  methods.expectJsonMessage = thenDo(async (ws, msg = null) => {
+    const received = await messages.pop();
+    const receivedJson = JSON.parse(received);
+    if (msg === null) {
+      expect(receivedJson).not.toEqual(null);
+    } else if (typeof msg === 'function') {
+      const result = msg(receivedJson);
+      if (result !== undefined) {
+        expect(result).toBe(true);
+      }
+    } else {
+      expect(receivedJson).toEqual(msg);
+    }
   });
   methods.close = thenDo((ws) => ws.close());
   methods.expectClosed = thenDo(() => closed.pop());

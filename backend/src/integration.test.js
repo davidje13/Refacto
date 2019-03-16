@@ -59,10 +59,20 @@ describe('Server', () => {
   });
 
   describe('ws://api/retros/retro-id', () => {
-    it('opens a web socket for known retro IDs', async () => {
+    it('sends initial replace-all retro data for known retro IDs', async () => {
       await request(server)
         .ws('/api/retros/r1')
-        .expect('hi')
+        .expectJsonMessage(({ change }) => (change.$set.name === 'My Retro'))
+        .close()
+        .expectClosed();
+    });
+
+    it('reflects update requests', async () => {
+      await request(server)
+        .ws('/api/retros/r1')
+        .expectJsonMessage()
+        .send(JSON.stringify({ change: { foo: 'bar' }, id: 7 }))
+        .expectJsonMessage(({ change }) => (change.foo === 'bar'))
         .close()
         .expectClosed();
     });

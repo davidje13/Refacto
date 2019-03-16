@@ -12,14 +12,12 @@ import {
   beginConsumingRetro,
   endConsumingRetro,
   setRetroState,
-} from '../../reducers/retro';
-import {
   addRetroItem,
   upvoteRetroItem,
   editRetroItem,
   deleteRetroItem,
   setRetroItemDone,
-} from '../../reducers/retroItems';
+} from '../../reducers/retro';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './RetroPage.less';
 

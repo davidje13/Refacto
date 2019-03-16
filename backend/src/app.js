@@ -1,6 +1,5 @@
 import WebSocketExpress from './websocket-express/WebSocketExpress';
 import ApiRouter from './routers/ApiRouter';
-import WebSocketRouter from './routers/WebSocketRouter';
 import StaticRouter from './routers/StaticRouter';
 import RetroService from './services/InMemoryRetroService';
 
@@ -167,7 +166,6 @@ const retroService = new RetroService([
 const app = new WebSocketExpress();
 
 app.use('/api', new ApiRouter(retroService));
-app.use('/api', new WebSocketRouter(retroService));
 app.use(new StaticRouter());
 
 export default app;

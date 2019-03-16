@@ -2,8 +2,10 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import retroList from './retroList';
 import retros from './retros';
+import { retroMiddleware } from './retro';
 import time from './time';
 import view from './view';
+import './immutabilityHelperAddons';
 
 export default createStore(
   combineReducers({
@@ -12,5 +14,5 @@ export default createStore(
     time,
     view,
   }),
-  applyMiddleware(thunk),
+  applyMiddleware(thunk, retroMiddleware),
 );
