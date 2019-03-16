@@ -5,7 +5,6 @@ import retros from './retros';
 import { retroMiddleware } from './retro';
 import time from './time';
 import view from './view';
-import './immutabilityHelperAddons';
 
 export default createStore(
   combineReducers({

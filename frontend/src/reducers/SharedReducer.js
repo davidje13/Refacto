@@ -1,4 +1,4 @@
-import update from 'immutability-helper';
+import update from 'json-immutability-helper';
 
 export default class SharedReducer {
   constructor(wsUrl, changeCallback = null, errorCallback = null) {

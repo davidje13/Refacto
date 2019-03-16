@@ -68,7 +68,7 @@ export const addRetroItem = (retroSlug, category, message) => {
 };
 
 function updateItem(itemId, updater) {
-  return { data: { items: { $updateWhere: ['id', itemId, updater] } } };
+  return { data: { items: { $updateWhere: [['id', itemId], updater] } } };
 }
 
 export const editRetroItem = (retroSlug, itemId, message) => {

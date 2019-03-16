@@ -137,7 +137,7 @@ installed (see [Running tests](#running-tests)).
 
 - React: <https://reactjs.org/docs/react-api.html>
 - Redux: <https://redux.js.org/api/api-reference>
-- Redux `update`: <https://github.com/kolodny/immutability-helper>
+- Redux `update`: <https://github.com/davidje13/json-immutability-helper> / <https://github.com/kolodny/immutability-helper>
 - React Router: <https://reacttraining.com/react-router/web/api>
 - Jest: <https://jestjs.io/docs/en/api>
 - Enzyme: <https://github.com/airbnb/enzyme>
