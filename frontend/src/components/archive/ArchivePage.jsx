@@ -25,13 +25,14 @@ export const ArchivePage = ({
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug, archiveId);
 
+  const retro = retroData?.retro;
   const archiveData = retroData?.archives?.[archiveId];
+  const archive = archiveData?.archive;
 
-  const retroName = retroData?.retro?.name || slug;
+  const retroName = retro?.name || slug;
   let archiveName = 'Archive';
-  if (archiveData?.archive) {
-    const { created } = archiveData.archive;
-    archiveName = `${formatDate(created)} Archive`;
+  if (archive) {
+    archiveName = `${formatDate(archive.created)} Archive`;
   }
 
   return (
@@ -42,9 +43,9 @@ export const ArchivePage = ({
         backLink={{ label: 'Archives', url: `/retros/${slug}/archives` }}
       />
       <Loader
-        loading={!archiveData}
+        loading={!archive}
         Component={RetroFormatPicker}
-        retroData={archiveData?.archive?.data}
+        retroData={archive?.data}
         retroState={{}}
         archive
       />

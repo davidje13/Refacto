@@ -9,7 +9,10 @@ jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div />));
 jest.mock('../common/Header', () => () => (<div />));
 
 describe('RetroPage', () => {
-  const retroData = makeRetro();
+  const retroData = {
+    retro: makeRetro(),
+    error: null,
+  };
 
   it('renders a retro page', () => {
     const dom = mount((

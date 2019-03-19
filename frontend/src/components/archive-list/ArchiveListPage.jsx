@@ -19,7 +19,8 @@ export const ArchiveListPage = ({
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug);
 
-  const retroName = retroData?.retro?.name || slug;
+  const retro = retroData?.retro;
+  const retroName = retro?.name || slug;
 
   return (
     <article className="page-archive-list">
@@ -29,9 +30,9 @@ export const ArchiveListPage = ({
         backLink={{ label: 'Back to Retro', url: `/retros/${slug}` }}
       />
       <Loader
-        loading={!retroData}
+        loading={!retro}
         Component={ArchiveList}
-        retro={retroData?.retro}
+        retro={retro}
       />
     </article>
   );

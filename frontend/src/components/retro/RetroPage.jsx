@@ -35,7 +35,8 @@ export const RetroPage = ({
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug);
 
-  const retroName = retroData?.retro?.name || slug;
+  const retro = retroData?.retro;
+  const retroName = retro?.name || slug;
 
   return (
     <article className="page-retro">
@@ -45,10 +46,10 @@ export const RetroPage = ({
         links={[{ label: 'Archives', url: `/retros/${slug}/archives` }]}
       />
       <Loader
-        loading={!retroData}
+        loading={!retro}
         Component={RetroFormatPicker}
-        retroData={retroData?.retro?.data}
-        retroState={retroData?.retro?.state}
+        retroData={retro?.data}
+        retroState={retro?.state}
         onAddItem={useBoundCallback(onAddItem, slug)}
         onVoteItem={useBoundCallback(onVoteItem, slug)}
         onEditItem={useBoundCallback(onEditItem, slug)}

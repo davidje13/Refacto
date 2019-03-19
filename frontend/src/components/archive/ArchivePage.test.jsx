@@ -13,7 +13,10 @@ describe('ArchivePage', () => {
     retro: makeRetro(),
     error: null,
     archives: {
-      myArchiveId: makeArchive(),
+      myArchiveId: {
+        archive: makeArchive(),
+        error: null,
+      },
     },
   };
 
