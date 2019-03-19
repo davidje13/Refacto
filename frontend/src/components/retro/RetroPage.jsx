@@ -6,7 +6,6 @@ import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import useBoundCallback from '../../hooks/useBoundCallback';
 import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
-import mapRouteToProps from '../../helpers/mapRouteToProps';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
   beginConsumingRetro,
@@ -80,8 +79,8 @@ RetroPage.defaultProps = {
 
 forbidExtraProps(RetroPage);
 
-const mapStateToProps = (state, { match }) => ({
-  retroData: state.retros[match.params.slug] || null,
+const mapStateToProps = (state, { slug }) => ({
+  retroData: state.retros[slug] || null,
 });
 
 const mapDispatchToProps = {
@@ -98,5 +97,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-  mapRouteToProps({ slug: 'slug' }),
 )(RetroPage);

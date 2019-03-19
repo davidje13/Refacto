@@ -5,7 +5,6 @@ import Header from '../common/Header';
 import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
 import { formatDate } from '../../time/formatters';
 import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
@@ -64,8 +63,8 @@ ArchivePage.defaultProps = {
 
 forbidExtraProps(ArchivePage);
 
-const mapStateToProps = (state, { match }) => ({
-  retroData: state.retros[match.params.slug],
+const mapStateToProps = (state, { slug }) => ({
+  retroData: state.retros[slug],
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -81,5 +80,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-  mapRouteToProps({ slug: 'slug', archiveId: 'archiveid' }),
 )(ArchivePage);

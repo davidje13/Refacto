@@ -10,15 +10,18 @@ import ArchivePage from './archive/ArchivePage';
 import NotFoundPage from './not-found/NotFoundPage';
 import './App.less';
 
+/* eslint-disable-next-line react/prop-types */ // utility function
+const withParams = (Page) => ({ match }) => (<Page {...match.params} />);
+
 export const App = () => (
   <React.Fragment>
     <Switch>
-      <Route path="/" exact component={WelcomePage} />
-      <Route path="/retros" exact component={RetroListPage} />
-      <Route path="/retros/:slug" exact component={RetroPage} />
-      <Route path="/retros/:slug/archives" exact component={ArchiveListPage} />
-      <Route path="/retros/:slug/archives/:archiveid" exact component={ArchivePage} />
-      <Route component={NotFoundPage} />
+      <Route path="/" exact render={withParams(WelcomePage)} />
+      <Route path="/retros" exact render={withParams(RetroListPage)} />
+      <Route path="/retros/:slug" exact render={withParams(RetroPage)} />
+      <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />
+      <Route path="/retros/:slug/archives/:archiveId" exact render={withParams(ArchivePage)} />
+      <Route render={withParams(NotFoundPage)} />
     </Switch>
     <Footer />
   </React.Fragment>
