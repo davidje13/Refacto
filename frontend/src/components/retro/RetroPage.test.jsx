@@ -9,13 +9,13 @@ jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div />));
 jest.mock('../common/Header', () => () => (<div />));
 
 describe('RetroPage', () => {
-  const data = makeRetro();
+  const retroData = makeRetro();
 
   it('renders a retro page', () => {
     const dom = mount((
       <RetroPage
         slug="abc"
-        data={data}
+        retroData={retroData}
         onAppear={() => {}}
         onDisappear={() => {}}
         onAddItem={() => {}}

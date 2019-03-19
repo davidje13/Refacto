@@ -9,7 +9,7 @@ jest.mock('./ArchiveList', () => () => (<div />));
 jest.mock('../common/Header', () => () => (<div />));
 
 describe('ArchiveListPage', () => {
-  const data = {
+  const retroData = {
     retro: makeRetro(),
     error: null,
   };
@@ -18,7 +18,7 @@ describe('ArchiveListPage', () => {
     const dom = mount((
       <ArchiveListPage
         slug="my-slug"
-        data={data}
+        retroData={retroData}
         onAppear={() => {}}
         onDisappear={() => {}}
       />

@@ -12,14 +12,14 @@ import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
 export const ArchiveListPage = ({
-  data,
+  retroData,
   slug,
   onAppear,
   onDisappear,
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug);
 
-  const retroName = data?.retro?.name || slug;
+  const retroName = retroData?.retro?.name || slug;
 
   return (
     <article className="page-archive-list">
@@ -29,9 +29,9 @@ export const ArchiveListPage = ({
         backLink={{ label: 'Back to Retro', url: `/retros/${slug}` }}
       />
       <Loader
-        loading={!data}
+        loading={!retroData}
         Component={ArchiveList}
-        retro={data?.retro}
+        retro={retroData?.retro}
       />
     </article>
   );
@@ -41,20 +41,20 @@ ArchiveListPage.propTypes = {
   slug: PropTypes.string.isRequired,
   onAppear: PropTypes.func.isRequired,
   onDisappear: PropTypes.func.isRequired,
-  data: PropTypes.shape({
+  retroData: PropTypes.shape({
     retro: propTypesShapeRetro,
     error: PropTypes.string,
   }),
 };
 
 ArchiveListPage.defaultProps = {
-  data: null,
+  retroData: null,
 };
 
 forbidExtraProps(ArchiveListPage);
 
 const mapStateToProps = (state, { match }) => ({
-  data: state.retros[match.params.slug],
+  retroData: state.retros[match.params.slug],
 });
 
 const mapDispatchToProps = {

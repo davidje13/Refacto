@@ -8,22 +8,32 @@ import UnknownRetro from './unknown/UnknownRetro';
 
 describe('Retro', () => {
   it('forwards properties to the specified retro format', () => {
-    const data = makeRetroData({ format: 'mood' });
-    const state = { foo: 'bar' };
+    const retroData = makeRetroData({ format: 'mood' });
+    const retroState = { foo: 'bar' };
 
-    const dom = shallow(<RetroFormatPicker retroData={data} retroState={state} />);
+    const dom = shallow((
+      <RetroFormatPicker
+        retroData={retroData}
+        retroState={retroState}
+      />
+    ));
 
     const format = dom.find(MoodRetro);
     expect(format).toExist();
     expect(format).toHaveProp({
-      retroData: data,
-      retroState: state,
+      retroData,
+      retroState,
     });
   });
 
   it('displays UnknownRetro for unknown formats', () => {
-    const data = makeRetroData({ format: 'nope' });
-    const dom = shallow(<RetroFormatPicker retroData={data} retroState={{}} />);
+    const retroData = makeRetroData({ format: 'nope' });
+    const dom = shallow((
+      <RetroFormatPicker
+        retroData={retroData}
+        retroState={{}}
+      />
+    ));
 
     expect(dom.find(UnknownRetro)).toExist();
     expect(dom.find(MoodRetro)).not.toExist();

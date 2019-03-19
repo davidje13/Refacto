@@ -23,7 +23,7 @@ import './RetroPage.less';
 
 export const RetroPage = ({
   slug,
-  data,
+  retroData,
   onAppear,
   onDisappear,
   onAddItem,
@@ -35,7 +35,7 @@ export const RetroPage = ({
 }) => {
   useExistenceCallbacks(onAppear, onDisappear, slug);
 
-  const retroName = data?.retro?.name || slug;
+  const retroName = retroData?.retro?.name || slug;
 
   return (
     <article className="page-retro">
@@ -45,10 +45,10 @@ export const RetroPage = ({
         links={[{ label: 'Archives', url: `/retros/${slug}/archives` }]}
       />
       <Loader
-        loading={!data}
+        loading={!retroData}
         Component={RetroFormatPicker}
-        retroData={data?.retro?.data}
-        retroState={data?.retro?.state}
+        retroData={retroData?.retro?.data}
+        retroState={retroData?.retro?.state}
         onAddItem={useBoundCallback(onAddItem, slug)}
         onVoteItem={useBoundCallback(onVoteItem, slug)}
         onEditItem={useBoundCallback(onEditItem, slug)}
@@ -62,7 +62,7 @@ export const RetroPage = ({
 
 RetroPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  data: PropTypes.shape({
+  retroData: PropTypes.shape({
     retro: propTypesShapeRetro,
     error: PropTypes.string,
   }),
@@ -77,13 +77,13 @@ RetroPage.propTypes = {
 };
 
 RetroPage.defaultProps = {
-  data: null,
+  retroData: null,
 };
 
 forbidExtraProps(RetroPage);
 
 const mapStateToProps = (state, { match }) => ({
-  data: state.retros[match.params.slug] || null,
+  retroData: state.retros[match.params.slug] || null,
 });
 
 const mapDispatchToProps = {
