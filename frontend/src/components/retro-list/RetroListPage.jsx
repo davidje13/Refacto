@@ -7,7 +7,7 @@ import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import { reloadRetroList } from '../../reducers/retroList';
-import { propTypesShapeRetroSummary } from '../../helpers/dataStructurePropTypes';
+import { propTypesShapeLoadedRetroList } from '../../helpers/dataStructurePropTypes';
 import RetroList from './RetroList';
 import './RetroListPage.less';
 
@@ -34,10 +34,7 @@ export const RetroListPage = ({
 };
 
 RetroListPage.propTypes = {
-  retrosData: PropTypes.shape({
-    retros: PropTypes.arrayOf(propTypesShapeRetroSummary),
-    error: PropTypes.string,
-  }),
+  retrosData: propTypesShapeLoadedRetroList,
   onAppear: PropTypes.func.isRequired,
 };
 

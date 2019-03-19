@@ -6,7 +6,7 @@ import Loader from '../common/Loader';
 import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
+import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
@@ -42,10 +42,7 @@ ArchiveListPage.propTypes = {
   slug: PropTypes.string.isRequired,
   onAppear: PropTypes.func.isRequired,
   onDisappear: PropTypes.func.isRequired,
-  retroData: PropTypes.shape({
-    retro: propTypesShapeRetro,
-    error: PropTypes.string,
-  }),
+  retroData: propTypesShapeLoadedRetro,
 };
 
 ArchiveListPage.defaultProps = {

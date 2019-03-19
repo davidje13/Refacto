@@ -12,6 +12,7 @@ describe('ArchiveListPage', () => {
   const retroData = {
     retro: makeRetro(),
     error: null,
+    archives: {},
   };
 
   it('renders an archive list page', () => {

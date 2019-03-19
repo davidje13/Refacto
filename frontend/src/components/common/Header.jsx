@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './Header.less';
 
 export const Header = ({
@@ -22,18 +23,19 @@ export const Header = ({
   </header>
 );
 
+const shapeLink = PropTypes.shape(forbidExtraProps({
+  label: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+}));
+
 Header.propTypes = {
   documentTitle: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  backLink: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  }),
-  links: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-  })),
+  backLink: shapeLink,
+  links: PropTypes.arrayOf(shapeLink),
 };
+
+forbidExtraProps(Header);
 
 Header.defaultProps = {
   backLink: null,

@@ -6,10 +6,7 @@ import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
-import {
-  propTypesShapeRetro,
-  propTypesShapeArchive,
-} from '../../helpers/dataStructurePropTypes';
+import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
 import { formatDate } from '../../time/formatters';
 import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
 import { loadArchive } from '../../reducers/archive';
@@ -54,14 +51,7 @@ export const ArchivePage = ({
 };
 
 ArchivePage.propTypes = {
-  retroData: PropTypes.shape({
-    retro: propTypesShapeRetro,
-    error: PropTypes.string,
-    archives: PropTypes.objectOf(PropTypes.shape({
-      archive: propTypesShapeArchive,
-      error: PropTypes.string,
-    })),
-  }),
+  retroData: propTypesShapeLoadedRetro,
   slug: PropTypes.string.isRequired,
   archiveId: PropTypes.string.isRequired,
   onAppear: PropTypes.func.isRequired,

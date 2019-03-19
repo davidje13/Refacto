@@ -45,12 +45,12 @@ export const TabControl = ({ tabs }) => {
 };
 
 TabControl.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.shape({
+  tabs: PropTypes.arrayOf(PropTypes.shape(forbidExtraProps({
     key: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     className: PropTypes.string,
     content: PropTypes.node.isRequired,
-  })).isRequired,
+  }))).isRequired,
 };
 
 forbidExtraProps(TabControl);

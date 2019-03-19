@@ -5,7 +5,7 @@ import Header from '../common/Header';
 import Loader from '../common/Loader';
 import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import useBoundCallback from '../../hooks/useBoundCallback';
-import { propTypesShapeRetro } from '../../helpers/dataStructurePropTypes';
+import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
 import mapRouteToProps from '../../helpers/mapRouteToProps';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
@@ -63,10 +63,7 @@ export const RetroPage = ({
 
 RetroPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  retroData: PropTypes.shape({
-    retro: propTypesShapeRetro,
-    error: PropTypes.string,
-  }),
+  retroData: propTypesShapeLoadedRetro,
   onAppear: PropTypes.func.isRequired,
   onDisappear: PropTypes.func.isRequired,
   onAddItem: PropTypes.func.isRequired,
