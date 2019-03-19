@@ -34,14 +34,7 @@ export const loadArchive = (retroSlug, archiveId) => async (dispatch, getState) 
 };
 
 const initialState = {
-  archive: {
-    id: '',
-    created: 0,
-    data: {
-      format: '',
-      items: [],
-    },
-  },
+  archive: null,
   error: null,
 };
 
