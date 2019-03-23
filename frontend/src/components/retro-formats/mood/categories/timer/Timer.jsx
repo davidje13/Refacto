@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import useCountdown from 'react-hook-countdown';
 import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
-import useCountdown from '../../../../../hooks/useCountdown';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
 export const Timer = ({

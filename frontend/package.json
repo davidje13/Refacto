@@ -16,6 +16,7 @@
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-helmet-async": "^0.2.0",
+    "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.0",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.4.0-beta.7",
     "redux": "^4.0.1",
