@@ -33,7 +33,7 @@
     "enzyme-adapter-react-16": "^1.11.2",
     "eslint": "^5.15.3",
     "eslint-plugin-react-hooks": "^1.6.0",
-    "jest": "^23.6.0",
+    "jest": "^24.5.0",
     "jest-enzyme": "^7.0.2",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",

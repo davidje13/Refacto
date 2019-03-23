@@ -36,7 +36,7 @@ module.exports = {
       }],
     }],
     ['@neutrinojs/jest', {
-      setupTestFrameworkScriptFile: '<rootDir>/src/test-helpers/entrypoint',
+      setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint'],
     }],
     ['@neutrinojs/react', {
       html: {

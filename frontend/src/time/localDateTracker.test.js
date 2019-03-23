@@ -25,7 +25,7 @@ class MockClock {
   }
 
   advanceTickTimeOnly = (millis) => {
-    jest.runTimersToTime(millis); // advanceTimersByTime
+    jest.advanceTimersByTime(millis);
   };
 }
 

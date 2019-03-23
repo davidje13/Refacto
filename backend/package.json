@@ -21,7 +21,7 @@
     "blocking-queue": "0.0.1",
     "eslint": "^5.15.3",
     "http-proxy-middleware": "^0.19.1",
-    "jest": "^23.6.0",
+    "jest": "^24.5.0",
     "neutrino": "^9.0.0-rc.0",
     "supertest": "^4.0.2",
     "webpack": "^4.29.6",
