@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
+import nullable from 'prop-types-nullable';
 import forbidExtraProps from './forbidExtraProps';
-import nullable from './nullableProps';
 
 const exactShape = (props) => PropTypes.shape(forbidExtraProps(props));
 

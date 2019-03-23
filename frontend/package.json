@@ -12,6 +12,7 @@
     "immutability-helper": "^3.0.0",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "prop-types": "^15.7.2",
+    "prop-types-nullable": "git+https://github.com/davidje13/prop-types-nullable.git#semver:^1.0.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-helmet-async": "^0.2.0",

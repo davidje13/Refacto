@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import nullable from 'prop-types-nullable';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
@@ -8,7 +9,6 @@ import TabControl from '../../common/TabControl';
 import useMutatedCallback from '../../../hooks/useMutatedCallback';
 import useBoundCallback from '../../../hooks/useBoundCallback';
 import useBoxed from '../../../hooks/useBoxed';
-import nullable from '../../../helpers/nullableProps';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeRetroData } from '../../../helpers/dataStructurePropTypes';
 import LocalDateProvider from '../../../time/LocalDateProvider';
