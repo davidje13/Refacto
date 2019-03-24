@@ -1,4 +1,4 @@
-import request from './test-helpers/superwstest';
+import request from 'superwstest';
 import app from './app';
 
 describe('Server', () => {
@@ -9,8 +9,8 @@ describe('Server', () => {
     server.listen(0, done);
   });
 
-  afterEach(() => {
-    server.close();
+  afterEach((done) => {
+    server.close(done);
   });
 
   describe('/api/retros', () => {

@@ -1,4 +1,4 @@
-import request from '../test-helpers/superwstest';
+import request from 'superwstest';
 import WebSocketExpress from './WebSocketExpress';
 import Router from './Router';
 
@@ -48,8 +48,8 @@ describe('WebSocketExpress', () => {
     server.listen(0, done);
   });
 
-  afterEach(() => {
-    server.close();
+  afterEach((done) => {
+    server.close(done);
   });
 
   describe('get', () => {
