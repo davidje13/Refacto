@@ -1,11 +1,10 @@
-import express from 'express';
+import WebSocketExpress from 'websocket-express';
 import path from 'path';
-import Router from '../websocket-express/Router';
 import basedir from '../basedir';
 
 const forwardHost = process.env.FORWARD_HOST || null;
 
-export default class StaticRouter extends Router {
+export default class StaticRouter extends WebSocketExpress.Router {
   constructor() {
     super();
 
@@ -25,7 +24,7 @@ export default class StaticRouter extends Router {
       const staticDir = path.join(basedir, 'static');
 
       // Production mode: all resources are copied into /static
-      this.useHTTP(express.static(staticDir));
+      this.use(WebSocketExpress.static(staticDir));
 
       // Single page app: serve index.html for any unknown GET request
       const indexPage = path.join(staticDir, 'index.html');

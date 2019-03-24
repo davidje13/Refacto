@@ -1,5 +1,5 @@
+import { Router } from 'websocket-express';
 import crypto from 'crypto';
-import Router from '../websocket-express/Router';
 
 class UniqueIdProvider {
   constructor() {

@@ -1,4 +1,4 @@
-import WebSocketExpress from './websocket-express/WebSocketExpress';
+import WebSocketExpress from 'websocket-express';
 import ApiRouter from './routers/ApiRouter';
 import StaticRouter from './routers/StaticRouter';
 import RetroService from './services/InMemoryRetroService';
