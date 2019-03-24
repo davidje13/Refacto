@@ -98,8 +98,8 @@ PORT=8080 npm start
 Add dependencies within the `backend`, `frontend` or `e2e` directories;
 not in the root of the project.
 
-Remember that runtime dependies should be installed with `--save`, and
-build / test dependencies should be installed with `--save-dev`.
+Remember that runtime dependencies should be installed with `--save`,
+and build / test dependencies should be installed with `--save-dev`.
 
 ### Examples
 
