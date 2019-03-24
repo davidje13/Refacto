@@ -62,7 +62,7 @@ describe('Server', () => {
     it('sends initial replace-all retro data for known retro IDs', async () => {
       await request(server)
         .ws('/api/retros/r1')
-        .expectJsonMessage(({ change }) => (change.$set.name === 'My Retro'))
+        .expectJson(({ change }) => (change.$set.name === 'My Retro'))
         .close()
         .expectClosed();
     });
@@ -70,15 +70,15 @@ describe('Server', () => {
     it('reflects update requests and persists changes', async () => {
       await request(server)
         .ws('/api/retros/r2')
-        .expectJsonMessage()
-        .send(JSON.stringify({ change: { name: { $set: 'bar' } }, id: 7 }))
-        .expectJsonMessage(({ change }) => (change.name.$set === 'bar'))
+        .expectJson()
+        .sendJson({ change: { name: { $set: 'bar' } }, id: 7 })
+        .expectJson(({ change }) => (change.name.$set === 'bar'))
         .close()
         .expectClosed();
 
       await request(server)
         .ws('/api/retros/r2')
-        .expectJsonMessage(({ change }) => (change.$set.name === 'bar'))
+        .expectJson(({ change }) => (change.$set.name === 'bar'))
         .close()
         .expectClosed();
     });

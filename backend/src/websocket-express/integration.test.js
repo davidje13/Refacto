@@ -72,11 +72,11 @@ describe('WebSocketExpress', () => {
     it('responds to websocket connections', async () => {
       await request(server)
         .ws('/path/ws')
-        .expectMessage('hello')
+        .expectText('hello')
         .send('foo')
-        .expectMessage('echo foo')
+        .expectText('echo foo')
         .send('abc')
-        .expectMessage('echo abc')
+        .expectText('echo abc')
         .close()
         .expectClosed();
     });
@@ -96,7 +96,7 @@ describe('WebSocketExpress', () => {
     it('responds to asynchronously accepted connections', async () => {
       await request(server)
         .ws('/path/ws-async')
-        .expectMessage('hello')
+        .expectText('hello')
         .close()
         .expectClosed();
     });
