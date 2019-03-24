@@ -4,8 +4,6 @@ set -e;
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
 
-"$BASEDIR/scripts/install.sh";
-
 echo 'Building frontend...';
 npm --prefix="$BASEDIR/frontend" run build --silent;
 
@@ -44,4 +42,4 @@ node "$BASEDIR/scripts/mutate-json.js" \
   > "$BUILDDIR/package.json";
 cp "$BASEDIR/backend/package-lock.json" "$BUILDDIR";
 
-echo 'Done.';
+echo 'Build complete.';

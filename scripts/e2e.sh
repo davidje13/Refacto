@@ -4,8 +4,6 @@ set -e;
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
 
-"$BASEDIR/scripts/install.sh";
-
 LOGS="$BASEDIR/e2e/build";
 mkdir -p "$LOGS";
 
@@ -79,4 +77,5 @@ if [[ "$ANY_E2E" == 'false' ]]; then
   false;
 fi;
 
-echo 'Done.';
+echo;
+echo 'End-to-end tests complete.';

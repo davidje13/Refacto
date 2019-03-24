@@ -3,8 +3,6 @@ set -e;
 
 BASEDIR="$(dirname "$0")/..";
 
-"$BASEDIR/scripts/install.sh";
-
 API_PORT="${PORT:-5000}";
 (( APP_PORT = API_PORT + 1 ));
 

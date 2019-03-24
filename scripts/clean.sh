@@ -14,4 +14,4 @@ rm -rf "$BASEDIR/backend/node_modules" || true;
 rm -rf "$BASEDIR/frontend/node_modules" || true;
 rm -rf "$BASEDIR/e2e/node_modules" || true;
 
-echo 'Done.';
+echo 'Cleaning complete.';
