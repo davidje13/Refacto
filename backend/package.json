@@ -8,12 +8,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "core-js": "^3.0.0",
     "express": "^4.16.4",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "source-map-support": "^0.5.11",
     "ws": "^6.2.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.4.2",
     "@neutrinojs/airbnb": "^9.0.0-rc.0",
     "@neutrinojs/copy": "^9.0.0-rc.0",
     "@neutrinojs/jest": "^9.0.0-rc.0",

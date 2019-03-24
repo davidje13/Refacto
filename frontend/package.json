@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
+    "core-js": "^3.0.0",
     "immutability-helper": "^3.0.0",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "prop-types": "^15.7.2",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
+    "@babel/preset-env": "^7.4.2",
     "@neutrinojs/airbnb": "^9.0.0-rc.0",
     "@neutrinojs/copy": "^9.0.0-rc.0",
     "@neutrinojs/jest": "^9.0.0-rc.0",

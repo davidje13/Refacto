@@ -24,7 +24,19 @@ module.exports = {
       }],
     }],
     '@neutrinojs/jest',
-    '@neutrinojs/node',
+    ['@neutrinojs/node', {
+      babel: {
+        presets: [
+          ['@babel/preset-env', {
+            useBuiltIns: 'usage',
+            corejs: 3,
+            targets: {
+              node: '10.15',
+            },
+          }],
+        ],
+      },
+    }],
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };

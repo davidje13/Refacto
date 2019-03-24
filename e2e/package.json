@@ -6,9 +6,11 @@
     "test": "jest --runInBand"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.4.2",
     "@neutrinojs/airbnb": "^9.0.0-rc.0",
     "@neutrinojs/jest": "^9.0.0-rc.0",
     "@neutrinojs/node": "^9.0.0-rc.0",
+    "core-js": "^3.0.0",
     "eslint": "^5.15.3",
     "jest": "^24.5.0",
     "neutrino": "^9.0.0-rc.0",

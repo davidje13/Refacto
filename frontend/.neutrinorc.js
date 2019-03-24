@@ -52,6 +52,21 @@ module.exports = {
         plugins: [
           '@babel/plugin-proposal-optional-chaining',
         ],
+        presets: [
+          ['@babel/preset-env', {
+            useBuiltIns: 'usage',
+            corejs: 3,
+//            debug: true,
+            targets: {
+              browsers: [
+                'last 1 chrome version',
+//                'last 1 firefox version',
+//                'last 1 edge version',
+//                'last 1 safari version',
+              ],
+            },
+          }],
+        ],
       },
       style: {
         test: /\.(css|less)$/,
