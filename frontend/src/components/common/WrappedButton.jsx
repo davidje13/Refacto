@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 
-export const WrappedButton = ({
+const WrappedButton = ({
   onClick,
   disabled,
   hideIfDisabled,

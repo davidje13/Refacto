@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ActionItem from './ActionItem';
 import ItemColumn from '../ItemColumn';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
 function actionItemWithinRange(from, to) {
   return (item) => (
@@ -13,7 +13,7 @@ function actionItemWithinRange(from, to) {
   );
 }
 
-export const ActionSection = ({
+const ActionSection = ({
   title,
   items,
   rangeFrom,

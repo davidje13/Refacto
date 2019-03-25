@@ -1,29 +1,19 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { makeRetroData } from '../../../test-helpers/dataFactories';
 
-import { MoodRetro } from './MoodRetro';
-import LocalDateProvider from '../../../time/LocalDateProvider';
+import MoodRetro from './MoodRetro';
 
 const emptyRetroData = makeRetroData({ format: 'mood' });
 
 describe('MoodRetro', () => {
-  const localDateProvider = new LocalDateProvider(0);
-
   it('renders without error', () => {
-    const dom = shallow((
+    const dom = mount((
       <MoodRetro
         retroData={emptyRetroData}
         retroState={{}}
-        localDateProvider={localDateProvider}
-        singleColumn={false}
         archive={false}
-        onAddItem={() => {}}
-        onVoteItem={() => {}}
-        onEditItem={() => {}}
-        onDeleteItem={() => {}}
-        onSetItemDone={() => {}}
-        onSetRetroState={() => {}}
+        dispatch={() => {}}
       />
     ));
     expect(dom).toExist();

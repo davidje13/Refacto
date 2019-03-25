@@ -1,48 +1,34 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeRetro, makeArchive } from '../../test-helpers/dataFactories';
+import { slugTracker, retroTracker } from '../../api/api';
 
-import { ArchivePage } from './ArchivePage';
+import ArchivePage from './ArchivePage';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 
+jest.mock('../../api/api');
 jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div />));
 jest.mock('../common/Header', () => () => (<div />));
 
 describe('ArchivePage', () => {
-  const retroData = {
-    retro: makeRetro(),
-    error: null,
-    archives: {
-      myArchiveId: {
-        archive: makeArchive(),
-        error: null,
-      },
-    },
-  };
+  const retroData = { retro: makeRetro() };
+  const archiveData = { archive: makeArchive() };
+
+  beforeEach(() => {
+    slugTracker.setServerData('abc', { id: 'r1' });
+    retroTracker.setServerData('r1', retroData, { myArchiveId: archiveData });
+  });
 
   it('renders a retro page', () => {
-    const dom = mount((
-      <ArchivePage
-        slug="abc"
-        archiveId="myArchiveId"
-        retroData={retroData}
-        onAppear={() => {}}
-        onDisappear={() => {}}
-      />
-    ));
+    const dom = mount(<ArchivePage slug="abc" archiveId="myArchiveId" />);
     expect(dom.find(RetroFormatPicker)).toExist();
   });
 
-  it('triggers a load request when displayed', () => {
-    const onAppear = jest.fn().mockName('onAppear');
-    mount((
-      <ArchivePage
-        slug="abc"
-        archiveId="myArchiveId"
-        onAppear={onAppear}
-        onDisappear={() => {}}
-      />
-    ));
-    expect(onAppear).toHaveBeenCalledWith('abc', 'myArchiveId');
+  it('subscribes to the retro while mounted', () => {
+    const dom = mount(<ArchivePage slug="abc" archiveId="myArchiveId" />);
+    expect(retroTracker.subscribed).toEqual(1);
+
+    dom.unmount();
+    expect(retroTracker.subscribed).toEqual(0);
   });
 });

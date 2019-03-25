@@ -1,20 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { reloadRetroList } from '../../reducers/retroList';
-import { propTypesShapeLoadedRetroList } from '../../helpers/dataStructurePropTypes';
+import useRetroList from '../../hooks/data/useRetroList';
 import RetroList from './RetroList';
 import './RetroListPage.less';
 
-export const RetroListPage = ({
-  retrosData,
-  onAppear,
-}) => {
-  useExistenceCallbacks(onAppear);
+const RetroListPage = () => {
+  const retroListState = useRetroList();
+
+  const retroList = retroListState?.retros;
 
   return (
     <article className="page-retro-list">
@@ -24,34 +19,14 @@ export const RetroListPage = ({
         backLink={{ label: 'Home', url: '/' }}
       />
       <Loader
-        loading={!retrosData}
+        loading={!retroList}
         Component={RetroList}
-        retros={retrosData?.retros}
+        retros={retroList}
       />
     </article>
   );
 };
 
-RetroListPage.propTypes = {
-  retrosData: propTypesShapeLoadedRetroList,
-  onAppear: PropTypes.func.isRequired,
-};
-
-RetroListPage.defaultProps = {
-  retrosData: null,
-};
-
 forbidExtraProps(RetroListPage);
 
-const mapStateToProps = (state) => ({
-  retrosData: state.retroList,
-});
-
-const mapDispatchToProps = {
-  onAppear: reloadRetroList,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RetroListPage);
+export default React.memo(RetroListPage);

@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 
-import { MoodItem } from './MoodItem';
+import MoodItem from './MoodItem';
 
 describe('MoodItem integration', () => {
   const item = makeItem({ message: 'a message here', id: 'my-id', votes: 3 });
@@ -38,19 +38,19 @@ describe('MoodItem integration', () => {
   it('does not mark items as done or focused by default', () => {
     const dom = mount(<MoodItem item={makeItem()} />);
 
-    expect(dom.find('.mood-item')).not.toHaveClassName('done');
-    expect(dom.find('.mood-item')).not.toHaveClassName('focused');
+    expect(dom.find('.mood-item.done')).not.toExist();
+    expect(dom.find('.mood-item.focused')).not.toExist();
   });
 
   it('marks the item as done if specified', () => {
     const dom = mount(<MoodItem item={makeItem({ done: true })} />);
 
-    expect(dom.find('.mood-item')).toHaveClassName('done');
+    expect(dom.find('.mood-item.done')).toExist();
   });
 
   it('marks the item as focused if specified', () => {
     const dom = mount(<MoodItem item={makeItem()} focused />);
 
-    expect(dom.find('.mood-item')).toHaveClassName('focused');
+    expect(dom.find('.mood-item.focused')).toExist();
   });
 });

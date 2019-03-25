@@ -1,24 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
-import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
+import useSlug from '../../hooks/data/useSlug';
+import useRetroReducer from '../../hooks/data/useRetroReducer';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
-export const ArchiveListPage = ({
-  retroData,
-  slug,
-  onAppear,
-  onDisappear,
-}) => {
-  useExistenceCallbacks(onAppear, onDisappear, slug);
+const ArchiveListPage = ({ slug }) => {
+  const [retroState] = useRetroReducer(useSlug(slug)?.id);
 
-  const retro = retroData?.retro;
+  const retro = retroState?.retro;
   const retroName = retro?.name || slug;
 
   return (
@@ -39,27 +32,8 @@ export const ArchiveListPage = ({
 
 ArchiveListPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  onAppear: PropTypes.func.isRequired,
-  onDisappear: PropTypes.func.isRequired,
-  retroData: propTypesShapeLoadedRetro,
-};
-
-ArchiveListPage.defaultProps = {
-  retroData: null,
 };
 
 forbidExtraProps(ArchiveListPage);
 
-const mapStateToProps = (state, { slug }) => ({
-  retroData: state.retros[slug],
-});
-
-const mapDispatchToProps = {
-  onAppear: beginConsumingRetro,
-  onDisappear: endConsumingRetro,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ArchiveListPage);
+export default React.memo(ArchiveListPage);

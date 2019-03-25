@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Loader.less';
 
-export const Loader = ({
+const Loader = ({
   Component,
   loadingMessage,
   loading,

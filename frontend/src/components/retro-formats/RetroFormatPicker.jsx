@@ -3,45 +3,30 @@ import PropTypes from 'prop-types';
 import MoodRetro from './mood/MoodRetro';
 import UnknownRetro from './unknown/UnknownRetro';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeRetroData } from '../../helpers/dataStructurePropTypes';
+import { propTypesShapeRetroData } from '../../api/dataStructurePropTypes';
 
 const formats = new Map();
 formats.set('mood', MoodRetro);
 
-export const RetroFormatPicker = ({ retroState, retroData, ...passThrough }) => {
+const RetroFormatPicker = (props) => {
+  const { retroData } = props;
   const RetroType = formats.get(retroData.format) || UnknownRetro;
 
-  return (
-    <RetroType
-      retroState={retroState}
-      retroData={retroData}
-      {...passThrough}
-    />
-  );
+  return (<RetroType {...props} />);
 };
 
 RetroFormatPicker.propTypes = {
   retroState: PropTypes.shape({}).isRequired,
   retroData: propTypesShapeRetroData.isRequired,
+  dispatch: PropTypes.func,
   archive: PropTypes.bool,
-  onAddItem: PropTypes.func,
-  onVoteItem: PropTypes.func,
-  onEditItem: PropTypes.func,
-  onDeleteItem: PropTypes.func,
-  onSetItemDone: PropTypes.func,
-  onSetRetroState: PropTypes.func,
 };
 
 RetroFormatPicker.defaultProps = {
+  dispatch: null,
   archive: false,
-  onAddItem: null,
-  onVoteItem: null,
-  onEditItem: null,
-  onDeleteItem: null,
-  onSetItemDone: null,
-  onSetRetroState: null,
 };
 
 forbidExtraProps(RetroFormatPicker);
 
-export default RetroFormatPicker;
+export default React.memo(RetroFormatPicker);

@@ -1,17 +1,20 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { makeRetroData } from '../../test-helpers/dataFactories';
 
-import { RetroFormatPicker } from './RetroFormatPicker';
+import RetroFormatPicker from './RetroFormatPicker';
 import MoodRetro from './mood/MoodRetro';
 import UnknownRetro from './unknown/UnknownRetro';
+
+jest.mock('./mood/MoodRetro', () => () => (<div />));
+jest.mock('./unknown/UnknownRetro', () => () => (<div />));
 
 describe('Retro', () => {
   it('forwards properties to the specified retro format', () => {
     const retroData = makeRetroData({ format: 'mood' });
     const retroState = { foo: 'bar' };
 
-    const dom = shallow((
+    const dom = mount((
       <RetroFormatPicker
         retroData={retroData}
         retroState={retroState}
@@ -28,7 +31,7 @@ describe('Retro', () => {
 
   it('displays UnknownRetro for unknown formats', () => {
     const retroData = makeRetroData({ format: 'nope' });
-    const dom = shallow((
+    const dom = mount((
       <RetroFormatPicker
         retroData={retroData}
         retroState={{}}

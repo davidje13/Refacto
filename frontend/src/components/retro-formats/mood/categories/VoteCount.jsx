@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import WrappedButton from '../../../common/WrappedButton';
 
-export const VoteCount = ({
+const VoteCount = ({
   votes,
   onVote,
 }) => (

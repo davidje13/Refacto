@@ -1,16 +1,32 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
+import renderDOM from '../../test-helpers/reactDom';
 import { makeRetro } from '../../test-helpers/dataFactories';
 
-import { ArchiveList } from './ArchiveList';
+import ArchiveList from './ArchiveList';
 import ArchiveLink from './ArchiveLink';
+
+jest.mock('./ArchiveLink', () => () => (<div />));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
     const retro = makeRetro({ archives: [] });
-    const dom = shallow(<ArchiveList retro={retro} />);
+    const dom = renderDOM(<ArchiveList retro={retro} />);
 
-    expect(dom).toIncludeText('has no archives');
+    expect(dom.textContent).toContain('has no archives');
+  });
+
+  it('displays no message if there are archives', () => {
+    const retro = makeRetro({
+      slug: 'foo',
+      archives: [
+        { id: 'a1', created: 10 },
+        { id: 'a2', created: 0 },
+      ],
+    });
+    const dom = renderDOM(<ArchiveList retro={retro} />);
+
+    expect(dom.textContent).not.toContain('has no archives');
   });
 
   it('displays a list of archives', () => {
@@ -22,7 +38,7 @@ describe('ArchiveList', () => {
       ],
     });
 
-    const dom = shallow(<ArchiveList retro={retro} />);
+    const dom = mount(<ArchiveList retro={retro} />);
 
     expect(dom.find(ArchiveLink).at(0)).toHaveProp({
       retroSlug: 'foo',
@@ -34,7 +50,6 @@ describe('ArchiveList', () => {
       archiveId: 'a2',
       created: 0,
     });
-    expect(dom).not.toIncludeText('has no archives');
   });
 
   it('orders archives newest-to-oldest', () => {
@@ -47,7 +62,7 @@ describe('ArchiveList', () => {
       ],
     });
 
-    const dom = shallow(<ArchiveList retro={retro} />);
+    const dom = mount(<ArchiveList retro={retro} />);
 
     expect(dom.find(ArchiveLink).at(0)).toHaveProp({ archiveId: 'a1' });
     expect(dom.find(ArchiveLink).at(1)).toHaveProp({ archiveId: 'a3' });

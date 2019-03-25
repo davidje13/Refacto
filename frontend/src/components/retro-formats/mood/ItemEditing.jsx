@@ -5,7 +5,7 @@ import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 
-export const ItemEditing = ({
+const ItemEditing = ({
   message,
   onSubmit,
   onCancel,

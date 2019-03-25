@@ -1,29 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
+import useSlug from '../../hooks/data/useSlug';
+import useRetroReducer from '../../hooks/data/useRetroReducer';
+import useArchive from '../../hooks/data/useArchive';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
 import { formatDate } from '../../time/formatters';
-import { beginConsumingRetro, endConsumingRetro } from '../../reducers/retro';
-import { loadArchive } from '../../reducers/archive';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './ArchivePage.less';
 
-export const ArchivePage = ({
-  retroData,
-  slug,
-  archiveId,
-  onAppear,
-  onDisappear,
-}) => {
-  useExistenceCallbacks(onAppear, onDisappear, slug, archiveId);
+const ArchivePage = ({ slug, archiveId }) => {
+  const [retroState] = useRetroReducer(useSlug(slug)?.id);
+  const archiveState = useArchive(retroState, archiveId);
 
-  const retro = retroData?.retro;
-  const archiveData = retroData?.archives?.[archiveId];
-  const archive = archiveData?.archive;
+  const retro = retroState?.retro;
+  const archive = archiveState?.archive;
 
   const retroName = retro?.name || slug;
   let archiveName = 'Archive';
@@ -50,34 +42,10 @@ export const ArchivePage = ({
 };
 
 ArchivePage.propTypes = {
-  retroData: propTypesShapeLoadedRetro,
   slug: PropTypes.string.isRequired,
   archiveId: PropTypes.string.isRequired,
-  onAppear: PropTypes.func.isRequired,
-  onDisappear: PropTypes.func.isRequired,
-};
-
-ArchivePage.defaultProps = {
-  retroData: null,
 };
 
 forbidExtraProps(ArchivePage);
 
-const mapStateToProps = (state, { slug }) => ({
-  retroData: state.retros[slug],
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onAppear: async (slug, archiveId) => {
-    await dispatch(beginConsumingRetro(slug));
-    await dispatch(loadArchive(slug, archiveId));
-  },
-  onDisappear: (slug) => {
-    dispatch(endConsumingRetro(slug));
-  },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ArchivePage);
+export default React.memo(ArchivePage);

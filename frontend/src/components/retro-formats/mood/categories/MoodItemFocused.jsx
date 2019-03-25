@@ -4,9 +4,9 @@ import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
-export const MoodItemFocused = ({
+const MoodItemFocused = ({
   item,
   focusedItemTimeout,
   onAddExtraTime,

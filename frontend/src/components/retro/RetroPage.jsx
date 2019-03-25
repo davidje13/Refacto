@@ -1,40 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import useExistenceCallbacks from '../../hooks/useExistenceCallbacks';
-import useBoundCallback from '../../hooks/useBoundCallback';
-import { propTypesShapeLoadedRetro } from '../../helpers/dataStructurePropTypes';
+import useSlug from '../../hooks/data/useSlug';
+import useRetroReducer from '../../hooks/data/useRetroReducer';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import {
-  beginConsumingRetro,
-  endConsumingRetro,
-  setRetroState,
-  addRetroItem,
-  upvoteRetroItem,
-  editRetroItem,
-  deleteRetroItem,
-  setRetroItemDone,
-} from '../../reducers/retro';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './RetroPage.less';
 
-export const RetroPage = ({
-  slug,
-  retroData,
-  onAppear,
-  onDisappear,
-  onAddItem,
-  onVoteItem,
-  onEditItem,
-  onDeleteItem,
-  onSetItemDone,
-  onSetRetroState,
-}) => {
-  useExistenceCallbacks(onAppear, onDisappear, slug);
+const RetroPage = ({ slug }) => {
+  const [retroState, retroDispatch] = useRetroReducer(useSlug(slug)?.id);
 
-  const retro = retroData?.retro;
+  const retro = retroState?.retro;
   const retroName = retro?.name || slug;
 
   return (
@@ -49,12 +26,7 @@ export const RetroPage = ({
         Component={RetroFormatPicker}
         retroData={retro?.data}
         retroState={retro?.state}
-        onAddItem={useBoundCallback(onAddItem, slug)}
-        onVoteItem={useBoundCallback(onVoteItem, slug)}
-        onEditItem={useBoundCallback(onEditItem, slug)}
-        onDeleteItem={useBoundCallback(onDeleteItem, slug)}
-        onSetItemDone={useBoundCallback(onSetItemDone, slug)}
-        onSetRetroState={useBoundCallback(onSetRetroState, slug)}
+        dispatch={retroDispatch}
       />
     </article>
   );
@@ -62,39 +34,8 @@ export const RetroPage = ({
 
 RetroPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  retroData: propTypesShapeLoadedRetro,
-  onAppear: PropTypes.func.isRequired,
-  onDisappear: PropTypes.func.isRequired,
-  onAddItem: PropTypes.func.isRequired,
-  onVoteItem: PropTypes.func.isRequired,
-  onEditItem: PropTypes.func.isRequired,
-  onDeleteItem: PropTypes.func.isRequired,
-  onSetItemDone: PropTypes.func.isRequired,
-  onSetRetroState: PropTypes.func.isRequired,
-};
-
-RetroPage.defaultProps = {
-  retroData: null,
 };
 
 forbidExtraProps(RetroPage);
 
-const mapStateToProps = (state, { slug }) => ({
-  retroData: state.retros[slug] || null,
-});
-
-const mapDispatchToProps = {
-  onAppear: beginConsumingRetro,
-  onDisappear: endConsumingRetro,
-  onAddItem: addRetroItem,
-  onVoteItem: upvoteRetroItem,
-  onEditItem: editRetroItem,
-  onDeleteItem: deleteRetroItem,
-  onSetItemDone: setRetroItemDone,
-  onSetRetroState: setRetroState,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RetroPage);
+export default React.memo(RetroPage);

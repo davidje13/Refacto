@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
-export const MoodItemPlain = ({
+const MoodItemPlain = ({
   item,
   onSelect,
   onVote,

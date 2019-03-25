@@ -9,7 +9,6 @@ export default class SharedReducer {
     this.latestLocalState = null;
     this.localChanges = [];
     this.pendingChanges = [];
-    this.onFirstData = null;
     this.idCounter = 0;
 
     this.ws = new WebSocket(wsUrl);
@@ -17,7 +16,7 @@ export default class SharedReducer {
     this.ws.addEventListener('error', this.handleError);
   }
 
-  getUniqueId() {
+  internalGetUniqueId() {
     this.idCounter += 1;
     return this.idCounter;
   }
@@ -30,21 +29,7 @@ export default class SharedReducer {
     this.pendingChanges = [];
   }
 
-  awaitFirstData() {
-    if (this.latestServerState !== null) {
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => {
-      this.onFirstData = resolve;
-    });
-  }
-
-  notify() {
-    if (this.onFirstData) {
-      const fn = this.onFirstData;
-      this.onFirstData = null;
-      fn();
-    }
+  internalNotify() {
     if (!this.changeCallback) {
       return;
     }
@@ -60,7 +45,7 @@ export default class SharedReducer {
       return false;
     }
 
-    const event = { change, id: this.getUniqueId() };
+    const event = { change, id: this.internalGetUniqueId() };
     this.localChanges.push(event);
     this.ws.send(JSON.stringify(event));
     return true;
@@ -81,7 +66,7 @@ export default class SharedReducer {
     return changed;
   }
 
-  apply(change) {
+  dispatch = (change) => {
     if (!change) {
       return;
     }
@@ -89,9 +74,9 @@ export default class SharedReducer {
     if (!this.getState()) {
       this.pendingChanges.push(change);
     } else if (this.internalApply(change)) {
-      this.notify();
+      this.internalNotify();
     }
-  }
+  };
 
   handleMessage = ({ data }) => {
     const { change, id = null } = JSON.parse(data);
@@ -113,7 +98,7 @@ export default class SharedReducer {
       this.latestLocalState = null;
     }
     if (this.internalApplyPendingChanges() || changed) {
-      this.notify();
+      this.internalNotify();
     }
   };
 

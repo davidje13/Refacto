@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import RetroLink from './RetroLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeRetroSummary } from '../../helpers/dataStructurePropTypes';
+import { propTypesShapeRetroSummary } from '../../api/dataStructurePropTypes';
 
-export const RetroList = ({ retros }) => {
+const RetroList = ({ retros }) => {
   if (!retros.length) {
     return (
       <p>You do not have any retros yet!</p>
@@ -28,4 +28,4 @@ RetroList.propTypes = {
 
 forbidExtraProps(RetroList);
 
-export default RetroList;
+export default React.memo(RetroList);

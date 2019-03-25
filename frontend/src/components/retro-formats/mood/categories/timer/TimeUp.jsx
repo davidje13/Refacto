@@ -4,7 +4,7 @@ import WrappedButton from '../../../../common/WrappedButton';
 import useBoundCallback from '../../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
-export const TimeUp = ({ onAddExtraTime }) => {
+const TimeUp = ({ onAddExtraTime }) => {
   const extraMinutes = 2;
 
   const extraTime = extraMinutes * 60 * 1000 + 999;

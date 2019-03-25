@@ -1,14 +1,28 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
+import renderDOM from '../../test-helpers/reactDom';
 
-import { RetroList } from './RetroList';
+import RetroList from './RetroList';
 import RetroLink from './RetroLink';
+
+jest.mock('./RetroLink', () => () => (<div />));
 
 describe('RetroList', () => {
   it('displays a message if there are no retros', () => {
-    const dom = shallow(<RetroList retros={[]} />);
+    const dom = renderDOM(<RetroList retros={[]} />);
 
-    expect(dom).toIncludeText('do not have any retros');
+    expect(dom.textContent).toContain('do not have any retros');
+  });
+
+  it('displays no message if there are retros', () => {
+    const retros = [
+      { id: 'u1', slug: 'a', name: 'R1' },
+      { id: 'u2', slug: 'b', name: 'R2' },
+    ];
+
+    const dom = renderDOM(<RetroList retros={retros} />);
+
+    expect(dom.textContent).not.toContain('do not have any retros');
   });
 
   it('displays a list of retros', () => {
@@ -17,7 +31,7 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const dom = shallow(<RetroList retros={retros} />);
+    const dom = mount(<RetroList retros={retros} />);
 
     expect(dom.find(RetroLink).at(0)).toHaveProp({
       slug: 'a',
@@ -27,6 +41,5 @@ describe('RetroList', () => {
       slug: 'b',
       name: 'R2',
     });
-    expect(dom).not.toIncludeText('do not have any retros');
   });
 });

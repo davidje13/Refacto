@@ -5,10 +5,10 @@ import MoodItemFocused from './MoodItemFocused';
 import ItemEditing from '../ItemEditing';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './MoodItem.less';
 
-export const MoodItem = ({
+const MoodItem = ({
   item,
   focused,
   focusedItemTimeout,

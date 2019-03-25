@@ -9,7 +9,7 @@ function getActive(tabs, activeKey) {
   return selected || tabs[0];
 }
 
-export const TabControl = ({ tabs }) => {
+const TabControl = ({ tabs }) => {
   const [activeKey, setActiveKey] = useState(null);
   const active = getActive(tabs, activeKey);
 

@@ -1,17 +1,24 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
-import useMutatedCallback from '../../../hooks/useMutatedCallback';
-import useBoundCallback from '../../../hooks/useBoundCallback';
+import {
+  setRetroState,
+  addRetroItem,
+  editRetroItem,
+  setRetroItemDone,
+  upvoteRetroItem,
+  deleteRetroItem,
+} from '../../../actions/retro';
 import useBoxed from '../../../hooks/useBoxed';
+import useWindowSize from '../../../hooks/env/useWindowSize';
+import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
+import useDispatchAction from '../../../hooks/useDispatchAction';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
-import { propTypesShapeRetroData } from '../../../helpers/dataStructurePropTypes';
-import LocalDateProvider from '../../../time/LocalDateProvider';
+import { propTypesShapeRetroData } from '../../../api/dataStructurePropTypes';
 import './MoodRetro.less';
 
 const CATEGORIES = [
@@ -20,7 +27,13 @@ const CATEGORIES = [
   { id: 'sad', title: 'Sad', placeholder: 'It wasn\u2019t so great that\u2026' },
 ];
 
-export const MoodRetro = ({
+const addRetroActionItem = addRetroItem.bind(null, 'action');
+
+const addExtraTime = (duration) => setRetroState({
+  focusedItemTimeout: Date.now() + duration,
+});
+
+const MoodRetro = ({
   retroState: {
     focusedItemId = null,
     focusedItemTimeout = 0,
@@ -28,50 +41,46 @@ export const MoodRetro = ({
   retroData: {
     items,
   },
-  singleColumn,
-  localDateProvider,
+  dispatch,
   archive,
-  onAddItem,
-  onVoteItem,
-  onEditItem,
-  onDeleteItem,
-  onSetItemDone,
-  onSetRetroState,
 }) => {
-  const handleAddActionItem = useBoundCallback(onAddItem, 'action');
+  const singleColumn = useWindowSize(({ width }) => (width <= 800), []);
+  const localDateProvider = useLocalDateProvider();
 
-  const handleAddExtraTime = useMutatedCallback(
-    onSetRetroState,
-    (duration) => [{ focusedItemTimeout: Date.now() + duration }],
-    [],
-  );
+  const handleAddItem = useDispatchAction(dispatch, addRetroItem);
+  const handleAddActionItem = useDispatchAction(dispatch, addRetroActionItem);
+  const handleUpvoteItem = useDispatchAction(dispatch, upvoteRetroItem);
+  const handleEditItem = useDispatchAction(dispatch, editRetroItem);
+  const handleDeleteItem = useDispatchAction(dispatch, deleteRetroItem);
+  const handleAddExtraTime = useDispatchAction(dispatch, addExtraTime);
+  const handleSetItemDone = useDispatchAction(dispatch, setRetroItemDone);
 
   const refFocusedItemId = useBoxed(focusedItemId);
   const handleSwitchFocus = useCallback((id, markPreviousDone) => {
     const focusedId = refFocusedItemId.current;
 
     if (markPreviousDone && focusedId !== null && id !== focusedId) {
-      onSetItemDone(focusedId, true);
+      dispatch(setRetroItemDone(focusedId, true));
     }
 
-    onSetRetroState({
+    dispatch(setRetroState({
       focusedItemId: id,
       focusedItemTimeout: Date.now() + (5 * 60 * 1000 + 999),
-    });
-  }, [onSetRetroState, onSetItemDone, refFocusedItemId]);
+    }));
+  }, [dispatch, refFocusedItemId]);
 
   const createMoodSection = (category) => (
     <MoodSection
       key={category.id}
       items={items}
       addItemPlaceholder={category.placeholder}
-      onAddItem={onAddItem}
-      onVote={onVoteItem}
-      onEdit={onEditItem}
-      onDelete={onDeleteItem}
-      onSwitchFocus={onSetRetroState && handleSwitchFocus}
+      onAddItem={handleAddItem}
+      onVote={handleUpvoteItem}
+      onEdit={handleEditItem}
+      onDelete={handleDeleteItem}
+      onSwitchFocus={dispatch && handleSwitchFocus}
       onAddExtraTime={handleAddExtraTime}
-      onSetDone={onSetItemDone}
+      onSetDone={handleSetItemDone}
       focusedItemId={focusedItemId}
       focusedItemTimeout={focusedItemTimeout}
       category={category.id}
@@ -82,9 +91,9 @@ export const MoodRetro = ({
     <ActionsPane
       items={items}
       onAddItem={handleAddActionItem}
-      onSetDone={onSetItemDone}
-      onEdit={onEditItem}
-      onDelete={onDeleteItem}
+      onSetDone={handleSetItemDone}
+      onEdit={handleEditItem}
+      onDelete={handleDeleteItem}
       localDateProvider={localDateProvider}
     />
   );
@@ -136,22 +145,10 @@ MoodRetro.propTypes = {
     focusedItemTimeout: PropTypes.number,
   }).isRequired,
   retroData: propTypesShapeRetroData.isRequired,
-  singleColumn: PropTypes.bool.isRequired,
-  localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
+  dispatch: nullable(PropTypes.func).isRequired,
   archive: PropTypes.bool.isRequired,
-  onAddItem: nullable(PropTypes.func).isRequired,
-  onVoteItem: nullable(PropTypes.func).isRequired,
-  onEditItem: nullable(PropTypes.func).isRequired,
-  onDeleteItem: nullable(PropTypes.func).isRequired,
-  onSetItemDone: nullable(PropTypes.func).isRequired,
-  onSetRetroState: nullable(PropTypes.func).isRequired,
 };
 
 forbidExtraProps(MoodRetro);
 
-const mapStateToProps = (state) => ({
-  singleColumn: (state.view.windowWidth <= 800),
-  localDateProvider: state.time.localDateProvider,
-});
-
-export default connect(mapStateToProps, () => ({}))(MoodRetro);
+export default MoodRetro;

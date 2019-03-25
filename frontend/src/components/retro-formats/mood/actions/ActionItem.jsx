@@ -5,10 +5,10 @@ import ItemEditing from '../ItemEditing';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './ActionItem.less';
 
-export const ActionItem = ({
+const ActionItem = ({
   item,
   onSetDone,
   onEdit,

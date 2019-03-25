@@ -5,9 +5,9 @@ import ItemColumn from '../ItemColumn';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
-export const MoodSection = ({
+const MoodSection = ({
   category,
   items,
   addItemPlaceholder,

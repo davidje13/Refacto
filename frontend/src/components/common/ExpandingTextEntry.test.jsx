@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { ExpandingTextEntry } from './ExpandingTextEntry';
+import ExpandingTextEntry from './ExpandingTextEntry';
 
 describe('ExpandingTextEntry', () => {
   it('sends the entered text when submit is pressed', () => {

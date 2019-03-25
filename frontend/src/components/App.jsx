@@ -13,7 +13,7 @@ import './App.less';
 /* eslint-disable-next-line react/prop-types */ // utility function
 const withParams = (Page) => ({ match }) => (<Page {...match.params} />);
 
-export const App = () => (
+const App = () => (
   <React.Fragment>
     <Switch>
       <Route path="/" exact render={withParams(WelcomePage)} />

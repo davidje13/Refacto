@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../common/Header';
 import './NotFoundPage.less';
 
-export const NotFoundPage = () => (
+const NotFoundPage = () => (
   <article className="page-not-found">
     <Header
       documentTitle="Not Found - Refacto"
@@ -13,7 +13,4 @@ export const NotFoundPage = () => (
   </article>
 );
 
-// Cannot use React.memo here yet
-// (see https://github.com/ReactTraining/react-router/issues/6471)
-
-export default NotFoundPage;
+export default React.memo(NotFoundPage);

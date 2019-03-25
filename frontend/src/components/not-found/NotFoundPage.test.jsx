@@ -1,11 +1,13 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 
-import { NotFoundPage } from './NotFoundPage';
+import NotFoundPage from './NotFoundPage';
+
+jest.mock('../common/Header', () => () => (<div />));
 
 describe('NotFoundPage', () => {
   it('displays a message', () => {
-    const dom = shallow(<NotFoundPage />);
+    const dom = mount(<NotFoundPage />);
     expect(dom).toIncludeText('not found');
   });
 });

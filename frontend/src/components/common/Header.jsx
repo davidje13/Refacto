@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './Header.less';
 
-export const Header = ({
+const Header = ({
   documentTitle,
   title,
   backLink,

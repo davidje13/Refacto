@@ -1,13 +1,13 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 
-import { VoteCount } from './VoteCount';
+import VoteCount from './VoteCount';
 
 describe('VoteCount', () => {
   it('displays the vote count', () => {
-    const dom = shallow(<VoteCount votes={3} />);
+    const dom = mount(<VoteCount votes={3} />);
 
-    expect(dom.find('.vote')).toHaveText('3');
+    expect(dom.find('button.vote')).toHaveText('3');
   });
 
   it('does not allow voting if no callback is given', () => {

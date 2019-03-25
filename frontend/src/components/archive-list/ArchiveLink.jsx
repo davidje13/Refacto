@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { formatDateTime } from '../../time/formatters';
 
-export const ArchiveLink = ({ retroSlug, archiveId, created }) => (
+const ArchiveLink = ({ retroSlug, archiveId, created }) => (
   <Link to={`/retros/${retroSlug}/archives/${archiveId}`}>
     <div className="archive-link">{ formatDateTime(created) }</div>
   </Link>

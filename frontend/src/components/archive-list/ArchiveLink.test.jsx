@@ -3,7 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import { formatDateTime } from '../../time/formatters';
 
-import { ArchiveLink } from './ArchiveLink';
+import ArchiveLink from './ArchiveLink';
 
 describe('ArchiveLink', () => {
   it('links to the archive', () => {

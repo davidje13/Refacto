@@ -1,14 +1,21 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 
-import { ActionsPane } from './ActionsPane';
+import ActionsPane from './ActionsPane';
 import ActionSection from './ActionSection';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 
+jest.mock('../../../common/ExpandingTextEntry', () => () => (<div />));
+jest.mock('./ActionSection', () => () => (<div />));
+
 describe('ActionsPane', () => {
-  const items = [makeItem(), makeItem(), makeItem()];
+  const items = [
+    makeItem({ id: '1' }),
+    makeItem({ id: '2' }),
+    makeItem({ id: '3' }),
+  ];
 
   let dom;
   let sections;
@@ -19,7 +26,7 @@ describe('ActionsPane', () => {
     jest.spyOn(localDateProvider, 'getMidnightTimestamp')
       .mockImplementation((days = 0) => days * 10);
 
-    dom = shallow((
+    dom = mount((
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
@@ -64,7 +71,7 @@ describe('ActionsPane', () => {
   });
 
   it('renders an input field if a callback is provided', () => {
-    dom = shallow((
+    dom = mount((
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}

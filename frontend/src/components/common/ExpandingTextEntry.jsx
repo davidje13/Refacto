@@ -20,7 +20,7 @@ function anyModifier(e) {
   );
 }
 
-export class ExpandingTextEntry extends React.PureComponent {
+class ExpandingTextEntry extends React.PureComponent {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func,

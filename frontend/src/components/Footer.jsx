@@ -2,7 +2,7 @@ import React from 'react';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import './Footer.less';
 
-export const Footer = () => (
+const Footer = () => (
   <footer className="page-footer">
     Refacto (
     <a
@@ -18,4 +18,4 @@ export const Footer = () => (
 
 forbidExtraProps(Footer);
 
-export default Footer;
+export default React.memo(Footer);

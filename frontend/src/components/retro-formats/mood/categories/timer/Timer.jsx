@@ -5,10 +5,7 @@ import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
-export const Timer = ({
-  targetTime,
-  onAddExtraTime,
-}) => {
+const Timer = ({ targetTime, onAddExtraTime }) => {
   const remaining = useCountdown(targetTime, 1000);
 
   let component;

@@ -1,26 +1,21 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { retroListTracker } from '../../api/api';
 
-import { RetroListPage } from './RetroListPage';
+import RetroListPage from './RetroListPage';
 import RetroList from './RetroList';
 
-jest.mock('./RetroList', () => () => (<div />));
+jest.mock('../../api/api');
 jest.mock('../common/Header', () => () => (<div />));
+jest.mock('./RetroList', () => () => (<div />));
 
 describe('RetroListPage', () => {
-  it('renders a retro list page', () => {
-    const retrosData = { retros: [], error: null };
-    const dom = mount((
-      <RetroListPage retrosData={retrosData} onAppear={() => {}} />
-    ));
-    expect(dom.find(RetroList)).toExist();
-  });
+  it('loads data when displayed', () => {
+    retroListTracker.setServerData({
+      retros: [{ id: 'u1', slug: 'a', name: 'R1' }],
+    });
 
-  it('triggers a load request when displayed', () => {
-    const onAppear = jest.fn().mockName('onAppear');
-    mount((
-      <RetroListPage onAppear={onAppear} />
-    ));
-    expect(onAppear).toHaveBeenCalled();
+    const dom = mount(<RetroListPage />);
+    expect(dom.find(RetroList).prop('retros')).toHaveLength(1);
   });
 });

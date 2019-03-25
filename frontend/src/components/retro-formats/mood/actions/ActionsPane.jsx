@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import ActionSection from './ActionSection';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
 
-export const ActionsPane = ({
+const ActionsPane = ({
   items,
   localDateProvider,
   onAddItem,

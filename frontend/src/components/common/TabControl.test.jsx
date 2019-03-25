@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import { TabControl } from './TabControl';
+import TabControl from './TabControl';
 
 function click(wrapper) {
   wrapper.simulate('click', {

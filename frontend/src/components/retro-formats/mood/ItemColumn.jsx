@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { propTypesShapeItem } from '../../../helpers/dataStructurePropTypes';
+import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
 
 function itemCreatedComparator(a, b) {
   // sort newer-to-older
@@ -13,7 +13,7 @@ function sortItems(items) {
   return sorted;
 }
 
-export const ItemColumn = ({
+const ItemColumn = ({
   items,
   ItemType,
   focusedItemId,
@@ -38,4 +38,4 @@ ItemColumn.defaultProps = {
   focusedItemId: null,
 };
 
-export default ItemColumn;
+export default React.memo(ItemColumn);

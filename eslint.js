@@ -8,7 +8,6 @@ module.exports = {
   },
 
   reactRules: {
-    'import/no-named-as-default': ['off'], // conflicts with redux convention
     'jsx-a11y/anchor-is-valid': ['error', {
       'components': ['Link'],
       'specialLink': ['to'],

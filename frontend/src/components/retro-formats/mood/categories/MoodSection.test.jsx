@@ -1,21 +1,24 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 
-import { MoodSection } from './MoodSection';
+import MoodSection from './MoodSection';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 
+jest.mock('../ItemColumn', () => () => (<div />));
+jest.mock('../../../common/ExpandingTextEntry', () => () => (<div />));
+
 describe('MoodSection', () => {
   it('displays a given category title', () => {
-    const dom = shallow(<MoodSection category="woo" items={[]} />);
+    const dom = mount(<MoodSection category="woo" items={[]} />);
 
     expect(dom.find('h2')).toHaveText('woo');
   });
 
   it('propagates focused ID', () => {
-    const dom = shallow(<MoodSection category="" items={[]} focusedItemId="b" />);
+    const dom = mount(<MoodSection category="" items={[]} focusedItemId="b" />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
       focusedItemId: 'b',
@@ -27,7 +30,7 @@ describe('MoodSection', () => {
       makeItem({ category: 'abc', message: 'foo' }),
       makeItem({ category: 'abc', message: 'bar' }),
     ];
-    const dom = shallow(<MoodSection category="abc" items={items} />);
+    const dom = mount(<MoodSection category="abc" items={items} />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
       ItemType: MoodItem,
@@ -40,7 +43,7 @@ describe('MoodSection', () => {
       makeItem({ category: 'nope', message: 'foo' }),
       makeItem({ category: 'yay', message: 'bar' }),
     ];
-    const dom = shallow(<MoodSection category="yay" items={items} />);
+    const dom = mount(<MoodSection category="yay" items={items} />);
 
     expect(dom.find(ItemColumn)).toHaveProp({
       items: [items[1]],
@@ -48,20 +51,20 @@ describe('MoodSection', () => {
   });
 
   it('does not render an input field if no callback is provided', () => {
-    const dom = shallow(<MoodSection category="" items={[]} />);
+    const dom = mount(<MoodSection category="" items={[]} />);
 
     expect(dom.find(ExpandingTextEntry)).not.toExist();
   });
 
   it('renders an input field if a callback is provided', () => {
-    const dom = shallow(<MoodSection category="" items={[]} onAddItem={() => {}} />);
+    const dom = mount(<MoodSection category="" items={[]} onAddItem={() => {}} />);
 
     expect(dom.find(ExpandingTextEntry)).toExist();
   });
 
   it('adds the current category to new items', () => {
     const onAddItem = jest.fn().mockName('onAddItem');
-    const dom = shallow((
+    const dom = mount((
       <MoodSection
         category="my-category"
         items={[]}

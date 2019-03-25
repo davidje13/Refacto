@@ -10,7 +10,6 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "core-js": "^3.0.0",
-    "immutability-helper": "^3.0.0",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "prop-types": "^15.7.2",
     "prop-types-nullable": "git+https://github.com/davidje13/prop-types-nullable.git#semver:^1.0.0",
@@ -18,10 +17,7 @@
     "react-dom": "^16.8.5",
     "react-helmet-async": "^0.2.0",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.0",
-    "react-redux": "^6.0.1",
-    "react-router-dom": "^5.0.0",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "react-router-dom": "^5.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",

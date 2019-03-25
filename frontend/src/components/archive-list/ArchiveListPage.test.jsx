@@ -1,41 +1,33 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeRetro } from '../../test-helpers/dataFactories';
+import { slugTracker, retroTracker } from '../../api/api';
 
-import { ArchiveListPage } from './ArchiveListPage';
+import ArchiveListPage from './ArchiveListPage';
 import ArchiveList from './ArchiveList';
 
-jest.mock('./ArchiveList', () => () => (<div />));
+jest.mock('../../api/api');
 jest.mock('../common/Header', () => () => (<div />));
+jest.mock('./ArchiveList', () => () => (<div />));
 
 describe('ArchiveListPage', () => {
-  const retroData = {
-    retro: makeRetro(),
-    error: null,
-    archives: {},
-  };
+  const retroData = { retro: makeRetro() };
+
+  beforeEach(() => {
+    slugTracker.setServerData('my-slug', { id: 'r1' });
+    retroTracker.setServerData('r1', retroData);
+  });
 
   it('renders an archive list page', () => {
-    const dom = mount((
-      <ArchiveListPage
-        slug="my-slug"
-        retroData={retroData}
-        onAppear={() => {}}
-        onDisappear={() => {}}
-      />
-    ));
+    const dom = mount(<ArchiveListPage slug="my-slug" />);
     expect(dom.find(ArchiveList)).toExist();
   });
 
-  it('triggers a load request when displayed', () => {
-    const onAppear = jest.fn().mockName('onAppear');
-    mount((
-      <ArchiveListPage
-        slug="my-slug"
-        onAppear={onAppear}
-        onDisappear={() => {}}
-      />
-    ));
-    expect(onAppear).toHaveBeenCalledWith('my-slug');
+  it('subscribes to the retro while mounted', async () => {
+    const dom = mount(<ArchiveListPage slug="my-slug" />);
+    expect(retroTracker.subscribed).toEqual(1);
+
+    dom.unmount();
+    expect(retroTracker.subscribed).toEqual(0);
   });
 });
