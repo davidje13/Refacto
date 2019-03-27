@@ -2,7 +2,7 @@
   "name": "refacto-e2e",
   "private": true,
   "scripts": {
-    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js src",
+    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js --report-unused-disable-directives src",
     "test": "jest --runInBand"
   },
   "devDependencies": {
