@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 
 const exactShape = (props) => PropTypes.shape(forbidExtraProps(props));
@@ -42,9 +41,4 @@ export const propTypesShapeRetro = exactShape({
   state: PropTypes.shape({}).isRequired,
   data: propTypesShapeRetroData.isRequired,
   archives: PropTypes.arrayOf(propTypesShapeArchiveSummary).isRequired,
-});
-
-export const propTypesShapeLoadedRetroList = exactShape({
-  retros: PropTypes.arrayOf(propTypesShapeRetroSummary).isRequired,
-  error: nullable(PropTypes.string).isRequired,
 });

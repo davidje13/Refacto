@@ -11,29 +11,27 @@ function allowOnly(permitted) {
       return null;
     }
 
-    const plural = badProps.length > 1;
     const propNames = badProps.map((key) => `\`${key}\``);
 
     return new TypeError((
-      `The prop${plural ? 's' : ''} ${propNames.join(', ')} ` +
-      `${plural ? 'are' : 'is'} not recognised by ${componentName}`
+      `Unknown props for ${componentName}: ${propNames.join(', ')}`
     ));
   };
 }
 
 function addUnknownPropsTest(propTypes, { alsoAllow = [] } = {}) {
+  let propName = 'rejectUnknownProps';
+  while (propTypes[propName] !== undefined) {
+    propName = `rejectUnknownProps_${Math.random()}`;
+  }
   return {
-    rejectUnknownProps: allowOnly([...Object.keys(propTypes), ...alsoAllow]),
+    [propName]: allowOnly([...Object.keys(propTypes), ...alsoAllow]),
     ...propTypes,
   };
 }
 
 function isComponent(o) {
-  return (
-    typeof o === 'function' ||
-    o instanceof React.Component ||
-    o instanceof React.PureComponent
-  );
+  return (typeof o === 'function' || o instanceof React.Component);
 }
 
 export default function forbidExtraProps(o, options) {
