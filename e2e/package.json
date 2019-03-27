@@ -12,6 +12,7 @@
     "@neutrinojs/node": "^9.0.0-rc.0",
     "core-js": "^3.0.0",
     "eslint": "^5.15.3",
+    "eslint-plugin-eslint-comments": "^3.1.1",
     "jest": "^24.5.0",
     "neutrino": "^9.0.0-rc.0",
     "selenium-webdriver": "^4.0.0-alpha.1",

@@ -9,6 +9,11 @@ module.exports = {
       eslint: {
         // All sources are test-related
         rules: Object.assign({}, baseRules, testRules),
+        baseConfig: {
+          extends: [
+            'plugin:eslint-comments/recommended',
+          ],
+        },
       },
     }],
     ['@neutrinojs/jest', {

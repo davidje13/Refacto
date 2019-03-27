@@ -9,6 +9,9 @@ module.exports = {
       eslint: {
         rules: baseRules,
         baseConfig: {
+          extends: [
+            'plugin:eslint-comments/recommended',
+          ],
           overrides: [{
             files: ['**/test-helpers/*'],
             rules: testRules,

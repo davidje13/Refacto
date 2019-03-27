@@ -30,6 +30,7 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "eslint": "^5.15.3",
+    "eslint-plugin-eslint-comments": "^3.1.1",
     "eslint-plugin-react-hooks": "^1.6.0",
     "jest": "^24.5.0",
     "jest-enzyme": "^7.0.2",
