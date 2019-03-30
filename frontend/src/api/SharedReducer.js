@@ -7,6 +7,7 @@ export default class SharedReducer {
 
     this.latestServerState = null;
     this.latestLocalState = null;
+    this.currentChange = null;
     this.localChanges = [];
     this.pendingChanges = [];
     this.idCounter = 0;
@@ -25,6 +26,7 @@ export default class SharedReducer {
     this.ws.close();
     this.latestServerState = null;
     this.latestLocalState = null;
+    this.currentChange = null;
     this.localChanges = [];
     this.pendingChanges = [];
   }
@@ -36,6 +38,16 @@ export default class SharedReducer {
     this.changeCallback(this.getState());
   }
 
+  internalSend = () => {
+    const event = {
+      change: this.currentChange,
+      id: this.internalGetUniqueId(),
+    };
+    this.localChanges.push(event);
+    this.ws.send(JSON.stringify(event));
+    this.currentChange = null;
+  };
+
   internalApply(change) {
     const oldState = this.getState();
 
@@ -45,9 +57,12 @@ export default class SharedReducer {
       return false;
     }
 
-    const event = { change, id: this.internalGetUniqueId() };
-    this.localChanges.push(event);
-    this.ws.send(JSON.stringify(event));
+    if (this.currentChange === null) {
+      this.currentChange = change;
+      setImmediate(this.internalSend);
+    } else {
+      this.currentChange = update.combine([this.currentChange, change]);
+    }
     return true;
   }
 
@@ -56,14 +71,9 @@ export default class SharedReducer {
       return false;
     }
 
-    let changed = false;
-    this.pendingChanges.forEach((change) => {
-      if (this.internalApply(change)) {
-        changed = true;
-      }
-    });
+    const aggregate = update.combine(this.pendingChanges);
     this.pendingChanges.length = 0;
-    return changed;
+    return this.internalApply(aggregate);
   }
 
   dispatch = (change) => {
@@ -109,9 +119,13 @@ export default class SharedReducer {
   getState() {
     if (!this.latestLocalState && this.latestServerState) {
       let state = this.latestServerState;
-      this.localChanges.forEach((change) => {
-        state = update(state, change);
-      });
+      state = update(
+        state,
+        update.combine(this.localChanges.map(({ change }) => change)),
+      );
+      if (this.currentChange) {
+        state = update(state, this.currentChange);
+      }
       this.latestLocalState = state;
     }
     return this.latestLocalState;
