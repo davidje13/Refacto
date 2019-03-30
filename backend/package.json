@@ -11,7 +11,7 @@
     "core-js": "^3.0.0",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "source-map-support": "^0.5.11",
-    "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.0.0"
+    "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.0.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.4.2",
@@ -24,7 +24,7 @@
     "http-proxy-middleware": "^0.19.1",
     "jest": "^24.5.0",
     "neutrino": "^9.0.0-rc.0",
-    "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.0",
+    "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.2",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   }

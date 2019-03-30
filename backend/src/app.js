@@ -165,6 +165,8 @@ const retroService = new RetroService([
 
 const app = new WebSocketExpress();
 
+app.disable('x-powered-by');
+app.enable('case sensitive routing');
 app.use('/api', new ApiRouter(retroService));
 app.use(new StaticRouter());
 
