@@ -3,11 +3,11 @@ import SubscriptionTracker from './SubscriptionTracker';
 import SharedReducer from './SharedReducer';
 
 class Retro {
-  constructor(apiBase, wsBase, retroId) {
+  constructor(apiBase, wsBase, retroId, token) {
     this.retroStateCallbacks = new Set();
     this.latestState = null;
 
-    const archiveTracker = new RetroArchiveTracker(apiBase, retroId);
+    const archiveTracker = new RetroArchiveTracker(apiBase, retroId, token);
 
     const setState = (state) => {
       this.latestState = state;
@@ -16,6 +16,7 @@ class Retro {
 
     this.reducer = new SharedReducer(
       `${wsBase}/retros/${retroId}`,
+      token,
       (data) => setState({ retro: data, error: null, archiveTracker }),
       (err) => setState({ retro: null, error: err, archiveTracker }),
     );
@@ -38,13 +39,13 @@ class Retro {
 export default class RetroTracker {
   constructor(apiBase, wsBase) {
     this.subscriptionTracker = new SubscriptionTracker(
-      (retroId) => new Retro(apiBase, wsBase, retroId),
+      ({ retroId, token }) => new Retro(apiBase, wsBase, retroId, token),
       (service) => service.close(),
     );
   }
 
-  subscribe(retroId, dispatchCallback, retroStateCallback) {
-    const sub = this.subscriptionTracker.subscribe(retroId);
+  subscribe(retroId, token, dispatchCallback, retroStateCallback) {
+    const sub = this.subscriptionTracker.subscribe({ retroId, token });
     dispatchCallback(sub.service.reducer.dispatch);
     sub.service.addStateCallback(retroStateCallback);
 

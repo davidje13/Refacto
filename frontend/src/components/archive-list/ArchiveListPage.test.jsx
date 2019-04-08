@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeRetro } from '../../test-helpers/dataFactories';
-import { slugTracker, retroTracker } from '../../api/api';
+import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
 
 import ArchiveListPage from './ArchiveListPage';
 import ArchiveList from './ArchiveList';
@@ -15,6 +15,7 @@ describe('ArchiveListPage', () => {
 
   beforeEach(() => {
     slugTracker.setServerData('my-slug', { id: 'r1' });
+    retroTokenTracker.set('r1', 'token-1');
     retroTracker.setServerData('r1', retroData);
   });
 

@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import nullable from 'prop-types-nullable';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import useSlug from '../../hooks/data/useSlug';
-import useRetroReducer from '../../hooks/data/useRetroReducer';
+import withRetroFromSlug from '../hocs/withRetroFromSlug';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
-const ArchiveListPage = ({ slug }) => {
-  const [retroState] = useRetroReducer(useSlug(slug)?.id);
-
+const ArchiveListPage = ({ slug, retroState }) => {
   const retro = retroState?.retro;
   const retroName = retro?.name || slug;
 
@@ -32,8 +30,9 @@ const ArchiveListPage = ({ slug }) => {
 
 ArchiveListPage.propTypes = {
   slug: PropTypes.string.isRequired,
+  retroState: nullable(PropTypes.shape({})).isRequired,
 };
 
 forbidExtraProps(ArchiveListPage);
 
-export default React.memo(ArchiveListPage);
+export default React.memo(withRetroFromSlug(ArchiveListPage, true));

@@ -1,3 +1,19 @@
+function canonicalJSON(o) {
+  if (o && typeof o === 'object' && !Array.isArray(o)) {
+    const keys = Object.keys(o).slice();
+    keys.sort();
+    const content = keys
+      .map((key) => `${JSON.stringify(key)}:${canonicalJSON(o[key])}`)
+      .join(',');
+    return `{${content}}`;
+  }
+  return JSON.stringify(o);
+}
+
+function makeKey(id) {
+  return canonicalJSON(id);
+}
+
 export default class SubscriptionTracker {
   constructor(generator, destructor) {
     this.generator = generator;
@@ -7,13 +23,14 @@ export default class SubscriptionTracker {
   }
 
   subscribe(id) {
-    let serviceInfo = this.services.get(id);
+    const key = makeKey(id);
+    let serviceInfo = this.services.get(key);
     if (!serviceInfo) {
       serviceInfo = {
         count: 0,
         service: this.generator(id),
       };
-      this.services.set(id, serviceInfo);
+      this.services.set(key, serviceInfo);
     }
 
     serviceInfo.count += 1;
@@ -26,7 +43,8 @@ export default class SubscriptionTracker {
   async unsubscribe(id) {
     await Promise.resolve(); // wait in case we immediately resubscribe
 
-    const serviceInfo = this.services.get(id);
+    const key = makeKey(id);
+    const serviceInfo = this.services.get(key);
     if (!serviceInfo || serviceInfo.count <= 0) {
       throw new Error(`Service ${id} is not active`);
     }
@@ -36,11 +54,12 @@ export default class SubscriptionTracker {
       return;
     }
 
-    this.services.delete(id);
+    this.services.delete(key);
     this.destructor(serviceInfo.service, id);
   }
 
   find(id) {
-    return this.services.get(id)?.service;
+    const key = makeKey(id);
+    return this.services.get(key)?.service;
   }
 }

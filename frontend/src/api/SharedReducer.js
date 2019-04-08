@@ -1,7 +1,12 @@
 import update from 'json-immutability-helper';
 
 export default class SharedReducer {
-  constructor(wsUrl, changeCallback = null, errorCallback = null) {
+  constructor(
+    wsUrl,
+    token = null,
+    changeCallback = null,
+    errorCallback = null,
+  ) {
     this.changeCallback = changeCallback;
     this.errorCallback = errorCallback;
 
@@ -15,6 +20,7 @@ export default class SharedReducer {
     this.ws = new WebSocket(wsUrl);
     this.ws.addEventListener('message', this.handleMessage);
     this.ws.addEventListener('error', this.handleError);
+    this.ws.addEventListener('open', () => this.ws.send(token), { once: true });
   }
 
   internalGetUniqueId() {

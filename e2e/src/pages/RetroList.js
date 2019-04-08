@@ -1,6 +1,6 @@
 import { By } from 'selenium-webdriver';
 import Page from './Page';
-import Retro from './Retro';
+import Password from './Password';
 
 export default class RetroList extends Page {
   constructor(driver) {
@@ -20,7 +20,7 @@ export default class RetroList extends Page {
     const item = await this.getRetroItemAtIndex(index);
     await item.click();
 
-    const page = new Retro(this.driver, 'unknown');
+    const page = new Password(this.driver, 'unknown');
     await page.wait();
     return page;
   }

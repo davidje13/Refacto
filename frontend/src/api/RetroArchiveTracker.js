@@ -1,7 +1,8 @@
 export default class RetroArchiveTracker {
-  constructor(apiBase, retroId) {
+  constructor(apiBase, retroId, token) {
     this.apiBase = apiBase;
     this.retroId = retroId;
+    this.token = token;
     this.archives = new Map();
   }
 
@@ -13,7 +14,7 @@ export default class RetroArchiveTracker {
     }
 
     const url = `${this.apiBase}/retros/${this.retroId}/archives/${archiveId}`;
-    global.fetch(url)
+    global.fetch(url, { headers: { Authorization: `Bearer ${this.token}` } })
       .then((data) => data.json())
       .then((archive) => ({ archive, error: null }))
       .catch((error) => ({ archive: null, error }))

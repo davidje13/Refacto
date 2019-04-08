@@ -1,34 +1,96 @@
 import { Router } from 'websocket-express';
-import crypto from 'crypto';
+import UniqueIdProvider from '../helpers/UniqueIdProvider';
 
-class UniqueIdProvider {
-  constructor() {
-    this.shared = crypto.randomBytes(8).toString('hex');
-    this.unique = 0;
+function splitFirst(data, delimiter) {
+  const sep = data.indexOf(delimiter);
+  if (sep === -1) {
+    return [data];
+  }
+  return [data.substr(0, sep), data.substr(sep + delimiter.length)];
+}
+
+function extractToken(auth) {
+  const [type, data] = splitFirst(auth, ' ');
+
+  if (type === 'Bearer') {
+    return data;
   }
 
-  get() {
-    const id = this.unique;
-    this.unique += 1;
-    return `${this.shared}-${id}`;
-  }
+  return null;
+}
+
+function nextMessage(ws) {
+  return new Promise((resolve, reject) => {
+    let onMessage = null;
+    let onClose = null;
+
+    const detach = () => {
+      ws.off('message', onMessage);
+      ws.off('close', onClose);
+    };
+
+    onMessage = (msg) => {
+      detach();
+      resolve(msg);
+    };
+
+    onClose = () => {
+      detach();
+      reject();
+    };
+
+    ws.on('message', onMessage);
+    ws.on('close', onClose);
+  });
 }
 
 export default class ApiRouter extends Router {
-  constructor(retroService) {
+  constructor(authService, retroService) {
     super();
 
     const idProvider = new UniqueIdProvider();
 
+    const getAuthentication = async (req, retroId) => {
+      const auth = req.get('Authorization');
+      if (!auth) {
+        return null;
+      }
+
+      const token = extractToken(auth);
+      if (!token) {
+        return null;
+      }
+
+      return authService.readAndVerifyToken(retroId, token);
+    };
+
     this.get('/slugs/:slug', async (req, res) => {
       const { slug } = req.params;
-      const retroid = await retroService.getRetroIdForSlug(slug);
+      const retroId = await retroService.getRetroIdForSlug(slug);
 
-      if (retroid !== null) {
-        res.json({ id: retroid });
+      if (retroId !== null) {
+        res.json({ id: retroId });
       } else {
         res.status(404).end();
       }
+    });
+
+    this.post('/auth/tokens/:retroId', async (req, res) => {
+      const { retroId } = req.params;
+      const { password } = req.body;
+
+      const permissions = {
+        read: true,
+        readArchives: true,
+        write: true,
+      };
+      const token = await authService.exchangePassword(retroId, password, permissions);
+      if (!token) {
+        res.status(400).json({ error: 'incorrect password' });
+        return;
+      }
+
+      res.status(200).json({ token });
     });
 
     this.get('/retros', async (req, res) => {
@@ -37,9 +99,22 @@ export default class ApiRouter extends Router {
       });
     });
 
-    this.get('/retros/:retroid', async (req, res) => {
-      const { retroid } = req.params;
-      const retro = await retroService.getRetro(retroid);
+    this.get('/retros/:retroId', async (req, res) => {
+      const { retroId } = req.params;
+      const auth = await getAuthentication(req, retroId);
+      if (!auth) {
+        res
+          .status(401)
+          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="read"`)
+          .end();
+        return;
+      }
+      if (!auth.readArchives) {
+        res.status(403).end();
+        return;
+      }
+
+      const retro = await retroService.getRetro(retroId);
 
       if (retro) {
         res.json(retro);
@@ -48,8 +123,21 @@ export default class ApiRouter extends Router {
       }
     });
 
-    this.ws('/retros/:retroid', async (req, ws) => {
-      const { retroid } = req.params;
+    this.ws('/retros/:retroId', async (req, ws) => {
+      const { retroId } = req.params;
+      let auth = await getAuthentication(req, retroId);
+      if (!auth) {
+        const token = await nextMessage(ws);
+        auth = await authService.readAndVerifyToken(retroId, token);
+        if (!auth) {
+          ws.close(4401, 'Unauthorized');
+          return;
+        }
+      }
+      if (!auth.read) {
+        ws.close(4403, 'Forbidden');
+        return;
+      }
 
       const mySourceId = idProvider.get();
 
@@ -61,10 +149,10 @@ export default class ApiRouter extends Router {
         ws.send(JSON.stringify(message));
       };
 
-      const subscription = await retroService.subscribeRetro(retroid, onChange);
+      const subscription = await retroService.subscribeRetro(retroId, onChange);
 
       if (!subscription) {
-        ws.close();
+        ws.close(4404, 'Not Found');
         return;
       }
 
@@ -72,6 +160,10 @@ export default class ApiRouter extends Router {
 
       ws.on('message', (msg) => {
         const { change, id } = JSON.parse(msg);
+        if (!auth.write) {
+          ws.close(4403, 'Forbidden');
+          return;
+        }
         subscription.send(change, { sourceId: mySourceId, id });
       });
 
@@ -80,9 +172,22 @@ export default class ApiRouter extends Router {
       }));
     });
 
-    this.get('/retros/:retroid/archives/:archiveid', async (req, res) => {
-      const { retroid, archiveid } = req.params;
-      const archive = await retroService.getRetroArchive(retroid, archiveid);
+    this.get('/retros/:retroId/archives/:archiveid', async (req, res) => {
+      const { retroId, archiveid } = req.params;
+      const auth = await getAuthentication(req, retroId);
+      if (!auth) {
+        res
+          .status(401)
+          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="readArchives"`)
+          .end();
+        return;
+      }
+      if (!auth.readArchives) {
+        res.status(403).end();
+        return;
+      }
+
+      const archive = await retroService.getRetroArchive(retroId, archiveid);
 
       if (archive) {
         res.json(archive);

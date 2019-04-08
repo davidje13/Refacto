@@ -6,6 +6,7 @@ describe('Running a retro', () => {
 
   let welcome;
   let retros;
+  let password;
   let retro;
 
   beforeAll(async () => {
@@ -32,8 +33,15 @@ describe('Running a retro', () => {
     expect(await retros.getTitle()).toEqual('Retros - Refacto');
   });
 
-  it('shows a specific retro when clicked', async () => {
-    retro = await retros.clickRetroAtIndex(0);
+  it('shows retro password entry when retro chosen', async () => {
+    password = await retros.clickRetroAtIndex(0);
+
+    expect(await password.getTitle()).toEqual('my-retro - Refacto');
+    await password.setPassword('password');
+  });
+
+  it('shows retro data when correct password given', async () => {
+    retro = await password.submit();
 
     expect(await retro.getTitle()).toEqual('My Retro - Refacto');
     expect(await retro.getNameText()).toEqual('My Retro');

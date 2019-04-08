@@ -1,3 +1,5 @@
+import ObservableTracker from '../ObservableTracker';
+
 class FakeRetroListTracker {
   data = null;
 
@@ -40,7 +42,7 @@ class FakeRetroTracker {
     this.data.set(retroId, { retro, archives });
   }
 
-  subscribe(retroId, dispatchCallback, retroStateCallback) {
+  subscribe(retroId, token, dispatchCallback, retroStateCallback) {
     this.subscribed += 1;
 
     const state = this.data.get(retroId);
@@ -76,6 +78,27 @@ class FakeRetroTracker {
   }
 }
 
+class FakeRetroTokenService {
+  data = new Map();
+
+  capturedPassword = null;
+
+  setServerData(retroId, token) {
+    this.data.set(retroId, token);
+  }
+
+  async submitPassword(retroId, password) {
+    this.capturedPassword = password;
+    const token = this.data.get(retroId);
+    if (!token) {
+      throw new Error('some error');
+    }
+    return token;
+  }
+}
+
 export const retroListTracker = new FakeRetroListTracker();
 export const slugTracker = new FakeSlugTracker();
 export const retroTracker = new FakeRetroTracker();
+export const retroTokenTracker = new ObservableTracker();
+export const retroTokenService = new FakeRetroTokenService();

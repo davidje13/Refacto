@@ -2,7 +2,7 @@ import { useState, useLayoutEffect } from 'react';
 import useNonce from '../useNonce';
 import { retroTracker } from '../../api/api';
 
-export default function useRetroReducer(retroId) {
+export default function useRetroReducer(retroId, token) {
   const [retro, setRetro] = useState(null);
   const [retroDispatch, setRetroDispatch] = useState(null);
   const nonce = useNonce();
@@ -11,17 +11,19 @@ export default function useRetroReducer(retroId) {
     const myNonce = nonce.next();
 
     setRetro(null);
-    if (!retroId) {
+    setRetroDispatch(null);
+    if (!retroId || !token) {
       return undefined;
     }
 
     const subscription = retroTracker.subscribe(
       retroId,
+      token,
       (dispatch) => nonce.check(myNonce) && setRetroDispatch(() => dispatch),
       (data) => nonce.check(myNonce) && setRetro(data),
     );
     return () => subscription.unsubscribe();
-  }, [retroTracker, setRetro, setRetroDispatch, retroId]);
+  }, [retroTracker, setRetro, setRetroDispatch, retroId, token]);
 
   return [retro, retroDispatch];
 }

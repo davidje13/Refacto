@@ -193,6 +193,7 @@ class ExpandingTextEntry extends React.PureComponent {
           onChange={this.handleChange}
           onKeyDown={this.handleKey}
           style={{ height: `${height}px` }}
+          autoComplete="off"
         />
         { extraOptions }
         <button
