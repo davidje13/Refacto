@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import WelcomePage from './welcome/WelcomePage';
@@ -21,6 +21,10 @@ const App = () => (
       <Route path="/retros/:slug" exact render={withParams(RetroPage)} />
       <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />
       <Route path="/retros/:slug/archives/:archiveId" exact render={withParams(ArchivePage)} />
+
+      <Redirect from="/retro/:slug" to="/retros/:slug" />
+      <Redirect from="/:slug" to="/retros/:slug" />
+
       <Route render={withParams(NotFoundPage)} />
     </Switch>
     <Footer />
