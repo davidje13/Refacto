@@ -18,6 +18,10 @@ module.exports = {
     'react/jsx-one-expression-per-line': ['off'], // too buggy
     'react-hooks/rules-of-hooks': ['error'],
 
+    // https://github.com/evcohen/eslint-plugin-jsx-a11y/issues/455#issuecomment-403105932
+    'jsx-a11y/label-has-associated-control': ['error', { depth: 2 }],
+    'jsx-a11y/label-has-for': ['off'],
+
     // https://github.com/facebook/react/issues/14920#issuecomment-471328990
     'react-hooks/exhaustive-deps': ['off'], // does not support spread yet
   },

@@ -23,19 +23,22 @@ async function addTestData() {
       ],
     },
   );
-  authService.setPassword(r1, 'password');
 
   const r2 = await retroService
     .createRetro('my-second-retro', 'My Second Retro', 'mood');
-  authService.setPassword(r2, 'pa55w0rd');
 
   const r3 = await retroService
     .createRetro('unknown-retro', 'An Unknown Retro Format', 'nope');
-  authService.setPassword(r3, '12345');
 
   const a1a = await retroService.createArchive(r1);
   const a1b = await retroService.createArchive(r1);
   const a2 = await retroService.createArchive(r2);
+
+  await Promise.all([
+    authService.setPassword(r1, 'password'),
+    authService.setPassword(r2, 'pa55w0rd'),
+    authService.setPassword(r3, '12345678'),
+  ]);
 
   return [r1, r2, r3, a1a, a1b, a2];
 }

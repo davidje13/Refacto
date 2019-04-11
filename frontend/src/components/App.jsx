@@ -24,8 +24,8 @@ const App = () => (
       <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />
       <Route path="/retros/:slug/archives/:archiveId" exact render={withParams(ArchivePage)} />
 
-      <Redirect from="/retro/:slug" to="/retros/:slug" />
-      <Redirect from="/:slug" to="/retros/:slug" />
+      <Redirect from="/retro/:slug" exact to="/retros/:slug" />
+      <Redirect from="/:slug" exact to="/retros/:slug" />
 
       <Route render={withParams(NotFoundPage)} />
     </Switch>

@@ -7,6 +7,14 @@ import {
   retroTokenTracker,
 } from '../../api/api';
 
+function makeSlug(text) {
+  return text.toLowerCase()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9_]+/g, '-')
+    .replace(/[-_]{2,}/g, '_')
+    .replace(/^[-_]+|[-_]+$/g, '');
+}
+
 class RetroForm extends React.PureComponent {
   static propTypes = {
     onCreate: PropTypes.func.isRequired,
@@ -30,14 +38,30 @@ class RetroForm extends React.PureComponent {
 
     const {
       name,
-      slug,
       password,
+      passwordConf,
       sending,
     } = this.state;
 
+    let { slug } = this.state;
+
     const { onCreate } = this.props;
 
-    if (!this.valid() || sending) {
+    if (sending) {
+      return;
+    }
+    if (!name || !password) {
+      return;
+    }
+    if (!slug) {
+      slug = makeSlug(name);
+    }
+    if (!slug) {
+      return;
+    }
+
+    if (password !== passwordConf) {
+      this.setState({ sending: false, error: 'Passwords do not match' });
       return;
     }
 
@@ -75,22 +99,6 @@ class RetroForm extends React.PureComponent {
     this.setState({ passwordConf: e.target.value });
   };
 
-  valid() {
-    const {
-      name,
-      slug,
-      password,
-      passwordConf,
-    } = this.state;
-
-    return (
-      Boolean(name) &&
-      Boolean(slug) &&
-      Boolean(password) &&
-      (passwordConf === password)
-    );
-  }
-
   render() {
     const {
       name,
@@ -106,41 +114,63 @@ class RetroForm extends React.PureComponent {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <input
-          name="name"
-          type="text"
-          placeholder="retro name"
-          value={name}
-          onChange={this.handleChangeName}
-          autoComplete="off"
-        />
-        { retrosBaseUrl }
-        <input
-          name="slug"
-          type="text"
-          placeholder=""
-          value={slug}
-          onChange={this.handleChangeSlug}
-          autoComplete="off"
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={this.handleChangePassword}
-          autoComplete="off"
-        />
-        <input
-          name="password-confirmation"
-          type="password"
-          placeholder="password-confirmation"
-          value={passwordConf}
-          onChange={this.handleChangePasswordConfirmation}
-          autoComplete="off"
-        />
+        <label>
+          Retro Name
+          <input
+            name="name"
+            type="text"
+            placeholder="retro name"
+            value={name}
+            onChange={this.handleChangeName}
+            autoComplete="off"
+            required
+          />
+        </label>
+        <label>
+          Retro URL
+          <div className="info">
+            (may contain lowercase letters, numbers, dashes and underscores)
+          </div>
+          <div className="prefixed-input">
+            <span className="prefix">{ retrosBaseUrl }</span>
+            <input
+              name="slug"
+              type="text"
+              placeholder={makeSlug(name)}
+              value={slug}
+              onChange={this.handleChangeSlug}
+              autoComplete="off"
+              pattern="^[a-z0-9][a-z0-9_-]*$"
+            />
+          </div>
+        </label>
+        <label>
+          Collaborator password
+          <input
+            name="password"
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={this.handleChangePassword}
+            autoComplete="off"
+            minLength="8"
+            required
+          />
+        </label>
+        <label>
+          Confirm password
+          <input
+            name="password-confirmation"
+            type="password"
+            placeholder="password"
+            value={passwordConf}
+            onChange={this.handleChangePasswordConfirmation}
+            autoComplete="off"
+            required
+          />
+        </label>
         { sending ? (<div className="sending">&hellip;</div>) : (
-          <button type="submit" title="Create Retro" disabled={!this.valid()}>
+          <button type="submit" title="Create Retro">
             Create
           </button>
         ) }

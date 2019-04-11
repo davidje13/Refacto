@@ -1,2 +1,76 @@
+@import (reference) '../colours.less';
+
 .page-retro-create {
+  form {
+    display: block;
+    margin: 64px auto 128px;
+    width: 600px;
+    max-width: calc(100% - 16px);
+
+    label {
+      display: block;
+    }
+
+    input, .prefixed-input {
+      display: block;
+      margin: 4px 0 16px;
+      padding: 8px;
+      font-size: 1.4em;
+      border: 1px solid @beige-shadow;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .prefixed-input {
+      display: flex;
+      flex-direction: row;
+      background: #FFFFFF;
+      padding: 0;
+      cursor: text;
+
+      .prefix {
+        flex: 1 1 auto;
+        padding: 8px;
+        padding-right: 2px;
+        color: @pale-text-on-white;
+      }
+
+      input {
+        margin: 0;
+        border: none;
+        font-size: 1em;
+        padding-left: 4px;
+      }
+    }
+
+    .info {
+      font-size: 0.8em;
+      float: right;
+      position: relative;
+      top: 2px;
+    }
+
+    button, .sending {
+      margin: 32px 0 0;
+      padding: 8px;
+      width: 100%;
+      font-size: 1.2em;
+      box-sizing: border-box;
+      background: @green-button-back;
+      color: #000000;
+      text-align: center;
+
+      &:disabled {
+        background: @beige-shadow;
+      }
+    }
+
+    .sending {
+      background: @beige-shadow;
+    }
+
+    .error {
+      color: @red-text-on-white;
+    }
+  }
 }

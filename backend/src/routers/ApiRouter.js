@@ -1,6 +1,9 @@
 import { Router } from 'websocket-express';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 
+const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
+const MIN_PASSWORD_LENGTH = 8;
+
 function splitFirst(data, delimiter) {
   const sep = data.indexOf(delimiter);
   if (sep === -1) {
@@ -103,9 +106,26 @@ export default class ApiRouter extends Router {
       const { slug, name, password } = req.body;
       // TODO: authentication
 
+      if (!name || typeof name !== 'string') {
+        res.status(400).json({ error: 'No name given' });
+        return;
+      }
+      if (!password || typeof password !== 'string') {
+        res.status(400).json({ error: 'No password given' });
+        return;
+      }
+      if (password.length < MIN_PASSWORD_LENGTH) {
+        res.status(400).json({ error: 'Password is too short' });
+        return;
+      }
+      if (!slug || typeof slug !== 'string' || !VALID_SLUG.test(slug)) {
+        res.status(400).json({ error: 'Invalid URL' });
+        return;
+      }
+
       const retroId = await retroService.getRetroIdForSlug(slug);
       if (retroId !== null) {
-        res.status(409).end();
+        res.status(409).json({ error: 'URL is already taken' });
         return;
       }
 
