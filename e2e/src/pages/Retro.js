@@ -13,4 +13,23 @@ export default class Retro extends Page {
   getNameText() {
     return this.getName().getText();
   }
+
+  setActionItemText(value) {
+    this.setFormValue(By.css('.actions .text-entry textarea'), value);
+  }
+
+  submitActionItem() {
+    this.click(By.css('.actions .text-entry button'));
+  }
+
+  getActionItems() {
+    return this.driver.findElements(By.css('.action-item'));
+  }
+
+  async getActionItemLabels() {
+    const items = await this.getActionItems();
+    return Promise.all(items.map(
+      (item) => item.findElement(By.css('.message')).getText(),
+    ));
+  }
 }

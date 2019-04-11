@@ -40,11 +40,11 @@ describe.skip('Application', () => {
     expect(dom).not.toContainMatchingElement('.page-retro');
   });
 
-  it('renders retro list page at /retros/', async () => {
+  it('renders retro list page at /retros', async () => {
     global.fetch.mockExpect('/api/retros')
       .andRespondJsonOk({ retros: [] });
 
-    const { dom } = await renderApp('/retros/');
+    const { dom } = await renderApp('/retros');
 
     expect(dom).toContainMatchingElement('.page-retro-list');
   });

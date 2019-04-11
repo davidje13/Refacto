@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import WelcomePage from './welcome/WelcomePage';
+import RetroCreatePage from './retro-create/RetroCreatePage';
 import RetroListPage from './retro-list/RetroListPage';
 import RetroPage from './retro/RetroPage';
 import ArchiveListPage from './archive-list/ArchiveListPage';
@@ -17,6 +18,7 @@ const App = () => (
   <React.Fragment>
     <Switch>
       <Route path="/" exact render={withParams(WelcomePage)} />
+      <Route path="/create" exact render={withParams(RetroCreatePage)} />
       <Route path="/retros" exact render={withParams(RetroListPage)} />
       <Route path="/retros/:slug" exact render={withParams(RetroPage)} />
       <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />

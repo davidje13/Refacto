@@ -99,6 +99,22 @@ export default class ApiRouter extends Router {
       });
     });
 
+    this.post('/retros', async (req, res) => {
+      const { slug, name, password } = req.body;
+      // TODO: authentication
+
+      const retroId = await retroService.getRetroIdForSlug(slug);
+      if (retroId !== null) {
+        res.status(409).end();
+        return;
+      }
+
+      const id = await retroService.createRetro(slug, name, 'mood');
+      await authService.setPassword(id, password);
+
+      res.status(200).json({ id });
+    });
+
     this.get('/retros/:retroId', async (req, res) => {
       const { retroId } = req.params;
       const auth = await getAuthentication(req, retroId);
@@ -172,8 +188,28 @@ export default class ApiRouter extends Router {
       }));
     });
 
-    this.get('/retros/:retroId/archives/:archiveid', async (req, res) => {
-      const { retroId, archiveid } = req.params;
+    this.post('/retros/:retroId/archives', async (req, res) => {
+      const { retroId } = req.params;
+      const auth = await getAuthentication(req, retroId);
+      if (!auth) {
+        res
+          .status(401)
+          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="write"`)
+          .end();
+        return;
+      }
+      if (!auth.write) {
+        res.status(403).end();
+        return;
+      }
+
+      const id = await retroService.createArchive(retroId);
+
+      res.status(200).json({ id });
+    });
+
+    this.get('/retros/:retroId/archives/:archiveId', async (req, res) => {
+      const { retroId, archiveId } = req.params;
       const auth = await getAuthentication(req, retroId);
       if (!auth) {
         res
@@ -187,7 +223,7 @@ export default class ApiRouter extends Router {
         return;
       }
 
-      const archive = await retroService.getRetroArchive(retroId, archiveid);
+      const archive = await retroService.getRetroArchive(retroId, archiveId);
 
       if (archive) {
         res.json(archive);

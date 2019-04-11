@@ -36,4 +36,22 @@ export default class Page {
   getTitle() {
     return this.driver.getTitle();
   }
+
+  setFormValue(selector, value) {
+    return this.driver.findElement(selector).sendKeys(value);
+  }
+
+  click(selector) {
+    return this.driver.findElement(selector).click();
+  }
+
+  async expectChange(fn) {
+    const body = await this.driver.findElement(By.css('body'));
+    const oldState = await body.getText();
+    await fn();
+    await this.driver.wait(async () => {
+      const state = await body.getText();
+      return state !== oldState;
+    });
+  }
 }

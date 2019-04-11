@@ -8,12 +8,11 @@ export default class Password extends Page {
   }
 
   setPassword(pass) {
-    return this.driver.findElement(By.css('form input[type=password]'))
-      .sendKeys(pass);
+    return this.setFormValue(By.css('form input[type=password]'), pass);
   }
 
   async submit() {
-    this.driver.findElement(By.css('form button')).click();
+    this.click(By.css('form button'));
 
     const page = new Retro(this.driver, 'unknown');
     await page.wait();

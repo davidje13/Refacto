@@ -21,7 +21,7 @@ class PasswordPage extends React.PureComponent {
     };
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
 
     const { retroId } = this.props;
@@ -30,15 +30,15 @@ class PasswordPage extends React.PureComponent {
       return;
     }
 
-    this.setState({ checking: true, error: null });
-    retroTokenService.submitPassword(retroId, password)
-      .then((token) => {
-        this.setState({ checking: false, error: null });
-        retroTokenTracker.set(retroId, token);
-      })
-      .catch((err) => {
-        this.setState({ checking: false, error: String(err.message) });
-      });
+    try {
+      this.setState({ checking: true, error: null });
+      const token = await retroTokenService.submitPassword(retroId, password);
+
+      this.setState({ checking: false, error: null });
+      retroTokenTracker.set(retroId, token);
+    } catch (err) {
+      this.setState({ checking: false, error: String(err.message) });
+    }
   };
 
   handleChangePassword = (e) => {

@@ -17,6 +17,7 @@ const RetroListPage = () => {
         documentTitle="Retros - Refacto"
         title="Retros"
         backLink={{ label: 'Home', url: '/' }}
+        links={[{ label: 'Create Retro', url: '/create' }]}
       />
       <Loader
         loading={!retroList}

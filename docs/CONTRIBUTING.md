@@ -78,6 +78,9 @@ Run end-to-end tests with non-headless browsers:
 HEADLESS=false npm run test:e2e
 ```
 
+The server logs generated during the end-to-end test run are written
+to `e2e/build/app.log`.
+
 ## Building
 
 ```bash

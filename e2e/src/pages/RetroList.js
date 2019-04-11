@@ -1,10 +1,11 @@
 import { By } from 'selenium-webdriver';
 import Page from './Page';
 import Password from './Password';
+import RetroCreate from './RetroCreate';
 
 export default class RetroList extends Page {
   constructor(driver) {
-    super(driver, '/retros/', '.page-retro-list');
+    super(driver, '/retros', '.page-retro-list');
   }
 
   getRetroItems() {
@@ -21,6 +22,14 @@ export default class RetroList extends Page {
     await item.click();
 
     const page = new Password(this.driver, 'unknown');
+    await page.wait();
+    return page;
+  }
+
+  async clickCreateRetro() {
+    await this.click(By.linkText('Create Retro'));
+
+    const page = new RetroCreate(this.driver);
     await page.wait();
     return page;
   }

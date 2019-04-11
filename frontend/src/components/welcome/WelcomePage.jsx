@@ -9,7 +9,7 @@ const WelcomePage = () => (
       documentTitle="Refacto"
       title="Refacto"
     />
-    <p>Take a look at the <Link to="/retros/" className="link-retro-list">retros</Link></p>
+    <p>Take a look at the <Link to="/retros" className="link-retro-list">retros</Link></p>
   </article>
 );
 

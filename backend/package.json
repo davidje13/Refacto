@@ -13,6 +13,7 @@
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "jwt-simple": "^0.5.6",
     "source-map-support": "^0.5.11",
+    "uuid": "^3.3.2",
     "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.0.2"
   },
   "devDependencies": {

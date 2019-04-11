@@ -1,4 +1,5 @@
 import update from 'json-immutability-helper';
+import uuidv4 from 'uuid/v4';
 
 function sleep(millis) {
   // Simulate data access delays to ensure non-flakey e2e tests, etc.
@@ -16,31 +17,27 @@ const filterArchiveSummaryInformation = ({ id, created }) => ({
   created,
 });
 
-const filterRetroInformation = (retro) => {
-  const { archives, ...rest } = retro;
-
-  return {
-    archives: archives.map(filterArchiveSummaryInformation),
-    ...rest,
-  };
-};
-
 export default class InMemoryRetroService {
-  constructor(initialData = []) {
-    this.data = initialData.map((retro) => ({
-      retro: filterRetroInformation(retro),
-      archives: retro.archives,
-      subscriptions: [],
-    }));
+  constructor() {
+    this.data = [];
+    this.simulatedDelay = 0;
+    this.simulatedSocketDelay = 0;
+  }
+
+  async internalDistribute(retroData, change, meta = {}) {
+    await sleep(this.simulatedSocketDelay);
+    /* eslint-disable-next-line no-param-reassign */ // shared data
+    retroData.retro = update(retroData.retro, change);
+    retroData.subscriptions.forEach((sub) => sub(change, meta));
   }
 
   async findRetroBySlug(slug) {
-    await sleep(300);
+    await sleep(this.simulatedDelay);
     return this.data.find((retroData) => (retroData.retro.slug === slug));
   }
 
   async findRetroById(id) {
-    await sleep(300);
+    await sleep(this.simulatedDelay);
     return this.data.find((retroData) => (retroData.retro.id === id));
   }
 
@@ -52,8 +49,57 @@ export default class InMemoryRetroService {
     return retroData.retro.id;
   }
 
+  async createRetro(
+    slug,
+    name,
+    format,
+    { state = {}, items = [], archives = [] } = {},
+  ) {
+    const existing = await this.findRetroBySlug(slug);
+    if (existing) {
+      throw new Error('slug exists');
+    }
+
+    const id = uuidv4();
+
+    this.data.push({
+      retro: {
+        id,
+        slug,
+        name,
+        state,
+        data: { format, items },
+        archives: archives.map(filterArchiveSummaryInformation),
+      },
+      archives,
+      subscriptions: [],
+    });
+
+    return id;
+  }
+
+  async createArchive(retroId) {
+    const retroData = await this.findRetroById(retroId);
+
+    const id = uuidv4();
+    const created = Date.now();
+
+    retroData.archives.push({
+      id,
+      created,
+      data: retroData.retro.data,
+    });
+
+    await this.internalDistribute(retroData, {
+      data: { items: { $set: [] } },
+      archives: { $push: [{ id, created }] },
+    });
+
+    return id;
+  }
+
   async getRetroList() {
-    await sleep(300);
+    await sleep(this.simulatedDelay);
     return this.data.map(filterSummaryInformation);
   }
 
@@ -82,11 +128,7 @@ export default class InMemoryRetroService {
         initialData = null; // GC
         return data;
       },
-      send: async (change, meta) => {
-        await sleep(100);
-        retroData.retro = update(retroData.retro, change);
-        subscriptions.forEach((sub) => sub(change, meta));
-      },
+      send: (change, meta) => this.internalDistribute(retroData, change, meta),
       close: () => {
         const i = subscriptions.indexOf(onChange);
         subscriptions.splice(i, 1);

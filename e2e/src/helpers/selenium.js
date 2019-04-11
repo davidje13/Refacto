@@ -6,8 +6,13 @@ import firefox from 'selenium-webdriver/firefox';
 
 const headless = process.env.HEADLESS !== 'false';
 
-const chromeOptions = new chrome.Options();
-const firefoxOptions = new firefox.Options();
+const width = 900; // ensure non-mobile display
+const height = 500;
+
+const chromeOptions = new chrome.Options()
+  .windowSize({ width, height });
+const firefoxOptions = new firefox.Options()
+  .windowSize({ width, height });
 
 if (headless) {
   chromeOptions.headless();

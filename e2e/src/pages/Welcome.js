@@ -16,7 +16,7 @@ export default class Welcome extends Page {
   }
 
   async clickRetroList() {
-    await this.driver.findElement(By.css('.link-retro-list')).click();
+    await this.click(By.css('.link-retro-list'));
 
     const page = new RetroList(this.driver);
     await page.wait();

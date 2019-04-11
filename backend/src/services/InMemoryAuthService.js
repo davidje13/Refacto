@@ -8,10 +8,11 @@ export default class InMemoryAuthService {
     this.hasher = hasher;
     this.tokenManager = tokenManager;
     this.data = new Map();
+    this.simulatedDelay = 0;
   }
 
   async setPassword(retroId, password) {
-    await sleep(100);
+    await sleep(this.simulatedDelay);
     const keys = await this.tokenManager.generateKeys();
     this.data.set(retroId, {
       hash: await this.hasher.hash(password),
@@ -21,7 +22,7 @@ export default class InMemoryAuthService {
   }
 
   async exchangePassword(retroId, password, tokenData) {
-    await sleep(100);
+    await sleep(this.simulatedDelay);
     const retroData = this.data.get(retroId);
     if (!retroData) {
       return null;
@@ -39,7 +40,7 @@ export default class InMemoryAuthService {
   }
 
   async readAndVerifyToken(retroId, token) {
-    await sleep(100);
+    await sleep(this.simulatedDelay);
     const retroData = this.data.get(retroId);
     if (!retroData) {
       return false;

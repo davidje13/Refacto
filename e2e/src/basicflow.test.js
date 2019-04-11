@@ -1,24 +1,33 @@
 import buildDriver from './helpers/selenium';
 import Welcome from './pages/Welcome';
+import Password from './pages/Password';
 
 describe('Running a retro', () => {
   let driver;
+  let driver2;
+
+  let retroSlug;
+  let retroPassword;
 
   let welcome;
   let retros;
-  let password;
+  let create;
   let retro;
 
   beforeAll(async () => {
     driver = buildDriver();
+    driver2 = buildDriver();
     jest.setTimeout(30000);
+
+    retroSlug = `e2e-test-retro-${Date.now()}`;
+    retroPassword = 'my-password';
   });
 
   afterAll(async () => {
-    await driver.quit();
+    await Promise.all([driver.quit(), driver2.quit()]);
   });
 
-  // Tests run sequentially in a single browser session
+  // Tests run sequentially in a single (pair of) browser sessions
 
   it('loads the welcome page', async () => {
     welcome = await new Welcome(driver).load();
@@ -33,17 +42,60 @@ describe('Running a retro', () => {
     expect(await retros.getTitle()).toEqual('Retros - Refacto');
   });
 
-  it('shows retro password entry when retro chosen', async () => {
-    password = await retros.clickRetroAtIndex(0);
+  it('shows a retro creation screen when requested', async () => {
+    create = await retros.clickCreateRetro();
 
-    expect(await password.getTitle()).toEqual('my-retro - Refacto');
-    await password.setPassword('password');
+    expect(await create.getTitle()).toEqual('New Retro - Refacto');
+    await create.setName('My Retro');
+    await create.setSlug(retroSlug);
+    await create.setPassword(retroPassword);
+    await create.setPasswordConfirmation(retroPassword);
   });
 
-  it('shows retro data when correct password given', async () => {
-    retro = await password.submit();
+  it('redirects to the newly created retro', async () => {
+    retro = await create.submit();
 
     expect(await retro.getTitle()).toEqual('My Retro - Refacto');
     expect(await retro.getNameText()).toEqual('My Retro');
+  });
+
+  describe('second user journey', () => {
+    let retro2;
+
+    it('prompts for a password for the retro', async () => {
+      const password2 = await new Password(driver2, retroSlug).load();
+
+      await password2.setPassword(retroPassword);
+      retro2 = await password2.submit();
+
+      expect(await retro2.getTitle()).toEqual('My Retro - Refacto');
+    });
+
+    it('synchronises activity (A -> B) in real time', async () => {
+      await retro2.expectChange(async () => {
+        await retro.setActionItemText('some action');
+        await retro.submitActionItem();
+      });
+
+      const expectedActions1 = [
+        'some action',
+      ];
+      expect(await retro.getActionItemLabels()).toEqual(expectedActions1);
+      expect(await retro2.getActionItemLabels()).toEqual(expectedActions1);
+    });
+
+    it('synchronises activity (B -> A) in real time', async () => {
+      await retro.expectChange(async () => {
+        await retro2.setActionItemText('another action');
+        await retro2.submitActionItem();
+      });
+
+      const expectedActions2 = [
+        'another action',
+        'some action',
+      ];
+      expect(await retro.getActionItemLabels()).toEqual(expectedActions2);
+      expect(await retro2.getActionItemLabels()).toEqual(expectedActions2);
+    });
   });
 });
