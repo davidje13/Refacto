@@ -10,7 +10,12 @@ import { formatDate } from '../../time/formatters';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './ArchivePage.less';
 
-const ArchivePage = ({ slug, retroState, archiveId }) => {
+const ArchivePage = ({
+  slug,
+  archiveId,
+  retroState,
+  error,
+}) => {
   const archiveState = useArchive(retroState, archiveId);
 
   const retro = retroState?.retro;
@@ -31,6 +36,7 @@ const ArchivePage = ({ slug, retroState, archiveId }) => {
       />
       <Loader
         loading={!archive}
+        error={error}
         Component={RetroFormatPicker}
         retroData={archive?.data}
         retroState={{}}
@@ -42,8 +48,13 @@ const ArchivePage = ({ slug, retroState, archiveId }) => {
 
 ArchivePage.propTypes = {
   slug: PropTypes.string.isRequired,
-  retroState: nullable(PropTypes.shape({})).isRequired,
   archiveId: PropTypes.string.isRequired,
+  retroState: nullable(PropTypes.shape({})).isRequired,
+  error: PropTypes.string,
+};
+
+ArchivePage.defaultProps = {
+  error: null,
 };
 
 forbidExtraProps(ArchivePage);

@@ -22,12 +22,16 @@ class FakeSlugTracker {
     this.data.set(slug, data);
   }
 
-  load(slug, dataCallback) {
+  subscribe(slug, dataCallback) {
     const info = this.data.get(slug);
     if (!info) {
       throw new Error(`Unexpected request for slug ${slug}`);
     }
-    dataCallback(info);
+    dataCallback(info.id);
+
+    return {
+      unsubscribe: () => {},
+    };
   }
 }
 

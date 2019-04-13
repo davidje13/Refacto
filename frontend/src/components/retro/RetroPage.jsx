@@ -6,11 +6,21 @@ import Loader from '../common/Loader';
 import withRetroFromSlug from '../hocs/withRetroFromSlug';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
+import RetroCreatePage from '../retro-create/RetroCreatePage';
 import './RetroPage.less';
 
-const RetroPage = ({ slug, retroState, retroDispatch }) => {
+const RetroPage = ({
+  slug,
+  retroState,
+  retroDispatch,
+  error,
+}) => {
   const retro = retroState?.retro;
   const retroName = retro?.name || slug;
+
+  if (error === 'not found') {
+    return (<RetroCreatePage defaultSlug={slug} />);
+  }
 
   return (
     <article className="page-retro">
@@ -21,6 +31,7 @@ const RetroPage = ({ slug, retroState, retroDispatch }) => {
       />
       <Loader
         loading={!retro}
+        error={error}
         Component={RetroFormatPicker}
         retroData={retro?.data}
         retroState={retro?.state}
@@ -34,6 +45,11 @@ RetroPage.propTypes = {
   slug: PropTypes.string.isRequired,
   retroState: nullable(PropTypes.shape({})).isRequired,
   retroDispatch: nullable(PropTypes.func).isRequired,
+  error: PropTypes.string,
+};
+
+RetroPage.defaultProps = {
+  error: null,
 };
 
 forbidExtraProps(RetroPage);

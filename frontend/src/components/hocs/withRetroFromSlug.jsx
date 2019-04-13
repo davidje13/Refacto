@@ -8,15 +8,21 @@ import PasswordPage from '../password/PasswordPage';
 export default function withRetroFromSlug(Component, readonly = false) {
   const Wrapped = (params) => {
     const { slug } = params;
-    const retroId = useSlug(slug)?.id;
+    const [retroId, slugError] = useSlug(slug);
     const token = useRetroToken(retroId);
-    const [retroState, retroDispatch] = useRetroReducer(retroId, token);
+    const [
+      retroState,
+      retroDispatch,
+      retroError,
+    ] = useRetroReducer(retroId, token);
 
-    if (retroId && !token) {
+    const error = slugError || retroError;
+
+    if (retroId && !token && !error) {
       return (<PasswordPage slug={slug} retroId={retroId} />);
     }
 
-    const childParams = Object.assign({ retroState }, params);
+    const childParams = Object.assign({ retroState, error }, params);
     if (!readonly) {
       childParams.retroDispatch = retroDispatch;
     }

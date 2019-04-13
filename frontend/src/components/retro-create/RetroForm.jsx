@@ -6,6 +6,7 @@ import {
   retroTokenService,
   retroTokenTracker,
 } from '../../api/api';
+import './RetroForm.less';
 
 function makeSlug(text) {
   return text.toLowerCase()
@@ -18,14 +19,19 @@ function makeSlug(text) {
 class RetroForm extends React.PureComponent {
   static propTypes = {
     onCreate: PropTypes.func.isRequired,
+    defaultSlug: PropTypes.string,
+  };
+
+  static defaultProps = {
+    defaultSlug: null,
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      slug: '',
+      name: props.defaultSlug || '',
+      slug: props.defaultSlug || '',
       password: '',
       passwordConf: '',
       sending: false,
@@ -109,11 +115,10 @@ class RetroForm extends React.PureComponent {
       error,
     } = this.state;
 
-    const { protocol, host } = document.location;
-    const retrosBaseUrl = `${protocol}//${host}/retros/`;
+    const retrosBaseUrl = `${document.location.host}/retros/`;
 
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} className="create-retro">
         <label>
           Retro Name
           <input

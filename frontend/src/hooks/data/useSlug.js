@@ -3,22 +3,24 @@ import useNonce from '../useNonce';
 import { slugTracker } from '../../api/api';
 
 export default function useSlug(slug) {
-  const [slugData, setSlugData] = useState(null);
+  const [retroId, setRetroId] = useState([null, null]);
   const nonce = useNonce();
 
   useLayoutEffect(() => {
     const myNonce = nonce.next();
 
-    setSlugData(null);
+    setRetroId([null, null]);
     if (!slug) {
-      return;
+      return undefined;
     }
 
-    slugTracker.load(
+    const subscription = slugTracker.subscribe(
       slug,
-      (data) => nonce.check(myNonce) && setSlugData(data),
+      (data) => nonce.check(myNonce) && setRetroId([data, null]),
+      (error) => nonce.check(myNonce) && setRetroId([null, error]),
     );
-  }, [slugTracker, setSlugData, slug, nonce]);
+    return () => subscription.unsubscribe();
+  }, [slugTracker, setRetroId, slug, nonce]);
 
-  return slugData;
+  return retroId;
 }

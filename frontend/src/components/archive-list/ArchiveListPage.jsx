@@ -8,7 +8,7 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
-const ArchiveListPage = ({ slug, retroState }) => {
+const ArchiveListPage = ({ slug, retroState, error }) => {
   const retro = retroState?.retro;
   const retroName = retro?.name || slug;
 
@@ -21,6 +21,7 @@ const ArchiveListPage = ({ slug, retroState }) => {
       />
       <Loader
         loading={!retro}
+        error={error}
         Component={ArchiveList}
         retro={retro}
       />
@@ -31,6 +32,11 @@ const ArchiveListPage = ({ slug, retroState }) => {
 ArchiveListPage.propTypes = {
   slug: PropTypes.string.isRequired,
   retroState: nullable(PropTypes.shape({})).isRequired,
+  error: PropTypes.string,
+};
+
+ArchiveListPage.defaultProps = {
+  error: null,
 };
 
 forbidExtraProps(ArchiveListPage);
