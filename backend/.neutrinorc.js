@@ -1,3 +1,7 @@
+const airbnb = require('@neutrinojs/airbnb');
+const copy = require('@neutrinojs/copy');
+const jest = require('@neutrinojs/jest');
+const node = require('@neutrinojs/node');
 const { baseRules, testRules } = require('../eslint.js');
 
 module.exports = {
@@ -5,7 +9,7 @@ module.exports = {
     tests: 'src',
   },
   use: [
-    ['@neutrinojs/airbnb', {
+    airbnb({
       eslint: {
         rules: baseRules,
         baseConfig: {
@@ -18,16 +22,16 @@ module.exports = {
           }],
         },
       },
-    }],
-    ['@neutrinojs/copy', {
+    }),
+    copy({
       patterns: [{
         context: 'src/static',
         from: '**/*',
         to: 'static',
       }],
-    }],
-    '@neutrinojs/jest',
-    ['@neutrinojs/node', {
+    }),
+    jest(),
+    node({
       babel: {
         presets: [
           ['@babel/preset-env', {
@@ -39,7 +43,7 @@ module.exports = {
           }],
         ],
       },
-    }],
+    }),
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };

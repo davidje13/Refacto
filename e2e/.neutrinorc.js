@@ -1,3 +1,6 @@
+const airbnb = require('@neutrinojs/airbnb');
+const jest = require('@neutrinojs/jest');
+const node = require('@neutrinojs/node');
 const { baseRules, testRules } = require('../eslint.js');
 
 module.exports = {
@@ -5,7 +8,7 @@ module.exports = {
     tests: 'src',
   },
   use: [
-    ['@neutrinojs/airbnb', {
+    airbnb({
       eslint: {
         // All sources are test-related
         rules: Object.assign({}, baseRules, testRules),
@@ -15,11 +18,11 @@ module.exports = {
           ],
         },
       },
-    }],
-    ['@neutrinojs/jest', {
+    }),
+    jest({
       bail: true,
-    }],
-    ['@neutrinojs/node', {
+    }),
+    node({
       babel: {
         presets: [
           ['@babel/preset-env', {
@@ -31,6 +34,6 @@ module.exports = {
           }],
         ],
       },
-    }],
+    }),
   ],
 };

@@ -1,6 +1,10 @@
+const airbnb = require('@neutrinojs/airbnb');
+const copy = require('@neutrinojs/copy');
+const jest = require('@neutrinojs/jest');
+const react = require('@neutrinojs/react');
 const { baseRules, reactRules, testRules } = require('../eslint.js');
 
-const linter = ['@neutrinojs/airbnb', {
+const linter = airbnb({
   eslint: {
     plugins: [
       'react-hooks',
@@ -16,7 +20,7 @@ const linter = ['@neutrinojs/airbnb', {
       }],
     },
   },
-}];
+});
 
 module.exports = {
   options: {
@@ -31,17 +35,17 @@ module.exports = {
         neutrino.use(linter);
       }
     },
-    ['@neutrinojs/copy', {
+    copy({
       patterns: [{
         context: 'src/static',
         from: '**/*',
         to: 'static',
       }],
-    }],
-    ['@neutrinojs/jest', {
+    }),
+    jest({
       setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint'],
-    }],
-    ['@neutrinojs/react', {
+    }),
+    react({
       html: {
         template: 'src/resources/html-template.ejs',
         favicon: 'src/resources/favicon.png',
@@ -84,7 +88,7 @@ module.exports = {
           },
         ],
       },
-    }],
+    }),
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };
