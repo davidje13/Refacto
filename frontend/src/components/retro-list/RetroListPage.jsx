@@ -7,7 +7,7 @@ import RetroList from './RetroList';
 import './RetroListPage.less';
 
 const RetroListPage = () => {
-  const retroListState = useRetroList();
+  const [retroListState, error] = useRetroList();
 
   const retroList = retroListState?.retros;
 
@@ -20,6 +20,7 @@ const RetroListPage = () => {
         links={[{ label: 'Create Retro', url: '/create' }]}
       />
       <Loader
+        error={error}
         loading={!retroList}
         Component={RetroList}
         retros={retroList}

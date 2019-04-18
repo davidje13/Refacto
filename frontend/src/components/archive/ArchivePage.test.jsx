@@ -12,10 +12,10 @@ jest.mock('../common/Header', () => () => (<div />));
 
 describe('ArchivePage', () => {
   const retroData = { retro: makeRetro() };
-  const archiveData = { archive: makeArchive() };
+  const archiveData = makeArchive();
 
   beforeEach(() => {
-    slugTracker.setServerData('abc', { id: 'r1' });
+    slugTracker.set('abc', 'r1');
     retroTokenTracker.set('r1', 'token-1');
     retroTracker.setServerData('r1', retroData, { myArchiveId: archiveData });
   });

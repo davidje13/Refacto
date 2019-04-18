@@ -16,10 +16,9 @@ const ArchivePage = ({
   retroState,
   error,
 }) => {
-  const archiveState = useArchive(retroState, archiveId);
+  const [archive, archiveError] = useArchive(retroState, archiveId);
 
   const retro = retroState?.retro;
-  const archive = archiveState?.archive;
 
   const retroName = retro?.name || slug;
   let archiveName = 'Archive';
@@ -36,7 +35,7 @@ const ArchivePage = ({
       />
       <Loader
         loading={!archive}
-        error={error}
+        error={error || archiveError}
         Component={RetroFormatPicker}
         retroData={archive?.data}
         retroState={{}}

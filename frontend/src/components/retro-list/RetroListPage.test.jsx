@@ -11,7 +11,7 @@ jest.mock('./RetroList', () => () => (<div />));
 
 describe('RetroListPage', () => {
   it('loads data when displayed', () => {
-    retroListTracker.setServerData({
+    retroListTracker.set({
       retros: [{ id: 'u1', slug: 'a', name: 'R1' }],
     });
 

@@ -14,7 +14,7 @@ describe('ArchiveListPage', () => {
   const retroData = { retro: makeRetro() };
 
   beforeEach(() => {
-    slugTracker.setServerData('my-slug', { id: 'r1' });
+    slugTracker.set('my-slug', 'r1');
     retroTokenTracker.set('r1', 'token-1');
     retroTracker.setServerData('r1', retroData);
   });

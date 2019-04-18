@@ -3,7 +3,7 @@ import SlugTracker from './SlugTracker';
 import RetroTracker from './RetroTracker';
 import RetroTokenService from './RetroTokenService';
 import RetroService from './RetroService';
-import ObservableTracker from './ObservableTracker';
+import ObservableTracker from '../rxjs/ObservableTracker';
 
 const { protocol, host } = document.location;
 const secure = (protocol !== 'http:');

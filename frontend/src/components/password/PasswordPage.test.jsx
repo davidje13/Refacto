@@ -9,7 +9,7 @@ jest.mock('../common/Header', () => () => (<div />));
 
 function getToken(retroId) {
   return new Promise((resolve) => {
-    const sub = retroTokenTracker.subscribe(retroId, (token) => {
+    const sub = retroTokenTracker.get(retroId).subscribe((token) => {
       resolve(token);
       sub.unsubscribe();
     });

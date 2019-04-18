@@ -1,62 +1,36 @@
-export default class SlugTracker {
+import { BehaviorSubject, of } from 'rxjs';
+import {
+  map,
+  switchMap,
+  materialize,
+  filter,
+  shareReplay,
+} from 'rxjs/operators';
+import loadHttp from '../rxjs/loadHttp';
+import CacheMap from '../helpers/CacheMap';
+
+function ajaxSubject(url, mapping) {
+  const subject = new BehaviorSubject(undefined);
+  const observable = subject.pipe(
+    switchMap((v) => (
+      v ? of(v) : loadHttp(url).pipe(map(mapping))
+    ).pipe(materialize())),
+    filter(({ kind }) => (kind !== 'C')),
+    shareReplay(1),
+  );
+  return { subject, observable };
+}
+
+export default class SlugTracker extends CacheMap {
   constructor(apiBase) {
-    this.apiBase = apiBase;
-    this.slugs = new Map();
+    super((slug) => ajaxSubject(`${apiBase}/slugs/${slug}`, ({ id }) => id));
   }
 
-  internalGetMutableInfo(slug) {
-    let slugInfo = this.slugs.get(slug);
-    if (!slugInfo) {
-      slugInfo = { id: null, subscriptions: new Set() };
-      this.slugs.set(slug, slugInfo);
-    }
-    return slugInfo;
+  get(slug) {
+    return super.get(slug).observable;
   }
 
   set(slug, id) {
-    const slugInfo = this.internalGetMutableInfo(slug);
-    if (slugInfo.id === id) {
-      return;
-    }
-    slugInfo.id = id;
-    slugInfo.subscriptions.forEach((sub) => sub(slugInfo.id));
-  }
-
-  subscribe(slug, dataCallback, errorCallback) {
-    const slugInfo = this.internalGetMutableInfo(slug);
-    if (!slugInfo.subscriptions.size) {
-      global.fetch(`${this.apiBase}/slugs/${slug}`)
-        .then((data) => {
-          if (data.status >= 500) {
-            throw new Error('internal error');
-          }
-          if (data.status === 404) {
-            throw new Error('not found');
-          }
-          if (data.status >= 400) {
-            throw new Error('unknown error');
-          }
-          return data.json();
-        })
-        .then((data) => this.set(slug, data.id))
-        .catch((error) => {
-          if (error && typeof error === 'object' && error.message) {
-            errorCallback(String(error.message));
-          } else {
-            errorCallback(String(error));
-          }
-        });
-    }
-
-    slugInfo.subscriptions.add(dataCallback);
-    if (slugInfo.id !== null) {
-      dataCallback(slugInfo.id);
-    }
-
-    return {
-      unsubscribe: () => {
-        slugInfo.subscriptions.delete(dataCallback);
-      },
-    };
+    super.get(slug).subject.next(id);
   }
 }
