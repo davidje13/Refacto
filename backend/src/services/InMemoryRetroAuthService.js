@@ -3,7 +3,7 @@ function sleep(millis) {
   return new Promise((resolve) => setTimeout(resolve, millis));
 }
 
-export default class InMemoryAuthService {
+export default class InMemoryRetroAuthService {
   constructor(hasher, tokenManager) {
     this.hasher = hasher;
     this.tokenManager = tokenManager;
@@ -39,13 +39,26 @@ export default class InMemoryAuthService {
     return this.tokenManager.signData(tokenData, retroData.privateKey);
   }
 
-  async readAndVerifyToken(retroId, token) {
+  async grantToken(retroId, tokenData) {
+    await sleep(this.simulatedDelay);
+    const retroData = this.data.get(retroId);
+    if (!retroData) {
+      return null;
+    }
+
+    return this.tokenManager.signData(tokenData, retroData.privateKey);
+  }
+
+  async readAndVerifyToken(retroId, retroToken) {
     await sleep(this.simulatedDelay);
     const retroData = this.data.get(retroId);
     if (!retroData) {
       return false;
     }
 
-    return this.tokenManager.readAndVerifySigned(token, retroData.publicKey);
+    return this.tokenManager.readAndVerifySigned(
+      retroToken,
+      retroData.publicKey,
+    );
   }
 }

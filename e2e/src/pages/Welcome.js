@@ -1,6 +1,7 @@
 import { By } from 'selenium-webdriver';
 import Page from './Page';
-import RetroList from './RetroList';
+import RetroCreate from './RetroCreate';
+import Login from './Login';
 
 export default class Welcome extends Page {
   constructor(driver) {
@@ -15,10 +16,18 @@ export default class Welcome extends Page {
     return this.getHeader().getText();
   }
 
-  async clickRetroList() {
-    await this.click(By.css('.link-retro-list'));
+  async clickCreateRetro() {
+    await this.click(By.css('.link-create'));
 
-    const page = new RetroList(this.driver);
+    const page = new RetroCreate(this.driver);
+    await page.wait();
+    return page;
+  }
+
+  async clickLoginWithGoogle() {
+    await this.click(By.css('.sso-google'));
+
+    const page = new Login(this.driver, RetroCreate);
     await page.wait();
     return page;
   }

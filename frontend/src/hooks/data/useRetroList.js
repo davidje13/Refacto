@@ -1,9 +1,9 @@
 import useObservable from '../useObservable';
 import { retroListTracker } from '../../api/api';
 
-export default function useRetroList() {
+export default function useRetroList(userToken) {
   return useObservable(
-    () => retroListTracker.get(),
-    [retroListTracker],
+    () => userToken && retroListTracker.get(userToken),
+    [retroListTracker, userToken],
   );
 }

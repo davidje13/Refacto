@@ -5,7 +5,10 @@ export default class RetroListTracker {
     this.apiBase = apiBase;
   }
 
-  get() {
-    return loadHttp(`${this.apiBase}/retros`);
+  get(userToken) {
+    return loadHttp({
+      url: `${this.apiBase}/retros`,
+      headers: { Authorization: `Bearer ${userToken}` },
+    });
   }
 }

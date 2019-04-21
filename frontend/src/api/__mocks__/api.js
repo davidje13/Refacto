@@ -1,17 +1,6 @@
-import { ReplaySubject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import ObservableTracker from '../../rxjs/ObservableTracker';
-
-class FakeRetroListTracker {
-  data = new ReplaySubject(1);
-
-  get() {
-    return this.data;
-  }
-
-  set(value) {
-    this.data.next(value);
-  }
-}
+import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
 
 class FakeRetroTracker {
   dispatch = () => {};
@@ -24,7 +13,7 @@ class FakeRetroTracker {
     this.data.set(retroId, { retro, archives });
   }
 
-  subscribe(retroId, token, dispatchCallback, retroStateCallback) {
+  subscribe(retroId, retroToken, dispatchCallback, retroStateCallback) {
     this.subscribed += 1;
 
     const state = this.data.get(retroId);
@@ -57,22 +46,47 @@ class FakeRetroTracker {
   }
 }
 
+class FakeUserTokenService {
+  userToken = null;
+
+  capturedService = null;
+
+  capturedExternalToken = null;
+
+  capturedNonce = null;
+
+  setServerData(userToken) {
+    this.userToken = userToken;
+  }
+
+  async login(service, externalToken, nonce) {
+    this.capturedService = service;
+    this.capturedExternalToken = externalToken;
+    this.capturedNonce = nonce;
+
+    if (!this.userToken) {
+      throw new Error('some error');
+    }
+    return this.userToken;
+  }
+}
+
 class FakeRetroTokenService {
   data = new Map();
 
   capturedPassword = null;
 
-  setServerData(retroId, token) {
-    this.data.set(retroId, token);
+  setServerData(retroId, retroToken) {
+    this.data.set(retroId, retroToken);
   }
 
   async submitPassword(retroId, password) {
     this.capturedPassword = password;
-    const token = this.data.get(retroId);
-    if (!token) {
+    const retroToken = this.data.get(retroId);
+    if (!retroToken) {
       throw new Error('some error');
     }
-    return token;
+    return retroToken;
   }
 }
 
@@ -97,9 +111,13 @@ class FakeRetroService {
   }
 }
 
-export const retroListTracker = new FakeRetroListTracker();
+export const configService = new SingleObservableTracker();
+export const retroListTracker = new ObservableTracker();
 export const slugTracker = new ObservableTracker();
 export const retroTracker = new FakeRetroTracker();
-export const retroTokenTracker = new ObservableTracker();
 export const retroTokenService = new FakeRetroTokenService();
 export const retroService = new FakeRetroService();
+export const userTokenService = new FakeUserTokenService();
+
+export const retroTokenTracker = new ObservableTracker();
+export const userTokenTracker = new SingleObservableTracker();

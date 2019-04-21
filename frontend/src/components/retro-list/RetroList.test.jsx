@@ -8,10 +8,12 @@ import RetroLink from './RetroLink';
 jest.mock('./RetroLink', () => () => (<div />));
 
 describe('RetroList', () => {
+  const emptyLabel = 'do not have any retros';
+
   it('displays a message if there are no retros', () => {
     const dom = renderDOM(<RetroList retros={[]} />);
 
-    expect(dom.textContent).toContain('do not have any retros');
+    expect(dom.textContent).toContain(emptyLabel);
   });
 
   it('displays no message if there are retros', () => {
@@ -22,7 +24,7 @@ describe('RetroList', () => {
 
     const dom = renderDOM(<RetroList retros={retros} />);
 
-    expect(dom.textContent).not.toContain('do not have any retros');
+    expect(dom.textContent).not.toContain(emptyLabel);
   });
 
   it('displays a list of retros', () => {

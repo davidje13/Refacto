@@ -50,6 +50,7 @@ export default class InMemoryRetroService {
   }
 
   async createRetro(
+    ownerId,
     slug,
     name,
     format,
@@ -63,6 +64,7 @@ export default class InMemoryRetroService {
     const id = uuidv4();
 
     this.data.push({
+      ownerId,
       retro: {
         id,
         slug,
@@ -98,9 +100,11 @@ export default class InMemoryRetroService {
     return id;
   }
 
-  async getRetroList() {
+  async getRetroListForUser(id) {
     await sleep(this.simulatedDelay);
-    return this.data.map(filterSummaryInformation);
+    return this.data
+      .filter(({ ownerId }) => (ownerId === id))
+      .map(filterSummaryInformation);
   }
 
   async getRetro(retroId) {

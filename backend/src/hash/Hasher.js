@@ -40,16 +40,16 @@ function preprocess(password, secretPepper, bruteSalt) {
 }
 
 export default class Hasher {
-  constructor(secretPepper = '', rounds = 10) {
+  constructor(secretPepper = '', workFactor = 10) {
     this.secretPepper = secretPepper;
-    this.rounds = rounds;
+    this.workFactor = workFactor;
   }
 
   async hash(data) {
     const bruteSalt = await pickBruteSalt();
     return bcrypt.hash(
       preprocess(data, this.secretPepper, bruteSalt),
-      this.rounds,
+      this.workFactor,
     );
   }
 
@@ -69,6 +69,6 @@ export default class Hasher {
   }
 
   needsRegenerate(hash) {
-    return bcrypt.getRounds(hash) < this.rounds;
+    return bcrypt.getRounds(hash) < this.workFactor;
   }
 }

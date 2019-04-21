@@ -9,8 +9,8 @@ jest.mock('../common/Header', () => () => (<div />));
 
 function getToken(retroId) {
   return new Promise((resolve) => {
-    const sub = retroTokenTracker.get(retroId).subscribe((token) => {
-      resolve(token);
+    const sub = retroTokenTracker.get(retroId).subscribe((retroToken) => {
+      resolve(retroToken);
       sub.unsubscribe();
     });
   });
@@ -25,8 +25,8 @@ describe('PasswordPage', () => {
     dom.find('input').simulate('change', { target: { value: 'my-password' } });
     dom.find('form').simulate('submit');
 
-    const token = await getToken('myRetroId');
+    const retroToken = await getToken('myRetroId');
     expect(retroTokenService.capturedPassword).toEqual('my-password');
-    expect(token).toEqual('some-token');
+    expect(retroToken).toEqual('some-token');
   });
 });

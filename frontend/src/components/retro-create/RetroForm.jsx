@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import withUserToken from '../hocs/withUserToken';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
   retroService,
@@ -18,6 +19,7 @@ function makeSlug(text) {
 
 class RetroForm extends React.PureComponent {
   static propTypes = {
+    userToken: PropTypes.string.isRequired,
     onCreate: PropTypes.func.isRequired,
     defaultSlug: PropTypes.string,
   };
@@ -51,7 +53,7 @@ class RetroForm extends React.PureComponent {
 
     let { slug } = this.state;
 
-    const { onCreate } = this.props;
+    const { onCreate, userToken } = this.props;
 
     if (sending) {
       return;
@@ -73,11 +75,16 @@ class RetroForm extends React.PureComponent {
 
     try {
       this.setState({ sending: true, error: null });
-      const retroId = await retroService.create({ name, slug, password });
-      const token = await retroTokenService.submitPassword(retroId, password);
+      const retroId = await retroService.create({
+        name,
+        slug,
+        password,
+        userToken,
+      });
+      const retroToken = await retroTokenService.submitPassword(retroId, password);
 
       this.setState({ sending: false, error: null });
-      retroTokenTracker.set(retroId, token);
+      retroTokenTracker.set(retroId, retroToken);
       onCreate({
         id: retroId,
         slug,
@@ -189,4 +196,4 @@ class RetroForm extends React.PureComponent {
 
 forbidExtraProps(RetroForm);
 
-export default React.memo(RetroForm);
+export default React.memo(withUserToken(RetroForm, 'Sign in to create a retro'));

@@ -8,7 +8,7 @@ LOGS="$BASEDIR/e2e/build";
 mkdir -p "$LOGS";
 
 if [[ -z "$TARGET_HOST" ]]; then
-  PORT="${PORT:-5002}";
+  PORT="${PORT:-5010}";
 
   # Build and launch all-in-one server
   "$BASEDIR/scripts/build.sh" --keep-deps;
@@ -18,7 +18,15 @@ if [[ -z "$TARGET_HOST" ]]; then
     npm --prefix="$BUILDDIR" install --production --silent;
   fi;
 
+  echo 'Using fake authentication provider';
+  (( FAKE_SSO_PORT = PORT + 2 ));
+  FAKE_SSO_HOST="http://localhost:$FAKE_SSO_PORT";
+  export GOOGLE_CLIENT_ID='fake-client-id';
+  export GOOGLE_AUTH_URL="$FAKE_SSO_HOST/auth";
+  export GOOGLE_TOKEN_INFO_URL="$FAKE_SSO_HOST/tokeninfo";
+
   PORT="$PORT" \
+  FAKE_SSO_PORT="$FAKE_SSO_PORT" \
   npm --prefix="$BUILDDIR" start --silent \
     > "$LOGS/app.log" 2>&1 & APP_PID="$!";
 

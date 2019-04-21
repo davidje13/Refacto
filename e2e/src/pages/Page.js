@@ -29,7 +29,7 @@ export default class Page {
     await this.driver.wait(this.untilNavigated, 5000);
     await this.driver.wait(untilNoLoaders, 5000);
     // wait an additional frame to allow some async events (e.g. title changes)
-    await sleep(50);
+    await sleep(100);
     return this;
   }
 

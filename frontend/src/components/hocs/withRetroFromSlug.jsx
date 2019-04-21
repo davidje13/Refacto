@@ -9,16 +9,16 @@ export default function withRetroFromSlug(Component, readonly = false) {
   const Wrapped = (params) => {
     const { slug } = params;
     const [retroId, slugError] = useSlug(slug);
-    const [token, tokenError] = useRetroToken(retroId);
+    const [retroToken, tokenError] = useRetroToken(retroId);
     const [
       retroState,
       retroDispatch,
       retroError,
-    ] = useRetroReducer(retroId, token);
+    ] = useRetroReducer(retroId, retroToken);
 
     const error = slugError || tokenError || retroError;
 
-    if (retroId && !token && !error) {
+    if (retroId && !retroToken && !error) {
       return (<PasswordPage slug={slug} retroId={retroId} />);
     }
 

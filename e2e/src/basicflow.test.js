@@ -6,11 +6,12 @@ describe('Running a retro', () => {
   let driver;
   let driver2;
 
+  let userName;
   let retroSlug;
   let retroPassword;
 
   let welcome;
-  let retros;
+  let login;
   let create;
   let retro;
 
@@ -19,6 +20,7 @@ describe('Running a retro', () => {
     driver2 = buildDriver();
     jest.setTimeout(30000);
 
+    userName = `e2e-test-user-${Date.now()}`;
     retroSlug = `e2e-test-retro-${Date.now()}`;
     retroPassword = 'my-password';
   });
@@ -36,14 +38,13 @@ describe('Running a retro', () => {
     expect(await welcome.getHeaderText()).toContain('Refacto');
   });
 
-  it('shows a list of retros when requested', async () => {
-    retros = await welcome.clickRetroList();
-
-    expect(await retros.getTitle()).toEqual('Retros - Refacto');
+  it('triggers a login flow when requested', async () => {
+    login = await welcome.clickLoginWithGoogle();
+    await login.setIdentifier(userName);
   });
 
-  it('shows a retro creation screen when requested', async () => {
-    create = await retros.clickCreateRetro();
+  it('shows a retro creation screen after logging in', async () => {
+    create = await login.submit();
 
     expect(await create.getTitle()).toEqual('New Retro - Refacto');
     await create.setName('My Retro');

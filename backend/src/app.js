@@ -1,32 +1,61 @@
 import WebSocketExpress from 'websocket-express';
 import ApiRouter from './routers/ApiRouter';
+import ApiConfigRouter from './routers/ApiConfigRouter';
+import ApiSsoRouter from './routers/ApiSsoRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
-import TokenManager from './services/TokenManager';
+import TokenManager from './tokens/TokenManager';
 import RetroService from './services/InMemoryRetroService';
-import AuthService from './services/InMemoryAuthService';
+import RetroAuthService from './services/InMemoryRetroAuthService';
+import UserAuthService from './services/InMemoryUserAuthService';
+import getEnv from './helpers/getEnv';
 
-// environment configuration
-const hasherRounds = 10;
-const secretPepper = '';
-const secretPrivateKeyPassphrase = '';
+const ssoConfig = {};
+const clientConfig = {
+  sso: {},
+};
 
-const hasher = new Hasher(secretPepper, hasherRounds);
+const hasherWorkFactor = getEnv('PASSWORD_HASH_WORK_FACTOR', 10);
+const secretPepper = getEnv('PASSWORD_SECRET_PEPPER', '');
+const secretPrivateKeyPassphrase = getEnv('PRIVATE_KEY_PASSPHRASE', '');
+
+const googleClientId = getEnv('GOOGLE_CLIENT_ID', null);
+if (googleClientId) {
+  ssoConfig.google = {
+    clientId: googleClientId,
+    tokenInfoUrl: getEnv('GOOGLE_TOKEN_INFO_URL', 'https://oauth2.googleapis.com/tokeninfo'),
+  };
+
+  clientConfig.sso.google = {
+    authUrl: getEnv('GOOGLE_AUTH_URL', 'https://accounts.google.com/o/oauth2/auth'),
+    clientId: googleClientId,
+  };
+}
+
+const hasher = new Hasher(secretPepper, hasherWorkFactor);
 const tokenManager = new TokenManager(secretPrivateKeyPassphrase);
 
 export const retroService = new RetroService();
 retroService.simulatedDelay = 50;
 retroService.simulatedSocketDelay = 50;
 
-export const authService = new AuthService(hasher, tokenManager);
-authService.simulatedDelay = 50;
+export const retroAuthService = new RetroAuthService(hasher, tokenManager);
+retroAuthService.simulatedDelay = 50;
+
+export const userAuthService = new UserAuthService(tokenManager);
+userAuthService.simulatedDelay = 50;
 
 const app = new WebSocketExpress();
 
 app.disable('x-powered-by');
 app.enable('case sensitive routing');
 app.use(WebSocketExpress.json({ limit: 5 * 1024 }));
-app.use('/api', new ApiRouter(authService, retroService));
+app.use('/api', new ApiRouter(userAuthService, retroAuthService, retroService));
+app.use('/api/config', new ApiConfigRouter(clientConfig));
+app.use('/api/sso', new ApiSsoRouter(userAuthService, ssoConfig));
 app.use(new StaticRouter());
+
+// TODO: key storage / sharing
+userAuthService.generateKeys();
 
 export default app;

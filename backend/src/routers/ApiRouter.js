@@ -48,23 +48,37 @@ function nextMessage(ws) {
 }
 
 export default class ApiRouter extends Router {
-  constructor(authService, retroService) {
+  constructor(userAuthService, retroAuthService, retroService) {
     super();
 
     const idProvider = new UniqueIdProvider();
 
-    const getAuthentication = async (req, retroId) => {
+    const getUserAuthentication = async (req) => {
       const auth = req.get('Authorization');
       if (!auth) {
         return null;
       }
 
-      const token = extractToken(auth);
-      if (!token) {
+      const userToken = extractToken(auth);
+      if (!userToken) {
         return null;
       }
 
-      return authService.readAndVerifyToken(retroId, token);
+      return userAuthService.readAndVerifyToken(userToken);
+    };
+
+    const getRetroAuthentication = async (req, retroId) => {
+      const auth = req.get('Authorization');
+      if (!auth) {
+        return null;
+      }
+
+      const retroToken = extractToken(auth);
+      if (!retroToken) {
+        return null;
+      }
+
+      return retroAuthService.readAndVerifyToken(retroId, retroToken);
     };
 
     this.get('/slugs/:slug', async (req, res) => {
@@ -87,24 +101,45 @@ export default class ApiRouter extends Router {
         readArchives: true,
         write: true,
       };
-      const token = await authService.exchangePassword(retroId, password, permissions);
-      if (!token) {
+      const retroToken = await retroAuthService.exchangePassword(
+        retroId,
+        password,
+        permissions,
+      );
+      if (!retroToken) {
         res.status(400).json({ error: 'incorrect password' });
         return;
       }
 
-      res.status(200).json({ token });
+      res.status(200).json({ retroToken });
     });
 
     this.get('/retros', async (req, res) => {
+      const auth = await getUserAuthentication(req);
+      if (!auth) {
+        res
+          .status(401)
+          .header('WWW-Authenticate', 'Bearer realm="user"')
+          .end();
+        return;
+      }
+
       res.json({
-        retros: await retroService.getRetroList(),
+        retros: await retroService.getRetroListForUser(auth.id),
       });
     });
 
     this.post('/retros', async (req, res) => {
+      const auth = await getUserAuthentication(req);
+      if (!auth) {
+        res
+          .status(401)
+          .header('WWW-Authenticate', 'Bearer realm="user"')
+          .end();
+        return;
+      }
+
       const { slug, name, password } = req.body;
-      // TODO: authentication
 
       if (!name || typeof name !== 'string') {
         res.status(400).json({ error: 'No name given' });
@@ -129,15 +164,15 @@ export default class ApiRouter extends Router {
         return;
       }
 
-      const id = await retroService.createRetro(slug, name, 'mood');
-      await authService.setPassword(id, password);
+      const id = await retroService.createRetro(auth.id, slug, name, 'mood');
+      await retroAuthService.setPassword(id, password);
 
       res.status(200).json({ id });
     });
 
     this.get('/retros/:retroId', async (req, res) => {
       const { retroId } = req.params;
-      const auth = await getAuthentication(req, retroId);
+      const auth = await getRetroAuthentication(req, retroId);
       if (!auth) {
         res
           .status(401)
@@ -161,10 +196,10 @@ export default class ApiRouter extends Router {
 
     this.ws('/retros/:retroId', async (req, ws) => {
       const { retroId } = req.params;
-      let auth = await getAuthentication(req, retroId);
+      let auth = await getRetroAuthentication(req, retroId);
       if (!auth) {
-        const token = await nextMessage(ws);
-        auth = await authService.readAndVerifyToken(retroId, token);
+        const retroToken = await nextMessage(ws);
+        auth = await retroAuthService.readAndVerifyToken(retroId, retroToken);
         if (!auth) {
           ws.close(4401, 'Unauthorized');
           return;
@@ -210,7 +245,7 @@ export default class ApiRouter extends Router {
 
     this.post('/retros/:retroId/archives', async (req, res) => {
       const { retroId } = req.params;
-      const auth = await getAuthentication(req, retroId);
+      const auth = await getRetroAuthentication(req, retroId);
       if (!auth) {
         res
           .status(401)
@@ -230,7 +265,7 @@ export default class ApiRouter extends Router {
 
     this.get('/retros/:retroId/archives/:archiveId', async (req, res) => {
       const { retroId, archiveId } = req.params;
-      const auth = await getAuthentication(req, retroId);
+      const auth = await getRetroAuthentication(req, retroId);
       if (!auth) {
         res
           .status(401)

@@ -3,13 +3,21 @@ export default class RetroService {
     this.apiBase = apiBase;
   }
 
-  async create({ name, slug, password }) {
+  async create({
+    name,
+    slug,
+    password,
+    userToken,
+  }) {
     const response = await fetch(
       `${this.apiBase}/retros`,
       {
         method: 'POST',
         cache: 'no-cache',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ name, slug, password }),
       },
     );

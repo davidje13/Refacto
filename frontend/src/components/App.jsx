@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
+import LoginCallback from './login/LoginCallback';
 import WelcomePage from './welcome/WelcomePage';
 import RetroCreatePage from './retro-create/RetroCreatePage';
 import RetroListPage from './retro-list/RetroListPage';
@@ -17,6 +18,7 @@ const withParams = (Page) => ({ match }) => (<Page {...match.params} />);
 const App = () => (
   <React.Fragment>
     <Switch>
+      <Route path="/sso/:service" exact render={withParams(LoginCallback)} />
       <Route path="/" exact render={withParams(WelcomePage)} />
       <Route path="/create" exact render={withParams(RetroCreatePage)} />
       <Route path="/retros" exact render={withParams(RetroListPage)} />

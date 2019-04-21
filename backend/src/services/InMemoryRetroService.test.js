@@ -8,11 +8,13 @@ describe('InMemoryRetroService', () => {
   beforeEach(async () => {
     service = new InMemoryRetroService();
     r1 = await service.createRetro(
+      'me',
       'my-retro',
       'My Retro',
       'something',
     );
     r2 = await service.createRetro(
+      'nobody',
       'my-second-retro',
       'My Second Retro',
       'other',
@@ -43,11 +45,11 @@ describe('InMemoryRetroService', () => {
     });
   });
 
-  describe('getRetroList', () => {
-    it('returns a list of summarised current retros', async () => {
-      const retros = await service.getRetroList();
+  describe('getRetroListForUser', () => {
+    it('returns a list of summarised retros for the user', async () => {
+      const retros = await service.getRetroListForUser('me');
 
-      expect(retros.length).toEqual(2);
+      expect(retros.length).toEqual(1);
       expect(retros[0]).toEqual({
         id: r1,
         slug: 'my-retro',

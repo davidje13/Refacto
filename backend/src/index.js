@@ -25,6 +25,15 @@ if (module.hot) {
   module.hot.accept('./app', refreshApp);
 }
 
+if (process.env.FAKE_SSO_PORT) {
+  // Dev mode: run an additional fake SSO server
+  import('./fake-sso/sso')
+    .then(({ default: ssoApp }) => ssoApp.listen(process.env.FAKE_SSO_PORT))
+    .catch(() => {
+      process.stderr.write('Failed to start fake SSO server\n');
+    });
+}
+
 server.listen(port, () => {
   process.stdout.write(`Available at http://localhost:${port}/\n`);
   process.stdout.write('Press Ctrl+C to stop\n');

@@ -12,6 +12,7 @@
     "core-js": "3.0.1",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "jwt-simple": "^0.5.6",
+    "node-fetch": "^2.3.0",
     "source-map-support": "^0.5.12",
     "uuid": "^3.3.2",
     "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.0.2"

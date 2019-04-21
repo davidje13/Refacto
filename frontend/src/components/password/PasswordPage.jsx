@@ -32,10 +32,10 @@ class PasswordPage extends React.PureComponent {
 
     try {
       this.setState({ checking: true, error: null });
-      const token = await retroTokenService.submitPassword(retroId, password);
+      const retroToken = await retroTokenService.submitPassword(retroId, password);
 
       this.setState({ checking: false, error: null });
-      retroTokenTracker.set(retroId, token);
+      retroTokenTracker.set(retroId, retroToken);
     } catch (err) {
       this.setState({ checking: false, error: String(err.message) });
     }
