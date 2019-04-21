@@ -50,7 +50,7 @@ describe.skip('Application', () => {
   });
 
   it('renders retro page at /retros/id', async () => {
-    const retro = makeRetro({ id: 'id-foobar', name: 'Retro Name' });
+    const retro = makeRetro({ name: 'Retro Name' });
 
     global.fetch.mockExpect('/api/slugs/slug-foobar')
       .andRespondJsonOk({ id: 'id-foobar' });
@@ -66,7 +66,7 @@ describe.skip('Application', () => {
   });
 
   it('renders archive page at /retros/id/archives/id', async () => {
-    const retro = makeRetro({ id: 'id-foobar', name: 'Retro Name' });
+    const retro = makeRetro({ name: 'Retro Name' });
 
     global.fetch.mockExpect('/api/slugs/slug-foobar')
       .andRespondJsonOk({ id: 'id-foobar' });

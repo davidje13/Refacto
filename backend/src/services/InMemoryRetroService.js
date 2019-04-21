@@ -6,7 +6,7 @@ function sleep(millis) {
   return new Promise((resolve) => setTimeout(resolve, millis));
 }
 
-const filterSummaryInformation = ({ retro: { id, slug, name } }) => ({
+const filterSummaryInformation = ({ id, slug, retro: { name } }) => ({
   id,
   slug,
   name,
@@ -33,12 +33,12 @@ export default class InMemoryRetroService {
 
   async findRetroBySlug(slug) {
     await sleep(this.simulatedDelay);
-    return this.data.find((retroData) => (retroData.retro.slug === slug));
+    return this.data.find((retroData) => (retroData.slug === slug));
   }
 
   async findRetroById(id) {
     await sleep(this.simulatedDelay);
-    return this.data.find((retroData) => (retroData.retro.id === id));
+    return this.data.find((retroData) => (retroData.id === id));
   }
 
   async getRetroIdForSlug(slug) {
@@ -46,7 +46,7 @@ export default class InMemoryRetroService {
     if (!retroData) {
       return null;
     }
-    return retroData.retro.id;
+    return retroData.id;
   }
 
   async createRetro(
@@ -64,10 +64,10 @@ export default class InMemoryRetroService {
     const id = uuidv4();
 
     this.data.push({
+      id,
+      slug,
       ownerId,
       retro: {
-        id,
-        slug,
         name,
         state,
         data: { format, items },

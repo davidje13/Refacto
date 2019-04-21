@@ -23,7 +23,8 @@ const ArchiveListPage = ({ slug, retroState, error }) => {
         loading={!retro}
         error={error}
         Component={ArchiveList}
-        retro={retro}
+        slug={slug}
+        archives={retro?.archives}
       />
     </article>
   );

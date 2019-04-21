@@ -1,7 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import renderDOM from '../../test-helpers/reactDom';
-import { makeRetro } from '../../test-helpers/dataFactories';
 
 import ArchiveList from './ArchiveList';
 import ArchiveLink from './ArchiveLink';
@@ -10,35 +9,28 @@ jest.mock('./ArchiveLink', () => () => (<div />));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
-    const retro = makeRetro({ archives: [] });
-    const dom = renderDOM(<ArchiveList retro={retro} />);
+    const dom = renderDOM(<ArchiveList slug="foo" archives={[]} />);
 
     expect(dom.textContent).toContain('has no archives');
   });
 
   it('displays no message if there are archives', () => {
-    const retro = makeRetro({
-      slug: 'foo',
-      archives: [
-        { id: 'a1', created: 10 },
-        { id: 'a2', created: 0 },
-      ],
-    });
-    const dom = renderDOM(<ArchiveList retro={retro} />);
+    const archives = [
+      { id: 'a1', created: 10 },
+      { id: 'a2', created: 0 },
+    ];
+    const dom = renderDOM(<ArchiveList slug="foo" archives={archives} />);
 
     expect(dom.textContent).not.toContain('has no archives');
   });
 
   it('displays a list of archives', () => {
-    const retro = makeRetro({
-      slug: 'foo',
-      archives: [
-        { id: 'a1', created: 10 },
-        { id: 'a2', created: 0 },
-      ],
-    });
+    const archives = [
+      { id: 'a1', created: 10 },
+      { id: 'a2', created: 0 },
+    ];
 
-    const dom = mount(<ArchiveList retro={retro} />);
+    const dom = mount(<ArchiveList slug="foo" archives={archives} />);
 
     expect(dom.find(ArchiveLink).at(0)).toHaveProp({
       retroSlug: 'foo',
@@ -53,16 +45,13 @@ describe('ArchiveList', () => {
   });
 
   it('orders archives newest-to-oldest', () => {
-    const retro = makeRetro({
-      slug: 'foo',
-      archives: [
-        { id: 'a1', created: 100 },
-        { id: 'a2', created: 0 },
-        { id: 'a3', created: 10 },
-      ],
-    });
+    const archives = [
+      { id: 'a1', created: 100 },
+      { id: 'a2', created: 0 },
+      { id: 'a3', created: 10 },
+    ];
 
-    const dom = mount(<ArchiveList retro={retro} />);
+    const dom = mount(<ArchiveList slug="foo" archives={archives} />);
 
     expect(dom.find(ArchiveLink).at(0)).toHaveProp({ archiveId: 'a1' });
     expect(dom.find(ArchiveLink).at(1)).toHaveProp({ archiveId: 'a3' });

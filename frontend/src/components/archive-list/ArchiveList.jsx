@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ArchiveLink from './ArchiveLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
+import { propTypesShapeArchiveSummary } from '../../api/dataStructurePropTypes';
 
 function archiveCreatedComparator(a, b) {
   // sort newer-to-older
@@ -14,7 +15,7 @@ function sortArchives(archives) {
   return sorted;
 }
 
-const ArchiveList = ({ retro: { slug, archives } }) => {
+const ArchiveList = ({ slug, archives }) => {
   if (!archives.length) {
     return (<p>This retro has no archives.</p>);
   }
@@ -31,7 +32,8 @@ const ArchiveList = ({ retro: { slug, archives } }) => {
 };
 
 ArchiveList.propTypes = {
-  retro: propTypesShapeRetro.isRequired,
+  slug: PropTypes.string.isRequired,
+  archives: PropTypes.arrayOf(propTypesShapeArchiveSummary).isRequired,
 };
 
 forbidExtraProps(ArchiveList);

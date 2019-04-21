@@ -24,8 +24,6 @@ export function makeRetro(details = {}) {
   const { format, items, ...rest } = details;
 
   return Object.assign({
-    id: 'my-retro-id',
-    slug: 'my-slug',
     name: 'my retro name',
     state: {},
     data: makeRetroData({ format, items }),

@@ -27,18 +27,3 @@ export const propTypesShapeRetroData = exactShape({
   format: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
 });
-
-export const propTypesShapeArchive = exactShape({
-  id: PropTypes.string.isRequired,
-  created: PropTypes.number.isRequired,
-  data: propTypesShapeRetroData.isRequired,
-});
-
-export const propTypesShapeRetro = exactShape({
-  id: PropTypes.string.isRequired,
-  slug: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  state: PropTypes.shape({}).isRequired,
-  data: propTypesShapeRetroData.isRequired,
-  archives: PropTypes.arrayOf(propTypesShapeArchiveSummary).isRequired,
-});
