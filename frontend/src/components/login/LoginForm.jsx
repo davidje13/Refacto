@@ -17,22 +17,25 @@ function randomString() {
   return result;
 }
 
+function makeState(redirect) {
+  const nonce = randomString();
+  window.sessionStorage.setItem('login-nonce', nonce);
+  return JSON.stringify({ nonce, redirect });
+}
+
 const LoginForm = ({ message, redirect }) => {
   const config = useConfig();
   const googleConfig = config?.sso?.google;
+  const githubConfig = config?.sso?.github;
 
   const resolvedRedirect = redirect || document.location.pathname;
   const domain = document.location.origin;
 
   const handleGoogleClick = useCallback(() => {
-    const nonce = randomString();
-    window.sessionStorage.setItem('login-nonce', nonce);
-
     const targetUrl = new URL('/sso/google', domain);
     const url = new URL(googleConfig.authUrl);
     url.searchParams.set('redirect_uri', targetUrl.toString());
-    url.searchParams.set('nonce', nonce);
-    url.searchParams.set('state', resolvedRedirect);
+    url.searchParams.set('state', makeState(resolvedRedirect));
     url.searchParams.set('response_type', 'id_token');
     url.searchParams.set('scope', 'openid');
     url.searchParams.set('client_id', googleConfig.clientId);
@@ -40,6 +43,16 @@ const LoginForm = ({ message, redirect }) => {
     url.searchParams.set('fetch_basic_profile', 'false');
     document.location.href = url.toString();
   }, [resolvedRedirect, domain, googleConfig]);
+
+  const handleGitHubClick = useCallback(() => {
+    const targetUrl = new URL('/sso/github', domain);
+    const url = new URL(githubConfig.authUrl);
+    url.searchParams.set('redirect_uri', targetUrl.toString());
+    url.searchParams.set('state', makeState(resolvedRedirect));
+    url.searchParams.set('scope', '');
+    url.searchParams.set('client_id', githubConfig.clientId);
+    document.location.href = url.toString();
+  }, [resolvedRedirect, domain, githubConfig]);
 
   return (
     <div className="login-form">
@@ -52,6 +65,15 @@ const LoginForm = ({ message, redirect }) => {
             onClick={handleGoogleClick}
           >
             Sign in with Google
+          </button>
+        ) : null }
+        { githubConfig ? (
+          <button
+            type="button"
+            className="sso-github"
+            onClick={handleGitHubClick}
+          >
+            Sign in with GitHub
           </button>
         ) : null }
       </p>

@@ -9,9 +9,9 @@ const LoginCallback = ({ history, service }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const { hash } = document.location;
+    const { search, hash } = document.location;
     const nonce = window.sessionStorage.getItem('login-nonce');
-    handleLogin(service, hash, nonce)
+    handleLogin(service, nonce, { search, hash })
       .then((redirect) => {
         window.sessionStorage.removeItem('login-nonce');
         history.replace(redirect);

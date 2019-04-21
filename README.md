@@ -60,6 +60,25 @@ deployments. For example:
 GOOGLE_CLIENT_ID=something.apps.googleusercontent.com npm start
 ```
 
+### Configuring GitHub sign in
+
+You will need a GitHub client ID:
+
+1. Go to <https://github.com/settings/applications/new>
+2. Set the "Homepage URL" to match your deployment. e.g. for local
+   testing, use `http://localhost:5000`
+3. Set the "Authorization callback URL" to the same value, with
+   `/sso/github` appended to the end.
+4. Record the client ID and client secret.
+```
+You can now invoke the application with the `GITHUB_CLIENT_ID` and
+`GITHUB_CLIENT_SECRET` environment variables set. This applies to both
+local testing and deployments. For example:
+
+```bash
+GITHUB_CLIENT_ID=idhere GITHUB_CLIENT_SECRET=secrethere npm start
+```
+
 ## Extra security
 
 See the [security documentation](docs/SECURITY.md) for details on

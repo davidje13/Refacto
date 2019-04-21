@@ -32,6 +32,21 @@ if (googleClientId) {
   };
 }
 
+const githubClientId = getEnv('GITHUB_CLIENT_ID', null);
+if (githubClientId) {
+  ssoConfig.github = {
+    clientId: githubClientId,
+    clientSecret: getEnv('GITHUB_CLIENT_SECRET', ''),
+    accessTokenUrl: getEnv('GITHUB_ACCESS_TOKEN_URL', 'https://github.com/login/oauth/access_token'),
+    userUrl: getEnv('GITHUB_USER_URL', 'https://api.github.com/user'),
+  };
+
+  clientConfig.sso.github = {
+    authUrl: getEnv('GITHUB_AUTH_URL', 'https://github.com/login/oauth/authorize'),
+    clientId: githubClientId,
+  };
+}
+
 const hasher = new Hasher(secretPepper, hasherWorkFactor);
 const tokenManager = new TokenManager(secretPrivateKeyPassphrase);
 

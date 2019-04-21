@@ -3,14 +3,14 @@ export default class UserTokenService {
     this.apiBase = apiBase;
   }
 
-  async login(service, externalToken, nonce) {
+  async login(service, externalToken) {
     const response = await fetch(
       `${this.apiBase}/sso/${service}`,
       {
         method: 'POST',
         cache: 'no-cache',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ externalToken, nonce }),
+        body: JSON.stringify({ externalToken }),
       },
     );
     const body = await response.json();

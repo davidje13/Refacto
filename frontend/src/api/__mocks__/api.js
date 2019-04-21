@@ -53,16 +53,13 @@ class FakeUserTokenService {
 
   capturedExternalToken = null;
 
-  capturedNonce = null;
-
   setServerData(userToken) {
     this.userToken = userToken;
   }
 
-  async login(service, externalToken, nonce) {
+  async login(service, externalToken) {
     this.capturedService = service;
     this.capturedExternalToken = externalToken;
-    this.capturedNonce = nonce;
 
     if (!this.userToken) {
       throw new Error('some error');

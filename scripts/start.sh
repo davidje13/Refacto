@@ -7,7 +7,7 @@ API_PORT="${PORT:-5000}";
 (( APP_PORT = API_PORT + 1 ));
 
 FAKE_SSO='true';
-if [[ -n "$GOOGLE_CLIENT_ID" ]]; then
+if [[ -n "$GOOGLE_CLIENT_ID" || -n "$GITHUB_CLIENT_ID" ]]; then
   FAKE_SSO='false';
 fi;
 if [[ " $* " == *' --fake-sso '* ]]; then

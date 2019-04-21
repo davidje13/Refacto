@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { Router } from 'websocket-express';
 
-async function extractGoogleId(config, externalToken, nonce) {
+async function extractGoogleId(config, externalToken) {
   // These checks can be done locally
   // see https://developers.google.com/identity/sign-in/web/backend-auth
 
@@ -22,9 +22,6 @@ async function extractGoogleId(config, externalToken, nonce) {
   if (externalTokenInfo.aud !== config.clientId) {
     throw new Error('audience mismatch');
   }
-  if (!nonce || externalTokenInfo.nonce !== nonce) {
-    throw new Error('nonce mismatch');
-  }
 
   // TODO: use externalTokenInfo.jti nonce to prevent replay attacks
   // (would need to store value at least until exp time)
@@ -32,32 +29,73 @@ async function extractGoogleId(config, externalToken, nonce) {
   return externalTokenInfo.sub;
 }
 
+async function extractGitHubId(config, externalToken) {
+  const accessParams = new URLSearchParams();
+  accessParams.append('code', externalToken);
+  accessParams.append('client_id', config.clientId);
+  accessParams.append('client_secret', config.clientSecret);
+  const accessRes = await fetch(config.accessTokenUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: accessParams.toString(),
+  });
+
+  const accessResults = new URLSearchParams(await accessRes.text());
+
+  const error = accessResults.get('error');
+  if (error) {
+    throw new Error(`validation error ${error}`);
+  }
+
+  const accessToken = accessResults.get('access_token');
+  if (!accessToken) {
+    throw new Error('validation internal error');
+  }
+
+  const userRes = await fetch(config.userUrl, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  const userResults = await userRes.json();
+  return userResults.id;
+}
+
+const services = [
+  { name: 'google', extract: extractGoogleId },
+  { name: 'github', extract: extractGitHubId },
+];
+
 export default class ApiSsoRouter extends Router {
   constructor(userAuthService, config) {
     super();
 
-    this.post('/google', async (req, res) => {
-      const { externalToken, nonce } = req.body;
-      if (!externalToken || !config.google) {
-        res.status(400).end();
+    services.forEach(({ name, extract }) => {
+      if (!config[name]) {
         return;
       }
 
-      try {
-        const googleId = await extractGoogleId(
-          config.google,
-          externalToken,
-          nonce,
-        );
+      this.post(`/${name}`, async (req, res) => {
+        const { externalToken } = req.body;
+        if (!externalToken) {
+          res.status(400).end();
+          return;
+        }
 
-        const userToken = await userAuthService.grantToken({
-          provider: 'google',
-          id: `google-${googleId}`,
-        });
-        res.status(200).json({ userToken });
-      } catch (e) {
-        res.status(400).json({ error: e.message || 'internal error' });
-      }
+        try {
+          const externalId = await extract(config[name], externalToken);
+          if (!externalId) {
+            throw new Error('failed to get user ID');
+          }
+
+          const userToken = await userAuthService.grantToken({
+            provider: name,
+            id: `${name}-${externalId}`,
+          });
+          res.status(200).json({ userToken });
+        } catch (e) {
+          res.status(400).json({ error: e.message || 'internal error' });
+        }
+      });
     });
   }
 }

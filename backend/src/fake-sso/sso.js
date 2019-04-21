@@ -18,6 +18,9 @@ app.use(WebSocketExpress.urlencoded({ extended: false }));
 
 function htmlSafe(value) {
   // Thanks, https://stackoverflow.com/a/6234804/1180785
+  if (!value) {
+    return '';
+  }
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
