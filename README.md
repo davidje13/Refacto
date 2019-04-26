@@ -70,7 +70,7 @@ You will need a GitHub client ID:
 3. Set the "Authorization callback URL" to the same value, with
    `/sso/github` appended to the end.
 4. Record the client ID and client secret.
-```
+
 You can now invoke the application with the `GITHUB_CLIENT_ID` and
 `GITHUB_CLIENT_SECRET` environment variables set. This applies to both
 local testing and deployments. For example:
