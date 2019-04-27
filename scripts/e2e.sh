@@ -18,17 +18,17 @@ if [[ -z "$TARGET_HOST" ]]; then
     npm --prefix="$BUILDDIR" install --production --silent;
   fi;
 
-  echo 'Using fake authentication provider';
-  (( FAKE_SSO_PORT = PORT + 2 ));
-  FAKE_SSO_HOST="http://localhost:$FAKE_SSO_PORT";
-  export GOOGLE_CLIENT_ID='fake-client-id';
-  export GOOGLE_AUTH_URL="$FAKE_SSO_HOST/auth";
-  export GOOGLE_TOKEN_INFO_URL="$FAKE_SSO_HOST/tokeninfo";
+  echo 'Using mock authentication provider';
+  (( MOCK_SSO_PORT = PORT + 2 ));
+  MOCK_SSO_HOST="http://localhost:$MOCK_SSO_PORT";
+  export SSO_GOOGLE_CLIENT_ID='mock-client-id';
+  export SSO_GOOGLE_AUTH_URL="$MOCK_SSO_HOST/auth";
+  export SSO_GOOGLE_TOKEN_INFO_URL="$MOCK_SSO_HOST/tokeninfo";
 
   PORT="$PORT" \
-  FAKE_SSO_PORT="$FAKE_SSO_PORT" \
-  SIMULATED_DELAY="50" \
-  SIMULATED_SOCKET_DELAY="50" \
+  MOCK_SSO_PORT="$MOCK_SSO_PORT" \
+  MOCK_IO_DELAY="50" \
+  MOCK_STREAM_DELAY="50" \
   npm --prefix="$BUILDDIR" start --silent \
     > "$LOGS/app.log" 2>&1 & APP_PID="$!";
 

@@ -52,12 +52,12 @@ You will need a Google client ID:
    "OAuth consent screen", as this will be visible to users of your
    deployed app.
 
-You can now invoke the application with the `GOOGLE_CLIENT_ID`
+You can now invoke the application with the `SSO_GOOGLE_CLIENT_ID`
 environment variable set. This applies to both local testing and
 deployments. For example:
 
 ```bash
-GOOGLE_CLIENT_ID=something.apps.googleusercontent.com npm start
+SSO_GOOGLE_CLIENT_ID=something.apps.googleusercontent.com npm start
 ```
 
 ### Configuring GitHub sign in
@@ -71,12 +71,12 @@ You will need a GitHub client ID:
    `/sso/github` appended to the end.
 4. Record the client ID and client secret.
 
-You can now invoke the application with the `GITHUB_CLIENT_ID` and
-`GITHUB_CLIENT_SECRET` environment variables set. This applies to both
-local testing and deployments. For example:
+You can now invoke the application with the `SSO_GITHUB_CLIENT_ID` and
+`SSO_GITHUB_CLIENT_SECRET` environment variables set. This applies to
+both local testing and deployments. For example:
 
 ```bash
-GITHUB_CLIENT_ID=idhere GITHUB_CLIENT_SECRET=secrethere npm start
+SSO_GITHUB_CLIENT_ID=idhere SSO_GITHUB_CLIENT_SECRET=secrethere npm start
 ```
 
 ## Extra security

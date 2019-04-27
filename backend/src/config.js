@@ -1,32 +1,46 @@
-import getEnv from './helpers/getEnv';
+import baseConfig from './config/default.json';
 
-const config = {
-  hasherWorkFactor: getEnv('PASSWORD_HASH_WORK_FACTOR', 10),
-  secretPepper: getEnv('PASSWORD_SECRET_PEPPER', ''),
-  secretPrivateKeyPassphrase: getEnv('PRIVATE_KEY_PASSPHRASE', ''),
-  simulatedDelay: getEnv('SIMULATED_DELAY', 0),
-  simulatedSocketDelay: getEnv('SIMULATED_SOCKET_DELAY', 0),
-  sso: {},
-};
+// Reads configuration from environment variables (falling back to values in
+// config/default.json if not set)
+// Variables are read in snake_case and exported in camelCase
 
-const googleClientId = getEnv('GOOGLE_CLIENT_ID', null);
-if (googleClientId) {
-  config.sso.google = {
-    clientId: googleClientId,
-    authUrl: getEnv('GOOGLE_AUTH_URL', 'https://accounts.google.com/o/oauth2/auth'),
-    tokenInfoUrl: getEnv('GOOGLE_TOKEN_INFO_URL', 'https://oauth2.googleapis.com/tokeninfo'),
-  };
+function getEnv(name, def = null) {
+  const value = process.env[name];
+  if (value === undefined) {
+    return def;
+  }
+  if (typeof def === 'number') {
+    const numValue = Number(value);
+    if (Number.isNaN(numValue) || value === '') {
+      return def;
+    }
+    return numValue;
+  }
+  return value;
 }
 
-const githubClientId = getEnv('GITHUB_CLIENT_ID', null);
-if (githubClientId) {
-  config.sso.github = {
-    clientId: githubClientId,
-    clientSecret: getEnv('GITHUB_CLIENT_SECRET', ''),
-    authUrl: getEnv('GITHUB_AUTH_URL', 'https://github.com/login/oauth/authorize'),
-    accessTokenUrl: getEnv('GITHUB_ACCESS_TOKEN_URL', 'https://github.com/login/oauth/access_token'),
-    userUrl: getEnv('GITHUB_USER_URL', 'https://api.github.com/user'),
-  };
+function makeSnake(name) {
+  return name.replace(/([a-z])([A-Z])/g, '$1_$2');
 }
 
-export default config;
+function makeCamel(name) {
+  return name.replace(/_(.)/g, (m, c) => c.toUpperCase());
+}
+
+function populateConfig(base, env = '') {
+  if (!base || typeof base !== 'object') {
+    return getEnv(env, base);
+  }
+  const envPrefix = env ? `${env}_` : '';
+
+  const result = {};
+  Object.keys(base).forEach((key) => {
+    result[makeCamel(key)] = populateConfig(
+      base[key],
+      `${envPrefix}${makeSnake(key).toUpperCase()}`,
+    );
+  });
+  return result;
+}
+
+export default populateConfig(baseConfig);

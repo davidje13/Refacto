@@ -2,12 +2,18 @@ import request from 'superwstest';
 import appFactory from './app';
 
 const config = {
-  hasherWorkFactor: 5,
-  secretPepper: 'abc',
-  secretPrivateKeyPassphrase: 'foobar',
-  simulatedDelay: 0,
-  simulatedSocketDelay: 0,
+  password: {
+    workFactor: 5,
+    secretPepper: 'abc',
+  },
+  token: {
+    secretPassphrase: 'foobar',
+  },
   sso: {},
+  mock: {
+    ioDelay: 0,
+    streamDelay: 0,
+  },
 };
 
 async function makeTestApp() {

@@ -7,10 +7,12 @@ function makeClientConfig(serverConfig) {
 
   Object.keys(serverConfig.sso).forEach((service) => {
     const config = serverConfig.sso[service];
-    clientConfig.sso[service] = {
-      authUrl: config.authUrl,
-      clientId: config.clientId,
-    };
+    if (config.clientId) {
+      clientConfig.sso[service] = {
+        authUrl: config.authUrl,
+        clientId: config.clientId,
+      };
+    }
   });
 
   return clientConfig;

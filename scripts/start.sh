@@ -6,21 +6,21 @@ BASEDIR="$(dirname "$0")/..";
 API_PORT="${PORT:-5000}";
 (( APP_PORT = API_PORT + 1 ));
 
-FAKE_SSO='true';
-if [[ -n "$GOOGLE_CLIENT_ID" || -n "$GITHUB_CLIENT_ID" ]]; then
-  FAKE_SSO='false';
+MOCK_SSO='true';
+if [[ -n "$SSO_GOOGLE_CLIENT_ID" || -n "$SSO_GITHUB_CLIENT_ID" ]]; then
+  MOCK_SSO='false';
 fi;
-if [[ " $* " == *' --fake-sso '* ]]; then
-  FAKE_SSO='true';
+if [[ " $* " == *' --mock-sso '* ]]; then
+  MOCK_SSO='true';
 fi;
 
-if [[ "$FAKE_SSO" == 'true' ]]; then
-  echo 'Using fake authentication provider';
-  (( FAKE_SSO_PORT = API_PORT + 2 ));
-  FAKE_SSO_HOST="http://localhost:$FAKE_SSO_PORT";
-  export GOOGLE_CLIENT_ID='fake-client-id';
-  export GOOGLE_AUTH_URL="$FAKE_SSO_HOST/auth";
-  export GOOGLE_TOKEN_INFO_URL="$FAKE_SSO_HOST/tokeninfo";
+if [[ "$MOCK_SSO" == 'true' ]]; then
+  echo 'Using mock authentication provider';
+  (( MOCK_SSO_PORT = API_PORT + 2 ));
+  MOCK_SSO_HOST="http://localhost:$MOCK_SSO_PORT";
+  export SSO_GOOGLE_CLIENT_ID='mock-client-id';
+  export SSO_GOOGLE_AUTH_URL="$MOCK_SSO_HOST/auth";
+  export SSO_GOOGLE_TOKEN_INFO_URL="$MOCK_SSO_HOST/tokeninfo";
 fi;
 
 echo 'Running frontend...';
@@ -37,5 +37,5 @@ echo 'Running backend...';
 
 PORT="$API_PORT" \
 FORWARD_HOST="http://localhost:$APP_PORT" \
-FAKE_SSO_PORT="$FAKE_SSO_PORT" \
+MOCK_SSO_PORT="$MOCK_SSO_PORT" \
 npm --prefix="$BASEDIR/backend" start --silent;

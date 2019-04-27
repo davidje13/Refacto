@@ -1,7 +1,7 @@
 import Hasher from './Hasher';
 
 describe('Hasher', () => {
-  const hasher = new Hasher('', 4);
+  const hasher = new Hasher({ workFactor: 4 });
 
   describe('hash', () => {
     it('returns an ASCII-safe hash', async () => {
@@ -39,7 +39,7 @@ describe('Hasher', () => {
     });
 
     it('uses the number of rounds from the hashed value', async () => {
-      const hasher2 = new Hasher('', 100);
+      const hasher2 = new Hasher({ workFactor: 100 });
       const hash = await hasher.hash('abc');
 
       expect(await hasher2.compare('abc', hash)).toEqual(true);
@@ -47,8 +47,8 @@ describe('Hasher', () => {
     });
 
     it('returns false for hashes with a different pepper', async () => {
-      const hasher1 = new Hasher('pepper1', 4);
-      const hasher2 = new Hasher('pepper2', 4);
+      const hasher1 = new Hasher({ secretPepper: 'pepper1', workFactor: 4 });
+      const hasher2 = new Hasher({ secretPepper: 'pepper2', workFactor: 4 });
       const hash = await hasher1.hash('abc');
 
       expect(await hasher2.compare('abc', hash)).toEqual(false);
@@ -57,16 +57,16 @@ describe('Hasher', () => {
 
   describe('needsRegenerate', () => {
     it('returns true if the hash uses too few rounds', async () => {
-      const hasher1 = new Hasher('', 4);
-      const hasher2 = new Hasher('', 6);
+      const hasher1 = new Hasher({ workFactor: 4 });
+      const hasher2 = new Hasher({ workFactor: 6 });
       const hash = await hasher1.hash('abc');
 
       expect(hasher2.needsRegenerate(hash)).toEqual(true);
     });
 
     it('returns false if the has uses sufficient rounds', async () => {
-      const hasher1 = new Hasher('', 8);
-      const hasher2 = new Hasher('', 6);
+      const hasher1 = new Hasher({ workFactor: 8 });
+      const hasher2 = new Hasher({ workFactor: 6 });
       const hash = await hasher1.hash('abc');
 
       expect(hasher1.needsRegenerate(hash)).toEqual(false);

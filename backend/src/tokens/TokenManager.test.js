@@ -56,8 +56,9 @@ describe('TokenManager', () => {
     });
 
     it('uses the passphrase to encrypt private keys at rest', async () => {
-      const passManager1 = new TokenManager('my-passphrase');
-      const passManager2 = new TokenManager('my-passphrase');
+      const config = { secretPassphrase: 'my-passphrase' };
+      const passManager1 = new TokenManager(config);
+      const passManager2 = new TokenManager(config);
       const passKeys = await passManager1.generateKeys();
 
       const token1 = passManager1.signData(data, passKeys.privateKey);

@@ -6,8 +6,6 @@ import config from './config';
 // app.js is the main entry point for the application.
 // (changes to index.js will not trigger HMR)
 
-const port = process.env.PORT || 5000;
-
 let activeApp = null;
 const server = http.createServer();
 
@@ -31,12 +29,14 @@ if (module.hot) {
   module.hot.accept(['./app', './config'], refreshApp);
 }
 
-if (process.env.FAKE_SSO_PORT) {
-  // Dev mode: run an additional fake SSO server
-  import('./fake-sso/sso')
-    .then(({ default: ssoApp }) => ssoApp.listen(process.env.FAKE_SSO_PORT))
+const { port, mock: { ssoPort } } = config;
+
+if (ssoPort) {
+  // Dev mode: run an additional mock SSO server
+  import('./mock-sso/sso')
+    .then(({ default: ssoApp }) => ssoApp.listen(ssoPort))
     .catch(() => {
-      process.stderr.write('Failed to start fake SSO server\n');
+      process.stderr.write('Failed to start mock SSO server\n');
     });
 }
 

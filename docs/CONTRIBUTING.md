@@ -9,7 +9,7 @@ npm start
 The site (both frontend resources and backend API) will be available at
 <http://localhost:5000/>. Both will automatically rebuild if changed.
 
-By default, this will run a fake Google authentication provider.
+By default, this will run a mock Google authentication provider.
 To enable real authentication providers (e.g. Google sign in), see the
 instructions in the main [README.md](../README.md).
 
@@ -68,8 +68,8 @@ npm run test:e2e
 
 During development, the build time can be significant. An alternative
 is to run the application in the background in watch mode using
-`npm start -- --fake-sso` (this differs from `npm start` because it
-uses a fake Google single-sign-on endpoint even if you have configured
+`npm start -- --mock-sso` (this differs from `npm start` because it
+uses a mock Google single-sign-on endpoint even if you have configured
 a real client ID), then run the end-to-end tests against that
 deployment:
 

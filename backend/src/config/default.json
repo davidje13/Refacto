@@ -1,0 +1,30 @@
+{
+  "port": 5000,
+  "forward_host": null,
+  "password": {
+    "work_factor": 10,
+    "secret_pepper": ""
+  },
+  "token": {
+    "secret_passphrase": ""
+  },
+  "sso": {
+    "google": {
+      "client_id": null,
+      "auth_url": "https://accounts.google.com/o/oauth2/auth",
+      "token_info_url": "https://oauth2.googleapis.com/tokeninfo"
+    },
+    "github": {
+      "client_id": null,
+      "client_secret": null,
+      "auth_url": "https://github.com/login/oauth/authorize",
+      "access_token_url": "https://github.com/login/oauth/access_token",
+      "user_url": "https://api.github.com/user"
+    }
+  },
+  "mock": {
+    "io_delay": 0,
+    "stream_delay": 0,
+    "sso_port": null
+  }
+}

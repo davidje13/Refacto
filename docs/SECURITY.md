@@ -19,7 +19,7 @@ If you have a powerful webserver, you can increase the hash work
 factor:
 
 ```bash
-PASSWORD_HASH_WORK_FACTOR=12 npm start
+PASSWORD_WORK_FACTOR=12 npm start
 ```
 
 This value can be changed with each deployment (and should slowly
@@ -75,7 +75,7 @@ value is in a deployment pipeline configuration, or a configuration
 server.
 
 ```bash
-PRIVATE_KEY_PASSPHRASE=asecretwhichmustnotbeknown npm start
+TOKEN_SECRET_PASSPHRASE=asecretwhichmustnotbeknown npm start
 ```
 
 **If this value ever changes, you will need to regenerate all key

@@ -2,10 +2,8 @@ import WebSocketExpress from 'websocket-express';
 import path from 'path';
 import basedir from '../basedir';
 
-const forwardHost = process.env.FORWARD_HOST || null;
-
 export default class StaticRouter extends WebSocketExpress.Router {
-  constructor() {
+  constructor(forwardHost = null) {
     super();
 
     if (forwardHost) {

@@ -11,8 +11,8 @@ const generateKeyPair = util.promisify(
 );
 
 export default class TokenManager {
-  constructor(secretPrivateKeyPassphrase = '') {
-    this.secretPrivateKeyPassphrase = secretPrivateKeyPassphrase;
+  constructor({ secretPassphrase = '' } = {}) {
+    this.secretPassphrase = secretPassphrase;
     this.modulusLength = 2048;
     this.algorithm = 'RS256';
   }
@@ -24,7 +24,7 @@ export default class TokenManager {
         type: 'pkcs8',
         format: 'pem',
         cipher: 'aes-256-cbc',
-        passphrase: this.secretPrivateKeyPassphrase,
+        passphrase: this.secretPassphrase,
       },
       publicKeyEncoding: {
         type: 'spki',
@@ -37,7 +37,7 @@ export default class TokenManager {
     const key = crypto.createPrivateKey({
       key: privateKey,
       format: 'pem',
-      passphrase: this.secretPrivateKeyPassphrase,
+      passphrase: this.secretPassphrase,
     });
     return jwt.encode(data, key, this.algorithm, {});
   }

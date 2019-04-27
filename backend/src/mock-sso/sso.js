@@ -33,7 +33,7 @@ app.get('/auth', (req, res) => {
   res.header('Content-Type', 'text/html').send(`
     <html>
       <head>
-        <title>Fake OAuth service</title>
+        <title>Mock OAuth service</title>
         <style>
           body {
             background: #EEEEEE;
@@ -75,9 +75,9 @@ app.get('/auth', (req, res) => {
       </head>
       <body>
         <form method="POST">
-          <h1>Fake OAuth service</h1>
+          <h1>Mock OAuth service</h1>
           <p>
-            This is a fake implementation of an OAuth server which is used
+            This is a mock implementation of an OAuth server which is used
             for local testing (including end-to-end automated tests).
           </p>
           <input type="hidden" name="redirect_uri" value="${htmlSafe(req.query.redirect_uri)}" />

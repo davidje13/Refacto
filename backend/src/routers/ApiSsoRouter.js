@@ -60,18 +60,19 @@ async function extractGitHubId(config, externalToken) {
   return userResults.id;
 }
 
-const services = [
-  { name: 'google', extract: extractGoogleId },
-  { name: 'github', extract: extractGitHubId },
-];
+const extractors = {
+  google: extractGoogleId,
+  github: extractGitHubId,
+};
 
 export default class ApiSsoRouter extends Router {
   constructor(userAuthService, config) {
     super();
 
-    services.forEach(({ name, extract }) => {
-      if (!config[name]) {
-        return;
+    Object.keys(config).forEach((name) => {
+      const extract = extractors[name];
+      if (!extract) {
+        throw new Error(`Unknown SSO service: ${name}`);
       }
 
       this.post(`/${name}`, async (req, res) => {

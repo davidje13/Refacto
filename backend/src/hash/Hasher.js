@@ -40,7 +40,7 @@ function preprocess(password, secretPepper, bruteSalt) {
 }
 
 export default class Hasher {
-  constructor(secretPepper = '', workFactor = 10) {
+  constructor({ secretPepper = '', workFactor = 10 } = {}) {
     this.secretPepper = secretPepper;
     this.workFactor = workFactor;
   }

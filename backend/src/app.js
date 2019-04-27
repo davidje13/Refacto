@@ -11,15 +11,15 @@ import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 
 export default async (config) => {
-  const configMap = new InMemoryMap(config.simulatedDelay);
-  const retroAuthMap = new InMemoryMap(config.simulatedDelay);
+  const configMap = new InMemoryMap(config.mock.ioDelay);
+  const retroAuthMap = new InMemoryMap(config.mock.ioDelay);
 
-  const hasher = new Hasher(config.secretPepper, config.hasherWorkFactor);
-  const tokenManager = new TokenManager(config.secretPrivateKeyPassphrase);
+  const hasher = new Hasher(config.password);
+  const tokenManager = new TokenManager(config.token);
 
   const retroService = new RetroService(
-    config.simulatedDelay,
-    config.simulatedSocketDelay,
+    config.mock.ioDelay,
+    config.mock.streamDelay,
   );
   const retroAuthService = new RetroAuthService(
     retroAuthMap,
@@ -37,7 +37,7 @@ export default async (config) => {
   app.use('/api', new ApiRouter(userAuthService, retroAuthService, retroService));
   app.use('/api/config', new ApiConfigRouter(config));
   app.use('/api/sso', new ApiSsoRouter(userAuthService, config.sso));
-  app.use(new StaticRouter());
+  app.use(new StaticRouter(config.forwardHost));
 
   await userAuthService.initialise(configMap);
 
