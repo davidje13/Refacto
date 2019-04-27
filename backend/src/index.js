@@ -1,5 +1,6 @@
 import http from 'http';
-import app from './app';
+import appFactory from './app';
+import config from './config';
 
 // This file exists mainly to enable hot module replacement.
 // app.js is the main entry point for the application.
@@ -10,19 +11,24 @@ const port = process.env.PORT || 5000;
 let activeApp = null;
 const server = http.createServer();
 
-function refreshApp() {
-  if (activeApp) {
-    activeApp.detach(server);
-  }
-  activeApp = app; // app import updated by HMR magic
-  activeApp.attach(server);
-}
+let latestNonce = {};
+async function refreshApp() {
+  const currentNonce = {};
+  latestNonce = currentNonce;
+  const newApp = await appFactory(config); // app import updated by HMR magic
 
-refreshApp();
+  if (latestNonce === currentNonce) {
+    if (activeApp) {
+      activeApp.detach(server);
+    }
+    activeApp = newApp;
+    activeApp.attach(server);
+  }
+}
 
 if (module.hot) {
   // Enable webpack-managed hot reloading of backend sources during development
-  module.hot.accept('./app', refreshApp);
+  module.hot.accept(['./app', './config'], refreshApp);
 }
 
 if (process.env.FAKE_SSO_PORT) {
@@ -34,7 +40,7 @@ if (process.env.FAKE_SSO_PORT) {
     });
 }
 
-server.listen(port, () => {
+refreshApp().then(() => server.listen(port, () => {
   process.stdout.write(`Available at http://localhost:${port}/\n`);
   process.stdout.write('Press Ctrl+C to stop\n');
-});
+}));

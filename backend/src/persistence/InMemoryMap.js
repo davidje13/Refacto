@@ -8,9 +8,9 @@ function sleep(millis) {
 }
 
 export default class InMemoryMap {
-  constructor() {
+  constructor(simulatedDelay = 0) {
     this.data = new Map();
-    this.simulatedDelay = 0;
+    this.simulatedDelay = simulatedDelay;
   }
 
   async set(key, value) {

@@ -27,6 +27,8 @@ if [[ -z "$TARGET_HOST" ]]; then
 
   PORT="$PORT" \
   FAKE_SSO_PORT="$FAKE_SSO_PORT" \
+  SIMULATED_DELAY="50" \
+  SIMULATED_SOCKET_DELAY="50" \
   npm --prefix="$BUILDDIR" start --silent \
     > "$LOGS/app.log" 2>&1 & APP_PID="$!";
 

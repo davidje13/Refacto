@@ -1,12 +1,19 @@
 import request from 'superwstest';
-import app, { retroService, retroAuthService, userAuthService } from './app';
+import appFactory from './app';
 
-retroService.simulatedDelay = 0;
-retroService.simulatedSocketDelay = 0;
-retroAuthService.simulatedDelay = 0;
-userAuthService.simulatedDelay = 0;
+const config = {
+  hasherWorkFactor: 5,
+  secretPepper: 'abc',
+  secretPrivateKeyPassphrase: 'foobar',
+  simulatedDelay: 0,
+  simulatedSocketDelay: 0,
+  sso: {},
+};
 
-async function addTestData() {
+async function makeTestApp() {
+  const app = await appFactory(config);
+  const { retroService, retroAuthService } = app.testHooks;
+
   const r1 = await retroService.createRetro(
     'nobody',
     'my-retro',
@@ -34,7 +41,7 @@ async function addTestData() {
 
   const a1a = await retroService.createArchive(r1);
   const a1b = await retroService.createArchive(r1);
-  const a2 = await retroService.createArchive(r2);
+  const a2a = await retroService.createArchive(r2);
 
   await Promise.all([
     retroAuthService.setPassword(r1, 'password'),
@@ -42,23 +49,30 @@ async function addTestData() {
     retroAuthService.setPassword(r3, '12345678'),
   ]);
 
-  return [r1, r2, r3, a1a, a1b, a2];
+  return [
+    app,
+    {
+      r1,
+      r2,
+      r3,
+      a1a,
+      a1b,
+      a2a,
+    },
+  ];
 }
 
 describe('Server', () => {
+  let app;
+  let testIds;
   let server;
-  let r1;
-  let r2;
-  let a1a;
-  let a2;
-
-  beforeAll(async () => {
-    [r1, r2, , a1a, , a2] = await addTestData();
-  });
 
   beforeEach((done) => {
-    server = app.createServer();
-    server.listen(0, done);
+    makeTestApp().then((testInfo) => {
+      [app, testIds] = testInfo;
+      server = app.createServer();
+      server.listen(0, done);
+    });
   });
 
   afterEach((done) => {
@@ -66,7 +80,7 @@ describe('Server', () => {
   });
 
   function getRetroToken(retroId) {
-    return retroAuthService.grantToken(retroId, {
+    return app.testHooks.retroAuthService.grantToken(retroId, {
       read: true,
       readArchives: true,
       write: true,
@@ -74,7 +88,7 @@ describe('Server', () => {
   }
 
   function getUserToken(userId) {
-    return userAuthService.grantToken({
+    return app.testHooks.userAuthService.grantToken({
       provider: 'test',
       id: userId,
     });
@@ -114,7 +128,7 @@ describe('Server', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      expect(response.body.id).toEqual(r1);
+      expect(response.body.id).toEqual(testIds.r1);
     });
 
     it('responds HTTP Not Found for unknown slugs', async () => {
@@ -127,7 +141,7 @@ describe('Server', () => {
   describe('/api/auth/tokens/retro-id', () => {
     it('responds with a token for the correct password', async () => {
       const response = await request(server)
-        .post(`/api/auth/tokens/${r1}`)
+        .post(`/api/auth/tokens/${testIds.r1}`)
         .send({ password: 'password' })
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -138,7 +152,7 @@ describe('Server', () => {
 
     it('responds HTTP Bad Request for incorrect password', async () => {
       const response = await request(server)
-        .post(`/api/auth/tokens/${r1}`)
+        .post(`/api/auth/tokens/${testIds.r1}`)
         .send({ password: 'nope' })
         .expect(400)
         .expect('Content-Type', /application\/json/);
@@ -157,9 +171,9 @@ describe('Server', () => {
 
   describe('ws://api/retros/retro-id', () => {
     it('sends initial replace-all retro data for known retro IDs', async () => {
-      const retroToken = await getRetroToken(r1);
+      const retroToken = await getRetroToken(testIds.r1);
       await request(server)
-        .ws(`/api/retros/${r1}`)
+        .ws(`/api/retros/${testIds.r1}`)
         .send(retroToken)
         .expectJson(({ change }) => (change.$set.name === 'My Retro'))
         .close()
@@ -167,9 +181,9 @@ describe('Server', () => {
     });
 
     it('reflects update requests and persists changes', async () => {
-      const retroToken = await getRetroToken(r2);
+      const retroToken = await getRetroToken(testIds.r2);
       await request(server)
-        .ws(`/api/retros/${r2}`)
+        .ws(`/api/retros/${testIds.r2}`)
         .send(retroToken)
         .expectJson()
         .sendJson({ change: { name: { $set: 'bar' } }, id: 7 })
@@ -178,7 +192,7 @@ describe('Server', () => {
         .expectClosed();
 
       await request(server)
-        .ws(`/api/retros/${r2}`)
+        .ws(`/api/retros/${testIds.r2}`)
         .send(retroToken)
         .expectJson(({ change }) => (change.$set.name === 'bar'))
         .close()
@@ -187,7 +201,7 @@ describe('Server', () => {
 
     it('closes the connection for incorrect tokens', async () => {
       await request(server)
-        .ws(`/api/retros/${r1}`)
+        .ws(`/api/retros/${testIds.r1}`)
         .send('nope')
         .expectClosed();
     });
@@ -202,9 +216,9 @@ describe('Server', () => {
 
   describe('/api/retros/retro-id/archives/archive-id', () => {
     it('responds with retro archives in JSON format', async () => {
-      const retroToken = await getRetroToken(r1);
+      const retroToken = await getRetroToken(testIds.r1);
       const response = await request(server)
-        .get(`/api/retros/${r1}/archives/${a1a}`)
+        .get(`/api/retros/${testIds.r1}/archives/${testIds.a1a}`)
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -214,21 +228,21 @@ describe('Server', () => {
 
     it('responds HTTP Unauthorized if no credentials are given', async () => {
       await request(server)
-        .get(`/api/retros/${r1}/archives/nope`)
+        .get(`/api/retros/${testIds.r1}/archives/nope`)
         .expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async () => {
       await request(server)
-        .get(`/api/retros/${r1}/archives/nope`)
+        .get(`/api/retros/${testIds.r1}/archives/nope`)
         .set('Authorization', 'Bearer nope')
         .expect(401);
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
-      const retroToken = await getRetroToken(r1);
+      const retroToken = await getRetroToken(testIds.r1);
       await request(server)
-        .get(`/api/retros/${r1}/archives/${a2}`)
+        .get(`/api/retros/${testIds.r1}/archives/${testIds.a2a}`)
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(404);
     });

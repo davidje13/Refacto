@@ -18,10 +18,10 @@ const filterArchiveSummaryInformation = ({ id, created }) => ({
 });
 
 export default class InMemoryRetroService {
-  constructor() {
+  constructor(simulatedDelay = 0, simulatedSocketDelay = 0) {
     this.data = [];
-    this.simulatedDelay = 0;
-    this.simulatedSocketDelay = 0;
+    this.simulatedDelay = simulatedDelay;
+    this.simulatedSocketDelay = simulatedSocketDelay;
   }
 
   async internalDistribute(retroData, change, meta = {}) {
