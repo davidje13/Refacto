@@ -107,14 +107,6 @@ export default class InMemoryRetroService {
       .map(filterSummaryInformation);
   }
 
-  async getRetro(retroId) {
-    const retroData = await this.findRetroById(retroId);
-    if (!retroData) {
-      return null;
-    }
-    return retroData.retro;
-  }
-
   async subscribeRetro(retroId, onChange) {
     const retroData = await this.findRetroById(retroId);
     if (!retroData) {

@@ -170,30 +170,6 @@ export default class ApiRouter extends Router {
       res.status(200).json({ id });
     });
 
-    this.get('/retros/:retroId', async (req, res) => {
-      const { retroId } = req.params;
-      const auth = await getRetroAuthentication(req, retroId);
-      if (!auth) {
-        res
-          .status(401)
-          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="read"`)
-          .end();
-        return;
-      }
-      if (!auth.readArchives) {
-        res.status(403).end();
-        return;
-      }
-
-      const retro = await retroService.getRetro(retroId);
-
-      if (retro) {
-        res.json(retro);
-      } else {
-        res.status(404).end();
-      }
-    });
-
     this.ws('/retros/:retroId', async (req, ws) => {
       const { retroId } = req.params;
       let auth = await getRetroAuthentication(req, retroId);

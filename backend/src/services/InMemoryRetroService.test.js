@@ -58,16 +58,20 @@ describe('InMemoryRetroService', () => {
     });
   });
 
-  describe('getRetro', () => {
+  describe('subscribeRetro', () => {
     it('returns the requested retro by ID', async () => {
-      const retro = await service.getRetro(r2);
+      const subscription = await service.subscribeRetro(r2, () => {});
+      const retro = subscription.getInitialData();
+      subscription.close();
 
       expect(retro).not.toBeNull();
       expect(retro.name).toEqual('My Second Retro');
     });
 
     it('returns full details', async () => {
-      const retro = await service.getRetro(r2);
+      const subscription = await service.subscribeRetro(r2, () => {});
+      const retro = subscription.getInitialData();
+      subscription.close();
 
       expect(retro).not.toBeNull();
       expect(retro.data.format).toEqual('other');
@@ -76,7 +80,9 @@ describe('InMemoryRetroService', () => {
     });
 
     it('returns summary archive details', async () => {
-      const retro = await service.getRetro(r2);
+      const subscription = await service.subscribeRetro(r2, () => {});
+      const retro = subscription.getInitialData();
+      subscription.close();
 
       expect(retro).not.toBeNull();
       expect(retro.archives.length).toEqual(2);
@@ -84,9 +90,9 @@ describe('InMemoryRetroService', () => {
     });
 
     it('returns null if the ID is not found', async () => {
-      const retro = await service.getRetro('nope');
+      const subscription = await service.subscribeRetro('nope', () => {});
 
-      expect(retro).toBeNull();
+      expect(subscription).toBeNull();
     });
   });
 

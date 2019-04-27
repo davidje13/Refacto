@@ -155,32 +155,6 @@ describe('Server', () => {
     });
   });
 
-  describe('/api/retros/retro-id', () => {
-    it('responds with retros in JSON format', async () => {
-      const retroToken = await getRetroToken(r1);
-      const response = await request(server)
-        .get(`/api/retros/${r1}`)
-        .set('Authorization', `Bearer ${retroToken}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body.name).toEqual('My Retro');
-    });
-
-    it('responds HTTP Unauthorized if no credentials are given', async () => {
-      await request(server)
-        .get(`/api/retros/${r1}`)
-        .expect(401);
-    });
-
-    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
-      await request(server)
-        .get(`/api/retros/${r1}`)
-        .set('Authorization', 'Bearer Foo')
-        .expect(401);
-    });
-  });
-
   describe('ws://api/retros/retro-id', () => {
     it('sends initial replace-all retro data for known retro IDs', async () => {
       const retroToken = await getRetroToken(r1);
