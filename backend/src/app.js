@@ -5,9 +5,10 @@ import ApiSsoRouter from './routers/ApiSsoRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
+import InMemoryMap from './persistence/InMemoryMap';
 import RetroService from './services/InMemoryRetroService';
-import RetroAuthService from './services/InMemoryRetroAuthService';
-import UserAuthService from './services/InMemoryUserAuthService';
+import RetroAuthService from './services/RetroAuthService';
+import UserAuthService from './services/UserAuthService';
 import getEnv from './helpers/getEnv';
 
 const ssoConfig = {};
@@ -47,18 +48,15 @@ if (githubClientId) {
   };
 }
 
+const configMap = new InMemoryMap();
+const retroAuthMap = new InMemoryMap();
+
 const hasher = new Hasher(secretPepper, hasherWorkFactor);
 const tokenManager = new TokenManager(secretPrivateKeyPassphrase);
 
 export const retroService = new RetroService();
-retroService.simulatedDelay = 50;
-retroService.simulatedSocketDelay = 50;
-
-export const retroAuthService = new RetroAuthService(hasher, tokenManager);
-retroAuthService.simulatedDelay = 50;
-
+export const retroAuthService = new RetroAuthService(retroAuthMap, hasher, tokenManager);
 export const userAuthService = new UserAuthService(tokenManager);
-userAuthService.simulatedDelay = 50;
 
 const app = new WebSocketExpress();
 
@@ -70,7 +68,11 @@ app.use('/api/config', new ApiConfigRouter(clientConfig));
 app.use('/api/sso', new ApiSsoRouter(userAuthService, ssoConfig));
 app.use(new StaticRouter());
 
-// TODO: key storage / sharing
-userAuthService.generateKeys();
+userAuthService.initialise(configMap);
+
+configMap.simulatedDelay = 50;
+retroAuthMap.simulatedDelay = 50;
+retroService.simulatedDelay = 50;
+retroService.simulatedSocketDelay = 50;
 
 export default app;

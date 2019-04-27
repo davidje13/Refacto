@@ -1,20 +1,13 @@
-function sleep(millis) {
-  // Simulate data access delays to ensure non-flakey e2e tests, etc.
-  return new Promise((resolve) => setTimeout(resolve, millis));
-}
-
-export default class InMemoryRetroAuthService {
-  constructor(hasher, tokenManager) {
+export default class RetroAuthService {
+  constructor(retroAuthMap, hasher, tokenManager) {
     this.hasher = hasher;
     this.tokenManager = tokenManager;
-    this.data = new Map();
-    this.simulatedDelay = 0;
+    this.retroAuthMap = retroAuthMap;
   }
 
   async setPassword(retroId, password) {
-    await sleep(this.simulatedDelay);
     const keys = await this.tokenManager.generateKeys();
-    this.data.set(retroId, {
+    await this.retroAuthMap.set(retroId, {
       hash: await this.hasher.hash(password),
       privateKey: keys.privateKey,
       publicKey: keys.publicKey,
@@ -22,8 +15,7 @@ export default class InMemoryRetroAuthService {
   }
 
   async exchangePassword(retroId, password, tokenData) {
-    await sleep(this.simulatedDelay);
-    const retroData = this.data.get(retroId);
+    const retroData = await this.retroAuthMap.get(retroId);
     if (!retroData) {
       return null;
     }
@@ -40,8 +32,7 @@ export default class InMemoryRetroAuthService {
   }
 
   async grantToken(retroId, tokenData) {
-    await sleep(this.simulatedDelay);
-    const retroData = this.data.get(retroId);
+    const retroData = await this.retroAuthMap.get(retroId);
     if (!retroData) {
       return null;
     }
@@ -50,8 +41,7 @@ export default class InMemoryRetroAuthService {
   }
 
   async readAndVerifyToken(retroId, retroToken) {
-    await sleep(this.simulatedDelay);
-    const retroData = this.data.get(retroId);
+    const retroData = await this.retroAuthMap.get(retroId);
     if (!retroData) {
       return false;
     }
