@@ -5,14 +5,16 @@ import ApiSsoRouter from './routers/ApiSsoRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
-import InMemoryMap from './persistence/InMemoryMap';
 import RetroService from './services/InMemoryRetroService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
+import connectDb from './persistence/connectDb';
 
 export default async (config) => {
-  const configMap = new InMemoryMap(config.mock.ioDelay);
-  const retroAuthMap = new InMemoryMap(config.mock.ioDelay);
+  const db = await connectDb(config.db, config.mock.ioDelay);
+
+  const configMap = await db.getMap('config');
+  const retroAuthMap = await db.getMap('retro_auth');
 
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);

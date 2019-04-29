@@ -81,3 +81,122 @@ TOKEN_SECRET_PASSPHRASE=asecretwhichmustnotbeknown npm start
 **If this value ever changes, you will need to regenerate all key
 pairs. This will invalidate any active sessions, forcing all users to
 reauthenticate.**
+
+## MongoDB
+
+### User authentication (access control)
+
+Before configuring authentication, you should create the database,
+collections and indexes necessary; the `refacto` user will not have
+permission to change these. You can do this by running the application
+without exposing it to the internet; after startup the configuration
+will be complete.
+
+1. Create users:
+
+   ```
+   use admin
+   db.createUser({
+     user: 'admin',
+     pwd: '<something secret>',
+     roles: [
+       { role: 'userAdminAnyDatabase', db: 'admin' },
+       'readWriteAnyDatabase',
+     ],
+   });
+   
+   use refacto
+   db.createUser({
+     user: 'refacto',
+     pwd: '<another secret>',
+     roles: [
+       { role: 'readWrite', db: 'refacto' },
+     ],
+   });
+   ```
+
+2. Enforce authorization:
+
+   ```bash
+   echo 'security.authorization: enabled' >> /usr/local/etc/mongod.conf
+   brew services restart mongodb
+   ```
+
+You can now connect as the `admin` user:
+
+```bash
+mongo --authenticationDatabase admin -u admin -p
+```
+
+And configure Refacto to connect as the `refacto` user:
+
+```bash
+DB_URL=mongodb://refacto:<pass>@localhost:27017/refacto npm start
+```
+
+<https://docs.mongodb.com/manual/tutorial/enable-authentication/>
+
+### Encrypted communication
+
+To enable SSL (encrypted) communications, but without server or client
+identity checks:
+
+```bash
+# macOS
+MONGO_VAR="/usr/local/var/mongodb"
+MONGO_CONF="/usr/local/etc/mongod.conf"
+
+# Ubuntu
+MONGO_VAR="/var/mongodb"
+MONGO_CONF="/etc/mongod.conf"
+
+openssl req \
+  -x509 \
+  -newkey rsa:4096 \
+  -keyout "$MONGO_VAR/server-key.pem" \
+  -out "$MONGO_VAR/server-cert.pem" \
+  -subj "/C=/ST=/L=/O=/OU=/CN=localhost" \
+  -nodes \
+  -days 36500 \
+  -batch
+
+cat \
+  "$MONGO_VAR/server-key.pem" \
+  "$MONGO_VAR/server-cert.pem" \
+  > "$MONGO_VAR/server.pem"
+
+cat <<EOF >> "$MONGO_CONF"
+net.ssl:
+  mode: requireSSL
+  PEMKeyFile: $MONGO_VAR/server.pem
+EOF
+
+# macOS
+brew services restart mongodb
+
+# Ubuntu
+sudo service mongod restart
+```
+
+After enabling security, change the database URL when starting Refacto:
+
+```bash
+DB_URL=mongodb://localhost:27017/refacto?ssl=true npm start
+```
+
+Note that after enabling this, unless you also configure identity
+checks, you will need to skip certificate validation when connecting
+via the commandline:
+
+```bash
+mongo --ssl --sslAllowInvalidCertificates
+```
+
+### Client / server identity checks
+
+If the database is running on a separate server, you should enable
+client & server identity checks. The following resources offer
+guidance:
+
+- <https://docs.mongodb.com/manual/tutorial/configure-ssl/>
+- <https://medium.com/@rajanmaharjan/secure-your-mongodb-connections-ssl-tls-92e2addb3c89>

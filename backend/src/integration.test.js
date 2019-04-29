@@ -9,6 +9,9 @@ const config = {
   token: {
     secretPassphrase: 'foobar',
   },
+  db: {
+    url: null,
+  },
   sso: {},
   mock: {
     ioDelay: 0,

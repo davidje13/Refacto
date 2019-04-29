@@ -9,9 +9,10 @@ npm start
 The site (both frontend resources and backend API) will be available at
 <http://localhost:5000/>. Both will automatically rebuild if changed.
 
-By default, this will run a mock Google authentication provider.
-To enable real authentication providers (e.g. Google sign in), see the
-instructions in the main [README.md](../README.md).
+By default, this will run a mock Google authentication provider and an
+in-memory database. To enable real authentication providers (e.g.
+Google sign in) and data persistence, see the
+[services documentation](./SERVICES.md).
 
 ## Running tests
 
@@ -100,6 +101,12 @@ cd build
 npm install --production
 PORT=8080 npm start
 ```
+
+See the [services documentation](./SERVICES.md) for details on
+setting up a database and integrating with authentication providers.
+
+See the [security documentation](./SECURITY.md) for additional
+considerations when running in production.
 
 ## Dependency management
 

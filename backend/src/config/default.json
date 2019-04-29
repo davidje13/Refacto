@@ -8,6 +8,9 @@
   "token": {
     "secret_passphrase": ""
   },
+  "db": {
+    "url": null
+  },
   "sso": {
     "google": {
       "client_id": null,

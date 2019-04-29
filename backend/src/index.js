@@ -9,18 +9,33 @@ import config from './config';
 let activeApp = null;
 const server = http.createServer();
 
+function startServer() {
+  server.listen(config.port, () => {
+    process.stdout.write(`Available at http://localhost:${config.port}/\n`);
+    process.stdout.write('Press Ctrl+C to stop\n');
+  });
+}
+
 let latestNonce = {};
 async function refreshApp() {
   const currentNonce = {};
   latestNonce = currentNonce;
-  const newApp = await appFactory(config); // app import updated by HMR magic
+  try {
+    const newApp = await appFactory(config); // app import updated by HMR magic
 
-  if (latestNonce === currentNonce) {
-    if (activeApp) {
-      activeApp.detach(server);
+    if (latestNonce === currentNonce) {
+      if (activeApp) {
+        activeApp.detach(server);
+      } else {
+        startServer();
+      }
+      activeApp = newApp;
+      activeApp.attach(server);
     }
-    activeApp = newApp;
-    activeApp.attach(server);
+  } catch (e) {
+    process.stderr.write('Failed to start server\n');
+    process.stderr.write(`${e.message}\n`);
+    process.exit(1);
   }
 }
 
@@ -29,18 +44,13 @@ if (module.hot) {
   module.hot.accept(['./app', './config'], refreshApp);
 }
 
-const { port, mock: { ssoPort } } = config;
-
-if (ssoPort) {
+if (config.mock.ssoPort) {
   // Dev mode: run an additional mock SSO server
   import('./mock-sso/sso')
-    .then(({ default: ssoApp }) => ssoApp.listen(ssoPort))
+    .then(({ default: ssoApp }) => ssoApp.listen(config.mock.ssoPort))
     .catch(() => {
       process.stderr.write('Failed to start mock SSO server\n');
     });
 }
 
-refreshApp().then(() => server.listen(port, () => {
-  process.stdout.write(`Available at http://localhost:${port}/\n`);
-  process.stdout.write('Press Ctrl+C to stop\n');
-}));
+refreshApp();
