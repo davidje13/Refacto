@@ -158,16 +158,18 @@ export default class ApiRouter extends Router {
         return;
       }
 
-      const retroId = await retroService.getRetroIdForSlug(slug);
-      if (retroId !== null) {
-        res.status(409).json({ error: 'URL is already taken' });
-        return;
+      try {
+        const id = await retroService.createRetro(auth.id, slug, name, 'mood');
+        await retroAuthService.setPassword(id, password);
+
+        res.status(200).json({ id });
+      } catch (e) {
+        if (e.message === 'slug exists') {
+          res.status(409).json({ error: 'URL is already taken' });
+          return;
+        }
+        throw e;
       }
-
-      const id = await retroService.createRetro(auth.id, slug, name, 'mood');
-      await retroAuthService.setPassword(id, password);
-
-      res.status(200).json({ id });
     });
 
     this.ws('/retros/:retroId', async (req, ws) => {
