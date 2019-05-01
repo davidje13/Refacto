@@ -9,6 +9,8 @@ import RetroService from './services/InMemoryRetroService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 import connectDb from './persistence/connectDb';
+import InMemoryTopic from './queue/InMemoryTopic';
+import TopicMap from './queue/TopicMap';
 
 export default async (config) => {
   const db = await connectDb(config.db, config.mock.ioDelay);
@@ -19,7 +21,12 @@ export default async (config) => {
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
-  const retroService = new RetroService(config.mock.ioDelay);
+  const retroChangeSubs = new TopicMap(() => new InMemoryTopic());
+
+  const retroService = new RetroService(
+    retroChangeSubs,
+    config.mock.ioDelay,
+  );
   const retroAuthService = new RetroAuthService(
     retroAuthMap,
     hasher,

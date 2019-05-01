@@ -190,7 +190,7 @@ export default class ApiRouter extends Router {
 
       const mySourceId = idProvider.get();
 
-      const onChange = (change, { id, sourceId }) => {
+      const onChange = ({ change, meta: { id, sourceId } }) => {
         const message = { change };
         if (sourceId === mySourceId) {
           message.id = id;

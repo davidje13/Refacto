@@ -1,12 +1,22 @@
 import InMemoryRetroService from './InMemoryRetroService';
 
+/* eslint-disable class-methods-use-this */
+class StubTopicMap {
+  add() {}
+
+  remove() {}
+
+  broadcast() {}
+}
+/* eslint-enable class-methods-use-this */
+
 describe('InMemoryRetroService', () => {
   let service;
   let r1;
   let r2;
 
   beforeEach(async () => {
-    service = new InMemoryRetroService();
+    service = new InMemoryRetroService(new StubTopicMap());
     r1 = await service.createRetro(
       'me',
       'my-retro',

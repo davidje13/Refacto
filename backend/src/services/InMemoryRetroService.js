@@ -18,9 +18,9 @@ const filterArchiveSummaryInformation = ({ id, created }) => ({
 });
 
 export default class InMemoryRetroService {
-  constructor(simulatedDelay = 0) {
+  constructor(retroChangeSubs, simulatedDelay = 0) {
     this.data = [];
-    this.subscriptions = new Map();
+    this.retroChangeSubs = retroChangeSubs;
     this.simulatedDelay = simulatedDelay;
   }
 
@@ -42,38 +42,12 @@ export default class InMemoryRetroService {
     }
   }
 
-  addSubscriber(retroId, sub) {
-    let subscribers = this.subscriptions.get(retroId);
-    if (!subscribers) {
-      subscribers = new Set();
-      this.subscriptions.set(retroId, subscribers);
-    }
-    subscribers.add(sub);
-  }
-
-  removeSubscriber(retroId, sub) {
-    const subscribers = this.subscriptions.get(retroId);
-    if (subscribers) {
-      subscribers.delete(sub);
-      if (!subscribers.length) {
-        this.subscriptions.delete(retroId);
-      }
-    }
-  }
-
-  broadcastSubscribers(retroId, ...args) {
-    const subscribers = this.subscriptions.get(retroId);
-    if (subscribers) {
-      subscribers.forEach((sub) => sub(...args));
-    }
-  }
-
   async internalDistribute(retroId, change, meta = {}) {
     const retroData = await this.findRetroById(retroId);
     const newRetroData = update(retroData, { retro: change });
     await this.updateRetroById(retroId, newRetroData);
 
-    this.broadcastSubscribers(retroId, change, meta);
+    this.retroChangeSubs.broadcast(retroId, { change, meta });
   }
 
   async getRetroIdForSlug(slug) {
@@ -147,7 +121,7 @@ export default class InMemoryRetroService {
       return null;
     }
 
-    this.addSubscriber(retroId, onChange);
+    this.retroChangeSubs.add(retroId, onChange);
 
     let initialData = retroData.retro;
 
@@ -158,7 +132,7 @@ export default class InMemoryRetroService {
         return data;
       },
       send: (change, meta) => this.internalDistribute(retroId, change, meta),
-      close: () => this.removeSubscriber(retroId, onChange),
+      close: () => this.retroChangeSubs.remove(retroId, onChange),
     };
   }
 
