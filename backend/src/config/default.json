@@ -27,7 +27,6 @@
   },
   "mock": {
     "io_delay": 0,
-    "stream_delay": 0,
     "sso_port": null
   }
 }

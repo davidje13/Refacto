@@ -18,17 +18,10 @@ const filterArchiveSummaryInformation = ({ id, created }) => ({
 });
 
 export default class InMemoryRetroService {
-  constructor(simulatedDelay = 0, simulatedSocketDelay = 0) {
+  constructor(simulatedDelay = 0) {
     this.data = [];
+    this.subscriptions = new Map();
     this.simulatedDelay = simulatedDelay;
-    this.simulatedSocketDelay = simulatedSocketDelay;
-  }
-
-  async internalDistribute(retroData, change, meta = {}) {
-    await sleep(this.simulatedSocketDelay);
-    /* eslint-disable-next-line no-param-reassign */ // shared data
-    retroData.retro = update(retroData.retro, change);
-    retroData.subscriptions.forEach((sub) => sub(change, meta));
   }
 
   async findRetroBySlug(slug) {
@@ -39,6 +32,48 @@ export default class InMemoryRetroService {
   async findRetroById(id) {
     await sleep(this.simulatedDelay);
     return this.data.find((retroData) => (retroData.id === id));
+  }
+
+  async updateRetroById(id, newData) {
+    await sleep(this.simulatedDelay);
+    const index = this.data.findIndex((retroData) => (retroData.id === id));
+    if (index !== -1) {
+      this.data[index] = newData;
+    }
+  }
+
+  addSubscriber(retroId, sub) {
+    let subscribers = this.subscriptions.get(retroId);
+    if (!subscribers) {
+      subscribers = new Set();
+      this.subscriptions.set(retroId, subscribers);
+    }
+    subscribers.add(sub);
+  }
+
+  removeSubscriber(retroId, sub) {
+    const subscribers = this.subscriptions.get(retroId);
+    if (subscribers) {
+      subscribers.delete(sub);
+      if (!subscribers.length) {
+        this.subscriptions.delete(retroId);
+      }
+    }
+  }
+
+  broadcastSubscribers(retroId, ...args) {
+    const subscribers = this.subscriptions.get(retroId);
+    if (subscribers) {
+      subscribers.forEach((sub) => sub(...args));
+    }
+  }
+
+  async internalDistribute(retroId, change, meta = {}) {
+    const retroData = await this.findRetroById(retroId);
+    const newRetroData = update(retroData, { retro: change });
+    await this.updateRetroById(retroId, newRetroData);
+
+    this.broadcastSubscribers(retroId, change, meta);
   }
 
   async getRetroIdForSlug(slug) {
@@ -74,7 +109,6 @@ export default class InMemoryRetroService {
         archives: archives.map(filterArchiveSummaryInformation),
       },
       archives,
-      subscriptions: [],
     });
 
     return id;
@@ -92,7 +126,7 @@ export default class InMemoryRetroService {
       data: retroData.retro.data,
     });
 
-    await this.internalDistribute(retroData, {
+    await this.internalDistribute(retroId, {
       data: { items: { $set: [] } },
       archives: { $push: [{ id, created }] },
     });
@@ -113,8 +147,7 @@ export default class InMemoryRetroService {
       return null;
     }
 
-    const { subscriptions } = retroData;
-    subscriptions.push(onChange);
+    this.addSubscriber(retroId, onChange);
 
     let initialData = retroData.retro;
 
@@ -124,11 +157,8 @@ export default class InMemoryRetroService {
         initialData = null; // GC
         return data;
       },
-      send: (change, meta) => this.internalDistribute(retroData, change, meta),
-      close: () => {
-        const i = subscriptions.indexOf(onChange);
-        subscriptions.splice(i, 1);
-      },
+      send: (change, meta) => this.internalDistribute(retroId, change, meta),
+      close: () => this.removeSubscriber(retroId, onChange),
     };
   }
 

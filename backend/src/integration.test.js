@@ -15,7 +15,6 @@ const config = {
   sso: {},
   mock: {
     ioDelay: 0,
-    streamDelay: 0,
   },
 };
 

@@ -19,10 +19,7 @@ export default async (config) => {
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
-  const retroService = new RetroService(
-    config.mock.ioDelay,
-    config.mock.streamDelay,
-  );
+  const retroService = new RetroService(config.mock.ioDelay);
   const retroAuthService = new RetroAuthService(
     retroAuthMap,
     hasher,
