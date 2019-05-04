@@ -12,6 +12,8 @@ const ArchiveListPage = ({ slug, retroState, error }) => {
   const retro = retroState?.retro;
   const retroName = retro?.name || slug;
 
+  // TODO: archives are not stored in retro data any more
+
   return (
     <article className="page-archive-list">
       <Header
@@ -20,7 +22,7 @@ const ArchiveListPage = ({ slug, retroState, error }) => {
         backLink={{ label: 'Back to Retro', url: `/retros/${slug}` }}
       />
       <Loader
-        loading={!retro}
+        loading={!retro?.archives}
         error={error}
         Component={ArchiveList}
         slug={slug}

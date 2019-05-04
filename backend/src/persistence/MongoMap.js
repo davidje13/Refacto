@@ -22,8 +22,4 @@ export default class MongoMap {
     }
     return raw.v;
   }
-
-  unset(key) {
-    return this.collection.deleteOne({ _id: key });
-  }
 }

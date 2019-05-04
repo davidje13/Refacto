@@ -1,4 +1,5 @@
-import InMemoryRetroService from './InMemoryRetroService';
+import RetroService from './RetroService';
+import InMemoryDb from '../persistence/InMemoryDb';
 
 /* eslint-disable class-methods-use-this */
 class StubTopicMap {
@@ -10,13 +11,16 @@ class StubTopicMap {
 }
 /* eslint-enable class-methods-use-this */
 
-describe('InMemoryRetroService', () => {
+describe('RetroService', () => {
   let service;
   let r1;
   let r2;
+  let a2a;
 
   beforeEach(async () => {
-    service = new InMemoryRetroService(new StubTopicMap());
+    const db = new InMemoryDb();
+    const topic = new StubTopicMap();
+    service = new RetroService(db, topic);
     r1 = await service.createRetro(
       'me',
       'my-retro',
@@ -28,17 +32,13 @@ describe('InMemoryRetroService', () => {
       'my-second-retro',
       'My Second Retro',
       'other',
-      {
-        state: { someRetroSpecificState: true },
-        items: [
-          { anItem: 'yes' },
-        ],
-        archives: [
-          { id: 'a1', created: 123, more: 'foo' },
-          { id: 'a2', created: 456, more: 'bar' },
-        ],
-      },
     );
+    await service.internalDistribute(r2, {
+      state: { $set: { someRetroSpecificState: true } },
+      data: { items: { $push: [{ anItem: 'yes' }] } },
+    });
+    a2a = await service.createArchive(r2, { format: 'foo' });
+    await service.createArchive(r2, { format: 'bar' });
   });
 
   describe('getRetroIdForSlug', () => {
@@ -89,16 +89,6 @@ describe('InMemoryRetroService', () => {
       expect(retro.state).toEqual({ someRetroSpecificState: true });
     });
 
-    it('returns summary archive details', async () => {
-      const subscription = await service.subscribeRetro(r2, () => {});
-      const retro = subscription.getInitialData();
-      subscription.close();
-
-      expect(retro).not.toBeNull();
-      expect(retro.archives.length).toEqual(2);
-      expect(retro.archives[0]).toEqual({ id: 'a1', created: 123 });
-    });
-
     it('returns null if the ID is not found', async () => {
       const subscription = await service.subscribeRetro('nope', () => {});
 
@@ -108,14 +98,14 @@ describe('InMemoryRetroService', () => {
 
   describe('getRetroArchive', () => {
     it('returns the requested retro archive by ID', async () => {
-      const archive = await service.getRetroArchive(r2, 'a1');
+      const archive = await service.getRetroArchive(r2, a2a);
 
       expect(archive).not.toBeNull();
-      expect(archive.created).toEqual(123);
+      expect(archive.data.format).toEqual('foo');
     });
 
     it('returns null if the archive is not in the retro', async () => {
-      const archive = await service.getRetroArchive(r1, 'a1');
+      const archive = await service.getRetroArchive(r1, a2a);
 
       expect(archive).toBeNull();
     });

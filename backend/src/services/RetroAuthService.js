@@ -1,21 +1,27 @@
 export default class RetroAuthService {
-  constructor(retroAuthMap, hasher, tokenManager) {
+  constructor(db, hasher, tokenManager) {
     this.hasher = hasher;
     this.tokenManager = tokenManager;
-    this.retroAuthMap = retroAuthMap;
+    this.retroAuthCollection = db.getCollection('retro_auth');
   }
 
-  async setPassword(retroId, password) {
-    const keys = await this.tokenManager.generateKeys();
-    await this.retroAuthMap.set(retroId, {
-      hash: await this.hasher.hash(password),
-      privateKey: keys.privateKey,
-      publicKey: keys.publicKey,
-    });
+  async setPassword(retroId, password, { cycleKeys = true } = {}) {
+    const hash = await this.hasher.hash(password);
+    if (cycleKeys) {
+      const keys = await this.tokenManager.generateKeys();
+      await this.retroAuthCollection.update('id', retroId, {
+        hash,
+        privateKey: keys.privateKey,
+        publicKey: keys.publicKey,
+      }, { upsert: true });
+    } else {
+      await this.retroAuthCollection.update('id', retroId, { hash });
+    }
   }
 
   async exchangePassword(retroId, password, tokenData) {
-    const retroData = await this.retroAuthMap.get(retroId);
+    const retroData = await this.retroAuthCollection
+      .get('id', retroId, ['hash']);
     if (!retroData) {
       return null;
     }
@@ -26,13 +32,14 @@ export default class RetroAuthService {
     }
 
     if (this.hasher.needsRegenerate(retroData.hash)) {
-      this.setPassword(retroId, password);
+      this.setPassword(retroId, password, { cycleKeys: false });
     }
-    return this.tokenManager.signData(tokenData, retroData.privateKey);
+    return this.grantToken(retroId, tokenData);
   }
 
   async grantToken(retroId, tokenData) {
-    const retroData = await this.retroAuthMap.get(retroId);
+    const retroData = await this.retroAuthCollection
+      .get('id', retroId, ['privateKey']);
     if (!retroData) {
       return null;
     }
@@ -41,7 +48,8 @@ export default class RetroAuthService {
   }
 
   async readAndVerifyToken(retroId, retroToken) {
-    const retroData = await this.retroAuthMap.get(retroId);
+    const retroData = await this.retroAuthCollection
+      .get('id', retroId, ['publicKey']);
     if (!retroData) {
       return false;
     }

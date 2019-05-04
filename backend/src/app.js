@@ -5,7 +5,7 @@ import ApiSsoRouter from './routers/ApiSsoRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
-import RetroService from './services/InMemoryRetroService';
+import RetroService from './services/RetroService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 import connectDb from './persistence/connectDb';
@@ -15,23 +15,13 @@ import TopicMap from './queue/TopicMap';
 export default async (config) => {
   const db = await connectDb(config.db, config.mock.ioDelay);
 
-  const configMap = await db.getMap('config');
-  const retroAuthMap = await db.getMap('retro_auth');
-
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
   const retroChangeSubs = new TopicMap(() => new InMemoryTopic());
 
-  const retroService = new RetroService(
-    retroChangeSubs,
-    config.mock.ioDelay,
-  );
-  const retroAuthService = new RetroAuthService(
-    retroAuthMap,
-    hasher,
-    tokenManager,
-  );
+  const retroService = new RetroService(db, retroChangeSubs);
+  const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
   const userAuthService = new UserAuthService(tokenManager);
 
   const app = new WebSocketExpress();
@@ -45,7 +35,7 @@ export default async (config) => {
   app.use('/api/sso', new ApiSsoRouter(userAuthService, config.sso));
   app.use(new StaticRouter(config.forwardHost));
 
-  await userAuthService.initialise(configMap);
+  await userAuthService.initialise(db);
 
   app.testHooks = {
     retroService,

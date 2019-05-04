@@ -5,7 +5,8 @@ export default class UserAuthService {
     this.publicKey = null;
   }
 
-  async initialise(configMap) {
+  async initialise(db) {
+    const configMap = db.getMap('config');
     let keys = await configMap.get('user-auth-keys');
     if (!keys) {
       keys = await this.tokenManager.generateKeys();

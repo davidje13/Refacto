@@ -221,6 +221,30 @@ export default class ApiRouter extends Router {
       }));
     });
 
+    this.get('/retros/:retroId/archives', async (req, res) => {
+      const { retroId } = req.params;
+      const auth = await getRetroAuthentication(req, retroId);
+      if (!auth) {
+        res
+          .status(401)
+          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="readArchives"`)
+          .end();
+        return;
+      }
+      if (!auth.readArchives) {
+        res.status(403).end();
+        return;
+      }
+
+      const archives = await retroService.getRetroArchiveList(retroId);
+
+      if (archives) {
+        res.json(archives);
+      } else {
+        res.status(404).end();
+      }
+    });
+
     this.post('/retros/:retroId/archives', async (req, res) => {
       const { retroId } = req.params;
       const auth = await getRetroAuthentication(req, retroId);
@@ -236,7 +260,8 @@ export default class ApiRouter extends Router {
         return;
       }
 
-      const id = await retroService.createArchive(retroId);
+      const { format, items } = req.body;
+      const id = await retroService.createArchive(retroId, { format, items });
 
       res.status(200).json({ id });
     });

@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import MongoMap from './MongoMap';
+import MongoCollection from './MongoCollection';
 
 export default class MongoDb {
   static async connect({ url }) {
@@ -17,5 +18,10 @@ export default class MongoDb {
   getMap(name) {
     const collection = this.db.collection(name);
     return new MongoMap(collection);
+  }
+
+  getCollection(name, keys) {
+    const collection = this.db.collection(name);
+    return new MongoCollection(collection, keys);
   }
 }

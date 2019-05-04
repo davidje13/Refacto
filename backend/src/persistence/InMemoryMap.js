@@ -27,10 +27,4 @@ export default class InMemoryMap {
     }
     return JSON.parse(raw);
   }
-
-  async unset(key) {
-    await sleep(this.simulatedDelay);
-
-    this.data.delete(key);
-  }
 }

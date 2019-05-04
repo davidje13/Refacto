@@ -27,18 +27,6 @@ async function makeTestApp() {
     'my-retro',
     'My Retro',
     'mood',
-    {
-      items: [
-        {
-          id: 'z9',
-          category: 'happy',
-          created: Date.now() - (86400000 * 10) - 198000,
-          message: 'An archived happy item.',
-          votes: 2,
-          done: false,
-        },
-      ],
-    },
   );
 
   const r2 = await retroService
@@ -47,9 +35,21 @@ async function makeTestApp() {
   const r3 = await retroService
     .createRetro('nobody', 'unknown-retro', 'An Unknown Retro Format', 'nope');
 
-  const a1a = await retroService.createArchive(r1);
-  const a1b = await retroService.createArchive(r1);
-  const a2a = await retroService.createArchive(r2);
+  const a1a = await retroService.createArchive(r1, {
+    format: 'mood',
+    items: [
+      {
+        id: 'z9',
+        category: 'happy',
+        created: Date.now() - (86400000 * 10) - 198000,
+        message: 'An archived happy item.',
+        votes: 2,
+        done: false,
+      },
+    ],
+  });
+  const a1b = await retroService.createArchive(r1, { format: 'mood' });
+  const a2a = await retroService.createArchive(r2, { format: 'mood' });
 
   await Promise.all([
     retroAuthService.setPassword(r1, 'password'),
