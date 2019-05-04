@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb';
-import MongoMap from './MongoMap';
 import MongoCollection from './MongoCollection';
 
 export default class MongoDb {
@@ -13,11 +12,6 @@ export default class MongoDb {
 
   constructor(db) {
     this.db = db;
-  }
-
-  getMap(name) {
-    const collection = this.db.collection(name);
-    return new MongoMap(collection);
   }
 
   getCollection(name, keys) {

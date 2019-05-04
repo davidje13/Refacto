@@ -6,11 +6,12 @@ export default class UserAuthService {
   }
 
   async initialise(db) {
-    const configMap = db.getMap('config');
-    let keys = await configMap.get('user-auth-keys');
+    const configCollection = db.getCollection('config');
+    let keys = await configCollection
+      .get('id', 'user-auth', ['privateKey', 'publicKey']);
     if (!keys) {
       keys = await this.tokenManager.generateKeys();
-      configMap.set('user-auth-keys', keys);
+      configCollection.add({ id: 'user-auth', ...keys });
     }
     this.privateKey = keys.privateKey;
     this.publicKey = keys.publicKey;
