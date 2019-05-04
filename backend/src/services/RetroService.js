@@ -30,23 +30,26 @@ export default class RetroService {
   }
 
   async createRetro(ownerId, slug, name, format) {
-    const existing = await this.retroCollection.get('slug', slug, ['id']);
-    if (existing) {
-      throw new Error('slug exists');
-    }
-
     const id = uuidv4();
 
-    await this.retroCollection.add({
-      id,
-      slug,
-      ownerId,
-      retro: {
-        name,
-        state: {},
-        data: { format, items: [] },
-      },
-    });
+    try {
+      await this.retroCollection.add({
+        id,
+        slug,
+        ownerId,
+        retro: {
+          name,
+          state: {},
+          data: { format, items: [] },
+        },
+      });
+    } catch (e) {
+      if (e.message === 'duplicate' || e.code === 11000) {
+        throw new Error('slug exists');
+      } else {
+        throw e;
+      }
+    }
 
     return id;
   }
