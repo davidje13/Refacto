@@ -1,13 +1,5 @@
-import { Notification } from 'rxjs';
+import { Notification, NotificationKind } from 'rxjs';
 import { useState, useLayoutEffect, useCallback } from 'react';
-
-// TODO: `import { NotificationKind } from 'rxjs';`
-// - awaiting release of https://github.com/ReactiveX/rxjs/pull/4514
-const NotificationKind = {
-  NEXT: 'N',
-  ERROR: 'E',
-  COMPLETE: 'C',
-};
 
 function isMaterialized(data, materialized) {
   if (typeof materialized === 'boolean') {
