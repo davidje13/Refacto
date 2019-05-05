@@ -13,7 +13,7 @@ import InMemoryTopic from './queue/InMemoryTopic';
 import TopicMap from './queue/TopicMap';
 
 export default async (config) => {
-  const db = await connectDb(config.db, config.mock.ioDelay);
+  const db = await connectDb(config.db);
 
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);

@@ -9,7 +9,7 @@
     "secret_passphrase": ""
   },
   "db": {
-    "url": null
+    "url": "memory://refacto"
   },
   "sso": {
     "google": {
@@ -26,7 +26,6 @@
     }
   },
   "mock": {
-    "io_delay": 0,
     "sso_port": null
   }
 }

@@ -10,12 +10,9 @@ const config = {
     secretPassphrase: 'foobar',
   },
   db: {
-    url: null,
+    url: 'memory://',
   },
   sso: {},
-  mock: {
-    ioDelay: 0,
-  },
 };
 
 async function makeTestApp() {

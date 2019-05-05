@@ -19,10 +19,10 @@ function applyFilter(data, fields) {
 }
 
 export default class InMemoryCollection {
-  constructor(keys = {}, simulatedDelay = 0) {
+  constructor(keys = {}, simulatedLatency = 0) {
     this.data = new Map();
     this.keys = new Map();
-    this.simulatedDelay = simulatedDelay;
+    this.simulatedLatency = simulatedLatency;
 
     Object.keys(keys).forEach((key) => {
       this.keys.set(key, { map: new Map(), options: keys[key] });
@@ -76,7 +76,7 @@ export default class InMemoryCollection {
   }
 
   async add(value) {
-    await sleep(this.simulatedDelay);
+    await sleep(this.simulatedLatency);
 
     this.internalCheckDuplicates(value);
     this.data.set(value.id, JSON.stringify(value));
@@ -84,7 +84,7 @@ export default class InMemoryCollection {
   }
 
   async update(keyName, key, value, { upsert = false } = {}) {
-    await sleep(this.simulatedDelay);
+    await sleep(this.simulatedLatency);
 
     const id = this.internalGetIds(keyName, key)[0];
     if (id === undefined) {
@@ -118,7 +118,7 @@ export default class InMemoryCollection {
   }
 
   async getAll(keyName, key, fields = null) {
-    await sleep(this.simulatedDelay);
+    await sleep(this.simulatedLatency);
 
     return this.internalGetIds(keyName, key)
       .map((id) => applyFilter(JSON.parse(this.data.get(id)), fields));

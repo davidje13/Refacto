@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 import MongoCollection from './MongoCollection';
 
 export default class MongoDb {
-  static async connect({ url }) {
+  static async connect(url) {
     const client = await MongoClient.connect(url, {
       poolSize: 20,
       useNewUrlParser: true,

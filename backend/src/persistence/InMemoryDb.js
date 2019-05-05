@@ -1,8 +1,15 @@
+import { URL } from 'url';
 import InMemoryCollection from './InMemoryCollection';
 
 export default class InMemoryDb {
-  constructor(simulatedDelay = 0) {
-    this.simulatedDelay = simulatedDelay;
+  static connect(url = 'memory://') {
+    const params = new URL(url).searchParams;
+    const simulatedLatency = Number(params.get('simulatedLatency'));
+    return new InMemoryDb({ simulatedLatency });
+  }
+
+  constructor({ simulatedLatency = 0 } = {}) {
+    this.simulatedLatency = simulatedLatency;
     this.mapTables = new Map();
   }
 
@@ -10,7 +17,7 @@ export default class InMemoryDb {
     if (!this.mapTables.has(name)) {
       this.mapTables.set(name, new InMemoryCollection(
         keys,
-        this.simulatedDelay,
+        this.simulatedLatency,
       ));
     }
     return this.mapTables.get(name);

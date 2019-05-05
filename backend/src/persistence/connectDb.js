@@ -1,18 +1,17 @@
 import InMemoryDb from './InMemoryDb';
 import MongoDb from './MongoDb';
 
-export default async function connectDb(config, simulatedDelay = 0) {
-  const target = config.url;
+export default async function connectDb({ url }) {
   try {
-    if (!target) {
-      return new InMemoryDb(simulatedDelay);
+    if (url.startsWith('memory')) {
+      return InMemoryDb.connect(url);
     }
-    if (target.startsWith('mongodb')) {
-      return await MongoDb.connect(config);
+    if (url.startsWith('mongodb')) {
+      return await MongoDb.connect(url);
     }
   } catch (e) {
     throw new Error(`Failed to connect to database: ${e.message}`);
   }
 
-  throw new Error(`Unknown database connection string: ${target}`);
+  throw new Error(`Unknown database connection string: ${url}`);
 }
