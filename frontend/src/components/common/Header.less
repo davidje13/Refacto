@@ -13,15 +13,19 @@
     text-align: center;
   }
 
+  .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+
   a {
+    display: inline-block;
     padding: 16px 12px;
     box-sizing: border-box;
     line-height: 1.8rem;
     height: 100%;
-
-    position: absolute;
-    top: 0;
-    right: 0;
 
     &:link, &:visited {
       color: #666666;
@@ -35,8 +39,9 @@
   }
 
   .back {
+    position: absolute;
+    top: 0;
     left: 0;
-    right: auto;
 
     &::before {
       content: "\2039";

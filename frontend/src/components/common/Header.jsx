@@ -17,9 +17,11 @@ const Header = ({
     { backLink && (
       <Link className="back" to={backLink.url}>{ backLink.label }</Link>
     ) }
-    { links.map(({ url, label }) => (
-      <Link key={url} to={url}>{ label }</Link>
-    )) }
+    <div className="menu">
+      { links.filter((link) => link).map(({ url, label }) => (
+        <Link key={url} to={url}>{ label }</Link>
+      )) }
+    </div>
   </header>
 );
 
