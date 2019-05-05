@@ -1,8 +1,8 @@
-import { MongoClient } from 'mongodb';
 import MongoCollection from './MongoCollection';
 
 export default class MongoDb {
   static async connect(url) {
+    const { MongoClient } = await import('mongodb');
     const client = await MongoClient.connect(url, {
       poolSize: 20,
       useNewUrlParser: true,
