@@ -1,4 +1,5 @@
 import WebSocketExpress from 'websocket-express';
+import CollectionStorage from 'collection-storage';
 import ApiRouter from './routers/ApiRouter';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiSsoRouter from './routers/ApiSsoRouter';
@@ -8,12 +9,11 @@ import TokenManager from './tokens/TokenManager';
 import RetroService from './services/RetroService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
-import connectDb from './persistence/connectDb';
 import InMemoryTopic from './queue/InMemoryTopic';
 import TopicMap from './queue/TopicMap';
 
 export default async (config) => {
-  const db = await connectDb(config.db);
+  const db = await CollectionStorage.connect(config.db.url);
 
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);

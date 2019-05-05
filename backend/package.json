@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.6",
+    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.0.0",
     "core-js": "3.0.1",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
     "jwt-simple": "^0.5.6",

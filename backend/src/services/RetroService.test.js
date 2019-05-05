@@ -1,5 +1,5 @@
+import { MemoryDb } from 'collection-storage';
 import RetroService from './RetroService';
-import InMemoryDb from '../persistence/InMemoryDb';
 
 /* eslint-disable class-methods-use-this */
 class StubTopicMap {
@@ -18,7 +18,7 @@ describe('RetroService', () => {
   let a2a;
 
   beforeEach(async () => {
-    const db = new InMemoryDb();
+    const db = new MemoryDb();
     const topic = new StubTopicMap();
     service = new RetroService(db, topic);
     r1 = await service.createRetro(

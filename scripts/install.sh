@@ -24,6 +24,7 @@ install_subproject() {
   if [[ ! -d "$BASEDIR/$PROJECT/node_modules" || "$FORCE" == 'true' ]]; then
     echo;
     echo "Installing $PROJECT dependencies...";
+    DISABLE_OPENCOLLECTIVE=1 \
     npm --prefix="$BASEDIR/$PROJECT" install --silent;
   fi;
 }
