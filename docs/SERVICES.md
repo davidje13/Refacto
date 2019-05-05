@@ -36,7 +36,8 @@ On Ubuntu, it can be installed with:
 apt install mongodb
 ```
 
-The configuration file will be created at `/etc/mongod.conf`.
+The configuration file will be created at `/usr/local/etc/mongod.conf`
+on macOS and `/etc/mongod.conf` on Ubuntu.
 
 *Note: MongoDB's default security model is enough for local
 development, but you should lock it down further in deployments. See
