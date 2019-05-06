@@ -54,25 +54,6 @@ export default class RetroService {
     return id;
   }
 
-  async createArchive(retroId, { format, items = [] }) {
-    const existing = await this.retroCollection.get('id', retroId, ['id']);
-    if (!existing) {
-      throw new Error('retro not found');
-    }
-
-    const id = uuidv4();
-    const created = Date.now();
-
-    await this.archiveCollection.add({
-      id,
-      retroId,
-      created,
-      data: { format, items },
-    });
-
-    return id;
-  }
-
   async getRetroListForUser(ownerId) {
     const raw = await this.retroCollection
       .getAll('ownerId', ownerId, ['id', 'slug', 'retro']);
@@ -98,25 +79,5 @@ export default class RetroService {
       send: (change, meta) => this.internalDistribute(retroId, change, meta),
       close: () => this.retroChangeSubs.remove(retroId, onChange),
     };
-  }
-
-  async getRetroArchiveList(retroId) {
-    const archives = await this.archiveCollection
-      .getAll('retroId', retroId, ['id', 'created']);
-
-    if (archives.length) {
-      return archives;
-    }
-
-    const retroData = await this.retroCollection.get('id', retroId, ['id']);
-    return (retroData === null ? null : archives);
-  }
-
-  async getRetroArchive(retroId, archiveId) {
-    const archiveData = await this.archiveCollection.get('id', archiveId);
-    if (!archiveData || archiveData.retroId !== retroId) {
-      return null;
-    }
-    return archiveData;
   }
 }

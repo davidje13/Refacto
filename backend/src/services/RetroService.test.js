@@ -15,7 +15,6 @@ describe('RetroService', () => {
   let service;
   let r1;
   let r2;
-  let a2a;
 
   beforeEach(async () => {
     const db = new MemoryDb();
@@ -37,8 +36,6 @@ describe('RetroService', () => {
       state: { $set: { someRetroSpecificState: true } },
       data: { items: { $push: [{ anItem: 'yes' }] } },
     });
-    a2a = await service.createArchive(r2, { format: 'foo' });
-    await service.createArchive(r2, { format: 'bar' });
   });
 
   describe('getRetroIdForSlug', () => {
@@ -93,21 +90,6 @@ describe('RetroService', () => {
       const subscription = await service.subscribeRetro('nope', () => {});
 
       expect(subscription).toBeNull();
-    });
-  });
-
-  describe('getRetroArchive', () => {
-    it('returns the requested retro archive by ID', async () => {
-      const archive = await service.getRetroArchive(r2, a2a);
-
-      expect(archive).not.toBeNull();
-      expect(archive.data.format).toEqual('foo');
-    });
-
-    it('returns null if the archive is not in the retro', async () => {
-      const archive = await service.getRetroArchive(r1, a2a);
-
-      expect(archive).toBeNull();
     });
   });
 });

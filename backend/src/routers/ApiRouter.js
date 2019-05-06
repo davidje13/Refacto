@@ -48,7 +48,12 @@ function nextMessage(ws) {
 }
 
 export default class ApiRouter extends Router {
-  constructor(userAuthService, retroAuthService, retroService) {
+  constructor(
+    userAuthService,
+    retroAuthService,
+    retroService,
+    retroArchiveService,
+  ) {
     super();
 
     const idProvider = new UniqueIdProvider();
@@ -236,13 +241,8 @@ export default class ApiRouter extends Router {
         return;
       }
 
-      const archives = await retroService.getRetroArchiveList(retroId);
-
-      if (archives) {
-        res.json(archives);
-      } else {
-        res.status(404).end();
-      }
+      const archives = await retroArchiveService.getRetroArchiveList(retroId);
+      res.json(archives);
     });
 
     this.post('/retros/:retroId/archives', async (req, res) => {
@@ -261,7 +261,10 @@ export default class ApiRouter extends Router {
       }
 
       const { format, items } = req.body;
-      const id = await retroService.createArchive(retroId, { format, items });
+      const id = await retroArchiveService.createArchive(retroId, {
+        format,
+        items,
+      });
 
       res.status(200).json({ id });
     });
@@ -281,7 +284,8 @@ export default class ApiRouter extends Router {
         return;
       }
 
-      const archive = await retroService.getRetroArchive(retroId, archiveId);
+      const archive = await retroArchiveService
+        .getRetroArchive(retroId, archiveId);
 
       if (archive) {
         res.json(archive);

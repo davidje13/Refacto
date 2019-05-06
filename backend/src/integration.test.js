@@ -17,7 +17,7 @@ const config = {
 
 async function makeTestApp() {
   const app = await appFactory(config);
-  const { retroService, retroAuthService } = app.testHooks;
+  const { retroService, retroArchiveService, retroAuthService } = app.testHooks;
 
   const r1 = await retroService.createRetro(
     'nobody',
@@ -32,7 +32,7 @@ async function makeTestApp() {
   const r3 = await retroService
     .createRetro('nobody', 'unknown-retro', 'An Unknown Retro Format', 'nope');
 
-  const a1a = await retroService.createArchive(r1, {
+  const a1a = await retroArchiveService.createArchive(r1, {
     format: 'mood',
     items: [
       {
@@ -45,8 +45,8 @@ async function makeTestApp() {
       },
     ],
   });
-  const a1b = await retroService.createArchive(r1, { format: 'mood' });
-  const a2a = await retroService.createArchive(r2, { format: 'mood' });
+  const a1b = await retroArchiveService.createArchive(r1, { format: 'mood' });
+  const a2a = await retroArchiveService.createArchive(r2, { format: 'mood' });
 
   await Promise.all([
     retroAuthService.setPassword(r1, 'password'),
