@@ -22,31 +22,6 @@ function extractToken(auth) {
   return null;
 }
 
-function nextMessage(ws) {
-  return new Promise((resolve, reject) => {
-    let onMessage = null;
-    let onClose = null;
-
-    const detach = () => {
-      ws.off('message', onMessage);
-      ws.off('close', onClose);
-    };
-
-    onMessage = (msg) => {
-      detach();
-      resolve(msg);
-    };
-
-    onClose = () => {
-      detach();
-      reject();
-    };
-
-    ws.on('message', onMessage);
-    ws.on('close', onClose);
-  });
-}
-
 export default class ApiRouter extends Router {
   constructor(
     userAuthService,
@@ -177,19 +152,21 @@ export default class ApiRouter extends Router {
       }
     });
 
-    this.ws('/retros/:retroId', async (req, ws) => {
+    this.ws('/retros/:retroId', async (req, res) => {
+      const ws = await res.accept();
+
       const { retroId } = req.params;
       let auth = await getRetroAuthentication(req, retroId);
       if (!auth) {
-        const retroToken = await nextMessage(ws);
+        const retroToken = await ws.nextMessage({ timeout: 5000 });
         auth = await retroAuthService.readAndVerifyToken(retroId, retroToken);
         if (!auth) {
-          ws.close(4401, 'Unauthorized');
+          res.sendError(401);
           return;
         }
       }
       if (!auth.read) {
-        ws.close(4403, 'Forbidden');
+        res.sendError(403);
         return;
       }
 
@@ -206,7 +183,7 @@ export default class ApiRouter extends Router {
       const subscription = await retroService.subscribeRetro(retroId, onChange);
 
       if (!subscription) {
-        ws.close(4404, 'Not Found');
+        res.sendError(404);
         return;
       }
 
@@ -215,7 +192,7 @@ export default class ApiRouter extends Router {
       ws.on('message', (msg) => {
         const { change, id } = JSON.parse(msg);
         if (!auth.write) {
-          ws.close(4403, 'Forbidden');
+          res.sendError(403);
           return;
         }
         subscription.send(change, { sourceId: mySourceId, id });
