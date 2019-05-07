@@ -1,11 +1,12 @@
 import { Router } from 'websocket-express';
-import { userAuth, retroAuth, authScope } from './authMiddleware';
+import { userAuth, retroAuth } from './authMiddleware';
+import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
 const MIN_PASSWORD_LENGTH = 8;
 
-export default class ApiRouter extends Router {
+export default class ApiRetrosRouter extends Router {
   constructor(
     userAuthService,
     retroAuthService,
@@ -18,46 +19,13 @@ export default class ApiRouter extends Router {
     const userAuthMiddleware = userAuth(userAuthService);
     const retroAuthMiddleware = retroAuth(retroAuthService);
 
-    this.get('/slugs/:slug', async (req, res) => {
-      const { slug } = req.params;
-      const retroId = await retroService.getRetroIdForSlug(slug);
-
-      if (retroId !== null) {
-        res.json({ id: retroId });
-      } else {
-        res.status(404).end();
-      }
-    });
-
-    this.post('/auth/tokens/:retroId', async (req, res) => {
-      const { retroId } = req.params;
-      const { password } = req.body;
-
-      const permissions = {
-        read: true,
-        readArchives: true,
-        write: true,
-      };
-      const retroToken = await retroAuthService.exchangePassword(
-        retroId,
-        password,
-        permissions,
-      );
-      if (!retroToken) {
-        res.status(400).json({ error: 'incorrect password' });
-        return;
-      }
-
-      res.status(200).json({ retroToken });
-    });
-
-    this.get('/retros', userAuthMiddleware, async (req, res) => {
+    this.get('/', userAuthMiddleware, async (req, res) => {
       res.json({
         retros: await retroService.getRetroListForUser(res.locals.auth.id),
       });
     });
 
-    this.post('/retros', userAuthMiddleware, async (req, res) => {
+    this.post('/', userAuthMiddleware, async (req, res) => {
       const { auth } = res.locals;
       const { slug, name, password } = req.body;
 
@@ -92,10 +60,10 @@ export default class ApiRouter extends Router {
       }
     });
 
-    this.useHTTP('/retros/:retroId', retroAuthMiddleware);
+    this.useHTTP('/:retroId', retroAuthMiddleware);
 
     this.ws(
-      '/retros/:retroId',
+      '/:retroId',
       retroAuth(retroAuthService, { optional: true }),
       async (req, res) => {
         const { retroId } = req.params;
@@ -149,48 +117,8 @@ export default class ApiRouter extends Router {
       },
     );
 
-    this.get(
-      '/retros/:retroId/archives',
-      authScope('readArchives'),
-      async (req, res) => {
-        const { retroId } = req.params;
-
-        const archives = await retroArchiveService.getRetroArchiveList(retroId);
-        res.json(archives);
-      },
-    );
-
-    this.post(
-      '/retros/:retroId/archives',
-      authScope('write'),
-      async (req, res) => {
-        const { retroId } = req.params;
-
-        const { format, items } = req.body;
-        const id = await retroArchiveService.createArchive(retroId, {
-          format,
-          items,
-        });
-
-        res.status(200).json({ id });
-      },
-    );
-
-    this.get(
-      '/retros/:retroId/archives/:archiveId',
-      authScope('readArchives'),
-      async (req, res) => {
-        const { retroId, archiveId } = req.params;
-
-        const archive = await retroArchiveService
-          .getRetroArchive(retroId, archiveId);
-
-        if (archive) {
-          res.json(archive);
-        } else {
-          res.status(404).end();
-        }
-      },
-    );
+    this.use('/:retroId/archives', new ApiRetroArchivesRouter(
+      retroArchiveService,
+    ));
   }
 }

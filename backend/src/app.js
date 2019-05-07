@@ -1,8 +1,10 @@
 import WebSocketExpress from 'websocket-express';
 import CollectionStorage from 'collection-storage';
-import ApiRouter from './routers/ApiRouter';
 import ApiConfigRouter from './routers/ApiConfigRouter';
+import ApiAuthRouter from './routers/ApiAuthRouter';
+import ApiSlugsRouter from './routers/ApiSlugsRouter';
 import ApiSsoRouter from './routers/ApiSsoRouter';
+import ApiRetrosRouter from './routers/ApiRetrosRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
@@ -32,14 +34,16 @@ export default async (config) => {
   app.enable('case sensitive routing');
   app.use(WebSocketExpress.json({ limit: 5 * 1024 }));
 
-  app.use('/api', new ApiRouter(
+  app.use('/api/auth', new ApiAuthRouter(retroAuthService));
+  app.use('/api/slugs', new ApiSlugsRouter(retroService));
+  app.use('/api/config', new ApiConfigRouter(config));
+  app.use('/api/sso', new ApiSsoRouter(userAuthService, config.sso));
+  app.use('/api/retros', new ApiRetrosRouter(
     userAuthService,
     retroAuthService,
     retroService,
     retroArchiveService,
   ));
-  app.use('/api/config', new ApiConfigRouter(config));
-  app.use('/api/sso', new ApiSsoRouter(userAuthService, config.sso));
   app.use(new StaticRouter(config.forwardHost));
 
   await userAuthService.initialise(db);
