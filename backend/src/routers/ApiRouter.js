@@ -1,26 +1,9 @@
 import { Router } from 'websocket-express';
+import { userAuth, retroAuth, authScope } from './authMiddleware';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
 const MIN_PASSWORD_LENGTH = 8;
-
-function splitFirst(data, delimiter) {
-  const sep = data.indexOf(delimiter);
-  if (sep === -1) {
-    return [data];
-  }
-  return [data.substr(0, sep), data.substr(sep + delimiter.length)];
-}
-
-function extractToken(auth) {
-  const [type, data] = splitFirst(auth, ' ');
-
-  if (type === 'Bearer') {
-    return data;
-  }
-
-  return null;
-}
 
 export default class ApiRouter extends Router {
   constructor(
@@ -32,34 +15,8 @@ export default class ApiRouter extends Router {
     super();
 
     const idProvider = new UniqueIdProvider();
-
-    const getUserAuthentication = async (req) => {
-      const auth = req.get('Authorization');
-      if (!auth) {
-        return null;
-      }
-
-      const userToken = extractToken(auth);
-      if (!userToken) {
-        return null;
-      }
-
-      return userAuthService.readAndVerifyToken(userToken);
-    };
-
-    const getRetroAuthentication = async (req, retroId) => {
-      const auth = req.get('Authorization');
-      if (!auth) {
-        return null;
-      }
-
-      const retroToken = extractToken(auth);
-      if (!retroToken) {
-        return null;
-      }
-
-      return retroAuthService.readAndVerifyToken(retroId, retroToken);
-    };
+    const userAuthMiddleware = userAuth(userAuthService);
+    const retroAuthMiddleware = retroAuth(retroAuthService);
 
     this.get('/slugs/:slug', async (req, res) => {
       const { slug } = req.params;
@@ -94,31 +51,14 @@ export default class ApiRouter extends Router {
       res.status(200).json({ retroToken });
     });
 
-    this.get('/retros', async (req, res) => {
-      const auth = await getUserAuthentication(req);
-      if (!auth) {
-        res
-          .status(401)
-          .header('WWW-Authenticate', 'Bearer realm="user"')
-          .end();
-        return;
-      }
-
+    this.get('/retros', userAuthMiddleware, async (req, res) => {
       res.json({
-        retros: await retroService.getRetroListForUser(auth.id),
+        retros: await retroService.getRetroListForUser(res.locals.auth.id),
       });
     });
 
-    this.post('/retros', async (req, res) => {
-      const auth = await getUserAuthentication(req);
-      if (!auth) {
-        res
-          .status(401)
-          .header('WWW-Authenticate', 'Bearer realm="user"')
-          .end();
-        return;
-      }
-
+    this.post('/retros', userAuthMiddleware, async (req, res) => {
+      const { auth } = res.locals;
       const { slug, name, password } = req.body;
 
       if (!name || typeof name !== 'string') {
@@ -152,123 +92,105 @@ export default class ApiRouter extends Router {
       }
     });
 
-    this.ws('/retros/:retroId', async (req, res) => {
-      const ws = await res.accept();
+    this.useHTTP('/retros/:retroId', retroAuthMiddleware);
 
-      const { retroId } = req.params;
-      let auth = await getRetroAuthentication(req, retroId);
-      if (!auth) {
-        const retroToken = await ws.nextMessage({ timeout: 5000 });
-        auth = await retroAuthService.readAndVerifyToken(retroId, retroToken);
+    this.ws(
+      '/retros/:retroId',
+      retroAuth(retroAuthService, { optional: true }),
+      async (req, res) => {
+        const { retroId } = req.params;
+        const ws = await res.accept();
+
+        let { auth } = res.locals;
+        if (!auth) {
+          const retroToken = await ws.nextMessage({ timeout: 5000 });
+          auth = await retroAuthService.readAndVerifyToken(retroId, retroToken);
+        }
         if (!auth) {
           res.sendError(401);
           return;
         }
-      }
-      if (!auth.read) {
-        res.sendError(403);
-        return;
-      }
-
-      const mySourceId = idProvider.get();
-
-      const onChange = ({ change, meta: { id, sourceId } }) => {
-        const message = { change };
-        if (sourceId === mySourceId) {
-          message.id = id;
-        }
-        ws.send(JSON.stringify(message));
-      };
-
-      const subscription = await retroService.subscribeRetro(retroId, onChange);
-
-      if (!subscription) {
-        res.sendError(404);
-        return;
-      }
-
-      ws.on('close', subscription.close);
-
-      ws.on('message', (msg) => {
-        const { change, id } = JSON.parse(msg);
-        if (!auth.write) {
+        if (!auth.read) {
           res.sendError(403);
           return;
         }
-        subscription.send(change, { sourceId: mySourceId, id });
-      });
 
-      ws.send(JSON.stringify({
-        change: { $set: subscription.getInitialData() },
-      }));
-    });
+        const mySourceId = idProvider.get();
 
-    this.get('/retros/:retroId/archives', async (req, res) => {
-      const { retroId } = req.params;
-      const auth = await getRetroAuthentication(req, retroId);
-      if (!auth) {
-        res
-          .status(401)
-          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="readArchives"`)
-          .end();
-        return;
-      }
-      if (!auth.readArchives) {
-        res.status(403).end();
-        return;
-      }
+        const onChange = ({ change, meta: { id, sourceId } }) => {
+          const message = { change };
+          if (sourceId === mySourceId) {
+            message.id = id;
+          }
+          ws.send(JSON.stringify(message));
+        };
 
-      const archives = await retroArchiveService.getRetroArchiveList(retroId);
-      res.json(archives);
-    });
+        const subscription = await retroService.subscribeRetro(retroId, onChange);
 
-    this.post('/retros/:retroId/archives', async (req, res) => {
-      const { retroId } = req.params;
-      const auth = await getRetroAuthentication(req, retroId);
-      if (!auth) {
-        res
-          .status(401)
-          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="write"`)
-          .end();
-        return;
-      }
-      if (!auth.write) {
-        res.status(403).end();
-        return;
-      }
+        if (!subscription) {
+          res.sendError(404);
+          return;
+        }
 
-      const { format, items } = req.body;
-      const id = await retroArchiveService.createArchive(retroId, {
-        format,
-        items,
-      });
+        ws.on('close', subscription.close);
 
-      res.status(200).json({ id });
-    });
+        ws.on('message', (msg) => {
+          const { change, id } = JSON.parse(msg);
+          if (!auth.write) {
+            res.sendError(403);
+            return;
+          }
+          subscription.send(change, { sourceId: mySourceId, id });
+        });
 
-    this.get('/retros/:retroId/archives/:archiveId', async (req, res) => {
-      const { retroId, archiveId } = req.params;
-      const auth = await getRetroAuthentication(req, retroId);
-      if (!auth) {
-        res
-          .status(401)
-          .header('WWW-Authenticate', `Bearer realm="${retroId}", scope="readArchives"`)
-          .end();
-        return;
-      }
-      if (!auth.readArchives) {
-        res.status(403).end();
-        return;
-      }
+        ws.send(JSON.stringify({
+          change: { $set: subscription.getInitialData() },
+        }));
+      },
+    );
 
-      const archive = await retroArchiveService
-        .getRetroArchive(retroId, archiveId);
+    this.get(
+      '/retros/:retroId/archives',
+      authScope('readArchives'),
+      async (req, res) => {
+        const { retroId } = req.params;
 
-      if (archive) {
-        res.json(archive);
-      } else {
-        res.status(404).end();
-      }
-    });
+        const archives = await retroArchiveService.getRetroArchiveList(retroId);
+        res.json(archives);
+      },
+    );
+
+    this.post(
+      '/retros/:retroId/archives',
+      authScope('write'),
+      async (req, res) => {
+        const { retroId } = req.params;
+
+        const { format, items } = req.body;
+        const id = await retroArchiveService.createArchive(retroId, {
+          format,
+          items,
+        });
+
+        res.status(200).json({ id });
+      },
+    );
+
+    this.get(
+      '/retros/:retroId/archives/:archiveId',
+      authScope('readArchives'),
+      async (req, res) => {
+        const { retroId, archiveId } = req.params;
+
+        const archive = await retroArchiveService
+          .getRetroArchive(retroId, archiveId);
+
+        if (archive) {
+          res.json(archive);
+        } else {
+          res.status(404).end();
+        }
+      },
+    );
   }
 }
