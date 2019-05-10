@@ -66,37 +66,44 @@ const extractors = {
 };
 
 export default class ApiSsoRouter extends Router {
-  constructor(userAuthService, config) {
+  constructor(userAuthService, configs) {
     super();
 
-    Object.keys(config).forEach((name) => {
-      const extract = extractors[name];
-      if (!extract) {
-        throw new Error(`Unknown SSO service: ${name}`);
+    this.post('/:name', async (req, res) => {
+      const { name } = req.params;
+      const config = configs[name];
+      const extractor = extractors[name];
+
+      if (!config) {
+        res.status(404).end();
+        return;
       }
 
-      this.post(`/${name}`, async (req, res) => {
-        const { externalToken } = req.body;
-        if (!externalToken) {
-          res.status(400).end();
-          return;
+      if (!extractor) {
+        res.status(500).json({ error: `missing logic for ${name}` });
+        return;
+      }
+
+      const { externalToken } = req.body;
+      if (!externalToken) {
+        res.status(400).end({ error: 'no externalToken provided' });
+        return;
+      }
+
+      try {
+        const externalId = await extractor(config, externalToken);
+        if (!externalId) {
+          throw new Error('failed to get user ID');
         }
 
-        try {
-          const externalId = await extract(config[name], externalToken);
-          if (!externalId) {
-            throw new Error('failed to get user ID');
-          }
-
-          const userToken = await userAuthService.grantToken({
-            provider: name,
-            id: `${name}-${externalId}`,
-          });
-          res.status(200).json({ userToken });
-        } catch (e) {
-          res.status(400).json({ error: e.message || 'internal error' });
-        }
-      });
+        const userToken = await userAuthService.grantToken({
+          provider: name,
+          id: `${name}-${externalId}`,
+        });
+        res.status(200).json({ userToken });
+      } catch (e) {
+        res.status(400).json({ error: e.message || 'internal error' });
+      }
     });
   }
 }
