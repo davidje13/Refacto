@@ -1,7 +1,6 @@
 import { Router } from 'websocket-express';
 import { userAuth, retroAuth } from './authMiddleware';
 import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
-import UniqueIdProvider from '../helpers/UniqueIdProvider';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
 const MIN_PASSWORD_LENGTH = 8;
@@ -15,7 +14,6 @@ export default class ApiRetrosRouter extends Router {
   ) {
     super();
 
-    const idProvider = new UniqueIdProvider();
     const userAuthMiddleware = userAuth(userAuthService);
     const retroAuthMiddleware = retroAuth(retroAuthService);
 
@@ -83,11 +81,9 @@ export default class ApiRetrosRouter extends Router {
           return;
         }
 
-        const mySourceId = idProvider.get();
-
-        const onChange = ({ change, meta: { id, sourceId } }) => {
-          const message = { change };
-          if (sourceId === mySourceId) {
+        const onChange = (msg, id) => {
+          const message = Object.assign({}, msg);
+          if (id !== undefined) {
             message.id = id;
           }
           ws.send(JSON.stringify(message));
@@ -108,7 +104,7 @@ export default class ApiRetrosRouter extends Router {
             res.sendError(403);
             return;
           }
-          subscription.send(change, { sourceId: mySourceId, id });
+          subscription.send(change, id);
         });
 
         ws.send(JSON.stringify({

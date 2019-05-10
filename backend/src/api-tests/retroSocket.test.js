@@ -62,6 +62,25 @@ describe('API retro websocket', () => {
         .expectClosed();
     });
 
+    it('rejects invalid changes', async () => {
+      const retroToken = await getRetroToken(hooks, retroId);
+      await request(server)
+        .ws(`/api/retros/${retroId}`)
+        .send(retroToken)
+        .expectJson()
+        .sendJson({ change: { name: 'bar' }, id: 7 })
+        .expectJson((json) => (json.error && json.id === 7))
+        .close()
+        .expectClosed();
+
+      await request(server)
+        .ws(`/api/retros/${retroId}`)
+        .send(retroToken)
+        .expectJson(({ change }) => (change.$set.name === 'My Retro'))
+        .close()
+        .expectClosed();
+    });
+
     it('closes the connection for incorrect tokens', async () => {
       await request(server)
         .ws(`/api/retros/${retroId}`)

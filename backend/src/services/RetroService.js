@@ -1,5 +1,6 @@
 import update from 'json-immutability-helper';
 import uuidv4 from 'uuid/v4';
+import UniqueIdProvider from '../helpers/UniqueIdProvider';
 
 export default class RetroService {
   constructor(db, retroChangeSubs) {
@@ -11,14 +12,28 @@ export default class RetroService {
       retroId: {},
     });
     this.retroChangeSubs = retroChangeSubs;
+    this.idProvider = new UniqueIdProvider();
   }
 
-  async internalDistribute(retroId, change, meta = {}) {
+  async internalDistribute(retroId, change, source, meta = null) {
     const retroData = await this.retroCollection.get('id', retroId, ['retro']);
-    const newRetro = update(retroData.retro, change);
-    await this.retroCollection.update('id', retroId, { retro: newRetro });
+    try {
+      const newRetro = update(retroData.retro, change);
+      await this.retroCollection.update('id', retroId, { retro: newRetro });
+    } catch (e) {
+      this.retroChangeSubs.broadcast(retroId, {
+        message: { error: e.message },
+        source,
+        meta,
+      });
+      return;
+    }
 
-    this.retroChangeSubs.broadcast(retroId, { change, meta });
+    this.retroChangeSubs.broadcast(retroId, {
+      message: { change },
+      source,
+      meta,
+    });
   }
 
   async getRetroIdForSlug(slug) {
@@ -66,7 +81,16 @@ export default class RetroService {
       return null;
     }
 
-    this.retroChangeSubs.add(retroId, onChange);
+    const myId = this.idProvider.get();
+    const eventHandler = ({ message, source, meta }) => {
+      if (source === myId) {
+        onChange(message, meta);
+      } else {
+        onChange(message, undefined);
+      }
+    };
+
+    this.retroChangeSubs.add(retroId, eventHandler);
 
     let initialData = retroData.retro;
 
@@ -76,8 +100,13 @@ export default class RetroService {
         initialData = null; // GC
         return data;
       },
-      send: (change, meta) => this.internalDistribute(retroId, change, meta),
-      close: () => this.retroChangeSubs.remove(retroId, onChange),
+      send: (change, meta) => this.internalDistribute(
+        retroId,
+        change,
+        myId,
+        meta,
+      ),
+      close: () => this.retroChangeSubs.remove(retroId, eventHandler),
     };
   }
 }
