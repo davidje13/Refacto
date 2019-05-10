@@ -1,5 +1,6 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
+import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 function getRetroToken({ retroAuthService }, retroId) {
@@ -13,9 +14,8 @@ function getRetroToken({ retroAuthService }, retroId) {
 describe('API retro websocket', () => {
   let hooks;
   let retroId;
-  let server;
 
-  beforeEach(async () => {
+  const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());
 
     hooks = app.testHooks;
@@ -29,15 +29,7 @@ describe('API retro websocket', () => {
 
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    server = app.createServer();
-  });
-
-  beforeEach((done) => {
-    server.listen(0, done);
-  });
-
-  afterEach((done) => {
-    server.close(done);
+    return app.createServer();
   });
 
   describe('ws://api/retros/retro-id', () => {

@@ -1,12 +1,12 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
+import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 describe('API slugs', () => {
   let retroId;
-  let server;
 
-  beforeEach(async () => {
+  const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());
 
     retroId = await app.testHooks.retroService.createRetro(
@@ -16,15 +16,7 @@ describe('API slugs', () => {
       'mood',
     );
 
-    server = app.createServer();
-  });
-
-  beforeEach((done) => {
-    server.listen(0, done);
-  });
-
-  afterEach((done) => {
-    server.close(done);
+    return app.createServer();
   });
 
   describe('/api/slugs/slug', () => {

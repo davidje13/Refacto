@@ -1,6 +1,7 @@
 import WebSocketExpress from 'websocket-express';
 import request from 'superwstest';
 import testConfig from './testConfig';
+import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 function addressToString(addr) {
@@ -14,20 +15,7 @@ function addressToString(addr) {
 
 describe('API static content', () => {
   describe('Embedded', () => {
-    let server;
-
-    beforeEach(async () => {
-      const app = await appFactory(testConfig());
-      server = app.createServer();
-    });
-
-    beforeEach((done) => {
-      server.listen(0, done);
-    });
-
-    afterEach((done) => {
-      server.close(done);
-    });
+    const server = testServerRunner(() => appFactory(testConfig()));
 
     it('responds with index.html for root requests', async () => {
       const response = await request(server)
@@ -49,35 +37,17 @@ describe('API static content', () => {
   });
 
   describe('Proxy', () => {
-    let proxyServer;
-    let server;
-
-    beforeEach((done) => {
+    const proxyServer = testServerRunner(() => {
       const proxyApp = new WebSocketExpress();
       proxyApp.get('/', (req, res) => {
         res.send('proxied content here');
       });
-      proxyServer = proxyApp.createServer();
-      proxyServer.listen(0, done);
+      return proxyApp.createServer();
     });
 
-    afterEach((done) => {
-      proxyServer.close(done);
-    });
-
-    beforeEach(async () => {
-      const forwardHost = addressToString(proxyServer.address());
-      const app = await appFactory(testConfig({ forwardHost }));
-      server = app.createServer();
-    });
-
-    beforeEach((done) => {
-      server.listen(0, done);
-    });
-
-    afterEach((done) => {
-      server.close(done);
-    });
+    const server = testServerRunner(() => appFactory(testConfig({
+      forwardHost: addressToString(proxyServer.address()),
+    })));
 
     it('proxies unknown requests to the configured address', async () => {
       const response = await request(server)

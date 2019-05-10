@@ -1,12 +1,12 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
+import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 describe('API auth', () => {
   let retroId;
-  let server;
 
-  beforeEach(async () => {
+  const server = testServerRunner(async () => {
     const app = await appFactory(testConfig({
       password: {
         workFactor: 3,
@@ -14,29 +14,10 @@ describe('API auth', () => {
       },
     }));
 
-    const {
-      retroService,
-      retroAuthService,
-    } = app.testHooks;
+    retroId = await app.testHooks.retroService.createRetro();
+    await app.testHooks.retroAuthService.setPassword(retroId, 'password');
 
-    retroId = await retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
-
-    await retroAuthService.setPassword(retroId, 'password');
-
-    server = app.createServer();
-  });
-
-  beforeEach((done) => {
-    server.listen(0, done);
-  });
-
-  afterEach((done) => {
-    server.close(done);
+    return app.createServer();
   });
 
   describe('/api/auth/tokens/retro-id', () => {

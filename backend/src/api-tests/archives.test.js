@@ -1,5 +1,6 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
+import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 function getRetroToken({ retroAuthService }, retroId) {
@@ -14,9 +15,8 @@ describe('API retro archives', () => {
   let hooks;
   let retroId;
   let archiveId;
-  let server;
 
-  beforeEach(async () => {
+  const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());
 
     hooks = app.testHooks;
@@ -35,15 +35,7 @@ describe('API retro archives', () => {
 
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    server = app.createServer();
-  });
-
-  beforeEach((done) => {
-    server.listen(0, done);
-  });
-
-  afterEach((done) => {
-    server.close(done);
+    return app.createServer();
   });
 
   describe('/api/retros/retro-id/archives/archive-id', () => {
@@ -72,8 +64,7 @@ describe('API retro archives', () => {
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
-      const otherRetroId = await hooks.retroService
-        .createRetro('me', 'my-second-retro', 'My Second Retro', 'mood');
+      const otherRetroId = await hooks.retroService.createRetro();
 
       const otherArchiveId = await hooks.retroArchiveService
         .createArchive(otherRetroId, { format: 'mood' });
