@@ -1,7 +1,8 @@
 import request from 'superwstest';
+import testConfig from './testConfig';
 import appFactory from '../app';
 
-const config = {
+const config = testConfig({
   password: {
     workFactor: 5,
     secretPepper: 'abc',
@@ -9,11 +10,7 @@ const config = {
   token: {
     secretPassphrase: 'foobar',
   },
-  db: {
-    url: 'memory://',
-  },
-  sso: {},
-};
+});
 
 async function makeTestApp() {
   const app = await appFactory(config);
@@ -67,7 +64,7 @@ async function makeTestApp() {
   ];
 }
 
-describe('Server', () => {
+describe('API', () => {
   let app;
   let testIds;
   let server;
@@ -176,23 +173,6 @@ describe('Server', () => {
         .post('/api/retros')
         .set('Authorization', 'Bearer Foo')
         .expect(401);
-    });
-  });
-
-  describe('/api/slugs/slug', () => {
-    it('responds with a retro ID', async () => {
-      const response = await request(server)
-        .get('/api/slugs/my-retro')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body.id).toEqual(testIds.r1);
-    });
-
-    it('responds HTTP Not Found for unknown slugs', async () => {
-      await request(server)
-        .get('/api/slugs/nope')
-        .expect(404);
     });
   });
 

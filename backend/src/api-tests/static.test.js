@@ -1,5 +1,6 @@
 import WebSocketExpress from 'websocket-express';
 import request from 'superwstest';
+import testConfig from './testConfig';
 import appFactory from '../app';
 
 function addressToString(addr) {
@@ -12,23 +13,16 @@ function addressToString(addr) {
 }
 
 describe('API static content', () => {
-  const baseConfig = {
-    password: {},
-    token: {},
-    db: {
-      url: 'memory://',
-    },
-    sso: {},
-  };
-
   describe('Embedded', () => {
     let server;
 
+    beforeEach(async () => {
+      const app = await appFactory(testConfig());
+      server = app.createServer();
+    });
+
     beforeEach((done) => {
-      appFactory(baseConfig).then((app) => {
-        server = app.createServer();
-        server.listen(0, done);
-      });
+      server.listen(0, done);
     });
 
     afterEach((done) => {
@@ -67,13 +61,14 @@ describe('API static content', () => {
       proxyServer.listen(0, done);
     });
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       const forwardHost = addressToString(proxyServer.address());
-      const config = Object.assign({ forwardHost }, baseConfig);
-      appFactory(config).then((app) => {
-        server = app.createServer();
-        server.listen(0, done);
-      });
+      const app = await appFactory(testConfig({ forwardHost }));
+      server = app.createServer();
+    });
+
+    beforeEach((done) => {
+      server.listen(0, done);
     });
 
     afterEach((done) => {
