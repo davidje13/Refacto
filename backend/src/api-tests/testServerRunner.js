@@ -9,13 +9,21 @@ export default (serverFn) => {
   });
 
   beforeEach((done) => {
-    server.listen(0, done);
+    if (server) {
+      server.listen(0, done);
+    } else {
+      done();
+    }
   });
 
   afterEach((done) => {
-    const tempServer = server;
-    server = null;
-    tempServer.close(done);
+    if (server) {
+      const tempServer = server;
+      server = null;
+      tempServer.close(done);
+    } else {
+      done();
+    }
   });
 
   return new Proxy({}, {

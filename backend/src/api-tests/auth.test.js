@@ -55,8 +55,7 @@ describe('API auth', () => {
       const response = await request(server)
         .post(`/api/auth/tokens/${retroId}`)
         .send({ password: 'password' })
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+        .expect(200);
 
       const { retroToken } = response.body;
 

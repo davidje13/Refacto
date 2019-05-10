@@ -86,7 +86,7 @@ export default class ApiSsoRouter extends Router {
 
       const { externalToken } = req.body;
       if (!externalToken) {
-        res.status(400).end({ error: 'no externalToken provided' });
+        res.status(400).json({ error: 'no externalToken provided' });
         return;
       }
 
@@ -102,7 +102,11 @@ export default class ApiSsoRouter extends Router {
         });
         res.status(200).json({ userToken });
       } catch (e) {
-        res.status(400).json({ error: e.message || 'internal error' });
+        if (e.message === 'validation internal error') {
+          res.status(500).json({ error: 'internal error' });
+        } else {
+          res.status(400).json({ error: e.message || 'unknown error' });
+        }
       }
     });
   }
