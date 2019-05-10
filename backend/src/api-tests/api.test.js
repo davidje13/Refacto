@@ -2,23 +2,17 @@ import request from 'superwstest';
 import testConfig from './testConfig';
 import appFactory from '../app';
 
-const config = testConfig({
-  password: {
-    workFactor: 5,
-    secretPepper: 'abc',
-  },
-  token: {
-    secretPassphrase: 'foobar',
-  },
-});
-
 describe('API', () => {
   let hooks;
   let testIds;
   let server;
 
   beforeEach(async () => {
-    const app = await appFactory(config);
+    const app = await appFactory(testConfig({
+      token: {
+        secretPassphrase: 'foobar',
+      },
+    }));
 
     hooks = app.testHooks;
     const {
@@ -174,37 +168,6 @@ describe('API', () => {
         .post('/api/retros')
         .set('Authorization', 'Bearer Foo')
         .expect(401);
-    });
-  });
-
-  describe('/api/auth/tokens/retro-id', () => {
-    it('responds with a token for the correct password', async () => {
-      const response = await request(server)
-        .post(`/api/auth/tokens/${testIds.r1}`)
-        .send({ password: 'password' })
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body.retroToken).toBeTruthy();
-      expect(response.body.error).not.toBeTruthy();
-    });
-
-    it('responds HTTP Bad Request for incorrect password', async () => {
-      const response = await request(server)
-        .post(`/api/auth/tokens/${testIds.r1}`)
-        .send({ password: 'nope' })
-        .expect(400)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body.retroToken).not.toBeTruthy();
-      expect(response.body.error).toEqual('incorrect password');
-    });
-
-    it('responds HTTP Bad Request for unknown retro IDs', async () => {
-      await request(server)
-        .post('/api/auth/tokens/nope')
-        .send({ password: 'anything' })
-        .expect(400);
     });
   });
 

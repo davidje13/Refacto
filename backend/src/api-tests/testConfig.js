@@ -1,5 +1,7 @@
 const baseTestConfig = {
-  password: {},
+  password: {
+    workFactor: 1,
+  },
   token: {},
   db: {
     url: 'memory://',
