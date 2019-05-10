@@ -12,69 +12,70 @@ const config = testConfig({
   },
 });
 
-async function makeTestApp() {
-  const app = await appFactory(config);
-  const { retroService, retroArchiveService, retroAuthService } = app.testHooks;
+describe('API', () => {
+  let hooks;
+  let testIds;
+  let server;
 
-  const r1 = await retroService.createRetro(
-    'nobody',
-    'my-retro',
-    'My Retro',
-    'mood',
-  );
+  beforeEach(async () => {
+    const app = await appFactory(config);
 
-  const r2 = await retroService
-    .createRetro('me', 'my-second-retro', 'My Second Retro', 'mood');
+    hooks = app.testHooks;
+    const {
+      retroService,
+      retroArchiveService,
+      retroAuthService,
+    } = hooks;
 
-  const r3 = await retroService
-    .createRetro('nobody', 'unknown-retro', 'An Unknown Retro Format', 'nope');
+    const r1 = await retroService.createRetro(
+      'nobody',
+      'my-retro',
+      'My Retro',
+      'mood',
+    );
 
-  const a1a = await retroArchiveService.createArchive(r1, {
-    format: 'mood',
-    items: [
-      {
-        id: 'z9',
-        category: 'happy',
-        created: Date.now() - (86400000 * 10) - 198000,
-        message: 'An archived happy item.',
-        votes: 2,
-        done: false,
-      },
-    ],
-  });
-  const a1b = await retroArchiveService.createArchive(r1, { format: 'mood' });
-  const a2a = await retroArchiveService.createArchive(r2, { format: 'mood' });
+    const r2 = await retroService
+      .createRetro('me', 'my-second-retro', 'My Second Retro', 'mood');
 
-  await Promise.all([
-    retroAuthService.setPassword(r1, 'password'),
-    retroAuthService.setPassword(r2, 'pa55w0rd'),
-    retroAuthService.setPassword(r3, '12345678'),
-  ]);
+    const r3 = await retroService
+      .createRetro('nobody', 'unknown-retro', 'An Unknown Retro Format', 'nope');
 
-  return [
-    app,
-    {
+    const a1a = await retroArchiveService.createArchive(r1, {
+      format: 'mood',
+      items: [
+        {
+          id: 'z9',
+          category: 'happy',
+          created: Date.now() - (86400000 * 10) - 198000,
+          message: 'An archived happy item.',
+          votes: 2,
+          done: false,
+        },
+      ],
+    });
+    const a1b = await retroArchiveService.createArchive(r1, { format: 'mood' });
+    const a2a = await retroArchiveService.createArchive(r2, { format: 'mood' });
+
+    await Promise.all([
+      retroAuthService.setPassword(r1, 'password'),
+      retroAuthService.setPassword(r2, 'pa55w0rd'),
+      retroAuthService.setPassword(r3, '12345678'),
+    ]);
+
+    testIds = {
       r1,
       r2,
       r3,
       a1a,
       a1b,
       a2a,
-    },
-  ];
-}
+    };
 
-describe('API', () => {
-  let app;
-  let testIds;
-  let server;
+    server = app.createServer();
+  });
 
   beforeEach((done) => {
-    makeTestApp().then((testInfo) => {
-      [app, testIds] = testInfo;
-      server = app.createServer();
-      server.listen(0, done);
-    });
+    server.listen(0, done);
   });
 
   afterEach((done) => {
@@ -82,7 +83,7 @@ describe('API', () => {
   });
 
   function getRetroToken(retroId) {
-    return app.testHooks.retroAuthService.grantToken(retroId, {
+    return hooks.retroAuthService.grantToken(retroId, {
       read: true,
       readArchives: true,
       write: true,
@@ -90,7 +91,7 @@ describe('API', () => {
   }
 
   function getUserToken(userId) {
-    return app.testHooks.userAuthService.grantToken({
+    return hooks.userAuthService.grantToken({
       provider: 'test',
       id: userId,
     });
@@ -135,7 +136,7 @@ describe('API', () => {
         .expect('Content-Type', /application\/json/);
 
       const returnedId = response.body.id;
-      const storedId = await app.testHooks.retroService.getRetroIdForSlug(slug);
+      const storedId = await hooks.retroService.getRetroIdForSlug(slug);
 
       expect(returnedId).toEqual(storedId);
     });
