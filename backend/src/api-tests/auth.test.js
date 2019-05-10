@@ -3,7 +3,7 @@ import testConfig from './testConfig';
 import appFactory from '../app';
 
 describe('API auth', () => {
-  let retroId1;
+  let retroId;
   let server;
 
   beforeEach(async () => {
@@ -19,14 +19,14 @@ describe('API auth', () => {
       retroAuthService,
     } = app.testHooks;
 
-    retroId1 = await retroService.createRetro(
+    retroId = await retroService.createRetro(
       'nobody',
       'my-retro',
       'My Retro',
       'mood',
     );
 
-    await retroAuthService.setPassword(retroId1, 'password');
+    await retroAuthService.setPassword(retroId, 'password');
 
     server = app.createServer();
   });
@@ -42,7 +42,7 @@ describe('API auth', () => {
   describe('/api/auth/tokens/retro-id', () => {
     it('responds with a token for the correct password', async () => {
       const response = await request(server)
-        .post(`/api/auth/tokens/${retroId1}`)
+        .post(`/api/auth/tokens/${retroId}`)
         .send({ password: 'password' })
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -53,7 +53,7 @@ describe('API auth', () => {
 
     it('responds HTTP Bad Request for incorrect password', async () => {
       const response = await request(server)
-        .post(`/api/auth/tokens/${retroId1}`)
+        .post(`/api/auth/tokens/${retroId}`)
         .send({ password: 'nope' })
         .expect(400)
         .expect('Content-Type', /application\/json/);

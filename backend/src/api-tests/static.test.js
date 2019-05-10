@@ -61,6 +61,10 @@ describe('API static content', () => {
       proxyServer.listen(0, done);
     });
 
+    afterEach((done) => {
+      proxyServer.close(done);
+    });
+
     beforeEach(async () => {
       const forwardHost = addressToString(proxyServer.address());
       const app = await appFactory(testConfig({ forwardHost }));
@@ -73,10 +77,6 @@ describe('API static content', () => {
 
     afterEach((done) => {
       server.close(done);
-    });
-
-    afterEach((done) => {
-      proxyServer.close(done);
     });
 
     it('proxies unknown requests to the configured address', async () => {

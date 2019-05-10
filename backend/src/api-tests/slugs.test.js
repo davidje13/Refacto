@@ -3,13 +3,13 @@ import testConfig from './testConfig';
 import appFactory from '../app';
 
 describe('API slugs', () => {
-  let retroId1;
+  let retroId;
   let server;
 
   beforeEach(async () => {
     const app = await appFactory(testConfig());
 
-    retroId1 = await app.testHooks.retroService.createRetro(
+    retroId = await app.testHooks.retroService.createRetro(
       'nobody',
       'my-retro',
       'My Retro',
@@ -34,7 +34,7 @@ describe('API slugs', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      expect(response.body.id).toEqual(retroId1);
+      expect(response.body.id).toEqual(retroId);
     });
 
     it('responds HTTP Not Found for unknown slugs', async () => {

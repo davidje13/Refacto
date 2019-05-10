@@ -2,10 +2,18 @@ import request from 'superwstest';
 import testConfig from './testConfig';
 import appFactory from '../app';
 
+function getRetroToken({ retroAuthService }, retroId) {
+  return retroAuthService.grantToken(retroId, {
+    read: true,
+    readArchives: true,
+    write: true,
+  });
+}
+
 describe('API retro archives', () => {
   let hooks;
-  let retroId1;
-  let archiveId1
+  let retroId;
+  let archiveId;
   let server;
 
   beforeEach(async () => {
@@ -13,19 +21,19 @@ describe('API retro archives', () => {
 
     hooks = app.testHooks;
 
-    retroId1 = await hooks.retroService.createRetro(
+    retroId = await hooks.retroService.createRetro(
       'nobody',
       'my-retro',
       'My Retro',
       'mood',
     );
 
-    archiveId1 = await hooks.retroArchiveService.createArchive(retroId1, {
+    archiveId = await hooks.retroArchiveService.createArchive(retroId, {
       format: 'mood',
       items: [{ id: 'z9' }],
     });
 
-    await hooks.retroAuthService.setPassword(retroId1, 'password');
+    await hooks.retroAuthService.setPassword(retroId, 'password');
 
     server = app.createServer();
   });
@@ -38,19 +46,11 @@ describe('API retro archives', () => {
     server.close(done);
   });
 
-  function getRetroToken(retroId) {
-    return hooks.retroAuthService.grantToken(retroId, {
-      read: true,
-      readArchives: true,
-      write: true,
-    });
-  }
-
   describe('/api/retros/retro-id/archives/archive-id', () => {
     it('responds with retro archives in JSON format', async () => {
-      const retroToken = await getRetroToken(retroId1);
+      const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
-        .get(`/api/retros/${retroId1}/archives/${archiveId1}`)
+        .get(`/api/retros/${retroId}/archives/${archiveId}`)
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -60,13 +60,13 @@ describe('API retro archives', () => {
 
     it('responds HTTP Unauthorized if no credentials are given', async () => {
       await request(server)
-        .get(`/api/retros/${retroId1}/archives/nope`)
+        .get(`/api/retros/${retroId}/archives/nope`)
         .expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async () => {
       await request(server)
-        .get(`/api/retros/${retroId1}/archives/nope`)
+        .get(`/api/retros/${retroId}/archives/nope`)
         .set('Authorization', 'Bearer nope')
         .expect(401);
     });
@@ -78,9 +78,9 @@ describe('API retro archives', () => {
       const otherArchiveId = await hooks.retroArchiveService
         .createArchive(otherRetroId, { format: 'mood' });
 
-      const retroToken = await getRetroToken(retroId1);
+      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
-        .get(`/api/retros/${retroId1}/archives/${otherArchiveId}`)
+        .get(`/api/retros/${retroId}/archives/${otherArchiveId}`)
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(404);
     });
