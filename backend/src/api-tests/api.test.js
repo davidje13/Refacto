@@ -17,7 +17,6 @@ describe('API', () => {
     hooks = app.testHooks;
     const {
       retroService,
-      retroArchiveService,
       retroAuthService,
     } = hooks;
 
@@ -34,22 +33,6 @@ describe('API', () => {
     const r3 = await retroService
       .createRetro('nobody', 'unknown-retro', 'An Unknown Retro Format', 'nope');
 
-    const a1a = await retroArchiveService.createArchive(r1, {
-      format: 'mood',
-      items: [
-        {
-          id: 'z9',
-          category: 'happy',
-          created: Date.now() - (86400000 * 10) - 198000,
-          message: 'An archived happy item.',
-          votes: 2,
-          done: false,
-        },
-      ],
-    });
-    const a1b = await retroArchiveService.createArchive(r1, { format: 'mood' });
-    const a2a = await retroArchiveService.createArchive(r2, { format: 'mood' });
-
     await Promise.all([
       retroAuthService.setPassword(r1, 'password'),
       retroAuthService.setPassword(r2, 'pa55w0rd'),
@@ -60,9 +43,6 @@ describe('API', () => {
       r1,
       r2,
       r3,
-      a1a,
-      a1b,
-      a2a,
     };
 
     server = app.createServer();
@@ -213,40 +193,6 @@ describe('API', () => {
         .ws('/api/retros/nope')
         .send('any-token')
         .expectClosed();
-    });
-  });
-
-  describe('/api/retros/retro-id/archives/archive-id', () => {
-    it('responds with retro archives in JSON format', async () => {
-      const retroToken = await getRetroToken(testIds.r1);
-      const response = await request(server)
-        .get(`/api/retros/${testIds.r1}/archives/${testIds.a1a}`)
-        .set('Authorization', `Bearer ${retroToken}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body.data.items.length).toBeGreaterThan(0);
-    });
-
-    it('responds HTTP Unauthorized if no credentials are given', async () => {
-      await request(server)
-        .get(`/api/retros/${testIds.r1}/archives/nope`)
-        .expect(401);
-    });
-
-    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
-      await request(server)
-        .get(`/api/retros/${testIds.r1}/archives/nope`)
-        .set('Authorization', 'Bearer nope')
-        .expect(401);
-    });
-
-    it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
-      const retroToken = await getRetroToken(testIds.r1);
-      await request(server)
-        .get(`/api/retros/${testIds.r1}/archives/${testIds.a2a}`)
-        .set('Authorization', `Bearer ${retroToken}`)
-        .expect(404);
     });
   });
 });

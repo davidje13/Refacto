@@ -2,7 +2,7 @@ import request from 'superwstest';
 import testConfig from './testConfig';
 import appFactory from '../app';
 
-describe('API Auth', () => {
+describe('API auth', () => {
   let retroId1;
   let server;
 
