@@ -1,14 +1,40 @@
 #!/bin/sh
 set -e;
+set -o pipefail;
 
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
+${PARALLEL_BUILD:=true}
 
-echo 'Building frontend...';
-npm --prefix="$BASEDIR/frontend" run build --silent;
+BUILD_PIDS="";
 
-echo 'Building backend...';
-npm --prefix="$BASEDIR/backend" run build --silent;
+function launch_build() {
+  NAME="$1";
+  echo "Building $NAME...";
+  if [[ "$PARALLEL_BUILD" == 'true' ]]; then
+    npm --prefix="$BASEDIR/$NAME" run build --silent 2>&1 | sed "s/^/$NAME: /" &
+    BUILD_PIDS="$BUILD_PIDS $!";
+  else
+    npm --prefix="$BASEDIR/$NAME" run build --silent;
+  fi;
+}
+
+launch_build 'frontend';
+launch_build 'backend';
+
+FAILED='';
+if [[ "$BUILD_PIDS" != '' ]]; then
+  for PID in $BUILD_PIDS; do
+    if ! wait "$PID"; then
+      FAILED='true';
+    fi;
+  done;
+fi;
+
+if [[ "$FAILED" == 'true' ]]; then
+  echo 'Build failed.';
+  false;
+fi;
 
 PRESERVE_NODE_MODULES='false';
 if [[

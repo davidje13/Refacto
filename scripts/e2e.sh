@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e;
+set -o pipefail;
 
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
@@ -41,15 +42,26 @@ fi;
 
 export TARGET_HOST;
 
-ANY_E2E='false';
-
 # Run tests
 
+E2E_PIDS="";
+
+function launch_e2e() {
+  NAME="$1";
+  echo "E2E testing in $NAME...";
+  if [[ "$PARALLEL_E2E" == 'true' ]]; then
+    SELENIUM_BROWSER="$NAME" \
+    npm --prefix="$BASEDIR/e2e" test --silent 2>&1 | sed "s/^/$NAME: /" &
+    E2E_PIDS="$E2E_PIDS $!";
+  else
+    SELENIUM_BROWSER="$NAME" \
+    npm --prefix="$BASEDIR/e2e" test --silent;
+    E2E_PIDS="-";
+  fi;
+}
+
 if which chromedriver > /dev/null; then
-  echo 'E2E testing in Chrome...';
-  SELENIUM_BROWSER=chrome \
-  npm --prefix="$BASEDIR/e2e" test --silent;
-  ANY_E2E='true';
+  launch_e2e 'chrome';
 else
   echo 'Skipping E2E testing in Chrome' >&2;
   echo >&2;
@@ -61,10 +73,7 @@ else
 fi;
 
 if which geckodriver > /dev/null; then
-  echo 'E2E testing in Firefox...';
-  SELENIUM_BROWSER=firefox \
-  npm --prefix="$BASEDIR/e2e" test --silent;
-  ANY_E2E='true';
+  launch_e2e 'firefox';
 else
   echo 'Skipping E2E testing in Firefox' >&2;
   echo >&2;
@@ -75,14 +84,28 @@ else
   echo >&2;
 fi;
 
+FAILED='';
+if [[ "$E2E_PIDS" != '' && "$E2E_PIDS" != '-' ]]; then
+  for PID in $E2E_PIDS; do
+    if ! wait "$PID"; then
+      FAILED='true';
+    fi;
+  done;
+fi;
+
 # Shutdown app server
 if [[ -n "$APP_PID" ]]; then
   kill "$APP_PID";
   trap - EXIT;
 fi;
 
-if [[ "$ANY_E2E" == 'false' ]]; then
+if [[ "$E2E_PIDS" == '' ]]; then
   echo 'Did not run any end-to-end tests as no drivers were found.';
+  false;
+fi;
+
+if [[ "$FAILED" != '' ]]; then
+  echo 'End-to-end tests failed.';
   false;
 fi;
 

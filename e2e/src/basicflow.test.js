@@ -2,6 +2,8 @@ import buildDriver from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
 
+const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
+
 describe('Running a retro', () => {
   let driver;
   let driver2;
@@ -20,8 +22,8 @@ describe('Running a retro', () => {
     driver2 = buildDriver();
     jest.setTimeout(30000);
 
-    userName = `e2e-test-user-${Date.now()}`;
-    retroSlug = `e2e-test-retro-${Date.now()}`;
+    userName = `e2e-test-user-${uniqueID}`;
+    retroSlug = `e2e-test-retro-${uniqueID}`;
     retroPassword = 'my-password';
   });
 
