@@ -9,7 +9,7 @@ export default class ApiRetroArchivesRouter extends Router {
       const { retroId } = req.params;
 
       const archives = await retroArchiveService.getRetroArchiveList(retroId);
-      res.json(archives);
+      res.json({ archives });
     });
 
     this.post('/', authScope('write'), async (req, res) => {

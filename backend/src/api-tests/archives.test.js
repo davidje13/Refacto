@@ -3,12 +3,12 @@ import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
-function getRetroToken({ retroAuthService }, retroId) {
-  return retroAuthService.grantToken(retroId, {
+function getRetroToken({ retroAuthService }, retroId, permissions = {}) {
+  return retroAuthService.grantToken(retroId, Object.assign({
     read: true,
     readArchives: true,
     write: true,
-  });
+  }, permissions));
 }
 
 describe('API retro archives', () => {
@@ -38,6 +38,83 @@ describe('API retro archives', () => {
     return app.createServer();
   });
 
+  describe('/api/retros/retro-id/archives', () => {
+    it('lists all retro archives in JSON format', async () => {
+      const retroToken = await getRetroToken(hooks, retroId);
+      const response = await request(server)
+        .get(`/api/retros/${retroId}/archives`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.archives.length).toEqual(1);
+      expect(response.body.archives[0].id).toEqual(archiveId);
+    });
+
+    it('responds HTTP Unauthorized if no credentials are given', async () => {
+      await request(server)
+        .get(`/api/retros/${retroId}/archives`)
+        .expect(401);
+    });
+
+    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
+      await request(server)
+        .get(`/api/retros/${retroId}/archives`)
+        .set('Authorization', 'Bearer nope')
+        .expect(401);
+    });
+
+    it('responds HTTP Forbidden if scope is not "readArchives"', async () => {
+      const retroToken = await getRetroToken(hooks, retroId, {
+        readArchives: false,
+      });
+
+      await request(server)
+        .get(`/api/retros/${retroId}/archives`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(403);
+    });
+  });
+
+  describe('POST /api/retros/retro-id/archives', () => {
+    it('creates a new archive', async () => {
+      const retroToken = await getRetroToken(hooks, retroId);
+      const response = await request(server)
+        .post(`/api/retros/${retroId}/archives`)
+        .send({ format: 'foo', items: [] })
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      const returnedId = response.body.id;
+      const storedArchive = await hooks.retroArchiveService
+        .getRetroArchive(retroId, returnedId);
+
+      expect(storedArchive.data.format).toEqual('foo');
+    });
+
+    it('responds HTTP Unauthorized if no credentials are given', async () => {
+      await request(server)
+        .post(`/api/retros/${retroId}/archives`)
+        .expect(401);
+    });
+
+    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
+      await request(server)
+        .post(`/api/retros/${retroId}/archives`)
+        .set('Authorization', 'Bearer nope')
+        .expect(401);
+    });
+
+    it('responds HTTP Forbidden if scope is not "write"', async () => {
+      const retroToken = await getRetroToken(hooks, retroId, { write: false });
+      await request(server)
+        .post(`/api/retros/${retroId}/archives`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(403);
+    });
+  });
+
   describe('/api/retros/retro-id/archives/archive-id', () => {
     it('responds with retro archives in JSON format', async () => {
       const retroToken = await getRetroToken(hooks, retroId);
@@ -61,6 +138,17 @@ describe('API retro archives', () => {
         .get(`/api/retros/${retroId}/archives/nope`)
         .set('Authorization', 'Bearer nope')
         .expect(401);
+    });
+
+    it('responds HTTP Forbidden if scope is not "readArchives"', async () => {
+      const retroToken = await getRetroToken(hooks, retroId, {
+        readArchives: false,
+      });
+
+      await request(server)
+        .get(`/api/retros/${retroId}/archives/${archiveId}`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(403);
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
