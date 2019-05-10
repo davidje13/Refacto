@@ -1,6 +1,7 @@
 {
   "port": 5000,
   "forward_host": null,
+  "mock_sso_port": null,
   "password": {
     "work_factor": 10,
     "secret_pepper": ""
@@ -24,8 +25,5 @@
       "access_token_url": "https://github.com/login/oauth/access_token",
       "user_url": "https://api.github.com/user"
     }
-  },
-  "mock": {
-    "sso_port": null
   }
 }

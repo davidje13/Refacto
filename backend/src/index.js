@@ -44,10 +44,10 @@ if (module.hot) {
   module.hot.accept(['./app', './config'], refreshApp);
 }
 
-if (config.mock.ssoPort) {
+if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
   import('./mock-sso/sso')
-    .then(({ default: ssoApp }) => ssoApp.listen(config.mock.ssoPort))
+    .then(({ default: ssoApp }) => ssoApp.listen(config.mockSsoPort))
     .catch(() => {
       process.stderr.write('Failed to start mock SSO server\n');
     });
