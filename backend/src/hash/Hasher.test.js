@@ -38,6 +38,14 @@ describe('Hasher', () => {
       expect(await hasher.compare('nope', hash)).toEqual(false);
     });
 
+    it('does not truncate long inputs', async () => {
+      const prefix = '0'.repeat(72);
+      const hash = await hasher.hash(`${prefix}1`);
+
+      expect(await hasher.compare(`${prefix}1`, hash)).toEqual(true);
+      expect(await hasher.compare(`${prefix}2`, hash)).toEqual(false);
+    });
+
     it('uses the number of rounds from the hashed value', async () => {
       const hasher2 = new Hasher({ workFactor: 100 });
       const hash = await hasher.hash('abc');
@@ -64,7 +72,7 @@ describe('Hasher', () => {
       expect(hasher2.needsRegenerate(hash)).toEqual(true);
     });
 
-    it('returns false if the has uses sufficient rounds', async () => {
+    it('returns false if the hash uses sufficient rounds', async () => {
       const hasher1 = new Hasher({ workFactor: 8 });
       const hasher2 = new Hasher({ workFactor: 6 });
       const hash = await hasher1.hash('abc');
