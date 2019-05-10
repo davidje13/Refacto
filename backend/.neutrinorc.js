@@ -42,6 +42,9 @@ module.exports = {
             },
           }],
         ],
+        plugins: [
+          'transform-dynamic-import',
+        ],
       },
     }),
     (neutrino) => neutrino.config.stats('minimal'),

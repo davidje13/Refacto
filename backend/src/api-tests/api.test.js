@@ -1,5 +1,5 @@
 import request from 'superwstest';
-import appFactory from './app';
+import appFactory from '../app';
 
 const config = {
   password: {
@@ -303,26 +303,6 @@ describe('Server', () => {
         .get(`/api/retros/${testIds.r1}/archives/${testIds.a2a}`)
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(404);
-    });
-  });
-
-  describe('Static content', () => {
-    it('responds with index.html for root requests', async () => {
-      const response = await request(server)
-        .get('/')
-        .expect(200)
-        .expect('Content-Type', /text\/html/);
-
-      expect(response.text).toContain('<title>Example Static Resource</title>');
-    });
-
-    it('responds with index.html for all unknown requests', async () => {
-      const response = await request(server)
-        .get('/foobar')
-        .expect(200)
-        .expect('Content-Type', /text\/html/);
-
-      expect(response.text).toContain('<title>Example Static Resource</title>');
     });
   });
 });

@@ -25,6 +25,7 @@
     "@neutrinojs/copy": "^9.0.0-rc.1",
     "@neutrinojs/jest": "^9.0.0-rc.1",
     "@neutrinojs/node": "^9.0.0-rc.1",
+    "babel-plugin-transform-dynamic-import": "^2.1.0",
     "eslint": "^5.16.0",
     "eslint-plugin-eslint-comments": "^3.1.1",
     "http-proxy-middleware": "^0.19.1",

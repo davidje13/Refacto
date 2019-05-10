@@ -9,14 +9,15 @@ export default class StaticRouter extends WebSocketExpress.Router {
     if (forwardHost) {
       // Dev mode: forward unknown requests to another service
       import('http-proxy-middleware')
-        .then(({ default: proxy }) => {
-          this.useHTTP(proxy({ target: forwardHost }));
+        .then((proxy) => {
+          this.useHTTP(proxy({ target: forwardHost, logLevel: 'warn' }));
         })
-        .catch(() => {
+        .catch((e) => {
           process.stderr.write((
-            'Failed to apply frontend forwarding ' +
+            `Failed to apply frontend forwarding to ${forwardHost} ` +
             '(only API will be available)\n'
           ));
+          process.stderr.write(`${e.message}\n`);
         });
     } else {
       const staticDir = path.join(basedir, 'static');
