@@ -27,6 +27,7 @@ export default async (config) => {
   const retroArchiveService = new RetroArchiveService(db);
   const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
   const userAuthService = new UserAuthService(tokenManager);
+  await userAuthService.initialise(db);
 
   const app = new WebSocketExpress();
 
@@ -45,8 +46,6 @@ export default async (config) => {
     retroArchiveService,
   ));
   app.use(new StaticRouter(config.forwardHost));
-
-  await userAuthService.initialise(db);
 
   app.testHooks = {
     retroService,
