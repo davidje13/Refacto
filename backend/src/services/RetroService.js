@@ -9,9 +9,6 @@ export default class RetroService {
       slug: { unique: true },
       ownerId: {},
     });
-    this.archiveCollection = db.getCollection('archive', {
-      retroId: {},
-    });
     this.retroChangeSubs = retroChangeSubs;
     this.idProvider = new UniqueIdProvider();
     this.taskQueues = new TaskQueueMap();
