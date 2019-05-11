@@ -32,7 +32,7 @@ describe('RetroService', () => {
       'My Second Retro',
       'other',
     );
-    await service.internalDistribute(r2, {
+    await service.updateRetro(r2, {
       state: { $set: { someRetroSpecificState: true } },
       data: { items: { $push: [{ anItem: 'yes' }] } },
     });

@@ -1,6 +1,7 @@
 import update from 'json-immutability-helper';
 import uuidv4 from 'uuid/v4';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
+import TaskQueueMap from '../task-queue/TaskQueueMap';
 
 export default class RetroService {
   constructor(db, retroChangeSubs) {
@@ -13,9 +14,10 @@ export default class RetroService {
     });
     this.retroChangeSubs = retroChangeSubs;
     this.idProvider = new UniqueIdProvider();
+    this.taskQueues = new TaskQueueMap();
   }
 
-  async internalDistribute(retroId, change, source, meta = null) {
+  async internalApplyChange(retroId, change, source, meta) {
     const retroData = await this.retroCollection.get('id', retroId, ['retro']);
     try {
       const newRetro = update(retroData.retro, change);
@@ -34,6 +36,15 @@ export default class RetroService {
       source,
       meta,
     });
+  }
+
+  async internalQueueChange(retroId, change, source, meta) {
+    return this.taskQueues.push(retroId, () => this.internalApplyChange(
+      retroId,
+      change,
+      source,
+      meta,
+    ));
   }
 
   async getRetroIdForSlug(slug) {
@@ -69,6 +80,10 @@ export default class RetroService {
     return id;
   }
 
+  async updateRetro(retroId, change) {
+    return this.internalQueueChange(retroId, change, null, null);
+  }
+
   async getRetroListForUser(ownerId) {
     const raw = await this.retroCollection
       .getAll('ownerId', ownerId, ['id', 'slug', 'retro']);
@@ -100,7 +115,7 @@ export default class RetroService {
         initialData = null; // GC
         return data;
       },
-      send: (change, meta) => this.internalDistribute(
+      send: (change, meta) => this.internalQueueChange(
         retroId,
         change,
         myId,
