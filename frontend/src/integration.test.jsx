@@ -7,32 +7,24 @@ import { makeRetro, makeArchive } from './test-helpers/dataFactories';
 
 import App from './components/App';
 
-async function runAllEvents() {
-  // Waits until no more promises are queued
-  return new Promise(setImmediate);
-}
-
 async function renderApp(location) {
   const context = {};
 
-  const dom = mount((
-    <HelmetProvider>
-      <StaticRouter location={location} context={context}>
-        <App />
-      </StaticRouter>
-    </HelmetProvider>
-  ));
+  let dom;
+  await act(async () => {
+    dom = mount((
+      <HelmetProvider>
+        <StaticRouter location={location} context={context}>
+          <App />
+        </StaticRouter>
+      </HelmetProvider>
+    ));
+  });
 
-  await act(runAllEvents);
   return { context, dom };
 }
 
-// TODO: disabled awaiting resolution of
-// https://github.com/facebook/react/issues/14769
-// see https://github.com/kentcdodds/react-testing-library/issues/281
-// see https://github.com/facebook/react/pull/14853
-
-describe.skip('Application', () => {
+describe('Application', () => {
   it('renders welcome page at root', async () => {
     const { dom } = await renderApp('/');
 
@@ -49,11 +41,15 @@ describe.skip('Application', () => {
     expect(dom).toContainMatchingElement('.page-retro-list');
   });
 
-  it('renders retro page at /retros/id', async () => {
+  // Maybe awaiting https://github.com/facebook/react/issues/15472
+  it.skip('renders retro page at /retros/id after password provided', async () => {
     const retro = makeRetro({ name: 'Retro Name' });
 
     global.fetch.mockExpect('/api/slugs/slug-foobar')
       .andRespondJsonOk({ id: 'id-foobar' });
+
+    global.fetch.mockExpect('/auth/tokens/id-foobar')
+      .andRespondJsonOk({ retroToken: 'my-token' });
 
     WebSocket.expect('/api/retros/id-foobar', (ws) => {
       ws.send(JSON.stringify({ change: { $set: retro } }));
@@ -61,11 +57,19 @@ describe.skip('Application', () => {
 
     const { dom } = await renderApp('/retros/slug-foobar');
 
+    // TODO: asynchronous action from mounting is not handled by act();
+    // DOM is not refreshed
+    expect(dom).toContainMatchingElement('.page-password');
+    expect(dom.find('.top-header h1')).toHaveText('Password for slug-foobar');
+
+    // TODO: fill in password
+
     expect(dom).toContainMatchingElement('.page-retro');
     expect(dom.find('.top-header h1')).toHaveText('Retro Name');
   });
 
-  it('renders archive page at /retros/id/archives/id', async () => {
+  // Maybe awaiting https://github.com/facebook/react/issues/15472
+  it.skip('renders archive page at /retros/id/archives/id after password provided', async () => {
     const retro = makeRetro({ name: 'Retro Name' });
 
     global.fetch.mockExpect('/api/slugs/slug-foobar')
@@ -84,8 +88,14 @@ describe.skip('Application', () => {
     expect(dom.find('.top-header h1')).toIncludeText('Retro Name');
   });
 
+  it('redirects to retros url for short unknown urls', async () => {
+    const { context } = await renderApp('/nope');
+
+    expect(context.url).toEqual('/retros/nope');
+  });
+
   it('renders not found page at unknown urls', async () => {
-    const { dom } = await renderApp('/nope');
+    const { dom } = await renderApp('/foo/bar');
 
     expect(dom).toContainMatchingElement('.page-not-found');
   });
