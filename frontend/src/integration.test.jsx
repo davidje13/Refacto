@@ -4,7 +4,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import { render, fireEvent } from 'react-testing-library';
 import { act } from 'react-dom/test-utils';
 import { makeRetro } from './test-helpers/dataFactories';
-import 'jest-dom/extend-expect';
 
 import App from './components/App';
 

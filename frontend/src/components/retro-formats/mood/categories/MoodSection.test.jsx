@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import 'jest-enzyme';
 
 import MoodSection from './MoodSection';
 import MoodItem from './MoodItem';

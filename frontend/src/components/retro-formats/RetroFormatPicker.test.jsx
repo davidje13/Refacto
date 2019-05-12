@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeRetroData } from '../../test-helpers/dataFactories';
+import 'jest-enzyme';
 
 import RetroFormatPicker from './RetroFormatPicker';
 import MoodRetro from './mood/MoodRetro';

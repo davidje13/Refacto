@@ -2,6 +2,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { mount } from 'enzyme';
+import 'jest-enzyme';
 
 import App from './App';
 

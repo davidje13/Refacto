@@ -1,6 +1,7 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
+import 'jest-enzyme';
 
 import RetroLink from './RetroLink';
 

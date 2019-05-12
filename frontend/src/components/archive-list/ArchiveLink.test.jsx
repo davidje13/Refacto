@@ -2,6 +2,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import { formatDateTime } from '../../time/formatters';
+import 'jest-enzyme';
 
 import ArchiveLink from './ArchiveLink';
 

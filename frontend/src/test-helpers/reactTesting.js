@@ -1,6 +1,6 @@
 import { cleanup } from 'react-testing-library';
 import { matcherHint, printReceived, printExpected } from 'jest-matcher-utils';
-// import 'jest-dom/extend-expect';
+import 'jest-dom/extend-expect';
 
 function toContainQuerySelector(element, selector) {
   if (!element) {

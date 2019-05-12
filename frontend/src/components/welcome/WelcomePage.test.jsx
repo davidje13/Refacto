@@ -2,6 +2,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { mount } from 'enzyme';
 import { configService, userTokenTracker } from '../../api/api';
+import 'jest-enzyme';
 
 import WelcomePage from './WelcomePage';
 

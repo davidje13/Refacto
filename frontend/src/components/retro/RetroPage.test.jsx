@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { makeRetro } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
+import 'jest-enzyme';
 
 import RetroPage from './RetroPage';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';

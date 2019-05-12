@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { userTokenTracker, retroListTracker } from '../../api/api';
+import 'jest-enzyme';
 
 import RetroListPage from './RetroListPage';
 import RetroList from './RetroList';
