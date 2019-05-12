@@ -1,18 +1,19 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 import { act } from 'react-dom/test-utils';
-import { makeRetro, makeArchive } from './test-helpers/dataFactories';
+import { makeRetro } from './test-helpers/dataFactories';
+import 'jest-dom/extend-expect';
 
 import App from './components/App';
 
 async function renderApp(location) {
   const context = {};
 
-  let dom;
+  let wrapper;
   await act(async () => {
-    dom = mount((
+    wrapper = render((
       <HelmetProvider>
         <StaticRouter location={location} context={context}>
           <App />
@@ -21,15 +22,15 @@ async function renderApp(location) {
     ));
   });
 
-  return { context, dom };
+  return { context, wrapper, dom: wrapper.container };
 }
 
 describe('Application', () => {
   it('renders welcome page at root', async () => {
     const { dom } = await renderApp('/');
 
-    expect(dom).toContainMatchingElement('.page-welcome');
-    expect(dom).not.toContainMatchingElement('.page-retro');
+    expect(dom).toContainQuerySelector('.page-welcome');
+    expect(dom).not.toContainQuerySelector('.page-retro');
   });
 
   it('renders retro list page at /retros', async () => {
@@ -38,17 +39,16 @@ describe('Application', () => {
 
     const { dom } = await renderApp('/retros');
 
-    expect(dom).toContainMatchingElement('.page-retro-list');
+    expect(dom).toContainQuerySelector('.page-retro-list');
   });
 
-  // Maybe awaiting https://github.com/facebook/react/issues/15472
-  it.skip('renders retro page at /retros/id after password provided', async () => {
+  it('renders retro page at /retros/id after password provided', async () => {
     const retro = makeRetro({ name: 'Retro Name' });
 
     global.fetch.mockExpect('/api/slugs/slug-foobar')
       .andRespondJsonOk({ id: 'id-foobar' });
 
-    global.fetch.mockExpect('/auth/tokens/id-foobar')
+    global.fetch.mockExpect('/api/auth/tokens/id-foobar')
       .andRespondJsonOk({ retroToken: 'my-token' });
 
     WebSocket.expect('/api/retros/id-foobar', (ws) => {
@@ -57,35 +57,21 @@ describe('Application', () => {
 
     const { dom } = await renderApp('/retros/slug-foobar');
 
-    // TODO: asynchronous action from mounting is not handled by act();
-    // DOM is not refreshed
-    expect(dom).toContainMatchingElement('.page-password');
-    expect(dom.find('.top-header h1')).toHaveText('Password for slug-foobar');
+    expect(dom).toContainQuerySelector('.page-password');
+    const header1 = dom.querySelector('.top-header h1');
+    expect(header1).toHaveTextContent('Password for slug-foobar');
 
-    // TODO: fill in password
+    const form = dom.querySelector('form');
+    const fieldPassword = form.querySelector('input[type=password]');
+    await act(async () => fireEvent.change(
+      fieldPassword,
+      { target: { value: 'anything' } },
+    ));
+    await act(async () => fireEvent.submit(form));
 
-    expect(dom).toContainMatchingElement('.page-retro');
-    expect(dom.find('.top-header h1')).toHaveText('Retro Name');
-  });
-
-  // Maybe awaiting https://github.com/facebook/react/issues/15472
-  it.skip('renders archive page at /retros/id/archives/id after password provided', async () => {
-    const retro = makeRetro({ name: 'Retro Name' });
-
-    global.fetch.mockExpect('/api/slugs/slug-foobar')
-      .andRespondJsonOk({ id: 'id-foobar' });
-
-    WebSocket.expect('/api/retros/id-foobar', (ws) => {
-      ws.send(JSON.stringify({ change: { $set: retro } }));
-    });
-
-    global.fetch.mockExpect('/api/retros/id-foobar/archives/zigzag')
-      .andRespondJsonOk(makeArchive());
-
-    const { dom } = await renderApp('/retros/slug-foobar/archives/zigzag');
-
-    expect(dom).toContainMatchingElement('.page-archive');
-    expect(dom.find('.top-header h1')).toIncludeText('Retro Name');
+    expect(dom).toContainQuerySelector('.page-retro');
+    const header2 = dom.querySelector('.top-header h1');
+    expect(header2).toHaveTextContent('Retro Name');
   });
 
   it('redirects to retros url for short unknown urls', async () => {
@@ -97,6 +83,6 @@ describe('Application', () => {
   it('renders not found page at unknown urls', async () => {
     const { dom } = await renderApp('/foo/bar');
 
-    expect(dom).toContainMatchingElement('.page-not-found');
+    expect(dom).toContainQuerySelector('.page-not-found');
   });
 });
