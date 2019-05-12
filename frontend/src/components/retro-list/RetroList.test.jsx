@@ -1,19 +1,25 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderDOM from '../../test-helpers/reactDom';
+import { render } from 'react-testing-library';
+import 'jest-dom/extend-expect';
 
 import RetroList from './RetroList';
-import RetroLink from './RetroLink';
 
-jest.mock('./RetroLink', () => () => (<div />));
+/* eslint-disable-next-line react/prop-types */
+jest.mock('./RetroLink', () => ({ name, slug }) => (
+  <div
+    className="mock-link"
+    data-name={name}
+    data-slug={slug}
+  />
+));
 
 describe('RetroList', () => {
   const emptyLabel = 'do not have any retros';
 
   it('displays a message if there are no retros', () => {
-    const dom = renderDOM(<RetroList retros={[]} />);
+    const { container } = render(<RetroList retros={[]} />);
 
-    expect(dom.textContent).toContain(emptyLabel);
+    expect(container.textContent).toContain(emptyLabel);
   });
 
   it('displays no message if there are retros', () => {
@@ -22,9 +28,9 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const dom = renderDOM(<RetroList retros={retros} />);
+    const { container } = render(<RetroList retros={retros} />);
 
-    expect(dom.textContent).not.toContain(emptyLabel);
+    expect(container.textContent).not.toContain(emptyLabel);
   });
 
   it('displays a list of retros', () => {
@@ -33,15 +39,13 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const dom = mount(<RetroList retros={retros} />);
+    const { container } = render(<RetroList retros={retros} />);
 
-    expect(dom.find(RetroLink).at(0)).toHaveProp({
-      slug: 'a',
-      name: 'R1',
-    });
-    expect(dom.find(RetroLink).at(1)).toHaveProp({
-      slug: 'b',
-      name: 'R2',
-    });
+    const links = container.querySelectorAll('.mock-link');
+
+    expect(links[0]).toHaveAttribute('data-slug', 'a');
+    expect(links[0]).toHaveAttribute('data-name', 'R1');
+    expect(links[1]).toHaveAttribute('data-slug', 'b');
+    expect(links[1]).toHaveAttribute('data-name', 'R2');
   });
 });

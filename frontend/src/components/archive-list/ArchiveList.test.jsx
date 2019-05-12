@@ -1,17 +1,26 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import renderDOM from '../../test-helpers/reactDom';
+import { render } from 'react-testing-library';
+import 'jest-dom/extend-expect';
 
 import ArchiveList from './ArchiveList';
-import ArchiveLink from './ArchiveLink';
 
-jest.mock('./ArchiveLink', () => () => (<div />));
+/* eslint-disable-next-line react/prop-types */
+jest.mock('./ArchiveLink', () => ({ retroSlug, archiveId, created }) => (
+  <div
+    className="mock-link"
+    data-retro-slug={retroSlug}
+    data-archive-id={archiveId}
+    data-created={created}
+  />
+));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
-    const dom = renderDOM(<ArchiveList slug="foo" archives={[]} />);
+    const { container } = render((
+      <ArchiveList slug="foo" archives={[]} />
+    ));
 
-    expect(dom.textContent).toContain('has no archives');
+    expect(container.textContent).toContain('has no archives');
   });
 
   it('displays no message if there are archives', () => {
@@ -19,9 +28,11 @@ describe('ArchiveList', () => {
       { id: 'a1', created: 10 },
       { id: 'a2', created: 0 },
     ];
-    const dom = renderDOM(<ArchiveList slug="foo" archives={archives} />);
+    const { container } = render((
+      <ArchiveList slug="foo" archives={archives} />
+    ));
 
-    expect(dom.textContent).not.toContain('has no archives');
+    expect(container.textContent).not.toContain('has no archives');
   });
 
   it('displays a list of archives', () => {
@@ -30,18 +41,19 @@ describe('ArchiveList', () => {
       { id: 'a2', created: 0 },
     ];
 
-    const dom = mount(<ArchiveList slug="foo" archives={archives} />);
+    const { container } = render((
+      <ArchiveList slug="foo" archives={archives} />
+    ));
 
-    expect(dom.find(ArchiveLink).at(0)).toHaveProp({
-      retroSlug: 'foo',
-      archiveId: 'a1',
-      created: 10,
-    });
-    expect(dom.find(ArchiveLink).at(1)).toHaveProp({
-      retroSlug: 'foo',
-      archiveId: 'a2',
-      created: 0,
-    });
+    const links = container.querySelectorAll('.mock-link');
+
+    expect(links[0]).toHaveAttribute('data-retro-slug', 'foo');
+    expect(links[0]).toHaveAttribute('data-archive-id', 'a1');
+    expect(links[0]).toHaveAttribute('data-created', '10');
+
+    expect(links[1]).toHaveAttribute('data-retro-slug', 'foo');
+    expect(links[1]).toHaveAttribute('data-archive-id', 'a2');
+    expect(links[1]).toHaveAttribute('data-created', '0');
   });
 
   it('orders archives newest-to-oldest', () => {
@@ -51,10 +63,14 @@ describe('ArchiveList', () => {
       { id: 'a3', created: 10 },
     ];
 
-    const dom = mount(<ArchiveList slug="foo" archives={archives} />);
+    const { container } = render((
+      <ArchiveList slug="foo" archives={archives} />
+    ));
 
-    expect(dom.find(ArchiveLink).at(0)).toHaveProp({ archiveId: 'a1' });
-    expect(dom.find(ArchiveLink).at(1)).toHaveProp({ archiveId: 'a3' });
-    expect(dom.find(ArchiveLink).at(2)).toHaveProp({ archiveId: 'a2' });
+    const links = container.querySelectorAll('.mock-link');
+
+    expect(links[0]).toHaveAttribute('data-archive-id', 'a1');
+    expect(links[1]).toHaveAttribute('data-archive-id', 'a3');
+    expect(links[2]).toHaveAttribute('data-archive-id', 'a2');
   });
 });
