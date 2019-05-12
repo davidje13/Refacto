@@ -10,7 +10,7 @@ let activeApp = null;
 const server = http.createServer();
 
 function startServer() {
-  server.listen(config.port, () => {
+  server.listen(config.port, config.serverBindAddress, () => {
     process.stdout.write(`Available at http://localhost:${config.port}/\n`);
     process.stdout.write('Press Ctrl+C to stop\n');
   });
@@ -47,7 +47,9 @@ if (module.hot) {
 if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
   import('./mock-sso/sso')
-    .then(({ default: ssoApp }) => ssoApp.listen(config.mockSsoPort))
+    .then(({ default: ssoApp }) => {
+      ssoApp.listen(config.mockSsoPort, config.serverBindAddress);
+    })
     .catch(() => {
       process.stderr.write('Failed to start mock SSO server\n');
     });

@@ -2,6 +2,7 @@
   "port": 5000,
   "forward_host": null,
   "mock_sso_port": null,
+  "server_bind_address": null,
   "password": {
     "work_factor": 10,
     "secret_pepper": ""

@@ -38,4 +38,5 @@ echo 'Running backend...';
 PORT="$API_PORT" \
 FORWARD_HOST="http://localhost:$APP_PORT" \
 MOCK_SSO_PORT="$MOCK_SSO_PORT" \
+SERVER_BIND_ADDRESS="localhost" \
 npm --prefix="$BASEDIR/backend" start --silent;

@@ -28,6 +28,7 @@ if [[ -z "$TARGET_HOST" ]]; then
 
   PORT="$PORT" \
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
+  SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
   npm --prefix="$BUILDDIR" start --silent \
     > "$LOGS/app.log" 2>&1 & APP_PID="$!";

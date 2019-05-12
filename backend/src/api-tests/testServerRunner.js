@@ -5,7 +5,7 @@ export default (serverFn) => {
     server = null;
     Promise.resolve(serverFn())
       .then((rawServer) => {
-        server = rawServer.listen(0, done);
+        server = rawServer.listen(0, 'localhost', done);
       })
       .catch(done.fail);
   });
