@@ -7,6 +7,7 @@ jest.mock('rxjs/ajax', () => ({
       .then(async (response) => {
         if (response.status >= 300) {
           subject.error({ status: response.status });
+          return;
         }
         const json = await response.json();
         subject.next({ status: response.status, response: json });
