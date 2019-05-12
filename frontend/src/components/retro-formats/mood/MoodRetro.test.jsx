@@ -1,7 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeRetroData } from '../../../test-helpers/dataFactories';
-import 'jest-enzyme';
 
 import MoodRetro from './MoodRetro';
 
@@ -9,7 +8,7 @@ const emptyRetroData = makeRetroData({ format: 'mood' });
 
 describe('MoodRetro', () => {
   it('renders without error', () => {
-    const dom = mount((
+    render((
       <MoodRetro
         retroData={emptyRetroData}
         retroState={{}}
@@ -17,6 +16,5 @@ describe('MoodRetro', () => {
         dispatch={() => {}}
       />
     ));
-    expect(dom).toExist();
   });
 });

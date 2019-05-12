@@ -1,22 +1,23 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
-import 'jest-enzyme';
+import { render, fireEvent } from 'react-testing-library';
 
 import RetroLink from './RetroLink';
 
 describe('RetroLink', () => {
   it('links to the retro slug', () => {
     const context = {};
-    const dom = mount((
+    const { container } = render((
       <StaticRouter location="/" context={context}>
         <RetroLink name="Foo" slug="bar" />
       </StaticRouter>
     ));
 
-    expect(dom).toIncludeText('Foo');
+    expect(container).toHaveTextContent('Foo');
 
-    dom.find('div').simulate('click', { button: 0 });
+    const button = container.querySelector('div');
+    fireEvent.click(button);
+
     expect(context.url).toEqual('/retros/bar');
   });
 });

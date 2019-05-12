@@ -1,8 +1,7 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 import { configService, userTokenTracker } from '../../api/api';
-import 'jest-enzyme';
 
 import WelcomePage from './WelcomePage';
 
@@ -23,13 +22,13 @@ describe('WelcomePage', () => {
       });
 
       const context = {};
-      const dom = mount((
+      const { container } = render((
         <StaticRouter location="/" context={context}>
           <WelcomePage />
         </StaticRouter>
       ));
 
-      expect(dom.find('.sso-google').length).toEqual(1);
+      expect(container).toContainQuerySelector('.sso-google');
     });
 
     it('displays no login buttons if not configured', () => {
@@ -38,13 +37,13 @@ describe('WelcomePage', () => {
       });
 
       const context = {};
-      const dom = mount((
+      const { container } = render((
         <StaticRouter location="/" context={context}>
           <WelcomePage />
         </StaticRouter>
       ));
 
-      expect(dom.find('.sso-google').length).toEqual(0);
+      expect(container).not.toContainQuerySelector('.sso-google');
     });
   });
 
@@ -55,13 +54,14 @@ describe('WelcomePage', () => {
 
     it('displays a link to create a new retro', () => {
       const context = {};
-      const dom = mount((
+      const { container } = render((
         <StaticRouter location="/" context={context}>
           <WelcomePage />
         </StaticRouter>
       ));
 
-      dom.find('a.link-create').simulate('click', { button: 0 });
+      const link = container.querySelector('a.link-create');
+      fireEvent.click(link);
       expect(context.url).toEqual('/create');
     });
   });

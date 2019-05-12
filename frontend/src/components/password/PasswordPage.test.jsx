@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
+import { act } from 'react-dom/test-utils';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
-import 'jest-enzyme';
 
 import PasswordPage from './PasswordPage';
 
@@ -21,10 +21,17 @@ describe('PasswordPage', () => {
   it('exchanges passwords for tokens', async () => {
     retroTokenService.setServerData('myRetroId', 'some-token');
 
-    const dom = mount(<PasswordPage slug="abc" retroId="myRetroId" />);
+    const { container } = render((
+      <PasswordPage slug="abc" retroId="myRetroId" />
+    ));
 
-    dom.find('input').simulate('change', { target: { value: 'my-password' } });
-    dom.find('form').simulate('submit');
+    const form = container.querySelector('form');
+    const fieldPassword = form.querySelector('input[type=password]');
+    await act(async () => fireEvent.change(
+      fieldPassword,
+      { target: { value: 'my-password' } },
+    ));
+    await act(async () => fireEvent.submit(form));
 
     const retroToken = await getToken('myRetroId');
     expect(retroTokenService.capturedPassword).toEqual('my-password');

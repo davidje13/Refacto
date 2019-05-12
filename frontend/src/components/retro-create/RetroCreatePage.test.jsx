@@ -1,7 +1,6 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
-import 'jest-enzyme';
+import { render } from 'react-testing-library';
 
 import RetroCreatePage from './RetroCreatePage';
 
@@ -11,7 +10,7 @@ describe('RetroCreatePage', () => {
   it('renders without error', () => {
     const context = {};
 
-    mount((
+    render((
       <StaticRouter location="/" context={context}>
         <RetroCreatePage />
       </StaticRouter>
