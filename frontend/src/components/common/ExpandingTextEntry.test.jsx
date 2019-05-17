@@ -1,85 +1,124 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import 'jest-enzyme';
+import { render, fireEvent } from 'react-testing-library';
 
 import ExpandingTextEntry from './ExpandingTextEntry';
 
+function setValue(input, value) {
+  fireEvent.change(input, { target: { value } });
+}
+
 describe('ExpandingTextEntry', () => {
-  it('sends the entered text when submit is pressed', () => {
-    const onSubmit = jest.fn().mockName('onSubmit');
-    const dom = mount(<ExpandingTextEntry onSubmit={onSubmit} />);
+  describe('with no extra options', () => {
+    let onSubmit;
+    let rendered;
+    let textarea;
 
-    dom.find('textarea').simulate('change', { target: { value: 'abc' } });
-    dom.find('form').simulate('submit');
+    beforeEach(() => {
+      onSubmit = jest.fn().mockName('onSubmit');
+      rendered = render(<ExpandingTextEntry onSubmit={onSubmit} />);
+      textarea = rendered.container.querySelector('textarea');
+    });
 
-    expect(onSubmit).toHaveBeenCalledWith('abc');
+    it('sends the entered text when submit is pressed', () => {
+      setValue(textarea, 'abc');
+      fireEvent.submit(textarea);
+
+      expect(onSubmit).toHaveBeenCalledWith('abc');
+    });
+
+    it('sends the entered text when the enter key is pressed', () => {
+      setValue(textarea, 'abc');
+      fireEvent.keyDown(textarea, { key: 'Enter' });
+
+      expect(onSubmit).toHaveBeenCalledWith('abc');
+    });
+
+    it('ignores cancel requests', () => {
+      setValue(textarea, 'abc');
+      fireEvent.keyDown(textarea, { key: 'Escape' });
+
+      expect(textarea.value).toEqual('abc');
+    });
+
+    it('does not submit blank values', () => {
+      fireEvent.submit(textarea);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('keeps the text after submitting', () => {
+      setValue(textarea, 'abc');
+      fireEvent.submit(textarea);
+
+      expect(textarea.value).toEqual('abc');
+    });
   });
 
-  it('sends the entered text when the enter key is pressed', () => {
-    const onSubmit = jest.fn().mockName('onSubmit');
-    const dom = mount(<ExpandingTextEntry onSubmit={onSubmit} />);
+  describe('onCancel', () => {
+    let onCancel;
+    let rendered;
+    let textarea;
 
-    dom.find('textarea').simulate('change', { target: { value: 'abc' } });
-    dom.find('textarea').simulate('keydown', { key: 'Enter' });
+    beforeEach(() => {
+      onCancel = jest.fn().mockName('onCancel');
 
-    expect(onSubmit).toHaveBeenCalledWith('abc');
+      rendered = render((
+        <ExpandingTextEntry
+          onSubmit={() => {}}
+          onCancel={onCancel}
+        />
+      ));
+      textarea = rendered.container.querySelector('textarea');
+    });
+
+    it('invokes the given callback when escape is pressed', () => {
+      setValue(textarea, 'abc');
+      fireEvent.keyDown(textarea, { key: 'Escape' });
+
+      expect(onCancel).toHaveBeenCalled();
+    });
   });
 
-  it('invokes the given cancel callback when escape is pressed', () => {
-    const onCancel = jest.fn().mockName('onCancel');
-    const dom = mount(<ExpandingTextEntry onSubmit={() => {}} onCancel={onCancel} />);
+  describe('clearAfterSubmit', () => {
+    let rendered;
+    let textarea;
 
-    dom.find('textarea').simulate('change', { target: { value: 'abc' } });
-    dom.find('textarea').simulate('keydown', { key: 'Escape' });
+    beforeEach(() => {
+      rendered = render((
+        <ExpandingTextEntry
+          onSubmit={() => {}}
+          clearAfterSubmit
+        />
+      ));
+      textarea = rendered.container.querySelector('textarea');
+    });
 
-    expect(onCancel).toHaveBeenCalled();
+    it('clears the text after submitting', () => {
+      setValue(textarea, 'abc');
+      fireEvent.submit(textarea);
+
+      expect(textarea.value).toEqual('');
+    });
   });
 
-  it('ignores cancel requests if there is no cancel callback', () => {
-    const dom = mount(<ExpandingTextEntry onSubmit={() => {}} />);
+  describe('extraOptions', () => {
+    let rendered;
 
-    dom.find('textarea').simulate('change', { target: { value: 'abc' } });
-    dom.find('textarea').simulate('keydown', { key: 'Escape' });
+    beforeEach(() => {
+      rendered = render((
+        <ExpandingTextEntry
+          onSubmit={() => {}}
+          extraOptions={<em />}
+        />
+      ));
+    });
 
-    expect(dom.find('textarea')).toHaveValue('abc');
-  });
+    it('displays extra options beside the submit button', () => {
+      expect(rendered.container).toContainQuerySelector('em');
+    });
 
-  it('does not submit blank values', () => {
-    const onSubmit = jest.fn().mockName('onSubmit');
-    const dom = mount(<ExpandingTextEntry onSubmit={onSubmit} />);
-
-    dom.find('form').simulate('submit');
-
-    expect(onSubmit).not.toHaveBeenCalled();
-  });
-
-  it('keeps the text after submitting by default', () => {
-    const dom = mount(<ExpandingTextEntry onSubmit={() => {}} />);
-
-    dom.find('textarea').simulate('change', { target: { value: 'abc' } });
-    dom.find('form').simulate('submit');
-
-    expect(dom.find('textarea')).toHaveValue('abc');
-  });
-
-  it('clears the text after submitting if requested', () => {
-    const dom = mount(<ExpandingTextEntry onSubmit={() => {}} clearAfterSubmit />);
-
-    dom.find('textarea').simulate('change', { target: { value: 'abc' } });
-    dom.find('form').simulate('submit');
-
-    expect(dom.find('textarea')).toHaveValue('');
-  });
-
-  it('displays extra options beside the submit button if specified', () => {
-    const dom = mount(<ExpandingTextEntry onSubmit={() => {}} extraOptions={<em />} />);
-
-    expect(dom.find('em')).toExist();
-  });
-
-  it('always applies the multiline class if extra options are given', () => {
-    const dom = mount(<ExpandingTextEntry onSubmit={() => {}} extraOptions={<em />} />);
-
-    expect(dom.find('form')).toHaveClassName('multiline');
+    it('always applies the multiline class if extra options are given', () => {
+      expect(rendered.container).toContainQuerySelector('form.multiline');
+    });
   });
 });

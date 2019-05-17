@@ -1,14 +1,12 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeRetro, makeArchive } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
-import 'jest-enzyme';
 
 import ArchivePage from './ArchivePage';
-import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 
 jest.mock('../../api/api');
-jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div />));
+jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div className="retro-format-picker" />));
 jest.mock('../common/Header', () => () => (<div />));
 
 describe('ArchivePage', () => {
@@ -22,15 +20,19 @@ describe('ArchivePage', () => {
   });
 
   it('renders a retro page', () => {
-    const dom = mount(<ArchivePage slug="abc" archiveId="myArchiveId" />);
-    expect(dom.find(RetroFormatPicker)).toExist();
+    const { container } = render((
+      <ArchivePage slug="abc" archiveId="myArchiveId" />
+    ));
+    expect(container).toContainQuerySelector('.retro-format-picker');
   });
 
   it('subscribes to the retro while mounted', () => {
-    const dom = mount(<ArchivePage slug="abc" archiveId="myArchiveId" />);
+    const { unmount } = render((
+      <ArchivePage slug="abc" archiveId="myArchiveId" />
+    ));
     expect(retroTracker.subscribed).toEqual(1);
 
-    dom.unmount();
+    unmount();
     expect(retroTracker.subscribed).toEqual(0);
   });
 });

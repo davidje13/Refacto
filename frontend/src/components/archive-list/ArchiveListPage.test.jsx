@@ -1,15 +1,13 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeRetro } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
-import 'jest-enzyme';
 
 import ArchiveListPage from './ArchiveListPage';
-import ArchiveList from './ArchiveList';
 
 jest.mock('../../api/api');
 jest.mock('../common/Header', () => () => (<div />));
-jest.mock('./ArchiveList', () => () => (<div />));
+jest.mock('./ArchiveList', () => () => (<div className="archive-list" />));
 
 describe('ArchiveListPage', () => {
   const retroData = { retro: makeRetro() };
@@ -21,15 +19,15 @@ describe('ArchiveListPage', () => {
   });
 
   it('renders an archive list page', () => {
-    const dom = mount(<ArchiveListPage slug="my-slug" />);
-    expect(dom.find(ArchiveList)).toExist();
+    const { container } = render(<ArchiveListPage slug="my-slug" />);
+    expect(container).toContainQuerySelector('.archive-list');
   });
 
   it('subscribes to the retro while mounted', async () => {
-    const dom = mount(<ArchiveListPage slug="my-slug" />);
+    const { unmount } = render(<ArchiveListPage slug="my-slug" />);
     expect(retroTracker.subscribed).toEqual(1);
 
-    dom.unmount();
+    unmount();
     expect(retroTracker.subscribed).toEqual(0);
   });
 });

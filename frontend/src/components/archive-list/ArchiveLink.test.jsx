@@ -1,31 +1,31 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 import { formatDateTime } from '../../time/formatters';
-import 'jest-enzyme';
 
 import ArchiveLink from './ArchiveLink';
 
 describe('ArchiveLink', () => {
   it('links to the archive', () => {
     const context = {};
-    const dom = mount((
+    const { container } = render((
       <StaticRouter location="/" context={context}>
         <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />
       </StaticRouter>
     ));
 
-    dom.find('div').simulate('click', { button: 0 });
+    fireEvent.click(container.querySelector('.archive-link'));
+
     expect(context.url).toEqual('/retros/bar/archives/a1');
   });
 
   it('displays the time of the archive', () => {
-    const dom = mount((
+    const { container } = render((
       <StaticRouter location="/" context={{}}>
         <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />
       </StaticRouter>
     ));
 
-    expect(dom).toIncludeText(formatDateTime(0));
+    expect(container).toHaveTextContent(formatDateTime(0));
   });
 });
