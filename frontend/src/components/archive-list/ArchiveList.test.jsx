@@ -1,17 +1,10 @@
 import React from 'react';
 import { render } from 'react-testing-library';
+import mockElement from '../../test-helpers/mockElement';
 
 import ArchiveList from './ArchiveList';
 
-/* eslint-disable-next-line react/prop-types */
-jest.mock('./ArchiveLink', () => ({ retroSlug, archiveId, created }) => (
-  <div
-    className="mock-link"
-    data-retro-slug={retroSlug}
-    data-archive-id={archiveId}
-    data-created={created}
-  />
-));
+jest.mock('./ArchiveLink', () => mockElement('fake-archive-link'));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
@@ -44,15 +37,19 @@ describe('ArchiveList', () => {
       <ArchiveList slug="foo" archives={archives} />
     ));
 
-    const links = container.querySelectorAll('.mock-link');
+    const links = container.querySelectorAll('fake-archive-link');
 
-    expect(links[0]).toHaveAttribute('data-retro-slug', 'foo');
-    expect(links[0]).toHaveAttribute('data-archive-id', 'a1');
-    expect(links[0]).toHaveAttribute('data-created', '10');
+    expect(links[0]).toHaveMockProps({
+      retroSlug: 'foo',
+      archiveId: 'a1',
+      created: 10,
+    });
 
-    expect(links[1]).toHaveAttribute('data-retro-slug', 'foo');
-    expect(links[1]).toHaveAttribute('data-archive-id', 'a2');
-    expect(links[1]).toHaveAttribute('data-created', '0');
+    expect(links[1]).toHaveMockProps({
+      retroSlug: 'foo',
+      archiveId: 'a2',
+      created: 0,
+    });
   });
 
   it('orders archives newest-to-oldest', () => {
@@ -66,10 +63,10 @@ describe('ArchiveList', () => {
       <ArchiveList slug="foo" archives={archives} />
     ));
 
-    const links = container.querySelectorAll('.mock-link');
+    const links = container.querySelectorAll('fake-archive-link');
 
-    expect(links[0]).toHaveAttribute('data-archive-id', 'a1');
-    expect(links[1]).toHaveAttribute('data-archive-id', 'a3');
-    expect(links[2]).toHaveAttribute('data-archive-id', 'a2');
+    expect(links[0]).toHaveMockProps('archiveId', 'a1');
+    expect(links[1]).toHaveMockProps('archiveId', 'a3');
+    expect(links[2]).toHaveMockProps('archiveId', 'a2');
   });
 });

@@ -1,13 +1,14 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import { makeRetro, makeArchive } from '../../test-helpers/dataFactories';
+import mockElement from '../../test-helpers/mockElement';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
 
 import ArchivePage from './ArchivePage';
 
 jest.mock('../../api/api');
-jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div className="retro-format-picker" />));
-jest.mock('../common/Header', () => () => (<div />));
+jest.mock('../retro-formats/RetroFormatPicker', () => mockElement('fake-retro-format-picker'));
+jest.mock('../common/Header', () => mockElement('fake-header'));
 
 describe('ArchivePage', () => {
   const retroData = { retro: makeRetro() };
@@ -23,7 +24,7 @@ describe('ArchivePage', () => {
     const { container } = render((
       <ArchivePage slug="abc" archiveId="myArchiveId" />
     ));
-    expect(container).toContainQuerySelector('.retro-format-picker');
+    expect(container).toContainQuerySelector('fake-retro-format-picker');
   });
 
   it('subscribes to the retro while mounted', () => {

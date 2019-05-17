@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import mockElement from '../../../../test-helpers/mockElement';
 import 'jest-enzyme';
 
 import ActionsPane from './ActionsPane';
@@ -8,8 +9,8 @@ import ActionSection from './ActionSection';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 
-jest.mock('../../../common/ExpandingTextEntry', () => () => (<div />));
-jest.mock('./ActionSection', () => () => (<div />));
+jest.mock('../../../common/ExpandingTextEntry', () => mockElement('fake-expanding-text-entry'));
+jest.mock('./ActionSection', () => mockElement('fake-action-section'));
 
 describe('ActionsPane', () => {
   const items = [

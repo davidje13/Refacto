@@ -1,14 +1,14 @@
 import React from 'react';
 import { render } from 'react-testing-library';
+import mockElement from '../../test-helpers/mockElement';
+import mockPropStorage from '../../test-helpers/mockPropStorage';
 import { userTokenTracker, retroListTracker } from '../../api/api';
 
 import RetroListPage from './RetroListPage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => () => (<div />));
-
-/* eslint-disable-next-line react/prop-types */
-jest.mock('./RetroList', () => ({ retros }) => (<div className="retro-list" data-retro-count={retros.length} />));
+jest.mock('../common/Header', () => mockElement('fake-header'));
+jest.mock('./RetroList', () => mockElement('fake-retro-list'));
 
 describe('RetroListPage', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('RetroListPage', () => {
   it('loads data when displayed', () => {
     const { container } = render(<RetroListPage />);
 
-    const retroList = container.querySelector('.retro-list');
-    expect(retroList).toHaveAttribute('data-retro-count', '1');
+    const retroList = container.querySelector('fake-retro-list');
+    expect(mockPropStorage.get(retroList).retros.length).toEqual(1);
   });
 });

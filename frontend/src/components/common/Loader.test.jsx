@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'react-testing-library';
+import mockElement from '../../test-helpers/mockElement';
 
 import Loader from './Loader';
 
-/* eslint-disable-next-line react/prop-types */
-const Component = ({ custom }) => (<div className="my-component" data-custom={custom} />);
+const Component = mockElement('my-component');
 
 describe('Loader', () => {
-  const COMPONENT_SELECTOR = '.my-component';
+  const COMPONENT_SELECTOR = 'my-component';
 
   it('displays a loading message and no content while loading', () => {
     const { container } = render(<Loader Component={Component} loading />);
@@ -30,6 +30,6 @@ describe('Loader', () => {
     expect(container).not.toHaveTextContent('Loading');
     expect(container).toContainQuerySelector(COMPONENT_SELECTOR);
     const component = container.querySelector(COMPONENT_SELECTOR);
-    expect(component).toHaveAttribute('data-custom', 'foo');
+    expect(component).toHaveMockProps('custom', 'foo');
   });
 });

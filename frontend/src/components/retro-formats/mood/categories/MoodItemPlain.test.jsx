@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import mockElement from '../../../../test-helpers/mockElement';
 
 import MoodItemPlain from './MoodItemPlain';
 
-/* eslint-disable-next-line react/prop-types */
-jest.mock('./VoteCount', () => ({ votes }) => (<div className="vote-count" data-votes={votes} />));
+jest.mock('./VoteCount', () => mockElement('fake-vote-count'));
 
 describe('MoodItemPlain', () => {
   it('displays the item message', () => {
@@ -19,8 +19,8 @@ describe('MoodItemPlain', () => {
     const item = makeItem({ votes: 3 });
     const { container } = render(<MoodItemPlain item={item} />);
 
-    const voteCount = container.querySelector('.vote-count');
-    expect(voteCount).toHaveAttribute('data-votes', '3');
+    const voteCount = container.querySelector('fake-vote-count');
+    expect(voteCount).toHaveMockProps('votes', 3);
   });
 
   it('does not mark items as done by default', () => {

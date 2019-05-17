@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import mockElement from '../../../../test-helpers/mockElement';
 import 'jest-enzyme';
 
 import MoodSection from './MoodSection';
@@ -8,8 +9,8 @@ import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 
-jest.mock('../ItemColumn', () => () => (<div />));
-jest.mock('../../../common/ExpandingTextEntry', () => () => (<div />));
+jest.mock('../ItemColumn', () => mockElement('fake-item-column'));
+jest.mock('../../../common/ExpandingTextEntry', () => mockElement('fake-expanding-text-entry'));
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {

@@ -1,13 +1,14 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import mockElement from '../../../../test-helpers/mockElement';
 import 'jest-enzyme';
 
 import ActionSection from './ActionSection';
 import ActionItem from './ActionItem';
 import ItemColumn from '../ItemColumn';
 
-jest.mock('../ItemColumn', () => () => (<div />));
+jest.mock('../ItemColumn', () => mockElement('fake-item-column'));
 
 describe('ActionSection', () => {
   it('displays a given title', () => {

@@ -1,12 +1,13 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { render, fireEvent } from 'react-testing-library';
+import mockElement from '../../test-helpers/mockElement';
 import { configService, userTokenTracker } from '../../api/api';
 
 import WelcomePage from './WelcomePage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => () => (<div />));
+jest.mock('../common/Header', () => mockElement('fake-header'));
 
 describe('WelcomePage', () => {
   describe('signed out', () => {

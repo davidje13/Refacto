@@ -1,11 +1,12 @@
 import React from 'react';
 import { render, fireEvent, act } from 'react-testing-library';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
+import mockElement from '../../test-helpers/mockElement';
 
 import PasswordPage from './PasswordPage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => () => (<div />));
+jest.mock('../common/Header', () => mockElement('fake-header'));
 
 function getToken(retroId) {
   return new Promise((resolve) => {

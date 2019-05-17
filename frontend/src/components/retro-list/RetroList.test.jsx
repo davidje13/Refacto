@@ -1,16 +1,10 @@
 import React from 'react';
 import { render } from 'react-testing-library';
+import mockElement from '../../test-helpers/mockElement';
 
 import RetroList from './RetroList';
 
-/* eslint-disable-next-line react/prop-types */
-jest.mock('./RetroLink', () => ({ name, slug }) => (
-  <div
-    className="mock-link"
-    data-name={name}
-    data-slug={slug}
-  />
-));
+jest.mock('./RetroLink', () => mockElement('fake-retro-link'));
 
 describe('RetroList', () => {
   const emptyLabel = 'do not have any retros';
@@ -40,11 +34,9 @@ describe('RetroList', () => {
 
     const { container } = render(<RetroList retros={retros} />);
 
-    const links = container.querySelectorAll('.mock-link');
+    const links = container.querySelectorAll('fake-retro-link');
 
-    expect(links[0]).toHaveAttribute('data-slug', 'a');
-    expect(links[0]).toHaveAttribute('data-name', 'R1');
-    expect(links[1]).toHaveAttribute('data-slug', 'b');
-    expect(links[1]).toHaveAttribute('data-name', 'R2');
+    expect(links[0]).toHaveMockProps({ slug: 'a', name: 'R1' });
+    expect(links[1]).toHaveMockProps({ slug: 'b', name: 'R2' });
   });
 });
