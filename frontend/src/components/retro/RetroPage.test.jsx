@@ -1,14 +1,12 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeRetro } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
-import 'jest-enzyme';
 
 import RetroPage from './RetroPage';
-import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 
 jest.mock('../../api/api');
-jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div />));
+jest.mock('../retro-formats/RetroFormatPicker', () => () => (<div className="retro-format-picker" />));
 jest.mock('../common/Header', () => () => (<div />));
 
 describe('RetroPage', () => {
@@ -21,7 +19,7 @@ describe('RetroPage', () => {
   });
 
   it('renders a retro page', () => {
-    const dom = mount(<RetroPage slug="abc" />);
-    expect(dom.find(RetroFormatPicker)).toExist();
+    const { container } = render(<RetroPage slug="abc" />);
+    expect(container).toContainQuerySelector('.retro-format-picker');
   });
 });
