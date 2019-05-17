@@ -1,45 +1,37 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeRetroData } from '../../test-helpers/dataFactories';
-import 'jest-enzyme';
 
 import RetroFormatPicker from './RetroFormatPicker';
-import MoodRetro from './mood/MoodRetro';
-import UnknownRetro from './unknown/UnknownRetro';
 
-jest.mock('./mood/MoodRetro', () => () => (<div />));
-jest.mock('./unknown/UnknownRetro', () => () => (<div />));
+jest.mock('./mood/MoodRetro', () => () => (<div className="mood-retro" />));
+jest.mock('./unknown/UnknownRetro', () => () => (<div className="unknown-retro" />));
 
 describe('Retro', () => {
   it('forwards properties to the specified retro format', () => {
     const retroData = makeRetroData({ format: 'mood' });
     const retroState = { foo: 'bar' };
 
-    const dom = mount((
+    const { container } = render((
       <RetroFormatPicker
         retroData={retroData}
         retroState={retroState}
       />
     ));
 
-    const format = dom.find(MoodRetro);
-    expect(format).toExist();
-    expect(format).toHaveProp({
-      retroData,
-      retroState,
-    });
+    expect(container).toContainQuerySelector('.mood-retro');
   });
 
   it('displays UnknownRetro for unknown formats', () => {
     const retroData = makeRetroData({ format: 'nope' });
-    const dom = mount((
+    const { container } = render((
       <RetroFormatPicker
         retroData={retroData}
         retroState={{}}
       />
     ));
 
-    expect(dom.find(UnknownRetro)).toExist();
-    expect(dom.find(MoodRetro)).not.toExist();
+    expect(container).toContainQuerySelector('.unknown-retro');
+    expect(container).not.toContainQuerySelector('.mood-retro');
   });
 });

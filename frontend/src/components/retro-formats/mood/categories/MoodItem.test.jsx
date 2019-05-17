@@ -1,7 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render, fireEvent } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
-import 'jest-enzyme';
 
 import MoodItem from './MoodItem';
 
@@ -9,49 +8,53 @@ describe('MoodItem integration', () => {
   const item = makeItem({ message: 'a message here', id: 'my-id', votes: 3 });
 
   it('displays the item message', () => {
-    const dom = mount(<MoodItem item={item} />);
+    const { container } = render(<MoodItem item={item} />);
 
-    expect(dom.find('button.message')).toHaveText(item.message);
+    const message = container.querySelector('button.message');
+    expect(message).toHaveTextContent(item.message);
   });
 
   it('displays the vote count', () => {
-    const dom = mount(<MoodItem item={item} />);
+    const { container } = render(<MoodItem item={item} />);
 
-    expect(dom.find('button.vote')).toHaveText('3');
+    const vote = container.querySelector('button.vote');
+    expect(vote).toHaveTextContent('3');
   });
 
   it('does not allow voting if no callback is given', () => {
-    const dom = mount(<MoodItem item={makeItem()} />);
+    const { container } = render(<MoodItem item={makeItem()} />);
 
-    expect(dom.find('button.vote')).toBeDisabled();
+    const vote = container.querySelector('button.vote');
+    expect(vote).toBeDisabled();
   });
 
   it('invokes the given callback with the item ID if voted on', () => {
     const onVote = jest.fn().mockName('onVote');
-    const dom = mount(<MoodItem item={item} onVote={onVote} />);
+    const { container } = render(<MoodItem item={item} onVote={onVote} />);
 
-    expect(dom.find('button.vote')).not.toBeDisabled();
-    dom.find('button.vote').simulate('click');
+    const vote = container.querySelector('button.vote');
+    expect(vote).not.toBeDisabled();
+    fireEvent.click(vote);
 
     expect(onVote).toHaveBeenCalled();
   });
 
   it('does not mark items as done or focused by default', () => {
-    const dom = mount(<MoodItem item={makeItem()} />);
+    const { container } = render(<MoodItem item={makeItem()} />);
 
-    expect(dom.find('.mood-item.done')).not.toExist();
-    expect(dom.find('.mood-item.focused')).not.toExist();
+    expect(container).not.toContainQuerySelector('.mood-item.done');
+    expect(container).not.toContainQuerySelector('.mood-item.focused');
   });
 
   it('marks the item as done if specified', () => {
-    const dom = mount(<MoodItem item={makeItem({ done: true })} />);
+    const { container } = render(<MoodItem item={makeItem({ done: true })} />);
 
-    expect(dom.find('.mood-item.done')).toExist();
+    expect(container).toContainQuerySelector('.mood-item.done');
   });
 
   it('marks the item as focused if specified', () => {
-    const dom = mount(<MoodItem item={makeItem()} focused />);
+    const { container } = render(<MoodItem item={makeItem()} focused />);
 
-    expect(dom.find('.mood-item.focused')).toExist();
+    expect(container).toContainQuerySelector('.mood-item.focused');
   });
 });

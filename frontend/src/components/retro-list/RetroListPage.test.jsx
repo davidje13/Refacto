@@ -1,14 +1,14 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { userTokenTracker, retroListTracker } from '../../api/api';
-import 'jest-enzyme';
 
 import RetroListPage from './RetroListPage';
-import RetroList from './RetroList';
 
 jest.mock('../../api/api');
 jest.mock('../common/Header', () => () => (<div />));
-jest.mock('./RetroList', () => () => (<div />));
+
+/* eslint-disable-next-line react/prop-types */
+jest.mock('./RetroList', () => ({ retros }) => (<div className="retro-list" data-retro-count={retros.length} />));
 
 describe('RetroListPage', () => {
   beforeEach(() => {
@@ -19,7 +19,9 @@ describe('RetroListPage', () => {
   });
 
   it('loads data when displayed', () => {
-    const dom = mount(<RetroListPage />);
-    expect(dom.find(RetroList).prop('retros')).toHaveLength(1);
+    const { container } = render(<RetroListPage />);
+
+    const retroList = container.querySelector('.retro-list');
+    expect(retroList).toHaveAttribute('data-retro-count', '1');
   });
 });

@@ -1,38 +1,38 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
-import 'jest-enzyme';
 
 import MoodItemPlain from './MoodItemPlain';
-import VoteCount from './VoteCount';
 
-jest.mock('./VoteCount', () => () => (<div />));
+/* eslint-disable-next-line react/prop-types */
+jest.mock('./VoteCount', () => ({ votes }) => (<div className="vote-count" data-votes={votes} />));
 
 describe('MoodItemPlain', () => {
   it('displays the item message', () => {
     const item = makeItem({ message: 'a message here' });
-    const dom = mount(<MoodItemPlain item={item} />);
+    const { container } = render(<MoodItemPlain item={item} />);
 
-    expect(dom).toIncludeText('a message here');
+    expect(container).toHaveTextContent('a message here');
   });
 
   it('displays the vote count', () => {
     const item = makeItem({ votes: 3 });
-    const dom = mount(<MoodItemPlain item={item} />);
+    const { container } = render(<MoodItemPlain item={item} />);
 
-    expect(dom.find(VoteCount)).toHaveProp({ votes: 3 });
+    const voteCount = container.querySelector('.vote-count');
+    expect(voteCount).toHaveAttribute('data-votes', '3');
   });
 
   it('does not mark items as done by default', () => {
-    const dom = mount(<MoodItemPlain item={makeItem()} />);
+    const { container } = render(<MoodItemPlain item={makeItem()} />);
 
-    expect(dom.find('.done')).not.toExist();
+    expect(container).not.toContainQuerySelector('.done');
   });
 
   it('marks the item as done if specified', () => {
     const item = makeItem({ done: true });
-    const dom = mount(<MoodItemPlain item={item} />);
+    const { container } = render(<MoodItemPlain item={item} />);
 
-    expect(dom.find('.done')).toExist();
+    expect(container).toContainQuerySelector('.done');
   });
 });
