@@ -147,6 +147,8 @@ installed (see [Running tests](#running-tests)).
 - `update`: <https://github.com/davidje13/json-immutability-helper> / <https://github.com/kolodny/immutability-helper>
 - React Router: <https://reacttraining.com/react-router/web/api>
 - Jest: <https://jestjs.io/docs/en/api>
+- React Testing Library <https://github.com/testing-library/react-testing-library>
+- Jest DOM Matchers <https://github.com/testing-library/jest-dom>
 - Enzyme: <https://github.com/airbnb/enzyme>
 - Jest Enzyme Matchers: <https://github.com/FormidableLabs/enzyme-matchers/tree/master/packages/jest-enzyme>
 - Supertest: <https://github.com/visionmedia/supertest> and <https://visionmedia.github.io/superagent/>
