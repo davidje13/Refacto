@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'react-testing-library';
-import { act } from 'react-dom/test-utils';
+import { render, fireEvent, act } from 'react-testing-library';
 
 import VoteCount from './VoteCount';
 
