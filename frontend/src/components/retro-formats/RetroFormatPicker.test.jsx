@@ -1,11 +1,12 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import { makeRetroData } from '../../test-helpers/dataFactories';
+import mockElement from '../../test-helpers/mockElement';
 
 import RetroFormatPicker from './RetroFormatPicker';
 
-jest.mock('./mood/MoodRetro', () => () => (<div className="mood-retro" />));
-jest.mock('./unknown/UnknownRetro', () => () => (<div className="unknown-retro" />));
+jest.mock('./mood/MoodRetro', () => mockElement('fake-mood-retro'));
+jest.mock('./unknown/UnknownRetro', () => mockElement('fake-unknown-retro'));
 
 describe('Retro', () => {
   it('forwards properties to the specified retro format', () => {
@@ -19,7 +20,11 @@ describe('Retro', () => {
       />
     ));
 
-    expect(container).toContainQuerySelector('.mood-retro');
+    expect(container).toContainQuerySelector('fake-mood-retro');
+    expect(container.querySelector('fake-mood-retro')).toHaveMockProps({
+      retroData,
+      retroState,
+    });
   });
 
   it('displays UnknownRetro for unknown formats', () => {
@@ -31,7 +36,7 @@ describe('Retro', () => {
       />
     ));
 
-    expect(container).toContainQuerySelector('.unknown-retro');
-    expect(container).not.toContainQuerySelector('.mood-retro');
+    expect(container).toContainQuerySelector('fake-unknown-retro');
+    expect(container).not.toContainQuerySelector('fake-mood-retro');
   });
 });
