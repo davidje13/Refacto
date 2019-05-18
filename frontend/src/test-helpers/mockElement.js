@@ -16,7 +16,7 @@ Object.defineProperty(HTMLElement.prototype, 'mockProps', {
 export default (tagName) => (props) => {
   const ref = useRef();
   useLayoutEffect(() => {
-    mockPropStorage.set(ref.current, props);
+    mockPropStorage.set(ref.current, Object.freeze(props));
   }, [ref, props]);
 
   return React.createElement(tagName, { ref });
