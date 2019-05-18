@@ -7,13 +7,11 @@ import Loader from './Loader';
 const Component = mockElement('my-component');
 
 describe('Loader', () => {
-  const COMPONENT_SELECTOR = 'my-component';
-
   it('displays a loading message and no content while loading', () => {
     const { container } = render(<Loader Component={Component} loading />);
 
     expect(container).toHaveTextContent('Loading');
-    expect(container).not.toContainQuerySelector(COMPONENT_SELECTOR);
+    expect(container).not.toContainQuerySelector('my-component');
   });
 
   it('displays custom loading messages', () => {
@@ -28,8 +26,8 @@ describe('Loader', () => {
     const { container } = render(<Loader Component={Component} custom="foo" />);
 
     expect(container).not.toHaveTextContent('Loading');
-    expect(container).toContainQuerySelector(COMPONENT_SELECTOR);
-    const component = container.querySelector(COMPONENT_SELECTOR);
+    expect(container).toContainQuerySelector('my-component');
+    const component = container.querySelector('my-component');
     expect(component).toHaveMockProps('custom', 'foo');
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, act } from 'react-testing-library';
+import { render, fireEvent } from 'react-testing-library';
 
 import VoteCount from './VoteCount';
 
@@ -22,7 +22,7 @@ describe('VoteCount', () => {
 
     const voteButton = container.querySelector('button.vote');
     expect(voteButton).toBeEnabled();
-    await act(async () => fireEvent.click(voteButton));
+    fireEvent.click(voteButton);
 
     expect(onVote).toHaveBeenCalled();
   });

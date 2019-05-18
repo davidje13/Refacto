@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, act } from 'react-testing-library';
+import { render, fireEvent } from 'react-testing-library';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
 import mockElement from '../../test-helpers/mockElement';
 
@@ -27,11 +27,8 @@ describe('PasswordPage', () => {
 
     const form = container.querySelector('form');
     const fieldPassword = form.querySelector('input[type=password]');
-    await act(async () => fireEvent.change(
-      fieldPassword,
-      { target: { value: 'my-password' } },
-    ));
-    await act(async () => fireEvent.submit(form));
+    fireEvent.change(fieldPassword, { target: { value: 'my-password' } });
+    fireEvent.submit(form);
 
     const retroToken = await getToken('myRetroId');
     expect(retroTokenService.capturedPassword).toEqual('my-password');

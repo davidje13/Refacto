@@ -61,10 +61,7 @@ describe('Application', () => {
 
     const form = dom.querySelector('form');
     const fieldPassword = form.querySelector('input[type=password]');
-    await act(async () => fireEvent.change(
-      fieldPassword,
-      { target: { value: 'anything' } },
-    ));
+    fireEvent.change(fieldPassword, { target: { value: 'anything' } });
     await act(async () => fireEvent.submit(form));
 
     expect(dom).toContainQuerySelector('.page-retro');
