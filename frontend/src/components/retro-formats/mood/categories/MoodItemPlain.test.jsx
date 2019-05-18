@@ -5,7 +5,7 @@ import mockElement from '../../../../test-helpers/mockElement';
 
 import MoodItemPlain from './MoodItemPlain';
 
-jest.mock('./VoteCount', () => mockElement('fake-vote-count'));
+jest.mock('./VoteCount', () => mockElement('mock-vote-count'));
 
 describe('MoodItemPlain', () => {
   it('displays the item message', () => {
@@ -19,7 +19,7 @@ describe('MoodItemPlain', () => {
     const item = makeItem({ votes: 3 });
     const { container } = render(<MoodItemPlain item={item} />);
 
-    const voteCount = container.querySelector('fake-vote-count');
+    const voteCount = container.querySelector('mock-vote-count');
     expect(voteCount).toHaveMockProps('votes', 3);
   });
 

@@ -6,8 +6,8 @@ import mockElement from '../../../../test-helpers/mockElement';
 import MoodSection from './MoodSection';
 import MoodItem from './MoodItem';
 
-jest.mock('../ItemColumn', () => mockElement('fake-item-column'));
-jest.mock('../../../common/ExpandingTextEntry', () => mockElement('fake-expanding-text-entry'));
+jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
+jest.mock('../../../common/ExpandingTextEntry', () => mockElement('mock-expanding-text-entry'));
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {
@@ -21,7 +21,7 @@ describe('MoodSection', () => {
       <MoodSection category="" items={[]} focusedItemId="b" />
     ));
 
-    expect(container.querySelector('fake-item-column')).toHaveMockProps({
+    expect(container.querySelector('mock-item-column')).toHaveMockProps({
       focusedItemId: 'b',
     });
   });
@@ -33,7 +33,7 @@ describe('MoodSection', () => {
     ];
     const { container } = render(<MoodSection category="abc" items={items} />);
 
-    expect(container.querySelector('fake-item-column')).toHaveMockProps({
+    expect(container.querySelector('mock-item-column')).toHaveMockProps({
       ItemType: MoodItem,
       items,
     });
@@ -46,7 +46,7 @@ describe('MoodSection', () => {
     ];
     const { container } = render(<MoodSection category="yay" items={items} />);
 
-    expect(container.querySelector('fake-item-column')).toHaveMockProps({
+    expect(container.querySelector('mock-item-column')).toHaveMockProps({
       items: [items[1]],
     });
   });
@@ -54,7 +54,7 @@ describe('MoodSection', () => {
   it('does not render an input field if no callback is provided', () => {
     const { container } = render(<MoodSection category="" items={[]} />);
 
-    expect(container).not.toContainQuerySelector('fake-expanding-text-entry');
+    expect(container).not.toContainQuerySelector('mock-expanding-text-entry');
   });
 
   it('renders an input field if a callback is provided', () => {
@@ -62,7 +62,7 @@ describe('MoodSection', () => {
       <MoodSection category="" items={[]} onAddItem={() => {}} />
     ));
 
-    expect(container).toContainQuerySelector('fake-expanding-text-entry');
+    expect(container).toContainQuerySelector('mock-expanding-text-entry');
   });
 
   it('adds the current category to new items', () => {
@@ -75,7 +75,7 @@ describe('MoodSection', () => {
       />
     ));
 
-    const textEntry = container.querySelector('fake-expanding-text-entry');
+    const textEntry = container.querySelector('mock-expanding-text-entry');
     textEntry.mockProps.onSubmit('my message');
 
     expect(onAddItem).toHaveBeenCalledWith('my-category', 'my message');

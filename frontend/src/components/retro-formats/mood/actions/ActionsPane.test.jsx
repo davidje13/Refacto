@@ -6,8 +6,8 @@ import mockElement from '../../../../test-helpers/mockElement';
 import ActionsPane from './ActionsPane';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 
-jest.mock('../../../common/ExpandingTextEntry', () => mockElement('fake-expanding-text-entry'));
-jest.mock('./ActionSection', () => mockElement('fake-action-section'));
+jest.mock('../../../common/ExpandingTextEntry', () => mockElement('mock-expanding-text-entry'));
+jest.mock('./ActionSection', () => mockElement('mock-action-section'));
 
 describe('ActionsPane', () => {
   const items = [
@@ -31,7 +31,7 @@ describe('ActionsPane', () => {
         localDateProvider={localDateProvider}
       />
     ));
-    sections = rendered.container.querySelectorAll('fake-action-section');
+    sections = rendered.container.querySelectorAll('mock-action-section');
   });
 
   it('creates a section for today', () => {
@@ -67,7 +67,7 @@ describe('ActionsPane', () => {
 
   it('does not render an input field if no callback is provided', () => {
     expect(rendered.container)
-      .not.toContainQuerySelector('fake-expanding-text-entry');
+      .not.toContainQuerySelector('mock-expanding-text-entry');
   });
 
   it('renders an input field if a callback is provided', () => {
@@ -80,6 +80,6 @@ describe('ActionsPane', () => {
     ));
 
     expect(rendered.container)
-      .toContainQuerySelector('fake-expanding-text-entry');
+      .toContainQuerySelector('mock-expanding-text-entry');
   });
 });

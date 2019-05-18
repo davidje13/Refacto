@@ -6,7 +6,7 @@ import mockElement from '../../../../test-helpers/mockElement';
 import ActionSection from './ActionSection';
 import ActionItem from './ActionItem';
 
-jest.mock('../ItemColumn', () => mockElement('fake-item-column'));
+jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
 
 describe('ActionSection', () => {
   it('displays a given title', () => {
@@ -22,7 +22,7 @@ describe('ActionSection', () => {
     ];
     const { container } = render(<ActionSection title="" items={items} />);
 
-    expect(container.querySelector('fake-item-column')).toHaveMockProps({
+    expect(container.querySelector('mock-item-column')).toHaveMockProps({
       ItemType: ActionItem,
       items,
     });
@@ -35,7 +35,7 @@ describe('ActionSection', () => {
     ];
     const { container } = render(<ActionSection title="" items={items} />);
 
-    expect(container.querySelector('fake-item-column')).toHaveMockProps({
+    expect(container.querySelector('mock-item-column')).toHaveMockProps({
       items: [items[1]],
     });
   });
@@ -56,7 +56,7 @@ describe('ActionSection', () => {
       />
     ));
 
-    expect(container.querySelector('fake-item-column')).toHaveMockProps({
+    expect(container.querySelector('mock-item-column')).toHaveMockProps({
       items: [items[0]],
     });
   });

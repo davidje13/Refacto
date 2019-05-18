@@ -4,7 +4,7 @@ import mockElement from '../../test-helpers/mockElement';
 
 import NotFoundPage from './NotFoundPage';
 
-jest.mock('../common/Header', () => mockElement('fake-header'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('NotFoundPage', () => {
   it('displays a message', () => {

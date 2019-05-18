@@ -7,7 +7,7 @@ import { configService, userTokenTracker } from '../../api/api';
 import WelcomePage from './WelcomePage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => mockElement('fake-header'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('WelcomePage', () => {
   describe('signed out', () => {

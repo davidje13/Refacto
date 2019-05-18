@@ -6,8 +6,8 @@ import { userTokenTracker, retroListTracker } from '../../api/api';
 import RetroListPage from './RetroListPage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => mockElement('fake-header'));
-jest.mock('./RetroList', () => mockElement('fake-retro-list'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
+jest.mock('./RetroList', () => mockElement('mock-retro-list'));
 
 describe('RetroListPage', () => {
   beforeEach(() => {
@@ -20,7 +20,7 @@ describe('RetroListPage', () => {
   it('loads data when displayed', () => {
     const { container } = render(<RetroListPage />);
 
-    const retroList = container.querySelector('fake-retro-list');
+    const retroList = container.querySelector('mock-retro-list');
     expect(retroList.mockProps.retros.length).toEqual(1);
   });
 });

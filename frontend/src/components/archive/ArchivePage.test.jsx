@@ -7,8 +7,8 @@ import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
 import ArchivePage from './ArchivePage';
 
 jest.mock('../../api/api');
-jest.mock('../retro-formats/RetroFormatPicker', () => mockElement('fake-retro-format-picker'));
-jest.mock('../common/Header', () => mockElement('fake-header'));
+jest.mock('../retro-formats/RetroFormatPicker', () => mockElement('mock-retro-format-picker'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('ArchivePage', () => {
   const retroData = { retro: makeRetro() };
@@ -24,7 +24,7 @@ describe('ArchivePage', () => {
     const { container } = render((
       <ArchivePage slug="abc" archiveId="myArchiveId" />
     ));
-    expect(container).toContainQuerySelector('fake-retro-format-picker');
+    expect(container).toContainQuerySelector('mock-retro-format-picker');
   });
 
   it('subscribes to the retro while mounted', () => {

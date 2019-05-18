@@ -4,7 +4,7 @@ import mockElement from '../../test-helpers/mockElement';
 
 import ArchiveList from './ArchiveList';
 
-jest.mock('./ArchiveLink', () => mockElement('fake-archive-link'));
+jest.mock('./ArchiveLink', () => mockElement('mock-archive-link'));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
@@ -37,7 +37,7 @@ describe('ArchiveList', () => {
       <ArchiveList slug="foo" archives={archives} />
     ));
 
-    const links = container.querySelectorAll('fake-archive-link');
+    const links = container.querySelectorAll('mock-archive-link');
 
     expect(links[0]).toHaveMockProps({
       retroSlug: 'foo',
@@ -63,7 +63,7 @@ describe('ArchiveList', () => {
       <ArchiveList slug="foo" archives={archives} />
     ));
 
-    const links = container.querySelectorAll('fake-archive-link');
+    const links = container.querySelectorAll('mock-archive-link');
 
     expect(links[0]).toHaveMockProps('archiveId', 'a1');
     expect(links[1]).toHaveMockProps('archiveId', 'a3');

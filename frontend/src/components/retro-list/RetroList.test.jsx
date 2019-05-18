@@ -4,7 +4,7 @@ import mockElement from '../../test-helpers/mockElement';
 
 import RetroList from './RetroList';
 
-jest.mock('./RetroLink', () => mockElement('fake-retro-link'));
+jest.mock('./RetroLink', () => mockElement('mock-retro-link'));
 
 describe('RetroList', () => {
   const emptyLabel = 'do not have any retros';
@@ -34,7 +34,7 @@ describe('RetroList', () => {
 
     const { container } = render(<RetroList retros={retros} />);
 
-    const links = container.querySelectorAll('fake-retro-link');
+    const links = container.querySelectorAll('mock-retro-link');
 
     expect(links[0]).toHaveMockProps({ slug: 'a', name: 'R1' });
     expect(links[1]).toHaveMockProps({ slug: 'b', name: 'R2' });

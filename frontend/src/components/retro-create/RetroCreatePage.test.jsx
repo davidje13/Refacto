@@ -5,7 +5,7 @@ import mockElement from '../../test-helpers/mockElement';
 
 import RetroCreatePage from './RetroCreatePage';
 
-jest.mock('../common/Header', () => mockElement('fake-header'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('RetroCreatePage', () => {
   it('renders without error', () => {

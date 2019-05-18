@@ -6,7 +6,7 @@ import mockElement from '../../test-helpers/mockElement';
 import PasswordPage from './PasswordPage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => mockElement('fake-header'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
 
 function getToken(retroId) {
   return new Promise((resolve) => {

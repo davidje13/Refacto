@@ -7,8 +7,8 @@ import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
 import ArchiveListPage from './ArchiveListPage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => mockElement('fake-header'));
-jest.mock('./ArchiveList', () => mockElement('fake-archive-list'));
+jest.mock('../common/Header', () => mockElement('mock-header'));
+jest.mock('./ArchiveList', () => mockElement('mock-archive-list'));
 
 describe('ArchiveListPage', () => {
   const retroData = { retro: makeRetro() };
@@ -21,7 +21,7 @@ describe('ArchiveListPage', () => {
 
   it('renders an archive list page', () => {
     const { container } = render(<ArchiveListPage slug="my-slug" />);
-    expect(container).toContainQuerySelector('fake-archive-list');
+    expect(container).toContainQuerySelector('mock-archive-list');
   });
 
   it('subscribes to the retro while mounted', async () => {
