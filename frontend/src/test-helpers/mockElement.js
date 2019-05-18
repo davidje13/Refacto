@@ -1,5 +1,17 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import mockPropStorage from './mockPropStorage';
+
+const mockPropStorage = new WeakMap();
+
+Object.defineProperty(HTMLElement.prototype, 'mockProps', {
+  configurable: true,
+  get: function getMockProps() {
+    const props = mockPropStorage.get(this);
+    if (!props) {
+      throw new Error('Cannot get mockProps of a non-mocked element');
+    }
+    return props;
+  },
+});
 
 export default (tagName) => (props) => {
   const ref = useRef();

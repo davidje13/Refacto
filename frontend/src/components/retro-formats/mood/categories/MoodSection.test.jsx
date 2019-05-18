@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import mockElement from '../../../../test-helpers/mockElement';
-import mockPropStorage from '../../../../test-helpers/mockPropStorage';
 
 import MoodSection from './MoodSection';
 import MoodItem from './MoodItem';
@@ -77,7 +76,7 @@ describe('MoodSection', () => {
     ));
 
     const textEntry = container.querySelector('fake-expanding-text-entry');
-    mockPropStorage.get(textEntry).onSubmit('my message');
+    textEntry.mockProps.onSubmit('my message');
 
     expect(onAddItem).toHaveBeenCalledWith('my-category', 'my message');
   });

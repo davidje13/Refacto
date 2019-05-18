@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import mockElement from '../../../../test-helpers/mockElement';
-import mockPropStorage from '../../../../test-helpers/mockPropStorage';
 
 import ActionsPane from './ActionsPane';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
@@ -38,7 +37,7 @@ describe('ActionsPane', () => {
   it('creates a section for today', () => {
     const today = sections[0];
 
-    expect(mockPropStorage.get(today).title).toContain('Today');
+    expect(today.mockProps.title).toContain('Today');
     expect(today).toHaveMockProps({
       items,
       rangeFrom: 0,
@@ -48,7 +47,7 @@ describe('ActionsPane', () => {
   it('creates a section for the past week', () => {
     const week = sections[1];
 
-    expect(mockPropStorage.get(week).title).toContain('Past Week');
+    expect(week.mockProps.title).toContain('Past Week');
     expect(week).toHaveMockProps({
       items,
       rangeFrom: -70,
@@ -59,7 +58,7 @@ describe('ActionsPane', () => {
   it('creates a section for older items', () => {
     const older = sections[2];
 
-    expect(mockPropStorage.get(older).title).toContain('Older');
+    expect(older.mockProps.title).toContain('Older');
     expect(older).toHaveMockProps({
       items,
       rangeTo: -70,

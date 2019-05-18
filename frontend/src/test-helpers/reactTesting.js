@@ -2,7 +2,6 @@ import { cleanup } from 'react-testing-library';
 import { matcherHint, printReceived, printExpected } from 'jest-matcher-utils';
 import fastDeepEqual from 'fast-deep-equal';
 import 'jest-dom/extend-expect';
-import mockPropStorage from './mockPropStorage';
 
 function toContainQuerySelector(element, selector) {
   if (!element) {
@@ -30,7 +29,7 @@ function toHaveMockProps(element, checkOrKey, value = undefined) {
     check = { [checkOrKey]: value };
   }
 
-  const elProps = mockPropStorage.get(element);
+  const elProps = element.mockProps;
 
   const mismatches = [];
   Object.keys(check).forEach((key) => {

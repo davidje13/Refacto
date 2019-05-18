@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from '../../test-helpers/mockElement';
-import mockPropStorage from '../../test-helpers/mockPropStorage';
 import { userTokenTracker, retroListTracker } from '../../api/api';
 
 import RetroListPage from './RetroListPage';
@@ -22,6 +21,6 @@ describe('RetroListPage', () => {
     const { container } = render(<RetroListPage />);
 
     const retroList = container.querySelector('fake-retro-list');
-    expect(mockPropStorage.get(retroList).retros.length).toEqual(1);
+    expect(retroList.mockProps.retros.length).toEqual(1);
   });
 });
