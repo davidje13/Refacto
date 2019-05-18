@@ -1,28 +1,28 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import mockElement from '../../../../test-helpers/mockElement';
-import 'jest-enzyme';
+import mockPropStorage from '../../../../test-helpers/mockPropStorage';
 
 import MoodSection from './MoodSection';
 import MoodItem from './MoodItem';
-import ItemColumn from '../ItemColumn';
-import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 
 jest.mock('../ItemColumn', () => mockElement('fake-item-column'));
 jest.mock('../../../common/ExpandingTextEntry', () => mockElement('fake-expanding-text-entry'));
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {
-    const dom = mount(<MoodSection category="woo" items={[]} />);
+    const { container } = render(<MoodSection category="woo" items={[]} />);
 
-    expect(dom.find('h2')).toHaveText('woo');
+    expect(container.querySelector('h2')).toHaveTextContent('woo');
   });
 
   it('propagates focused ID', () => {
-    const dom = mount(<MoodSection category="" items={[]} focusedItemId="b" />);
+    const { container } = render((
+      <MoodSection category="" items={[]} focusedItemId="b" />
+    ));
 
-    expect(dom.find(ItemColumn)).toHaveProp({
+    expect(container.querySelector('fake-item-column')).toHaveMockProps({
       focusedItemId: 'b',
     });
   });
@@ -32,9 +32,9 @@ describe('MoodSection', () => {
       makeItem({ category: 'abc', message: 'foo' }),
       makeItem({ category: 'abc', message: 'bar' }),
     ];
-    const dom = mount(<MoodSection category="abc" items={items} />);
+    const { container } = render(<MoodSection category="abc" items={items} />);
 
-    expect(dom.find(ItemColumn)).toHaveProp({
+    expect(container.querySelector('fake-item-column')).toHaveMockProps({
       ItemType: MoodItem,
       items,
     });
@@ -45,28 +45,30 @@ describe('MoodSection', () => {
       makeItem({ category: 'nope', message: 'foo' }),
       makeItem({ category: 'yay', message: 'bar' }),
     ];
-    const dom = mount(<MoodSection category="yay" items={items} />);
+    const { container } = render(<MoodSection category="yay" items={items} />);
 
-    expect(dom.find(ItemColumn)).toHaveProp({
+    expect(container.querySelector('fake-item-column')).toHaveMockProps({
       items: [items[1]],
     });
   });
 
   it('does not render an input field if no callback is provided', () => {
-    const dom = mount(<MoodSection category="" items={[]} />);
+    const { container } = render(<MoodSection category="" items={[]} />);
 
-    expect(dom.find(ExpandingTextEntry)).not.toExist();
+    expect(container).not.toContainQuerySelector('fake-expanding-text-entry');
   });
 
   it('renders an input field if a callback is provided', () => {
-    const dom = mount(<MoodSection category="" items={[]} onAddItem={() => {}} />);
+    const { container } = render((
+      <MoodSection category="" items={[]} onAddItem={() => {}} />
+    ));
 
-    expect(dom.find(ExpandingTextEntry)).toExist();
+    expect(container).toContainQuerySelector('fake-expanding-text-entry');
   });
 
   it('adds the current category to new items', () => {
     const onAddItem = jest.fn().mockName('onAddItem');
-    const dom = mount((
+    const { container } = render((
       <MoodSection
         category="my-category"
         items={[]}
@@ -74,7 +76,8 @@ describe('MoodSection', () => {
       />
     ));
 
-    dom.find(ExpandingTextEntry).props().onSubmit('my message');
+    const textEntry = container.querySelector('fake-expanding-text-entry');
+    mockPropStorage.get(textEntry).onSubmit('my message');
 
     expect(onAddItem).toHaveBeenCalledWith('my-category', 'my message');
   });

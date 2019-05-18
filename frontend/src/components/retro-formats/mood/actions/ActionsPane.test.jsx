@@ -1,12 +1,10 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import mockElement from '../../../../test-helpers/mockElement';
-import 'jest-enzyme';
+import mockPropStorage from '../../../../test-helpers/mockPropStorage';
 
 import ActionsPane from './ActionsPane';
-import ActionSection from './ActionSection';
-import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 
 jest.mock('../../../common/ExpandingTextEntry', () => mockElement('fake-expanding-text-entry'));
@@ -19,7 +17,7 @@ describe('ActionsPane', () => {
     makeItem({ id: '3' }),
   ];
 
-  let dom;
+  let rendered;
   let sections;
   let localDateProvider;
 
@@ -28,30 +26,30 @@ describe('ActionsPane', () => {
     jest.spyOn(localDateProvider, 'getMidnightTimestamp')
       .mockImplementation((days = 0) => days * 10);
 
-    dom = mount((
+    rendered = render((
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
       />
     ));
-    sections = dom.find(ActionSection);
+    sections = rendered.container.querySelectorAll('fake-action-section');
   });
 
   it('creates a section for today', () => {
-    const today = sections.at(0);
+    const today = sections[0];
 
-    expect(today.props().title).toContain('Today');
-    expect(today).toHaveProp({
+    expect(mockPropStorage.get(today).title).toContain('Today');
+    expect(today).toHaveMockProps({
       items,
       rangeFrom: 0,
     });
   });
 
   it('creates a section for the past week', () => {
-    const week = sections.at(1);
+    const week = sections[1];
 
-    expect(week.props().title).toContain('Past Week');
-    expect(week).toHaveProp({
+    expect(mockPropStorage.get(week).title).toContain('Past Week');
+    expect(week).toHaveMockProps({
       items,
       rangeFrom: -70,
       rangeTo: 0,
@@ -59,21 +57,22 @@ describe('ActionsPane', () => {
   });
 
   it('creates a section for older items', () => {
-    const older = sections.at(2);
+    const older = sections[2];
 
-    expect(older.props().title).toContain('Older');
-    expect(older).toHaveProp({
+    expect(mockPropStorage.get(older).title).toContain('Older');
+    expect(older).toHaveMockProps({
       items,
       rangeTo: -70,
     });
   });
 
   it('does not render an input field if no callback is provided', () => {
-    expect(dom.find(ExpandingTextEntry)).not.toExist();
+    expect(rendered.container)
+      .not.toContainQuerySelector('fake-expanding-text-entry');
   });
 
   it('renders an input field if a callback is provided', () => {
-    dom = mount((
+    rendered = render((
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
@@ -81,6 +80,7 @@ describe('ActionsPane', () => {
       />
     ));
 
-    expect(dom.find(ExpandingTextEntry)).toExist();
+    expect(rendered.container)
+      .toContainQuerySelector('fake-expanding-text-entry');
   });
 });

@@ -1,5 +1,6 @@
 import { cleanup } from 'react-testing-library';
 import { matcherHint, printReceived, printExpected } from 'jest-matcher-utils';
+import fastDeepEqual from 'fast-deep-equal';
 import 'jest-dom/extend-expect';
 import mockPropStorage from './mockPropStorage';
 
@@ -39,7 +40,7 @@ function toHaveMockProps(element, checkOrKey, value = undefined) {
       if (actual === undefined) {
         mismatches.push(key);
       }
-    } else if (expected !== actual) {
+    } else if (!fastDeepEqual(expected, actual)) {
       mismatches.push(key);
     }
   });

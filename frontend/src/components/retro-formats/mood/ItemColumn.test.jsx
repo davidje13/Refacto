@@ -1,49 +1,58 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeItem } from '../../../test-helpers/dataFactories';
-import 'jest-enzyme';
+import mockElement from '../../../test-helpers/mockElement';
 
 import ItemColumn from './ItemColumn';
 
-const Item = () => (<div />);
+const Item = mockElement('my-item');
 
 describe('ItemColumn', () => {
   it('displays all items', () => {
     const item1 = makeItem({ id: 'a' });
     const item2 = makeItem({ id: 'b' });
-    const dom = mount(<ItemColumn items={[item1, item2]} ItemType={Item} />);
+    const { container } = render((
+      <ItemColumn items={[item1, item2]} ItemType={Item} />
+    ));
 
-    expect(dom.find(Item).length).toEqual(2);
+    expect(container.querySelectorAll('my-item').length).toEqual(2);
   });
 
   it('orders items newest-first', () => {
     const item1 = makeItem({ id: 'a', created: 100 });
     const item2 = makeItem({ id: 'b', created: 200 });
-    const dom = mount(<ItemColumn items={[item1, item2]} ItemType={Item} />);
+    const { container } = render((
+      <ItemColumn items={[item1, item2]} ItemType={Item} />
+    ));
 
-    const displayedItems = dom.find(Item);
-    expect(displayedItems.at(0)).toHaveProp({ item: item2 });
-    expect(displayedItems.at(1)).toHaveProp({ item: item1 });
+    const displayedItems = container.querySelectorAll('my-item');
+    expect(displayedItems[0]).toHaveMockProps({ item: item2 });
+    expect(displayedItems[1]).toHaveMockProps({ item: item1 });
   });
 
   it('passes extra props to the items unchanged', () => {
     const item = makeItem();
-    const dom = mount(<ItemColumn items={[item]} ItemType={Item} foo="bar" />);
+    const { container } = render((
+      <ItemColumn items={[item]} ItemType={Item} foo="bar" />
+    ));
 
-    const displayedItems = dom.find(Item);
-    expect(displayedItems.at(0)).toHaveProp({ foo: 'bar' });
+    const displayedItems = container.querySelectorAll('my-item');
+    expect(displayedItems[0]).toHaveMockProps({ foo: 'bar' });
   });
 
   it('focuses nothing by default', () => {
     const item = makeItem();
-    const dom = mount(<ItemColumn items={[item]} ItemType={Item} />);
+    const { container } = render((
+      <ItemColumn items={[item]} ItemType={Item} />
+    ));
 
-    expect(dom.find(Item)).toHaveProp({ focused: false });
+    const displayedItems = container.querySelectorAll('my-item');
+    expect(displayedItems[0]).toHaveMockProps({ focused: false });
   });
 
   it('focuses the requested item', () => {
     const item = makeItem();
-    const dom = mount((
+    const { container } = render((
       <ItemColumn
         items={[item]}
         ItemType={Item}
@@ -51,6 +60,7 @@ describe('ItemColumn', () => {
       />
     ));
 
-    expect(dom.find(Item)).toHaveProp({ focused: true });
+    const displayedItems = container.querySelectorAll('my-item');
+    expect(displayedItems[0]).toHaveMockProps({ focused: true });
   });
 });

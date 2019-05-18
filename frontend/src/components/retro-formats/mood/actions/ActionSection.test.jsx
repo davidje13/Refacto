@@ -1,20 +1,18 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import mockElement from '../../../../test-helpers/mockElement';
-import 'jest-enzyme';
 
 import ActionSection from './ActionSection';
 import ActionItem from './ActionItem';
-import ItemColumn from '../ItemColumn';
 
 jest.mock('../ItemColumn', () => mockElement('fake-item-column'));
 
 describe('ActionSection', () => {
   it('displays a given title', () => {
-    const dom = mount(<ActionSection title="my title" items={[]} />);
+    const { container } = render(<ActionSection title="my title" items={[]} />);
 
-    expect(dom.find('h3')).toHaveText('my title');
+    expect(container.querySelector('h3')).toHaveTextContent('my title');
   });
 
   it('displays a list of ActionItem items', () => {
@@ -22,9 +20,9 @@ describe('ActionSection', () => {
       makeItem({ category: 'action', message: 'foo' }),
       makeItem({ category: 'action', message: 'bar' }),
     ];
-    const dom = mount(<ActionSection title="" items={items} />);
+    const { container } = render(<ActionSection title="" items={items} />);
 
-    expect(dom.find(ItemColumn)).toHaveProp({
+    expect(container.querySelector('fake-item-column')).toHaveMockProps({
       ItemType: ActionItem,
       items,
     });
@@ -35,9 +33,9 @@ describe('ActionSection', () => {
       makeItem({ category: 'nope', message: 'foo' }),
       makeItem({ category: 'action', message: 'bar' }),
     ];
-    const dom = mount(<ActionSection title="" items={items} />);
+    const { container } = render(<ActionSection title="" items={items} />);
 
-    expect(dom.find(ItemColumn)).toHaveProp({
+    expect(container.querySelector('fake-item-column')).toHaveMockProps({
       items: [items[1]],
     });
   });
@@ -49,9 +47,16 @@ describe('ActionSection', () => {
       makeItem({ category: 'action', created: 25 }),
     ];
 
-    const dom = mount(<ActionSection title="" items={items} rangeFrom={10} rangeTo={20} />);
+    const { container } = render((
+      <ActionSection
+        title=""
+        items={items}
+        rangeFrom={10}
+        rangeTo={20}
+      />
+    ));
 
-    expect(dom.find(ItemColumn)).toHaveProp({
+    expect(container.querySelector('fake-item-column')).toHaveMockProps({
       items: [items[0]],
     });
   });
