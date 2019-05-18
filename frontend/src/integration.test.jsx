@@ -6,29 +6,43 @@ import { makeRetro } from './test-helpers/dataFactories';
 
 import App from './components/App';
 
+HelmetProvider.canUseDOM = false;
+
+function extractHelmetTitle(context) {
+  return context.helmet.title.toString().match(/>(.*)</)[1];
+}
+
 async function renderApp(location) {
-  const context = {};
+  const routerContext = {};
+  const helmetContext = {};
 
   let wrapper;
   await act(async () => {
     wrapper = render((
-      <HelmetProvider>
-        <StaticRouter location={location} context={context}>
+      <HelmetProvider context={helmetContext}>
+        <StaticRouter location={location} context={routerContext}>
           <App />
         </StaticRouter>
       </HelmetProvider>
     ));
   });
 
-  return { context, wrapper, dom: wrapper.container };
+  return {
+    routerContext,
+    currentTitle: () => extractHelmetTitle(helmetContext),
+    wrapper,
+    dom: wrapper.container,
+  };
 }
 
 describe('Application', () => {
   it('renders welcome page at root', async () => {
-    const { dom } = await renderApp('/');
+    const { dom, currentTitle } = await renderApp('/');
 
     expect(dom).toContainQuerySelector('.page-welcome');
     expect(dom).not.toContainQuerySelector('.page-retro');
+
+    expect(currentTitle()).toEqual('Refacto');
   });
 
   it('renders retro list page at /retros', async () => {
@@ -70,9 +84,9 @@ describe('Application', () => {
   });
 
   it('redirects to retros url for short unknown urls', async () => {
-    const { context } = await renderApp('/nope');
+    const { routerContext } = await renderApp('/nope');
 
-    expect(context.url).toEqual('/retros/nope');
+    expect(routerContext.url).toEqual('/retros/nope');
   });
 
   it('renders not found page at unknown urls', async () => {
