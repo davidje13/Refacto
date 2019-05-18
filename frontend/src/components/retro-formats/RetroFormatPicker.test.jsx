@@ -21,7 +21,7 @@ describe('Retro', () => {
     ));
 
     expect(container).toContainQuerySelector('mock-mood-retro');
-    expect(container.querySelector('mock-mood-retro')).toHaveMockProps({
+    expect(container.querySelector('mock-mood-retro').mockProps).toMatchObject({
       retroData,
       retroState,
     });

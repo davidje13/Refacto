@@ -21,7 +21,8 @@ describe('MoodSection', () => {
       <MoodSection category="" items={[]} focusedItemId="b" />
     ));
 
-    expect(container.querySelector('mock-item-column')).toHaveMockProps({
+    const column = container.querySelector('mock-item-column');
+    expect(column.mockProps).toMatchObject({
       focusedItemId: 'b',
     });
   });
@@ -33,7 +34,8 @@ describe('MoodSection', () => {
     ];
     const { container } = render(<MoodSection category="abc" items={items} />);
 
-    expect(container.querySelector('mock-item-column')).toHaveMockProps({
+    const column = container.querySelector('mock-item-column');
+    expect(column.mockProps).toMatchObject({
       ItemType: MoodItem,
       items,
     });
@@ -46,7 +48,8 @@ describe('MoodSection', () => {
     ];
     const { container } = render(<MoodSection category="yay" items={items} />);
 
-    expect(container.querySelector('mock-item-column')).toHaveMockProps({
+    const column = container.querySelector('mock-item-column');
+    expect(column.mockProps).toMatchObject({
       items: [items[1]],
     });
   });

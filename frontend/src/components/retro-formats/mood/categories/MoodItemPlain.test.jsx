@@ -20,7 +20,7 @@ describe('MoodItemPlain', () => {
     const { container } = render(<MoodItemPlain item={item} />);
 
     const voteCount = container.querySelector('mock-vote-count');
-    expect(voteCount).toHaveMockProps('votes', 3);
+    expect(voteCount.mockProps.votes).toEqual(3);
   });
 
   it('does not mark items as done by default', () => {

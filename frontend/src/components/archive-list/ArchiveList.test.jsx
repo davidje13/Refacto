@@ -39,13 +39,13 @@ describe('ArchiveList', () => {
 
     const links = container.querySelectorAll('mock-archive-link');
 
-    expect(links[0]).toHaveMockProps({
+    expect(links[0].mockProps).toEqual({
       retroSlug: 'foo',
       archiveId: 'a1',
       created: 10,
     });
 
-    expect(links[1]).toHaveMockProps({
+    expect(links[1].mockProps).toEqual({
       retroSlug: 'foo',
       archiveId: 'a2',
       created: 0,
@@ -65,8 +65,8 @@ describe('ArchiveList', () => {
 
     const links = container.querySelectorAll('mock-archive-link');
 
-    expect(links[0]).toHaveMockProps('archiveId', 'a1');
-    expect(links[1]).toHaveMockProps('archiveId', 'a3');
-    expect(links[2]).toHaveMockProps('archiveId', 'a2');
+    expect(links[0].mockProps.archiveId).toEqual('a1');
+    expect(links[1].mockProps.archiveId).toEqual('a3');
+    expect(links[2].mockProps.archiveId).toEqual('a2');
   });
 });

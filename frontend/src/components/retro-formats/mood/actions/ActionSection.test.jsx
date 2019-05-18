@@ -22,7 +22,8 @@ describe('ActionSection', () => {
     ];
     const { container } = render(<ActionSection title="" items={items} />);
 
-    expect(container.querySelector('mock-item-column')).toHaveMockProps({
+    const column = container.querySelector('mock-item-column');
+    expect(column.mockProps).toMatchObject({
       ItemType: ActionItem,
       items,
     });
@@ -35,7 +36,8 @@ describe('ActionSection', () => {
     ];
     const { container } = render(<ActionSection title="" items={items} />);
 
-    expect(container.querySelector('mock-item-column')).toHaveMockProps({
+    const column = container.querySelector('mock-item-column');
+    expect(column.mockProps).toMatchObject({
       items: [items[1]],
     });
   });
@@ -56,7 +58,8 @@ describe('ActionSection', () => {
       />
     ));
 
-    expect(container.querySelector('mock-item-column')).toHaveMockProps({
+    const column = container.querySelector('mock-item-column');
+    expect(column.mockProps).toMatchObject({
       items: [items[0]],
     });
   });

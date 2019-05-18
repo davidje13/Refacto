@@ -26,8 +26,9 @@ describe('Loader', () => {
     const { container } = render(<Loader Component={Component} custom="foo" />);
 
     expect(container).not.toHaveTextContent('Loading');
-    expect(container).toContainQuerySelector('my-component');
+
     const component = container.querySelector('my-component');
-    expect(component).toHaveMockProps('custom', 'foo');
+    expect(component).not.toEqual(null);
+    expect(component.mockProps).toEqual({ custom: 'foo' });
   });
 });
