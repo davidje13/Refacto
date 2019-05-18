@@ -1,8 +1,8 @@
+import { Subject as MockSubject } from 'rxjs';
+
 jest.mock('rxjs/ajax', () => ({
   ajax: (url) => {
-    /* eslint-disable-next-line global-require */
-    const { Subject } = require('rxjs');
-    const subject = new Subject();
+    const subject = new MockSubject();
     global.fetch(url)
       .then(async (response) => {
         if (response.status >= 300) {
