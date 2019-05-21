@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from 'react-testing-library';
+import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
-import mockElement from '../../test-helpers/mockElement';
 
 import PasswordPage from './PasswordPage';
 

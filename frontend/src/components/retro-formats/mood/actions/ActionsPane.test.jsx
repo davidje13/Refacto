@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-testing-library';
+import mockElement from 'react-mock-element';
 import { makeItem } from '../../../../test-helpers/dataFactories';
-import mockElement from '../../../../test-helpers/mockElement';
 
 import ActionsPane from './ActionsPane';
 import LocalDateProvider from '../../../../time/LocalDateProvider';

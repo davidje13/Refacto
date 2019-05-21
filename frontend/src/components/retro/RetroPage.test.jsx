@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-testing-library';
+import mockElement from 'react-mock-element';
 import { makeRetro } from '../../test-helpers/dataFactories';
-import mockElement from '../../test-helpers/mockElement';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
 
 import RetroPage from './RetroPage';

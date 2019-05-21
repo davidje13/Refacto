@@ -1,7 +1,7 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { render, fireEvent } from 'react-testing-library';
-import mockElement from '../../test-helpers/mockElement';
+import mockElement from 'react-mock-element';
 import { configService, userTokenTracker } from '../../api/api';
 
 import WelcomePage from './WelcomePage';

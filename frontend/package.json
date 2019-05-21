@@ -37,6 +37,7 @@
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "neutrino": "^9.0.0-rc.3",
+    "react-mock-element": "git+https://github.com/davidje13/react-mock-element.git#semver:^1.0.0",
     "react-testing-library": "^7.0.0",
     "timezone-mock": "^1.0.5",
     "webpack": "^4.31.0",
