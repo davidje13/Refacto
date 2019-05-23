@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { userTokenTracker, retroListTracker } from '../../api/api';
+import { queries, css } from '../../test-helpers/queries';
 
 import RetroListPage from './RetroListPage';
 
@@ -18,9 +19,9 @@ describe('RetroListPage', () => {
   });
 
   it('loads data when displayed', () => {
-    const { container } = render(<RetroListPage />);
+    const dom = render(<RetroListPage />, { queries });
 
-    const retroList = container.querySelector('mock-retro-list');
+    const retroList = dom.getBy(css('mock-retro-list'));
     expect(retroList.mockProps.retros.length).toEqual(1);
   });
 });

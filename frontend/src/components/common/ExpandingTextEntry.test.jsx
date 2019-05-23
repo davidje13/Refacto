@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from 'react-testing-library';
+import { queries, css } from '../../test-helpers/queries';
 
 import ExpandingTextEntry from './ExpandingTextEntry';
 
@@ -10,13 +11,13 @@ function setValue(input, value) {
 describe('ExpandingTextEntry', () => {
   describe('with no extra options', () => {
     let onSubmit;
-    let rendered;
+    let dom;
     let textarea;
 
     beforeEach(() => {
       onSubmit = jest.fn().mockName('onSubmit');
-      rendered = render(<ExpandingTextEntry onSubmit={onSubmit} />);
-      textarea = rendered.container.querySelector('textarea');
+      dom = render(<ExpandingTextEntry onSubmit={onSubmit} />, { queries });
+      textarea = dom.getBy(css('textarea'));
     });
 
     it('sends the entered text when submit is pressed', () => {
@@ -56,19 +57,19 @@ describe('ExpandingTextEntry', () => {
 
   describe('onCancel', () => {
     let onCancel;
-    let rendered;
+    let dom;
     let textarea;
 
     beforeEach(() => {
       onCancel = jest.fn().mockName('onCancel');
 
-      rendered = render((
+      dom = render((
         <ExpandingTextEntry
           onSubmit={() => {}}
           onCancel={onCancel}
         />
-      ));
-      textarea = rendered.container.querySelector('textarea');
+      ), { queries });
+      textarea = dom.getBy(css('textarea'));
     });
 
     it('invokes the given callback when escape is pressed', () => {
@@ -80,17 +81,17 @@ describe('ExpandingTextEntry', () => {
   });
 
   describe('clearAfterSubmit', () => {
-    let rendered;
+    let dom;
     let textarea;
 
     beforeEach(() => {
-      rendered = render((
+      dom = render((
         <ExpandingTextEntry
           onSubmit={() => {}}
           clearAfterSubmit
         />
-      ));
-      textarea = rendered.container.querySelector('textarea');
+      ), { queries });
+      textarea = dom.getBy(css('textarea'));
     });
 
     it('clears the text after submitting', () => {
@@ -102,23 +103,23 @@ describe('ExpandingTextEntry', () => {
   });
 
   describe('extraOptions', () => {
-    let rendered;
+    let dom;
 
     beforeEach(() => {
-      rendered = render((
+      dom = render((
         <ExpandingTextEntry
           onSubmit={() => {}}
           extraOptions={<em />}
         />
-      ));
+      ), { queries });
     });
 
     it('displays extra options beside the submit button', () => {
-      expect(rendered.container).toContainQuerySelector('em');
+      expect(dom).toContainElementWith(css('em'));
     });
 
     it('always applies the multiline class if extra options are given', () => {
-      expect(rendered.container).toContainQuerySelector('form.multiline');
+      expect(dom).toContainElementWith(css('form.multiline'));
     });
   });
 });

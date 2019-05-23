@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { render, fireEvent, act } from 'react-testing-library';
 import { makeRetro } from './test-helpers/dataFactories';
+import { queries, css } from './test-helpers/queries';
 
 import App from './components/App';
 
@@ -16,22 +17,21 @@ async function renderApp(location) {
   const routerContext = {};
   const helmetContext = {};
 
-  let wrapper;
+  let dom;
   await act(async () => {
-    wrapper = render((
+    dom = render((
       <HelmetProvider context={helmetContext}>
         <StaticRouter location={location} context={routerContext}>
           <App />
         </StaticRouter>
       </HelmetProvider>
-    ));
+    ), { queries });
   });
 
   return {
     routerContext,
     currentTitle: () => extractHelmetTitle(helmetContext),
-    wrapper,
-    dom: wrapper.container,
+    dom,
   };
 }
 
@@ -39,8 +39,8 @@ describe('Application', () => {
   it('renders welcome page at root', async () => {
     const { dom, currentTitle } = await renderApp('/');
 
-    expect(dom).toContainQuerySelector('.page-welcome');
-    expect(dom).not.toContainQuerySelector('.page-retro');
+    expect(dom).toContainElementWith(css('.page-welcome'));
+    expect(dom).not.toContainElementWith(css('.page-retro'));
 
     expect(currentTitle()).toEqual('Refacto');
   });
@@ -51,7 +51,7 @@ describe('Application', () => {
 
     const { dom } = await renderApp('/retros');
 
-    expect(dom).toContainQuerySelector('.page-retro-list');
+    expect(dom).toContainElementWith(css('.page-retro-list'));
   });
 
   it('renders retro page at /retros/id after password provided', async () => {
@@ -69,17 +69,17 @@ describe('Application', () => {
 
     const { dom } = await renderApp('/retros/slug-foobar');
 
-    expect(dom).toContainQuerySelector('.page-password');
-    const header1 = dom.querySelector('.top-header h1');
+    expect(dom).toContainElementWith(css('.page-password'));
+    const header1 = dom.getBy(css('.top-header h1'));
     expect(header1).toHaveTextContent('Password for slug-foobar');
 
-    const form = dom.querySelector('form');
-    const fieldPassword = form.querySelector('input[type=password]');
+    const form = dom.getBy(css('form'));
+    const fieldPassword = queries.getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'anything' } });
     await act(async () => fireEvent.submit(form));
 
-    expect(dom).toContainQuerySelector('.page-retro');
-    const header2 = dom.querySelector('.top-header h1');
+    expect(dom).toContainElementWith(css('.page-retro'));
+    const header2 = dom.getBy(css('.top-header h1'));
     expect(header2).toHaveTextContent('Retro Name');
   });
 
@@ -92,6 +92,6 @@ describe('Application', () => {
   it('renders not found page at unknown urls', async () => {
     const { dom } = await renderApp('/foo/bar');
 
-    expect(dom).toContainQuerySelector('.page-not-found');
+    expect(dom).toContainElementWith(css('.page-not-found'));
   });
 });

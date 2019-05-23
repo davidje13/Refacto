@@ -3,6 +3,7 @@ import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
+import { queries, css } from '../../test-helpers/queries';
 
 import RetroPage from './RetroPage';
 
@@ -20,7 +21,7 @@ describe('RetroPage', () => {
   });
 
   it('renders a retro page', () => {
-    const { container } = render(<RetroPage slug="abc" />);
-    expect(container).toContainQuerySelector('mock-retro-format-picker');
+    const dom = render(<RetroPage slug="abc" />, { queries });
+    expect(dom).toContainElementWith(css('mock-retro-format-picker'));
   });
 });

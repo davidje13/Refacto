@@ -3,6 +3,7 @@ import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
+import { queries, css } from '../../test-helpers/queries';
 
 import ArchiveListPage from './ArchiveListPage';
 
@@ -20,15 +21,15 @@ describe('ArchiveListPage', () => {
   });
 
   it('renders an archive list page', () => {
-    const { container } = render(<ArchiveListPage slug="my-slug" />);
-    expect(container).toContainQuerySelector('mock-archive-list');
+    const dom = render(<ArchiveListPage slug="my-slug" />, { queries });
+    expect(dom).toContainElementWith(css('mock-archive-list'));
   });
 
   it('subscribes to the retro while mounted', async () => {
-    const { unmount } = render(<ArchiveListPage slug="my-slug" />);
+    const dom = render(<ArchiveListPage slug="my-slug" />, { queries });
     expect(retroTracker.subscribed).toEqual(1);
 
-    unmount();
+    dom.unmount();
     expect(retroTracker.subscribed).toEqual(0);
   });
 });

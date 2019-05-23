@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
+import { queries, css, textFragment } from '../../test-helpers/queries';
 
 import RetroList from './RetroList';
 
@@ -10,9 +11,9 @@ describe('RetroList', () => {
   const emptyLabel = 'do not have any retros';
 
   it('displays a message if there are no retros', () => {
-    const { container } = render(<RetroList retros={[]} />);
+    const dom = render(<RetroList retros={[]} />, { queries });
 
-    expect(container.textContent).toContain(emptyLabel);
+    expect(dom).toContainElementWith(textFragment(emptyLabel));
   });
 
   it('displays no message if there are retros', () => {
@@ -21,9 +22,9 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const { container } = render(<RetroList retros={retros} />);
+    const dom = render(<RetroList retros={retros} />, { queries });
 
-    expect(container.textContent).not.toContain(emptyLabel);
+    expect(dom).not.toContainElementWith(textFragment(emptyLabel));
   });
 
   it('displays a list of retros', () => {
@@ -32,9 +33,9 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const { container } = render(<RetroList retros={retros} />);
+    const dom = render(<RetroList retros={retros} />, { queries });
 
-    const links = container.querySelectorAll('mock-retro-link');
+    const links = dom.getAllBy(css('mock-retro-link'));
 
     expect(links[0].mockProps).toEqual({ slug: 'a', name: 'R1' });
     expect(links[1].mockProps).toEqual({ slug: 'b', name: 'R2' });

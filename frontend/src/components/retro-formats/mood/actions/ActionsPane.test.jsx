@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import { queries, css } from '../../../../test-helpers/queries';
 
 import ActionsPane from './ActionsPane';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
@@ -16,7 +17,7 @@ describe('ActionsPane', () => {
     makeItem({ id: '3' }),
   ];
 
-  let rendered;
+  let dom;
   let sections;
   let localDateProvider;
 
@@ -25,13 +26,13 @@ describe('ActionsPane', () => {
     jest.spyOn(localDateProvider, 'getMidnightTimestamp')
       .mockImplementation((days = 0) => days * 10);
 
-    rendered = render((
+    dom = render((
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
       />
-    ));
-    sections = rendered.container.querySelectorAll('mock-action-section');
+    ), { queries });
+    sections = dom.getAllBy(css('mock-action-section'));
   });
 
   it('creates a section for today', () => {
@@ -66,20 +67,18 @@ describe('ActionsPane', () => {
   });
 
   it('does not render an input field if no callback is provided', () => {
-    expect(rendered.container)
-      .not.toContainQuerySelector('mock-expanding-text-entry');
+    expect(dom).not.toContainElementWith(css('mock-expanding-text-entry'));
   });
 
   it('renders an input field if a callback is provided', () => {
-    rendered = render((
+    dom = render((
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
         onAddItem={() => {}}
       />
-    ));
+    ), { queries });
 
-    expect(rendered.container)
-      .toContainQuerySelector('mock-expanding-text-entry');
+    expect(dom).toContainElementWith(css('mock-expanding-text-entry'));
   });
 });

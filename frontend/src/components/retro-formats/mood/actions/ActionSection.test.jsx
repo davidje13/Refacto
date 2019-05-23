@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import { queries, css } from '../../../../test-helpers/queries';
 
 import ActionSection from './ActionSection';
 import ActionItem from './ActionItem';
@@ -10,9 +11,11 @@ jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
 
 describe('ActionSection', () => {
   it('displays a given title', () => {
-    const { container } = render(<ActionSection title="my title" items={[]} />);
+    const dom = render((
+      <ActionSection title="my title" items={[]} />
+    ), { queries });
 
-    expect(container.querySelector('h3')).toHaveTextContent('my title');
+    expect(dom.getBy(css('h3'))).toHaveTextContent('my title');
   });
 
   it('displays a list of ActionItem items', () => {
@@ -20,9 +23,11 @@ describe('ActionSection', () => {
       makeItem({ category: 'action', message: 'foo' }),
       makeItem({ category: 'action', message: 'bar' }),
     ];
-    const { container } = render(<ActionSection title="" items={items} />);
+    const dom = render((
+      <ActionSection title="" items={items} />
+    ), { queries });
 
-    const column = container.querySelector('mock-item-column');
+    const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
       ItemType: ActionItem,
       items,
@@ -34,9 +39,11 @@ describe('ActionSection', () => {
       makeItem({ category: 'nope', message: 'foo' }),
       makeItem({ category: 'action', message: 'bar' }),
     ];
-    const { container } = render(<ActionSection title="" items={items} />);
+    const dom = render((
+      <ActionSection title="" items={items} />
+    ), { queries });
 
-    const column = container.querySelector('mock-item-column');
+    const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
       items: [items[1]],
     });
@@ -49,16 +56,16 @@ describe('ActionSection', () => {
       makeItem({ category: 'action', created: 25 }),
     ];
 
-    const { container } = render((
+    const dom = render((
       <ActionSection
         title=""
         items={items}
         rangeFrom={10}
         rangeTo={20}
       />
-    ));
+    ), { queries });
 
-    const column = container.querySelector('mock-item-column');
+    const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
       items: [items[0]],
     });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from 'react-testing-library';
+import { queries, css } from '../../test-helpers/queries';
 
 import TabControl from './TabControl';
 
@@ -18,12 +19,12 @@ describe('TabControl', () => {
     },
   ];
 
-  let rendered;
+  let dom;
   let headers;
 
   beforeEach(() => {
-    rendered = render(<TabControl tabs={tabs} />);
-    headers = rendered.container.querySelectorAll('button');
+    dom = render(<TabControl tabs={tabs} />, { queries });
+    headers = dom.getAllBy(css('button'));
   });
 
   it('renders a tab header for each item', () => {
@@ -41,15 +42,15 @@ describe('TabControl', () => {
   });
 
   it('renders the first tab by default', () => {
-    expect(rendered.container).toContainQuerySelector('strong');
-    expect(rendered.container).not.toContainQuerySelector('em');
+    expect(dom).toContainElementWith(css('strong'));
+    expect(dom).not.toContainElementWith(css('em'));
   });
 
   it('switches tab when a header is clicked', () => {
     fireEvent.click(headers[1]);
 
-    expect(rendered.container).not.toContainQuerySelector('strong');
-    expect(rendered.container).toContainQuerySelector('em');
+    expect(dom).not.toContainElementWith(css('strong'));
+    expect(dom).toContainElementWith(css('em'));
 
     expect(headers[0]).not.toHaveClass('active');
     expect(headers[1]).toHaveClass('active');

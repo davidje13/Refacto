@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeItem } from '../../../../test-helpers/dataFactories';
+import { queries, css, text } from '../../../../test-helpers/queries';
 
 import MoodItemPlain from './MoodItemPlain';
 
@@ -10,29 +11,29 @@ jest.mock('./VoteCount', () => mockElement('mock-vote-count'));
 describe('MoodItemPlain', () => {
   it('displays the item message', () => {
     const item = makeItem({ message: 'a message here' });
-    const { container } = render(<MoodItemPlain item={item} />);
+    const dom = render(<MoodItemPlain item={item} />, { queries });
 
-    expect(container).toHaveTextContent('a message here');
+    expect(dom).toContainElementWith(text('a message here'));
   });
 
   it('displays the vote count', () => {
     const item = makeItem({ votes: 3 });
-    const { container } = render(<MoodItemPlain item={item} />);
+    const dom = render(<MoodItemPlain item={item} />, { queries });
 
-    const voteCount = container.querySelector('mock-vote-count');
+    const voteCount = dom.getBy(css('mock-vote-count'));
     expect(voteCount.mockProps.votes).toEqual(3);
   });
 
   it('does not mark items as done by default', () => {
-    const { container } = render(<MoodItemPlain item={makeItem()} />);
+    const dom = render(<MoodItemPlain item={makeItem()} />, { queries });
 
-    expect(container).not.toContainQuerySelector('.done');
+    expect(dom).not.toContainElementWith(css('.done'));
   });
 
   it('marks the item as done if specified', () => {
     const item = makeItem({ done: true });
-    const { container } = render(<MoodItemPlain item={item} />);
+    const dom = render(<MoodItemPlain item={item} />, { queries });
 
-    expect(container).toContainQuerySelector('.done');
+    expect(dom).toContainElementWith(css('.done'));
   });
 });

@@ -3,6 +3,7 @@ import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeRetro, makeArchive } from '../../test-helpers/dataFactories';
 import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
+import { queries, css } from '../../test-helpers/queries';
 
 import ArchivePage from './ArchivePage';
 
@@ -21,19 +22,19 @@ describe('ArchivePage', () => {
   });
 
   it('renders a retro page', () => {
-    const { container } = render((
+    const dom = render((
       <ArchivePage slug="abc" archiveId="myArchiveId" />
-    ));
-    expect(container).toContainQuerySelector('mock-retro-format-picker');
+    ), { queries });
+    expect(dom).toContainElementWith(css('mock-retro-format-picker'));
   });
 
   it('subscribes to the retro while mounted', () => {
-    const { unmount } = render((
+    const dom = render((
       <ArchivePage slug="abc" archiveId="myArchiveId" />
-    ));
+    ), { queries });
     expect(retroTracker.subscribed).toEqual(1);
 
-    unmount();
+    dom.unmount();
     expect(retroTracker.subscribed).toEqual(0);
   });
 });

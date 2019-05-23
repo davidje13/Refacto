@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { render, fireEvent } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { configService, userTokenTracker } from '../../api/api';
+import { queries, css } from '../../test-helpers/queries';
 
 import WelcomePage from './WelcomePage';
 
@@ -23,13 +24,13 @@ describe('WelcomePage', () => {
       });
 
       const context = {};
-      const { container } = render((
+      const dom = render((
         <StaticRouter location="/" context={context}>
           <WelcomePage />
         </StaticRouter>
-      ));
+      ), { queries });
 
-      expect(container).toContainQuerySelector('.sso-google');
+      expect(dom).toContainElementWith(css('.sso-google'));
     });
 
     it('displays no login buttons if not configured', () => {
@@ -38,13 +39,13 @@ describe('WelcomePage', () => {
       });
 
       const context = {};
-      const { container } = render((
+      const dom = render((
         <StaticRouter location="/" context={context}>
           <WelcomePage />
         </StaticRouter>
-      ));
+      ), { queries });
 
-      expect(container).not.toContainQuerySelector('.sso-google');
+      expect(dom).not.toContainElementWith(css('.sso-google'));
     });
   });
 
@@ -55,13 +56,13 @@ describe('WelcomePage', () => {
 
     it('displays a link to create a new retro', () => {
       const context = {};
-      const { container } = render((
+      const dom = render((
         <StaticRouter location="/" context={context}>
           <WelcomePage />
         </StaticRouter>
-      ));
+      ), { queries });
 
-      const link = container.querySelector('a.link-create');
+      const link = dom.getBy(css('a.link-create'));
       fireEvent.click(link);
       expect(context.url).toEqual('/create');
     });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
+import { queries, css, textFragment } from '../../test-helpers/queries';
 
 import Loader from './Loader';
 
@@ -8,27 +9,30 @@ const Component = mockElement('my-component');
 
 describe('Loader', () => {
   it('displays a loading message and no content while loading', () => {
-    const { container } = render(<Loader Component={Component} loading />);
+    const dom = render((
+      <Loader Component={Component} loading />
+    ), { queries });
 
-    expect(container).toHaveTextContent('Loading');
-    expect(container).not.toContainQuerySelector('my-component');
+    expect(dom).toContainElementWith(textFragment('Loading'));
+    expect(dom).not.toContainElementWith(css('my-component'));
   });
 
   it('displays custom loading messages', () => {
-    const { container } = render((
+    const dom = render((
       <Loader Component={Component} loading loadingMessage="foobar" />
-    ));
+    ), { queries });
 
-    expect(container).toHaveTextContent('foobar');
+    expect(dom).toContainElementWith(textFragment('foobar'));
   });
 
   it('displays content and no loading message when loaded', () => {
-    const { container } = render(<Loader Component={Component} custom="foo" />);
+    const dom = render((
+      <Loader Component={Component} custom="foo" />
+    ), { queries });
 
-    expect(container).not.toHaveTextContent('Loading');
+    expect(dom).not.toContainElementWith(textFragment('Loading'));
 
-    const component = container.querySelector('my-component');
-    expect(component).not.toEqual(null);
+    const component = dom.getBy(css('my-component'));
     expect(component.mockProps).toEqual({ custom: 'foo' });
   });
 });

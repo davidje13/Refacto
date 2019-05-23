@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
+import { queries, css } from '../../test-helpers/queries';
 
 import PasswordPage from './PasswordPage';
 
@@ -21,12 +22,12 @@ describe('PasswordPage', () => {
   it('exchanges passwords for tokens', async () => {
     retroTokenService.setServerData('myRetroId', 'some-token');
 
-    const { container } = render((
+    const dom = render((
       <PasswordPage slug="abc" retroId="myRetroId" />
-    ));
+    ), { queries });
 
-    const form = container.querySelector('form');
-    const fieldPassword = form.querySelector('input[type=password]');
+    const form = dom.getBy(css('form'));
+    const fieldPassword = queries.getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'my-password' } });
     fireEvent.submit(form);
 

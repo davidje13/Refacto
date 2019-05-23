@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeRetroData } from '../../test-helpers/dataFactories';
+import { queries, css } from '../../test-helpers/queries';
 
 import RetroFormatPicker from './RetroFormatPicker';
 
@@ -13,15 +14,15 @@ describe('Retro', () => {
     const retroData = makeRetroData({ format: 'mood' });
     const retroState = { foo: 'bar' };
 
-    const { container } = render((
+    const dom = render((
       <RetroFormatPicker
         retroData={retroData}
         retroState={retroState}
       />
-    ));
+    ), { queries });
 
-    expect(container).toContainQuerySelector('mock-mood-retro');
-    expect(container.querySelector('mock-mood-retro').mockProps).toMatchObject({
+    expect(dom).toContainElementWith(css('mock-mood-retro'));
+    expect(dom.getBy(css('mock-mood-retro')).mockProps).toMatchObject({
       retroData,
       retroState,
     });
@@ -29,14 +30,14 @@ describe('Retro', () => {
 
   it('displays UnknownRetro for unknown formats', () => {
     const retroData = makeRetroData({ format: 'nope' });
-    const { container } = render((
+    const dom = render((
       <RetroFormatPicker
         retroData={retroData}
         retroState={{}}
       />
-    ));
+    ), { queries });
 
-    expect(container).toContainQuerySelector('mock-unknown-retro');
-    expect(container).not.toContainQuerySelector('mock-mood-retro');
+    expect(dom).toContainElementWith(css('mock-unknown-retro'));
+    expect(dom).not.toContainElementWith(css('mock-mood-retro'));
   });
 });

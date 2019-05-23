@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
+import { queries, css, textFragment } from '../../test-helpers/queries';
 
 import ArchiveList from './ArchiveList';
 
@@ -8,11 +9,11 @@ jest.mock('./ArchiveLink', () => mockElement('mock-archive-link'));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
-    const { container } = render((
+    const dom = render((
       <ArchiveList slug="foo" archives={[]} />
-    ));
+    ), { queries });
 
-    expect(container.textContent).toContain('has no archives');
+    expect(dom).toContainElementWith(textFragment('has no archives'));
   });
 
   it('displays no message if there are archives', () => {
@@ -20,11 +21,11 @@ describe('ArchiveList', () => {
       { id: 'a1', created: 10 },
       { id: 'a2', created: 0 },
     ];
-    const { container } = render((
+    const dom = render((
       <ArchiveList slug="foo" archives={archives} />
-    ));
+    ), { queries });
 
-    expect(container.textContent).not.toContain('has no archives');
+    expect(dom).not.toContainElementWith(textFragment('has no archives'));
   });
 
   it('displays a list of archives', () => {
@@ -33,11 +34,11 @@ describe('ArchiveList', () => {
       { id: 'a2', created: 0 },
     ];
 
-    const { container } = render((
+    const dom = render((
       <ArchiveList slug="foo" archives={archives} />
-    ));
+    ), { queries });
 
-    const links = container.querySelectorAll('mock-archive-link');
+    const links = dom.getAllBy(css('mock-archive-link'));
 
     expect(links[0].mockProps).toEqual({
       retroSlug: 'foo',
@@ -59,11 +60,11 @@ describe('ArchiveList', () => {
       { id: 'a3', created: 10 },
     ];
 
-    const { container } = render((
+    const dom = render((
       <ArchiveList slug="foo" archives={archives} />
-    ));
+    ), { queries });
 
-    const links = container.querySelectorAll('mock-archive-link');
+    const links = dom.getAllBy(css('mock-archive-link'));
 
     expect(links[0].mockProps.archiveId).toEqual('a1');
     expect(links[1].mockProps.archiveId).toEqual('a3');

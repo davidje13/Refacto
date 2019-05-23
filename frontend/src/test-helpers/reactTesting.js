@@ -1,18 +1,23 @@
 import { cleanup } from 'react-testing-library';
 import { matcherHint, printReceived, printExpected } from 'jest-matcher-utils';
+import { queryAllBy } from './queries';
 import 'jest-dom/extend-expect';
 
-function toContainQuerySelector(element, selector) {
-  if (!element) {
-    throw new Error('Cannot use toContainQuerySelector on non-element');
+function toContainElementWith(base, query) {
+  if (!base) {
+    throw new Error('Cannot use toContainElementWith on non-element');
   }
+  const element = base.container || base;
+  const expected =
+    `${this.isNot ? 'no elements' : 'an element'} ${query.description}`;
+
   return {
-    pass: Boolean(element.querySelector(selector)),
+    pass: queryAllBy(element, query).length > 0,
     message: () => [
-      matcherHint(`${this.isNot ? '.not' : ''}.toContainQuerySelector`, 'element', 'selector'),
+      matcherHint(`${this.isNot ? '.not' : ''}.toContainElementWith`, 'element', 'query'),
       '',
-      `Expected ${this.isNot ? 'no elements' : 'an element'} matching`,
-      `  ${printExpected(selector)}`,
+      'Expected',
+      `  ${printExpected(expected)}`,
       'Received',
       `  ${printReceived(element)}`,
     ].join('\n'),
@@ -20,7 +25,7 @@ function toContainQuerySelector(element, selector) {
 }
 
 expect.extend({
-  toContainQuerySelector,
+  toContainElementWith,
 });
 
 afterEach(cleanup);

@@ -1,26 +1,27 @@
 import React from 'react';
 import { render, fireEvent } from 'react-testing-library';
+import { queries, css } from '../../../../test-helpers/queries';
 
 import VoteCount from './VoteCount';
 
 describe('VoteCount', () => {
   it('displays the vote count', () => {
-    const { container } = render(<VoteCount votes={3} />);
+    const dom = render(<VoteCount votes={3} />, { queries });
 
-    expect(container.querySelector('button.vote')).toHaveTextContent('3');
+    expect(dom.getBy(css('button.vote'))).toHaveTextContent('3');
   });
 
   it('does not allow voting if no callback is given', () => {
-    const { container } = render(<VoteCount votes={3} />);
+    const dom = render(<VoteCount votes={3} />, { queries });
 
-    expect(container.querySelector('button.vote')).toBeDisabled();
+    expect(dom.getBy(css('button.vote'))).toBeDisabled();
   });
 
   it('invokes the given callback if voted on', async () => {
     const onVote = jest.fn().mockName('onVote');
-    const { container } = render(<VoteCount votes={3} onVote={onVote} />);
+    const dom = render(<VoteCount votes={3} onVote={onVote} />, { queries });
 
-    const voteButton = container.querySelector('button.vote');
+    const voteButton = dom.getBy(css('button.vote'));
     expect(voteButton).toBeEnabled();
     fireEvent.click(voteButton);
 

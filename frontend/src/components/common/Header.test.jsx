@@ -2,6 +2,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { render, fireEvent } from 'react-testing-library';
+import { queries, css } from '../../test-helpers/queries';
 
 import Header from './Header';
 
@@ -16,7 +17,7 @@ describe('Header', () => {
     const helmetContext = {};
     const routerContext = {};
 
-    const { container } = render((
+    const dom = render((
       <HelmetProvider context={helmetContext}>
         <StaticRouter location="" context={routerContext}>
           <Header
@@ -25,17 +26,17 @@ describe('Header', () => {
           />
         </StaticRouter>
       </HelmetProvider>
-    ));
+    ), { queries });
 
     expect(extractHelmetTitle(helmetContext)).toEqual('doc-title');
-    expect(container.querySelector('h1')).toHaveTextContent('page-title');
+    expect(dom.getBy(css('h1'))).toHaveTextContent('page-title');
   });
 
   it('displays a back link if specified', () => {
     const helmetContext = {};
     const routerContext = {};
 
-    const { container } = render((
+    const dom = render((
       <HelmetProvider context={helmetContext}>
         <StaticRouter location="" context={routerContext}>
           <Header
@@ -45,9 +46,9 @@ describe('Header', () => {
           />
         </StaticRouter>
       </HelmetProvider>
-    ));
+    ), { queries });
 
-    const backLink = container.querySelector('.back');
+    const backLink = dom.getBy(css('.back'));
     expect(backLink).toHaveTextContent('back-label');
 
     fireEvent.click(backLink);
@@ -58,7 +59,7 @@ describe('Header', () => {
     const helmetContext = {};
     const routerContext = {};
 
-    const { container } = render((
+    const dom = render((
       <HelmetProvider context={helmetContext}>
         <StaticRouter location="" context={routerContext}>
           <Header
@@ -71,9 +72,9 @@ describe('Header', () => {
           />
         </StaticRouter>
       </HelmetProvider>
-    ));
+    ), { queries });
 
-    const links = container.querySelectorAll('.menu > *');
+    const links = dom.getAllBy(css('.menu > *'));
     expect(links.length).toEqual(2);
     expect(links[0]).toHaveTextContent('label-1');
     expect(links[1]).toHaveTextContent('label-2');
