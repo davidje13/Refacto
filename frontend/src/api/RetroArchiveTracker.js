@@ -11,5 +11,16 @@ export default class RetroArchiveTracker extends CacheMap {
       shareReplay(1),
       materialize(),
     ));
+
+    this.apiBase = apiBase;
+    this.retroId = retroId;
+    this.retroToken = retroToken;
+  }
+
+  getList() {
+    return loadHttp({
+      url: `${this.apiBase}/retros/${this.retroId}/archives`,
+      headers: { Authorization: `Bearer ${this.retroToken}` },
+    });
   }
 }

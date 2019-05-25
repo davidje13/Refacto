@@ -4,15 +4,16 @@ import nullable from 'prop-types-nullable';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import withRetroFromSlug from '../hocs/withRetroFromSlug';
+import useArchiveList from '../../hooks/data/useArchiveList';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
 const ArchiveListPage = ({ slug, retroState, error }) => {
-  const retro = retroState?.retro;
-  const retroName = retro?.name || slug;
+  const [archiveListState, archivesError] = useArchiveList(retroState);
+  const retroName = retroState?.retro?.name || slug;
 
-  // TODO: archives are not stored in retro data any more
+  const archives = archiveListState?.archives;
 
   return (
     <article className="page-archive-list">
@@ -22,11 +23,11 @@ const ArchiveListPage = ({ slug, retroState, error }) => {
         backLink={{ label: 'Back to Retro', url: `/retros/${slug}` }}
       />
       <Loader
-        loading={!retro?.archives}
-        error={error}
+        loading={!archives}
+        error={archivesError || error}
         Component={ArchiveList}
         slug={slug}
-        archives={retro?.archives}
+        archives={archives}
       />
     </article>
   );

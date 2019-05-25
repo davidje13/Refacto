@@ -29,6 +29,18 @@ class FakeRetroTracker {
         }
         return new BehaviorSubject(archive);
       },
+
+      getList: () => {
+        const archives = [];
+        Object.keys(state.archives).forEach((archiveId) => {
+          const archive = state.archives[archiveId];
+          archives.push({
+            id: archiveId,
+            created: archive.created,
+          });
+        });
+        return new BehaviorSubject({ archives });
+      },
     };
 
     dispatchCallback(this.dispatch);
