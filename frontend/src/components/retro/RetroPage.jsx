@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import withRetroFromSlug from '../hocs/withRetroFromSlug';
+import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
+import useRetroReducer from '../../hooks/data/useRetroReducer';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
@@ -11,14 +12,19 @@ import './RetroPage.less';
 
 const RetroPage = ({
   slug,
-  retroState,
-  retroDispatch,
-  error,
+  retroId,
+  retroToken,
+  retroTokenError,
 }) => {
-  const retro = retroState?.retro;
+  const [
+    retro,
+    retroDispatch,
+    retroError,
+  ] = useRetroReducer(retroId, retroToken);
+
   const retroName = retro?.name || slug;
 
-  if (error === 'not found') {
+  if (retroTokenError === 'not found') {
     return (<RetroCreatePage defaultSlug={slug} />);
   }
 
@@ -31,7 +37,7 @@ const RetroPage = ({
       />
       <Loader
         loading={!retro}
-        error={error}
+        error={retroTokenError || retroError}
         Component={RetroFormatPicker}
         retroData={retro?.data}
         retroState={retro?.state}
@@ -43,15 +49,15 @@ const RetroPage = ({
 
 RetroPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  retroState: nullable(PropTypes.shape({})).isRequired,
-  retroDispatch: nullable(PropTypes.func).isRequired,
-  error: PropTypes.string,
+  retroId: nullable(PropTypes.string).isRequired,
+  retroToken: nullable(PropTypes.string).isRequired,
+  retroTokenError: PropTypes.string,
 };
 
 RetroPage.defaultProps = {
-  error: null,
+  retroTokenError: null,
 };
 
 forbidExtraProps(RetroPage);
 
-export default React.memo(withRetroFromSlug(RetroPage));
+export default React.memo(withRetroTokenForSlug(RetroPage));

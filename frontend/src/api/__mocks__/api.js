@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { of as rxjsOf, throwError } from 'rxjs';
 import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
 
@@ -9,52 +9,90 @@ class FakeRetroTracker {
 
   subscribed = 0;
 
-  setServerData(retroId, retro, archives = {}) {
-    this.data.set(retroId, { retro, archives });
+  expectedRetroToken = null;
+
+  setExpectedToken(retroToken) {
+    this.expectedRetroToken = retroToken;
+  }
+
+  setServerData(retroId, serverData) {
+    this.data.set(retroId, serverData);
   }
 
   subscribe(retroId, retroToken, dispatchCallback, retroStateCallback) {
-    this.subscribed += 1;
-
-    const state = this.data.get(retroId);
-    if (!state) {
-      throw new Error(`Unexpected request for retro ${retroId}`);
+    if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
+      throw new Error(`Incorrect retro token: ${retroToken}`);
     }
 
-    const archiveTracker = {
-      get: (archiveId) => {
-        const archive = state.archives[archiveId];
-        if (!archive) {
-          throw new Error(`Unexpected request for archive ${archiveId}`);
-        }
-        return new BehaviorSubject(archive);
-      },
+    this.subscribed += 1;
 
-      getList: () => {
-        const archives = [];
-        Object.keys(state.archives).forEach((archiveId) => {
-          const archive = state.archives[archiveId];
-          archives.push({
-            id: archiveId,
-            created: archive.created,
-          });
-        });
-        return new BehaviorSubject({ archives });
-      },
-    };
+    const serverData = this.data.get(retroId);
+    if (!serverData) {
+      return throwError('not found');
+    }
 
     dispatchCallback(this.dispatch);
     retroStateCallback(Object.assign({
       retro: null,
       error: null,
-      archiveTracker,
-    }, state.retro));
+    }, serverData));
 
     return {
       unsubscribe: () => {
         this.subscribed -= 1;
       },
     };
+  }
+}
+
+class FakeArchiveTracker {
+  data = new Map();
+
+  expectedRetroToken = null;
+
+  setExpectedToken(retroToken) {
+    this.expectedRetroToken = retroToken;
+  }
+
+  setServerData(retroId, archiveId, archive) {
+    if (!this.data.has(retroId)) {
+      this.data.set(retroId, new Map());
+    }
+    this.data.get(retroId).set(archiveId, archive);
+  }
+
+  get(retroId, archiveId, retroToken) {
+    if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
+      return throwError(`Incorrect retro token: ${retroToken}`);
+    }
+
+    const serverData = this.data.get(retroId);
+    if (!serverData) {
+      return throwError('not found');
+    }
+    const archive = serverData.get(archiveId);
+    if (!archive) {
+      return throwError('not found');
+    }
+    return rxjsOf(archive);
+  }
+
+  getList(retroId, retroToken) {
+    if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
+      return throwError(`Incorrect retro token: ${retroToken}`);
+    }
+
+    const archives = [];
+    const serverData = this.data.get(retroId);
+    if (serverData) {
+      serverData.forEach((archive, archiveId) => {
+        archives.push({
+          id: archiveId,
+          created: archive.created,
+        });
+      });
+    }
+    return rxjsOf({ archives });
   }
 }
 
@@ -124,6 +162,7 @@ export const configService = new SingleObservableTracker();
 export const retroListTracker = new ObservableTracker();
 export const slugTracker = new ObservableTracker();
 export const retroTracker = new FakeRetroTracker();
+export const archiveTracker = new FakeArchiveTracker();
 export const retroTokenService = new FakeRetroTokenService();
 export const retroService = new FakeRetroService();
 export const userTokenService = new FakeUserTokenService();

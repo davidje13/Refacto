@@ -2,7 +2,12 @@ import React from 'react';
 import { render } from 'react-testing-library';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../test-helpers/dataFactories';
-import { slugTracker, retroTokenTracker, retroTracker } from '../../api/api';
+import {
+  slugTracker,
+  retroTokenTracker,
+  retroTracker,
+  archiveTracker,
+} from '../../api/api';
 import { queries, css } from '../../test-helpers/queries';
 
 import ArchiveListPage from './ArchiveListPage';
@@ -17,7 +22,9 @@ describe('ArchiveListPage', () => {
   beforeEach(() => {
     slugTracker.set('my-slug', 'r1');
     retroTokenTracker.set('r1', 'token-1');
+    retroTracker.setExpectedToken('token-1');
     retroTracker.setServerData('r1', retroData);
+    archiveTracker.setExpectedToken('token-1');
   });
 
   it('renders an archive list page', () => {

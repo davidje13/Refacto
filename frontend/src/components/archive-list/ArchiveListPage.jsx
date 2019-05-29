@@ -3,17 +3,23 @@ import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import withRetroFromSlug from '../hocs/withRetroFromSlug';
+import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
+import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useArchiveList from '../../hooks/data/useArchiveList';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
-const ArchiveListPage = ({ slug, retroState, error }) => {
-  const [archiveListState, archivesError] = useArchiveList(retroState);
-  const retroName = retroState?.retro?.name || slug;
+const ArchiveListPage = ({
+  slug,
+  retroId,
+  retroToken,
+  retroTokenError,
+}) => {
+  const [retro] = useRetroReducer(retroId, retroToken);
+  const [archives, archivesError] = useArchiveList(retroId, retroToken);
 
-  const archives = archiveListState?.archives;
+  const retroName = retro?.name || slug;
 
   return (
     <article className="page-archive-list">
@@ -24,7 +30,7 @@ const ArchiveListPage = ({ slug, retroState, error }) => {
       />
       <Loader
         loading={!archives}
-        error={archivesError || error}
+        error={retroTokenError || archivesError}
         Component={ArchiveList}
         slug={slug}
         archives={archives}
@@ -35,14 +41,15 @@ const ArchiveListPage = ({ slug, retroState, error }) => {
 
 ArchiveListPage.propTypes = {
   slug: PropTypes.string.isRequired,
-  retroState: nullable(PropTypes.shape({})).isRequired,
-  error: PropTypes.string,
+  retroId: nullable(PropTypes.string).isRequired,
+  retroToken: nullable(PropTypes.string).isRequired,
+  retroTokenError: PropTypes.string,
 };
 
 ArchiveListPage.defaultProps = {
-  error: null,
+  retroTokenError: null,
 };
 
 forbidExtraProps(ArchiveListPage);
 
-export default React.memo(withRetroFromSlug(ArchiveListPage, true));
+export default React.memo(withRetroTokenForSlug(ArchiveListPage));

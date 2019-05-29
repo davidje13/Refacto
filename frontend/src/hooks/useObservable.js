@@ -28,7 +28,7 @@ export default function useObservable(
       (d) => {
         if (isMaterialized(d, materialized)) {
           if (d.kind !== NotificationKind.COMPLETE) {
-            setState([d.value, d.error]);
+            setState([d.value || null, d.error || null]);
           }
         } else {
           setState([d, null]);

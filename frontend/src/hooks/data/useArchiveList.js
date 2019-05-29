@@ -1,10 +1,16 @@
 import useObservable from '../useObservable';
+import { archiveTracker } from '../../api/api';
 
-export default function useArchiveList(retroState) {
-  const archiveTracker = retroState?.archiveTracker;
-
-  return useObservable(
-    () => archiveTracker?.getList(),
-    [archiveTracker],
+export default function useArchiveList(retroId, retroToken) {
+  const [archiveListState, error] = useObservable(
+    () => {
+      if (!retroId || !retroToken) {
+        return null;
+      }
+      return archiveTracker.getList(retroId, retroToken);
+    },
+    [archiveTracker, retroId, retroToken],
   );
+
+  return [archiveListState?.archives, error];
 }

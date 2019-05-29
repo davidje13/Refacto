@@ -28,5 +28,5 @@ export default function useRetroReducer(retroId, retroToken) {
     return () => subscription.unsubscribe();
   }, [retroTracker, setRetro, setRetroDispatch, setError, retroId, retroToken]);
 
-  return [retro, retroDispatch, error];
+  return [retro?.retro, retroDispatch, error];
 }
