@@ -42,7 +42,7 @@ describe('Header', () => {
           <Header
             documentTitle="doc-title"
             title="page-title"
-            backLink={{ label: 'back-label', url: 'back-url' }}
+            backLink={{ label: 'back-label', action: 'back-url' }}
           />
         </StaticRouter>
       </HelmetProvider>
@@ -66,8 +66,8 @@ describe('Header', () => {
             documentTitle="doc-title"
             title="page-title"
             links={[
-              { label: 'label-1', url: 'url-1' },
-              { label: 'label-2', url: 'url-2' },
+              { label: 'label-1', action: 'url-1' },
+              { label: 'label-2', action: 'url-2' },
             ]}
           />
         </StaticRouter>
@@ -78,8 +78,79 @@ describe('Header', () => {
     expect(links.length).toEqual(2);
     expect(links[0]).toHaveTextContent('label-1');
     expect(links[1]).toHaveTextContent('label-2');
+  });
+
+  it('skips null menu items', () => {
+    const helmetContext = {};
+    const routerContext = {};
+
+    const dom = render((
+      <HelmetProvider context={helmetContext}>
+        <StaticRouter location="" context={routerContext}>
+          <Header
+            documentTitle="doc-title"
+            title="page-title"
+            links={[
+              { label: 'label-1', action: 'url-1' },
+              null,
+              { label: 'label-2', action: 'url-2' },
+            ]}
+          />
+        </StaticRouter>
+      </HelmetProvider>
+    ), { queries });
+
+    const links = dom.getAllBy(css('.menu > *'));
+    expect(links.length).toEqual(2);
+    expect(links[1]).toHaveTextContent('label-2');
+  });
+
+  it('routes to the given URL when a menu item is clicked', () => {
+    const helmetContext = {};
+    const routerContext = {};
+
+    const dom = render((
+      <HelmetProvider context={helmetContext}>
+        <StaticRouter location="" context={routerContext}>
+          <Header
+            documentTitle="doc-title"
+            title="page-title"
+            links={[
+              { label: 'label-1', action: 'url-1' },
+            ]}
+          />
+        </StaticRouter>
+      </HelmetProvider>
+    ), { queries });
+
+    const links = dom.getAllBy(css('.menu > *'));
 
     fireEvent.click(links[0]);
     expect(routerContext.url).toEqual('url-1');
+  });
+
+  it('invokes the given callback when a menu item is clicked', () => {
+    const helmetContext = {};
+    const routerContext = {};
+    const clickCallback = jest.fn().mockName('clickCallback');
+
+    const dom = render((
+      <HelmetProvider context={helmetContext}>
+        <StaticRouter location="" context={routerContext}>
+          <Header
+            documentTitle="doc-title"
+            title="page-title"
+            links={[
+              { label: 'label-1', action: clickCallback },
+            ]}
+          />
+        </StaticRouter>
+      </HelmetProvider>
+    ), { queries });
+
+    const links = dom.getAllBy(css('.menu > *'));
+
+    fireEvent.click(links[0]);
+    expect(clickCallback).toHaveBeenCalled();
   });
 });

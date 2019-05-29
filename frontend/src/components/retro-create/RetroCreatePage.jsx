@@ -18,7 +18,7 @@ const RetroCreatePage = ({ defaultSlug, history }) => {
       <Header
         documentTitle="New Retro - Refacto"
         title="New Retro"
-        backLink={{ label: 'Home', url: '/' }}
+        backLink={{ label: 'Home', action: '/' }}
       />
       <RetroForm onCreate={handleCreate} defaultSlug={defaultSlug} />
     </article>

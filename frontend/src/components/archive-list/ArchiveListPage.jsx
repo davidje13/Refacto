@@ -26,7 +26,7 @@ const ArchiveListPage = ({
       <Header
         documentTitle={`Archives - ${retroName} - Refacto`}
         title={`${retroName} Archives`}
-        backLink={{ label: 'Back to Retro', url: `/retros/${slug}` }}
+        backLink={{ label: 'Back to Retro', action: `/retros/${slug}` }}
       />
       <Loader
         loading={!archives}

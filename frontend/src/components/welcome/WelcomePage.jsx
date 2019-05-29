@@ -17,7 +17,7 @@ const WelcomePage = () => {
         <Link className="link-create" to="/create">Create new retro</Link>
       </p>
     );
-    links = [{ label: 'My Retros', url: '/retros' }];
+    links = [{ label: 'My Retros', action: '/retros' }];
   } else {
     createLink = (
       <LoginForm message="Sign in to create a new retro" redirect="/create" />

@@ -38,8 +38,8 @@ const RetroListPage = () => {
       <Header
         documentTitle="My Retros - Refacto"
         title="My Retros"
-        backLink={{ label: 'Home', url: '/' }}
-        links={[{ label: 'Create Retro', url: '/create' }]}
+        backLink={{ label: 'Home', action: '/' }}
+        links={[{ label: 'Create Retro', action: '/create' }]}
       />
       { content }
     </article>

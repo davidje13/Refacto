@@ -26,7 +26,7 @@ const LoginCallback = ({ history, service }) => {
       <Header
         documentTitle="Refacto"
         title="Refacto"
-        backLink={{ label: 'Home', url: '/' }}
+        backLink={{ label: 'Home', action: '/' }}
       />
       <p>{ error ? `Login failed: ${error}` : 'Logging in\u2026' }</p>
     </article>

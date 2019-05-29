@@ -33,7 +33,7 @@ const RetroPage = ({
       <Header
         documentTitle={`${retroName} - Refacto`}
         title={retroName}
-        links={[{ label: 'Archives', url: `/retros/${slug}/archives` }]}
+        links={[{ label: 'Archives', action: `/retros/${slug}/archives` }]}
       />
       <Loader
         loading={!retro}

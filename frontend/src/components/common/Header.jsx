@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import nullable from 'prop-types-nullable';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import HeaderLinkItem, { propTypesLink } from './HeaderLinkItem';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './Header.less';
 
@@ -14,27 +15,22 @@ const Header = ({
   <header className="top-header">
     <Helmet title={documentTitle} />
     <h1>{ title }</h1>
-    { backLink && (
-      <Link className="back" to={backLink.url}>{ backLink.label }</Link>
-    ) }
+    { backLink && (<HeaderLinkItem className="back" {...backLink} />) }
     <div className="menu">
-      { links.filter((link) => link).map(({ url, label }) => (
-        <Link key={url} to={url}>{ label }</Link>
+      { links.filter((link) => link).map((link) => (
+        <HeaderLinkItem key={link.label} {...link} />
       )) }
     </div>
   </header>
 );
 
-const shapeLink = PropTypes.shape(forbidExtraProps({
-  label: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
-}));
+const shapeLink = PropTypes.shape(propTypesLink);
 
 Header.propTypes = {
   documentTitle: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   backLink: shapeLink,
-  links: PropTypes.arrayOf(shapeLink),
+  links: PropTypes.arrayOf(nullable(shapeLink)),
 };
 
 forbidExtraProps(Header);

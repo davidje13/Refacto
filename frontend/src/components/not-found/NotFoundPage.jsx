@@ -7,7 +7,7 @@ const NotFoundPage = () => (
     <Header
       documentTitle="Not Found - Refacto"
       title="Not Found"
-      backLink={{ label: 'Home', url: '/' }}
+      backLink={{ label: 'Home', action: '/' }}
     />
     <p>Sorry, that page was not found.</p>
   </article>
