@@ -1,0 +1,58 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(128, 128, 128, 0.5);
+  z-index: 10;
+
+  animation: 0.2s ease popup-fade-in;
+
+  .popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    margin-bottom: -50%;
+    transform: translate(-50%, -50%);
+    max-width: calc(100% - 32px);
+    max-height: calc(100% - 32px);
+    box-sizing: border-box;
+    background: #FFFFFF;
+    padding: 16px 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    outline: none;
+    overflow: auto;
+    --webkit-overflow-scrolling: touch;
+
+    animation: 0.2s ease-out popup-float-in;
+
+    h1 {
+      font-weight: bolder;
+      font-size: 1.5em;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+@keyframes popup-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popup-float-in {
+  from {
+    margin-top: -50px;
+  }
+
+  to {
+    margin-top: 0;
+  }
+}

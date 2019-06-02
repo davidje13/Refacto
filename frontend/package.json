@@ -17,6 +17,7 @@
     "react-dom": "^16.9.0-alpha.0",
     "react-helmet-async": "^1.0.2",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.0",
+    "react-modal": "^3.8.1",
     "react-router-dom": "^5.0.0",
     "rxjs": "^6.5.2"
   },

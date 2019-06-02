@@ -57,3 +57,11 @@ export const upvoteRetroItem = (itemId) => updateItem(itemId, {
 export const deleteRetroItem = (itemId) => ({
   data: { items: { $deleteWhere: ['id', itemId] } },
 });
+
+export const clearCovered = () => ({
+  state: { $set: {} },
+  data: { items: { $seq: [
+    { $deleteWhere: { key: 'category', not: 'action' } },
+    { $deleteWhere: { key: 'done', equals: true } },
+  ] } },
+});

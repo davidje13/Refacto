@@ -19,11 +19,13 @@ RetroFormatPicker.propTypes = {
   retroState: PropTypes.shape({}).isRequired,
   retroData: propTypesShapeRetroData.isRequired,
   dispatch: PropTypes.func,
+  onComplete: PropTypes.func,
   archive: PropTypes.bool,
 };
 
 RetroFormatPicker.defaultProps = {
   dispatch: null,
+  onComplete: null,
   archive: false,
 };
 

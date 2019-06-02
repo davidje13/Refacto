@@ -16,6 +16,14 @@ export default class ApiRetroArchivesRouter extends Router {
       const { retroId } = req.params;
 
       const { format, items } = req.body;
+      if (!format || typeof format !== 'string') {
+        res.status(400).json({ error: 'No format given' });
+        return;
+      }
+      if (!items || !Array.isArray(items)) {
+        res.status(400).json({ error: 'No items given' });
+        return;
+      }
       const id = await retroArchiveService.createArchive(retroId, {
         format,
         items,

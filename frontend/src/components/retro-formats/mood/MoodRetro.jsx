@@ -146,6 +146,7 @@ MoodRetro.propTypes = {
   }).isRequired,
   retroData: propTypesShapeRetroData.isRequired,
   dispatch: nullable(PropTypes.func).isRequired,
+  onComplete: PropTypes.func.isRequired,
   archive: PropTypes.bool.isRequired,
 };
 

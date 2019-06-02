@@ -1,0 +1,28 @@
+@import (reference) '../colours.less';
+
+.popup-archive {
+  p {
+    margin: 16px 0 0;
+  }
+
+  button {
+    margin: 0 16px;
+    padding: 8px 16px;
+    background: #EEEEEE;
+    color: @green-text-on-white;
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      box-shadow: none;
+    }
+  }
+
+  button.primary {
+    background: @green-button-dark;
+    color: #FFFFFF;
+  }
+}

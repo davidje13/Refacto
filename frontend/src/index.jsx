@@ -1,4 +1,5 @@
 import React from 'react';
+import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -12,6 +13,9 @@ if (process.env.NODE_ENV === 'development') {
   console.info('React.StrictMode is enabled; some lifecycle methods including constructors and render will be double-invoked to check for side-effects');
 }
 
+const root = document.getElementById('root');
+Modal.setAppElement(root);
+
 configService.load().then(() => {
   ReactDOM.render(
     <HelmetProvider>
@@ -21,6 +25,6 @@ configService.load().then(() => {
         </React.StrictMode>
       </BrowserRouter>
     </HelmetProvider>,
-    document.getElementById('root'),
+    root,
   );
 });

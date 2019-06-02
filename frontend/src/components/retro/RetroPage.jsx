@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
+import ArchivePopup from './ArchivePopup';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
+import Popup from '../common/Popup';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
+import useBoundCallback from '../../hooks/useBoundCallback';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
+import { clearCovered } from '../../actions/retro';
+import { archiveService } from '../../api/api';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
@@ -21,6 +26,36 @@ const RetroPage = ({
     retroDispatch,
     retroError,
   ] = useRetroReducer(retroId, retroToken);
+  const [archivePopupVisible, setArchivePopupVisible] = useState(false);
+  const showArchivePopup = useBoundCallback(setArchivePopupVisible, true);
+  const hideArchivePopup = useBoundCallback(setArchivePopupVisible, false);
+
+  const isArchiving = useRef();
+  const performArchive = useCallback(() => {
+    if (isArchiving.current) {
+      return;
+    }
+    isArchiving.current = true;
+
+    archiveService.create({
+      retroId,
+      data: retro.data,
+      retroToken,
+    }).then(() => {
+      isArchiving.current = false;
+      retroDispatch(clearCovered());
+      hideArchivePopup();
+    });
+  }, [
+    isArchiving,
+    hideArchivePopup,
+    archiveService,
+    retroDispatch,
+    clearCovered,
+    retroId,
+    retro,
+    retroToken,
+  ]);
 
   const retroName = retro?.name || slug;
 
@@ -28,12 +63,31 @@ const RetroPage = ({
     return (<RetroCreatePage defaultSlug={slug} />);
   }
 
+  let popup = null;
+  if (retroDispatch && archivePopupVisible) {
+    popup = {
+      title: 'Create Archive',
+      content: (
+        <ArchivePopup
+          onConfirm={performArchive}
+          onCancel={hideArchivePopup}
+        />
+      ),
+    };
+  }
+
   return (
     <article className="page-retro">
       <Header
         documentTitle={`${retroName} - Refacto`}
         title={retroName}
-        links={[{ label: 'Archives', action: `/retros/${slug}/archives` }]}
+        links={[
+          retroDispatch ? {
+            label: 'Create Archive',
+            action: showArchivePopup,
+          } : null,
+          { label: 'Archives', action: `/retros/${slug}/archives` },
+        ]}
       />
       <Loader
         loading={!retro}
@@ -42,7 +96,9 @@ const RetroPage = ({
         retroData={retro?.data}
         retroState={retro?.state}
         dispatch={retroDispatch}
+        onComplete={showArchivePopup}
       />
+      <Popup data={popup} onClose={hideArchivePopup} />
     </article>
   );
 };
