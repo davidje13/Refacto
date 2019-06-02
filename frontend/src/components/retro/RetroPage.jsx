@@ -76,13 +76,15 @@ const RetroPage = ({
     };
   }
 
+  const canArchive = Boolean(retroDispatch && retro?.data?.items?.length > 0);
+
   return (
     <article className="page-retro">
       <Header
         documentTitle={`${retroName} - Refacto`}
         title={retroName}
         links={[
-          retroDispatch ? {
+          canArchive ? {
             label: 'Create Archive',
             action: showArchivePopup,
           } : null,

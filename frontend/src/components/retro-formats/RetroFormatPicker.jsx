@@ -25,7 +25,7 @@ RetroFormatPicker.propTypes = {
 
 RetroFormatPicker.defaultProps = {
   dispatch: null,
-  onComplete: null,
+  onComplete: () => {},
   archive: false,
 };
 

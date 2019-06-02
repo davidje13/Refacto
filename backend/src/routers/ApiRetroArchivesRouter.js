@@ -20,7 +20,7 @@ export default class ApiRetroArchivesRouter extends Router {
         res.status(400).json({ error: 'No format given' });
         return;
       }
-      if (!items || !Array.isArray(items)) {
+      if (!items || !Array.isArray(items) || !items.length) {
         res.status(400).json({ error: 'No items given' });
         return;
       }
