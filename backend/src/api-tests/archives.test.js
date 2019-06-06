@@ -81,7 +81,7 @@ describe('API retro archives', () => {
       const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .post(`/api/retros/${retroId}/archives`)
-        .send({ format: 'foo', items: [] })
+        .send({ format: 'foo', items: [{ id: 'foo' }] })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -91,6 +91,15 @@ describe('API retro archives', () => {
         .getRetroArchive(retroId, returnedId);
 
       expect(storedArchive.data.format).toEqual('foo');
+    });
+
+    it('rejects empty archives', async () => {
+      const retroToken = await getRetroToken(hooks, retroId);
+      await request(server)
+        .post(`/api/retros/${retroId}/archives`)
+        .send({ format: 'foo', items: [] })
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(400);
     });
 
     it('responds HTTP Unauthorized if no credentials are given', async () => {

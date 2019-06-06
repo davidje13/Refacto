@@ -13,6 +13,7 @@ describe('MoodRetro', () => {
         retroData={emptyRetroData}
         retroState={{}}
         archive={false}
+        onComplete={() => {}}
         dispatch={() => {}}
       />
     ));

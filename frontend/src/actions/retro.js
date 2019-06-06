@@ -60,8 +60,12 @@ export const deleteRetroItem = (itemId) => ({
 
 export const clearCovered = () => ({
   state: { $set: {} },
-  data: { items: { $seq: [
-    { $deleteWhere: { key: 'category', not: 'action' } },
-    { $deleteWhere: { key: 'done', equals: true } },
-  ] } },
+  data: {
+    items: {
+      $seq: [
+        { $deleteWhere: { key: 'category', not: 'action' } },
+        { $deleteWhere: { key: 'done', equals: true } },
+      ],
+    },
+  },
 });

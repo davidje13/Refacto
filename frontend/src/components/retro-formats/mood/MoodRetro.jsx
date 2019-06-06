@@ -41,6 +41,7 @@ const MoodRetro = ({
   retroData: {
     items,
   },
+  onComplete, /* eslint-disable-line no-unused-vars */ // TODO
   dispatch,
   archive,
 }) => {
