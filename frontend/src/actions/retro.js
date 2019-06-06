@@ -1,3 +1,5 @@
+import uuidv4 from '../helpers/uuidv4';
+
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
 
@@ -9,7 +11,7 @@ function sanitiseInput(value) {
 
 function makeItem(category, message) {
   return {
-    id: `temp-local-id-${Date.now()}`,
+    id: uuidv4(),
     category,
     created: Date.now(),
     message,
