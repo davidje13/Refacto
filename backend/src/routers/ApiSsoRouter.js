@@ -69,6 +69,8 @@ export default class ApiSsoRouter extends Router {
   constructor(userAuthService, configs) {
     super();
 
+    const tokenLifespan = 60 * 60 * 2;
+
     this.post('/:name', async (req, res) => {
       const { name } = req.params;
       const config = configs[name];
@@ -96,9 +98,14 @@ export default class ApiSsoRouter extends Router {
           throw new Error('failed to get user ID');
         }
 
+        const now = Date.now() / 1000;
+
         const userToken = await userAuthService.grantToken({
+          iat: now,
+          exp: now + tokenLifespan,
+          aud: 'user',
           provider: name,
-          id: `${name}-${externalId}`,
+          sub: `${name}-${externalId}`,
         });
         res.status(200).json({ userToken });
       } catch (e) {

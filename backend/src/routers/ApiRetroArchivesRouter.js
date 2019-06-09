@@ -1,18 +1,17 @@
-import { Router } from 'websocket-express';
-import { authScope } from './authMiddleware';
+import { Router, requireAuthScope } from 'websocket-express';
 
 export default class ApiRetroArchivesRouter extends Router {
   constructor(retroArchiveService) {
     super({ mergeParams: true });
 
-    this.get('/', authScope('readArchives'), async (req, res) => {
+    this.get('/', requireAuthScope('readArchives'), async (req, res) => {
       const { retroId } = req.params;
 
       const archives = await retroArchiveService.getRetroArchiveList(retroId);
       res.json({ archives });
     });
 
-    this.post('/', authScope('write'), async (req, res) => {
+    this.post('/', requireAuthScope('write'), async (req, res) => {
       const { retroId } = req.params;
 
       const { format, items } = req.body;
@@ -32,7 +31,7 @@ export default class ApiRetroArchivesRouter extends Router {
       res.status(200).json({ id });
     });
 
-    this.get('/:archiveId', authScope('readArchives'), async (req, res) => {
+    this.get('/:archiveId', requireAuthScope('readArchives'), async (req, res) => {
       const { retroId, archiveId } = req.params;
 
       const archive = await retroArchiveService

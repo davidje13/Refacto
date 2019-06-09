@@ -3,11 +3,14 @@ import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
-function getRetroToken({ retroAuthService }, retroId) {
+function getRetroToken({ retroAuthService }, retroId, scopes = {}) {
   return retroAuthService.grantToken(retroId, {
-    read: true,
-    readArchives: true,
-    write: true,
+    aud: `retro-${retroId}`,
+    scopes: Object.assign({
+      read: true,
+      readArchives: true,
+      write: true,
+    }, scopes),
   });
 }
 

@@ -113,11 +113,11 @@ describe('API single-sign-on', () => {
         .expect(200);
 
       const { userToken } = response.body;
+      const data = jwt.decode(userToken, '', true);
 
-      expect(jwt.decode(userToken, '', true)).toEqual({
-        provider: 'google',
-        id: 'google-my-external-id',
-      });
+      expect(data.aud).toEqual('user');
+      expect(data.sub).toEqual('google-my-external-id');
+      expect(data.provider).toEqual('google');
 
       await request(server)
         .get('/api/retros')

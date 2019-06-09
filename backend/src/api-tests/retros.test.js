@@ -5,8 +5,9 @@ import appFactory from '../app';
 
 function getUserToken({ userAuthService }, userId) {
   return userAuthService.grantToken({
+    aud: 'user',
     provider: 'test',
-    id: userId,
+    sub: userId,
   });
 }
 

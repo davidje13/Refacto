@@ -1,5 +1,10 @@
-import { Router } from 'websocket-express';
-import { userAuth, retroAuth } from './authMiddleware';
+import {
+  Router,
+  requireBearerAuth,
+  requireAuthScope,
+  getAuthData,
+  hasAuthScope,
+} from 'websocket-express';
 import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
@@ -14,17 +19,21 @@ export default class ApiRetrosRouter extends Router {
   ) {
     super();
 
-    const userAuthMiddleware = userAuth(userAuthService);
-    const retroAuthMiddleware = retroAuth(retroAuthService);
+    const userAuthMiddleware = requireBearerAuth(
+      'user',
+      (token) => userAuthService.readAndVerifyToken(token),
+    );
 
     this.get('/', userAuthMiddleware, async (req, res) => {
+      const userId = getAuthData(res).sub;
+
       res.json({
-        retros: await retroService.getRetroListForUser(res.locals.auth.id),
+        retros: await retroService.getRetroListForUser(userId),
       });
     });
 
     this.post('/', userAuthMiddleware, async (req, res) => {
-      const { auth } = res.locals;
+      const userId = getAuthData(res).sub;
       const { slug, name, password } = req.body;
 
       if (!name || typeof name !== 'string') {
@@ -45,7 +54,7 @@ export default class ApiRetrosRouter extends Router {
       }
 
       try {
-        const id = await retroService.createRetro(auth.id, slug, name, 'mood');
+        const id = await retroService.createRetro(userId, slug, name, 'mood');
         await retroAuthService.setPassword(id, password);
 
         res.status(200).json({ id });
@@ -58,60 +67,45 @@ export default class ApiRetrosRouter extends Router {
       }
     });
 
-    this.useHTTP('/:retroId', retroAuthMiddleware);
+    this.use('/:retroId', requireBearerAuth(
+      (req) => req.params.retroId,
+      (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
+    ));
 
-    this.ws(
-      '/:retroId',
-      retroAuth(retroAuthService, { optional: true }),
-      async (req, res) => {
-        const { retroId } = req.params;
-        const ws = await res.accept();
+    this.ws('/:retroId', requireAuthScope('read'), async (req, res) => {
+      const { retroId } = req.params;
+      const ws = await res.accept();
 
-        let { auth } = res.locals;
-        if (!auth) {
-          const retroToken = await ws.nextMessage({ timeout: 5000 });
-          auth = await retroAuthService.readAndVerifyToken(retroId, retroToken);
+      const onChange = (msg, id) => {
+        const message = Object.assign({}, msg);
+        if (id !== undefined) {
+          message.id = id;
         }
-        if (!auth) {
-          res.sendError(401);
-          return;
-        }
-        if (!auth.read) {
+        ws.send(JSON.stringify(message));
+      };
+
+      const subscription = await retroService.subscribeRetro(retroId, onChange);
+
+      if (!subscription) {
+        res.sendError(404);
+        return;
+      }
+
+      ws.on('close', subscription.close);
+
+      ws.on('message', (msg) => {
+        const { change, id } = JSON.parse(msg);
+        if (!hasAuthScope(res, 'write')) {
           res.sendError(403);
           return;
         }
+        subscription.send(change, id);
+      });
 
-        const onChange = (msg, id) => {
-          const message = Object.assign({}, msg);
-          if (id !== undefined) {
-            message.id = id;
-          }
-          ws.send(JSON.stringify(message));
-        };
-
-        const subscription = await retroService.subscribeRetro(retroId, onChange);
-
-        if (!subscription) {
-          res.sendError(404);
-          return;
-        }
-
-        ws.on('close', subscription.close);
-
-        ws.on('message', (msg) => {
-          const { change, id } = JSON.parse(msg);
-          if (!auth.write) {
-            res.sendError(403);
-            return;
-          }
-          subscription.send(change, id);
-        });
-
-        ws.send(JSON.stringify({
-          change: { $set: subscription.getInitialData() },
-        }));
-      },
-    );
+      ws.send(JSON.stringify({
+        change: { $set: subscription.getInitialData() },
+      }));
+    });
 
     this.use('/:retroId/archives', new ApiRetroArchivesRouter(
       retroArchiveService,

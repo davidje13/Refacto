@@ -58,8 +58,10 @@ describe('API auth', () => {
         .expect(200);
 
       const { retroToken } = response.body;
+      const data = jwt.decode(retroToken, '', true);
 
-      expect(jwt.decode(retroToken, '', true)).toEqual({
+      expect(data.aud).toEqual(`retro-${retroId}`);
+      expect(data.scopes).toEqual({
         read: true,
         write: true,
         readArchives: true,

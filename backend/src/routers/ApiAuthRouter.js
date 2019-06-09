@@ -4,11 +4,15 @@ export default class ApiAuthRouter extends Router {
   constructor(retroAuthService) {
     super();
 
+    const tokenLifespan = 60 * 60 * 24 * 30 * 6;
+
     this.post('/tokens/:retroId', async (req, res) => {
       const { retroId } = req.params;
       const { password } = req.body;
 
-      const permissions = {
+      const now = Date.now() / 1000;
+
+      const scopes = {
         read: true,
         readArchives: true,
         write: true,
@@ -16,7 +20,12 @@ export default class ApiAuthRouter extends Router {
       const retroToken = await retroAuthService.exchangePassword(
         retroId,
         password,
-        permissions,
+        {
+          iat: now,
+          exp: now + tokenLifespan,
+          aud: `retro-${retroId}`,
+          scopes,
+        },
       );
       if (!retroToken) {
         res.status(400).json({ error: 'incorrect password' });

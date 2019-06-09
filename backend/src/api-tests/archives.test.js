@@ -3,12 +3,15 @@ import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
-function getRetroToken({ retroAuthService }, retroId, permissions = {}) {
-  return retroAuthService.grantToken(retroId, Object.assign({
-    read: true,
-    readArchives: true,
-    write: true,
-  }, permissions));
+function getRetroToken({ retroAuthService }, retroId, scopes = {}) {
+  return retroAuthService.grantToken(retroId, {
+    aud: `retro-${retroId}`,
+    scopes: Object.assign({
+      read: true,
+      readArchives: true,
+      write: true,
+    }, scopes),
+  });
 }
 
 describe('API retro archives', () => {
