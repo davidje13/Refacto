@@ -98,7 +98,7 @@ export default class ApiSsoRouter extends Router {
           throw new Error('failed to get user ID');
         }
 
-        const now = Date.now() / 1000;
+        const now = Math.floor(Date.now() / 1000);
 
         const userToken = await userAuthService.grantToken({
           iat: now,

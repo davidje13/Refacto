@@ -17,7 +17,7 @@
     "node-fetch": "^2.5.0",
     "source-map-support": "^0.5.12",
     "uuid": "^3.3.2",
-    "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.3.0"
+    "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.3.3"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.4.4",

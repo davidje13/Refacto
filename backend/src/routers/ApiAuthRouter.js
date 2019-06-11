@@ -10,7 +10,7 @@ export default class ApiAuthRouter extends Router {
       const { retroId } = req.params;
       const { password } = req.body;
 
-      const now = Date.now() / 1000;
+      const now = Math.floor(Date.now() / 1000);
 
       const scopes = {
         read: true,
