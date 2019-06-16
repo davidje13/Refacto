@@ -84,6 +84,7 @@ const MoodRetro = ({
       onSetDone={handleSetItemDone}
       focusedItemId={focusedItemId}
       focusedItemTimeout={focusedItemTimeout}
+      categoryLabel={category.title}
       category={category.id}
     />
   );

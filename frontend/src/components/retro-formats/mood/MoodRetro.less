@@ -50,9 +50,18 @@
 
       h2 {
         font-weight: bolder;
-        margin: 0 0 @base-padding;
+        margin-bottom: @base-padding;
       }
     }
+  }
+
+  .columns > section header h2 {
+    position: relative;
+    margin-top: -20px;
+    text-shadow:
+      0 4px 8px rgba(0, 0, 0, 0.2),
+      0 2px 3px rgba(0, 0, 0, 0.2);
+    z-index: 2;
   }
 
   section.actions {

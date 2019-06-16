@@ -12,14 +12,16 @@ jest.mock('../../../common/ExpandingTextEntry', () => mockElement('mock-expandin
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {
-    const dom = render(<MoodSection category="woo" items={[]} />, { queries });
+    const dom = render((
+      <MoodSection category="woo" categoryLabel="woo title" items={[]} />
+    ), { queries });
 
-    expect(dom.getBy(css('h2'))).toHaveTextContent('woo');
+    expect(dom.getBy(css('h2'))).toHaveAttribute('title', 'woo title');
   });
 
   it('propagates focused ID', () => {
     const dom = render((
-      <MoodSection category="" items={[]} focusedItemId="b" />
+      <MoodSection category="" categoryLabel="" items={[]} focusedItemId="b" />
     ), { queries });
 
     const column = dom.getBy(css('mock-item-column'));
@@ -34,7 +36,7 @@ describe('MoodSection', () => {
       makeItem({ category: 'abc', message: 'bar' }),
     ];
     const dom = render((
-      <MoodSection category="abc" items={items} />
+      <MoodSection category="abc" categoryLabel="" items={items} />
     ), { queries });
 
     const column = dom.getBy(css('mock-item-column'));
@@ -50,7 +52,7 @@ describe('MoodSection', () => {
       makeItem({ category: 'yay', message: 'bar' }),
     ];
     const dom = render((
-      <MoodSection category="yay" items={items} />
+      <MoodSection category="yay" categoryLabel="" items={items} />
     ), { queries });
 
     const column = dom.getBy(css('mock-item-column'));
@@ -60,14 +62,21 @@ describe('MoodSection', () => {
   });
 
   it('does not render an input field if no callback is provided', () => {
-    const dom = render(<MoodSection category="" items={[]} />, { queries });
+    const dom = render((
+      <MoodSection category="" categoryLabel="" items={[]} />
+    ), { queries });
 
     expect(dom).not.toContainElementWith(css('mock-expanding-text-entry'));
   });
 
   it('renders an input field if a callback is provided', () => {
     const dom = render((
-      <MoodSection category="" items={[]} onAddItem={() => {}} />
+      <MoodSection
+        category=""
+        categoryLabel=""
+        items={[]}
+        onAddItem={() => {}}
+      />
     ), { queries });
 
     expect(dom).toContainElementWith(css('mock-expanding-text-entry'));
@@ -78,6 +87,7 @@ describe('MoodSection', () => {
     const dom = render((
       <MoodSection
         category="my-category"
+        categoryLabel=""
         items={[]}
         onAddItem={onAddItem}
       />

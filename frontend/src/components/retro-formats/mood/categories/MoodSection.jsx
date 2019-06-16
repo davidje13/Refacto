@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
@@ -9,6 +10,7 @@ import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
 const MoodSection = ({
   category,
+  categoryLabel,
   items,
   addItemPlaceholder,
   onAddItem,
@@ -40,7 +42,7 @@ const MoodSection = ({
   return (
     <section className={category}>
       <header>
-        <h2>{category}</h2>
+        <h2 title={categoryLabel}><FaceIcon type={category} /></h2>
         { onAddItem && (
           <ExpandingTextEntry
             onSubmit={handleAddItem}
@@ -69,6 +71,7 @@ const MoodSection = ({
 
 MoodSection.propTypes = {
   category: PropTypes.string.isRequired,
+  categoryLabel: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   addItemPlaceholder: PropTypes.string,
   onAddItem: PropTypes.func,
