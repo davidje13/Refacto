@@ -1,14 +1,9 @@
 import crypto from 'crypto';
 
 export default class UniqueIdProvider {
-  private shared: string;
+  private shared = crypto.randomBytes(8).toString('hex');
 
-  private unique: number;
-
-  public constructor() {
-    this.shared = crypto.randomBytes(8).toString('hex');
-    this.unique = 0;
-  }
+  private unique = 0;
 
   public get(): string {
     const id = this.unique;

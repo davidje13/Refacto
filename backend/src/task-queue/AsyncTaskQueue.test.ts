@@ -1,18 +1,22 @@
 import AsyncTaskQueue from './AsyncTaskQueue';
 
-class ControllablePromise {
-  constructor() {
-    this.preResolve = null;
-    this.preReject = null;
-    this.resolve = (v) => {
-      this.preResolve = v;
-    };
-    this.reject = (v) => {
-      this.preReject = v;
-    };
-    this.hasStarted = false;
+class ControllablePromise<T> {
+  public preResolve: T | null = null;
 
-    this.promiseFactory = () => new Promise((resolve, reject) => {
+  public preReject: Error | null = null;
+
+  public hasStarted = false;
+
+  public resolve: (v: T) => void = (v) => {
+    this.preResolve = v;
+  };
+
+  public reject: (v: Error) => void = (v) => {
+    this.preReject = v;
+  };
+
+  public makePromiseFactory(): () => Promise<T> {
+    return () => new Promise<T>((resolve, reject) => {
       this.hasStarted = true;
       this.resolve = resolve;
       this.reject = reject;
@@ -63,14 +67,14 @@ describe('AsyncTaskQueue', () => {
     let result1 = null;
     let result2 = null;
 
-    const promise1 = queue.push(task1.promiseFactory)
-      .catch((err) => ({ err }))
+    const promise1 = queue.push(task1.makePromiseFactory())
+      .catch((e) => ({ err: e.message }))
       .then((result) => {
         result1 = result;
       });
 
-    const promise2 = queue.push(task2.promiseFactory)
-      .catch((err) => ({ err }))
+    const promise2 = queue.push(task2.makePromiseFactory())
+      .catch((e) => ({ err: e.message }))
       .then((result) => {
         result2 = result;
       });
@@ -101,19 +105,19 @@ describe('AsyncTaskQueue', () => {
     let result1 = null;
     let result2 = null;
 
-    const promise1 = queue.push(task1.promiseFactory)
-      .catch((err) => ({ err }))
+    const promise1 = queue.push(task1.makePromiseFactory())
+      .catch((e) => ({ err: e.message }))
       .then((result) => {
         result1 = result;
       });
 
-    const promise2 = queue.push(task2.promiseFactory)
-      .catch((err) => ({ err }))
+    const promise2 = queue.push(task2.makePromiseFactory())
+      .catch((e) => ({ err: e.message }))
       .then((result) => {
         result2 = result;
       });
 
-    task1.reject('nope');
+    task1.reject(new Error('nope'));
     await promise1;
 
     expect(task2.hasStarted).toEqual(true);
@@ -136,8 +140,8 @@ describe('AsyncTaskQueue', () => {
     const task1 = new ControllablePromise();
     const task2 = new ControllablePromise();
 
-    const promise1 = queue.push(task1.promiseFactory);
-    const promise2 = queue.push(task2.promiseFactory);
+    const promise1 = queue.push(task1.makePromiseFactory());
+    const promise2 = queue.push(task2.makePromiseFactory());
 
     expect(drainCalls).toEqual(0);
 

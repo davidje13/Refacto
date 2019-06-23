@@ -65,6 +65,7 @@ module.exports = {
         ],
         plugins: [
           'transform-dynamic-import',
+          '@babel/plugin-proposal-class-properties',
         ],
       },
     }),

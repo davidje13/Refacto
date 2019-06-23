@@ -1,11 +1,7 @@
 import { TopicListener, Topic } from './Topic';
 
 export default class InMemoryTopic<T> implements Topic<T> {
-  private subscribers: Set<TopicListener<T>>;
-
-  public constructor() {
-    this.subscribers = new Set();
-  }
+  private subscribers = new Set<TopicListener<T>>();
 
   public add(fn: TopicListener<T>): void {
     this.subscribers.add(fn);

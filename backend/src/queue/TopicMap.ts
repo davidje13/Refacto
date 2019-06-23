@@ -1,11 +1,11 @@
 import { TopicListener, Topic, TopicFactory } from './Topic';
 
 export default class TopicMap<T> {
-  private data: Map<string, Topic<T>>;
+  private data = new Map<string, Topic<T>>();
 
-  public constructor(private readonly topicFactory: TopicFactory<T>) {
-    this.data = new Map();
-  }
+  public constructor(
+    private readonly topicFactory: TopicFactory<T>,
+  ) {}
 
   public async add(key: string, fn: TopicListener<T>): Promise<void> {
     let d = this.data.get(key);

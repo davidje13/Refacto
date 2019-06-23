@@ -1,26 +1,24 @@
 import EventEmitter from 'events';
 import TaskQueueMap from './TaskQueueMap';
+import { Task, TaskQueue } from './TaskQueue';
 
-class FakeQueue extends EventEmitter {
-  constructor() {
-    super();
-    this.taskCount = 0;
-  }
+class FakeQueue<T> extends EventEmitter implements TaskQueue<T> {
+  public taskCount = 0;
 
-  push(task) {
+  public push(task: Task<T>): Promise<T> {
     this.taskCount += 1;
     return task();
   }
 }
 
 describe('TaskQueueMap', () => {
-  let returnedQueues;
+  let returnedQueues: TaskQueue<string>[];
   let map;
 
   beforeEach(() => {
     returnedQueues = [];
     const queueFactory = () => {
-      const queue = new FakeQueue();
+      const queue = new FakeQueue<string>();
       returnedQueues.push(queue);
       return queue;
     };
@@ -56,7 +54,7 @@ describe('TaskQueueMap', () => {
 
     map.push('b', () => 'C');
     expect(returnedQueues.length).toEqual(2);
-    expect(returnedQueues[1].taskCount).toEqual(2);
+    expect((returnedQueues[1] as FakeQueue<string>).taskCount).toEqual(2);
   });
 
   it('removes queues after "drain" is emitted', () => {
@@ -65,12 +63,12 @@ describe('TaskQueueMap', () => {
 
     map.push('a', () => 'B');
     expect(returnedQueues.length).toEqual(1);
-    expect(returnedQueues[0].taskCount).toEqual(2);
+    expect((returnedQueues[0] as FakeQueue<string>).taskCount).toEqual(2);
 
     returnedQueues[0].emit('drain');
 
     map.push('a', () => 'C');
     expect(returnedQueues.length).toEqual(2);
-    expect(returnedQueues[1].taskCount).toEqual(1);
+    expect((returnedQueues[1] as FakeQueue<string>).taskCount).toEqual(1);
   });
 });

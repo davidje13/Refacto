@@ -19,6 +19,8 @@ module.exports = {
     '@typescript-eslint/no-this-alias': ['error'],
     '@typescript-eslint/no-unnecessary-qualifier': ['error'],
     '@typescript-eslint/no-unnecessary-type-assertion': ['error'],
+    'no-useless-constructor': ['off'],
+    'no-empty-function': ['off'],
     '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/prefer-function-type': ['error'],
     '@typescript-eslint/prefer-includes': ['error'],
@@ -31,6 +33,7 @@ module.exports = {
     '@typescript-eslint/no-parameter-properties': ['error', {
       'allows': ['private readonly'],
     }],
+    '@typescript-eslint/no-non-null-assertion': ['off'],
   },
 
   reactRules: {
