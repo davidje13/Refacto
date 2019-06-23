@@ -6,7 +6,8 @@
     "noEmit": true,
     "strict": true,
     "isolatedModules": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": ["src/types", "node_modules/@types"]
   },
   "include": [
     "src"

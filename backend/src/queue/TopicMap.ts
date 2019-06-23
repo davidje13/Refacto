@@ -1,35 +1,7 @@
-import { TopicListener, Topic, TopicFactory } from './Topic';
+import { TopicListener } from './Topic';
 
-export default class TopicMap<T> {
-  private data = new Map<string, Topic<T>>();
-
-  public constructor(
-    private readonly topicFactory: TopicFactory<T>,
-  ) {}
-
-  public async add(key: string, fn: TopicListener<T>): Promise<void> {
-    let d = this.data.get(key);
-    if (!d) {
-      d = this.topicFactory(key);
-      this.data.set(key, d);
-    }
-    await d.add(fn);
-  }
-
-  public async remove(key: string, fn: TopicListener<T>): Promise<void> {
-    const d = this.data.get(key);
-    if (d) {
-      const anyRemaining = await d.remove(fn);
-      if (!anyRemaining) {
-        this.data.delete(key);
-      }
-    }
-  }
-
-  public async broadcast(key: string, message: T): Promise<void> {
-    const d = this.data.get(key);
-    if (d) {
-      await d.broadcast(message);
-    }
-  }
+export default interface TopicMap<T> {
+  add(key: string, fn: TopicListener<T>): Promise<void> | void;
+  remove(key: string, fn: TopicListener<T>): Promise<void> | void;
+  broadcast(key: string, message: T): Promise<void> | void;
 }

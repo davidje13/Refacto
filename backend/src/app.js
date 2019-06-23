@@ -13,7 +13,7 @@ import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 import InMemoryTopic from './queue/InMemoryTopic';
-import TopicMap from './queue/TopicMap';
+import TrackingTopicMap from './queue/TrackingTopicMap';
 
 export default async (config) => {
   const db = await CollectionStorage.connect(config.db.url);
@@ -21,7 +21,7 @@ export default async (config) => {
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
-  const retroChangeSubs = new TopicMap(() => new InMemoryTopic());
+  const retroChangeSubs = new TrackingTopicMap(() => new InMemoryTopic());
 
   const retroService = new RetroService(db, retroChangeSubs);
   const retroArchiveService = new RetroArchiveService(db);

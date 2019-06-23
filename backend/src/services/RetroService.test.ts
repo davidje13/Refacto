@@ -1,24 +1,25 @@
 import { MemoryDb } from 'collection-storage';
-import RetroService from './RetroService';
+import RetroService, { TopicMessage } from './RetroService';
+import TopicMap from '../queue/TopicMap';
 
 /* eslint-disable class-methods-use-this */
-class StubTopicMap {
-  add() {}
+class StubTopicMap<T> implements TopicMap<T> {
+  public add(): void {}
 
-  remove() {}
+  public remove(): void {}
 
-  broadcast() {}
+  public broadcast(): void {}
 }
 /* eslint-enable class-methods-use-this */
 
 describe('RetroService', () => {
-  let service;
-  let r1;
-  let r2;
+  let service: RetroService;
+  let r1: string;
+  let r2: string;
 
   beforeEach(async () => {
     const db = new MemoryDb();
-    const topic = new StubTopicMap();
+    const topic = new StubTopicMap<TopicMessage>();
     service = new RetroService(db, topic);
     r1 = await service.createRetro(
       'me',
@@ -34,7 +35,7 @@ describe('RetroService', () => {
     );
     await service.updateRetro(r2, {
       state: { $set: { someRetroSpecificState: true } },
-      data: { items: { $push: [{ anItem: 'yes' }] } },
+      data: { items: { $push: [{ id: 'yes' }] } },
     });
   });
 
@@ -68,8 +69,8 @@ describe('RetroService', () => {
   describe('subscribeRetro', () => {
     it('returns the requested retro by ID', async () => {
       const subscription = await service.subscribeRetro(r2, () => {});
-      const retro = subscription.getInitialData();
-      subscription.close();
+      const retro = subscription!.getInitialData();
+      subscription!.close();
 
       expect(retro).not.toBeNull();
       expect(retro.name).toEqual('My Second Retro');
@@ -77,8 +78,8 @@ describe('RetroService', () => {
 
     it('returns full details', async () => {
       const subscription = await service.subscribeRetro(r2, () => {});
-      const retro = subscription.getInitialData();
-      subscription.close();
+      const retro = subscription!.getInitialData();
+      subscription!.close();
 
       expect(retro).not.toBeNull();
       expect(retro.data.format).toEqual('other');

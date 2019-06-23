@@ -1,4 +1,5 @@
 import uuidv4 from 'uuid/v4';
+import { Collection, DB } from 'collection-storage';
 import RetroArchive from '../data/RetroArchive';
 
 export default class RetroArchiveService {

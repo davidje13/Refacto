@@ -1,11 +1,29 @@
+import { Collection, DB } from 'collection-storage';
+import Hasher from '../hash/Hasher';
+import TokenManager from '../tokens/TokenManager';
+
+interface RetroAuth {
+  privateKey: string;
+  publicKey: string;
+  hash: string;
+}
+
 export default class RetroAuthService {
-  constructor(db, hasher, tokenManager) {
-    this.hasher = hasher;
-    this.tokenManager = tokenManager;
-    this.retroAuthCollection = db.getCollection('retro_auth');
+  private readonly retroAuthCollection: Collection<RetroAuth>;
+
+  public constructor(
+    db: DB,
+    private readonly hasher: Hasher,
+    private readonly tokenManager: TokenManager,
+  ) {
+    this.retroAuthCollection = db.getCollection<RetroAuth>('retro_auth');
   }
 
-  async setPassword(retroId, password, { cycleKeys = true } = {}) {
+  public async setPassword(
+    retroId: string,
+    password: string,
+    { cycleKeys = true } = {},
+  ): Promise<void> {
     const hash = await this.hasher.hash(password);
     if (cycleKeys) {
       const keys = await this.tokenManager.generateKeys();
@@ -19,7 +37,11 @@ export default class RetroAuthService {
     }
   }
 
-  async exchangePassword(retroId, password, tokenData) {
+  public async exchangePassword(
+    retroId: string,
+    password: string,
+    tokenData: object,
+  ): Promise<string | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['hash']);
     if (!retroData) {
@@ -37,7 +59,7 @@ export default class RetroAuthService {
     return this.grantToken(retroId, tokenData);
   }
 
-  async grantToken(retroId, tokenData) {
+  public async grantToken(retroId: string, tokenData: object): Promise<string | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['privateKey']);
     if (!retroData) {
@@ -47,11 +69,11 @@ export default class RetroAuthService {
     return this.tokenManager.signData(tokenData, retroData.privateKey);
   }
 
-  async readAndVerifyToken(retroId, retroToken) {
+  public async readAndVerifyToken(retroId: string, retroToken: string): Promise<object | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['publicKey']);
     if (!retroData) {
-      return false;
+      return null;
     }
 
     return this.tokenManager.readAndVerifySigned(
