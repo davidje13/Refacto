@@ -2,27 +2,49 @@ const airbnb = require('@neutrinojs/airbnb');
 const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
-const { baseRules, testRules } = require('../eslint.js');
+const { baseRules, testRules, tsRules } = require('../eslint.js');
+
+const typescript = () => (neutrino) => {
+  const { extensions } = neutrino.options;
+  const index = extensions.indexOf('js');
+  extensions.splice(index, 0, 'ts', 'tsx');
+  neutrino.options.extensions = extensions;
+};
 
 module.exports = {
   options: {
     tests: 'src',
   },
   use: [
-    airbnb({
+    typescript(),
+    (neutrino) => neutrino.use(airbnb({
       eslint: {
-        rules: baseRules,
+        parser: '@typescript-eslint/parser',
+        parserOptions: {
+          project: './tsconfig.json',
+        },
+        plugins: ['@typescript-eslint'],
+        rules: Object.assign({}, baseRules, tsRules),
         baseConfig: {
           extends: [
             'plugin:eslint-comments/recommended',
+            'plugin:@typescript-eslint/eslint-recommended',
+            'plugin:@typescript-eslint/recommended',
           ],
           overrides: [{
-            files: ['**/test-helpers/*'],
-            rules: testRules,
+            files: ['**/test-helpers/*', '**/*.test.*'],
+            rules: Object.assign({}, tsRules, testRules),
           }],
+          settings: {
+            'import/resolver': {
+              node: {
+                extensions: neutrino.options.extensions.map((ext) => `.${ext}`),
+              },
+            },
+          },
         },
       },
-    }),
+    })),
     copy({
       patterns: [{
         context: 'src/static',
@@ -39,6 +61,7 @@ module.exports = {
               node: '10.15',
             },
           }],
+          ['@babel/preset-typescript', {}],
         ],
         plugins: [
           'transform-dynamic-import',

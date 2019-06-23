@@ -1,21 +1,21 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import util from 'util';
+import { promisify } from 'util';
 
 // adds random brute-force salt to bcrypt algorithm
 // (results in average ~1.8x work for incorrect passwords)
 
 const BRUTE_SALTS = '01234567'.split('');
 
-const randomBytes = util.promisify(crypto.randomBytes);
+const randomBytes = promisify(crypto.randomBytes);
 
-async function pickBruteSalt() {
+async function pickBruteSalt(): Promise<string> {
   const buf = await randomBytes(1);
   const index = buf[0] % BRUTE_SALTS.length;
   return BRUTE_SALTS[index];
 }
 
-function shuffle(list) {
+function shuffle<T>(list: T[]): T[] {
   // randomisation is just to vary response
   // times to reduce average server load;
   // cryptographic randomness is not required here
@@ -31,7 +31,11 @@ function shuffle(list) {
   return result;
 }
 
-function preprocess(password, secretPepper, bruteSalt) {
+function preprocess(
+  password: string,
+  secretPepper: string,
+  bruteSalt: string,
+): string {
   // use SHA to ensure no max length
   // (which would make it possible to brute-force the secretPepper)
   const hash = crypto.createHash('sha512');
@@ -40,12 +44,16 @@ function preprocess(password, secretPepper, bruteSalt) {
 }
 
 export default class Hasher {
-  constructor({ secretPepper = '', workFactor = 10 } = {}) {
+  private secretPepper: string;
+
+  private workFactor: number;
+
+  public constructor({ secretPepper = '', workFactor = 10 } = {}) {
     this.secretPepper = secretPepper;
     this.workFactor = workFactor;
   }
 
-  async hash(data) {
+  public async hash(data: string): Promise<string> {
     const bruteSalt = await pickBruteSalt();
     return bcrypt.hash(
       preprocess(data, this.secretPepper, bruteSalt),
@@ -53,7 +61,7 @@ export default class Hasher {
     );
   }
 
-  async compare(data, hash) {
+  public async compare(data: string, hash: string): Promise<boolean> {
     const salts = shuffle(BRUTE_SALTS);
     for (let i = 0; i < salts.length; i += 1) {
       /* eslint-disable-next-line no-await-in-loop */ // intentionally serial
@@ -68,7 +76,7 @@ export default class Hasher {
     return false;
   }
 
-  needsRegenerate(hash) {
+  public needsRegenerate(hash: string): boolean {
     return bcrypt.getRounds(hash) < this.workFactor;
   }
 }

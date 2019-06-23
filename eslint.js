@@ -7,6 +7,29 @@ module.exports = {
     'operator-linebreak': ['error', 'after'],
   },
 
+  tsRules: {
+    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/await-thenable': ['error'],
+    '@typescript-eslint/ban-ts-ignore': ['error'],
+    '@typescript-eslint/func-call-spacing': ['error'],
+    '@typescript-eslint/member-ordering': ['error'],
+//    '@typescript-eslint/no-floating-promises': ['error'],
+    '@typescript-eslint/no-for-in-array': ['error'],
+    '@typescript-eslint/no-require-imports': ['error'],
+    '@typescript-eslint/no-this-alias': ['error'],
+    '@typescript-eslint/no-unnecessary-qualifier': ['error'],
+    '@typescript-eslint/no-unnecessary-type-assertion': ['error'],
+    '@typescript-eslint/no-useless-constructor': ['error'],
+    '@typescript-eslint/prefer-function-type': ['error'],
+    '@typescript-eslint/prefer-includes': ['error'],
+    '@typescript-eslint/prefer-regexp-exec': ['error'],
+    '@typescript-eslint/prefer-string-starts-ends-with': ['error'],
+    '@typescript-eslint/require-array-sort-compare': ['error'],
+    '@typescript-eslint/restrict-plus-operands': ['error'],
+    '@typescript-eslint/unbound-method': ['error'],
+    '@typescript-eslint/explicit-function-return-type': ['error'],
+  },
+
   reactRules: {
     'jsx-a11y/anchor-is-valid': ['error', {
       'components': ['Link'],
@@ -30,5 +53,6 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       'devDependencies': true,
     }],
+    '@typescript-eslint/explicit-function-return-type': ['off'],
   },
 };

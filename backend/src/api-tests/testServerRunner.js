@@ -7,7 +7,7 @@ export default (serverFn) => {
       .then((rawServer) => {
         server = rawServer.listen(0, 'localhost', done);
       })
-      .catch(done.fail);
+      .catch((e) => done.fail(e));
   });
 
   afterEach((done) => {
