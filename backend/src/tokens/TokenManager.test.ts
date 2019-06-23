@@ -1,11 +1,11 @@
-import TokenManager from './TokenManager';
+import TokenManager, { KeyPair } from './TokenManager';
 
 const JWT_PATTERN = /^([a-zA-Z0-9_-]+(\.|$)){3}$/;
 
 describe('TokenManager', () => {
   const manager = new TokenManager();
   const data = { foo: 'bar' };
-  let keys;
+  let keys: KeyPair;
 
   beforeAll(async () => {
     keys = await manager.generateKeys();
