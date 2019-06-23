@@ -2,8 +2,8 @@ import { MemoryDb } from 'collection-storage';
 import RetroArchiveService from './RetroArchiveService';
 
 describe('RetroArchiveService', () => {
-  let service;
-  let a1;
+  let service: RetroArchiveService;
+  let a1: string;
 
   beforeEach(async () => {
     const db = new MemoryDb();
@@ -17,7 +17,7 @@ describe('RetroArchiveService', () => {
       const archive = await service.getRetroArchive('my-retro-id', a1);
 
       expect(archive).not.toBeNull();
-      expect(archive.data.format).toEqual('foo');
+      expect(archive!.data.format).toEqual('foo');
     });
 
     it('returns null if the archive is not in the retro', async () => {

@@ -1,13 +1,19 @@
 import uuidv4 from 'uuid/v4';
+import RetroArchive from '../data/RetroArchive';
 
 export default class RetroArchiveService {
-  constructor(db) {
-    this.archiveCollection = db.getCollection('archive', {
+  private readonly archiveCollection: Collection<RetroArchive>;
+
+  public constructor(db: DB) {
+    this.archiveCollection = db.getCollection<RetroArchive>('archive', {
       retroId: {},
     });
   }
 
-  async createArchive(retroId, { format, items = [] }) {
+  public async createArchive(
+    retroId: string,
+    { format = '', items = [] },
+  ): Promise<string> {
     const id = uuidv4();
     const created = Date.now();
 
@@ -21,12 +27,15 @@ export default class RetroArchiveService {
     return id;
   }
 
-  getRetroArchiveList(retroId) {
+  public getRetroArchiveList(retroId: string): Promise<RetroArchive[]> {
     return this.archiveCollection
       .getAll('retroId', retroId, ['id', 'created']);
   }
 
-  async getRetroArchive(retroId, archiveId) {
+  public async getRetroArchive(
+    retroId: string,
+    archiveId: string,
+  ): Promise<RetroArchive | null> {
     const archiveData = await this.archiveCollection.get('id', archiveId);
     if (!archiveData || archiveData.retroId !== retroId) {
       return null;

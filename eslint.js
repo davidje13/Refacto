@@ -33,6 +33,8 @@ module.exports = {
     '@typescript-eslint/no-parameter-properties': ['error', {
       'allows': ['private readonly'],
     }],
+    'babel/semi': ['off'],
+    '@typescript-eslint/semi': ['error'],
     '@typescript-eslint/no-non-null-assertion': ['off'],
     '@typescript-eslint/no-explicit-any': ['off'],
   },
