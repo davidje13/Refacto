@@ -1,10 +1,13 @@
-export default class TopicMap {
-  constructor(topicFactory) {
+import { TopicListener, Topic, TopicFactory } from './Topic';
+
+export default class TopicMap<T> {
+  private data: Map<string, Topic<T>>;
+
+  public constructor(private readonly topicFactory: TopicFactory<T>) {
     this.data = new Map();
-    this.topicFactory = topicFactory;
   }
 
-  async add(key, fn) {
+  public async add(key: string, fn: TopicListener<T>): Promise<void> {
     let d = this.data.get(key);
     if (!d) {
       d = this.topicFactory(key);
@@ -13,7 +16,7 @@ export default class TopicMap {
     await d.add(fn);
   }
 
-  async remove(key, fn) {
+  public async remove(key: string, fn: TopicListener<T>): Promise<void> {
     const d = this.data.get(key);
     if (d) {
       const anyRemaining = await d.remove(fn);
@@ -23,7 +26,7 @@ export default class TopicMap {
     }
   }
 
-  async broadcast(key, message) {
+  public async broadcast(key: string, message: T): Promise<void> {
     const d = this.data.get(key);
     if (d) {
       await d.broadcast(message);

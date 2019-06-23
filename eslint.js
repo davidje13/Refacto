@@ -28,6 +28,9 @@ module.exports = {
     '@typescript-eslint/restrict-plus-operands': ['error'],
     '@typescript-eslint/unbound-method': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['error'],
+    '@typescript-eslint/no-parameter-properties': ['error', {
+      'allows': ['private readonly'],
+    }],
   },
 
   reactRules: {

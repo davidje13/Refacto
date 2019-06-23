@@ -13,6 +13,8 @@
 			"**/node_modules": true,
 			"**/package-lock.json": true,
 			"concept": true
-		}
+		},
+		"javascript.preferences.quoteStyle": "single",
+		"typescript.preferences.quoteStyle": "single"
 	}
 }
