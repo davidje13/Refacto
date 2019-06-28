@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.6",
-    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.0.0",
+    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.0.1",
     "core-js": "^3.0.1",
-    "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.0",
+    "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.2",
     "jwt-simple": "^0.5.6",
     "mongodb": "^3.2.3",
     "node-fetch": "^2.5.0",

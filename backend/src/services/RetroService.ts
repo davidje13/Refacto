@@ -124,7 +124,7 @@ export default class RetroService {
     let initialData: Retro['retro'] | null = retroData.retro;
 
     return {
-      getInitialData: (): Retro['retro'] => {
+      getInitialData: (): Readonly<Retro['retro']> => {
         if (!initialData) {
           throw new Error('Already fetched initialData');
         }

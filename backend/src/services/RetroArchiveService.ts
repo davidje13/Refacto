@@ -28,7 +28,7 @@ export default class RetroArchiveService {
     return id;
   }
 
-  public getRetroArchiveList(retroId: string): Promise<RetroArchive[]> {
+  public getRetroArchiveList(retroId: string): Promise<Readonly<RetroArchive>[]> {
     return this.archiveCollection
       .getAll('retroId', retroId, ['id', 'created']);
   }
@@ -36,7 +36,7 @@ export default class RetroArchiveService {
   public async getRetroArchive(
     retroId: string,
     archiveId: string,
-  ): Promise<RetroArchive | null> {
+  ): Promise<Readonly<RetroArchive> | null> {
     const archiveData = await this.archiveCollection.get('id', archiveId);
     if (!archiveData || archiveData.retroId !== retroId) {
       return null;
