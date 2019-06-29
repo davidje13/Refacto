@@ -1,4 +1,5 @@
 import { DB } from 'collection-storage';
+import { JWTPayload } from 'websocket-express';
 import TokenManager, { KeyPair } from '../tokens/TokenManager';
 
 interface StoredKeyPair extends KeyPair {
@@ -33,7 +34,7 @@ export default class UserAuthService {
     return this.tokenManager.signData(tokenData, this.privateKey);
   }
 
-  public readAndVerifyToken(userToken: string): object | null {
+  public readAndVerifyToken(userToken: string): JWTPayload | null {
     if (!this.publicKey) {
       throw new Error('Not initialised');
     }

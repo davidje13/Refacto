@@ -1,14 +1,14 @@
 import WebSocketExpress from 'websocket-express';
 import uuidv4 from 'uuid/v4';
-import TokenManager from '../tokens/TokenManager';
+import TokenManager, { KeyPair } from '../tokens/TokenManager';
 
 // This is used for local development and smoke testing; it simulates a
 // Google sign in handshake.
 
 const tokenManager = new TokenManager();
 
-let keys = {};
-tokenManager.generateKeys().then((k) => {
+let keys: KeyPair = { publicKey: '', privateKey: '' };
+tokenManager.generateKeys().then((k): void => {
   keys = k;
 });
 
@@ -16,7 +16,7 @@ const app = new WebSocketExpress();
 
 app.use(WebSocketExpress.urlencoded({ extended: false }));
 
-function htmlSafe(value) {
+function htmlSafe(value?: string): string {
   // Thanks, https://stackoverflow.com/a/6234804/1180785
   if (!value) {
     return '';
@@ -29,7 +29,7 @@ function htmlSafe(value) {
     .replace(/'/g, '&#039;');
 }
 
-app.get('/auth', (req, res) => {
+app.get('/auth', (req, res): void => {
   res.header('Content-Type', 'text/html').send(`
     <html>
       <head>
@@ -91,7 +91,7 @@ app.get('/auth', (req, res) => {
   `);
 });
 
-app.post('/auth', (req, res) => {
+app.post('/auth', (req, res): void => {
   const {
     redirect_uri: redirectUri,
     nonce,
@@ -121,7 +121,7 @@ app.post('/auth', (req, res) => {
   res.redirect(303, `${redirectUri}#${redirectParams.toString()}`);
 });
 
-app.get('/tokeninfo', (req, res) => {
+app.get('/tokeninfo', (req, res): void => {
   const { id_token: idToken } = req.query;
   try {
     const data = tokenManager.readAndVerifySigned(idToken, keys.publicKey);

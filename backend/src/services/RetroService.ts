@@ -10,7 +10,7 @@ import RetroSummary from '../data/RetroSummary';
 type Identifier = string | null;
 type RetroSpec = Spec<Retro['retro']>;
 
-interface ChangeInfo {
+export interface ChangeInfo {
   error?: string;
   change?: RetroSpec;
 }
@@ -18,12 +18,12 @@ interface ChangeInfo {
 export interface TopicMessage {
   message: ChangeInfo;
   source: Identifier;
-  meta?: object;
+  meta?: any;
 }
 
-export interface RetroSubscription {
+export interface RetroSubscription<MetaT> {
   getInitialData: () => Retro['retro'];
-  send: (change: RetroSpec, meta?: object) => Promise<void>;
+  send: (change: RetroSpec, meta?: MetaT) => Promise<void>;
   close: () => Promise<void>;
 }
 
@@ -101,10 +101,10 @@ export default class RetroService {
     }));
   }
 
-  public async subscribeRetro(
+  public async subscribeRetro<MetaT>(
     retroId: string,
-    onChange: (message: ChangeInfo, meta?: object) => void,
-  ): Promise<RetroSubscription | null> {
+    onChange: (message: ChangeInfo, meta?: MetaT) => void,
+  ): Promise<RetroSubscription<MetaT> | null> {
     const retroData = await this.retroCollection.get('id', retroId, ['retro']);
     if (!retroData) {
       return null;
@@ -134,7 +134,7 @@ export default class RetroService {
       },
       send: (
         change: RetroSpec,
-        meta?: object,
+        meta?: MetaT,
       ): Promise<void> => this.internalQueueChange(
         retroId,
         change,
@@ -177,7 +177,7 @@ export default class RetroService {
     retroId: string,
     change: RetroSpec,
     source: Identifier,
-    meta?: object,
+    meta?: any,
   ): Promise<void> {
     return this.taskQueues.push(
       retroId,

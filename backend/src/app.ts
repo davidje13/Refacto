@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import WebSocketExpress, { Router } from 'websocket-express';
 import CollectionStorage from 'collection-storage';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
@@ -8,20 +8,22 @@ import ApiRetrosRouter from './routers/ApiRetrosRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
-import RetroService from './services/RetroService';
+import RetroService, { TopicMessage } from './services/RetroService';
 import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 import InMemoryTopic from './queue/InMemoryTopic';
 import TrackingTopicMap from './queue/TrackingTopicMap';
 
-export default async (config) => {
+export default async (config: any): Promise<WebSocketExpress> => {
   const db = await CollectionStorage.connect(config.db.url);
 
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
-  const retroChangeSubs = new TrackingTopicMap(() => new InMemoryTopic());
+  const retroChangeSubs = new TrackingTopicMap(
+    (): InMemoryTopic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
+  );
 
   const retroService = new RetroService(db, retroChangeSubs);
   const retroArchiveService = new RetroArchiveService(db);
@@ -45,9 +47,9 @@ export default async (config) => {
     retroService,
     retroArchiveService,
   ));
-  app.use(new StaticRouter(config.forwardHost));
+  app.use(new StaticRouter(config.forwardHost) as Router);
 
-  app.testHooks = {
+  (app as any).testHooks = {
     retroService,
     retroArchiveService,
     retroAuthService,

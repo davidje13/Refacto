@@ -1,4 +1,5 @@
 import { Collection, DB } from 'collection-storage';
+import { JWTPayload } from 'websocket-express';
 import Hasher from '../hash/Hasher';
 import TokenManager from '../tokens/TokenManager';
 
@@ -59,7 +60,7 @@ export default class RetroAuthService {
     return this.grantToken(retroId, tokenData);
   }
 
-  public async grantToken(retroId: string, tokenData: object): Promise<string | null> {
+  public async grantToken(retroId: string, tokenData: JWTPayload): Promise<string | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['privateKey']);
     if (!retroData) {
@@ -69,7 +70,7 @@ export default class RetroAuthService {
     return this.tokenManager.signData(tokenData, retroData.privateKey);
   }
 
-  public async readAndVerifyToken(retroId: string, retroToken: string): Promise<object | null> {
+  public async readAndVerifyToken(retroId: string, retroToken: string): Promise<JWTPayload | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['publicKey']);
     if (!retroData) {

@@ -1,4 +1,4 @@
-import RetroItem from './RetroItem';
+import RetroData from './RetroData';
 
 export default interface Retro {
   id: string;
@@ -7,9 +7,6 @@ export default interface Retro {
   retro: {
     name: string;
     state: object;
-    data: {
-      format: string;
-      items: RetroItem[];
-    };
+    data: RetroData;
   };
 }

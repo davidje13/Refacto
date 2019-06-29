@@ -1,6 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import { Collection, DB } from 'collection-storage';
 import RetroArchive from '../data/RetroArchive';
+import RetroData from '../data/RetroData';
 
 export default class RetroArchiveService {
   private readonly archiveCollection: Collection<RetroArchive>;
@@ -13,7 +14,7 @@ export default class RetroArchiveService {
 
   public async createArchive(
     retroId: string,
-    { format = '', items = [] },
+    { format = '', items = [] }: Partial<RetroData>,
   ): Promise<string> {
     const id = uuidv4();
     const created = Date.now();

@@ -4,36 +4,41 @@ import {
   requireAuthScope,
   getAuthData,
   hasAuthScope,
+  JWTPayload,
 } from 'websocket-express';
 import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
+import UserAuthService from '../services/UserAuthService';
+import RetroAuthService from '../services/RetroAuthService';
+import RetroService, { ChangeInfo } from '../services/RetroService';
+import RetroArchiveService from '../services/RetroArchiveService';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
 const MIN_PASSWORD_LENGTH = 8;
 
 export default class ApiRetrosRouter extends Router {
-  constructor(
-    userAuthService,
-    retroAuthService,
-    retroService,
-    retroArchiveService,
+  public constructor(
+    userAuthService: UserAuthService,
+    retroAuthService: RetroAuthService,
+    retroService: RetroService,
+    retroArchiveService: RetroArchiveService,
   ) {
     super();
 
     const userAuthMiddleware = requireBearerAuth(
       'user',
-      (token) => userAuthService.readAndVerifyToken(token),
+      (token): (JWTPayload | null) => userAuthService.readAndVerifyToken(token),
     );
 
-    this.get('/', userAuthMiddleware, async (req, res) => {
-      const userId = getAuthData(res).sub;
+    this.get('/', userAuthMiddleware, async (req, res): Promise<void> => {
+      const userId = getAuthData(res).sub!;
 
       res.json({
         retros: await retroService.getRetroListForUser(userId),
       });
     });
 
-    this.post('/', userAuthMiddleware, async (req, res) => {
-      const userId = getAuthData(res).sub;
+    this.post('/', userAuthMiddleware, async (req, res): Promise<void> => {
+      const userId = getAuthData(res).sub!;
       const { slug, name, password } = req.body;
 
       if (!name || typeof name !== 'string') {
@@ -68,18 +73,21 @@ export default class ApiRetrosRouter extends Router {
     });
 
     this.use('/:retroId', requireBearerAuth(
-      (req) => req.params.retroId,
-      (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
+      (req): string => req.params.retroId,
+      (token, realm): Promise<JWTPayload | null> => retroAuthService.readAndVerifyToken(
+        realm,
+        token,
+      ),
     ));
 
-    this.ws('/:retroId', requireAuthScope('read'), async (req, res) => {
+    this.ws('/:retroId', requireAuthScope('read'), async (req, res): Promise<void> => {
       const { retroId } = req.params;
       const ws = await res.accept();
 
-      const onChange = (msg, id) => {
+      const onChange = (msg: ChangeInfo, id?: string): void => {
         const message = Object.assign({}, msg);
         if (id !== undefined) {
-          message.id = id;
+          (message as any).id = id;
         }
         ws.send(JSON.stringify(message));
       };
@@ -93,7 +101,7 @@ export default class ApiRetrosRouter extends Router {
 
       ws.on('close', subscription.close);
 
-      ws.on('message', (msg) => {
+      ws.on('message', (msg: string): void => {
         const { change, id } = JSON.parse(msg);
         if (!hasAuthScope(res, 'write')) {
           res.sendError(403);

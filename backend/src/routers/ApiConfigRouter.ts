@@ -1,11 +1,22 @@
 import { Router } from 'websocket-express';
 
-function makeClientConfig(serverConfig) {
-  const clientConfig = {
+interface ClientConfig {
+  sso: {
+    [service: string]: {
+      authUrl: string;
+      clientId: string;
+    };
+  };
+}
+
+type ServerConfig = ClientConfig;
+
+function makeClientConfig(serverConfig: ServerConfig): ClientConfig {
+  const clientConfig: ClientConfig = {
     sso: {},
   };
 
-  Object.keys(serverConfig.sso).forEach((service) => {
+  Object.keys(serverConfig.sso).forEach((service): void => {
     const config = serverConfig.sso[service];
     if (config.clientId) {
       clientConfig.sso[service] = {
@@ -19,12 +30,12 @@ function makeClientConfig(serverConfig) {
 }
 
 export default class ApiConfigRouter extends Router {
-  constructor(serverConfig) {
+  public constructor(serverConfig: ServerConfig) {
     super();
 
     const clientConfig = makeClientConfig(serverConfig);
 
-    this.get('/', (req, res) => {
+    this.get('/', (req, res): void => {
       res.json(clientConfig);
     });
   }
