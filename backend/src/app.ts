@@ -8,6 +8,7 @@ import ApiRetrosRouter from './routers/ApiRetrosRouter';
 import StaticRouter from './routers/StaticRouter';
 import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
+import SsoService from './services/SsoService';
 import RetroService, { TopicMessage } from './services/RetroService';
 import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
@@ -25,6 +26,7 @@ export default async (config: any): Promise<WebSocketExpress> => {
     (): InMemoryTopic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
   );
 
+  const ssoService = new SsoService(config.sso);
   const retroService = new RetroService(db, retroChangeSubs);
   const retroArchiveService = new RetroArchiveService(db);
   const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
@@ -40,7 +42,7 @@ export default async (config: any): Promise<WebSocketExpress> => {
   app.use('/api/auth', new ApiAuthRouter(retroAuthService));
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
   app.use('/api/config', new ApiConfigRouter(config));
-  app.use('/api/sso', new ApiSsoRouter(userAuthService, config.sso));
+  app.use('/api/sso', new ApiSsoRouter(userAuthService, ssoService));
   app.use('/api/retros', new ApiRetrosRouter(
     userAuthService,
     retroAuthService,
