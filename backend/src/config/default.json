@@ -1,8 +1,8 @@
 {
   "port": 5000,
-  "forwardHost": null,
-  "mockSsoPort": null,
-  "serverBindAddress": null,
+  "forwardHost": "",
+  "mockSsoPort": 0,
+  "serverBindAddress": "",
   "password": {
     "workFactor": 10,
     "secretPepper": ""
@@ -15,13 +15,13 @@
   },
   "sso": {
     "google": {
-      "clientId": null,
+      "clientId": "",
       "authUrl": "https://accounts.google.com/o/oauth2/auth",
       "tokenInfoUrl": "https://oauth2.googleapis.com/tokeninfo"
     },
     "github": {
-      "clientId": null,
-      "clientSecret": null,
+      "clientId": "",
+      "clientSecret": "",
       "authUrl": "https://github.com/login/oauth/authorize",
       "accessTokenUrl": "https://github.com/login/oauth/access_token",
       "userUrl": "https://api.github.com/user"

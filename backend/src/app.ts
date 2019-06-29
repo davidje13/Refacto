@@ -15,8 +15,9 @@ import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 import InMemoryTopic from './queue/InMemoryTopic';
 import TrackingTopicMap from './queue/TrackingTopicMap';
+import { ConfigT } from './config';
 
-export default async (config: any): Promise<WebSocketExpress> => {
+export default async (config: ConfigT): Promise<WebSocketExpress> => {
   const db = await CollectionStorage.connect(config.db.url);
 
   const hasher = new Hasher(config.password);

@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-interface GitHubConfig {
+export interface GitHubConfig {
   tokenInfoUrl: string;
   accessTokenUrl: string;
   userUrl: string;

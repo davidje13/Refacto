@@ -4,22 +4,22 @@ import baseConfig from './config/default.json';
 // config/default.json if not set)
 // Variables are read in UPPER_SNAKE_CASE and exported in camelCase
 
-function getEnv(name: string, def: null): string | null;
-function getEnv<T>(name: string, def: T): T;
-
-function getEnv(name: string, def: any): any {
+function getEnv<T>(name: string, def: T): T {
   const value = process.env[name];
   if (value === undefined) {
     return def;
   }
   if (typeof def === 'number') {
-    const numValue = Number(value);
-    if (Number.isNaN(numValue) || value === '') {
+    if (value === '') {
       return def;
     }
-    return numValue;
+    const numValue = Number(value);
+    if (Number.isNaN(numValue)) {
+      throw new Error(`Invalid value for ${name} (expected a number)`);
+    }
+    return numValue as (T & number);
   }
-  return value;
+  return value as (T & string);
 }
 
 function makeSnake(name: string): string {
@@ -49,4 +49,7 @@ function populateConfig<T>(base: T, env = ''): T {
   return result;
 }
 
-export default populateConfig(baseConfig);
+const resolvedConfig = populateConfig(baseConfig);
+
+export type ConfigT = typeof resolvedConfig;
+export default resolvedConfig;

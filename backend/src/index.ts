@@ -1,4 +1,5 @@
 import http from 'http';
+import WebSocketExpress from 'websocket-express';
 import appFactory from './app';
 import config from './config';
 
@@ -6,18 +7,18 @@ import config from './config';
 // app.js is the main entry point for the application.
 // (changes to index.js will not trigger HMR)
 
-let activeApp = null;
+let activeApp: WebSocketExpress | null = null;
 const server = http.createServer();
 
-function startServer() {
-  server.listen(config.port, config.serverBindAddress, () => {
+function startServer(): void {
+  server.listen(config.port, config.serverBindAddress, (): void => {
     process.stdout.write(`Available at http://localhost:${config.port}/\n`);
     process.stdout.write('Press Ctrl+C to stop\n');
   });
 }
 
 let latestNonce = {};
-async function refreshApp() {
+async function refreshApp(): Promise<void> {
   const currentNonce = {};
   latestNonce = currentNonce;
   try {
@@ -47,10 +48,10 @@ if (module.hot) {
 if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
   import('./mock-sso/sso')
-    .then(({ default: ssoApp }) => {
+    .then(({ default: ssoApp }): void => {
       ssoApp.listen(config.mockSsoPort, config.serverBindAddress);
     })
-    .catch(() => {
+    .catch((): void => {
       process.stderr.write('Failed to start mock SSO server\n');
     });
 }

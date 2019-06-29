@@ -151,7 +151,7 @@ export default class RetroService {
     retroId: string,
     change: RetroSpec,
     source: Identifier,
-    meta?: object,
+    meta?: any,
   ): Promise<void> {
     const retroData = await this.retroCollection.get('id', retroId, ['retro']);
     try {

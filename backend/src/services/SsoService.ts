@@ -1,5 +1,5 @@
-import extractGoogleId from './sso/GoogleSso';
-import extractGitHubId from './sso/GitHubSso';
+import extractGoogleId, { GoogleConfig } from './sso/GoogleSso';
+import extractGitHubId, { GitHubConfig } from './sso/GitHubSso';
 
 type ConfiguredExtractor = (externalToken: string) => Promise<string>;
 
@@ -7,11 +7,15 @@ interface Extractors {
   [service: string]: ConfiguredExtractor | undefined;
 }
 
-function bindExtractor<T>(
+interface BaseConfig {
+  clientId?: string;
+}
+
+function bindExtractor<T extends BaseConfig>(
   extractor: (config: T, externalToken: string) => Promise<string>,
   config: T,
 ): ConfiguredExtractor | undefined {
-  if (!config) {
+  if (!config || !config.clientId) {
     return undefined;
   }
   return extractor.bind(null, config);
@@ -21,11 +25,11 @@ export default class SsoService {
   private readonly extractors: Extractors;
 
   public constructor(
-    configs: { [service: string]: any },
+    configs: { [service: string]: BaseConfig },
   ) {
     this.extractors = {
-      google: bindExtractor(extractGoogleId, configs.google),
-      github: bindExtractor(extractGitHubId, configs.github),
+      google: bindExtractor(extractGoogleId, configs.google as GoogleConfig),
+      github: bindExtractor(extractGitHubId, configs.github as GitHubConfig),
     };
   }
 

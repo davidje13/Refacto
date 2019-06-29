@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-interface GoogleConfig {
+export interface GoogleConfig {
   tokenInfoUrl: string;
   clientId: string;
 }
