@@ -1,9 +1,13 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
-import appFactory from '../app';
+import appFactory, { TestHooks } from '../app';
 
-function getRetroToken({ retroAuthService }, retroId, scopes = {}) {
+function getRetroToken(
+  { retroAuthService }: TestHooks,
+  retroId: string,
+  scopes = {},
+) {
   return retroAuthService.grantToken(retroId, {
     aud: `retro-${retroId}`,
     scopes: Object.assign({
@@ -15,8 +19,8 @@ function getRetroToken({ retroAuthService }, retroId, scopes = {}) {
 }
 
 describe('API retro websocket', () => {
-  let hooks;
-  let retroId;
+  let hooks: TestHooks;
+  let retroId: string;
 
   const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());

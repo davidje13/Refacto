@@ -4,7 +4,7 @@ import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 describe('API slugs', () => {
-  let retroId;
+  let retroId: string;
 
   const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());

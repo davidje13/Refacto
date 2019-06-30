@@ -1,9 +1,12 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
-import appFactory from '../app';
+import appFactory, { TestHooks } from '../app';
 
-function getUserToken({ userAuthService }, userId) {
+function getUserToken(
+  { userAuthService }: TestHooks,
+  userId: string,
+): string {
   return userAuthService.grantToken({
     aud: 'user',
     provider: 'test',
@@ -12,7 +15,7 @@ function getUserToken({ userAuthService }, userId) {
 }
 
 describe('API retros', () => {
-  let hooks;
+  let hooks: TestHooks;
 
   const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());
@@ -45,7 +48,7 @@ describe('API retros', () => {
 
   describe('/api/retros', () => {
     it('responds with retros for the user in JSON format', async () => {
-      const userToken = await getUserToken(hooks, 'me');
+      const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
         .get('/api/retros')
@@ -74,7 +77,7 @@ describe('API retros', () => {
   describe('POST /api/retros', () => {
     it('creates a new retro', async () => {
       const slug = 'new-retro';
-      const userToken = await getUserToken(hooks, 'me');
+      const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
         .post('/api/retros')
@@ -90,7 +93,7 @@ describe('API retros', () => {
     });
 
     it('responds HTTP Bad Request if data is missing', async () => {
-      const userToken = await getUserToken(hooks, 'me');
+      const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
         .post('/api/retros')
@@ -102,7 +105,7 @@ describe('API retros', () => {
     });
 
     it('responds HTTP Conflict if slug is unavailable', async () => {
-      const userToken = await getUserToken(hooks, 'me');
+      const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
         .post('/api/retros')

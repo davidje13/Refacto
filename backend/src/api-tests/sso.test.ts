@@ -2,17 +2,8 @@ import WebSocketExpress from 'websocket-express';
 import request from 'superwstest';
 import jwt from 'jwt-simple';
 import testConfig from './testConfig';
-import testServerRunner from './testServerRunner';
+import testServerRunner, { addressToString } from './testServerRunner';
 import appFactory from '../app';
-
-function addressToString(addr) {
-  if (typeof addr === 'string') {
-    return addr;
-  }
-  const { address, family, port } = addr;
-  const host = (family === 'IPv6') ? `[${address}]` : address;
-  return `http://${host}:${port}`;
-}
 
 describe('API single-sign-on', () => {
   const mockSsoServer = testServerRunner(() => {
@@ -41,7 +32,7 @@ describe('API single-sign-on', () => {
       google: {
         clientId: 'my-client-id',
         authUrl: 'foo',
-        tokenInfoUrl: addressToString(mockSsoServer.address()),
+        tokenInfoUrl: addressToString(mockSsoServer.address()!),
       },
     },
   })));

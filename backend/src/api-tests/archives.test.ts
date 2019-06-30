@@ -1,9 +1,13 @@
 import request from 'superwstest';
 import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
-import appFactory from '../app';
+import appFactory, { TestHooks } from '../app';
 
-function getRetroToken({ retroAuthService }, retroId, scopes = {}) {
+function getRetroToken(
+  { retroAuthService }: TestHooks,
+  retroId: string,
+  scopes = {},
+) {
   return retroAuthService.grantToken(retroId, {
     aud: `retro-${retroId}`,
     scopes: Object.assign({
@@ -15,9 +19,9 @@ function getRetroToken({ retroAuthService }, retroId, scopes = {}) {
 }
 
 describe('API retro archives', () => {
-  let hooks;
-  let retroId;
-  let archiveId;
+  let hooks: TestHooks;
+  let retroId: string;
+  let archiveId: string;
 
   const server = testServerRunner(async () => {
     const app = await appFactory(testConfig());
@@ -93,7 +97,7 @@ describe('API retro archives', () => {
       const storedArchive = await hooks.retroArchiveService
         .getRetroArchive(retroId, returnedId);
 
-      expect(storedArchive.data.format).toEqual('foo');
+      expect(storedArchive!.data.format).toEqual('foo');
     });
 
     it('rejects empty archives', async () => {
@@ -164,7 +168,7 @@ describe('API retro archives', () => {
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
-      const otherRetroId = await hooks.retroService.createRetro();
+      const otherRetroId = await hooks.retroService.createRetro('', '', '', '');
 
       const otherArchiveId = await hooks.retroArchiveService
         .createArchive(otherRetroId, { format: 'mood' });

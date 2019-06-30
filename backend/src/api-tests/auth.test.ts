@@ -5,7 +5,7 @@ import testServerRunner from './testServerRunner';
 import appFactory from '../app';
 
 describe('API auth', () => {
-  let retroId;
+  let retroId: string;
 
   const server = testServerRunner(async () => {
     const app = await appFactory(testConfig({
@@ -15,7 +15,7 @@ describe('API auth', () => {
       },
     }));
 
-    retroId = await app.testHooks.retroService.createRetro();
+    retroId = await app.testHooks.retroService.createRetro('', '', '', '');
     await app.testHooks.retroAuthService.setPassword(retroId, 'password');
 
     return app.createServer();

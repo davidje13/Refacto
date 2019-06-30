@@ -17,7 +17,18 @@ import InMemoryTopic from './queue/InMemoryTopic';
 import TrackingTopicMap from './queue/TrackingTopicMap';
 import { ConfigT } from './config';
 
-export default async (config: ConfigT): Promise<WebSocketExpress> => {
+export interface TestHooks {
+  retroService: RetroService;
+  retroArchiveService: RetroArchiveService;
+  retroAuthService: RetroAuthService;
+  userAuthService: UserAuthService;
+}
+
+interface TestHookWebSocketExpress extends WebSocketExpress {
+  testHooks: TestHooks;
+}
+
+export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   const db = await CollectionStorage.connect(config.db.url);
 
   const hasher = new Hasher(config.password);
@@ -52,12 +63,13 @@ export default async (config: ConfigT): Promise<WebSocketExpress> => {
   ));
   app.use(new StaticRouter(config.forwardHost) as Router);
 
-  (app as any).testHooks = {
+  const testHookApp = app as TestHookWebSocketExpress;
+  testHookApp.testHooks = {
     retroService,
     retroArchiveService,
     retroAuthService,
     userAuthService,
   };
 
-  return app;
+  return testHookApp;
 };

@@ -1,17 +1,8 @@
 import WebSocketExpress from 'websocket-express';
 import request from 'superwstest';
 import testConfig from './testConfig';
-import testServerRunner from './testServerRunner';
+import testServerRunner, { addressToString } from './testServerRunner';
 import appFactory from '../app';
-
-function addressToString(addr) {
-  if (typeof addr === 'string') {
-    return addr;
-  }
-  const { address, family, port } = addr;
-  const host = (family === 'IPv6') ? `[${address}]` : address;
-  return `http://${host}:${port}`;
-}
 
 describe('API static content', () => {
   describe('Embedded', () => {
@@ -46,7 +37,7 @@ describe('API static content', () => {
     });
 
     const server = testServerRunner(() => appFactory(testConfig({
-      forwardHost: addressToString(proxyServer.address()),
+      forwardHost: addressToString(proxyServer.address()!),
     })));
 
     it('proxies unknown requests to the configured address', async () => {
