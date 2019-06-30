@@ -1,4 +1,4 @@
-const airbnb = require('@neutrinojs/airbnb');
+const airbnb = require('@neutrinojs/airbnb-base');
 const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
 const { baseRules, testRules } = require('../eslint.js');

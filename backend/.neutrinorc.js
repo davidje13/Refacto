@@ -1,4 +1,4 @@
-const airbnb = require('@neutrinojs/airbnb');
+const airbnb = require('@neutrinojs/airbnb-base');
 const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');

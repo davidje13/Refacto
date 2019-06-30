@@ -24,7 +24,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-typescript": "^7.3.3",
-    "@neutrinojs/airbnb": "^9.0.0-rc.3",
+    "@neutrinojs/airbnb-base": "^9.0.0-rc.3",
     "@neutrinojs/copy": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
     "@neutrinojs/node": "^9.0.0-rc.3",

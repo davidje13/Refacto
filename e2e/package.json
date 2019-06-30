@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.4.5",
-    "@neutrinojs/airbnb": "^9.0.0-rc.3",
+    "@neutrinojs/airbnb-base": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
     "@neutrinojs/node": "^9.0.0-rc.3",
     "core-js": "^3.1.4",
