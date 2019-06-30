@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import { queries, css, text } from '../../../../test-helpers/queries';
 

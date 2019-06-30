@@ -1,7 +1,7 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { render, fireEvent, act } from 'react-testing-library';
+import { render, fireEvent, act } from '@testing-library/react';
 import { makeRetro } from './test-helpers/dataFactories';
 import { queries, css } from './test-helpers/queries';
 

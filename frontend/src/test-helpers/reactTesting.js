@@ -1,4 +1,4 @@
-import { cleanup } from 'react-testing-library';
+import { cleanup } from '@testing-library/react';
 import { matcherHint, printReceived, printExpected } from 'jest-matcher-utils';
 import { queryAllBy } from './queries';
 import 'jest-dom/extend-expect';

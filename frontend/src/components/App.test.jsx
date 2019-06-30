@@ -1,7 +1,7 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 
 import App from './App';
 

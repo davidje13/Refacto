@@ -10,7 +10,7 @@ import {
   queryAllByTestId,
   queryAllByText,
   queryAllByTitle,
-} from 'react-testing-library';
+} from '@testing-library/react';
 
 export const css = (selector) => ({
   description: `matching CSS selector ${selector}`,

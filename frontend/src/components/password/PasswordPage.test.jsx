@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
 import { queries, css } from '../../test-helpers/queries';

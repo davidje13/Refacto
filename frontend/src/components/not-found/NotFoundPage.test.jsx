@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { queries, textFragment } from '../../test-helpers/queries';
 
