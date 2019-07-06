@@ -2,16 +2,17 @@ const airbnb = require('@neutrinojs/airbnb-base');
 const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
+const typescript = require('neutrino-typescript');
+const typescriptLint = require('neutrino-typescript-eslint');
 const { baseRules, testRules, tsRules } = require('../eslint.js');
-const { typescriptBefore, typescriptAfter } = require('./neutrino-typescript');
 
 module.exports = {
   options: {
     tests: 'src',
   },
   use: [
-    typescriptBefore(),
-    (neutrino) => neutrino.use(airbnb({
+    typescript(),
+    airbnb({
       eslint: {
         rules: Object.assign({}, baseRules, tsRules),
         baseConfig: {
@@ -24,7 +25,8 @@ module.exports = {
           }],
         },
       },
-    })),
+    }),
+    typescriptLint(),
     copy({
       patterns: [{
         context: 'src/static',
@@ -47,7 +49,6 @@ module.exports = {
         ],
       },
     }),
-    typescriptAfter(),
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };
