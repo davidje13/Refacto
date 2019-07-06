@@ -1,22 +1,22 @@
-import { By } from 'selenium-webdriver';
+import { By, WebDriver, WebElementPromise } from 'selenium-webdriver';
 import Page from './Page';
 import RetroCreate from './RetroCreate';
 import Login from './Login';
 
 export default class Welcome extends Page {
-  constructor(driver) {
+  public constructor(driver: WebDriver) {
     super(driver, '/', '.page-welcome');
   }
 
-  getHeader() {
+  public getHeader(): WebElementPromise {
     return this.driver.findElement(By.css('h1'));
   }
 
-  getHeaderText() {
+  public getHeaderText(): Promise<string> {
     return this.getHeader().getText();
   }
 
-  async clickCreateRetro() {
+  public async clickCreateRetro(): Promise<RetroCreate> {
     await this.click(By.css('.link-create'));
 
     const page = new RetroCreate(this.driver);
@@ -24,10 +24,10 @@ export default class Welcome extends Page {
     return page;
   }
 
-  async clickLoginWithGoogle() {
+  public async clickLoginWithGoogle(): Promise<Login<RetroCreate>> {
     await this.click(By.css('.sso-google'));
 
-    const page = new Login(this.driver, RetroCreate);
+    const page = new Login<RetroCreate>(this.driver, RetroCreate);
     await page.wait();
     return page;
   }

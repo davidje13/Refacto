@@ -1,29 +1,29 @@
-import { By } from 'selenium-webdriver';
+import { By, WebDriver } from 'selenium-webdriver';
 import Page from './Page';
 import Retro from './Retro';
 
 export default class RetroCreate extends Page {
-  constructor(driver) {
+  public constructor(driver: WebDriver) {
     super(driver, '/create', '.page-retro-create');
   }
 
-  setName(name) {
+  public setName(name: string): Promise<void> {
     return this.setFormValue(By.css('form input[name=name]'), name);
   }
 
-  setSlug(slug) {
+  public setSlug(slug: string): Promise<void> {
     return this.setFormValue(By.css('form input[name=slug]'), slug);
   }
 
-  setPassword(pass) {
+  public setPassword(pass: string): Promise<void> {
     return this.setFormValue(By.css('form input[name=password]'), pass);
   }
 
-  setPasswordConfirmation(pass) {
+  public setPasswordConfirmation(pass: string): Promise<void> {
     return this.setFormValue(By.css('form input[name=password-confirmation]'), pass);
   }
 
-  async submit() {
+  public async submit(): Promise<Retro> {
     this.click(By.css('form button'));
 
     const page = new Retro(this.driver, 'unknown');

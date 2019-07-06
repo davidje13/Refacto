@@ -1,21 +1,25 @@
+import { WebDriver } from 'selenium-webdriver';
 import buildDriver from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
+import Login from './pages/Login';
+import RetroCreate from './pages/RetroCreate';
+import Retro from './pages/Retro';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
 
 describe('Running a retro', () => {
-  let driver;
-  let driver2;
+  let driver: WebDriver;
+  let driver2: WebDriver;
 
-  let userName;
-  let retroSlug;
-  let retroPassword;
+  let userName: string;
+  let retroSlug: string;
+  let retroPassword: string;
 
-  let welcome;
-  let login;
-  let create;
-  let retro;
+  let welcome: Welcome;
+  let login: Login<RetroCreate>;
+  let create: RetroCreate;
+  let retro: Retro;
 
   beforeAll(async () => {
     driver = buildDriver();
@@ -63,7 +67,7 @@ describe('Running a retro', () => {
   });
 
   describe('second user journey', () => {
-    let retro2;
+    let retro2: Retro;
 
     it('prompts for a password for the retro', async () => {
       const password2 = await new Password(driver2, retroSlug).load();

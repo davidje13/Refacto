@@ -31,7 +31,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['error'],
     '@typescript-eslint/no-parameter-properties': ['error', {
-      'allows': ['private readonly'],
+      'allows': ['private readonly', 'protected readonly'],
     }],
     'babel/semi': ['off'],
     '@typescript-eslint/semi': ['error'],
