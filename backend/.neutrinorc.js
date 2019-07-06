@@ -12,6 +12,7 @@ module.exports = {
   },
   use: [
     typescript(),
+    typescriptLint(),
     airbnb({
       eslint: {
         rules: Object.assign({}, baseRules, tsRules),
@@ -26,7 +27,6 @@ module.exports = {
         },
       },
     }),
-    typescriptLint(),
     copy({
       patterns: [{
         context: 'src/static',

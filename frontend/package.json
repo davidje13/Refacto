@@ -17,13 +17,13 @@
     "react-dom": "^16.9.0-alpha.0",
     "react-helmet-async": "^1.0.2",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.0",
-    "react-modal": "^3.8.1",
+    "react-modal": "^3.8.2",
     "react-router-dom": "^5.0.1",
     "rxjs": "^6.5.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-env": "^7.5.0",
     "@neutrinojs/airbnb": "^9.0.0-rc.3",
     "@neutrinojs/copy": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
@@ -41,7 +41,7 @@
     "neutrino": "^9.0.0-rc.3",
     "react-mock-element": "git+https://github.com/davidje13/react-mock-element.git#semver:^1.0.0",
     "timezone-mock": "^1.0.5",
-    "webpack": "^4.35.0",
+    "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
   }
