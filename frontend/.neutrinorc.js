@@ -4,37 +4,37 @@ const jest = require('@neutrinojs/jest');
 const react = require('@neutrinojs/react');
 const { baseRules, reactRules, testRules } = require('../eslint.js');
 
-const linter = airbnb({
-  eslint: {
-    plugins: [
-      'react-hooks',
-    ],
-    rules: Object.assign({}, baseRules, reactRules),
-    baseConfig: {
-      extends: [
-        'plugin:eslint-comments/recommended',
-      ],
-      overrides: [{
-        files: ['**/test-helpers/*'],
-        rules: testRules,
-      }],
-    },
-  },
-});
+const conditionalModule = (pred, mod) => (neutrino) => {
+  if (pred(neutrino)) {
+    neutrino.use(mod);
+  }
+};
 
 module.exports = {
   options: {
     tests: 'src',
   },
   use: [
-    (neutrino) => {
-      // exclude linting from development as it is very buggy (lots of false
-      // positives) when used with webpack dev server, but works fine in
-      // isolation
-      if (process.env.NODE_ENV !== 'development') {
-        neutrino.use(linter);
-      }
-    },
+    // exclude linting from development as it is very buggy (lots of false
+    // positives) when used with webpack dev server, but works fine in
+    // isolation
+    conditionalModule(() => process.env.NODE_ENV !== 'development', airbnb({
+      eslint: {
+        plugins: [
+          'react-hooks',
+        ],
+        rules: Object.assign({}, baseRules, reactRules),
+        baseConfig: {
+          extends: [
+            'plugin:eslint-comments/recommended',
+          ],
+          overrides: [{
+            files: ['**/test-helpers/*'],
+            rules: testRules,
+          }],
+        },
+      },
+    })),
     copy({
       patterns: [{
         context: 'src/static',
