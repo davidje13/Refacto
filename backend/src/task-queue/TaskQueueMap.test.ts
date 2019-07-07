@@ -17,7 +17,7 @@ describe('TaskQueueMap', () => {
 
   beforeEach(() => {
     returnedQueues = [];
-    const queueFactory = () => {
+    const queueFactory = (): TaskQueue<string> => {
       const queue = new FakeQueue<string>();
       returnedQueues.push(queue);
       return queue;

@@ -7,7 +7,7 @@ function getRetroToken(
   { retroAuthService }: TestHooks,
   retroId: string,
   scopes = {},
-) {
+): Promise<string | null> {
   return retroAuthService.grantToken(retroId, {
     aud: `retro-${retroId}`,
     scopes: Object.assign({

@@ -62,6 +62,11 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       'devDependencies': true,
     }],
-    '@typescript-eslint/explicit-function-return-type': ['off'],
+  },
+
+  testTsRules: {
+    '@typescript-eslint/explicit-function-return-type': ['error', {
+      'allowExpressions': true,
+    }],
   },
 };

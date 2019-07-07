@@ -4,7 +4,7 @@ const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
 const typescript = require('neutrino-typescript');
 const typescriptLint = require('neutrino-typescript-eslint');
-const { baseRules, testRules, tsRules } = require('../eslint.js');
+const { baseRules, testRules, tsRules, testTsRules } = require('../eslint.js');
 
 module.exports = {
   options: {
@@ -22,7 +22,7 @@ module.exports = {
           ],
           overrides: [{
             files: ['**/test-helpers/*', '**/*.test.*'],
-            rules: Object.assign({}, tsRules, testRules),
+            rules: Object.assign({}, tsRules, testRules, testTsRules),
           }],
         },
       },
