@@ -29,7 +29,9 @@ module.exports = {
     '@typescript-eslint/require-array-sort-compare': ['error'],
     '@typescript-eslint/restrict-plus-operands': ['error'],
     '@typescript-eslint/unbound-method': ['error'],
-    '@typescript-eslint/explicit-function-return-type': ['error'],
+    '@typescript-eslint/explicit-function-return-type': ['error', {
+      'allowTypedFunctionExpressions': true,
+    }],
     '@typescript-eslint/no-parameter-properties': ['error', {
       'allows': ['private readonly', 'protected readonly'],
     }],
@@ -66,6 +68,7 @@ module.exports = {
 
   testTsRules: {
     '@typescript-eslint/explicit-function-return-type': ['error', {
+      'allowTypedFunctionExpressions': true,
       'allowExpressions': true,
     }],
   },
