@@ -31,6 +31,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['error', {
       'allowTypedFunctionExpressions': true,
+      'allowHigherOrderFunctions': true,
     }],
     '@typescript-eslint/no-parameter-properties': ['error', {
       'allows': ['private readonly', 'protected readonly'],
@@ -69,6 +70,7 @@ module.exports = {
   testTsRules: {
     '@typescript-eslint/explicit-function-return-type': ['error', {
       'allowTypedFunctionExpressions': true,
+      'allowHigherOrderFunctions': true,
       'allowExpressions': true,
     }],
   },
