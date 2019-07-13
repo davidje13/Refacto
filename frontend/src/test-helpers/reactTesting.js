@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import { matcherHint, printReceived, printExpected } from 'jest-matcher-utils';
 import { queryAllBy } from './queries';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 
 function toContainElementWith(base, query) {
   if (!base) {

@@ -5,6 +5,9 @@ import basedir from '../basedir';
 // This function is required due to a typescript / babel mismatch
 // for default exports from dynamic imports
 function defaultExport<T>(module: { default: T }): T {
+  if (module.default) {
+    return module.default;
+  }
   return module as any as T;
 }
 
