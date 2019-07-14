@@ -26,5 +26,5 @@ export const retroTokenService = new RetroTokenService(API_BASE);
 export const retroService = new RetroService(API_BASE);
 export const userTokenService = new UserTokenService(API_BASE);
 
-export const retroTokenTracker = new ObservableTracker();
-export const userTokenTracker = new SingleObservableTracker();
+export const retroTokenTracker = new ObservableTracker<string, string>();
+export const userTokenTracker = new SingleObservableTracker<string>();

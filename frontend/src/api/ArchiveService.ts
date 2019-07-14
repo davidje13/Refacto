@@ -1,13 +1,21 @@
-export default class ArchiveService {
-  constructor(apiBase) {
-    this.apiBase = apiBase;
-  }
+import RetroData from '../data/RetroData';
 
-  async create({
+interface ArchiveOptions {
+  retroId: string;
+  data: RetroData;
+  retroToken: string;
+}
+
+export default class ArchiveService {
+  public constructor(
+    private readonly apiBase: string,
+  ) {}
+
+  public async create({
     retroId,
     data,
     retroToken,
-  }) {
+  }: ArchiveOptions): Promise<string> {
     const response = await fetch(
       `${this.apiBase}/retros/${retroId}/archives`,
       {

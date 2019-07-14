@@ -1,25 +1,30 @@
-import { of as rxjsOf, throwError } from 'rxjs';
+import { of as rxjsOf, throwError, Observable } from 'rxjs';
 import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
 
 class FakeRetroTracker {
-  data = new Map();
+  private data = new Map();
 
-  subscribed = 0;
+  private subscribed = 0;
 
-  expectedRetroToken = null;
+  private expectedRetroToken: string | null = null;
 
-  dispatch = () => {};
+  public dispatch: () => void = () => {};
 
-  setExpectedToken(retroToken) {
+  public setExpectedToken(retroToken: string): void {
     this.expectedRetroToken = retroToken;
   }
 
-  setServerData(retroId, serverData) {
+  public setServerData(retroId: string, serverData: any): void {
     this.data.set(retroId, serverData);
   }
 
-  subscribe(retroId, retroToken, dispatchCallback, retroStateCallback) {
+  public subscribe(
+    retroId: string,
+    retroToken: string,
+    dispatchCallback: any,
+    retroStateCallback: any,
+  ): { unsubscribe: () => void } {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       throw new Error(`Incorrect retro token: ${retroToken}`);
     }
@@ -28,7 +33,7 @@ class FakeRetroTracker {
 
     const serverData = this.data.get(retroId);
     if (!serverData) {
-      return throwError('not found');
+      throw new Error('not found');
     }
 
     dispatchCallback(this.dispatch);
@@ -38,7 +43,7 @@ class FakeRetroTracker {
     }, serverData));
 
     return {
-      unsubscribe: () => {
+      unsubscribe: (): void => {
         this.subscribed -= 1;
       },
     };
@@ -46,22 +51,30 @@ class FakeRetroTracker {
 }
 
 class FakeArchiveTracker {
-  data = new Map();
+  private data = new Map();
 
-  expectedRetroToken = null;
+  private expectedRetroToken: string | null = null;
 
-  setExpectedToken(retroToken) {
+  public setExpectedToken(retroToken: string): void {
     this.expectedRetroToken = retroToken;
   }
 
-  setServerData(retroId, archiveId, archive) {
+  public setServerData(
+    retroId: string,
+    archiveId: string,
+    archive: any,
+  ): void {
     if (!this.data.has(retroId)) {
       this.data.set(retroId, new Map());
     }
     this.data.get(retroId).set(archiveId, archive);
   }
 
-  get(retroId, archiveId, retroToken) {
+  public get(
+    retroId: string,
+    archiveId: string,
+    retroToken: string,
+  ): Observable<any> {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       return throwError(`Incorrect retro token: ${retroToken}`);
     }
@@ -77,15 +90,18 @@ class FakeArchiveTracker {
     return rxjsOf(archive);
   }
 
-  getList(retroId, retroToken) {
+  public getList(
+    retroId: string,
+    retroToken: string,
+  ): Observable<{ archives: any[] }> {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       return throwError(`Incorrect retro token: ${retroToken}`);
     }
 
-    const archives = [];
+    const archives: any[] = [];
     const serverData = this.data.get(retroId);
     if (serverData) {
-      serverData.forEach((archive, archiveId) => {
+      serverData.forEach((archive: any, archiveId: string) => {
         archives.push({
           id: archiveId,
           created: archive.created,
@@ -97,17 +113,20 @@ class FakeArchiveTracker {
 }
 
 class FakeUserTokenService {
-  userToken = null;
+  public capturedService: string | null = null;
 
-  capturedService = null;
+  public capturedExternalToken: string | null = null;
 
-  capturedExternalToken = null;
+  private userToken: string | null = null;
 
-  setServerData(userToken) {
+  public setServerData(userToken: string): void {
     this.userToken = userToken;
   }
 
-  async login(service, externalToken) {
+  public async login(
+    service: string,
+    externalToken: string,
+  ): Promise<string> {
     this.capturedService = service;
     this.capturedExternalToken = externalToken;
 
@@ -119,15 +138,18 @@ class FakeUserTokenService {
 }
 
 class FakeRetroTokenService {
-  data = new Map();
+  public capturedPassword: string | null = null;
 
-  capturedPassword = null;
+  private data = new Map();
 
-  setServerData(retroId, retroToken) {
+  public setServerData(retroId: string, retroToken: string): void {
     this.data.set(retroId, retroToken);
   }
 
-  async submitPassword(retroId, password) {
+  public async submitPassword(
+    retroId: string,
+    password: string,
+  ): Promise<string> {
     this.capturedPassword = password;
     const retroToken = this.data.get(retroId);
     if (!retroToken) {
@@ -138,23 +160,23 @@ class FakeRetroTokenService {
 }
 
 class FakeRetroService {
-  id = null;
+  public capturedName: string | null = null;
 
-  capturedName = null;
+  public capturedSlug: string | null = null;
 
-  capturedSlug = null;
+  public capturedPassword: string | null = null;
 
-  capturedPassword = null;
+  private id: string | null = null;
 
-  setServerData(retroId) {
+  public setServerData(retroId: string): void {
     this.id = retroId;
   }
 
-  async create({ name, slug, password }) {
+  public async create({ name, slug, password }: any): Promise<string> {
     this.capturedName = name;
     this.capturedSlug = slug;
     this.capturedPassword = password;
-    return this.id;
+    return this.id!;
   }
 }
 

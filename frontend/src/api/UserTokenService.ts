@@ -1,9 +1,12 @@
 export default class UserTokenService {
-  constructor(apiBase) {
-    this.apiBase = apiBase;
-  }
+  public constructor(
+    private readonly apiBase: string,
+  ) {}
 
-  async login(service, externalToken) {
+  public async login(
+    service: string,
+    externalToken: string,
+  ): Promise<string> {
     const response = await fetch(
       `${this.apiBase}/sso/${service}`,
       {
