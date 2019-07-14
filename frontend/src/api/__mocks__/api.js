@@ -3,13 +3,13 @@ import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
 
 class FakeRetroTracker {
-  dispatch = () => {};
-
   data = new Map();
 
   subscribed = 0;
 
   expectedRetroToken = null;
+
+  dispatch = () => {};
 
   setExpectedToken(retroToken) {
     this.expectedRetroToken = retroToken;

@@ -12,5 +12,8 @@ export default function useArchiveList(retroId, retroToken) {
     [archiveTracker, retroId, retroToken],
   );
 
-  return [archiveListState?.archives, error];
+  return [
+    archiveListState ? archiveListState.archives : null, // TODO TypeScript#16
+    error,
+  ];
 }

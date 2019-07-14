@@ -1,24 +1,45 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import { render, fireEvent, act } from '@testing-library/react';
+import { StaticRouter, StaticRouterContext } from 'react-router-dom';
+import { HelmetProvider, FilledContext } from 'react-helmet-async';
+import {
+  render,
+  fireEvent,
+  act,
+  RenderResult,
+} from '@testing-library/react';
 import { makeRetro } from './test-helpers/dataFactories';
 import { queries, css } from './test-helpers/queries';
+import { mockFetchExpect } from './test-helpers/fetch';
+import { mockWsExpect } from './test-helpers/ws';
 
 import App from './components/App';
 
-HelmetProvider.canUseDOM = false;
+// https://github.com/staylor/react-helmet-async/issues/61
+(HelmetProvider as any).canUseDOM = false;
 
-function extractHelmetTitle(context) {
-  return context.helmet.title.toString().match(/>(.*)</)[1];
+function extractHelmetTitle(context: FilledContext): string {
+  const match = />(.*)</.exec(context.helmet.title.toString());
+  return match ? match[1] : '';
 }
 
-async function renderApp(location) {
-  const routerContext = {};
-  const helmetContext = {};
+interface RenderedApp {
+  routerContext: StaticRouterContext;
+  currentTitle: () => string;
+  dom: RenderResult<typeof queries>;
+}
 
-  let dom;
-  await act(async () => {
+function asyncAct(fn: () => Promise<any> | void): Promise<void> {
+  // awaiting React 16.9.0
+  // https://github.com/facebook/react/issues/14769
+  return act(fn) as any as Promise<void>;
+}
+
+async function renderApp(location: string): Promise<RenderedApp> {
+  const routerContext: StaticRouterContext = {};
+  const helmetContext: FilledContext = {} as any;
+
+  let dom: RenderResult<typeof queries>;
+  await asyncAct(async () => {
     dom = render((
       <HelmetProvider context={helmetContext}>
         <StaticRouter location={location} context={routerContext}>
@@ -31,7 +52,7 @@ async function renderApp(location) {
   return {
     routerContext,
     currentTitle: () => extractHelmetTitle(helmetContext),
-    dom,
+    dom: dom!,
   };
 }
 
@@ -46,7 +67,7 @@ describe('Application', () => {
   });
 
   it('renders retro list page at /retros', async () => {
-    global.fetch.mockExpect('/api/retros')
+    mockFetchExpect('/api/retros')
       .andRespondJsonOk({ retros: [] });
 
     const { dom } = await renderApp('/retros');
@@ -57,13 +78,13 @@ describe('Application', () => {
   it('renders retro page at /retros/id after password provided', async () => {
     const retro = makeRetro({ name: 'Retro Name' });
 
-    global.fetch.mockExpect('/api/slugs/slug-foobar')
+    mockFetchExpect('/api/slugs/slug-foobar')
       .andRespondJsonOk({ id: 'id-foobar' });
 
-    global.fetch.mockExpect('/api/auth/tokens/id-foobar')
+    mockFetchExpect('/api/auth/tokens/id-foobar')
       .andRespondJsonOk({ retroToken: 'my-token' });
 
-    WebSocket.expect('/api/retros/id-foobar', (ws) => {
+    mockWsExpect('/api/retros/id-foobar', (ws: WebSocket) => {
       ws.send(JSON.stringify({ change: { $set: retro } }));
     });
 
@@ -76,7 +97,7 @@ describe('Application', () => {
     const form = dom.getBy(css('form'));
     const fieldPassword = queries.getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'anything' } });
-    await act(async () => fireEvent.submit(form));
+    await asyncAct(async () => fireEvent.submit(form));
 
     expect(dom).toContainElementWith(css('.page-retro'));
     const header2 = dom.getBy(css('.top-header h1'));

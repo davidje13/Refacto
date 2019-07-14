@@ -7,11 +7,11 @@ import './ExpandingTextEntry.less';
 
 const NEWLINE = /(\r\n)|(\n\r?)/g;
 
-function sanitiseInput(value) {
+function sanitiseInput(value: string): string {
   return value.replace(NEWLINE, '\n');
 }
 
-function anyModifier(e) {
+function anyModifier(e: React.KeyboardEvent): boolean {
   return (
     e.ctrlKey ||
     e.shiftKey ||
@@ -20,8 +20,28 @@ function anyModifier(e) {
   );
 }
 
-class ExpandingTextEntry extends React.PureComponent {
-  static propTypes = {
+interface PropsT {
+  onSubmit: (value: string) => void;
+  onCancel?: () => void;
+  placeholder: string;
+  defaultValue: string;
+  autoFocus: boolean;
+  extraOptions?: React.ReactNode;
+  submitButtonLabel?: React.ReactNode;
+  submitButtonTitle?: string;
+  className?: string;
+  clearAfterSubmit: boolean;
+}
+
+interface StateT {
+  value: string;
+  baseHeight: number;
+  contentHeight: number;
+  contentHeightMultiline: number;
+}
+
+class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
+  public static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func,
     placeholder: PropTypes.string,
@@ -34,7 +54,7 @@ class ExpandingTextEntry extends React.PureComponent {
     clearAfterSubmit: PropTypes.bool,
   };
 
-  static defaultProps = {
+  public static readonly defaultProps = {
     onCancel: null,
     placeholder: '',
     defaultValue: '',
@@ -46,7 +66,9 @@ class ExpandingTextEntry extends React.PureComponent {
     clearAfterSubmit: false,
   };
 
-  constructor(props) {
+  private textareaRef: React.RefObject<HTMLTextAreaElement>;
+
+  public constructor(props: PropsT) {
     super(props);
 
     const { defaultValue } = props;
@@ -60,10 +82,10 @@ class ExpandingTextEntry extends React.PureComponent {
     this.textareaRef = React.createRef();
   }
 
-  componentDidMount() {
+  public componentDidMount(): void {
     window.addEventListener('resize', this.updateSize);
 
-    const textarea = this.textareaRef.current;
+    const textarea = this.textareaRef.current!;
     const baseHeight = getEmptyHeight(textarea);
     this.setState({
       baseHeight,
@@ -78,12 +100,12 @@ class ExpandingTextEntry extends React.PureComponent {
     }
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     window.removeEventListener('resize', this.updateSize);
   }
 
-  updateSize = () => {
-    const textarea = this.textareaRef.current;
+  public updateSize = (): void => {
+    const textarea = this.textareaRef.current!;
 
     if (textarea.value === '') {
       const { baseHeight } = this.state;
@@ -93,7 +115,11 @@ class ExpandingTextEntry extends React.PureComponent {
         contentHeightMultiline: baseHeight,
       });
     } else {
-      const height = getMultilClassHeights(textarea, textarea.form, 'multiline');
+      const height = getMultilClassHeights(
+        textarea,
+        textarea.form!,
+        'multiline',
+      );
 
       this.setState({
         contentHeight: height.withoutClass,
@@ -102,7 +128,7 @@ class ExpandingTextEntry extends React.PureComponent {
     }
   };
 
-  handleSubmit = (e) => {
+  public handleSubmit = (e: React.SyntheticEvent): void => {
     e.preventDefault();
 
     const { onSubmit, clearAfterSubmit } = this.props;
@@ -119,7 +145,7 @@ class ExpandingTextEntry extends React.PureComponent {
     onSubmit(sanitiseInput(value));
   };
 
-  handleCancel = (e) => {
+  public handleCancel = (e: React.SyntheticEvent): void => {
     const { onCancel } = this.props;
 
     if (onCancel) {
@@ -128,12 +154,12 @@ class ExpandingTextEntry extends React.PureComponent {
     }
   };
 
-  handleChange = (e) => {
+  public handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     this.setState({ value: e.target.value });
     this.updateSize();
   };
 
-  handleKey = (e) => {
+  public handleKey = (e: React.KeyboardEvent): void => {
     if (anyModifier(e)) {
       return;
     }
@@ -149,7 +175,7 @@ class ExpandingTextEntry extends React.PureComponent {
     }
   };
 
-  clear() {
+  public clear(): void {
     const { baseHeight } = this.state;
 
     this.setState({
@@ -159,7 +185,7 @@ class ExpandingTextEntry extends React.PureComponent {
     });
   }
 
-  render() {
+  public render(): React.ReactNode {
     const {
       placeholder,
       className,
@@ -179,6 +205,7 @@ class ExpandingTextEntry extends React.PureComponent {
     const multiline = (extraOptions !== null) || (contentHeight > baseHeight);
     const height = (multiline ? contentHeightMultiline : contentHeight);
 
+    /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
     return (
       <form
         onSubmit={this.handleSubmit}
@@ -189,7 +216,7 @@ class ExpandingTextEntry extends React.PureComponent {
           placeholder={placeholder}
           value={value}
           wrap="soft"
-          autoFocus={autoFocus} /* eslint-disable-line jsx-a11y/no-autofocus */ // passthrough
+          autoFocus={autoFocus}
           onChange={this.handleChange}
           onKeyDown={this.handleKey}
           style={{ height: `${height}px` }}
@@ -206,6 +233,7 @@ class ExpandingTextEntry extends React.PureComponent {
         </button>
       </form>
     );
+    /* eslint-enable jsx-a11y/no-autofocus */
   }
 }
 

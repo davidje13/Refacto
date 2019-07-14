@@ -5,9 +5,6 @@ module.exports = {
   baseRules: {
     'arrow-parens': ['error', 'always'],
     'operator-linebreak': ['error', 'after'],
-  },
-
-  tsRules: {
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/await-thenable': ['error'],
     '@typescript-eslint/ban-ts-ignore': ['error'],
@@ -59,15 +56,16 @@ module.exports = {
 
     // https://github.com/facebook/react/issues/14920#issuecomment-471328990
     'react-hooks/exhaustive-deps': ['off'], // does not support spread yet
+
+    'react/jsx-filename-extension': ['error', {
+      'extensions': ['jsx', 'tsx'],
+    }],
   },
 
   testRules: {
     'import/no-extraneous-dependencies': ['error', {
       'devDependencies': true,
     }],
-  },
-
-  testTsRules: {
     '@typescript-eslint/explicit-function-return-type': ['error', {
       'allowTypedFunctionExpressions': true,
       'allowHigherOrderFunctions': true,

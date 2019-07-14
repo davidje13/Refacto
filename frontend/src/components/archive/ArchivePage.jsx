@@ -21,12 +21,13 @@ const ArchivePage = ({
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archive, archiveError] = useArchive(retroId, archiveId, retroToken);
 
-  const retroName = retro?.name || slug;
+  const retroName = retro ? retro.name : slug; // TODO TypeScript#16
   let archiveName = 'Archive';
   if (archive) {
     archiveName = `${formatDate(archive.created)} Archive`;
   }
 
+  // TODO TypeScript#16
   return (
     <article className="page-archive">
       <Header
@@ -38,7 +39,7 @@ const ArchivePage = ({
         loading={!archive}
         error={retroTokenError || archiveError}
         Component={RetroFormatPicker}
-        retroData={archive?.data}
+        retroData={archive ? archive.data : null}
         retroState={{}}
         archive
       />

@@ -119,7 +119,10 @@ export default class SharedReducer {
   };
 
   handleError = () => {
-    this.errorCallback?.('Failed to connect');
+    // TODO TypeScript#16
+    if (this.errorCallback) {
+      this.errorCallback('Failed to connect');
+    }
   };
 
   getState() {

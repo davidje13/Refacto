@@ -1,23 +1,23 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { queries, css } from '../../test-helpers/queries';
 
 import ExpandingTextEntry from './ExpandingTextEntry';
 
-function setValue(input, value) {
+function setValue(input: HTMLElement, value: string): void {
   fireEvent.change(input, { target: { value } });
 }
 
 describe('ExpandingTextEntry', () => {
   describe('with no extra options', () => {
-    let onSubmit;
-    let dom;
-    let textarea;
+    let onSubmit: jest.Mock<(value: string) => void>;
+    let dom: RenderResult<typeof queries>;
+    let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
       onSubmit = jest.fn().mockName('onSubmit');
       dom = render(<ExpandingTextEntry onSubmit={onSubmit} />, { queries });
-      textarea = dom.getBy(css('textarea'));
+      textarea = dom.getBy(css('textarea')) as HTMLTextAreaElement;
     });
 
     it('sends the entered text when submit is pressed', () => {
@@ -56,9 +56,9 @@ describe('ExpandingTextEntry', () => {
   });
 
   describe('onCancel', () => {
-    let onCancel;
-    let dom;
-    let textarea;
+    let onCancel: jest.Mock<() => void>;
+    let dom: RenderResult<typeof queries>;
+    let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
       onCancel = jest.fn().mockName('onCancel');
@@ -69,7 +69,7 @@ describe('ExpandingTextEntry', () => {
           onCancel={onCancel}
         />
       ), { queries });
-      textarea = dom.getBy(css('textarea'));
+      textarea = dom.getBy(css('textarea')) as HTMLTextAreaElement;
     });
 
     it('invokes the given callback when escape is pressed', () => {
@@ -81,8 +81,8 @@ describe('ExpandingTextEntry', () => {
   });
 
   describe('clearAfterSubmit', () => {
-    let dom;
-    let textarea;
+    let dom: RenderResult<typeof queries>;
+    let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
       dom = render((
@@ -91,7 +91,7 @@ describe('ExpandingTextEntry', () => {
           clearAfterSubmit
         />
       ), { queries });
-      textarea = dom.getBy(css('textarea'));
+      textarea = dom.getBy(css('textarea')) as HTMLTextAreaElement;
     });
 
     it('clears the text after submitting', () => {
@@ -103,7 +103,7 @@ describe('ExpandingTextEntry', () => {
   });
 
   describe('extraOptions', () => {
-    let dom;
+    let dom: RenderResult<typeof queries>;
 
     beforeEach(() => {
       dom = render((

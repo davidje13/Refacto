@@ -19,7 +19,7 @@ const ArchiveListPage = ({
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archives, archivesError] = useArchiveList(retroId, retroToken);
 
-  const retroName = retro?.name || slug;
+  const retroName = retro ? retro.name : slug; // TODO TypeScript#16
 
   return (
     <article className="page-archive-list">

@@ -1,7 +1,6 @@
 import {
   waitForElement,
   getElementError,
-  getMultipleElementsFoundError,
   queryAllByAltText,
   queryAllByDisplayValue,
   queryAllByLabelText,
@@ -10,61 +9,92 @@ import {
   queryAllByTestId,
   queryAllByText,
   queryAllByTitle,
+  WaitForElementOptions,
 } from '@testing-library/react';
 
-export const css = (selector) => ({
+type HTMLElementList = NodeListOf<HTMLElement> | HTMLElement[];
+
+export interface Query {
+  description: string;
+  multipleErrorDetail?: string;
+  missingErrorDetail?: string;
+  queryAll: (container: HTMLElement) => HTMLElementList;
+  getAll?: (container: HTMLElement) => HTMLElementList;
+}
+
+function getMultipleElementsFoundError(
+  message: string,
+  container: HTMLElement,
+): Error {
+  return getElementError(
+    `${message}\n\n(If this is intentional, then use \`getAllBy\`, \`queryAllBy\` or \`findAllBy\`).`,
+    container,
+  );
+}
+
+export const css = (selector: string): Query => ({
   description: `matching CSS selector ${selector}`,
   queryAll: (container) => container.querySelectorAll(selector),
 });
 
-export const altText = (value, ...options) => ({
+export const altText = (value: string, ...options: any[]): Query => ({
   description: `with the alt text ${value}`,
   queryAll: (container) => queryAllByAltText(container, value, ...options),
 });
 
-export const displayValue = (value, ...options) => ({
+export const displayValue = (value: string, ...options: any[]): Query => ({
   description: `with the value ${value}`,
   queryAll: (container) => queryAllByDisplayValue(container, value, ...options),
 });
 
-export const labelText = (value, ...options) => ({
+export const labelText = (value: string, ...options: any[]): Query => ({
   description: `with the label text ${value}`,
   queryAll: (container) => queryAllByLabelText(container, value, ...options),
   getAll: (container) => getAllByLabelText(container, value, ...options),
 });
 
-export const attribute = (name, value, ...options) => ({
+export const attribute = (name: string, value: string, ...options: any[]): Query => ({
   description: `by [${name}=${value}]`,
   queryAll: (container) => queryAllByAttribute(name, container, value, ...options),
 });
 
-export const placeholderText = (value, ...options) => ({
+export const placeholderText = (value: string, ...options: any[]): Query => ({
   description: `with the placeholder text ${value}`,
   queryAll: (container) => queryAllByAttribute('placeholder', container, value, ...options),
 });
 
 export const role = attribute.bind('role');
 
-export const testId = (id, ...options) => ({
+export const testId = (id: string, ...options: any[]): Query => ({
   description: `with the test ID ${id}`,
   queryAll: (container) => queryAllByTestId(container, id, ...options),
 });
 
-export const text = (value, ...options) => ({
+export const text = (value: string, ...options: any[]): Query => ({
   description: `with the text '${value}'`,
-  missingErrorDetail: 'This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.',
+  missingErrorDetail: [
+    'This could be because the text is broken up by multiple elements. ',
+    'In this case, you can provide a function for your text matcher ',
+    'to make your matcher more flexible.',
+  ].join(''),
   queryAll: (container) => queryAllByText(container, value, ...options),
 });
 
-export const textFragment = (value, ...options) => text(value, { exact: false, ...options });
+export const textFragment = (
+  value: string,
+  ...options: any[]
+): Query => text(value, { exact: false, ...options });
 
-export const title = (value, ...options) => ({
+export const title = (value: string, ...options: any[]): Query => ({
   description: `with the title ${value}`,
   queryAll: (container) => queryAllByTitle(container, value, ...options),
 });
 
 
-export const queryAllBy = (container, query) => {
+export const queryAllBy = (
+  container: HTMLElement,
+  query: Query,
+): HTMLElement[] => {
   const elements = query.queryAll(container);
   if (!elements) {
     return [];
@@ -75,7 +105,10 @@ export const queryAllBy = (container, query) => {
   return Array.from(elements);
 };
 
-export const queryBy = (container, query) => {
+export const queryBy = (
+  container: HTMLElement,
+  query: Query,
+): HTMLElement | null => {
   const elements = queryAllBy(container, query);
   if (elements.length > 1) {
     throw getMultipleElementsFoundError(
@@ -89,7 +122,10 @@ export const queryBy = (container, query) => {
   return elements[0] || null;
 };
 
-export const getAllBy = (container, query) => {
+export const getAllBy = (
+  container: HTMLElement,
+  query: Query,
+): HTMLElement[] => {
   const elements = queryAllBy(container, query);
   if (!elements.length) {
     throw getElementError(
@@ -103,7 +139,10 @@ export const getAllBy = (container, query) => {
   return elements;
 };
 
-export const getBy = (container, query) => {
+export const getBy = (
+  container: HTMLElement,
+  query: Query,
+): HTMLElement => {
   const element = queryBy(container, query);
   if (!element) {
     throw getElementError(
@@ -117,12 +156,20 @@ export const getBy = (container, query) => {
   return element;
 };
 
-export const findAllBy = (container, query, waitOptions) => waitForElement(
+export const findAllBy = (
+  container: HTMLElement,
+  query: Query,
+  waitOptions: WaitForElementOptions,
+): Promise<HTMLElement[]> => waitForElement(
   () => getAllBy(container, query),
   waitOptions,
 );
 
-export const findBy = (container, query, waitOptions) => waitForElement(
+export const findBy = (
+  container: HTMLElement,
+  query: Query,
+  waitOptions: WaitForElementOptions,
+): Promise<HTMLElement> => waitForElement(
   () => getBy(container, query),
   waitOptions,
 );

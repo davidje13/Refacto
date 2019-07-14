@@ -7,7 +7,7 @@ import App from './components/App';
 import { configService } from './api/api';
 import './index.less';
 
-// https://github.com/facebook/react/issues/12906
+// https://github.com/facebook/react/issues/16061
 if (process.env.NODE_ENV === 'development') {
   // eslint-disable-next-line no-console
   console.info('React.StrictMode is enabled; some lifecycle methods including constructors and render will be double-invoked to check for side-effects');

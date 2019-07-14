@@ -5,7 +5,11 @@ import LocalDateProvider from './LocalDateProvider';
 const HOUR_MS = 1000 * 60 * 60;
 const DAY_MS = HOUR_MS * 24;
 
-function getMidnightsRange(provider, from, to) {
+function getMidnightsRange(
+  provider: LocalDateProvider,
+  from: number,
+  to: number,
+): number[] {
   const result = [];
   for (let offset = from; offset <= to; offset += 1) {
     result.push(provider.getMidnightTimestamp(offset));
@@ -13,7 +17,7 @@ function getMidnightsRange(provider, from, to) {
   return result;
 }
 
-function posMod(a, b) {
+function posMod(a: number, b: number): number {
   return ((a % b) + b) % b;
 }
 
@@ -57,15 +61,25 @@ describe('LocalDateProvider', () => {
     });
   });
 
+  interface TimezoneCheckOpts {
+    timezoneName: string;
+    tsSwitch1: number; // exact UTC time of switch from winter to summer
+    tsSwitch2: number; // exact UTC time of switch from summer to winter
+    tsSwitch1Winter: number; // local midnight before switch1
+    tsSwitch1Summer: number; // local midnight after switch1
+    tsSwitch2Summer: number; // local midnight before switch2
+    tsSwitch2Winter: number; // local midnight after switch2
+  }
+
   function commonTimezoneChecks({
     timezoneName,
-    tsSwitch1, // exact UTC time of switch from winter to summer
-    tsSwitch2, // exact UTC time of switch from summer to winter
-    tsSwitch1Winter, // local midnight before switch1
-    tsSwitch1Summer, // local midnight after switch1
-    tsSwitch2Summer, // local midnight before switch2
-    tsSwitch2Winter, // local midnight after switch2
-  }) {
+    tsSwitch1,
+    tsSwitch2,
+    tsSwitch1Winter,
+    tsSwitch1Summer,
+    tsSwitch2Summer,
+    tsSwitch2Winter,
+  }: TimezoneCheckOpts): void {
     const phaseWinter = posMod(tsSwitch2Winter - tsSwitch1Winter, DAY_MS);
     if (phaseWinter !== 0) {
       throw new Error(`Test winter times do not match (delta: ${phaseWinter})`);

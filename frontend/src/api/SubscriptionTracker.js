@@ -1,7 +1,8 @@
 function canonicalJSON(o) {
   if (o && typeof o === 'object' && !Array.isArray(o)) {
     const keys = Object.keys(o).slice();
-    keys.sort();
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+    keys.sort(); // just need consistency
     const content = keys
       .map((key) => `${JSON.stringify(key)}:${canonicalJSON(o[key])}`)
       .join(',');
@@ -60,6 +61,7 @@ export default class SubscriptionTracker {
 
   find(id) {
     const key = makeKey(id);
-    return this.services.get(key)?.service;
+    const o = this.services.get(key);
+    return o ? o.service : null; // TODO TypeScript#16
   }
 }

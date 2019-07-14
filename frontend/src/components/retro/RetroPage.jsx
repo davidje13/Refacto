@@ -57,7 +57,7 @@ const RetroPage = ({
     retroToken,
   ]);
 
-  const retroName = retro?.name || slug;
+  const retroName = retro ? retro.name : slug; // TODO TypeScript#16
 
   if (retroTokenError === 'not found') {
     return (<RetroCreatePage defaultSlug={slug} />);
@@ -76,8 +76,14 @@ const RetroPage = ({
     };
   }
 
-  const canArchive = Boolean(retroDispatch && retro?.data?.items?.length > 0);
+  const canArchive = Boolean((
+    retroDispatch &&
+    retro && // TODO TypeScript#16
+    retro.data &&
+    retro.data.items.length > 0
+  ));
 
+  // TODO TypeScript#16
   return (
     <article className="page-retro">
       <Header
@@ -95,8 +101,8 @@ const RetroPage = ({
         loading={!retro}
         error={retroTokenError || retroError}
         Component={RetroFormatPicker}
-        retroData={retro?.data}
-        retroState={retro?.state}
+        retroData={retro ? retro.data : null}
+        retroState={retro ? retro.state : null}
         dispatch={retroDispatch}
         onComplete={showArchivePopup}
       />

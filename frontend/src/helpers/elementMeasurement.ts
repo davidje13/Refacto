@@ -1,4 +1,7 @@
-export function takeHeightMeasurements(element, fn) {
+export function takeHeightMeasurements<T>(
+  element: HTMLElement,
+  fn: (measure: () => number) => T,
+): T {
   /* eslint-disable no-param-reassign */ // temporary mutation is necessary for measurement
 
   const oldHeight = element.style.height;
@@ -10,8 +13,10 @@ export function takeHeightMeasurements(element, fn) {
   /* eslint-enable no-param-reassign */
 }
 
-export function getEmptyHeight(element) {
-  return takeHeightMeasurements(element, (measure) => {
+export function getEmptyHeight(
+  element: HTMLInputElement | HTMLTextAreaElement,
+): number {
+  return takeHeightMeasurements(element, (measure): number => {
     /* eslint-disable no-param-reassign */ // temporary mutation is necessary for measurement
 
     const oldValue = element.value;
@@ -24,7 +29,16 @@ export function getEmptyHeight(element) {
   });
 }
 
-function measureMultiClassHeights(element, className, measure) {
+interface WithWithout<T> {
+  withClass: T;
+  withoutClass: T;
+}
+
+function measureMultiClassHeights<T>(
+  element: HTMLElement,
+  className: string,
+  measure: () => T,
+): WithWithout<T> {
   let withClass;
   let withoutClass;
 
@@ -47,7 +61,11 @@ function measureMultiClassHeights(element, className, measure) {
   return { withClass, withoutClass };
 }
 
-export function getMultilClassHeights(element, classElement, className) {
+export function getMultilClassHeights(
+  element: HTMLElement,
+  classElement: HTMLElement,
+  className: string,
+): WithWithout<number> {
   return takeHeightMeasurements(
     element,
     (measure) => measureMultiClassHeights(classElement, className, measure),

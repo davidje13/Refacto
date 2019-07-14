@@ -12,7 +12,8 @@ const RetroListPage = () => {
   const [userToken] = useUserToken();
   const [retroListState, error] = useRetroList(userToken);
 
-  const retroList = retroListState?.retros;
+  // TODO TypeScript#16
+  const retroList = retroListState ? retroListState.retros : null;
 
   let content;
 

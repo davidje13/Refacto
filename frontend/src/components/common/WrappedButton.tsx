@@ -2,6 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 
+interface PropsT extends React.HTMLAttributes<HTMLElement> {
+  onClick?: () => void;
+  disabled: boolean;
+  hideIfDisabled: boolean;
+  title?: string;
+  disabledTitle?: string;
+  children?: React.ReactNode;
+}
+
 const WrappedButton = ({
   onClick,
   disabled,
@@ -10,7 +19,7 @@ const WrappedButton = ({
   disabledTitle,
   children,
   ...props
-}) => {
+}: PropsT): React.ReactElement | null => {
   const handleClick = useParameterlessCallback(onClick);
   const resolvedDisabled = disabled || !onClick;
 

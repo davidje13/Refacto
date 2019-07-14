@@ -4,7 +4,7 @@ const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
 const typescript = require('neutrino-typescript');
 const typescriptLint = require('neutrino-typescript-eslint');
-const { baseRules, testRules, tsRules, testTsRules } = require('../eslint.js');
+const { baseRules, testRules } = require('../eslint.js');
 
 module.exports = {
   options: {
@@ -15,14 +15,14 @@ module.exports = {
     typescriptLint(),
     airbnb({
       eslint: {
-        rules: Object.assign({}, baseRules, tsRules),
+        rules: baseRules,
         baseConfig: {
           extends: [
             'plugin:eslint-comments/recommended',
           ],
           overrides: [{
             files: ['**/test-helpers/*', '**/*.test.*'],
-            rules: Object.assign({}, tsRules, testRules, testTsRules),
+            rules: testRules,
           }],
         },
       },

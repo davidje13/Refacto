@@ -30,13 +30,16 @@ const MoodSection = ({
   }, [onSwitchFocus]);
 
   const handleItemCancel = useCallback((id) => {
-    onSetDone?.(id, false);
-    onSwitchFocus?.(null, false);
+    // TODO TypeScript#16
+    if (onSetDone) {
+      onSetDone(id, false);
+    }
+    onSwitchFocus(null, false);
   }, [onSwitchFocus, onSetDone]);
 
   const handleItemDone = useCallback((id) => {
-    onSetDone?.(id, true);
-    onSwitchFocus?.(null, false);
+    onSetDone(id, true);
+    onSwitchFocus(null, false);
   }, [onSwitchFocus, onSetDone]);
 
   return (
@@ -63,7 +66,7 @@ const MoodSection = ({
         onSelect={onSwitchFocus && handleItemSelect}
         onAddExtraTime={onAddExtraTime}
         onCancel={onSwitchFocus && handleItemCancel}
-        onDone={onSetDone && handleItemDone}
+        onDone={onSwitchFocus && onSetDone && handleItemDone}
       />
     </section>
   );

@@ -5,13 +5,22 @@ import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 
+interface PropsT {
+  message: string;
+  onSubmit: () => void;
+  onCancel?: () => void;
+  onDelete?: () => void;
+  className?: string;
+}
+
+/* eslint-disable jsx-a11y/no-autofocus */ // user triggered this
 const ItemEditing = ({
   message,
   onSubmit,
   onCancel,
   onDelete,
   className,
-}) => (
+}: PropsT): React.ReactElement => (
   <div className={classNames(className, 'editing')}>
     <ExpandingTextEntry
       defaultValue={message}
@@ -24,10 +33,11 @@ const ItemEditing = ({
           Delete
         </WrappedButton>
       )}
-      autoFocus /* eslint-disable-line jsx-a11y/no-autofocus */ // user triggered this
+      autoFocus
     />
   </div>
 );
+/* eslint-enable jsx-a11y/no-autofocus */
 
 ItemEditing.propTypes = {
   message: PropTypes.string.isRequired,

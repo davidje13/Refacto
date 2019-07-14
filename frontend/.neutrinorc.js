@@ -2,6 +2,8 @@ const airbnb = require('@neutrinojs/airbnb');
 const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const react = require('@neutrinojs/react');
+const typescript = require('neutrino-typescript');
+const typescriptLint = require('neutrino-typescript-eslint');
 const { baseRules, reactRules, testRules } = require('../eslint.js');
 
 const conditionalModule = (pred, mod) => (neutrino) => {
@@ -15,6 +17,8 @@ module.exports = {
     tests: 'src',
   },
   use: [
+    typescript(),
+    typescriptLint(),
     // exclude linting from development as it is very buggy (lots of false
     // positives) when used with webpack dev server, but works fine in
     // isolation
@@ -29,7 +33,7 @@ module.exports = {
             'plugin:eslint-comments/recommended',
           ],
           overrides: [{
-            files: ['**/test-helpers/*'],
+            files: ['**/test-helpers/*', '**/*.test.*'],
             rules: testRules,
           }],
         },
@@ -56,9 +60,6 @@ module.exports = {
         inline: false, // disable hot reloading
       },
       babel: {
-        plugins: [
-          '@babel/plugin-proposal-optional-chaining',
-        ],
         presets: [
           ['@babel/preset-env', {
 //            debug: true,

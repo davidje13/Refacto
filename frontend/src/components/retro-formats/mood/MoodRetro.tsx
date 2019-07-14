@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
+import { Spec } from 'json-immutability-helper';
 import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
@@ -21,7 +22,13 @@ import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import { propTypesShapeRetroData } from '../../../api/dataStructurePropTypes';
 import './MoodRetro.less';
 
-const CATEGORIES = [
+interface Category {
+  id: string;
+  title: string;
+  placeholder: string;
+}
+
+const CATEGORIES: Category[] = [
   { id: 'happy', title: 'Happy', placeholder: 'I\u2019m glad that\u2026' },
   { id: 'meh', title: 'Meh', placeholder: 'I\u2019m wondering about\u2026' },
   { id: 'sad', title: 'Sad', placeholder: 'It wasn\u2019t so great that\u2026' },
@@ -29,9 +36,22 @@ const CATEGORIES = [
 
 const addRetroActionItem = addRetroItem.bind(null, 'action');
 
-const addExtraTime = (duration) => setRetroState({
+const addExtraTime = (duration: number): Spec<any> => setRetroState({ // TODO
   focusedItemTimeout: Date.now() + duration,
 });
+
+interface PropsT {
+  retroState: {
+    focusedItemId?: string | null;
+    focusedItemTimeout?: number;
+  };
+  retroData: {
+    items: any[];
+  };
+  onComplete: () => void;
+  dispatch: (spec: Spec<any>) => void; // TODO
+  archive: () => void;
+}
 
 const MoodRetro = ({
   retroState: {
@@ -41,10 +61,10 @@ const MoodRetro = ({
   retroData: {
     items,
   },
-  onComplete, /* eslint-disable-line no-unused-vars */ // TODO
+  onComplete, /* eslint-disable-line @typescript-eslint/no-unused-vars */ // TODO
   dispatch,
   archive,
-}) => {
+}: PropsT): React.ReactElement => {
   const singleColumn = useWindowSize(({ width }) => (width <= 800), []);
   const localDateProvider = useLocalDateProvider();
 
@@ -70,7 +90,7 @@ const MoodRetro = ({
     }));
   }, [dispatch, refFocusedItemId]);
 
-  const createMoodSection = (category) => (
+  const createMoodSection = (category: Category): React.ReactElement => (
     <MoodSection
       key={category.id}
       items={items}

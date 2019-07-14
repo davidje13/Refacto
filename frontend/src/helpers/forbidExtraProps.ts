@@ -1,11 +1,16 @@
 import React from 'react';
+import { Validator } from 'prop-types';
 
 // Based vaguely on airbnb prop-types-exact, but with no added dependencies
 
-function allowOnly(permitted) {
+interface ForbidOptions {
+  alsoAllow?: string[];
+}
+
+function allowOnly(permitted: string[]): Validator<any> {
   const permittedSet = new Set(permitted);
 
-  return (props, _, componentName) => {
+  return (props: object, _: any, componentName: string): (Error | null) => {
     const badProps = Object.keys(props).filter((key) => !permittedSet.has(key));
     if (!badProps.length) {
       return null;
@@ -19,9 +24,12 @@ function allowOnly(permitted) {
   };
 }
 
-function addUnknownPropsTest(propTypes, { alsoAllow = [] } = {}) {
+function addUnknownPropsTest<T>(
+  propTypes: T,
+  { alsoAllow = [] }: ForbidOptions = {},
+): T {
   let propName = 'rejectUnknownProps';
-  while (propTypes[propName] !== undefined) {
+  while ((propTypes as any)[propName] !== undefined) {
     propName = `rejectUnknownProps_${Math.random()}`;
   }
   return {
@@ -30,11 +38,11 @@ function addUnknownPropsTest(propTypes, { alsoAllow = [] } = {}) {
   };
 }
 
-function isComponent(o) {
+function isComponent(o: any): o is React.ComponentType {
   return (typeof o === 'function' || o instanceof React.Component);
 }
 
-export default function forbidExtraProps(o, options) {
+export default function forbidExtraProps<T>(o: T, options?: ForbidOptions): T {
   if (isComponent(o)) {
     // Called on component; mutate its static propTypes
     const component = o;

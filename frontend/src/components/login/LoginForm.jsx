@@ -25,8 +25,9 @@ function makeState(redirect) {
 
 const LoginForm = ({ message, redirect }) => {
   const config = useConfig();
-  const googleConfig = config?.sso?.google;
-  const githubConfig = config?.sso?.github;
+  const sso = (config || {}).sso || {}; // TODO TypeScript#16
+  const googleConfig = sso.google;
+  const githubConfig = sso.github;
 
   const resolvedRedirect = redirect || document.location.pathname;
   const domain = document.location.origin;
