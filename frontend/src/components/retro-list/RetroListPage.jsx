@@ -10,10 +10,7 @@ import './RetroListPage.less';
 
 const RetroListPage = () => {
   const [userToken] = useUserToken();
-  const [retroListState, error] = useRetroList(userToken);
-
-  // TODO TypeScript#16
-  const retroList = retroListState ? retroListState.retros : null;
+  const [retroList, error] = useRetroList(userToken);
 
   let content;
 

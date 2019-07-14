@@ -41,7 +41,13 @@ export default class RetroTracker {
     );
   }
 
-  subscribe(retroId, retroToken, dispatchCallback, retroStateCallback) {
+  subscribe(
+    retroId,
+    retroToken,
+    dispatchCallback,
+    retroStateCallback,
+    errorCallback, /* eslint-disable-line @typescript-eslint/no-unused-vars */ // TODO
+  ) {
     const sub = this.subscriptionTracker.subscribe({ retroId, retroToken });
     dispatchCallback(sub.service.reducer.dispatch);
     sub.service.addStateCallback(retroStateCallback);
