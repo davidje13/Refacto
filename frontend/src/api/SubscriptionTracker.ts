@@ -1,4 +1,4 @@
-function canonicalJSON(o) {
+function canonicalJSON(o: any): string {
   if (o && typeof o === 'object' && !Array.isArray(o)) {
     const keys = Object.keys(o).slice();
     // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
@@ -11,19 +11,29 @@ function canonicalJSON(o) {
   return JSON.stringify(o);
 }
 
-function makeKey(id) {
+function makeKey(id: any): string {
   return canonicalJSON(id);
 }
 
-export default class SubscriptionTracker {
-  constructor(generator, destructor) {
-    this.generator = generator;
-    this.destructor = destructor;
+interface ServiceInfo<T> {
+  count: number;
+  service: T;
+}
 
-    this.services = new Map();
-  }
+interface Subscription<T> {
+  service: T;
+  unsubscribe(): Promise<void>;
+}
 
-  subscribe(id) {
+export default class SubscriptionTracker<K, S> {
+  private readonly services = new Map<string, ServiceInfo<S>>();
+
+  public constructor(
+    private readonly generator: (id: K) => S,
+    private readonly destructor: (service: S, id: K) => void,
+  ) {}
+
+  public subscribe(id: K): Subscription<S> {
     const key = makeKey(id);
     let serviceInfo = this.services.get(key);
     if (!serviceInfo) {
@@ -37,11 +47,11 @@ export default class SubscriptionTracker {
     serviceInfo.count += 1;
     return {
       service: serviceInfo.service,
-      unsubscribe: () => this.unsubscribe(id),
+      unsubscribe: (): Promise<void> => this.unsubscribe(id),
     };
   }
 
-  async unsubscribe(id) {
+  public async unsubscribe(id: K): Promise<void> {
     await Promise.resolve(); // wait in case we immediately resubscribe
 
     const key = makeKey(id);
@@ -59,7 +69,7 @@ export default class SubscriptionTracker {
     this.destructor(serviceInfo.service, id);
   }
 
-  find(id) {
+  public find(id: K): S | null {
     const key = makeKey(id);
     const o = this.services.get(key);
     return o ? o.service : null; // TODO TypeScript#16
