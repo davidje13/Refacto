@@ -1,8 +1,8 @@
 import { useState, useRef, useLayoutEffect } from 'react';
 import LocalDateProvider from '../../time/LocalDateProvider';
-import localDateTracker from '../../time/localDateTracker';
+import localDateTracker, { NowGetter } from '../../time/localDateTracker';
 
-export default function useLocalDateProvider(clock = Date) {
+export default function useLocalDateProvider(clock: NowGetter = Date): LocalDateProvider {
   const [state, setState] = useState(() => new LocalDateProvider(clock.now()));
   const stateRef = useRef(state);
 
@@ -21,7 +21,7 @@ export default function useLocalDateProvider(clock = Date) {
       },
       clock,
     );
-    return () => tracker.stop();
+    return (): void => tracker.stop();
   }, [setState, stateRef, clock]);
 
   return state;

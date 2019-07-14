@@ -1,30 +1,33 @@
 import timezoneMock from 'timezone-mock';
 
 import localDateTracker from './localDateTracker';
+import LocalDateProvider from './LocalDateProvider';
 
 class MockClock {
-  constructor(time = 0) {
+  private time: number;
+
+  public constructor(time = 0) {
     this.time = time;
   }
 
-  set(millis) {
+  public set(millis: number): void {
     this.time = millis;
   }
 
-  now() {
+  public now(): number {
     return this.time;
   }
 
-  advanceByTime(millis) {
+  public advanceByTime(millis: number): void {
     this.advanceWallTimeOnly(millis);
     this.advanceTickTimeOnly(millis);
   }
 
-  advanceWallTimeOnly(millis) {
+  public advanceWallTimeOnly(millis: number): void {
     this.time += millis;
   }
 
-  advanceTickTimeOnly = (millis) => {
+  public advanceTickTimeOnly = (millis: number): void => {
     jest.advanceTimersByTime(millis);
   };
 }
@@ -33,8 +36,8 @@ describe('localDateTracker', () => {
   const day1 = 1123200000;
   const day2 = 1209600000;
 
-  let callback;
-  let mockClock;
+  let callback: jest.Mock<void, [LocalDateProvider]>;
+  let mockClock: MockClock;
 
   beforeEach(() => {
     timezoneMock.register('UTC');

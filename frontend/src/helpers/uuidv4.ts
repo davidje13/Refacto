@@ -27,12 +27,12 @@ SOFTWARE.
 
 /* eslint-disable no-return-assign, no-bitwise */
 
-const bth = [];
+const bth: string[] = [];
 for (let i = 0; i < 256; i += 1) {
   bth[i] = (i + 0x100).toString(16).substr(1);
 }
 
-function bytesToUuid(buf) {
+function bytesToUuid(buf: Uint8Array): string {
   let i = 0;
   return ([
     bth[buf[i += 1]], bth[buf[i += 1]],
@@ -48,7 +48,7 @@ function bytesToUuid(buf) {
 
 const rnds = new Uint8Array(16);
 
-export default function v4() {
+export default function v4(): string {
   window.crypto.getRandomValues(rnds);
 
   rnds[6] = (rnds[6] & 0x0f) | 0x40;

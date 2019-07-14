@@ -6,16 +6,27 @@ const MAX_DELAY = 60 * 1000;
 const MAX_DELAY_HIDDEN = 10 * 60 * 1000;
 const MIN_DELAY = 1000;
 
-export default function localDateTracker(callback, clock = Date) {
-  let currentMidnight = 0;
-  let timer = null;
+export interface NowGetter {
+  now(): number;
+}
 
-  const update = () => {
+export interface LocalDateTrackerRef {
+  stop(): void;
+}
+
+export default function localDateTracker(
+  callback: (provider: LocalDateProvider) => void,
+  clock: NowGetter = Date,
+): LocalDateTrackerRef {
+  let currentMidnight = 0;
+  let timer: NodeJS.Timeout | undefined;
+
+  const update = (): void => {
     const now = clock.now();
     const provider = new LocalDateProvider(now);
     const nextMidnight = provider.getMidnightTimestamp(1);
 
-    clearTimeout(timer);
+    clearTimeout(timer!);
     const maxDelay = document.hidden ? MAX_DELAY_HIDDEN : MAX_DELAY;
     const delay = Math.max(Math.min(nextMidnight - now, maxDelay), MIN_DELAY);
     timer = setTimeout(update, delay);
@@ -30,8 +41,8 @@ export default function localDateTracker(callback, clock = Date) {
   window.addEventListener('focus', update);
 
   return {
-    stop: () => {
-      clearTimeout(timer);
+    stop: (): void => {
+      clearTimeout(timer!);
       window.removeEventListener('focus', update);
     },
   };
