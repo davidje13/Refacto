@@ -6,12 +6,3 @@ export default interface RetroItem {
   votes: number;
   done: boolean;
 }
-
-export const makeRetroItem = (id: string): RetroItem => ({
-  id,
-  category: '',
-  created: 0,
-  message: '',
-  votes: 0,
-  done: false,
-});

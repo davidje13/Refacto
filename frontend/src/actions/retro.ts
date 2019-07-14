@@ -1,15 +1,20 @@
+import { Spec } from 'json-immutability-helper';
 import uuidv4 from '../helpers/uuidv4';
+import RetroItem from '../data/RetroItem';
+import Retro from '../data/Retro';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
 
-function sanitiseInput(value) {
+export type RetroSpec = Spec<Retro['retro']>;
+
+function sanitiseInput(value: string): string {
   return value
     .replace(IRRELEVANT_WHITESPACE, ' ')
     .replace(PADDING, '');
 }
 
-function makeItem(category, message) {
+function makeItem(category: string, message: string): RetroItem {
   return {
     id: uuidv4(),
     category,
@@ -20,11 +25,11 @@ function makeItem(category, message) {
   };
 }
 
-export const setRetroState = (delta) => ({
+export const setRetroState = (delta: object): RetroSpec => ({
   state: { $merge: delta },
 });
 
-export const addRetroItem = (category, message) => {
+export const addRetroItem = (category: string, message: string): RetroSpec | null => {
   const sanitisedMessage = sanitiseInput(message);
   if (!sanitisedMessage) {
     return null;
@@ -34,11 +39,11 @@ export const addRetroItem = (category, message) => {
   };
 };
 
-function updateItem(itemId, updater) {
+function updateItem(itemId: string, updater: Spec<RetroItem>): RetroSpec {
   return { data: { items: { $updateWhere: [['id', itemId], updater] } } };
 }
 
-export const editRetroItem = (itemId, message) => {
+export const editRetroItem = (itemId: string, message: string): RetroSpec | null => {
   const sanitisedMessage = sanitiseInput(message);
   if (!sanitisedMessage) {
     return null;
@@ -48,19 +53,19 @@ export const editRetroItem = (itemId, message) => {
   });
 };
 
-export const setRetroItemDone = (itemId, done) => updateItem(itemId, {
+export const setRetroItemDone = (itemId: string, done: boolean): RetroSpec => updateItem(itemId, {
   done: { $set: done },
 });
 
-export const upvoteRetroItem = (itemId) => updateItem(itemId, {
+export const upvoteRetroItem = (itemId: string): RetroSpec => updateItem(itemId, {
   votes: { $add: 1 },
 });
 
-export const deleteRetroItem = (itemId) => ({
+export const deleteRetroItem = (itemId: string): RetroSpec => ({
   data: { items: { $deleteWhere: ['id', itemId] } },
 });
 
-export const clearCovered = () => ({
+export const clearCovered = (): RetroSpec => ({
   state: { $set: {} },
   data: {
     items: {

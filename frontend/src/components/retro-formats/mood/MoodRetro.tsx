@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
-import { Spec } from 'json-immutability-helper';
 import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
 import {
+  RetroSpec,
   setRetroState,
   addRetroItem,
   editRetroItem,
@@ -36,7 +36,7 @@ const CATEGORIES: Category[] = [
 
 const addRetroActionItem = addRetroItem.bind(null, 'action');
 
-const addExtraTime = (duration: number): Spec<any> => setRetroState({ // TODO
+const addExtraTime = (duration: number): RetroSpec => setRetroState({
   focusedItemTimeout: Date.now() + duration,
 });
 
@@ -49,7 +49,7 @@ interface PropsT {
     items: any[];
   };
   onComplete: () => void;
-  dispatch: (spec: Spec<any>) => void; // TODO
+  dispatch: (spec: RetroSpec) => void;
   archive: () => void;
 }
 

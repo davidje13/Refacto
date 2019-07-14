@@ -1,5 +1,6 @@
 import { MemoryDb } from 'collection-storage';
 import RetroService, { TopicMessage } from './RetroService';
+import { makeRetroItem } from '../data/RetroItem';
 import TopicMap from '../queue/TopicMap';
 
 /* eslint-disable class-methods-use-this */
@@ -35,7 +36,7 @@ describe('RetroService', () => {
     );
     await service.updateRetro(r2, {
       state: { $set: { someRetroSpecificState: true } },
-      data: { items: { $push: [{ id: 'yes' }] } },
+      data: { items: { $push: [makeRetroItem('yes')] } },
     });
   });
 
