@@ -47,7 +47,7 @@ module.exports = {
       }],
     }),
     jest({
-      setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint'],
+      setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
     }),
     react({
       html: {

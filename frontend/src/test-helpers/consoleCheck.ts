@@ -1,8 +1,19 @@
-const spyConsole = console;
+import 'jest'; /* eslint-disable-line jest/no-jest-import */ // mark as module
+
+const spyConsole: any = console;
 
 // Automatically fail tests if errors or warnings are logged to the console
 
-function checkConsoleOutput(console, methodName, friendlyName) {
+interface CustomMatcherResult {
+  pass: boolean;
+  message: string | (() => string);
+}
+
+function checkConsoleOutput(
+  console: Record<string, jest.Mock<void, [...string[]]>>,
+  methodName: string,
+  friendlyName: string,
+): CustomMatcherResult {
   const lines = console[methodName].mock.calls;
   if (lines.length) {
     return {
@@ -15,6 +26,15 @@ function checkConsoleOutput(console, methodName, friendlyName) {
     pass: true,
     message: () => `Expected a console ${friendlyName}, but got nothing`,
   };
+}
+
+declare global {
+  namespace jest { // eslint-disable-line @typescript-eslint/no-namespace
+    interface Matchers<R> {
+      toHaveReportedNoErrors: () => R;
+      toHaveReportedNoWarnings: () => R;
+    }
+  }
 }
 
 expect.extend({
@@ -38,8 +58,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  expect(spyConsole).toHaveReportedNoErrors('error');
-  expect(spyConsole).toHaveReportedNoWarnings('warn');
+  expect(spyConsole).toHaveReportedNoErrors();
+  expect(spyConsole).toHaveReportedNoWarnings();
   spyConsole.error.mockRestore();
   spyConsole.warn.mockRestore();
 });
