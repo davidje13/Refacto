@@ -181,12 +181,7 @@ export default class RetroService {
   ): Promise<void> {
     return this.taskQueues.push(
       retroId,
-      (): Promise<void> => this.internalApplyChange(
-        retroId,
-        change,
-        source,
-        meta,
-      ),
+      () => this.internalApplyChange(retroId, change, source, meta),
     );
   }
 }

@@ -16,7 +16,7 @@ function makeClientConfig(serverConfig: ServerConfig): ClientConfig {
     sso: {},
   };
 
-  Object.keys(serverConfig.sso).forEach((service): void => {
+  Object.keys(serverConfig.sso).forEach((service) => {
     const config = serverConfig.sso[service];
     if (config.clientId) {
       clientConfig.sso[service] = {
@@ -35,7 +35,7 @@ export default class ApiConfigRouter extends Router {
 
     const clientConfig = makeClientConfig(serverConfig);
 
-    this.get('/', (req, res): void => {
+    this.get('/', (req, res) => {
       res.json(clientConfig);
     });
   }

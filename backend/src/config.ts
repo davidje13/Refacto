@@ -37,7 +37,7 @@ function populateConfig<T>(base: T, env = ''): T {
   const envPrefix = env ? `${env}_` : '';
 
   const result: T = base;
-  Object.keys(base).forEach((key): void => {
+  Object.keys(base).forEach((key) => {
     if (makeCamel(key) !== key) {
       throw new Error(`Property ${key} should be camel case`);
     }

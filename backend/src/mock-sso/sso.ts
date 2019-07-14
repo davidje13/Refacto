@@ -8,7 +8,7 @@ import TokenManager, { KeyPair } from '../tokens/TokenManager';
 const tokenManager = new TokenManager();
 
 let keys: KeyPair = { publicKey: '', privateKey: '' };
-tokenManager.generateKeys().then((k): void => {
+tokenManager.generateKeys().then((k) => {
   keys = k;
 });
 
@@ -29,7 +29,7 @@ function htmlSafe(value?: string): string {
     .replace(/'/g, '&#039;');
 }
 
-app.get('/auth', (req, res): void => {
+app.get('/auth', (req, res) => {
   res.header('Content-Type', 'text/html').send(`
     <html>
       <head>
@@ -91,7 +91,7 @@ app.get('/auth', (req, res): void => {
   `);
 });
 
-app.post('/auth', (req, res): void => {
+app.post('/auth', (req, res) => {
   const {
     redirect_uri: redirectUri,
     nonce,
@@ -121,7 +121,7 @@ app.post('/auth', (req, res): void => {
   res.redirect(303, `${redirectUri}#${redirectParams.toString()}`);
 });
 
-app.get('/tokeninfo', (req, res): void => {
+app.get('/tokeninfo', (req, res) => {
   const { id_token: idToken } = req.query;
   try {
     const data = tokenManager.readAndVerifySigned(idToken, keys.publicKey);

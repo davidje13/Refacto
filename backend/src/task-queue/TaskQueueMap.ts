@@ -13,7 +13,7 @@ export default class TaskQueueMap<T> {
     let queue = this.queues.get(key);
     if (!queue) {
       queue = this.queueFactory();
-      queue.on('drain', (): void => {
+      queue.on('drain', () => {
         this.queues.delete(key);
       });
       this.queues.set(key, queue);

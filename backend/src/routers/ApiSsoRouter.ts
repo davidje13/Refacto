@@ -11,7 +11,7 @@ export default class ApiSsoRouter extends Router {
 
     const tokenLifespan = 60 * 60 * 2;
 
-    this.post('/:name', async (req, res): Promise<void> => {
+    this.post('/:name', async (req, res) => {
       const name = req.params.name as string;
 
       if (!ssoService.supportsService(name)) {

@@ -5,5 +5,3 @@ export default interface Topic<T> {
   remove(fn: TopicListener<T>): Promise<boolean> | boolean;
   broadcast(message: T): Promise<void> | void;
 }
-
-export type TopicFactory<T> = (key: string) => Topic<T>;

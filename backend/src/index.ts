@@ -11,7 +11,7 @@ let activeApp: WebSocketExpress | null = null;
 const server = http.createServer();
 
 function startServer(): void {
-  server.listen(config.port, config.serverBindAddress, (): void => {
+  server.listen(config.port, config.serverBindAddress, () => {
     process.stdout.write(`Available at http://localhost:${config.port}/\n`);
     process.stdout.write('Press Ctrl+C to stop\n');
   });
@@ -48,10 +48,10 @@ if (module.hot) {
 if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
   import('./mock-sso/sso')
-    .then(({ default: ssoApp }): void => {
+    .then(({ default: ssoApp }) => {
       ssoApp.listen(config.mockSsoPort, config.serverBindAddress);
     })
-    .catch((): void => {
+    .catch(() => {
       process.stderr.write('Failed to start mock SSO server\n');
     });
 }

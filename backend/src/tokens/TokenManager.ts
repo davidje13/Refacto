@@ -17,7 +17,7 @@ const generateKeyPair = util.promisify(
   ): void => crypto.generateKeyPair(
     type as any,
     options as any,
-    (err: Error | null, publicKey: string, privateKey: string): void => {
+    (err: Error | null, publicKey: string, privateKey: string) => {
       callback(err, { publicKey, privateKey });
     },
   ),

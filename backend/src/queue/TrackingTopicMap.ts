@@ -1,11 +1,11 @@
 import TopicMap from './TopicMap';
-import Topic, { TopicFactory, TopicListener } from './Topic';
+import Topic, { TopicListener } from './Topic';
 
 export default class TrackingTopicMap<T> implements TopicMap<T> {
   private data = new Map<string, Topic<T>>();
 
   public constructor(
-    private readonly topicFactory: TopicFactory<T>,
+    private readonly topicFactory: (key: string) => Topic<T>,
   ) {}
 
   public async add(key: string, fn: TopicListener<T>): Promise<void> {

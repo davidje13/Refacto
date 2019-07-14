@@ -13,6 +13,6 @@ export default class InMemoryTopic<T> implements Topic<T> {
   }
 
   public broadcast(message: T): void {
-    this.subscribers.forEach((sub): void => sub(message));
+    this.subscribers.forEach((sub) => sub(message));
   }
 }

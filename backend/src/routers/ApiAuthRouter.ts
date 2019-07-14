@@ -7,7 +7,7 @@ export default class ApiAuthRouter extends Router {
 
     const tokenLifespan = 60 * 60 * 24 * 30 * 6;
 
-    this.post('/tokens/:retroId', async (req, res): Promise<void> => {
+    this.post('/tokens/:retroId', async (req, res) => {
       const { retroId } = req.params;
       const { password } = req.body;
 

@@ -18,16 +18,16 @@ export default (
 ): Server => {
   let server: Server | null;
 
-  beforeEach((done): void => {
+  beforeEach((done) => {
     server = null;
     Promise.resolve(serverFn())
-      .then((rawServer): void => {
+      .then((rawServer) => {
         server = rawServer.listen(0, 'localhost', done);
       })
-      .catch((e): void => done.fail(e));
+      .catch((e) => done.fail(e));
   });
 
-  afterEach((done): void => {
+  afterEach((done) => {
     if (server) {
       const tempServer = server;
       server = null;

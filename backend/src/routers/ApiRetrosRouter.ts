@@ -29,7 +29,7 @@ export default class ApiRetrosRouter extends Router {
       (token): (JWTPayload | null) => userAuthService.readAndVerifyToken(token),
     );
 
-    this.get('/', userAuthMiddleware, async (req, res): Promise<void> => {
+    this.get('/', userAuthMiddleware, async (req, res) => {
       const userId = getAuthData(res).sub!;
 
       res.json({
@@ -37,7 +37,7 @@ export default class ApiRetrosRouter extends Router {
       });
     });
 
-    this.post('/', userAuthMiddleware, async (req, res): Promise<void> => {
+    this.post('/', userAuthMiddleware, async (req, res) => {
       const userId = getAuthData(res).sub!;
       const { slug, name, password } = req.body;
 
@@ -73,14 +73,11 @@ export default class ApiRetrosRouter extends Router {
     });
 
     this.use('/:retroId', requireBearerAuth(
-      (req): string => req.params.retroId,
-      (token, realm): Promise<JWTPayload | null> => retroAuthService.readAndVerifyToken(
-        realm,
-        token,
-      ),
+      (req) => req.params.retroId,
+      (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
     ));
 
-    this.ws('/:retroId', requireAuthScope('read'), async (req, res): Promise<void> => {
+    this.ws('/:retroId', requireAuthScope('read'), async (req, res) => {
       const { retroId } = req.params;
       const ws = await res.accept();
 
@@ -101,7 +98,7 @@ export default class ApiRetrosRouter extends Router {
 
       ws.on('close', subscription.close);
 
-      ws.on('message', (msg: string): void => {
+      ws.on('message', (msg: string) => {
         const { change, id } = JSON.parse(msg);
         if (!hasAuthScope(res, 'write')) {
           res.sendError(403);

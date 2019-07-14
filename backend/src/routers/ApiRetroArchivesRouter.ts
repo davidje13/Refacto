@@ -5,14 +5,14 @@ export default class ApiRetroArchivesRouter extends Router {
   public constructor(retroArchiveService: RetroArchiveService) {
     super({ mergeParams: true });
 
-    this.get('/', requireAuthScope('readArchives'), async (req, res): Promise<void> => {
+    this.get('/', requireAuthScope('readArchives'), async (req, res) => {
       const { retroId } = req.params;
 
       const archives = await retroArchiveService.getRetroArchiveList(retroId);
       res.json({ archives });
     });
 
-    this.post('/', requireAuthScope('write'), async (req, res): Promise<void> => {
+    this.post('/', requireAuthScope('write'), async (req, res) => {
       const { retroId } = req.params;
 
       const { format, items } = req.body;
@@ -32,7 +32,7 @@ export default class ApiRetroArchivesRouter extends Router {
       res.status(200).json({ id });
     });
 
-    this.get('/:archiveId', requireAuthScope('readArchives'), async (req, res): Promise<void> => {
+    this.get('/:archiveId', requireAuthScope('readArchives'), async (req, res) => {
       const { retroId, archiveId } = req.params;
 
       const archive = await retroArchiveService

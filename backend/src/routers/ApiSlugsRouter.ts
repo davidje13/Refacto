@@ -5,7 +5,7 @@ export default class ApiSlugsRouter extends Router {
   public constructor(retroService: RetroService) {
     super();
 
-    this.get('/:slug', async (req, res): Promise<void> => {
+    this.get('/:slug', async (req, res) => {
       const { slug } = req.params;
       const retroId = await retroService.getRetroIdForSlug(slug);
 
