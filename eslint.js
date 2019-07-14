@@ -66,10 +66,5 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       'devDependencies': true,
     }],
-    '@typescript-eslint/explicit-function-return-type': ['error', {
-      'allowTypedFunctionExpressions': true,
-      'allowHigherOrderFunctions': true,
-      'allowExpressions': true,
-    }],
   },
 };

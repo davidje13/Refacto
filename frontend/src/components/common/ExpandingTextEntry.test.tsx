@@ -8,6 +8,8 @@ function setValue(input: HTMLElement, value: string): void {
   fireEvent.change(input, { target: { value } });
 }
 
+const nop = (): void => {};
+
 describe('ExpandingTextEntry', () => {
   describe('with no extra options', () => {
     let onSubmit: jest.Mock<(value: string) => void>;
@@ -65,7 +67,7 @@ describe('ExpandingTextEntry', () => {
 
       dom = render((
         <ExpandingTextEntry
-          onSubmit={() => {}}
+          onSubmit={nop}
           onCancel={onCancel}
         />
       ), { queries });
@@ -87,7 +89,7 @@ describe('ExpandingTextEntry', () => {
     beforeEach(() => {
       dom = render((
         <ExpandingTextEntry
-          onSubmit={() => {}}
+          onSubmit={nop}
           clearAfterSubmit
         />
       ), { queries });
@@ -108,7 +110,7 @@ describe('ExpandingTextEntry', () => {
     beforeEach(() => {
       dom = render((
         <ExpandingTextEntry
-          onSubmit={() => {}}
+          onSubmit={nop}
           extraOptions={<em />}
         />
       ), { queries });

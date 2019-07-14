@@ -34,10 +34,10 @@ class MockWebSocketClient {
     Promise.resolve().then(() => {
       this.dispatchEvent('open', new CustomEvent('open'));
       const ws = {
-        send: (data: string) => {
+        send: (data: string): void => {
           this.dispatchEvent('message', new MessageEvent('message', { data }));
         },
-        receive: () => this.messages.pop(),
+        receive: (): Promise<string> => this.messages.pop(),
       };
       expected.scriptFn(ws as any as WebSocket);
       this.dispatchEvent('close', new CloseEvent('close'));

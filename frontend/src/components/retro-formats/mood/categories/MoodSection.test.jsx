@@ -10,6 +10,8 @@ import MoodItem from './MoodItem';
 jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
 jest.mock('../../../common/ExpandingTextEntry', () => mockElement('mock-expanding-text-entry'));
 
+const nop = () => {};
+
 describe('MoodSection', () => {
   it('displays a given category title', () => {
     const dom = render((
@@ -75,7 +77,7 @@ describe('MoodSection', () => {
         category=""
         categoryLabel=""
         items={[]}
-        onAddItem={() => {}}
+        onAddItem={nop}
       />
     ), { queries });
 

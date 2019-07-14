@@ -6,6 +6,8 @@ import MoodRetro from './MoodRetro';
 
 const emptyRetroData = makeRetroData({ format: 'mood' });
 
+const nop = () => {};
+
 describe('MoodRetro', () => {
   it('renders without error', () => {
     render((
@@ -13,8 +15,8 @@ describe('MoodRetro', () => {
         retroData={emptyRetroData}
         retroState={{}}
         archive={false}
-        onComplete={() => {}}
-        dispatch={() => {}}
+        onComplete={nop}
+        dispatch={nop}
       />
     ));
   });

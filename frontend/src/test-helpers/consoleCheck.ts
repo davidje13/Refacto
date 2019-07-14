@@ -18,13 +18,13 @@ function checkConsoleOutput(
   if (lines.length) {
     return {
       pass: false,
-      message: () => `Expected no console ${friendlyName}s, got:\n\n${lines.join('\n\n')}`,
+      message: (): string => `Expected no console ${friendlyName}s, got:\n\n${lines.join('\n\n')}`,
     };
   }
 
   return {
     pass: true,
-    message: () => `Expected a console ${friendlyName}, but got nothing`,
+    message: (): string => `Expected a console ${friendlyName}, but got nothing`,
   };
 }
 
@@ -38,10 +38,10 @@ declare global {
 }
 
 expect.extend({
-  toHaveReportedNoErrors(console) {
+  toHaveReportedNoErrors(console): CustomMatcherResult {
     return checkConsoleOutput(console, 'error', 'error');
   },
-  toHaveReportedNoWarnings(console) {
+  toHaveReportedNoWarnings(console): CustomMatcherResult {
     return checkConsoleOutput(console, 'warn', 'warning');
   },
 });

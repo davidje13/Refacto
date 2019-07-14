@@ -13,6 +13,8 @@ class StubTopicMap<T> implements TopicMap<T> {
 }
 /* eslint-enable class-methods-use-this */
 
+const nop = (): void => {};
+
 describe('RetroService', () => {
   let service: RetroService;
   let r1: string;
@@ -69,7 +71,7 @@ describe('RetroService', () => {
 
   describe('subscribeRetro', () => {
     it('returns the requested retro by ID', async () => {
-      const subscription = await service.subscribeRetro(r2, () => {});
+      const subscription = await service.subscribeRetro(r2, nop);
       const retro = subscription!.getInitialData();
       subscription!.close();
 
@@ -78,7 +80,7 @@ describe('RetroService', () => {
     });
 
     it('returns full details', async () => {
-      const subscription = await service.subscribeRetro(r2, () => {});
+      const subscription = await service.subscribeRetro(r2, nop);
       const retro = subscription!.getInitialData();
       subscription!.close();
 
@@ -89,7 +91,7 @@ describe('RetroService', () => {
     });
 
     it('returns null if the ID is not found', async () => {
-      const subscription = await service.subscribeRetro('nope', () => {});
+      const subscription = await service.subscribeRetro('nope', nop);
 
       expect(subscription).toBeNull();
     });

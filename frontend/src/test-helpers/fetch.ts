@@ -3,7 +3,7 @@ import { Subject as MockSubject } from 'rxjs';
 type FetchFn = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
 jest.mock('rxjs/ajax', () => ({
-  ajax: (url: string) => {
+  ajax: (url: string): MockSubject<unknown> => {
     const subject = new MockSubject();
     ((global as any).fetch as FetchFn)(url)
       .then(async (response) => {
@@ -51,15 +51,15 @@ class MockExpectation implements MockExpectationT {
   }
 
   public andRespond(body: string, init?: RequestInit): void {
-    this.fn = (request) => request.respond(body, init);
+    this.fn = (request): void => request.respond(body, init);
   }
 
   public andRespondOk(body: string, init?: RequestInit): void {
-    this.fn = (request) => request.respondOk(body, init);
+    this.fn = (request): void => request.respondOk(body, init);
   }
 
   public andRespondJsonOk(body: object, init?: RequestInit): void {
-    this.fn = (request) => request.respondJsonOk(body, init);
+    this.fn = (request): void => request.respondJsonOk(body, init);
   }
 }
 
@@ -109,7 +109,7 @@ class MockRequest {
     // const response = new Response(body, init)
     const response = {
       status: init.status || 200,
-      json: () => Promise.resolve(JSON.parse(body!)),
+      json: (): Promise<object> => Promise.resolve(JSON.parse(body!)),
     };
     this.internalResolve!(response);
     this.close();
@@ -184,7 +184,7 @@ class MockFetch {
   private invoke = (
     url: string,
     options: RequestInit = {},
-  ) => new Promise((resolve, reject) => {
+  ): Promise<ResponseWrapper> => new Promise((resolve, reject): void => {
     const request = new MockRequest(url, options, resolve, reject);
     const expectation = this.expectations.find((exp) => request.matches(exp));
     if (expectation) {

@@ -16,7 +16,7 @@ class ControllablePromise<T> {
   };
 
   public makePromiseFactory(): () => Promise<T> {
-    return () => new Promise<T>((resolve, reject) => {
+    return (): Promise<T> => new Promise<T>((resolve, reject): void => {
       this.hasStarted = true;
       this.resolve = resolve;
       this.reject = reject;
@@ -35,7 +35,7 @@ describe('AsyncTaskQueue', () => {
     const queue = new AsyncTaskQueue();
 
     const result = await queue.push(async () => {
-      await new Promise((resolve) => resolve());
+      await new Promise((resolve): void => resolve());
       return 3;
     });
 
@@ -48,7 +48,7 @@ describe('AsyncTaskQueue', () => {
     let capturedError = null;
     try {
       await queue.push(async () => {
-        await new Promise((resolve) => resolve());
+        await new Promise((resolve): void => resolve());
         throw new Error('nope');
       });
     } catch (e) {

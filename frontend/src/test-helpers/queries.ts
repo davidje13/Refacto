@@ -34,40 +34,40 @@ function getMultipleElementsFoundError(
 
 export const css = (selector: string): Query => ({
   description: `matching CSS selector ${selector}`,
-  queryAll: (container) => container.querySelectorAll(selector),
+  queryAll: (container): NodeListOf<HTMLElement> => container.querySelectorAll(selector),
 });
 
 export const altText = (value: string, ...options: any[]): Query => ({
   description: `with the alt text ${value}`,
-  queryAll: (container) => queryAllByAltText(container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByAltText(container, value, ...options),
 });
 
 export const displayValue = (value: string, ...options: any[]): Query => ({
   description: `with the value ${value}`,
-  queryAll: (container) => queryAllByDisplayValue(container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByDisplayValue(container, value, ...options),
 });
 
 export const labelText = (value: string, ...options: any[]): Query => ({
   description: `with the label text ${value}`,
-  queryAll: (container) => queryAllByLabelText(container, value, ...options),
-  getAll: (container) => getAllByLabelText(container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByLabelText(container, value, ...options),
+  getAll: (container): HTMLElement[] => getAllByLabelText(container, value, ...options),
 });
 
 export const attribute = (name: string, value: string, ...options: any[]): Query => ({
   description: `by [${name}=${value}]`,
-  queryAll: (container) => queryAllByAttribute(name, container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByAttribute(name, container, value, ...options),
 });
 
 export const placeholderText = (value: string, ...options: any[]): Query => ({
   description: `with the placeholder text ${value}`,
-  queryAll: (container) => queryAllByAttribute('placeholder', container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByAttribute('placeholder', container, value, ...options),
 });
 
 export const role = attribute.bind('role');
 
 export const testId = (id: string, ...options: any[]): Query => ({
   description: `with the test ID ${id}`,
-  queryAll: (container) => queryAllByTestId(container, id, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByTestId(container, id, ...options),
 });
 
 export const text = (value: string, ...options: any[]): Query => ({
@@ -77,7 +77,7 @@ export const text = (value: string, ...options: any[]): Query => ({
     'In this case, you can provide a function for your text matcher ',
     'to make your matcher more flexible.',
   ].join(''),
-  queryAll: (container) => queryAllByText(container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByText(container, value, ...options),
 });
 
 export const textFragment = (
@@ -87,7 +87,7 @@ export const textFragment = (
 
 export const title = (value: string, ...options: any[]): Query => ({
   description: `with the title ${value}`,
-  queryAll: (container) => queryAllByTitle(container, value, ...options),
+  queryAll: (container): HTMLElement[] => queryAllByTitle(container, value, ...options),
 });
 
 

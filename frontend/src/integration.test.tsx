@@ -51,7 +51,7 @@ async function renderApp(location: string): Promise<RenderedApp> {
 
   return {
     routerContext,
-    currentTitle: () => extractHelmetTitle(helmetContext),
+    currentTitle: (): string => extractHelmetTitle(helmetContext),
     dom: dom!,
   };
 }
