@@ -29,10 +29,10 @@ export const setRetroState = (delta: object): RetroSpec => ({
   state: { $merge: delta },
 });
 
-export const addRetroItem = (category: string, message: string): RetroSpec | null => {
+export const addRetroItem = (category: string, message: string): RetroSpec | undefined => {
   const sanitisedMessage = sanitiseInput(message);
   if (!sanitisedMessage) {
-    return null;
+    return undefined;
   }
   return {
     data: { items: { $push: [makeItem(category, sanitisedMessage)] } },
@@ -43,10 +43,10 @@ function updateItem(itemId: string, updater: Spec<RetroItem>): RetroSpec {
   return { data: { items: { $updateWhere: [['id', itemId], updater] } } };
 }
 
-export const editRetroItem = (itemId: string, message: string): RetroSpec | null => {
+export const editRetroItem = (itemId: string, message: string): RetroSpec | undefined => {
   const sanitisedMessage = sanitiseInput(message);
   if (!sanitisedMessage) {
-    return null;
+    return undefined;
   }
   return updateItem(itemId, {
     message: { $set: sanitisedMessage },

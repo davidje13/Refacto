@@ -1,19 +1,29 @@
-import { Notification, NotificationKind } from 'rxjs';
+import { Notification, NotificationKind, Observable } from 'rxjs';
 import { useState, useLayoutEffect, useCallback } from 'react';
 
-function isMaterialized(data, materialized) {
+type MaterializedOptionT = boolean | 'detect';
+interface ObservableOptions {
+  materialized?: MaterializedOptionT;
+}
+
+export type ObservableState<T> = [null, null] | [T, null] | [null, any];
+
+function isMaterialized(
+  data: any,
+  materialized: MaterializedOptionT,
+): data is Notification<any> {
   if (typeof materialized === 'boolean') {
     return materialized;
   }
   return (data instanceof Notification);
 }
 
-export default function useObservable(
-  observableGenerator,
-  args = [],
-  { materialized = 'detect' } = {},
-) {
-  const [state, setState] = useState([null, null]);
+export default function useObservable<T>(
+  observableGenerator: () => (Observable<T> | undefined),
+  args: any[] = [],
+  { materialized = 'detect' }: ObservableOptions = {},
+): ObservableState<T> {
+  const [state, setState] = useState<ObservableState<T>>([null, null]);
   const generator = useCallback(observableGenerator, args);
 
   useLayoutEffect(() => {
@@ -36,7 +46,7 @@ export default function useObservable(
       },
       (e) => setState([null, e]),
     );
-    return () => sub.unsubscribe();
+    return (): void => sub.unsubscribe();
   }, [setState, generator, materialized]);
 
   return state;
