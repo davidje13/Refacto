@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 
-const exactShape = (props) => PropTypes.shape(forbidExtraProps(props));
+const exactShape = <T>(
+  props: T,
+): PropTypes.Requireable<PropTypes.InferProps<T>> => PropTypes.shape(forbidExtraProps(props));
 
 export const propTypesShapeRetroSummary = exactShape({
   id: PropTypes.string.isRequired,

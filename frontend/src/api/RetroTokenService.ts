@@ -1,9 +1,12 @@
 export default class RetroTokenService {
-  constructor(apiBase) {
-    this.apiBase = apiBase;
-  }
+  public constructor(
+    private readonly apiBase: string,
+  ) {}
 
-  async submitPassword(retroId, password) {
+  public async submitPassword(
+    retroId: string,
+    password: string,
+  ): Promise<string> {
     const response = await fetch(
       `${this.apiBase}/auth/tokens/${retroId}`,
       {

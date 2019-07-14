@@ -6,12 +6,12 @@ interface ObservableOptions {
   materialized?: MaterializedOptionT;
 }
 
-export type ObservableState<T> = [null, null] | [T, null] | [null, any];
+export type ObservableState<T> = [T | null, any];
 
 function isMaterialized(
-  data: any,
+  data: unknown,
   materialized: MaterializedOptionT,
-): data is Notification<any> {
+): data is Notification<unknown> {
   if (typeof materialized === 'boolean') {
     return materialized;
   }
@@ -19,7 +19,7 @@ function isMaterialized(
 }
 
 export default function useObservable<T>(
-  observableGenerator: () => (Observable<T> | undefined),
+  observableGenerator: () => (Observable<T | Notification<T>> | undefined),
   args: any[] = [],
   { materialized = 'detect' }: ObservableOptions = {},
 ): ObservableState<T> {

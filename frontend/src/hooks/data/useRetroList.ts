@@ -6,7 +6,12 @@ export default function useRetroList(
   userToken: string | null,
 ): ObservableState<RetroSummary[]> {
   const [retroListState, error] = useObservable(
-    () => userToken && retroListTracker.get(userToken),
+    () => {
+      if (!userToken) {
+        return undefined;
+      }
+      return retroListTracker.get(userToken);
+    },
     [retroListTracker, userToken],
   );
 

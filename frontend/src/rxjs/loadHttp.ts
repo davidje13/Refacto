@@ -1,5 +1,5 @@
 import { map, catchError } from 'rxjs/operators';
-import { ajax } from 'rxjs/ajax';
+import { ajax, AjaxRequest } from 'rxjs/ajax';
 import { Observable } from 'rxjs';
 
 interface HttpError {
@@ -19,7 +19,7 @@ function makeHttpError({ status }: HttpError): string {
   return 'connection failed';
 }
 
-export default function loadHttp(url: string): Observable<unknown> {
+export default function loadHttp<T>(url: string | AjaxRequest): Observable<T> {
   return ajax(url).pipe(
     map((data) => data.response),
     catchError((data) => {

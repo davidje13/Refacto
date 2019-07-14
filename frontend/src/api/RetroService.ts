@@ -1,14 +1,21 @@
-export default class RetroService {
-  constructor(apiBase) {
-    this.apiBase = apiBase;
-  }
+interface RetroOptions {
+  name: string;
+  slug: string;
+  password: string;
+  userToken: string;
+}
 
-  async create({
+export default class RetroService {
+  public constructor(
+    private readonly apiBase: string,
+  ) {}
+
+  public async create({
     name,
     slug,
     password,
     userToken,
-  }) {
+  }: RetroOptions): Promise<string> {
     const response = await fetch(
       `${this.apiBase}/retros`,
       {
