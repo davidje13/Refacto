@@ -38,7 +38,7 @@ function addUnknownPropsTest<T>(
   };
 }
 
-function isComponent(o: any): o is React.ComponentType {
+function isComponent(o: unknown): o is React.ComponentType {
   return (typeof o === 'function' || o instanceof React.Component);
 }
 

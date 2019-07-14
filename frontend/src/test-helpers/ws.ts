@@ -13,7 +13,7 @@ class MockWebSocketClient {
 
   private readonly messages: BlockingQueue<string>;
 
-  private readonly listeners: { [type: string]: ListenerFn[] };
+  private readonly listeners: Record<string, ListenerFn[]>;
 
   public constructor(url: string) {
     const expected = MockWebSocketClient.expectations.find(

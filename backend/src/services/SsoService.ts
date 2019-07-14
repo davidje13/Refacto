@@ -25,7 +25,7 @@ export default class SsoService {
   private readonly extractors: Extractors;
 
   public constructor(
-    configs: { [service: string]: BaseConfig },
+    configs: Record<string, BaseConfig>,
   ) {
     this.extractors = {
       google: bindExtractor(extractGoogleId, configs.google as GoogleConfig),

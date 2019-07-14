@@ -9,7 +9,7 @@ const baseTestConfig = {
   sso: {},
 };
 
-function isObj(x: any): x is { [key: string]: any } {
+function isObj(x: unknown): x is Record<string, unknown> {
   return x && typeof x === 'object';
 }
 

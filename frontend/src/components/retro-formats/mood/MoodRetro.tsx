@@ -14,6 +14,7 @@ import {
   upvoteRetroItem,
   deleteRetroItem,
 } from '../../../actions/retro';
+import RetroData from '../../../data/RetroData';
 import useBoxed from '../../../hooks/useBoxed';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
@@ -45,9 +46,7 @@ interface PropsT {
     focusedItemId?: string | null;
     focusedItemTimeout?: number;
   };
-  retroData: {
-    items: any[];
-  };
+  retroData: RetroData;
   onComplete: () => void;
   dispatch: (spec: RetroSpec) => void;
   archive: () => void;
