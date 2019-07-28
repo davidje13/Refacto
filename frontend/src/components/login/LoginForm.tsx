@@ -4,7 +4,7 @@ import useConfig from '../../hooks/data/useConfig';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './LoginForm.less';
 
-function randomString() {
+function randomString(): string {
   const array = new Uint8Array(10);
   crypto.getRandomValues(array);
 
@@ -17,15 +17,20 @@ function randomString() {
   return result;
 }
 
-function makeState(redirect) {
+function makeState(redirect: string): string {
   const nonce = randomString();
   window.sessionStorage.setItem('login-nonce', nonce);
   return JSON.stringify({ nonce, redirect });
 }
 
-const LoginForm = ({ message, redirect }) => {
+interface PropsT {
+  message: string | null;
+  redirect: string | null;
+}
+
+const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
   const config = useConfig();
-  const sso = (config || {}).sso || {}; // TODO TypeScript#16
+  const sso = config ? config.sso : {}; // TODO TypeScript#16
   const googleConfig = sso.google;
   const githubConfig = sso.github;
 

@@ -1,10 +1,15 @@
 import { userTokenService, userTokenTracker } from '../../api/api';
 
+interface LocationT {
+  search: string;
+  hash: string;
+}
+
 export default async function handleLogin(
-  service,
-  localNonce,
-  { search, hash },
-) {
+  service: string,
+  localNonce: string,
+  { search, hash }: LocationT,
+): Promise<string> {
   let externalToken = null;
   let state = null;
 
@@ -23,7 +28,7 @@ export default async function handleLogin(
     throw new Error('unrecognised login details');
   }
 
-  const { redirect, nonce } = JSON.parse(state);
+  const { redirect, nonce } = JSON.parse(state!);
   if (!localNonce || nonce !== localNonce) {
     throw new Error('possible cross-site request forgery');
   }

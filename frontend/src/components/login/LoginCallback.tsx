@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import handleLogin from './handleLogin';
 import Header from '../common/Header';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 
-const LoginCallback = ({ history, service }) => {
-  const [error, setError] = useState(null);
+interface PropsT extends RouteComponentProps {
+  service: string;
+}
+
+const LoginCallback = ({
+  history,
+  service,
+}: PropsT): React.ReactElement => {
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const { search, hash } = document.location;
     const nonce = window.sessionStorage.getItem('login-nonce');
+    if (!nonce) {
+      setError('');
+      return;
+    }
     handleLogin(service, nonce, { search, hash })
       .then((redirect) => {
         window.sessionStorage.removeItem('login-nonce');
@@ -32,14 +41,5 @@ const LoginCallback = ({ history, service }) => {
     </article>
   );
 };
-
-LoginCallback.propTypes = {
-  history: PropTypes.shape({
-    replace: PropTypes.func.isRequired,
-  }).isRequired,
-  service: PropTypes.string.isRequired,
-};
-
-forbidExtraProps(LoginCallback, { alsoAllow: ['location', 'match', 'staticContext'] });
 
 export default React.memo(withRouter(LoginCallback));
