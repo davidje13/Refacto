@@ -13,7 +13,7 @@ describe('ItemColumn', () => {
     const item1 = makeItem({ id: 'a' });
     const item2 = makeItem({ id: 'b' });
     const dom = render((
-      <ItemColumn items={[item1, item2]} ItemType={Item} />
+      <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
     ), { queries });
 
     expect(dom.getAllBy(css('my-item')).length).toEqual(2);
@@ -23,7 +23,7 @@ describe('ItemColumn', () => {
     const item1 = makeItem({ id: 'a', created: 100 });
     const item2 = makeItem({ id: 'b', created: 200 });
     const dom = render((
-      <ItemColumn items={[item1, item2]} ItemType={Item} />
+      <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
     ), { queries });
 
     const displayedItems = dom.getAllBy(css('my-item'));
@@ -31,10 +31,10 @@ describe('ItemColumn', () => {
     expect(displayedItems[1].mockProps.item).toEqual(item1);
   });
 
-  it('passes extra props to the items unchanged', () => {
+  it('passes item props to the items unchanged', () => {
     const item = makeItem();
     const dom = render((
-      <ItemColumn items={[item]} ItemType={Item} foo="bar" />
+      <ItemColumn items={[item]} ItemType={Item} itemProps={{ foo: 'bar' }} />
     ), { queries });
 
     const displayedItems = dom.getAllBy(css('my-item'));
@@ -44,7 +44,7 @@ describe('ItemColumn', () => {
   it('focuses nothing by default', () => {
     const item = makeItem();
     const dom = render((
-      <ItemColumn items={[item]} ItemType={Item} />
+      <ItemColumn items={[item]} ItemType={Item} itemProps={{}} />
     ), { queries });
 
     const displayedItems = dom.getAllBy(css('my-item'));
@@ -58,6 +58,7 @@ describe('ItemColumn', () => {
         items={[item]}
         ItemType={Item}
         focusedItemId={item.id}
+        itemProps={{}}
       />
     ), { queries });
 

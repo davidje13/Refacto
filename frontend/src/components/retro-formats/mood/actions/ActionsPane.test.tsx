@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { makeItem } from '../../../../test-helpers/dataFactories';
 import { queries, css } from '../../../../test-helpers/queries';
@@ -17,9 +17,9 @@ describe('ActionsPane', () => {
     makeItem({ id: '3' }),
   ];
 
-  let dom;
-  let sections;
-  let localDateProvider;
+  let dom: RenderResult<typeof queries>;
+  let sections: HTMLElement[];
+  let localDateProvider: LocalDateProvider;
 
   beforeEach(() => {
     localDateProvider = new LocalDateProvider(0);
@@ -75,7 +75,7 @@ describe('ActionsPane', () => {
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
-        onAddItem={() => {}}
+        onAddItem={(): void => {}}
       />
     ), { queries });
 

@@ -14,36 +14,45 @@ function sortItems(items: RetroItem[]): RetroItem[] {
   return sorted;
 }
 
-interface PropsT {
-  items: RetroItem[];
-  ItemType: React.ElementType;
-  focusedItemId?: string | null;
-  [K: string]: any;
+interface ItemPropsP {
+  item: RetroItem;
+  focused: boolean;
 }
 
-const ItemColumn = ({
+interface PropsT<P> {
+  items: RetroItem[];
+  ItemType: React.ComponentType<P>;
+  focusedItemId?: string | null;
+  itemProps: Omit<P, 'item' | 'focused'>;
+}
+
+function ItemColumn<P extends Partial<ItemPropsP>>({
   items,
   ItemType,
   focusedItemId,
-  ...props
-}: PropsT): React.ReactElement => (
-  <ul className="item-column">
-    { sortItems(items).map((item) => (
-      <li key={item.id}>
-        <ItemType item={item} focused={item.id === focusedItemId} {...props} />
-      </li>
-    )) }
-  </ul>
-);
+  itemProps,
+}: PropsT<P>): React.ReactElement {
+  const AnyItemType = ItemType as any;
+  return (
+    <ul className="item-column">
+      { sortItems(items).map((item) => (
+        <li key={item.id}>
+          <AnyItemType item={item} focused={item.id === focusedItemId} {...itemProps} />
+        </li>
+      )) }
+    </ul>
+  );
+}
 
 ItemColumn.propTypes = {
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   ItemType: PropTypes.elementType.isRequired,
   focusedItemId: PropTypes.string,
+  itemProps: PropTypes.shape({}).isRequired,
 };
 
 ItemColumn.defaultProps = {
   focusedItemId: null,
 };
 
-export default React.memo(ItemColumn);
+export default ItemColumn;

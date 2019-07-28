@@ -6,6 +6,16 @@ import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
+import RetroItem from '../../../../data/RetroItem';
+
+interface PropsT {
+  items: RetroItem[];
+  localDateProvider: LocalDateProvider;
+  onAddItem?: (message: string) => void;
+  onSetDone?: (id: string, done: boolean) => void;
+  onEdit?: (id: string, message: string) => void;
+  onDelete?: (id: string) => void;
+}
 
 const ActionsPane = ({
   items,
@@ -14,7 +24,7 @@ const ActionsPane = ({
   onSetDone,
   onEdit,
   onDelete,
-}) => {
+}: PropsT): React.ReactElement => {
   const today = localDateProvider.getMidnightTimestamp();
   const lastWeek = localDateProvider.getMidnightTimestamp(-7);
 

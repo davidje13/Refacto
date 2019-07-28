@@ -42,11 +42,11 @@ const MoodSection = ({
 }: PropsT): React.ReactElement => {
   const handleAddItem = useBoundCallback(onAddItem, category);
 
-  const handleItemSelect = useCallback((id) => {
+  const handleItemSelect = useCallback((id: string) => {
     onSwitchFocus!(id, true);
   }, [onSwitchFocus]);
 
-  const handleItemCancel = useCallback((id) => {
+  const handleItemCancel = useCallback((id: string) => {
     // TODO TypeScript#16
     if (onSetDone) {
       onSetDone(id, false);
@@ -54,7 +54,7 @@ const MoodSection = ({
     onSwitchFocus!(null, false);
   }, [onSwitchFocus, onSetDone]);
 
-  const handleItemDone = useCallback((id) => {
+  const handleItemDone = useCallback((id: string) => {
     onSetDone!(id, true);
     onSwitchFocus!(null, false);
   }, [onSwitchFocus, onSetDone]);
@@ -72,18 +72,20 @@ const MoodSection = ({
           />
         ) }
       </header>
-      <ItemColumn
+      <ItemColumn<React.ComponentPropsWithRef<typeof MoodItem>>
         items={items.filter((item) => (item.category === category))}
         ItemType={MoodItem}
         focusedItemId={focusedItemId}
-        focusedItemTimeout={focusedItemTimeout}
-        onVote={onVote}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onSelect={onSwitchFocus && handleItemSelect}
-        onAddExtraTime={onAddExtraTime}
-        onCancel={onSwitchFocus && handleItemCancel}
-        onDone={onSwitchFocus && onSetDone && handleItemDone}
+        itemProps={{
+          focusedItemTimeout,
+          onVote,
+          onEdit,
+          onDelete,
+          onSelect: onSwitchFocus && handleItemSelect,
+          onAddExtraTime,
+          onCancel: onSwitchFocus && handleItemCancel,
+          onDone: onSwitchFocus && onSetDone && handleItemDone,
+        }}
       />
     </section>
   );

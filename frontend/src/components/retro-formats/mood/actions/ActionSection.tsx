@@ -4,13 +4,24 @@ import ActionItem from './ActionItem';
 import ItemColumn from '../ItemColumn';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
+import RetroItem from '../../../../data/RetroItem';
 
-function actionItemWithinRange(from, to) {
-  return (item) => (
+function actionItemWithinRange(from: number, to: number) {
+  return (item: RetroItem): boolean => (
     item.category === 'action' &&
     item.created >= from &&
     item.created < to
   );
+}
+
+interface PropsT {
+  title: string;
+  items: RetroItem[];
+  rangeFrom: number;
+  rangeTo: number;
+  onSetDone?: (id: string, done: boolean) => void;
+  onEdit?: (id: string, message: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 const ActionSection = ({
@@ -21,17 +32,19 @@ const ActionSection = ({
   onSetDone,
   onEdit,
   onDelete,
-}) => (
+}: PropsT): React.ReactElement => (
   <section>
     <header>
       <h3>{title}</h3>
     </header>
-    <ItemColumn
+    <ItemColumn<React.ComponentPropsWithRef<typeof ActionItem>>
       items={items.filter(actionItemWithinRange(rangeFrom, rangeTo))}
       ItemType={ActionItem}
-      onSetDone={onSetDone}
-      onEdit={onEdit}
-      onDelete={onDelete}
+      itemProps={{
+        onSetDone,
+        onEdit,
+        onDelete,
+      }}
     />
   </section>
 );
@@ -49,9 +62,9 @@ ActionSection.propTypes = {
 ActionSection.defaultProps = {
   rangeFrom: Number.NEGATIVE_INFINITY,
   rangeTo: Number.POSITIVE_INFINITY,
-  onSetDone: null,
-  onEdit: null,
-  onDelete: null,
+  onSetDone: undefined,
+  onEdit: undefined,
+  onDelete: undefined,
 };
 
 forbidExtraProps(ActionSection);

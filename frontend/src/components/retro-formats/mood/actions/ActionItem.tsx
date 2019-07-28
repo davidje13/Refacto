@@ -7,13 +7,21 @@ import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './ActionItem.less';
+import RetroItem from '../../../../data/RetroItem';
+
+interface PropsT {
+  item: RetroItem;
+  onSetDone?: (id: string, done: boolean) => void;
+  onEdit?: (id: string, message: string) => void;
+  onDelete?: (id: string) => void;
+}
 
 const ActionItem = ({
   item,
   onSetDone,
   onEdit,
   onDelete,
-}) => {
+}: PropsT): React.ReactElement => {
   const handleToggleDone = useBoundCallback(onSetDone, item.id, !item.done);
   const handleDelete = useBoundCallback(onDelete, item.id);
 
@@ -22,7 +30,7 @@ const ActionItem = ({
   const handleCancelEdit = useBoundCallback(setEditing, false);
   const handleSaveEdit = useCallback((message) => {
     setEditing(false);
-    onEdit(item.id, message);
+    onEdit!(item.id, message);
   }, [setEditing, onEdit, item.id]);
 
   if (editing) {
@@ -64,9 +72,9 @@ ActionItem.propTypes = {
 };
 
 ActionItem.defaultProps = {
-  onSetDone: null,
-  onEdit: null,
-  onDelete: null,
+  onSetDone: undefined,
+  onEdit: undefined,
+  onDelete: undefined,
 };
 
 forbidExtraProps(ActionItem, { alsoAllow: ['focused'] });
