@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import RetroLink from './RetroLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetroSummary } from '../../api/dataStructurePropTypes';
+import RetroSummary from '../../data/RetroSummary';
 
-const RetroList = ({ retros }) => {
+interface PropsT {
+  retros: RetroSummary[];
+}
+
+const RetroList = ({ retros }: PropsT): React.ReactElement => {
   if (!retros.length) {
     return (
       <p>You do not have any retros yet!</p>

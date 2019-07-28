@@ -1,5 +1,5 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, StaticRouterContext } from 'react-router-dom';
 import { render, fireEvent } from '@testing-library/react';
 import { queries, text } from '../../test-helpers/queries';
 
@@ -7,7 +7,7 @@ import RetroLink from './RetroLink';
 
 describe('RetroLink', () => {
   it('links to the retro slug', () => {
-    const context = {};
+    const context: StaticRouterContext = {};
     const dom = render((
       <StaticRouter location="/" context={context}>
         <RetroLink name="Foo" slug="bar" />

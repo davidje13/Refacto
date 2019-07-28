@@ -4,7 +4,12 @@ import WrappedButton from '../common/WrappedButton';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './ArchivePopup.less';
 
-const ArchivePopup = ({ onConfirm, onCancel }) => (
+interface PropsT {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const ArchivePopup = ({ onConfirm, onCancel }: PropsT): React.ReactElement => (
   <div className="popup-archive">
     <p>Archive and clear this retro?</p>
     <p>

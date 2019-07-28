@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 
-const RetroLink = ({ name, slug }) => (
+interface PropsT {
+  name: string;
+  slug: string;
+}
+
+const RetroLink = ({ name, slug }: PropsT): React.ReactElement => (
   <Link to={`/retros/${slug}`}>
     <div className="retro-link">{ name }</div>
   </Link>

@@ -9,7 +9,7 @@ import {
 } from '../../api/api';
 import './RetroForm.less';
 
-function makeSlug(text) {
+function makeSlug(text: string): string {
   return text.toLowerCase()
     .replace(/['"]/g, '')
     .replace(/[^a-z0-9_]+/g, '-')
@@ -17,18 +17,40 @@ function makeSlug(text) {
     .replace(/^[-_]+|[-_]+$/g, '');
 }
 
-class RetroForm extends React.PureComponent {
-  static propTypes = {
+interface CreationT {
+  id: string;
+  name: string;
+  slug: string;
+  password: string;
+}
+
+interface PropsT {
+  defaultSlug?: string;
+  userToken: string;
+  onCreate: (data: CreationT) => void;
+}
+
+interface StateT {
+  name: string;
+  slug: string;
+  password: string;
+  passwordConf: string;
+  sending: boolean;
+  error: string | null;
+}
+
+class RetroForm extends React.PureComponent<PropsT, StateT> {
+  public static propTypes = {
     userToken: PropTypes.string.isRequired,
     onCreate: PropTypes.func.isRequired,
     defaultSlug: PropTypes.string,
   };
 
-  static defaultProps = {
-    defaultSlug: null,
+  public static defaultProps = {
+    defaultSlug: undefined,
   };
 
-  constructor(props) {
+  public constructor(props: PropsT) {
     super(props);
 
     this.state = {
@@ -41,7 +63,7 @@ class RetroForm extends React.PureComponent {
     };
   }
 
-  handleSubmit = async (e) => {
+  public handleSubmit = async (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault();
 
     const {
@@ -96,23 +118,23 @@ class RetroForm extends React.PureComponent {
     }
   };
 
-  handleChangeName = (e) => {
+  public handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ name: e.target.value });
   };
 
-  handleChangeSlug = (e) => {
+  public handleChangeSlug = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ slug: e.target.value });
   };
 
-  handleChangePassword = (e) => {
+  public handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ password: e.target.value });
   };
 
-  handleChangePasswordConfirmation = (e) => {
+  public handleChangePasswordConfirmation = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ passwordConf: e.target.value });
   };
 
-  render() {
+  public render(): React.ReactElement {
     const {
       name,
       slug,
@@ -165,7 +187,7 @@ class RetroForm extends React.PureComponent {
             value={password}
             onChange={this.handleChangePassword}
             autoComplete="off"
-            minLength="8"
+            minLength={8}
             required
           />
         </label>
