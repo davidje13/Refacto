@@ -5,13 +5,21 @@ import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
+import RetroItem from '../../../../data/RetroItem';
+
+interface PropsT {
+  item: RetroItem;
+  onSelect?: () => void;
+  onVote?: () => void;
+  onEdit?: () => void;
+}
 
 const MoodItemPlain = ({
   item,
   onSelect,
   onVote,
   onEdit,
-}) => (
+}: PropsT): React.ReactElement => (
   <div className={classNames('mood-item', { done: item.done })}>
     <WrappedButton className="message" onClick={onSelect}>
       { item.message }
@@ -34,9 +42,9 @@ MoodItemPlain.propTypes = {
 };
 
 MoodItemPlain.defaultProps = {
-  onSelect: null,
-  onVote: null,
-  onEdit: null,
+  onSelect: undefined,
+  onVote: undefined,
+  onEdit: undefined,
 };
 
 forbidExtraProps(MoodItemPlain);

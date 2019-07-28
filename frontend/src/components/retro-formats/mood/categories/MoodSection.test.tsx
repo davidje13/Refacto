@@ -10,7 +10,7 @@ import MoodItem from './MoodItem';
 jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
 jest.mock('../../../common/ExpandingTextEntry', () => mockElement('mock-expanding-text-entry'));
 
-const nop = () => {};
+const nop = (): void => {};
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {

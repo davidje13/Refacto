@@ -1,6 +1,4 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
 import classNames from 'classnames';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
@@ -19,8 +17,6 @@ import useBoxed from '../../../hooks/useBoxed';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
 import useDispatchAction from '../../../hooks/useDispatchAction';
-import forbidExtraProps from '../../../helpers/forbidExtraProps';
-import { propTypesShapeRetroData } from '../../../api/dataStructurePropTypes';
 import './MoodRetro.less';
 
 interface Category {
@@ -47,12 +43,12 @@ interface PropsT {
     focusedItemTimeout?: number;
   };
   retroData: RetroData;
+  dispatch?: (spec: RetroSpec) => void;
   onComplete: () => void;
-  dispatch: (spec: RetroSpec) => void;
-  archive: () => void;
+  archive: boolean;
 }
 
-const MoodRetro = ({
+export default ({
   retroState: {
     focusedItemId = null,
     focusedItemTimeout = 0,
@@ -80,10 +76,10 @@ const MoodRetro = ({
     const focusedId = refFocusedItemId.current;
 
     if (markPreviousDone && focusedId !== null && id !== focusedId) {
-      dispatch(setRetroItemDone(focusedId, true));
+      dispatch!(setRetroItemDone(focusedId, true));
     }
 
-    dispatch(setRetroState({
+    dispatch!(setRetroState({
       focusedItemId: id,
       focusedItemTimeout: Date.now() + (5 * 60 * 1000 + 999),
     }));
@@ -159,18 +155,3 @@ const MoodRetro = ({
     </div>
   );
 };
-
-MoodRetro.propTypes = {
-  retroState: PropTypes.shape({
-    focusedItemId: PropTypes.string,
-    focusedItemTimeout: PropTypes.number,
-  }).isRequired,
-  retroData: propTypesShapeRetroData.isRequired,
-  dispatch: nullable(PropTypes.func).isRequired,
-  onComplete: PropTypes.func.isRequired,
-  archive: PropTypes.bool.isRequired,
-};
-
-forbidExtraProps(MoodRetro);
-
-export default MoodRetro;

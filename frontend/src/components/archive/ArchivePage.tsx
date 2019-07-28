@@ -49,6 +49,7 @@ const ArchivePage = ({
           retroData: archive.data,
           retroState: {},
           archive: true,
+          onComplete: (): void => {},
         } : null}
       />
     </article>

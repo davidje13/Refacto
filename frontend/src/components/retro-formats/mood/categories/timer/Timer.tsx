@@ -5,7 +5,12 @@ import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
-const Timer = ({ targetTime, onAddExtraTime }) => {
+interface PropsT {
+  targetTime: number;
+  onAddExtraTime?: (time: number) => void;
+}
+
+const Timer = ({ targetTime, onAddExtraTime }: PropsT): React.ReactElement => {
   const remaining = useCountdown(targetTime, 1000);
 
   let component;
@@ -24,7 +29,7 @@ Timer.propTypes = {
 };
 
 Timer.defaultProps = {
-  onAddExtraTime: null,
+  onAddExtraTime: undefined,
 };
 
 forbidExtraProps(Timer);

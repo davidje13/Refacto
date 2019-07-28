@@ -110,8 +110,9 @@ const RetroPage = ({
         componentProps={retro ? {
           retroData: retro.data,
           retroState: retro.state,
-          dispatch: retroDispatch,
+          dispatch: retroDispatch || undefined,
           onComplete: showArchivePopup,
+          archive: false,
         } : null}
       />
       <Popup data={popup} onClose={hideArchivePopup} />

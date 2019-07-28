@@ -5,6 +5,15 @@ import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
+import RetroItem from '../../../../data/RetroItem';
+
+interface PropsT {
+  item: RetroItem;
+  focusedItemTimeout: number;
+  onAddExtraTime?: (time: number) => void;
+  onCancel?: () => void;
+  onDone?: () => void;
+}
 
 const MoodItemFocused = ({
   item,
@@ -12,7 +21,7 @@ const MoodItemFocused = ({
   onAddExtraTime,
   onCancel,
   onDone,
-}) => (
+}: PropsT): React.ReactElement => (
   <div className="mood-item focused">
     <div className="message">{ item.message }</div>
     <VoteCount votes={item.votes} />
@@ -36,9 +45,9 @@ MoodItemFocused.propTypes = {
 
 MoodItemFocused.defaultProps = {
   focusedItemTimeout: 0,
-  onAddExtraTime: null,
-  onCancel: null,
-  onDone: null,
+  onAddExtraTime: undefined,
+  onCancel: undefined,
+  onDone: undefined,
 };
 
 forbidExtraProps(MoodItemFocused);

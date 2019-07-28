@@ -3,10 +3,15 @@ import PropTypes from 'prop-types';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import WrappedButton from '../../../common/WrappedButton';
 
+interface PropsT {
+  votes: number;
+  onVote?: () => void;
+}
+
 const VoteCount = ({
   votes,
   onVote,
-}) => (
+}: PropsT): React.ReactElement => (
   <WrappedButton
     className="vote"
     title="Agree with this"
@@ -23,7 +28,7 @@ VoteCount.propTypes = {
 };
 
 VoteCount.defaultProps = {
-  onVote: null,
+  onVote: undefined,
 };
 
 forbidExtraProps(VoteCount);

@@ -6,7 +6,7 @@ import MoodRetro from './MoodRetro';
 
 const emptyRetroData = makeRetroData({ format: 'mood' });
 
-const nop = () => {};
+const nop = (): void => {};
 
 describe('MoodRetro', () => {
   it('renders without error', () => {

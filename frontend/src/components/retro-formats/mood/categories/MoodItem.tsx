@@ -7,6 +7,20 @@ import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './MoodItem.less';
+import RetroItem from '../../../../data/RetroItem';
+
+interface PropsT {
+  item: RetroItem;
+  focused: boolean;
+  focusedItemTimeout: number;
+  onEdit?: (id: string, message: string) => void;
+  onAddExtraTime?: (time: number) => void;
+  onVote?: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onSelect?: (id: string) => void;
+  onCancel?: (id: string) => void;
+  onDone?: (id: string) => void;
+}
 
 const MoodItem = ({
   item,
@@ -19,7 +33,7 @@ const MoodItem = ({
   onSelect,
   onCancel,
   onDone,
-}) => {
+}: PropsT): React.ReactElement => {
   const handleVote = useBoundCallback(onVote, item.id);
   const handleDelete = useBoundCallback(onDelete, item.id);
   const handleSelect = useBoundCallback(onSelect, item.id);
@@ -31,7 +45,7 @@ const MoodItem = ({
   const handleCancelEdit = useBoundCallback(setEditing, false);
   const handleSaveEdit = useCallback((message) => {
     setEditing(false);
-    onEdit(item.id, message);
+    onEdit!(item.id, message);
   }, [setEditing, onEdit, item.id]);
 
   if (editing) {
@@ -62,7 +76,7 @@ const MoodItem = ({
     <MoodItemPlain
       item={item}
       onVote={handleVote}
-      onEdit={onEdit ? handleBeginEdit : null}
+      onEdit={onEdit ? handleBeginEdit : undefined}
       onSelect={handleSelect}
     />
   );
@@ -84,13 +98,13 @@ MoodItem.propTypes = {
 MoodItem.defaultProps = {
   focused: false,
   focusedItemTimeout: 0,
-  onVote: null,
-  onEdit: null,
-  onDelete: null,
-  onSelect: null,
-  onAddExtraTime: null,
-  onCancel: null,
-  onDone: null,
+  onVote: undefined,
+  onEdit: undefined,
+  onDelete: undefined,
+  onSelect: undefined,
+  onAddExtraTime: undefined,
+  onCancel: undefined,
+  onDone: undefined,
 };
 
 forbidExtraProps(MoodItem);

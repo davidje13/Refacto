@@ -7,7 +7,7 @@ import forbidExtraProps from '../../../helpers/forbidExtraProps';
 
 interface PropsT {
   message: string;
-  onSubmit: () => void;
+  onSubmit: (message: string) => void;
   onCancel?: () => void;
   onDelete?: () => void;
   className?: string;

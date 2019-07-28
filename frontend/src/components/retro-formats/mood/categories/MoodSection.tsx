@@ -7,6 +7,23 @@ import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
+import RetroItem from '../../../../data/RetroItem';
+
+interface PropsT {
+  category: string;
+  categoryLabel: string;
+  items: RetroItem[];
+  addItemPlaceholder: string;
+  onAddItem?: (category: string, message: string) => void;
+  onVote?: (id: string) => void;
+  onEdit?: (id: string, message: string) => void;
+  onDelete?: (id: string) => void;
+  onSetDone?: (id: string, done: boolean) => void;
+  onSwitchFocus?: (id: string | null, markPreviousDone: boolean) => void;
+  onAddExtraTime?: (time: number) => void;
+  focusedItemId: string | null;
+  focusedItemTimeout: number;
+}
 
 const MoodSection = ({
   category,
@@ -22,11 +39,11 @@ const MoodSection = ({
   onAddExtraTime,
   focusedItemId,
   focusedItemTimeout,
-}) => {
+}: PropsT): React.ReactElement => {
   const handleAddItem = useBoundCallback(onAddItem, category);
 
   const handleItemSelect = useCallback((id) => {
-    onSwitchFocus(id, true);
+    onSwitchFocus!(id, true);
   }, [onSwitchFocus]);
 
   const handleItemCancel = useCallback((id) => {
@@ -34,19 +51,19 @@ const MoodSection = ({
     if (onSetDone) {
       onSetDone(id, false);
     }
-    onSwitchFocus(null, false);
+    onSwitchFocus!(null, false);
   }, [onSwitchFocus, onSetDone]);
 
   const handleItemDone = useCallback((id) => {
-    onSetDone(id, true);
-    onSwitchFocus(null, false);
+    onSetDone!(id, true);
+    onSwitchFocus!(null, false);
   }, [onSwitchFocus, onSetDone]);
 
   return (
     <section className={category}>
       <header>
         <h2 title={categoryLabel}><FaceIcon type={category} /></h2>
-        { onAddItem && (
+        { handleAddItem && (
           <ExpandingTextEntry
             onSubmit={handleAddItem}
             submitButtonTitle="Add"
@@ -90,13 +107,13 @@ MoodSection.propTypes = {
 
 MoodSection.defaultProps = {
   addItemPlaceholder: '',
-  onAddItem: null,
-  onVote: null,
-  onEdit: null,
-  onDelete: null,
-  onSwitchFocus: null,
-  onSetDone: null,
-  onAddExtraTime: null,
+  onAddItem: undefined,
+  onVote: undefined,
+  onEdit: undefined,
+  onDelete: undefined,
+  onSwitchFocus: undefined,
+  onSetDone: undefined,
+  onAddExtraTime: undefined,
   focusedItemId: null,
   focusedItemTimeout: 0,
 };

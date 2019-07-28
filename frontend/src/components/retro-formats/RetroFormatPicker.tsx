@@ -7,16 +7,16 @@ import { propTypesShapeRetroData } from '../../api/dataStructurePropTypes';
 import RetroData from '../../data/RetroData';
 import { RetroSpec } from '../../actions/retro';
 
-const formats = new Map();
-formats.set('mood', MoodRetro);
-
 interface PropsT {
   retroState: object;
   retroData: RetroData;
-  dispatch?: ((spec: RetroSpec) => void) | null;
-  onComplete?: () => void;
-  archive?: boolean;
+  dispatch?: (spec: RetroSpec) => void;
+  onComplete: () => void;
+  archive: boolean;
 }
+
+const formats = new Map<string, React.ComponentType<PropsT>>();
+formats.set('mood', MoodRetro);
 
 const RetroFormatPicker = (props: PropsT): React.ReactElement => {
   const { retroData } = props;
@@ -34,7 +34,7 @@ RetroFormatPicker.propTypes = {
 };
 
 RetroFormatPicker.defaultProps = {
-  dispatch: null,
+  dispatch: undefined,
   onComplete: (): void => {},
   archive: false,
 };

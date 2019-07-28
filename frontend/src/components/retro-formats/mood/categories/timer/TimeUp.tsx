@@ -4,7 +4,11 @@ import WrappedButton from '../../../../common/WrappedButton';
 import useBoundCallback from '../../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
-const TimeUp = ({ onAddExtraTime }) => {
+interface PropsT {
+  onAddExtraTime?: (time: number) => void;
+}
+
+const TimeUp = ({ onAddExtraTime }: PropsT): React.ReactElement => {
   const extraMinutes = 2;
 
   const extraTime = extraMinutes * 60 * 1000 + 999;
@@ -26,7 +30,7 @@ TimeUp.propTypes = {
 };
 
 TimeUp.defaultProps = {
-  onAddExtraTime: null,
+  onAddExtraTime: undefined,
 };
 
 forbidExtraProps(TimeUp);
