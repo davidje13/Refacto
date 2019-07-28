@@ -2,7 +2,7 @@ import React from 'react';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import './Footer.less';
 
-const Footer = () => (
+const Footer = (): React.ReactElement => (
   <footer className="page-footer">
     Refacto (
     <a

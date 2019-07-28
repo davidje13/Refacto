@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UnknownRetro = () => (
+const UnknownRetro = (): React.ReactElement => (
   <div className="retro-format-unknown">
     <p>Please refresh the page to see this retro.</p>
   </div>

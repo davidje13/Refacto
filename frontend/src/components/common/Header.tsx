@@ -6,11 +6,13 @@ import HeaderLinkItem, { propTypesLink, LinkPropsT } from './HeaderLinkItem';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './Header.less';
 
+export type HeaderLinks = (LinkPropsT | null)[];
+
 interface PropsT {
   documentTitle: string;
   title: string;
   backLink: LinkPropsT | null;
-  links: (LinkPropsT | null)[];
+  links: HeaderLinks;
 }
 
 function nonNull<T>(o: T | null): o is T {

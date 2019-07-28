@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../common/Header';
+import Header, { HeaderLinks } from '../common/Header';
 import LoginForm from '../login/LoginForm';
 import useUserToken from '../../hooks/data/useUserToken';
 import './WelcomePage.less';
 
-const WelcomePage = () => {
+const WelcomePage = (): React.ReactElement => {
   const [userToken] = useUserToken();
 
-  let createLink;
-  let links;
+  let createLink: React.ReactNode;
+  let links: HeaderLinks;
 
   if (userToken) {
     createLink = (

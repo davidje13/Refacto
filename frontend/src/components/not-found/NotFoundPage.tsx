@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../common/Header';
 import './NotFoundPage.less';
 
-const NotFoundPage = () => (
+const NotFoundPage = (): React.ReactElement => (
   <article className="page-not-found">
     <Header
       documentTitle="Not Found - Refacto"

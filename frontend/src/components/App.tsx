@@ -1,5 +1,10 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import {
+  Route,
+  Switch,
+  Redirect,
+  RouteComponentProps,
+} from 'react-router-dom';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import LoginCallback from './login/LoginCallback';
@@ -12,10 +17,13 @@ import ArchivePage from './archive/ArchivePage';
 import NotFoundPage from './not-found/NotFoundPage';
 import './App.less';
 
-/* eslint-disable-next-line react/prop-types */ // utility function
-const withParams = (Page) => ({ match }) => (<Page {...match.params} />);
+const withParams = (
+  Page: React.ComponentType<any>,
+) => ({ match }: RouteComponentProps): React.ReactElement => (
+  <Page {...match.params} />
+);
 
-const App = () => (
+const App = (): React.ReactElement => (
   <React.Fragment>
     <Switch>
       <Route path="/sso/:service" exact render={withParams(LoginCallback)} />
