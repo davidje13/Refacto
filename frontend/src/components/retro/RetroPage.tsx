@@ -15,12 +15,19 @@ import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
 import './RetroPage.less';
 
+interface PropsT {
+  slug: string;
+  retroId: string | null;
+  retroToken: string | null;
+  retroTokenError?: string | null;
+}
+
 const RetroPage = ({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}) => {
+}: PropsT): React.ReactElement => {
   const [
     retro,
     retroDispatch,
@@ -30,7 +37,7 @@ const RetroPage = ({
   const showArchivePopup = useBoundCallback(setArchivePopupVisible, true);
   const hideArchivePopup = useBoundCallback(setArchivePopupVisible, false);
 
-  const isArchiving = useRef();
+  const isArchiving = useRef(false);
   const performArchive = useCallback(() => {
     if (isArchiving.current) {
       return;
@@ -38,12 +45,12 @@ const RetroPage = ({
     isArchiving.current = true;
 
     archiveService.create({
-      retroId,
-      data: retro.data,
-      retroToken,
+      retroId: retroId!,
+      data: retro!.data,
+      retroToken: retroToken!,
     }).then(() => {
       isArchiving.current = false;
-      retroDispatch(clearCovered());
+      retroDispatch!(clearCovered());
       hideArchivePopup();
     });
   }, [
@@ -97,14 +104,15 @@ const RetroPage = ({
           { label: 'Archives', action: `/retros/${slug}/archives` },
         ]}
       />
-      <Loader
-        loading={!retro}
+      <Loader<typeof RetroFormatPicker>
         error={retroTokenError || retroError}
         Component={RetroFormatPicker}
-        retroData={retro ? retro.data : null}
-        retroState={retro ? retro.state : null}
-        dispatch={retroDispatch}
-        onComplete={showArchivePopup}
+        componentProps={retro ? {
+          retroData: retro.data,
+          retroState: retro.state,
+          dispatch: retroDispatch,
+          onComplete: showArchivePopup,
+        } : null}
       />
       <Popup data={popup} onClose={hideArchivePopup} />
     </article>

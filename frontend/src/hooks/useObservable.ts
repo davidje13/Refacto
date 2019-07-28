@@ -6,7 +6,7 @@ interface ObservableOptions {
   materialized?: MaterializedOptionT;
 }
 
-export type ObservableState<T> = [T | null, any];
+export type ObservableState<T> = [T | null, string | null];
 
 function isMaterialized(
   data: unknown,

@@ -10,7 +10,10 @@ const Component = mockElement('my-component');
 describe('Loader', () => {
   it('displays a loading message and no content while loading', () => {
     const dom = render((
-      <Loader Component={Component} loading />
+      <Loader
+        Component={Component}
+        componentProps={null}
+      />
     ), { queries });
 
     expect(dom).toContainElementWith(textFragment('Loading'));
@@ -19,7 +22,11 @@ describe('Loader', () => {
 
   it('displays custom loading messages', () => {
     const dom = render((
-      <Loader Component={Component} loading loadingMessage="foobar" />
+      <Loader
+        Component={Component}
+        componentProps={null}
+        loadingMessage="foobar"
+      />
     ), { queries });
 
     expect(dom).toContainElementWith(textFragment('foobar'));
@@ -27,7 +34,10 @@ describe('Loader', () => {
 
   it('displays content and no loading message when loaded', () => {
     const dom = render((
-      <Loader Component={Component} custom="foo" />
+      <Loader
+        Component={Component}
+        componentProps={{ custom: 'foo' }}
+      />
     ), { queries });
 
     expect(dom).not.toContainElementWith(textFragment('Loading'));

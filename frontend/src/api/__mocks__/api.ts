@@ -3,9 +3,9 @@ import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
 
 class FakeRetroTracker {
-  private data = new Map();
+  public subscribed = 0;
 
-  private subscribed = 0;
+  private data = new Map();
 
   private expectedRetroToken: string | null = null;
 

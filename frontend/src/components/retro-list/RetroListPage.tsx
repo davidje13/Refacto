@@ -8,7 +8,7 @@ import useRetroList from '../../hooks/data/useRetroList';
 import RetroList from './RetroList';
 import './RetroListPage.less';
 
-const RetroListPage = () => {
+const RetroListPage = (): React.ReactElement => {
   const [userToken] = useUserToken();
   const [retroList, error] = useRetroList(userToken);
 
@@ -16,11 +16,12 @@ const RetroListPage = () => {
 
   if (userToken) {
     content = (
-      <Loader
+      <Loader<typeof RetroList>
         error={error}
-        loading={!retroList}
         Component={RetroList}
-        retros={retroList}
+        componentProps={retroList ? {
+          retros: retroList,
+        } : null}
       />
     );
   } else {

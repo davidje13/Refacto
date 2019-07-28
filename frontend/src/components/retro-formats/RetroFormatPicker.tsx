@@ -4,11 +4,21 @@ import MoodRetro from './mood/MoodRetro';
 import UnknownRetro from './unknown/UnknownRetro';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetroData } from '../../api/dataStructurePropTypes';
+import RetroData from '../../data/RetroData';
+import { RetroSpec } from '../../actions/retro';
 
 const formats = new Map();
 formats.set('mood', MoodRetro);
 
-const RetroFormatPicker = (props) => {
+interface PropsT {
+  retroState: object;
+  retroData: RetroData;
+  dispatch?: ((spec: RetroSpec) => void) | null;
+  onComplete?: () => void;
+  archive?: boolean;
+}
+
+const RetroFormatPicker = (props: PropsT): React.ReactElement => {
   const { retroData } = props;
   const RetroType = formats.get(retroData.format) || UnknownRetro;
 
@@ -25,7 +35,7 @@ RetroFormatPicker.propTypes = {
 
 RetroFormatPicker.defaultProps = {
   dispatch: null,
-  onComplete: () => {},
+  onComplete: (): void => {},
   archive: false,
 };
 

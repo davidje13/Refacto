@@ -10,12 +10,19 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
+interface PropsT {
+  slug: string;
+  retroId: string | null;
+  retroToken: string | null;
+  retroTokenError?: string | null;
+}
+
 const ArchiveListPage = ({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}) => {
+}: PropsT): React.ReactElement => {
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archives, archivesError] = useArchiveList(retroId, retroToken);
 
@@ -28,12 +35,13 @@ const ArchiveListPage = ({
         title={`${retroName} Archives`}
         backLink={{ label: 'Back to Retro', action: `/retros/${slug}` }}
       />
-      <Loader
-        loading={!archives}
+      <Loader<typeof ArchiveList>
         error={retroTokenError || archivesError}
         Component={ArchiveList}
-        slug={slug}
-        archives={archives}
+        componentProps={archives ? {
+          slug,
+          archives,
+        } : null}
       />
     </article>
   );

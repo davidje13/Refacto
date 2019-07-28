@@ -4,9 +4,20 @@ import useMutatedCallback from './useMutatedCallback';
 // https://github.com/microsoft/TypeScript/issues/6229
 
 function useBoundCallback<R, A1, B extends any[]>(
+  fn: (a1: A1, ...args: B) => R,
+  a1: A1
+): (...args: B) => R;
+
+function useBoundCallback<R, A1, B extends any[]>(
   fn: ((a1: A1, ...args: B) => R) | undefined,
   a1: A1
 ): ((...args: B) => R) | undefined;
+
+function useBoundCallback<R, A1, A2, B extends any[]>(
+  fn: (a1: A1, a2: A2, ...args: B) => R,
+  a1: A1,
+  a2: A2,
+): (...args: B) => R;
 
 function useBoundCallback<R, A1, A2, B extends any[]>(
   fn: ((a1: A1, a2: A2, ...args: B) => R) | undefined,

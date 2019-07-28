@@ -185,7 +185,7 @@ class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
     });
   }
 
-  public render(): React.ReactNode {
+  public render(): React.ReactElement {
     const {
       placeholder,
       className,

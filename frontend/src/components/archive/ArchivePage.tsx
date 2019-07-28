@@ -11,13 +11,21 @@ import { formatDate } from '../../time/formatters';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './ArchivePage.less';
 
+interface PropsT {
+  slug: string;
+  retroId: string | null;
+  archiveId: string;
+  retroToken: string | null;
+  retroTokenError?: string | null;
+}
+
 const ArchivePage = ({
   slug,
   retroId,
   archiveId,
   retroToken,
   retroTokenError,
-}) => {
+}: PropsT): React.ReactElement => {
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archive, archiveError] = useArchive(retroId, archiveId, retroToken);
 
@@ -27,7 +35,6 @@ const ArchivePage = ({
     archiveName = `${formatDate(archive.created)} Archive`;
   }
 
-  // TODO TypeScript#16
   return (
     <article className="page-archive">
       <Header
@@ -35,13 +42,14 @@ const ArchivePage = ({
         title={`${retroName} (${archiveName})`}
         backLink={{ label: 'Archives', action: `/retros/${slug}/archives` }}
       />
-      <Loader
-        loading={!archive}
+      <Loader<typeof RetroFormatPicker>
         error={retroTokenError || archiveError}
         Component={RetroFormatPicker}
-        retroData={archive ? archive.data : null}
-        retroState={{}}
-        archive
+        componentProps={archive ? {
+          retroData: archive.data,
+          retroState: {},
+          archive: true,
+        } : null}
       />
     </article>
   );

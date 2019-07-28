@@ -4,8 +4,16 @@ import useSlug from '../../hooks/data/useSlug';
 import useRetroToken from '../../hooks/data/useRetroToken';
 import PasswordPage from '../password/PasswordPage';
 
-export default function withRetroTokenForSlug(Component) {
-  const Wrapped = ({ slug, ...params }) => {
+interface InputPropsT {
+  slug: string | null;
+}
+
+type Unwrapped<P> = Omit<P, 'retroId' | 'retroToken' | 'retroTokenError'>;
+
+export default function withRetroTokenForSlug<P extends InputPropsT>(
+  Component: React.ComponentType<P>,
+): React.ComponentType<Unwrapped<P>> {
+  const Wrapped = ({ slug, ...params }: Unwrapped<P>): React.ReactElement => {
     const [retroId, slugError] = useSlug(slug);
     const [retroToken, tokenError] = useRetroToken(retroId);
 
@@ -15,8 +23,9 @@ export default function withRetroTokenForSlug(Component) {
       return (<PasswordPage slug={slug} retroId={retroId} />);
     }
 
+    const AnyComponent = Component as React.ComponentType<any>;
     return (
-      <Component
+      <AnyComponent
         slug={slug}
         retroId={retroId}
         retroToken={retroToken}
@@ -28,7 +37,7 @@ export default function withRetroTokenForSlug(Component) {
 
   Wrapped.propTypes = {
     slug: PropTypes.string.isRequired,
-  };
+  } as any;
 
   return Wrapped;
 }
