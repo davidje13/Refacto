@@ -20,7 +20,7 @@ export default function withRetroTokenForSlug<P extends InputPropsT>(
     const error = slugError || tokenError;
 
     if (retroId && !retroToken && !error) {
-      return (<PasswordPage slug={slug} retroId={retroId} />);
+      return (<PasswordPage slug={slug!} retroId={retroId} />);
     }
 
     const AnyComponent = Component as React.ComponentType<any>;

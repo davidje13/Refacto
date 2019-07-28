@@ -5,13 +5,24 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
 import './PasswordPage.less';
 
-class PasswordPage extends React.PureComponent {
-  static propTypes = {
+interface PropsT {
+  slug: string;
+  retroId: string;
+}
+
+interface StateT {
+  password: string;
+  checking: boolean;
+  error: string | null;
+}
+
+class PasswordPage extends React.PureComponent<PropsT, StateT> {
+  public static propTypes = {
     slug: PropTypes.string.isRequired,
     retroId: PropTypes.string.isRequired,
   };
 
-  constructor(props) {
+  public constructor(props: PropsT) {
     super(props);
 
     this.state = {
@@ -21,7 +32,7 @@ class PasswordPage extends React.PureComponent {
     };
   }
 
-  handleSubmit = async (e) => {
+  public handleSubmit = async (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault();
 
     const { retroId } = this.props;
@@ -41,11 +52,11 @@ class PasswordPage extends React.PureComponent {
     }
   };
 
-  handleChangePassword = (e) => {
+  public handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ password: e.target.value });
   };
 
-  render() {
+  public render(): React.ReactElement {
     const { slug } = this.props;
     const { password, checking, error } = this.state;
 
@@ -61,7 +72,7 @@ class PasswordPage extends React.PureComponent {
             placeholder="password"
             value={password}
             onChange={this.handleChangePassword}
-            disabled={this.checking}
+            disabled={checking}
             autoComplete="off"
           />
           { checking ? (<div className="checking">&hellip;</div>) : (
