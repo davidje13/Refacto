@@ -1,21 +1,23 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { StaticRouter, StaticRouterContext } from 'react-router-dom';
+import { HelmetProvider, FilledContext } from 'react-helmet-async';
 import { render, fireEvent } from '@testing-library/react';
 import { queries, css } from '../../test-helpers/queries';
 
 import Header from './Header';
 
-HelmetProvider.canUseDOM = false;
+// https://github.com/staylor/react-helmet-async/issues/61
+(HelmetProvider as any).canUseDOM = false;
 
-function extractHelmetTitle(context) {
-  return context.helmet.title.toString().match(/>(.*)</)[1];
+function extractHelmetTitle(context: FilledContext): string {
+  const match = />(.*)</.exec(context.helmet.title.toString());
+  return match ? match[1] : '';
 }
 
 describe('Header', () => {
   it('sets the document and page title', () => {
-    const helmetContext = {};
-    const routerContext = {};
+    const routerContext: StaticRouterContext = {};
+    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
       <HelmetProvider context={helmetContext}>
@@ -33,8 +35,8 @@ describe('Header', () => {
   });
 
   it('displays a back link if specified', () => {
-    const helmetContext = {};
-    const routerContext = {};
+    const routerContext: StaticRouterContext = {};
+    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
       <HelmetProvider context={helmetContext}>
@@ -56,8 +58,8 @@ describe('Header', () => {
   });
 
   it('displays a menu of links if specified', () => {
-    const helmetContext = {};
-    const routerContext = {};
+    const routerContext: StaticRouterContext = {};
+    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
       <HelmetProvider context={helmetContext}>
@@ -81,8 +83,8 @@ describe('Header', () => {
   });
 
   it('skips null menu items', () => {
-    const helmetContext = {};
-    const routerContext = {};
+    const routerContext: StaticRouterContext = {};
+    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
       <HelmetProvider context={helmetContext}>
@@ -106,8 +108,8 @@ describe('Header', () => {
   });
 
   it('routes to the given URL when a menu item is clicked', () => {
-    const helmetContext = {};
-    const routerContext = {};
+    const routerContext: StaticRouterContext = {};
+    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
       <HelmetProvider context={helmetContext}>
@@ -130,8 +132,8 @@ describe('Header', () => {
   });
 
   it('invokes the given callback when a menu item is clicked', () => {
-    const helmetContext = {};
-    const routerContext = {};
+    const routerContext: StaticRouterContext = {};
+    const helmetContext: FilledContext = {} as any;
     const clickCallback = jest.fn().mockName('clickCallback');
 
     const dom = render((

@@ -1,16 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
+import RetroItem from '../../../data/RetroItem';
 
-function itemCreatedComparator(a, b) {
+function itemCreatedComparator(a: RetroItem, b: RetroItem): number {
   // sort newer-to-older
   return b.created - a.created;
 }
 
-function sortItems(items) {
+function sortItems(items: RetroItem[]): RetroItem[] {
   const sorted = items.slice();
   sorted.sort(itemCreatedComparator);
   return sorted;
+}
+
+interface PropsT {
+  items: RetroItem[];
+  ItemType: React.ElementType;
+  focusedItemId?: string | null;
+  [K: string]: any;
 }
 
 const ItemColumn = ({
@@ -18,7 +26,7 @@ const ItemColumn = ({
   ItemType,
   focusedItemId,
   ...props
-}) => (
+}: PropsT): React.ReactElement => (
   <ul className="item-column">
     { sortItems(items).map((item) => (
       <li key={item.id}>
