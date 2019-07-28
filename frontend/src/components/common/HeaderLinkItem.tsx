@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import WrappedButton from './WrappedButton';
 
-const HeaderLinkItem = ({ label, action, ...props }) => {
+export interface LinkPropsT extends Omit<React.HTMLAttributes<HTMLElement>, 'onClick'> {
+  label: string;
+  action: string | (() => void);
+}
+
+const HeaderLinkItem = ({
+  label,
+  action,
+  ...props
+}: LinkPropsT): React.ReactElement => {
   if (typeof action === 'string') {
     return (<Link to={action} {...props}>{ label }</Link>);
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, StaticRouterContext } from 'react-router-dom';
 import { render, fireEvent } from '@testing-library/react';
 import { formatDateTime } from '../../time/formatters';
 import { queries, css, text } from '../../test-helpers/queries';
@@ -8,7 +8,7 @@ import ArchiveLink from './ArchiveLink';
 
 describe('ArchiveLink', () => {
   it('links to the archive', () => {
-    const context = {};
+    const context: StaticRouterContext = {};
     const dom = render((
       <StaticRouter location="/" context={context}>
         <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />

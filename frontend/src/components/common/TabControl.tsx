@@ -4,13 +4,24 @@ import classNames from 'classnames';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './TabControl.less';
 
-function getActive(tabs, activeKey) {
+interface TabT {
+  key: string;
+  title: string;
+  className?: string;
+  content: React.ReactNode;
+}
+
+function getActive(tabs: TabT[], activeKey: string): TabT {
   const selected = tabs.filter(({ key }) => (key === activeKey))[0];
   return selected || tabs[0];
 }
 
-const TabControl = ({ tabs }) => {
-  const [activeKey, setActiveKey] = useState(null);
+interface PropsT {
+  tabs: TabT[];
+}
+
+const TabControl = ({ tabs }: PropsT): React.ReactElement => {
+  const [activeKey, setActiveKey] = useState('');
   const active = getActive(tabs, activeKey);
 
   const handleTabClick = useCallback((e) => {

@@ -3,19 +3,30 @@ import PropTypes from 'prop-types';
 import ArchiveLink from './ArchiveLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeArchiveSummary } from '../../api/dataStructurePropTypes';
+import RetroArchiveSummary from '../../data/RetroArchiveSummary';
 
-function archiveCreatedComparator(a, b) {
+function archiveCreatedComparator(
+  a: RetroArchiveSummary,
+  b: RetroArchiveSummary,
+): number {
   // sort newer-to-older
   return b.created - a.created;
 }
 
-function sortArchives(archives) {
+function sortArchives(
+  archives: RetroArchiveSummary[],
+): RetroArchiveSummary[] {
   const sorted = archives.slice();
   sorted.sort(archiveCreatedComparator);
   return sorted;
 }
 
-const ArchiveList = ({ slug, archives }) => {
+interface PropsT {
+  slug: string;
+  archives: RetroArchiveSummary[];
+}
+
+const ArchiveList = ({ slug, archives }: PropsT): React.ReactElement => {
   if (!archives.length) {
     return (<p>This retro has no archives.</p>);
   }

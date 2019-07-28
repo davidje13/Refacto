@@ -6,7 +6,15 @@ import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './Popup.less';
 
-const Popup = ({ data, onClose }) => {
+interface PropsT {
+  data: null | {
+    title: string;
+    content: React.ReactNode;
+  };
+  onClose?: () => void;
+}
+
+const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
   const closeHandler = useParameterlessCallback(onClose);
   if (!data) {
     return null;
@@ -18,7 +26,7 @@ const Popup = ({ data, onClose }) => {
       portalClassName=""
       overlayClassName="popup-overlay"
       className="popup-content"
-      bodyOpenClassName={null}
+      bodyOpenClassName={undefined}
       onRequestClose={closeHandler}
       aria={{ labelledby: 'modal-heading' }}
     >
@@ -37,7 +45,7 @@ Popup.propTypes = {
 };
 
 Popup.defaultProps = {
-  onClose: null,
+  onClose: undefined,
 };
 
 forbidExtraProps(Popup);

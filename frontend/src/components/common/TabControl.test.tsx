@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, RenderResult } from '@testing-library/react';
 import { queries, css } from '../../test-helpers/queries';
 
 import TabControl from './TabControl';
@@ -19,8 +19,8 @@ describe('TabControl', () => {
     },
   ];
 
-  let dom;
-  let headers;
+  let dom: RenderResult<typeof queries>;
+  let headers: HTMLElement[];
 
   beforeEach(() => {
     dom = render(<TabControl tabs={tabs} />, { queries });
