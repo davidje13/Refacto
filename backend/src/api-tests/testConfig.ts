@@ -17,16 +17,16 @@ function deepMerge<T, U>(a: T, b?: U): T & U {
   if (!isObj(a) || !isObj(b)) {
     return b as (T & U);
   }
-  const r = Object.assign({}, a) as any;
+  const r = Object.assign({}, a) as (T & U);
   Object.keys(b).forEach((k) => {
     const key = k as keyof U;
     if (Object.prototype.hasOwnProperty.call(a, key)) {
       r[key] = deepMerge((a as any)[key], b[key]);
     } else {
-      r[key] = b[key];
+      r[key] = b[key] as any;
     }
   });
-  return r as (T & U);
+  return r;
 }
 
 export default (

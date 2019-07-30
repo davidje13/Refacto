@@ -82,11 +82,8 @@ export default class ApiRetrosRouter extends Router {
       const ws = await res.accept();
 
       const onChange = (msg: ChangeInfo, id?: string): void => {
-        const message = Object.assign({}, msg);
-        if (id !== undefined) {
-          (message as any).id = id;
-        }
-        ws.send(JSON.stringify(message));
+        const data = (id !== undefined) ? { id, ...msg } : msg;
+        ws.send(JSON.stringify(data));
       };
 
       const subscription = await retroService.subscribeRetro(retroId, onChange);

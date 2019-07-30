@@ -1,4 +1,4 @@
-import WebSocketExpress, { Router } from 'websocket-express';
+import WebSocketExpress from 'websocket-express';
 import CollectionStorage from 'collection-storage';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
@@ -61,7 +61,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     retroService,
     retroArchiveService,
   ));
-  app.use(new StaticRouter(config.forwardHost) as Router);
+  app.use(new StaticRouter(config.forwardHost));
 
   const testHookApp = app as TestHookWebSocketExpress;
   testHookApp.testHooks = {
