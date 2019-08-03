@@ -22,17 +22,17 @@
     "rxjs": "^6.5.2"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-env": "^7.5.5",
     "@neutrinojs/airbnb": "^9.0.0-rc.3",
     "@neutrinojs/copy": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
     "@neutrinojs/react": "^9.0.0-rc.3",
     "@testing-library/jest-dom": "^4.0.0",
-    "@testing-library/react": "^8.0.5",
+    "@testing-library/react": "^8.0.7",
     "@types/classnames": "^2.2.9",
-    "@types/jest": "^24.0.15",
-    "@types/react": "^16.8.23",
-    "@types/react-dom": "^16.8.4",
+    "@types/jest": "^24.0.16",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.8.5",
     "@types/react-helmet": "^5.0.8",
     "@types/react-modal": "^3.8.2",
     "@types/react-router-dom": "^4.3.4",
@@ -50,8 +50,8 @@
     "react-mock-element": "git+https://github.com/davidje13/react-mock-element.git#semver:^1.0.1",
     "timezone-mock": "^1.0.8",
     "typescript": "^3.5.2",
-    "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.7.2"
   }
 }

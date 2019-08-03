@@ -15,20 +15,20 @@
     "jwt-simple": "^0.5.6",
     "mongodb": "^3.2.7",
     "node-fetch": "^2.6.0",
-    "source-map-support": "^0.5.12",
+    "source-map-support": "^0.5.13",
     "uuid": "^3.3.2",
     "websocket-express": "git+https://github.com/davidje13/websocket-express.git#semver:^1.3.5"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-env": "^7.5.5",
     "@neutrinojs/airbnb-base": "^9.0.0-rc.3",
     "@neutrinojs/copy": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
     "@neutrinojs/node": "^9.0.0-rc.3",
     "@types/bcrypt": "^3.0.0",
     "@types/http-proxy-middleware": "^0.19.2",
-    "@types/jest": "^24.0.15",
-    "@types/node-fetch": "^2.3.7",
+    "@types/jest": "^24.0.16",
+    "@types/node-fetch": "^2.5.0",
     "@types/uuid": "^3.4.5",
     "@types/webpack-env": "^1.14.0",
     "babel-plugin-transform-dynamic-import": "^2.1.0",
@@ -39,9 +39,9 @@
     "neutrino": "^9.0.0-rc.3",
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.2",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.0",
-    "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.5",
+    "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.6",
     "typescript": "^3.5.3",
-    "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5"
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6"
   }
 }
