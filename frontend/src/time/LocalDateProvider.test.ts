@@ -1,4 +1,4 @@
-import timezoneMock from 'timezone-mock';
+import timezoneMock, { TimeZone } from 'timezone-mock';
 
 import LocalDateProvider from './LocalDateProvider';
 
@@ -62,7 +62,7 @@ describe('LocalDateProvider', () => {
   });
 
   interface TimezoneCheckOpts {
-    timezoneName: string;
+    timezoneName: TimeZone;
     tsSwitch1: number; // exact UTC time of switch from winter to summer
     tsSwitch2: number; // exact UTC time of switch from summer to winter
     tsSwitch1Winter: number; // local midnight before switch1

@@ -48,7 +48,7 @@
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.2",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.0",
     "react-mock-element": "git+https://github.com/davidje13/react-mock-element.git#semver:^1.0.1",
-    "timezone-mock": "^1.0.5",
+    "timezone-mock": "^1.0.8",
     "typescript": "^3.5.2",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
