@@ -4,4 +4,5 @@
 // (without this hack, it is impossible to get a consistent
 // relative __dirname in any non-root-directory script)
 
-export default __dirname;
+const basedir = __dirname;
+export default basedir;
