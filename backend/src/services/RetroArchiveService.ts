@@ -13,7 +13,7 @@ export default class RetroArchiveService {
 
   public async createArchive(
     retroId: string,
-    { format = '', items = [] }: Partial<RetroData>,
+    { format, items }: RetroData,
   ): Promise<string> {
     const id = uuidv4();
     const created = Date.now();
@@ -22,7 +22,8 @@ export default class RetroArchiveService {
       id,
       retroId,
       created,
-      data: { format, items },
+      format,
+      items,
     });
 
     return id;

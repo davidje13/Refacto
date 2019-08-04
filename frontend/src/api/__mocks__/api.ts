@@ -1,7 +1,7 @@
 import { of as rxjsOf, throwError, Observable } from 'rxjs';
 import { Spec } from 'json-immutability-helper';
 import {
-  MutableRetro,
+  Retro,
   RetroArchive,
   RetroSummary,
 } from 'refacto-entities';
@@ -10,14 +10,14 @@ import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
 import { ClientConfig } from '../ConfigService';
 
 export type RetroState = {
-  retro: MutableRetro;
+  retro: Retro;
   error: null;
 } | {
   retro: null;
   error: any;
 };
 
-type RetroDispatch = (spec: Spec<MutableRetro>) => void;
+type RetroDispatch = (spec: Spec<Retro>) => void;
 type RetroStateCallback = (state: RetroState) => void;
 
 class FakeRetroTracker {

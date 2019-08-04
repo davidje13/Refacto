@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
-import { RetroData } from 'refacto-entities';
+import { RetroItem } from 'refacto-entities';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
@@ -38,11 +38,11 @@ const addExtraTime = (duration: number): RetroSpec => setRetroState({
 });
 
 interface PropsT {
+  retroItems: RetroItem[];
   retroState: {
     focusedItemId?: string | null;
     focusedItemTimeout?: number;
   };
-  retroData: RetroData;
   dispatch?: (spec: RetroSpec) => void;
   onComplete: () => void;
   archive: boolean;
@@ -53,9 +53,7 @@ export default ({
     focusedItemId = null,
     focusedItemTimeout = 0,
   },
-  retroData: {
-    items,
-  },
+  retroItems,
   onComplete, /* eslint-disable-line @typescript-eslint/no-unused-vars */ // TODO
   dispatch,
   archive,
@@ -88,7 +86,7 @@ export default ({
   const createMoodSection = (category: Category): React.ReactElement => (
     <MoodSection
       key={category.id}
-      items={items}
+      items={retroItems}
       addItemPlaceholder={category.placeholder}
       onAddItem={handleAddItem}
       onVote={handleUpvoteItem}
@@ -106,7 +104,7 @@ export default ({
 
   const actionSection = (
     <ActionsPane
-      items={items}
+      items={retroItems}
       onAddItem={handleAddActionItem}
       onSetDone={handleSetItemDone}
       onEdit={handleEditItem}

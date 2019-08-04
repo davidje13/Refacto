@@ -1,8 +1,7 @@
-import { RetroData } from 'refacto-entities';
+import { Retro, RetroData } from 'refacto-entities';
 
 interface ArchiveOptions {
-  retroId: string;
-  data: RetroData;
+  retro: Retro;
   retroToken: string;
 }
 
@@ -12,12 +11,15 @@ export default class ArchiveService {
   ) {}
 
   public async create({
-    retroId,
-    data,
+    retro,
     retroToken,
   }: ArchiveOptions): Promise<string> {
+    const retroData: RetroData = {
+      format: retro.format,
+      items: retro.items,
+    };
     const response = await fetch(
-      `${this.apiBase}/retros/${retroId}/archives`,
+      `${this.apiBase}/retros/${retro.id}/archives`,
       {
         method: 'POST',
         cache: 'no-cache',
@@ -25,7 +27,7 @@ export default class ArchiveService {
           Authorization: `Bearer ${retroToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(retroData),
       },
     );
     const body = await response.json();

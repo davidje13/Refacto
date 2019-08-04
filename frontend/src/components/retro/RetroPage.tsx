@@ -45,8 +45,7 @@ const RetroPage = ({
     isArchiving.current = true;
 
     archiveService.create({
-      retroId: retroId!,
-      data: retro!.data,
+      retro: retro!,
       retroToken: retroToken!,
     }).then(() => {
       isArchiving.current = false;
@@ -86,8 +85,7 @@ const RetroPage = ({
   const canArchive = Boolean((
     retroDispatch &&
     retro && // TODO TypeScript#16
-    retro.data &&
-    retro.data.items.length > 0
+    retro.items.length > 0
   ));
 
   // TODO TypeScript#16
@@ -108,7 +106,8 @@ const RetroPage = ({
         error={retroTokenError || retroError}
         Component={RetroFormatPicker}
         componentProps={retro ? {
-          retroData: retro.data,
+          retroFormat: retro.format,
+          retroItems: retro.items,
           retroState: retro.state,
           dispatch: retroDispatch || undefined,
           onComplete: showArchivePopup,

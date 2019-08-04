@@ -8,8 +8,8 @@ describe('RetroArchiveService', () => {
   beforeEach(async () => {
     const db = new MemoryDb();
     service = new RetroArchiveService(db);
-    a1 = await service.createArchive('my-retro-id', { format: 'foo' });
-    await service.createArchive('my-retro-id', { format: 'bar' });
+    a1 = await service.createArchive('my-retro-id', { format: 'foo', items: [] });
+    await service.createArchive('my-retro-id', { format: 'bar', items: [] });
   });
 
   describe('getRetroArchive', () => {
@@ -17,7 +17,7 @@ describe('RetroArchiveService', () => {
       const archive = await service.getRetroArchive('my-retro-id', a1);
 
       expect(archive).not.toBeNull();
-      expect(archive!.data.format).toEqual('foo');
+      expect(archive!.format).toEqual('foo');
     });
 
     it('returns null if the archive is not in the retro', async () => {

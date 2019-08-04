@@ -46,7 +46,8 @@ const ArchivePage = ({
         error={retroTokenError || archiveError}
         Component={RetroFormatPicker}
         componentProps={archive ? {
-          retroData: archive.data,
+          retroFormat: archive.format,
+          retroItems: archive.items,
           retroState: {},
           archive: true,
           onComplete: (): void => {},

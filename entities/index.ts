@@ -18,78 +18,49 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
   }, details);
 }
 
-export interface RetroData {
-  format: string;
-  items: RetroItem[];
-}
-
-export function makeRetroData({
-  format = '',
-  items = [],
-}: Partial<RetroData> = {}): RetroData {
-  return { format, items };
-}
-
-export interface MutableRetro {
-  name: string;
-  state: object;
-  data: RetroData;
-}
-
-export function makeMutableRetro({
-  format,
-  items,
-  ...details
-}: Partial<RetroData & MutableRetro> = {}): MutableRetro {
-  return Object.assign({
-    name: '',
-    state: {},
-    data: makeRetroData({ format, items }),
-  }, details);
-}
-
-export interface Retro {
-  id: string;
-  ownerId: string;
-  slug: string;
-  retro: MutableRetro;
-}
-
 export interface RetroSummary {
   id: string;
   slug: string;
   name: string;
 }
 
-export function makeRetroSummary(details: Partial<RetroSummary> = {}): RetroSummary {
+export interface RetroData {
+  format: string;
+  items: RetroItem[];
+}
+
+export interface Retro extends RetroSummary, RetroData {
+  ownerId: string;
+  state: object;
+}
+
+export function makeRetro(details: Partial<Retro> = {}): Retro {
   return Object.assign({
     id: '',
     slug: '',
     name: '',
-  }, details);
-}
-
-export interface RetroArchive {
-  id: string;
-  retroId: string;
-  created: number;
-  data: RetroData;
-}
-
-export function makeRetroArchive({
-  format,
-  items,
-  ...details
-}: Partial<RetroData & RetroArchive> = {}): RetroArchive {
-  return Object.assign({
-    id: '',
-    retroId: 0,
-    created: 0,
-    data: makeRetroData({ format, items }),
+    ownerId: '',
+    state: {},
+    format: '',
+    items: [],
   }, details);
 }
 
 export interface RetroArchiveSummary {
   id: string;
   created: number;
+}
+
+export interface RetroArchive extends RetroArchiveSummary, RetroData {
+  retroId: string;
+}
+
+export function makeRetroArchive(details: Partial<RetroArchive> = {}): RetroArchive {
+  return Object.assign({
+    id: '',
+    retroId: 0,
+    created: 0,
+    format: '',
+    items: [],
+  }, details);
 }

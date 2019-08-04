@@ -75,7 +75,7 @@ describe('API retro websocket', () => {
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
         .expectJson()
-        .sendJson({ change: { name: 'bar' }, id: 7 })
+        .sendJson({ change: { name: { $invalid: 'bar' } }, id: 7 })
         .expectJson((json) => (json.error && json.id === 7))
         .close()
         .expectClosed();

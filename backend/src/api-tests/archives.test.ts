@@ -98,7 +98,7 @@ describe('API retro archives', () => {
       const storedArchive = await hooks.retroArchiveService
         .getRetroArchive(retroId, returnedId);
 
-      expect(storedArchive!.data.format).toEqual('foo');
+      expect(storedArchive!.format).toEqual('foo');
     });
 
     it('rejects empty archives', async () => {
@@ -141,7 +141,7 @@ describe('API retro archives', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      expect(response.body.data.items[0].id).toEqual('z9');
+      expect(response.body.items[0].id).toEqual('z9');
     });
 
     it('responds HTTP Unauthorized if no credentials are given', async () => {
@@ -172,7 +172,7 @@ describe('API retro archives', () => {
       const otherRetroId = await hooks.retroService.createRetro('', '', '', '');
 
       const otherArchiveId = await hooks.retroArchiveService
-        .createArchive(otherRetroId, { format: 'mood' });
+        .createArchive(otherRetroId, { format: 'mood', items: [] });
 
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)

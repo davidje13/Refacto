@@ -24,8 +24,3 @@ export const propTypesShapeItem = exactShape({
   votes: PropTypes.number,
   done: PropTypes.bool,
 });
-
-export const propTypesShapeRetroData = exactShape({
-  format: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
-});

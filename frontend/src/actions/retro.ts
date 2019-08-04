@@ -1,11 +1,11 @@
 import { Spec } from 'json-immutability-helper';
-import { MutableRetro, RetroItem } from 'refacto-entities';
+import { Retro, RetroItem } from 'refacto-entities';
 import uuidv4 from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
 
-export type RetroSpec = Spec<MutableRetro>;
+export type RetroSpec = Spec<Retro>;
 
 function sanitiseInput(value: string): string {
   return value
@@ -34,12 +34,12 @@ export const addRetroItem = (category: string, message: string): RetroSpec | und
     return undefined;
   }
   return {
-    data: { items: { $push: [makeItem(category, sanitisedMessage)] } },
+    items: { $push: [makeItem(category, sanitisedMessage)] },
   };
 };
 
 function updateItem(itemId: string, updater: Spec<RetroItem>): RetroSpec {
-  return { data: { items: { $updateWhere: [['id', itemId], updater] } } };
+  return { items: { $updateWhere: [['id', itemId], updater] } };
 }
 
 export const editRetroItem = (itemId: string, message: string): RetroSpec | undefined => {
@@ -61,17 +61,15 @@ export const upvoteRetroItem = (itemId: string): RetroSpec => updateItem(itemId,
 });
 
 export const deleteRetroItem = (itemId: string): RetroSpec => ({
-  data: { items: { $deleteWhere: ['id', itemId] } },
+  items: { $deleteWhere: ['id', itemId] },
 });
 
 export const clearCovered = (): RetroSpec => ({
   state: { $set: {} },
-  data: {
-    items: {
-      $seq: [
-        { $deleteWhere: { key: 'category', not: 'action' } },
-        { $deleteWhere: { key: 'done', equals: true } },
-      ],
-    },
+  items: {
+    $seq: [
+      { $deleteWhere: { key: 'category', not: 'action' } },
+      { $deleteWhere: { key: 'done', equals: true } },
+    ],
   },
 });

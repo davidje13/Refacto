@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { makeMutableRetro } from 'refacto-entities';
+import { makeRetro } from 'refacto-entities';
 import {
   slugTracker,
   retroTokenTracker,
@@ -26,7 +26,7 @@ describe('ArchiveListPage', () => {
     slugTracker.set('my-slug', 'r1');
     retroTokenTracker.set('r1', 'token-1');
     mockRetroTracker.setExpectedToken('token-1');
-    mockRetroTracker.setServerData('r1', { retro: makeMutableRetro() });
+    mockRetroTracker.setServerData('r1', { retro: makeRetro() });
     mockArchiveTracker.setExpectedToken('token-1');
   });
 
