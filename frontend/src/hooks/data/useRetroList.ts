@@ -1,6 +1,6 @@
+import { RetroSummary } from 'refacto-entities';
 import useObservable, { ObservableState } from '../useObservable';
 import { retroListTracker } from '../../api/api';
-import RetroSummary from '../../data/RetroSummary';
 
 export default function useRetroList(
   userToken: string | null,

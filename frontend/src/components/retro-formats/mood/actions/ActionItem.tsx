@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { RetroItem } from 'refacto-entities';
 import ItemEditing from '../ItemEditing';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './ActionItem.less';
-import RetroItem from '../../../../data/RetroItem';
 
 interface PropsT {
   item: RetroItem;

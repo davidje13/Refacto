@@ -61,10 +61,12 @@ if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
 fi;
 
 echo 'Generating package.json...';
-node "$BASEDIR/scripts/mutate-json.js" \
+< "$BASEDIR/backend/package.json" \
+  grep -v '"file:' \
+  | node "$BASEDIR/scripts/mutate-json.js" \
+  'name="refacto-app"' \
   'scripts={"start": "node index.js"}' \
   'devDependencies=' \
-  < "$BASEDIR/backend/package.json" \
   > "$BUILDDIR/package.json";
 cp "$BASEDIR/backend/package-lock.json" "$BUILDDIR";
 

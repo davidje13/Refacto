@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RetroItem } from 'refacto-entities';
 import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
-import RetroItem from '../../../data/RetroItem';
 
 function itemCreatedComparator(a: RetroItem, b: RetroItem): number {
   // sort newer-to-older

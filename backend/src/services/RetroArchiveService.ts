@@ -1,8 +1,6 @@
 import uuidv4 from 'uuid/v4';
 import { Collection, DB } from 'collection-storage';
-import RetroArchive from '../data/RetroArchive';
-import RetroData from '../data/RetroData';
-import RetroArchiveSummary from '../data/RetroArchiveSummary';
+import { RetroArchive, RetroData, RetroArchiveSummary } from 'refacto-entities';
 
 export default class RetroArchiveService {
   private readonly archiveCollection: Collection<RetroArchive>;

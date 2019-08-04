@@ -1,7 +1,7 @@
 import request from 'superwstest';
+import { makeRetroItem } from 'refacto-entities';
 import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
-import { makeRetroItem } from '../data/RetroItem';
 import appFactory, { TestHooks } from '../app';
 
 function getRetroToken(
@@ -38,7 +38,7 @@ describe('API retro archives', () => {
 
     archiveId = await hooks.retroArchiveService.createArchive(retroId, {
       format: 'mood',
-      items: [makeRetroItem('z9')],
+      items: [makeRetroItem({ id: 'z9' })],
     });
 
     await hooks.retroAuthService.setPassword(retroId, 'password');

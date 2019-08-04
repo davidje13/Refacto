@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { RetroItem } from 'refacto-entities';
 import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
@@ -7,7 +8,6 @@ import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
-import RetroItem from '../../../../data/RetroItem';
 
 interface PropsT {
   category: string;

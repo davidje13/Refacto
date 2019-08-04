@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RetroItem } from 'refacto-entities';
 import ActionItem from './ActionItem';
 import ItemColumn from '../ItemColumn';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
-import RetroItem from '../../../../data/RetroItem';
 
 function actionItemWithinRange(from: number, to: number) {
   return (item: RetroItem): boolean => (

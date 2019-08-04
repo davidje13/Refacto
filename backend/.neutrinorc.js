@@ -5,6 +5,7 @@ const node = require('@neutrinojs/node');
 const typescript = require('neutrino-typescript');
 const typescriptLint = require('neutrino-typescript-eslint');
 const { baseRules, testRules } = require('../eslint.js');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   options: {
@@ -49,6 +50,7 @@ module.exports = {
         ],
       },
     }),
+    (neutrino) => neutrino.config.externals([nodeExternals({ whitelist: [/^webpack/, /^refacto-entities$/] })]),
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };

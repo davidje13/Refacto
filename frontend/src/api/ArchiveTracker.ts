@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
+import { RetroArchive } from 'refacto-entities';
 import loadHttp from '../rxjs/loadHttp';
-import RetroArchive from '../data/RetroArchive';
 
 interface RetroArchiveList {
   archives: RetroArchive[];

@@ -1,8 +1,10 @@
-import RetroData from '../data/RetroData';
-import RetroSummary from '../data/RetroSummary';
-import Retro from '../data/Retro';
-import RetroArchive from '../data/RetroArchive';
-import RetroItem from '../data/RetroItem';
+import {
+  Retro,
+  RetroData,
+  RetroItem,
+  RetroSummary,
+  RetroArchive,
+} from 'refacto-entities';
 
 export function makeRetroData({
   format = 'none',

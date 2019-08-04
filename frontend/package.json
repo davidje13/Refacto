@@ -19,6 +19,7 @@
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.1",
     "react-modal": "^3.8.2",
     "react-router-dom": "^5.0.1",
+    "refacto-entities": "file:../entities",
     "rxjs": "^6.5.2"
   },
   "devDependencies": {

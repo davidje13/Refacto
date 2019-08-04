@@ -1,7 +1,6 @@
 import { Spec } from 'json-immutability-helper';
+import { Retro, RetroItem } from 'refacto-entities';
 import uuidv4 from '../helpers/uuidv4';
-import RetroItem from '../data/RetroItem';
-import Retro from '../data/Retro';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;

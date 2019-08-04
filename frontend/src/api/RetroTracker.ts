@@ -1,7 +1,7 @@
 import { Spec } from 'json-immutability-helper';
+import { Retro } from 'refacto-entities';
 import SubscriptionTracker from './SubscriptionTracker';
 import SharedReducer from './SharedReducer';
-import Retro from '../data/Retro';
 
 interface RetroKey {
   retroId: string;

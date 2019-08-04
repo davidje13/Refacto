@@ -1,6 +1,6 @@
+import { RetroArchive } from 'refacto-entities';
 import useObservable, { ObservableState } from '../useObservable';
 import { archiveTracker } from '../../api/api';
-import RetroArchive from '../../data/RetroArchive';
 
 export default function useArchive(
   retroId: string | null,

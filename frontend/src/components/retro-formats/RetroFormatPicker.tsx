@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RetroData } from 'refacto-entities';
 import MoodRetro from './mood/MoodRetro';
 import UnknownRetro from './unknown/UnknownRetro';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetroData } from '../../api/dataStructurePropTypes';
-import RetroData from '../../data/RetroData';
 import { RetroSpec } from '../../actions/retro';
 
 interface PropsT {

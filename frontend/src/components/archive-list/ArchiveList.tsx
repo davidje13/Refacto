@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RetroArchiveSummary } from 'refacto-entities';
 import ArchiveLink from './ArchiveLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeArchiveSummary } from '../../api/dataStructurePropTypes';
-import RetroArchiveSummary from '../../data/RetroArchiveSummary';
 
 function archiveCreatedComparator(
   a: RetroArchiveSummary,

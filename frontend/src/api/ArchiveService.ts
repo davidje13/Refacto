@@ -1,4 +1,4 @@
-import RetroData from '../data/RetroData';
+import { RetroData } from 'refacto-entities';
 
 interface ArchiveOptions {
   retroId: string;

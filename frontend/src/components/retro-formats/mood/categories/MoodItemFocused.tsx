@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
-import RetroItem from '../../../../data/RetroItem';
 
 interface PropsT {
   item: RetroItem;

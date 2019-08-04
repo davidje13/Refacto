@@ -1,11 +1,10 @@
 import update, { Spec } from 'json-immutability-helper';
 import uuidv4 from 'uuid/v4';
 import { DB, Collection } from 'collection-storage';
+import { Retro, RetroSummary } from 'refacto-entities';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 import TaskQueueMap from '../task-queue/TaskQueueMap';
 import TopicMap from '../queue/TopicMap';
-import Retro from '../data/Retro';
-import RetroSummary from '../data/RetroSummary';
 
 type Identifier = string | null;
 type RetroSpec = Spec<Retro['retro']>;

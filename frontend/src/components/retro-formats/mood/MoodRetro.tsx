@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
+import { RetroData } from 'refacto-entities';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
@@ -12,7 +13,6 @@ import {
   upvoteRetroItem,
   deleteRetroItem,
 } from '../../../actions/retro';
-import RetroData from '../../../data/RetroData';
 import useBoxed from '../../../hooks/useBoxed';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';

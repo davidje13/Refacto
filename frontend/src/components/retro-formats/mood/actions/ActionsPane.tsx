@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RetroItem } from 'refacto-entities';
 import ActionSection from './ActionSection';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
-import RetroItem from '../../../../data/RetroItem';
 
 interface PropsT {
   items: RetroItem[];

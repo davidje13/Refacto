@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { RetroItem } from 'refacto-entities';
 import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditing from '../ItemEditing';
@@ -7,7 +8,6 @@ import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './MoodItem.less';
-import RetroItem from '../../../../data/RetroItem';
 
 interface PropsT {
   item: RetroItem;
