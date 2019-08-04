@@ -1,11 +1,29 @@
 import { of as rxjsOf, throwError, Observable } from 'rxjs';
+import { Spec } from 'json-immutability-helper';
+import {
+  MutableRetro,
+  RetroArchive,
+  RetroSummary,
+} from 'refacto-entities';
 import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
+import { ClientConfig } from '../ConfigService';
+
+export type RetroState = {
+  retro: MutableRetro;
+  error: null;
+} | {
+  retro: null;
+  error: any;
+};
+
+type RetroDispatch = (spec: Spec<MutableRetro>) => void;
+type RetroStateCallback = (state: RetroState) => void;
 
 class FakeRetroTracker {
   public subscribed = 0;
 
-  private data = new Map();
+  private data = new Map<string, RetroState>();
 
   private expectedRetroToken: string | null = null;
 
@@ -15,15 +33,21 @@ class FakeRetroTracker {
     this.expectedRetroToken = retroToken;
   }
 
-  public setServerData(retroId: string, serverData: any): void {
-    this.data.set(retroId, serverData);
+  public setServerData(
+    retroId: string,
+    serverData: Partial<RetroState>,
+  ): void {
+    this.data.set(retroId, Object.assign({
+      retro: null,
+      error: null,
+    }, serverData));
   }
 
   public subscribe(
     retroId: string,
     retroToken: string,
-    dispatchCallback: any,
-    retroStateCallback: any,
+    dispatchCallback: (dispatch: RetroDispatch) => void,
+    retroStateCallback: RetroStateCallback,
   ): { unsubscribe: () => void } {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       throw new Error(`Incorrect retro token: ${retroToken}`);
@@ -37,10 +61,7 @@ class FakeRetroTracker {
     }
 
     dispatchCallback(this.dispatch);
-    retroStateCallback(Object.assign({
-      retro: null,
-      error: null,
-    }, serverData));
+    retroStateCallback(Object.assign({}, serverData));
 
     return {
       unsubscribe: (): void => {
@@ -51,7 +72,7 @@ class FakeRetroTracker {
 }
 
 class FakeArchiveTracker {
-  private data = new Map();
+  private data = new Map<string, Map<string, RetroArchive>>();
 
   private expectedRetroToken: string | null = null;
 
@@ -62,19 +83,19 @@ class FakeArchiveTracker {
   public setServerData(
     retroId: string,
     archiveId: string,
-    archive: any,
+    archive: RetroArchive,
   ): void {
     if (!this.data.has(retroId)) {
       this.data.set(retroId, new Map());
     }
-    this.data.get(retroId).set(archiveId, archive);
+    this.data.get(retroId)!.set(archiveId, archive);
   }
 
   public get(
     retroId: string,
     archiveId: string,
     retroToken: string,
-  ): Observable<any> {
+  ): Observable<RetroArchive> {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       return throwError(`Incorrect retro token: ${retroToken}`);
     }
@@ -140,7 +161,7 @@ class FakeUserTokenService {
 class FakeRetroTokenService {
   public capturedPassword: string | null = null;
 
-  private data = new Map();
+  private data = new Map<string, string>();
 
   public setServerData(retroId: string, retroToken: string): void {
     this.data.set(retroId, retroToken);
@@ -159,6 +180,13 @@ class FakeRetroTokenService {
   }
 }
 
+interface RetroOptions {
+  name: string;
+  slug: string;
+  password: string;
+  userToken: string;
+}
+
 class FakeRetroService {
   public capturedName: string | null = null;
 
@@ -166,28 +194,40 @@ class FakeRetroService {
 
   public capturedPassword: string | null = null;
 
+  public capturedUserToken: string | null = null;
+
   private id: string | null = null;
 
   public setServerData(retroId: string): void {
     this.id = retroId;
   }
 
-  public async create({ name, slug, password }: any): Promise<string> {
+  public async create({
+    name,
+    slug,
+    password,
+    userToken,
+  }: RetroOptions): Promise<string> {
     this.capturedName = name;
     this.capturedSlug = slug;
     this.capturedPassword = password;
+    this.capturedUserToken = userToken;
     return this.id!;
   }
 }
 
-export const configService = new SingleObservableTracker();
-export const retroListTracker = new ObservableTracker();
-export const slugTracker = new ObservableTracker();
+interface RetroList {
+  retros: RetroSummary[];
+}
+
+export const configService = new SingleObservableTracker<ClientConfig>();
+export const retroListTracker = new ObservableTracker<string, RetroList>();
+export const slugTracker = new ObservableTracker<string, string>();
 export const retroTracker = new FakeRetroTracker();
 export const archiveTracker = new FakeArchiveTracker();
 export const retroTokenService = new FakeRetroTokenService();
 export const retroService = new FakeRetroService();
 export const userTokenService = new FakeUserTokenService();
 
-export const retroTokenTracker = new ObservableTracker();
-export const userTokenTracker = new SingleObservableTracker();
+export const retroTokenTracker = new ObservableTracker<string, string>();
+export const userTokenTracker = new SingleObservableTracker<string | null>();

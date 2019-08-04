@@ -30,27 +30,29 @@ export function makeRetroData({
   return { format, items };
 }
 
-export interface Retro {
-  id: string;
-  ownerId: string;
-  slug: string;
-  retro: {
-    name: string;
-    state: object;
-    data: RetroData;
-  };
+export interface MutableRetro {
+  name: string;
+  state: object;
+  data: RetroData;
 }
 
-export function makeRetro({
+export function makeMutableRetro({
   format,
   items,
   ...details
-}: Partial<RetroData & Retro['retro']> = {}): Retro['retro'] {
+}: Partial<RetroData & MutableRetro> = {}): MutableRetro {
   return Object.assign({
     name: '',
     state: {},
     data: makeRetroData({ format, items }),
   }, details);
+}
+
+export interface Retro {
+  id: string;
+  ownerId: string;
+  slug: string;
+  retro: MutableRetro;
 }
 
 export interface RetroSummary {

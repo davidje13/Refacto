@@ -1,5 +1,5 @@
 import { Spec } from 'json-immutability-helper';
-import { Retro } from 'refacto-entities';
+import { MutableRetro } from 'refacto-entities';
 import SubscriptionTracker from './SubscriptionTracker';
 import SharedReducer from './SharedReducer';
 
@@ -9,14 +9,14 @@ interface RetroKey {
 }
 
 export type RetroState = {
-  retro: Retro['retro'];
+  retro: MutableRetro;
   error: null;
 } | {
   retro: null;
   error: any;
 };
 
-type RetroDispatch = (spec: Spec<Retro['retro']>) => void;
+type RetroDispatch = (spec: Spec<MutableRetro>) => void;
 type RetroStateCallback = (state: RetroState) => void;
 
 interface RetroSubscription {
@@ -24,7 +24,7 @@ interface RetroSubscription {
 }
 
 class RetroWrapper {
-  public readonly reducer: SharedReducer<Retro['retro']>;
+  public readonly reducer: SharedReducer<MutableRetro>;
 
   private readonly retroStateCallbacks = new Set<RetroStateCallback>();
 
@@ -43,7 +43,7 @@ class RetroWrapper {
       this.retroStateCallbacks.forEach((fn) => fn(state));
     };
 
-    this.reducer = new SharedReducer<Retro['retro']>(
+    this.reducer = new SharedReducer<MutableRetro>(
       `${wsBase}/retros/${retroId}`,
       retroToken,
       (data): void => setState({ retro: data, error: null }),

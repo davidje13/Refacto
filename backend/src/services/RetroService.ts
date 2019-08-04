@@ -1,13 +1,13 @@
 import update, { Spec } from 'json-immutability-helper';
 import uuidv4 from 'uuid/v4';
 import { DB, Collection } from 'collection-storage';
-import { Retro, RetroSummary } from 'refacto-entities';
+import { Retro, RetroSummary, MutableRetro } from 'refacto-entities';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 import TaskQueueMap from '../task-queue/TaskQueueMap';
 import TopicMap from '../queue/TopicMap';
 
 type Identifier = string | null;
-type RetroSpec = Spec<Retro['retro']>;
+type RetroSpec = Spec<MutableRetro>;
 
 export interface ChangeInfo {
   error?: string;
@@ -21,7 +21,7 @@ export interface TopicMessage {
 }
 
 export interface RetroSubscription<MetaT> {
-  getInitialData: () => Retro['retro'];
+  getInitialData: () => Readonly<MutableRetro>;
   send: (change: RetroSpec, meta?: MetaT) => Promise<void>;
   close: () => Promise<void>;
 }
@@ -120,10 +120,10 @@ export default class RetroService {
 
     this.retroChangeSubs.add(retroId, eventHandler);
 
-    let initialData: Retro['retro'] | null = retroData.retro;
+    let initialData: MutableRetro | null = retroData.retro;
 
     return {
-      getInitialData: (): Readonly<Retro['retro']> => {
+      getInitialData: (): Readonly<MutableRetro> => {
         if (!initialData) {
           throw new Error('Already fetched initialData');
         }

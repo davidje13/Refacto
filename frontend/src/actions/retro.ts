@@ -1,11 +1,11 @@
 import { Spec } from 'json-immutability-helper';
-import { Retro, RetroItem } from 'refacto-entities';
+import { MutableRetro, RetroItem } from 'refacto-entities';
 import uuidv4 from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
 
-export type RetroSpec = Spec<Retro['retro']>;
+export type RetroSpec = Spec<MutableRetro>;
 
 function sanitiseInput(value: string): string {
   return value

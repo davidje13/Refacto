@@ -7,7 +7,7 @@ import {
   act,
   RenderResult,
 } from '@testing-library/react';
-import { makeRetro } from 'refacto-entities';
+import { makeMutableRetro } from 'refacto-entities';
 import { queries, css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
@@ -76,7 +76,7 @@ describe('Application', () => {
   });
 
   it('renders retro page at /retros/id after password provided', async () => {
-    const retro = makeRetro({ name: 'Retro Name' });
+    const retro = makeMutableRetro({ name: 'Retro Name' });
 
     mockFetchExpect('/api/slugs/slug-foobar')
       .andRespondJsonOk({ id: 'id-foobar' });
