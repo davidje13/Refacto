@@ -1,12 +1,12 @@
 import WebSocketExpress from 'websocket-express';
 import CollectionStorage from 'collection-storage';
+import Hasher from 'pwd-hasher';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
 import ApiSsoRouter from './routers/ApiSsoRouter';
 import ApiRetrosRouter from './routers/ApiRetrosRouter';
 import StaticRouter from './routers/StaticRouter';
-import Hasher from './hash/Hasher';
 import TokenManager from './tokens/TokenManager';
 import SsoService from './services/SsoService';
 import RetroService, { TopicMessage } from './services/RetroService';

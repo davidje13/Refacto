@@ -1,6 +1,6 @@
 import { Collection, DB } from 'collection-storage';
 import { JWTPayload } from 'websocket-express';
-import Hasher from '../hash/Hasher';
+import Hasher from 'pwd-hasher';
 import TokenManager from '../tokens/TokenManager';
 
 interface RetroAuth {
