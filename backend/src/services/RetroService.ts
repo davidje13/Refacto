@@ -155,6 +155,9 @@ export default class RetroService {
   ): Promise<void> {
     const retroData = await this.retroCollection.get('id', retroId, ['retro']);
     try {
+      if (!retroData) {
+        throw new Error('Retro deleted');
+      }
       const newRetro = update(retroData.retro, change);
       await this.retroCollection.update('id', retroId, { retro: newRetro });
     } catch (e) {

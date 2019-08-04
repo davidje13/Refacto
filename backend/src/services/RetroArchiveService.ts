@@ -2,6 +2,7 @@ import uuidv4 from 'uuid/v4';
 import { Collection, DB } from 'collection-storage';
 import RetroArchive from '../data/RetroArchive';
 import RetroData from '../data/RetroData';
+import RetroArchiveSummary from '../data/RetroArchiveSummary';
 
 export default class RetroArchiveService {
   private readonly archiveCollection: Collection<RetroArchive>;
@@ -29,7 +30,7 @@ export default class RetroArchiveService {
     return id;
   }
 
-  public getRetroArchiveList(retroId: string): Promise<Readonly<RetroArchive>[]> {
+  public getRetroArchiveList(retroId: string): Promise<Readonly<RetroArchiveSummary>[]> {
     return this.archiveCollection
       .getAll('retroId', retroId, ['id', 'created']);
   }
