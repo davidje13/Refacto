@@ -5,6 +5,8 @@ import Password from './pages/Password';
 import Login from './pages/Login';
 import RetroCreate from './pages/RetroCreate';
 import Retro from './pages/Retro';
+import RetroArchiveList from './pages/RetroArchiveList';
+import RetroArchive from './pages/RetroArchive';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
 
@@ -20,6 +22,8 @@ describe('Running a retro', () => {
   let login: Login<RetroCreate>;
   let create: RetroCreate;
   let retro: Retro;
+  let archiveList: RetroArchiveList;
+  let archive: RetroArchive;
 
   beforeAll(async () => {
     driver = buildDriver();
@@ -104,5 +108,32 @@ describe('Running a retro', () => {
       expect(await retro.getActionItemLabels()).toEqual(expectedActions2);
       expect(await retro2.getActionItemLabels()).toEqual(expectedActions2);
     });
+  });
+
+  it('clears completed action items when archiving', async () => {
+    await retro.toggleActionItemDone(1);
+    await retro.performArchive();
+
+    expect(await retro.getActionItemLabels()).toEqual([
+      'another action',
+    ]);
+  });
+
+  it('displays a list of archives', async () => {
+    archiveList = await retro.clickViewArchives();
+
+    const labels = await archiveList.getArchiveLabels();
+    expect(labels.length).toEqual(1);
+  });
+
+  it('displays archives in a read-only view', async () => {
+    archive = await archiveList.clickArchiveAtIndex(0);
+
+    expect(await archive.getTitle()).toContain('My Retro');
+    expect(await archive.getNameText()).toContain('My Retro');
+    expect(await archive.getActionItemLabels()).toEqual([
+      'another action',
+      'some action',
+    ]);
   });
 });

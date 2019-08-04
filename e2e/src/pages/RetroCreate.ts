@@ -26,8 +26,6 @@ export default class RetroCreate extends Page {
   public async submit(): Promise<Retro> {
     this.click(By.css('form button'));
 
-    const page = new Retro(this.driver, 'unknown');
-    await page.wait();
-    return page;
+    return new Retro(this.driver, 'unknown').wait();
   }
 }

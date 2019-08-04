@@ -21,16 +21,12 @@ export default class RetroList extends Page {
     const item = await this.getRetroItemAtIndex(index);
     await item.click();
 
-    const page = new Password(this.driver, 'unknown');
-    await page.wait();
-    return page;
+    return new Password(this.driver, 'unknown').wait();
   }
 
   public async clickCreateRetro(): Promise<RetroCreate> {
     await this.click(By.linkText('Create Retro'));
 
-    const page = new RetroCreate(this.driver);
-    await page.wait();
-    return page;
+    return new RetroCreate(this.driver).wait();
   }
 }

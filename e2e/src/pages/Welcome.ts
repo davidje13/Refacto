@@ -19,16 +19,12 @@ export default class Welcome extends Page {
   public async clickCreateRetro(): Promise<RetroCreate> {
     await this.click(By.css('.link-create'));
 
-    const page = new RetroCreate(this.driver);
-    await page.wait();
-    return page;
+    return new RetroCreate(this.driver).wait();
   }
 
   public async clickLoginWithGoogle(): Promise<Login<RetroCreate>> {
     await this.click(By.css('.sso-google'));
 
-    const page = new Login<RetroCreate>(this.driver, RetroCreate);
-    await page.wait();
-    return page;
+    return new Login<RetroCreate>(this.driver, RetroCreate).wait();
   }
 }

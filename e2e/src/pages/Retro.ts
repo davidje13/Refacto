@@ -5,10 +5,18 @@ import {
   WebElement,
 } from 'selenium-webdriver';
 import Page from './Page';
+import RetroArchiveList from './RetroArchiveList';
+import { ByButtonText } from '../helpers/customBy';
+import customUntil from '../helpers/customUntil';
+
+const untilNoPopup = customUntil.noElementLocated(By.css('.popup-overlay'));
 
 export default class Retro extends Page {
+  private readonly slug: string;
+
   public constructor(driver: WebDriver, slug: string) {
     super(driver, `/retros/${slug}`, '.page-retro');
+    this.slug = slug;
   }
 
   public getName(): WebElementPromise {
@@ -31,10 +39,27 @@ export default class Retro extends Page {
     return this.driver.findElements(By.css('.action-item'));
   }
 
+  public async toggleActionItemDone(index: number): Promise<void> {
+    const items = await this.getActionItems();
+    await items[index].findElement(By.css('.toggle-done')).click();
+  }
+
   public async getActionItemLabels(): Promise<string[]> {
     const items = await this.getActionItems();
     return Promise.all(items.map(
       (item) => item.findElement(By.css('.message')).getText(),
     ));
+  }
+
+  public async performArchive(): Promise<void> {
+    await this.driver.findElement(ByButtonText('Create Archive')).click();
+    await this.driver.findElement(ByButtonText('Archive')).click();
+    await this.driver.wait(untilNoPopup);
+  }
+
+  public async clickViewArchives(): Promise<RetroArchiveList> {
+    await this.driver.findElement(By.linkText('Archives')).click();
+
+    return new RetroArchiveList(this.driver, this.slug).wait();
   }
 }

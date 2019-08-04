@@ -18,8 +18,6 @@ export default class Login<TargetPageT extends Page> extends Page {
   public async submit(): Promise<TargetPageT> {
     this.click(By.css('form button'));
 
-    const page = new this.ExpectedTarget(this.driver);
-    await page.wait();
-    return page;
+    return new this.ExpectedTarget(this.driver).wait();
   }
 }
