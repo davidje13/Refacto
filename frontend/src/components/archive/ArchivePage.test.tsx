@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { makeRetro, makeArchive } from '../../test-helpers/dataFactories';
+import { makeRetro, makeRetroArchive } from 'refacto-entities';
 import {
   slugTracker,
   retroTokenTracker,
@@ -23,7 +23,7 @@ const mockArchiveTracker = archiveTracker as any as typeof mockApiTypes.archiveT
 
 describe('ArchivePage', () => {
   const retroData = { retro: makeRetro() };
-  const archiveData = makeArchive();
+  const archiveData = makeRetroArchive();
 
   beforeEach(() => {
     slugTracker.set('abc', 'r1');

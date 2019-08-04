@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, RenderResult } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { makeItem } from '../../../../test-helpers/dataFactories';
+import { makeRetroItem } from 'refacto-entities';
 import { queries, css } from '../../../../test-helpers/queries';
 
 import ActionsPane from './ActionsPane';
@@ -12,9 +12,9 @@ jest.mock('./ActionSection', () => mockElement('mock-action-section'));
 
 describe('ActionsPane', () => {
   const items = [
-    makeItem({ id: '1' }),
-    makeItem({ id: '2' }),
-    makeItem({ id: '3' }),
+    makeRetroItem({ id: '1' }),
+    makeRetroItem({ id: '2' }),
+    makeRetroItem({ id: '3' }),
   ];
 
   let dom: RenderResult<typeof queries>;

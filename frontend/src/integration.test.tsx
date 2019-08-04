@@ -7,7 +7,7 @@ import {
   act,
   RenderResult,
 } from '@testing-library/react';
-import { makeRetro } from './test-helpers/dataFactories';
+import { makeRetro } from 'refacto-entities';
 import { queries, css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';

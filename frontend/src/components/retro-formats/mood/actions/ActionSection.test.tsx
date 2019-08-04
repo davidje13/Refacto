@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { makeItem } from '../../../../test-helpers/dataFactories';
+import { makeRetroItem } from 'refacto-entities';
 import { queries, css } from '../../../../test-helpers/queries';
 
 import ActionSection from './ActionSection';
@@ -20,8 +20,8 @@ describe('ActionSection', () => {
 
   it('displays a list of ActionItem items', () => {
     const items = [
-      makeItem({ category: 'action', message: 'foo' }),
-      makeItem({ category: 'action', message: 'bar' }),
+      makeRetroItem({ category: 'action', message: 'foo' }),
+      makeRetroItem({ category: 'action', message: 'bar' }),
     ];
     const dom = render((
       <ActionSection title="" items={items} />
@@ -36,8 +36,8 @@ describe('ActionSection', () => {
 
   it('filters out non-action items', () => {
     const items = [
-      makeItem({ category: 'nope', message: 'foo' }),
-      makeItem({ category: 'action', message: 'bar' }),
+      makeRetroItem({ category: 'nope', message: 'foo' }),
+      makeRetroItem({ category: 'action', message: 'bar' }),
     ];
     const dom = render((
       <ActionSection title="" items={items} />
@@ -51,9 +51,9 @@ describe('ActionSection', () => {
 
   it('filters by created date', () => {
     const items = [
-      makeItem({ category: 'action', created: 15 }),
-      makeItem({ category: 'action', created: 5 }),
-      makeItem({ category: 'action', created: 25 }),
+      makeRetroItem({ category: 'action', created: 15 }),
+      makeRetroItem({ category: 'action', created: 5 }),
+      makeRetroItem({ category: 'action', created: 25 }),
     ];
 
     const dom = render((

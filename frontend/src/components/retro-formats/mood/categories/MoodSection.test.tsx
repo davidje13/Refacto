@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { makeItem } from '../../../../test-helpers/dataFactories';
+import { makeRetroItem } from 'refacto-entities';
 import { queries, css } from '../../../../test-helpers/queries';
 
 import MoodSection from './MoodSection';
@@ -34,8 +34,8 @@ describe('MoodSection', () => {
 
   it('displays a list of MoodItem items', () => {
     const items = [
-      makeItem({ category: 'abc', message: 'foo' }),
-      makeItem({ category: 'abc', message: 'bar' }),
+      makeRetroItem({ category: 'abc', message: 'foo' }),
+      makeRetroItem({ category: 'abc', message: 'bar' }),
     ];
     const dom = render((
       <MoodSection category="abc" categoryLabel="" items={items} />
@@ -50,8 +50,8 @@ describe('MoodSection', () => {
 
   it('filters out items for other categories', () => {
     const items = [
-      makeItem({ category: 'nope', message: 'foo' }),
-      makeItem({ category: 'yay', message: 'bar' }),
+      makeRetroItem({ category: 'nope', message: 'foo' }),
+      makeRetroItem({ category: 'yay', message: 'bar' }),
     ];
     const dom = render((
       <MoodSection category="yay" categoryLabel="" items={items} />

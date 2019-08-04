@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { makeItem } from '../../../test-helpers/dataFactories';
+import { makeRetroItem } from 'refacto-entities';
 import { queries, css } from '../../../test-helpers/queries';
 
 import ItemColumn from './ItemColumn';
@@ -10,8 +10,8 @@ const Item = mockElement('my-item');
 
 describe('ItemColumn', () => {
   it('displays all items', () => {
-    const item1 = makeItem({ id: 'a' });
-    const item2 = makeItem({ id: 'b' });
+    const item1 = makeRetroItem({ id: 'a' });
+    const item2 = makeRetroItem({ id: 'b' });
     const dom = render((
       <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
     ), { queries });
@@ -20,8 +20,8 @@ describe('ItemColumn', () => {
   });
 
   it('orders items newest-first', () => {
-    const item1 = makeItem({ id: 'a', created: 100 });
-    const item2 = makeItem({ id: 'b', created: 200 });
+    const item1 = makeRetroItem({ id: 'a', created: 100 });
+    const item2 = makeRetroItem({ id: 'b', created: 200 });
     const dom = render((
       <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
     ), { queries });
@@ -32,7 +32,7 @@ describe('ItemColumn', () => {
   });
 
   it('passes item props to the items unchanged', () => {
-    const item = makeItem();
+    const item = makeRetroItem();
     const dom = render((
       <ItemColumn items={[item]} ItemType={Item} itemProps={{ foo: 'bar' }} />
     ), { queries });
@@ -42,7 +42,7 @@ describe('ItemColumn', () => {
   });
 
   it('focuses nothing by default', () => {
-    const item = makeItem();
+    const item = makeRetroItem();
     const dom = render((
       <ItemColumn items={[item]} ItemType={Item} itemProps={{}} />
     ), { queries });
@@ -52,7 +52,7 @@ describe('ItemColumn', () => {
   });
 
   it('focuses the requested item', () => {
-    const item = makeItem();
+    const item = makeRetroItem();
     const dom = render((
       <ItemColumn
         items={[item]}

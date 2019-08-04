@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { makeRetroData } from '../../../test-helpers/dataFactories';
+import { makeRetroData } from 'refacto-entities';
 
 import MoodRetro from './MoodRetro';
 
