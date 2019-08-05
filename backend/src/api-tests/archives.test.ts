@@ -89,7 +89,7 @@ describe('API retro archives', () => {
       const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .post(`/api/retros/${retroId}/archives`)
-        .send({ format: 'foo', items: [{ id: 'foo' }] })
+        .send({ format: 'foo', items: [makeRetroItem({ id: 'foo' })] })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);

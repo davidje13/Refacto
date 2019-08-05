@@ -101,7 +101,19 @@ describe('API retros', () => {
         .set('Authorization', `Bearer ${userToken}`)
         .expect(400);
 
-      expect(response.body.error).toEqual('No password given');
+      expect(response.body.error).toEqual('Expected string');
+    });
+
+    it('responds HTTP Bad Request if data is blank', async () => {
+      const userToken = getUserToken(hooks, 'me');
+
+      const response = await request(server)
+        .post('/api/retros')
+        .send({ slug: 'new-retro', name: '', password: 'password' })
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(400);
+
+      expect(response.body.error).toEqual('No name given');
     });
 
     it('responds HTTP Conflict if slug is unavailable', async () => {

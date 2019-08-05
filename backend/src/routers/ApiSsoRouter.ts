@@ -20,7 +20,7 @@ export default class ApiSsoRouter extends Router {
       }
 
       const { externalToken } = req.body;
-      if (!externalToken) {
+      if (!externalToken || typeof externalToken !== 'string') {
         res.status(400).json({ error: 'no externalToken provided' });
         return;
       }

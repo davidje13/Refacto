@@ -11,6 +11,7 @@ import UserAuthService from '../services/UserAuthService';
 import RetroAuthService from '../services/RetroAuthService';
 import RetroService, { ChangeInfo } from '../services/RetroService';
 import RetroArchiveService from '../services/RetroArchiveService';
+import json from '../helpers/json';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
 const MIN_PASSWORD_LENGTH = 8;
@@ -38,27 +39,24 @@ export default class ApiRetrosRouter extends Router {
     });
 
     this.post('/', userAuthMiddleware, async (req, res) => {
-      const userId = getAuthData(res).sub!;
-      const { slug, name, password } = req.body;
-
-      if (!name || typeof name !== 'string') {
-        res.status(400).json({ error: 'No name given' });
-        return;
-      }
-      if (!password || typeof password !== 'string') {
-        res.status(400).json({ error: 'No password given' });
-        return;
-      }
-      if (password.length < MIN_PASSWORD_LENGTH) {
-        res.status(400).json({ error: 'Password is too short' });
-        return;
-      }
-      if (!slug || typeof slug !== 'string' || !VALID_SLUG.test(slug)) {
-        res.status(400).json({ error: 'Invalid URL' });
-        return;
-      }
-
       try {
+        const userId = getAuthData(res).sub!;
+        const { slug, name, password } = json.extractObject(req.body, {
+          slug: json.string,
+          name: json.string,
+          password: json.string,
+        });
+
+        if (!name) {
+          throw new Error('No name given');
+        }
+        if (password.length < MIN_PASSWORD_LENGTH) {
+          throw new Error('Password is too short');
+        }
+        if (!VALID_SLUG.test(slug)) {
+          throw new Error('Invalid URL');
+        }
+
         const id = await retroService.createRetro(userId, slug, name, 'mood');
         await retroAuthService.setPassword(id, password);
 
@@ -66,9 +64,9 @@ export default class ApiRetrosRouter extends Router {
       } catch (e) {
         if (e.message === 'slug exists') {
           res.status(409).json({ error: 'URL is already taken' });
-          return;
+        } else {
+          res.status(400).json({ error: e.message });
         }
-        throw e;
       }
     });
 

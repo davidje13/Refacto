@@ -1,5 +1,6 @@
 import { Router, requireAuthScope } from 'websocket-express';
 import RetroArchiveService from '../services/RetroArchiveService';
+import { extractRetroData } from '../helpers/jsonParsers';
 
 export default class ApiRetroArchivesRouter extends Router {
   public constructor(retroArchiveService: RetroArchiveService) {
@@ -13,23 +14,21 @@ export default class ApiRetroArchivesRouter extends Router {
     });
 
     this.post('/', requireAuthScope('write'), async (req, res) => {
-      const { retroId } = req.params;
+      try {
+        const { retroId } = req.params;
+        const data = extractRetroData(req.body);
+        if (!data.format) {
+          throw new Error('No format given');
+        }
+        if (!data.items.length) {
+          throw new Error('No items given');
+        }
+        const id = await retroArchiveService.createArchive(retroId, data);
 
-      const { format, items } = req.body;
-      if (!format || typeof format !== 'string') {
-        res.status(400).json({ error: 'No format given' });
-        return;
+        res.status(200).json({ id });
+      } catch (e) {
+        res.status(400).json({ error: e.message });
       }
-      if (!items || !Array.isArray(items) || !items.length) {
-        res.status(400).json({ error: 'No items given' });
-        return;
-      }
-      const id = await retroArchiveService.createArchive(retroId, {
-        format,
-        items,
-      });
-
-      res.status(200).json({ id });
     });
 
     this.get('/:archiveId', requireAuthScope('readArchives'), async (req, res) => {
