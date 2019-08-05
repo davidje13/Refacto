@@ -1,5 +1,7 @@
 import { By } from 'selenium-webdriver';
 
-export function ByButtonText(text: string): By {
-  return By.xpath(`//button[text()="${text}"]`);
-}
+export default {
+  buttonText(text: string): By {
+    return By.xpath(`//button[text()="${text}"]`);
+  },
+};

@@ -6,7 +6,7 @@ import {
 } from 'selenium-webdriver';
 import Page from './Page';
 import RetroArchiveList from './RetroArchiveList';
-import { ByButtonText } from '../helpers/customBy';
+import CBy from '../helpers/customBy';
 import customUntil from '../helpers/customUntil';
 
 const untilNoPopup = customUntil.noElementLocated(By.css('.popup-overlay'));
@@ -52,8 +52,8 @@ export default class Retro extends Page {
   }
 
   public async performArchive(): Promise<void> {
-    await this.driver.findElement(ByButtonText('Create Archive')).click();
-    await this.driver.findElement(ByButtonText('Archive')).click();
+    await this.driver.findElement(CBy.buttonText('Create Archive')).click();
+    await this.driver.findElement(CBy.buttonText('Archive')).click();
     await this.driver.wait(untilNoPopup);
   }
 
