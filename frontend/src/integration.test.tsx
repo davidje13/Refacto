@@ -29,8 +29,7 @@ interface RenderedApp {
 }
 
 function asyncAct(fn: () => Promise<any> | void): Promise<void> {
-  // awaiting React 16.9.0
-  // https://github.com/facebook/react/issues/14769
+  // TODO: awaiting https://github.com/testing-library/react-testing-library/issues/436
   return act(fn) as any as Promise<void>;
 }
 
