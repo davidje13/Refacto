@@ -6,7 +6,7 @@ import TokenManager from '../tokens/TokenManager';
 interface RetroAuth {
   privateKey: string;
   publicKey: string;
-  hash: string;
+  passwordHash: string;
 }
 
 export default class RetroAuthService {
@@ -25,16 +25,16 @@ export default class RetroAuthService {
     password: string,
     { cycleKeys = true } = {},
   ): Promise<void> {
-    const hash = await this.hasher.hash(password);
+    const passwordHash = await this.hasher.hash(password);
     if (cycleKeys) {
       const keys = await this.tokenManager.generateKeys();
       await this.retroAuthCollection.update('id', retroId, {
-        hash,
+        passwordHash,
         privateKey: keys.privateKey,
         publicKey: keys.publicKey,
       }, { upsert: true });
     } else {
-      await this.retroAuthCollection.update('id', retroId, { hash });
+      await this.retroAuthCollection.update('id', retroId, { passwordHash });
     }
   }
 
@@ -44,17 +44,17 @@ export default class RetroAuthService {
     tokenData: object,
   ): Promise<string | null> {
     const retroData = await this.retroAuthCollection
-      .get('id', retroId, ['hash']);
+      .get('id', retroId, ['passwordHash']);
     if (!retroData) {
       return null;
     }
 
-    const match = await this.hasher.compare(password, retroData.hash);
+    const match = await this.hasher.compare(password, retroData.passwordHash);
     if (!match) {
       return null;
     }
 
-    if (this.hasher.needsRegenerate(retroData.hash)) {
+    if (this.hasher.needsRegenerate(retroData.passwordHash)) {
       this.setPassword(retroId, password, { cycleKeys: false });
     }
     return this.grantToken(retroId, tokenData);
