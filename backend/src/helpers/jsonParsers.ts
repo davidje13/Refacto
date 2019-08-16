@@ -1,4 +1,4 @@
-import { RetroItem, RetroData } from 'refacto-entities';
+import { RetroItem, RetroData, Retro } from 'refacto-entities';
 import json from './json';
 
 export const extractRetroItem = json.object<RetroItem>({
@@ -11,6 +11,16 @@ export const extractRetroItem = json.object<RetroItem>({
 });
 
 export const extractRetroData = json.object<RetroData>({
+  format: json.string,
+  items: json.array(extractRetroItem),
+});
+
+export const extractRetro = json.object<Retro>({
+  id: json.string,
+  slug: json.string,
+  name: json.string,
+  ownerId: json.string,
+  state: json.record,
   format: json.string,
   items: json.array(extractRetroItem),
 });

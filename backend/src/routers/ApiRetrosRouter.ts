@@ -79,7 +79,7 @@ export default class ApiRetrosRouter extends Router {
       const { retroId } = req.params;
       const ws = await res.accept();
 
-      const onChange = (msg: ChangeInfo, id?: string): void => {
+      const onChange = (msg: ChangeInfo, id?: number): void => {
         const data = (id !== undefined) ? { id, ...msg } : msg;
         ws.send(JSON.stringify(data));
       };
@@ -94,12 +94,15 @@ export default class ApiRetrosRouter extends Router {
       ws.on('close', subscription.close);
 
       ws.on('message', (msg: string) => {
-        const { change, id } = JSON.parse(msg);
         if (!hasAuthScope(res, 'write')) {
           res.sendError(403);
           return;
         }
-        subscription.send(change, id);
+        const message = json.parse(msg, json.object({
+          change: json.record,
+          id: json.optional(json.number),
+        }));
+        subscription.send(message.change, message.id);
       });
 
       ws.send(JSON.stringify({

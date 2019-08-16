@@ -73,4 +73,5 @@ export default {
   },
 
   extractObject: <T>(source: unknown, maps: ObjectMapper<T>): T => jsonObject(maps)(source),
+  parse: <T>(source: string, map: Mapper<T>): T => map(JSON.parse(source)),
 };

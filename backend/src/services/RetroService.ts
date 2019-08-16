@@ -5,6 +5,7 @@ import { Retro, RetroSummary } from 'refacto-entities';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 import TaskQueueMap from '../task-queue/TaskQueueMap';
 import TopicMap from '../queue/TopicMap';
+import { extractRetro } from '../helpers/jsonParsers';
 
 type Identifier = string | null;
 type RetroSpec = Spec<Retro>;
@@ -28,16 +29,22 @@ export interface RetroSubscription<MetaT> {
 
 const SENSITIVE_FIELDS: (keyof Retro)[] = ['id', 'ownerId', 'slug'];
 
-function checkSensitiveEdits(retro: Retro, newRetro: Retro): void {
+function checkSensitiveEdits(retro: Retro, newRetro: Retro): Retro {
   Object.keys(newRetro).forEach((k) => {
     if (!Object.prototype.hasOwnProperty.call(retro, k)) {
       throw new Error(`Cannot add field ${k}`);
     }
-    const key = k as keyof Retro;
-    if (SENSITIVE_FIELDS.includes(key) && retro[key] !== newRetro[key]) {
+  });
+  SENSITIVE_FIELDS.forEach((key) => {
+    if (retro[key] !== newRetro[key]) {
       throw new Error(`Cannot edit field ${key}`);
     }
   });
+
+  // validate the final retro
+  // (required because Spec<Retro> is not validated at request time
+  // due to data structure complexity)
+  return extractRetro(newRetro);
 }
 
 export default class RetroService {
@@ -163,8 +170,8 @@ export default class RetroService {
       if (!retro) {
         throw new Error('Retro deleted');
       }
-      const newRetro = update(retro, change);
-      checkSensitiveEdits(retro, newRetro);
+      let newRetro = update(retro, change);
+      newRetro = checkSensitiveEdits(retro, newRetro);
       await this.retroCollection.update('id', retroId, newRetro);
     } catch (e) {
       this.retroChangeSubs.broadcast(retroId, {

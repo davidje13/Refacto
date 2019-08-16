@@ -223,6 +223,26 @@ describe('RetroService', () => {
       subscription!.close();
     });
 
+    it('rejects attempts to delete top-level fields', async () => {
+      const listener = new ChangeListener();
+      const subscription = await service.subscribeRetro(r2, listener.onChange);
+
+      await subscription!.send({ $unset: ['ownerId'] });
+      expect(listener.latestError()).toEqual('Cannot edit field ownerId');
+
+      subscription!.close();
+    });
+
+    it('rejects attempts to modify retros in invalid ways', async () => {
+      const listener = new ChangeListener();
+      const subscription = await service.subscribeRetro(r2, listener.onChange);
+
+      await subscription!.send({ items: { $push: [{ nope: 7 }] } } as any);
+      expect(listener.latestError()).toBeTruthy();
+
+      subscription!.close();
+    });
+
     it('does not trigger updates for invalid edits', async () => {
       const listener1 = new ChangeListener();
       const listener2 = new ChangeListener();
