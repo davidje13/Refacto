@@ -23,6 +23,7 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
   focusedItemId: string | null;
   focusedItemTimeout: number;
+  autoScroll: boolean;
 }
 
 const MoodSection = ({
@@ -39,6 +40,7 @@ const MoodSection = ({
   onAddExtraTime,
   focusedItemId,
   focusedItemTimeout,
+  autoScroll,
 }: PropsT): React.ReactElement => {
   const handleAddItem = useBoundCallback(onAddItem, category);
 
@@ -78,6 +80,7 @@ const MoodSection = ({
         focusedItemId={focusedItemId}
         itemProps={{
           focusedItemTimeout,
+          autoScroll,
           onVote,
           onEdit,
           onDelete,
@@ -105,6 +108,7 @@ MoodSection.propTypes = {
   onAddExtraTime: PropTypes.func,
   focusedItemId: PropTypes.string,
   focusedItemTimeout: PropTypes.number,
+  autoScroll: PropTypes.bool,
 };
 
 MoodSection.defaultProps = {
@@ -118,6 +122,7 @@ MoodSection.defaultProps = {
   onAddExtraTime: undefined,
   focusedItemId: null,
   focusedItemTimeout: 0,
+  autoScroll: false,
 };
 
 forbidExtraProps(MoodSection);

@@ -10,6 +10,7 @@ import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 interface PropsT {
   item: RetroItem;
   focusedItemTimeout: number;
+  autoScroll: boolean;
   onAddExtraTime?: (time: number) => void;
   onCancel?: () => void;
   onDone?: () => void;
@@ -18,6 +19,7 @@ interface PropsT {
 const MoodItemFocused = ({
   item,
   focusedItemTimeout,
+  autoScroll,
   onAddExtraTime,
   onCancel,
   onDone,
@@ -25,13 +27,14 @@ const MoodItemFocused = ({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (ref.current && ref.current.scrollIntoView) { // TODO TypeScript#16
+    // TODO TypeScript#16
+    if (autoScroll && ref.current && ref.current.scrollIntoView) {
       ref.current.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
       });
     }
-  }, [ref]);
+  }, [ref, autoScroll]);
 
   return (
     <div className="mood-item focused">
@@ -52,6 +55,7 @@ const MoodItemFocused = ({
 MoodItemFocused.propTypes = {
   item: propTypesShapeItem.isRequired,
   focusedItemTimeout: PropTypes.number,
+  autoScroll: PropTypes.bool,
   onAddExtraTime: PropTypes.func,
   onCancel: PropTypes.func,
   onDone: PropTypes.func,
@@ -60,6 +64,7 @@ MoodItemFocused.propTypes = {
 MoodItemFocused.defaultProps = {
   focusedItemTimeout: 0,
   onAddExtraTime: undefined,
+  autoScroll: false,
   onCancel: undefined,
   onDone: undefined,
 };

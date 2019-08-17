@@ -97,6 +97,7 @@ export default ({
       onSetDone={handleSetItemDone}
       focusedItemId={focusedItemId}
       focusedItemTimeout={focusedItemTimeout}
+      autoScroll={!singleColumn}
       categoryLabel={category.title}
       category={category.id}
     />

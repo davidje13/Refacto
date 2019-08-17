@@ -13,6 +13,7 @@ interface PropsT {
   item: RetroItem;
   focused: boolean;
   focusedItemTimeout: number;
+  autoScroll: boolean;
   onEdit?: (id: string, message: string) => void;
   onAddExtraTime?: (time: number) => void;
   onVote?: (id: string) => void;
@@ -26,6 +27,7 @@ const MoodItem = ({
   item,
   focused,
   focusedItemTimeout,
+  autoScroll,
   onEdit,
   onAddExtraTime,
   onVote,
@@ -66,6 +68,7 @@ const MoodItem = ({
         item={item}
         focusedItemTimeout={focusedItemTimeout}
         onAddExtraTime={onAddExtraTime}
+        autoScroll={autoScroll}
         onCancel={handleCancel}
         onDone={handleDone}
       />
@@ -86,6 +89,7 @@ MoodItem.propTypes = {
   item: propTypesShapeItem.isRequired,
   focused: PropTypes.bool,
   focusedItemTimeout: PropTypes.number,
+  autoScroll: PropTypes.bool,
   onVote: PropTypes.func,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
@@ -98,6 +102,7 @@ MoodItem.propTypes = {
 MoodItem.defaultProps = {
   focused: false,
   focusedItemTimeout: 0,
+  autoScroll: false,
   onVote: undefined,
   onEdit: undefined,
   onDelete: undefined,
