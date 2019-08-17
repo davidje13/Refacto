@@ -136,4 +136,12 @@ describe('Running a retro', () => {
       'some action',
     ]);
   });
+
+  it('displays the security page', async () => {
+    welcome = await new Welcome(driver).load();
+    const security = await welcome.clickSecurity();
+
+    expect(await security.getTitle()).toEqual('Privacy & Security - Refacto');
+    expect(await security.getHeaderText()).toContain('Privacy & Security');
+  });
 });

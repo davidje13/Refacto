@@ -9,6 +9,7 @@ import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import LoginCallback from './login/LoginCallback';
 import WelcomePage from './welcome/WelcomePage';
+import SecurityPage from './security/SecurityPage';
 import RetroCreatePage from './retro-create/RetroCreatePage';
 import RetroListPage from './retro-list/RetroListPage';
 import RetroPage from './retro/RetroPage';
@@ -28,6 +29,7 @@ const App = (): React.ReactElement => (
     <Switch>
       <Route path="/sso/:service" exact render={withParams(LoginCallback)} />
       <Route path="/" exact render={withParams(WelcomePage)} />
+      <Route path="/security" exact render={withParams(SecurityPage)} />
       <Route path="/create" exact render={withParams(RetroCreatePage)} />
       <Route path="/retros" exact render={withParams(RetroListPage)} />
       <Route path="/retros/:slug" exact render={withParams(RetroPage)} />

@@ -32,7 +32,20 @@ const WelcomePage = (): React.ReactElement => {
         title="Refacto"
         links={links}
       />
+      <p>
+        Refacto makes it easy to run team retros with remote team members.
+      </p>
       { createLink }
+      <p>
+        <a
+          className="link-security"
+          href="/security"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Privacy &amp; Security information
+        </a>
+      </p>
     </article>
   );
 };

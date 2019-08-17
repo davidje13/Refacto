@@ -79,7 +79,26 @@
     background: @beige-shadow;
   }
 
+  .warning, .error {
+    font-weight: bolder;
+    margin: 16px 0 0;
+  }
+
+  .warning {
+    color: @yellow-text-on-white;
+
+    &:before {
+      content: "\26A0\FE0F";
+      margin-right: 4px;
+    }
+  }
+
   .error {
     color: @red-text-on-white;
+
+    &:before {
+      content: "\2757\FE0F";
+      margin-right: 4px;
+    }
   }
 }

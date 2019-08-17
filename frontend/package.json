@@ -10,6 +10,7 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "core-js": "^3.2.0",
+    "js-sha1": "^0.6.0",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
     "prop-types": "^15.7.2",
     "prop-types-nullable": "git+https://github.com/davidje13/prop-types-nullable.git#semver:^1.0.1",

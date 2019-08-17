@@ -7,6 +7,7 @@ import {
   retroTokenService,
   retroTokenTracker,
 } from '../../api/api';
+import countPasswordBreaches from '../../api/PasswordChecker';
 import './RetroForm.less';
 
 function makeSlug(text: string): string {
@@ -36,8 +37,11 @@ interface StateT {
   password: string;
   passwordConf: string;
   sending: boolean;
+  passwordWarning: string | null;
   error: string | null;
 }
+
+const MIN_PASSWORD_LENGTH = 8;
 
 class RetroForm extends React.PureComponent<PropsT, StateT> {
   public static propTypes = {
@@ -59,6 +63,7 @@ class RetroForm extends React.PureComponent<PropsT, StateT> {
       password: '',
       passwordConf: '',
       sending: false,
+      passwordWarning: null,
       error: null,
     };
   }
@@ -127,11 +132,42 @@ class RetroForm extends React.PureComponent<PropsT, StateT> {
   };
 
   public handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ password: e.target.value });
+    this.setState({ password: e.target.value, passwordWarning: null });
   };
 
-  public handleChangePasswordConfirmation = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ passwordConf: e.target.value });
+  public handleChangePasswordConfirmation = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
+    const current = e.target.value;
+    const { password, passwordConf } = this.state;
+    if (passwordConf === current) {
+      return;
+    }
+    this.setState({ passwordConf: e.target.value, passwordWarning: null });
+    if (password !== current) {
+      return;
+    }
+    if (current.length < MIN_PASSWORD_LENGTH) {
+      this.setState({ passwordWarning: 'This password is too short' });
+      return;
+    }
+
+    try {
+      const count = await countPasswordBreaches(current);
+      const { password: updatedPassword } = this.state;
+      if (updatedPassword !== current) {
+        return;
+      }
+      if (count > 100) {
+        this.setState({ passwordWarning: 'This password is very common and insecure' });
+      } else if (count > 20) {
+        this.setState({ passwordWarning: 'This password is common and insecure' });
+      } else if (count > 0) {
+        this.setState({ passwordWarning: 'This password may be insecure' });
+      }
+    } catch (err) {
+      // ignore
+    }
   };
 
   public render(): React.ReactElement {
@@ -141,6 +177,7 @@ class RetroForm extends React.PureComponent<PropsT, StateT> {
       password,
       passwordConf,
       sending,
+      passwordWarning,
       error,
     } = this.state;
 
@@ -187,7 +224,7 @@ class RetroForm extends React.PureComponent<PropsT, StateT> {
             value={password}
             onChange={this.handleChangePassword}
             autoComplete="off"
-            minLength={8}
+            minLength={MIN_PASSWORD_LENGTH}
             required
           />
         </label>
@@ -203,6 +240,18 @@ class RetroForm extends React.PureComponent<PropsT, StateT> {
             required
           />
         </label>
+        { passwordWarning ? (
+          <div className="warning">
+            { `${passwordWarning} \u2014 ` }
+            <a
+              href="/security#passwords"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
+          </div>
+        ) : null }
         { sending ? (<div className="sending">&hellip;</div>) : (
           <button type="submit" title="Create Retro">
             Create
