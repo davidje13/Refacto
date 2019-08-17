@@ -10,7 +10,7 @@ const Anchor = ({ tag }: PropsT): React.ReactElement => {
 
   useEffect(() => {
     const anchor = window.location.hash.substr(1);
-    if (anchor === tag && ref.current) {
+    if (anchor === tag && ref.current && ref.current.scrollIntoView) {
       ref.current.scrollIntoView();
     }
   }, [ref, tag]);

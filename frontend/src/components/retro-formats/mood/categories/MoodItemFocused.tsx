@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
@@ -21,19 +21,33 @@ const MoodItemFocused = ({
   onAddExtraTime,
   onCancel,
   onDone,
-}: PropsT): React.ReactElement => (
-  <div className="mood-item focused">
-    <div className="message">{ item.message }</div>
-    <VoteCount votes={item.votes} />
-    <WrappedButton title="Cancel" className="cancel" onClick={onCancel}>
-      Cancel
-    </WrappedButton>
-    <WrappedButton title="Done" className="close" onClick={onDone}>
-      Done
-    </WrappedButton>
-    <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />
-  </div>
-);
+}: PropsT): React.ReactElement => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current && ref.current.scrollIntoView) { // TODO TypeScript#16
+      ref.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [ref]);
+
+  return (
+    <div className="mood-item focused">
+      <div className="scroll-target" ref={ref} />
+      <div className="message">{ item.message }</div>
+      <VoteCount votes={item.votes} />
+      <WrappedButton title="Cancel" className="cancel" onClick={onCancel}>
+        Cancel
+      </WrappedButton>
+      <WrappedButton title="Done" className="close" onClick={onDone}>
+        Done
+      </WrappedButton>
+      <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />
+    </div>
+  );
+};
 
 MoodItemFocused.propTypes = {
   item: propTypesShapeItem.isRequired,
