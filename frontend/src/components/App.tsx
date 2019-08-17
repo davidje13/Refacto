@@ -15,6 +15,7 @@ import RetroListPage from './retro-list/RetroListPage';
 import RetroPage from './retro/RetroPage';
 import ArchiveListPage from './archive-list/ArchiveListPage';
 import ArchivePage from './archive/ArchivePage';
+import RetroSettingsPage from './retro-settings/RetroSettingsPage';
 import NotFoundPage from './not-found/NotFoundPage';
 import './App.less';
 
@@ -35,6 +36,7 @@ const App = (): React.ReactElement => (
       <Route path="/retros/:slug" exact render={withParams(RetroPage)} />
       <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />
       <Route path="/retros/:slug/archives/:archiveId" exact render={withParams(ArchivePage)} />
+      <Route path="/retros/:slug/settings" exact render={withParams(RetroSettingsPage)} />
 
       <Redirect from="/retro/:slug" exact to="/retros/:slug" />
       <Redirect from="/:slug" exact to="/retros/:slug" />

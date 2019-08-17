@@ -118,6 +118,17 @@ describe('Running a retro', () => {
       expect(await retro2.getActionItemLabels()).toEqual(expectedActions2);
     });
 
+    it('synchronises configuration changes', async () => {
+      await retro2.expectChange(async () => {
+        const settings = await retro.clickSettings();
+        await settings.setName('My Retro Renamed');
+        await settings.clickSave();
+      });
+
+      expect(await retro.getNameText()).toEqual('My Retro Renamed');
+      expect(await retro2.getNameText()).toEqual('My Retro Renamed');
+    });
+
     it('prompts to archive when the last item is completed', async () => {
       await retro.expectChange(() => retro2.focusMoodItem(0));
       await retro.expectChange(() => retro2.closeMoodItem(0));

@@ -95,6 +95,10 @@ const RetroPage = ({
         documentTitle={`${retroName} - Refacto`}
         title={retroName}
         links={[
+          retroDispatch ? {
+            label: 'Settings',
+            action: `/retros/${slug}/settings`,
+          } : null,
           canArchive ? {
             label: 'Create Archive',
             action: showArchivePopup,

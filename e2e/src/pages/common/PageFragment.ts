@@ -37,8 +37,10 @@ export default abstract class PageFragment {
     return this.container().findElements(selector);
   }
 
-  protected setFormValue(selector: By, value: string): Promise<void> {
-    return this.findElement(selector).sendKeys(value);
+  protected async setFormValue(selector: By, value: string): Promise<void> {
+    const element = this.findElement(selector);
+    await element.clear();
+    await element.sendKeys(value);
   }
 
   protected click(selector: By): Promise<void> {

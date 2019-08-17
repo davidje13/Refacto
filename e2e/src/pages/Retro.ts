@@ -8,6 +8,7 @@ import Page from './common/Page';
 import PageFragment from './common/PageFragment';
 import Popup from './common/Popup';
 import RetroArchiveList from './RetroArchiveList';
+import RetroSettings from './RetroSettings';
 import CBy from '../helpers/customBy';
 
 class ItemEntry extends PageFragment {
@@ -100,6 +101,12 @@ export default class Retro extends Page {
     await this.click(By.linkText('Archives'));
 
     return new RetroArchiveList(this.driver, this.slug).wait();
+  }
+
+  public async clickSettings(): Promise<RetroSettings> {
+    await this.click(By.linkText('Settings'));
+
+    return new RetroSettings(this.driver, this.slug).wait();
   }
 
   private getName(): WebElementPromise {
