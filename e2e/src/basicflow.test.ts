@@ -71,11 +71,10 @@ describe('Running a retro', () => {
   });
 
   it('lists created items', async () => {
-    const happy = retro.getHappyItemEntry();
-    await happy.setText('yay');
-    await happy.submit();
+    await retro.getHappyItemEntry().enter('yay');
+    await retro.getHappyItemEntry().enter('hurrah');
 
-    expect(await retro.getMoodItemLabels()).toEqual(['yay']);
+    expect(await retro.getMoodItemLabels()).toEqual(['hurrah', 'yay']);
   });
 
   describe('second user journey', () => {
@@ -91,15 +90,13 @@ describe('Running a retro', () => {
     });
 
     it('displays previously added items', async () => {
-      expect(await retro2.getMoodItemLabels()).toEqual(['yay']);
+      expect(await retro2.getMoodItemLabels()).toEqual(['hurrah', 'yay']);
     });
 
     it('synchronises activity (A -> B) in real time', async () => {
-      await retro2.expectChange(async () => {
-        const actionEntry = retro.getActionItemEntry();
-        await actionEntry.setText('some action');
-        await actionEntry.submit();
-      });
+      await retro2.expectChange(
+        () => retro.getActionItemEntry().enter('some action'),
+      );
 
       const expectedActions1 = [
         'some action',
@@ -109,11 +106,9 @@ describe('Running a retro', () => {
     });
 
     it('synchronises activity (B -> A) in real time', async () => {
-      await retro.expectChange(async () => {
-        const actionEntry = retro2.getActionItemEntry();
-        await actionEntry.setText('another action');
-        await actionEntry.submit();
-      });
+      await retro.expectChange(
+        () => retro2.getActionItemEntry().enter('another action'),
+      );
 
       const expectedActions2 = [
         'another action',
@@ -121,6 +116,19 @@ describe('Running a retro', () => {
       ];
       expect(await retro.getActionItemLabels()).toEqual(expectedActions2);
       expect(await retro2.getActionItemLabels()).toEqual(expectedActions2);
+    });
+
+    it('prompts to archive when the last item is completed', async () => {
+      await retro.expectChange(() => retro2.focusMoodItem(0));
+      await retro.expectChange(() => retro2.closeMoodItem(0));
+      expect(await retro2.getArchivePopup().exists()).toBeFalsy();
+
+      await retro.expectChange(() => retro2.focusMoodItem(1));
+      await retro.expectChange(() => retro2.closeMoodItem(1));
+      expect(await retro2.getArchivePopup().exists()).toBeTruthy();
+
+      // ...but does not prompt other viewers
+      expect(await retro.getArchivePopup().exists()).toBeFalsy();
     });
   });
 

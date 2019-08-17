@@ -18,6 +18,11 @@ class ItemEntry extends PageFragment {
   public submit(): Promise<void> {
     return this.click(By.css('button'));
   }
+
+  public async enter(value: string): Promise<void> {
+    await this.setText(value);
+    await this.submit();
+  }
 }
 
 export default class Retro extends Page {

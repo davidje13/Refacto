@@ -54,7 +54,7 @@ export default ({
     focusedItemTimeout = 0,
   },
   retroItems,
-  onComplete, /* eslint-disable-line @typescript-eslint/no-unused-vars */ // TODO
+  onComplete,
   dispatch,
   archive,
 }: PropsT): React.ReactElement => {
@@ -67,7 +67,24 @@ export default ({
   const handleEditItem = useDispatchAction(dispatch, editRetroItem);
   const handleDeleteItem = useDispatchAction(dispatch, deleteRetroItem);
   const handleAddExtraTime = useDispatchAction(dispatch, addExtraTime);
-  const handleSetItemDone = useDispatchAction(dispatch, setRetroItemDone);
+  const handleSetActionItemDone = useDispatchAction(dispatch, setRetroItemDone);
+
+  const refRetroItems = useBoxed(retroItems);
+  const handleSetMoodItemDone = useCallback((id, done) => {
+    dispatch!(setRetroItemDone(id, done));
+
+    const items = refRetroItems.current;
+    if (onComplete && items && done) {
+      const allDone = items.every((item) => (
+        item.done ||
+        item.id === id ||
+        item.category === 'action'
+      ));
+      if (allDone) {
+        onComplete();
+      }
+    }
+  }, [dispatch, refRetroItems]);
 
   const refFocusedItemId = useBoxed(focusedItemId);
   const handleSwitchFocus = useCallback((id, markPreviousDone) => {
@@ -94,7 +111,7 @@ export default ({
       onDelete={handleDeleteItem}
       onSwitchFocus={dispatch && handleSwitchFocus}
       onAddExtraTime={handleAddExtraTime}
-      onSetDone={handleSetItemDone}
+      onSetDone={handleSetMoodItemDone}
       focusedItemId={focusedItemId}
       focusedItemTimeout={focusedItemTimeout}
       autoScroll={!singleColumn}
@@ -107,7 +124,7 @@ export default ({
     <ActionsPane
       items={retroItems}
       onAddItem={handleAddActionItem}
-      onSetDone={handleSetItemDone}
+      onSetDone={handleSetActionItemDone}
       onEdit={handleEditItem}
       onDelete={handleDeleteItem}
       localDateProvider={localDateProvider}
