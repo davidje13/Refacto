@@ -1,3 +1,22 @@
+@import (reference) '../colours.less';
+
 .page-welcome {
   text-align: center;
+
+  .link-create {
+    margin: 8px;
+    padding: 8px 16px;
+    background: @green-button-dark;
+    color: #FFFFFF;
+    transition: box-shadow 0.2s ease;
+
+    &:active, &:hover, &:focus {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+    }
+
+    &:active {
+      box-shadow: none;
+    }
+  }
 }
