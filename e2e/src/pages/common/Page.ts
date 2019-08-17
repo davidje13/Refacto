@@ -5,20 +5,23 @@ import {
   WebDriver,
   WebElementCondition,
 } from 'selenium-webdriver';
-import customUntil from '../helpers/customUntil';
+import customUntil from '../../helpers/customUntil';
+import PageFragment from './PageFragment';
+import Popup from './Popup';
 
 const HOST = process.env.TARGET_HOST!;
 
 const untilNoLoaders = customUntil.noElementLocated(By.css('.loader'));
 
-export default abstract class Page {
+export default abstract class Page extends PageFragment {
   private readonly untilNavigated: WebElementCondition;
 
   protected constructor(
-    protected readonly driver: WebDriver,
+    driver: WebDriver,
     private readonly subpath: string,
     expectedCSS: string,
   ) {
+    super(driver, By.tagName('body'));
     this.untilNavigated = until.elementLocated(By.css(expectedCSS));
   }
 
@@ -42,21 +45,7 @@ export default abstract class Page {
     return this.driver.getTitle();
   }
 
-  public setFormValue(selector: By, value: string): Promise<void> {
-    return this.driver.findElement(selector).sendKeys(value);
-  }
-
-  public click(selector: By): Promise<void> {
-    return this.driver.findElement(selector).click();
-  }
-
-  public async expectChange(fn: () => (void | Promise<void>)): Promise<void> {
-    const body = await this.driver.findElement(By.css('body'));
-    const oldState = await body.getText();
-    await fn();
-    await this.driver.wait(async () => {
-      const state = await body.getText();
-      return state !== oldState;
-    });
+  protected getPopup(className: string): Popup {
+    return new Popup(this.driver, className);
   }
 }

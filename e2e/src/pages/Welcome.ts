@@ -1,5 +1,5 @@
 import { By, WebDriver, WebElementPromise } from 'selenium-webdriver';
-import Page from './Page';
+import Page from './common/Page';
 import RetroCreate from './RetroCreate';
 import Login from './Login';
 import Security from './Security';
@@ -7,10 +7,6 @@ import Security from './Security';
 export default class Welcome extends Page {
   public constructor(driver: WebDriver) {
     super(driver, '/', '.page-welcome');
-  }
-
-  public getHeader(): WebElementPromise {
-    return this.driver.findElement(By.css('h1'));
   }
 
   public getHeaderText(): Promise<string> {
@@ -30,7 +26,7 @@ export default class Welcome extends Page {
   }
 
   public async clickSecurity(): Promise<Security> {
-    const element = this.driver.findElement(By.css('.link-security'));
+    const element = this.findElement(By.css('.link-security'));
     // avoid opening a new tab, as this is difficult to manage
     await this.driver.executeScript(
       'arguments[0].setAttribute("target", "_self");',
@@ -39,5 +35,9 @@ export default class Welcome extends Page {
     await element.click();
 
     return new Security(this.driver).wait();
+  }
+
+  private getHeader(): WebElementPromise {
+    return this.findElement(By.css('h1'));
   }
 }

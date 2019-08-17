@@ -1,5 +1,5 @@
 import { By, WebDriver } from 'selenium-webdriver';
-import Page from './Page';
+import Page from './common/Page';
 import Retro from './Retro';
 
 export default class RetroCreate extends Page {

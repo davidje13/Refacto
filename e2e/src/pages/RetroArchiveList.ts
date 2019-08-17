@@ -1,5 +1,5 @@
 import { By, WebDriver, WebElement } from 'selenium-webdriver';
-import Page from './Page';
+import Page from './common/Page';
 import RetroArchive from './RetroArchive';
 
 export default class RetroArchiveList extends Page {
@@ -10,18 +10,9 @@ export default class RetroArchiveList extends Page {
     this.slug = slug;
   }
 
-  public getArchiveItems(): Promise<WebElement[]> {
-    return this.driver.findElements(By.css('.archive-link'));
-  }
-
   public async getArchiveLabels(): Promise<string[]> {
     const items = await this.getArchiveItems();
     return Promise.all(items.map((item) => item.getText()));
-  }
-
-  public async getArchiveItemAtIndex(index: number): Promise<WebElement> {
-    const all = await this.getArchiveItems();
-    return all[index];
   }
 
   public async clickArchiveAtIndex(index: number): Promise<RetroArchive> {
@@ -29,5 +20,14 @@ export default class RetroArchiveList extends Page {
     await item.click();
 
     return new RetroArchive(this.driver, this.slug, 'unknown').wait();
+  }
+
+  private getArchiveItems(): Promise<WebElement[]> {
+    return this.findElements(By.css('.archive-link'));
+  }
+
+  private async getArchiveItemAtIndex(index: number): Promise<WebElement> {
+    const all = await this.getArchiveItems();
+    return all[index];
   }
 }

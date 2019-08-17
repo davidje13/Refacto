@@ -70,6 +70,14 @@ describe('Running a retro', () => {
     expect(await retro.getNameText()).toEqual('My Retro');
   });
 
+  it('lists created items', async () => {
+    const happy = retro.getHappyItemEntry();
+    await happy.setText('yay');
+    await happy.submit();
+
+    expect(await retro.getMoodItemLabels()).toEqual(['yay']);
+  });
+
   describe('second user journey', () => {
     let retro2: Retro;
 
@@ -82,10 +90,15 @@ describe('Running a retro', () => {
       expect(await retro2.getTitle()).toEqual('My Retro - Refacto');
     });
 
+    it('displays previously added items', async () => {
+      expect(await retro2.getMoodItemLabels()).toEqual(['yay']);
+    });
+
     it('synchronises activity (A -> B) in real time', async () => {
       await retro2.expectChange(async () => {
-        await retro.setActionItemText('some action');
-        await retro.submitActionItem();
+        const actionEntry = retro.getActionItemEntry();
+        await actionEntry.setText('some action');
+        await actionEntry.submit();
       });
 
       const expectedActions1 = [
@@ -97,8 +110,9 @@ describe('Running a retro', () => {
 
     it('synchronises activity (B -> A) in real time', async () => {
       await retro.expectChange(async () => {
-        await retro2.setActionItemText('another action');
-        await retro2.submitActionItem();
+        const actionEntry = retro2.getActionItemEntry();
+        await actionEntry.setText('another action');
+        await actionEntry.submit();
       });
 
       const expectedActions2 = [
@@ -110,13 +124,12 @@ describe('Running a retro', () => {
     });
   });
 
-  it('clears completed action items when archiving', async () => {
+  it('clears items and completed action items when archiving', async () => {
     await retro.toggleActionItemDone(1);
     await retro.performArchive();
 
-    expect(await retro.getActionItemLabels()).toEqual([
-      'another action',
-    ]);
+    expect(await retro.getMoodItemLabels()).toEqual([]);
+    expect(await retro.getActionItemLabels()).toEqual(['another action']);
   });
 
   it('displays a list of archives', async () => {
