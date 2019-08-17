@@ -33,12 +33,16 @@ const ActionsPane = ({
       <header>
         <h2>Action items</h2>
         { onAddItem && (
-          <ExpandingTextEntry
-            onSubmit={onAddItem}
-            submitButtonTitle="Add"
-            placeholder="Add an action item"
-            clearAfterSubmit
-          />
+          <div className="new-action-item-hold">
+            <div className="new-action-item">
+              <ExpandingTextEntry
+                onSubmit={onAddItem}
+                submitButtonTitle="Add"
+                placeholder="Add an action item"
+                clearAfterSubmit
+              />
+            </div>
+          </div>
         ) }
       </header>
       <ActionSection

@@ -2,6 +2,7 @@
 
 @base-padding: 16px;
 @action-header-padding: 24px;
+@add-action-max-scroll: 2000px;
 
 .retro-format-mood {
   .happy {
@@ -210,12 +211,34 @@
 
         h2 {
           text-align: center;
-          margin: @action-header-padding 0;
+          margin: @action-header-padding 0 calc(@action-header-padding - 16px);
         }
 
-        .text-entry {
+        // new-action-item is sticky on the bottom of the page
+        // but because it needs to escape its parent, this
+        // hierarchy is needed
+        .new-action-item-hold {
+          position: relative;
+          margin: -@add-action-max-scroll auto -8px;
+          pointer-events: none;
           max-width: 24em;
-          margin: 0 auto;
+
+          &:before {
+            content: "";
+            display: block;
+            height: @add-action-max-scroll;
+          }
+
+          .new-action-item {
+            pointer-events: initial;
+            padding: 16px 16px 8px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background: @beige-back;
+            box-shadow: 0 0 4px @beige-back;
+            position: sticky;
+            bottom: 0;
+          }
         }
       }
 
