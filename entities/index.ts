@@ -58,7 +58,7 @@ export interface RetroArchive extends RetroArchiveSummary, RetroData {
 export function makeRetroArchive(details: Partial<RetroArchive> = {}): RetroArchive {
   return Object.assign({
     id: '',
-    retroId: 0,
+    retroId: '',
     created: 0,
     format: '',
     items: [],
