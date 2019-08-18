@@ -49,6 +49,8 @@ const ActionItem = ({
     <div className={classNames('action-item', { done: item.done })}>
       <div className="message">{ item.message }</div>
       <WrappedButton
+        role="checkbox"
+        aria-checked={item.done}
         title={item.done ? 'Mark as not done' : 'Mark as done'}
         className="toggle-done"
         onClick={handleToggleDone}
