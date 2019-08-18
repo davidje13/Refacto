@@ -8,11 +8,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/express-serve-static-core": "4.16.7",
     "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.0.4",
-    "core-js": "^3.2.0",
+    "core-js": "^3.2.1",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
     "jwt-simple": "^0.5.6",
-    "mongodb": "^3.2.7",
+    "mongodb": "^3.3.0",
     "node-fetch": "^2.6.0",
     "pwd-hasher": "git+https://github.com/davidje13/pwd-hasher.git#semver:^1.0.0",
     "refacto-entities": "file:../entities",
@@ -35,13 +36,13 @@
     "eslint": "^5.16.0",
     "eslint-plugin-eslint-comments": "^3.1.2",
     "http-proxy-middleware": "^0.19.1",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "neutrino": "^9.0.0-rc.3",
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.2",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.0",
     "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.6",
     "typescript": "^3.5.3",
-    "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6"
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
   }
 }

@@ -28,9 +28,9 @@ interface RenderedApp {
   dom: RenderResult<typeof queries>;
 }
 
-function asyncAct(fn: () => Promise<any> | void): Promise<void> {
-  // TODO: awaiting https://github.com/testing-library/react-testing-library/issues/436
-  return act(fn) as any as Promise<void>;
+function asyncAct(fn: () => Promise<any>): Promise<void> {
+  // TODO: awaiting https://github.com/DefinitelyTyped/DefinitelyTyped/pull/37554
+  return act(fn as any) as any as Promise<void>;
 }
 
 async function renderApp(location: string): Promise<RenderedApp> {
