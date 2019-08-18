@@ -52,8 +52,9 @@ fi;
 echo 'Combining output...';
 rm -rf "$BUILDDIR" || true;
 cp -R "$BASEDIR/backend/build" "$BUILDDIR";
+rm -rf "$BUILDDIR/static" || true;
 mkdir -p "$BUILDDIR/static";
-cp -Rf "$BASEDIR/frontend/build/"* "$BUILDDIR/static";
+cp -R "$BASEDIR/frontend/build/"* "$BUILDDIR/static";
 
 if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
   echo 'Restoring node_modules...';

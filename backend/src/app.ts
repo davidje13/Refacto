@@ -28,6 +28,18 @@ interface TestHookWebSocketExpress extends WebSocketExpress {
   testHooks: TestHooks;
 }
 
+const CSP = [
+  'base-uri \'self\'',
+  'default-src \'self\'',
+  'object-src \'none\'',
+  'script-src \'self\' \'unsafe-eval\'',
+  'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com',
+  'font-src \'self\' https://fonts.gstatic.com',
+  'connect-src \'self\' https://api.pwnedpasswords.com',
+  'img-src \'self\'',
+  'form-action \'none\'',
+].join('; ');
+
 export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   const db = await CollectionStorage.connect(config.db.url);
 
@@ -50,6 +62,22 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   app.disable('x-powered-by');
   app.enable('case sensitive routing');
   app.use(WebSocketExpress.json({ limit: 5 * 1024 }));
+
+  app.useHTTP((req, res, next) => {
+    res.header('x-frame-options', 'DENY');
+    res.header('x-xss-protection', '1; mode=block');
+    res.header('x-content-type-options', 'nosniff');
+    res.header('content-security-policy', CSP);
+    next();
+  });
+
+  app.useHTTP('/api', (req, res, next) => {
+    res.header('cache-control', 'no-cache, no-store');
+    res.header('expires', '0');
+    res.header('pragma', 'no-cache');
+    res.removeHeader('content-security-policy');
+    next();
+  });
 
   app.use('/api/auth', new ApiAuthRouter(retroAuthService));
   app.use('/api/slugs', new ApiSlugsRouter(retroService));

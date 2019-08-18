@@ -17,6 +17,15 @@ describe('API static content', () => {
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
 
+    it('responds with requested file for known requests', async () => {
+      const response = await request(server)
+        .get('/example.abc123.js')
+        .expect(200)
+        .expect('Content-Type', /application\/javascript/);
+
+      expect(response.text).toContain('// Example Versioned Resource');
+    });
+
     it('responds with index.html for all unknown requests', async () => {
       const response = await request(server)
         .get('/foobar')
@@ -24,6 +33,37 @@ describe('API static content', () => {
         .expect('Content-Type', /text\/html/);
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
+    });
+
+    it('adds common headers', async () => {
+      await request(server)
+        .get('/')
+        .expect('X-Frame-Options', 'DENY');
+
+      await request(server)
+        .get('/example.abc123.js')
+        .expect('X-Frame-Options', 'DENY');
+
+      await request(server)
+        .get('/foobar')
+        .expect('X-Frame-Options', 'DENY');
+    });
+
+    it('manages cache control', async () => {
+      await request(server)
+        .get('/')
+        .expect('Cache-Control', 'public, max-age=600')
+        .expect('ETag', /.+/);
+
+      await request(server)
+        .get('/example.abc123.js')
+        .expect('Cache-Control', 'public, max-age=31536000')
+        .expect('ETag', /.+/);
+
+      await request(server)
+        .get('/foobar')
+        .expect('Cache-Control', 'public, max-age=600')
+        .expect('ETag', /.+/);
     });
   });
 
@@ -46,6 +86,12 @@ describe('API static content', () => {
         .expect(200);
 
       expect(response.text).toContain('proxied content here');
+    });
+
+    it('adds common headers', async () => {
+      await request(server)
+        .get('/')
+        .expect('X-Frame-Options', 'DENY');
     });
   });
 });

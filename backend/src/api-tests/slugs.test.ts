@@ -34,5 +34,17 @@ describe('API slugs', () => {
         .get('/api/slugs/nope')
         .expect(404);
     });
+
+    it('adds common headers', async () => {
+      await request(server)
+        .get('/api/slugs/my-retro')
+        .expect('X-Frame-Options', 'DENY');
+    });
+
+    it('adds API headers', async () => {
+      await request(server)
+        .get('/api/slugs/my-retro')
+        .expect('Cache-Control', 'no-cache, no-store');
+    });
   });
 });
