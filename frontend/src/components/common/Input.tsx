@@ -5,6 +5,7 @@ type Callback<T> = (value: T) => void;
 
 type InheritT = Omit<React.InputHTMLAttributes<HTMLInputElement>, (
   'onChange' |
+  'value' |
   'defaultValue' |
   'checked' |
   'defaultChecked'
@@ -13,14 +14,31 @@ type InheritT = Omit<React.InputHTMLAttributes<HTMLInputElement>, (
 type PropsT = InheritT & ({
   type: string;
   value: string;
+  selected?: never;
+  checked?: never;
+  onChange?: Callback<string>;
+} | {
+  type: 'radio';
+  value: string;
+  selected: string;
+  checked?: never;
   onChange?: Callback<string>;
 } | {
   type: 'checkbox';
+  value?: never;
+  selected?: never;
   checked: boolean;
   onChange?: Callback<boolean>;
 });
 
-const Input = ({ type, onChange, ...rest }: PropsT): React.ReactElement => {
+const Input = ({
+  type,
+  value,
+  selected,
+  checked,
+  onChange,
+  ...rest
+}: PropsT): React.ReactElement => {
   const changeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (!onChange) {
       return;
@@ -40,6 +58,8 @@ const Input = ({ type, onChange, ...rest }: PropsT): React.ReactElement => {
   return (
     <input
       type={type}
+      value={value}
+      checked={type === 'radio' ? (selected === value) : checked}
       onChange={changeHandler}
       autoComplete="off"
       {...rest}

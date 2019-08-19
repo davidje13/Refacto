@@ -17,7 +17,7 @@ class OptionType<T> {
   }
 
   public specSet(value: T): Spec<Record<string, unknown>> {
-    if (value === undefined) {
+    if (value === undefined || value === this.def) {
       return { $unset: [this.key] };
     }
     return { [this.key]: { $set: value } };
@@ -26,6 +26,7 @@ class OptionType<T> {
 
 const OPTIONS = {
   alwaysShowAddAction: new OptionType<boolean>('always-show-add-action', true),
+  faceTheme: new OptionType<string>('face-theme', 'emoji'),
 };
 
 export default OPTIONS;

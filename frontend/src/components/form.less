@@ -10,7 +10,7 @@
     display: block;
   }
 
-  input:not([type='checkbox']), .prefixed-input {
+  input:not([type='checkbox']):not([type='radio']), .prefixed-input {
     display: block;
     margin: 4px 0 16px;
     padding: 8px;
@@ -20,9 +20,22 @@
     box-sizing: border-box;
   }
 
-  input[type='checkbox'] {
-    margin: 4px 4px 16px;
+  fieldset {
+    margin-top: 8px;
+
+    legend {
+      margin-bottom: 8px;
+    }
+  }
+
+  input[type='checkbox'], input[type='radio'] {
+    margin: 4px 12px 16px 8px;
     vertical-align: top;
+  }
+
+  .fixed-column {
+    display: inline-block;
+    width: 120px;
   }
 
   .prefixed-input {

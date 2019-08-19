@@ -8,6 +8,7 @@ import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import OPTIONS from '../../helpers/optionManager';
 import './SettingsForm.less';
+import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
 
 interface SaveT {
   id: string;
@@ -26,6 +27,9 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
     OPTIONS.alwaysShowAddAction.read(retro.options),
   );
+  const [faceTheme, setFaceTheme] = useState(
+    OPTIONS.faceTheme.read(retro.options),
+  );
 
   const [handleSubmit, sending, error] = useSubmissionCallback(() => {
     if (!name || !slug) {
@@ -35,13 +39,32 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
     // TODO: await confirmation
     dispatch({
       name: { $set: name },
-      options: OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
+      options: {
+        $seq: [
+          OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
+          OPTIONS.faceTheme.specSet(faceTheme),
+        ],
+      },
     });
 
     if (onSave) {
       onSave({ id: retro.id, slug });
     }
-  }, [name, slug, alwaysShowAddAction, dispatch, onSave]);
+  }, [name, slug, alwaysShowAddAction, faceTheme, dispatch, onSave]);
+
+  const themeChoices = getThemes().map(([value, theme]) => (
+    <label>
+      <Input
+        name="face-theme"
+        type="radio"
+        value={value}
+        selected={faceTheme}
+        onChange={setFaceTheme}
+      />
+      <span className="fixed-column">{ theme.name }</span>
+      { ` ${theme.icons.happy} ${theme.icons.meh} ${theme.icons.sad}` }
+    </label>
+  ));
 
   return (
     <form onSubmit={handleSubmit} className="retro-settings">
@@ -65,6 +88,10 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
         />
         Sticky &ldquo;add action&rdquo; input
       </label>
+      <fieldset>
+        <legend>Faces theme</legend>
+        { themeChoices }
+      </fieldset>
       { sending ? (<div className="sending">&hellip;</div>) : (
         <button type="submit" title="Save Changes">
           Save
