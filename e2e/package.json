@@ -10,7 +10,7 @@
     "@neutrinojs/airbnb-base": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
     "@neutrinojs/node": "^9.0.0-rc.3",
-    "@types/jest": "^24.0.17",
+    "@types/jest": "^24.0.18",
     "@types/selenium-webdriver": "^4.0.1",
     "core-js": "^3.2.1",
     "eslint": "^5.16.0",
