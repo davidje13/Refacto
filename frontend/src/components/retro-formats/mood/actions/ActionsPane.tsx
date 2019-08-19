@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { RetroItem } from 'refacto-entities';
 import ActionSection from './ActionSection';
 import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
@@ -11,6 +12,7 @@ import { formatDate } from '../../../../time/formatters';
 interface PropsT {
   items: RetroItem[];
   localDateProvider: LocalDateProvider;
+  alwaysShowEntry: boolean;
   onAddItem?: (message: string) => void;
   onSetDone?: (id: string, done: boolean) => void;
   onEdit?: (id: string, message: string) => void;
@@ -20,6 +22,7 @@ interface PropsT {
 const ActionsPane = ({
   items,
   localDateProvider,
+  alwaysShowEntry,
   onAddItem,
   onSetDone,
   onEdit,
@@ -33,7 +36,11 @@ const ActionsPane = ({
       <header>
         <h2>Action items</h2>
         { onAddItem && (
-          <div className="new-action-item-hold">
+          <div
+            className={classNames('new-action-item-hold', {
+              'always-visible': alwaysShowEntry,
+            })}
+          >
             <div className="new-action-item">
               <ExpandingTextEntry
                 onSubmit={onAddItem}
@@ -77,6 +84,7 @@ const ActionsPane = ({
 ActionsPane.propTypes = {
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
+  alwaysShowEntry: PropTypes.bool,
   onAddItem: PropTypes.func,
   onSetDone: PropTypes.func,
   onEdit: PropTypes.func,
@@ -84,6 +92,7 @@ ActionsPane.propTypes = {
 };
 
 ActionsPane.defaultProps = {
+  alwaysShowEntry: false,
   onAddItem: null,
   onSetDone: null,
   onEdit: null,

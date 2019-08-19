@@ -8,6 +8,7 @@ import { propTypesShapeItem } from '../../api/dataStructurePropTypes';
 import { RetroSpec } from '../../actions/retro';
 
 interface ChildPropsT {
+  retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: object;
   dispatch?: (spec: RetroSpec) => void;
@@ -30,6 +31,7 @@ const RetroFormatPicker = ({ retroFormat, ...props }: PropsT): React.ReactElemen
 
 RetroFormatPicker.propTypes = {
   retroFormat: PropTypes.string.isRequired,
+  retroOptions: PropTypes.shape({}).isRequired,
   retroItems: PropTypes.arrayOf(propTypesShapeItem).isRequired,
   retroState: PropTypes.shape({}).isRequired,
   dispatch: PropTypes.func,

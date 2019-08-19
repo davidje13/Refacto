@@ -90,6 +90,7 @@ export default class RetroService {
         ownerId,
         state: {},
         format,
+        options: {},
         items: [],
       });
     } catch (e) {

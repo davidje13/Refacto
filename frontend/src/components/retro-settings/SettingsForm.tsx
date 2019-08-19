@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Retro } from 'refacto-entities';
 import Input from '../common/Input';
 import { RetroSpec } from '../../actions/retro';
+import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import useSubmissionCallback from '../../hooks/useSubmissionCallback';
+import OPTIONS from '../../helpers/optionManager';
 import './SettingsForm.less';
 
 interface SaveT {
@@ -22,6 +23,9 @@ interface PropsT {
 const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement => {
   const [name, setName] = useState(retro.name);
   const [slug] = useState(retro.slug);
+  const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
+    OPTIONS.alwaysShowAddAction.read(retro.options),
+  );
 
   const [handleSubmit, sending, error] = useSubmissionCallback(() => {
     if (!name || !slug) {
@@ -31,12 +35,13 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
     // TODO: await confirmation
     dispatch({
       name: { $set: name },
+      options: OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
     });
 
     if (onSave) {
       onSave({ id: retro.id, slug });
     }
-  }, [name, slug, dispatch, onSave]);
+  }, [name, slug, alwaysShowAddAction, dispatch, onSave]);
 
   return (
     <form onSubmit={handleSubmit} className="retro-settings">
@@ -50,6 +55,15 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
           onChange={setName}
           required
         />
+      </label>
+      <label>
+        <Input
+          name="always-show-add-action"
+          type="checkbox"
+          checked={alwaysShowAddAction}
+          onChange={setAlwaysShowAddAction}
+        />
+        Sticky &ldquo;add action&rdquo; input
       </label>
       { sending ? (<div className="sending">&hellip;</div>) : (
         <button type="submit" title="Save Changes">

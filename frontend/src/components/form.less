@@ -10,7 +10,7 @@
     display: block;
   }
 
-  input, .prefixed-input {
+  input:not([type='checkbox']), .prefixed-input {
     display: block;
     margin: 4px 0 16px;
     padding: 8px;
@@ -18,6 +18,11 @@
     border: 1px solid @beige-shadow;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  input[type='checkbox'] {
+    margin: 4px 4px 16px;
+    vertical-align: top;
   }
 
   .prefixed-input {

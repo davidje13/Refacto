@@ -9,6 +9,7 @@ describe('MoodRetro', () => {
   it('renders without error', () => {
     render((
       <MoodRetro
+        retroOptions={{}}
         retroItems={[]}
         retroState={{}}
         archive={false}

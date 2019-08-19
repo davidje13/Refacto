@@ -111,6 +111,7 @@ const RetroPage = ({
         Component={RetroFormatPicker}
         componentProps={retro ? {
           retroFormat: retro.format,
+          retroOptions: retro.options,
           retroItems: retro.items,
           retroState: retro.state,
           dispatch: retroDispatch || undefined,

@@ -17,6 +17,7 @@ import useBoxed from '../../../hooks/useBoxed';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
 import useDispatchAction from '../../../hooks/useDispatchAction';
+import OPTIONS from '../../../helpers/optionManager';
 import './MoodRetro.less';
 
 interface Category {
@@ -38,6 +39,7 @@ const addExtraTime = (duration: number): RetroSpec => setRetroState({
 });
 
 interface PropsT {
+  retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: {
     focusedItemId?: string | null;
@@ -49,6 +51,7 @@ interface PropsT {
 }
 
 export default ({
+  retroOptions,
   retroState: {
     focusedItemId = null,
     focusedItemTimeout = 0,
@@ -123,6 +126,7 @@ export default ({
   const actionSection = (
     <ActionsPane
       items={retroItems}
+      alwaysShowEntry={OPTIONS.alwaysShowAddAction.read(retroOptions)}
       onAddItem={handleAddActionItem}
       onSetDone={handleSetActionItemDone}
       onEdit={handleEditItem}

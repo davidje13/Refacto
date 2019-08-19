@@ -16,7 +16,6 @@ type PropsT = InheritT & ({
   onChange?: Callback<string>;
 } | {
   type: 'checkbox';
-  value: string;
   checked: boolean;
   onChange?: Callback<boolean>;
 });

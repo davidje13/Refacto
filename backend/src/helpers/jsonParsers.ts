@@ -12,6 +12,7 @@ export const extractRetroItem = json.object<RetroItem>({
 
 export const extractRetroData = json.object<RetroData>({
   format: json.string,
+  options: json.record,
   items: json.array(extractRetroItem),
 });
 
@@ -22,5 +23,6 @@ export const extractRetro = json.object<Retro>({
   ownerId: json.string,
   state: json.record,
   format: json.string,
+  options: json.record,
   items: json.array(extractRetroItem),
 });

@@ -214,14 +214,18 @@
           margin: @action-header-padding 0 calc(@action-header-padding - 16px);
         }
 
+        .new-action-item-hold {
+          margin: @action-header-padding auto 0;
+          max-width: 24em;
+        }
+
         // new-action-item is sticky on the bottom of the page
         // but because it needs to escape its parent, this
         // hierarchy is needed
-        .new-action-item-hold {
+        .new-action-item-hold.always-visible {
           position: relative;
           margin: -@add-action-max-scroll auto -8px;
           pointer-events: none;
-          max-width: 24em;
 
           &:before {
             content: "";

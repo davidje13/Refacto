@@ -17,6 +17,7 @@ describe('Retro', () => {
     const dom = render((
       <RetroFormatPicker
         retroFormat="mood"
+        retroOptions={{}}
         retroItems={retroItems}
         retroState={retroState}
       />
@@ -33,6 +34,7 @@ describe('Retro', () => {
     const dom = render((
       <RetroFormatPicker
         retroFormat="nope"
+        retroOptions={{}}
         retroItems={[]}
         retroState={{}}
       />

@@ -37,6 +37,7 @@ export const propTypesShapeRetro: Requireable<Retro | null> = exactShape({
   name: PropTypes.string.isRequired,
   ownerId: PropTypes.string.isRequired,
   format: PropTypes.string.isRequired,
+  options: PropTypes.shape({}).isRequired,
   state: PropTypes.shape({}).isRequired,
   items: PropTypes.arrayOf(propTypesShapeItem.isRequired).isRequired,
 });

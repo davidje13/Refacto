@@ -16,6 +16,7 @@ export default class ArchiveService {
   }: ArchiveOptions): Promise<string> {
     const retroData: RetroData = {
       format: retro.format,
+      options: retro.options,
       items: retro.items,
     };
     const response = await fetch(

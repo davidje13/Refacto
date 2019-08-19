@@ -23,6 +23,7 @@ export default class RetroArchiveService {
       retroId,
       created,
       format: data.format,
+      options: data.options,
       items: data.items,
     });
 

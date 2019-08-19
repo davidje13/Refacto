@@ -38,6 +38,7 @@ describe('API retro archives', () => {
 
     archiveId = await hooks.retroArchiveService.createArchive(retroId, {
       format: 'mood',
+      options: {},
       items: [makeRetroItem({ id: 'z9' })],
     });
 
@@ -89,7 +90,7 @@ describe('API retro archives', () => {
       const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .post(`/api/retros/${retroId}/archives`)
-        .send({ format: 'foo', items: [makeRetroItem({ id: 'foo' })] })
+        .send({ format: 'foo', options: { opt: 'yes' }, items: [makeRetroItem({ id: 'foo' })] })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -99,13 +100,14 @@ describe('API retro archives', () => {
         .getRetroArchive(retroId, returnedId);
 
       expect(storedArchive!.format).toEqual('foo');
+      expect(storedArchive!.options.opt).toEqual('yes');
     });
 
     it('rejects empty archives', async () => {
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .post(`/api/retros/${retroId}/archives`)
-        .send({ format: 'foo', items: [] })
+        .send({ format: 'foo', options: {}, items: [] })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(400);
     });
@@ -172,7 +174,7 @@ describe('API retro archives', () => {
       const otherRetroId = await hooks.retroService.createRetro('', '', '', '');
 
       const otherArchiveId = await hooks.retroArchiveService
-        .createArchive(otherRetroId, { format: 'mood', items: [] });
+        .createArchive(otherRetroId, { format: 'mood', options: {}, items: [] });
 
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)

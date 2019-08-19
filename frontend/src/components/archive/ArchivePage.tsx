@@ -47,6 +47,7 @@ const ArchivePage = ({
         Component={RetroFormatPicker}
         componentProps={archive ? {
           retroFormat: archive.format,
+          retroOptions: archive.options,
           retroItems: archive.items,
           retroState: {},
           archive: true,

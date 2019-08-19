@@ -26,12 +26,13 @@ export interface RetroSummary {
 
 export interface RetroData {
   format: string;
+  options: Record<string, unknown>;
   items: RetroItem[];
 }
 
 export interface Retro extends RetroSummary, RetroData {
   ownerId: string;
-  state: object;
+  state: Record<string, unknown>;
 }
 
 export function makeRetro(details: Partial<Retro> = {}): Retro {
@@ -42,6 +43,7 @@ export function makeRetro(details: Partial<Retro> = {}): Retro {
     ownerId: '',
     state: {},
     format: '',
+    options: {},
     items: [],
   }, details);
 }
@@ -61,6 +63,7 @@ export function makeRetroArchive(details: Partial<RetroArchive> = {}): RetroArch
     retroId: '',
     created: 0,
     format: '',
+    options: {},
     items: [],
   }, details);
 }
