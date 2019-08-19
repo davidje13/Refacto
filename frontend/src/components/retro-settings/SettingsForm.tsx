@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Retro } from 'refacto-entities';
+import Input from '../common/Input';
 import { RetroSpec } from '../../actions/retro';
 import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
+import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import './SettingsForm.less';
 
 interface SaveT {
@@ -17,106 +19,59 @@ interface PropsT {
   onSave?: (data: SaveT) => void;
 }
 
-interface StateT {
-  name: string;
-  slug: string;
-  sending: boolean;
-  error: string | null;
-}
+const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement => {
+  const [name, setName] = useState(retro.name);
+  const [slug] = useState(retro.slug);
 
-class SettingsForm extends React.PureComponent<PropsT, StateT> {
-  public static propTypes = {
-    retro: propTypesShapeRetro.isRequired,
-    dispatch: PropTypes.func.isRequired,
-    onSave: PropTypes.func,
-  };
-
-  public static defaultProps = {
-    onSave: undefined,
-  };
-
-  public constructor(props: PropsT) {
-    super(props);
-
-    this.state = {
-      name: props.retro.name,
-      slug: props.retro.slug,
-      sending: false,
-      error: null,
-    };
-  }
-
-  public handleSubmit = async (e: React.SyntheticEvent): Promise<void> => {
-    e.preventDefault();
-
-    const {
-      name,
-      slug,
-      sending,
-    } = this.state;
-
-    const { retro, dispatch, onSave } = this.props;
-
-    if (sending) {
-      return;
-    }
+  const [handleSubmit, sending, error] = useSubmissionCallback(() => {
     if (!name || !slug) {
-      return;
+      throw new Error('Cannot set blank name or slug');
     }
 
-    try {
-      this.setState({ sending: true, error: null });
-      // TODO: await confirmation
-      dispatch({
-        name: { $set: name },
-      });
+    // TODO: await confirmation
+    dispatch({
+      name: { $set: name },
+    });
 
-      this.setState({ sending: false, error: null });
-      if (onSave) {
-        onSave({ id: retro.id, slug });
-      }
-    } catch (err) {
-      this.setState({ sending: false, error: String(err.message) });
+    if (onSave) {
+      onSave({ id: retro.id, slug });
     }
-  };
+  }, [name, slug, dispatch, onSave]);
 
-  public handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ name: e.target.value });
-  };
+  return (
+    <form onSubmit={handleSubmit} className="retro-settings">
+      <label>
+        Retro Name
+        <Input
+          name="name"
+          type="text"
+          placeholder="retro name"
+          value={name}
+          onChange={setName}
+          required
+        />
+      </label>
+      { sending ? (<div className="sending">&hellip;</div>) : (
+        <button type="submit" title="Save Changes">
+          Save
+        </button>
+      ) }
+      { error ? (
+        <div className="error">{ error }</div>
+      ) : null }
+    </form>
+  );
+};
 
-  public render(): React.ReactElement {
-    const {
-      name,
-      sending,
-      error,
-    } = this.state;
+SettingsForm.propTypes = {
+  retro: propTypesShapeRetro.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
+};
 
-    return (
-      <form onSubmit={this.handleSubmit} className="retro-settings">
-        <label>
-          Retro Name
-          <input
-            name="name"
-            type="text"
-            placeholder="retro name"
-            value={name}
-            onChange={this.handleChangeName}
-            autoComplete="off"
-            required
-          />
-        </label>
-        { sending ? (<div className="sending">&hellip;</div>) : (
-          <button type="submit" title="Save Changes">
-            Save
-          </button>
-        ) }
-        { error ? (
-          <div className="error">{ error }</div>
-        ) : null }
-      </form>
-    );
-  }
-}
+SettingsForm.defaultProps = {
+  onSave: undefined,
+};
 
 forbidExtraProps(SettingsForm);
 

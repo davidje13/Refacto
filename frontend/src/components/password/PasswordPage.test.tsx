@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
 import * as mockApiTypes from '../../api/__mocks__/api';
@@ -32,7 +32,9 @@ describe('PasswordPage', () => {
     const form = dom.getBy(css('form'));
     const fieldPassword = queries.getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'my-password' } });
-    fireEvent.submit(form);
+    await (act as any)(async () => {
+      fireEvent.submit(form);
+    });
 
     const retroToken = await getToken('myRetroId');
     expect(mockRetroTokenService.capturedPassword).toEqual('my-password');
