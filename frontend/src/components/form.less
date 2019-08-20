@@ -10,7 +10,7 @@
     display: block;
   }
 
-  input:not([type='checkbox']):not([type='radio']), .prefixed-input {
+  input, .prefixed-input {
     display: block;
     margin: 4px 0 16px;
     padding: 8px;
@@ -29,8 +29,12 @@
   }
 
   input[type='checkbox'], input[type='radio'] {
+    display: inline-block;
     margin: 4px 12px 16px 8px;
     vertical-align: top;
+    padding: 0;
+    border: none;
+    width: auto;
   }
 
   .fixed-column {
