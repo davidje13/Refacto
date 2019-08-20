@@ -53,7 +53,7 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
   }, [name, slug, alwaysShowAddAction, faceTheme, dispatch, onSave]);
 
   const themeChoices = getThemes().map(([value, theme]) => (
-    <label>
+    <label key={value}>
       <Input
         name="face-theme"
         type="radio"
