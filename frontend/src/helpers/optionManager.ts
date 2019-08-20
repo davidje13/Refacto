@@ -26,7 +26,7 @@ class OptionType<T> {
 
 const OPTIONS = {
   alwaysShowAddAction: new OptionType<boolean>('always-show-add-action', true),
-  faceTheme: new OptionType<string>('face-theme', 'emoji'),
+  faceTheme: new OptionType<string>('face-theme', 'faces'),
 };
 
 export default OPTIONS;
