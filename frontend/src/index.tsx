@@ -3,9 +3,10 @@ import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import App from './components/App';
 import { configService } from './api/api';
+
 import './index.less';
+import App from './components/App';
 
 // https://github.com/facebook/react/issues/16061
 if (process.env.NODE_ENV === 'development') {
