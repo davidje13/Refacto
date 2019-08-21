@@ -84,7 +84,7 @@ app.get('/auth', (req, res) => {
           <input type="hidden" name="nonce" value="${htmlSafe(req.query.nonce)}" />
           <input type="hidden" name="state" value="${htmlSafe(req.query.state)}" />
           <input type="hidden" name="client_id" value="${htmlSafe(req.query.client_id)}" />
-          <label>Sign in as <input type="text" name="identifier" required /></label><button>Sign in</button>
+          <label>Sign in as <input type="text" name="identifier" required autofocus /></label><button>Sign in</button>
         </form>
       </body>
     </html>
