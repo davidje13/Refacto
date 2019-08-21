@@ -42,6 +42,7 @@ enum SlugAvailability {
   BLANK,
   INVALID,
   CHECKING,
+  FAILED,
   TAKEN,
   AVAILABLE,
 }
@@ -122,7 +123,7 @@ const RetroForm = ({
         setSlugAvailability(SlugAvailability.TAKEN);
       }
     } catch (err) {
-      // ignore
+      setSlugAvailability(SlugAvailability.FAILED);
     }
   }, [checkSlugNonce, slugTracker, setSlugAvailability]);
 
@@ -188,6 +189,13 @@ const RetroForm = ({
     case SlugAvailability.CHECKING:
       slugChecker = (
         <div className="slug-checker checking" />
+      );
+      break;
+    case SlugAvailability.FAILED:
+      slugChecker = (
+        <div className="slug-checker failed">
+          { 'Unable to check availability' }
+        </div>
       );
       break;
     case SlugAvailability.TAKEN:

@@ -53,6 +53,12 @@ export default class SlugTracker {
 
   public async isAvailable(slug: string): Promise<boolean> {
     const result = await this.get(slug).pipe(first()).toPromise();
-    return !result.hasValue;
+    if (result.hasValue) {
+      return false;
+    }
+    if (result.error === 'not found') {
+      return true;
+    }
+    throw new Error(result.error);
   }
 }
