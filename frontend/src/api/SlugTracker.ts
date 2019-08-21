@@ -11,6 +11,7 @@ import {
   materialize,
   filter,
   shareReplay,
+  first,
 } from 'rxjs/operators';
 import loadHttp from '../rxjs/loadHttp';
 import CacheMap from '../helpers/CacheMap';
@@ -48,5 +49,10 @@ export default class SlugTracker {
 
   public set(slug: string, id: string): void {
     this.storage.get(slug).subject.next(id);
+  }
+
+  public async isAvailable(slug: string): Promise<boolean> {
+    const result = await this.get(slug).pipe(first()).toPromise();
+    return !result.hasValue;
   }
 }
