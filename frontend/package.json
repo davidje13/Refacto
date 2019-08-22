@@ -4,7 +4,9 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development",
-    "lint": "eslint --cache --format codeframe --ext mjs,jsx,js,tsx,ts --report-unused-disable-directives src && tsc",
+    "lint:eslint": "eslint --cache --format codeframe --ext mjs,jsx,js,tsx,ts --report-unused-disable-directives src",
+    "lint:tsc": "tsc",
+    "lint": "npm run lint:eslint --silent && npm run lint:tsc --silent",
     "test": "jest"
   },
   "dependencies": {
