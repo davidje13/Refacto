@@ -13,7 +13,7 @@ interface PropsT {
   category: string;
   categoryLabel: string;
   items: RetroItem[];
-  faceTheme: string;
+  theme: string;
   addItemPlaceholder: string;
   onAddItem?: (category: string, message: string) => void;
   onVote?: (id: string) => void;
@@ -30,7 +30,7 @@ interface PropsT {
 const MoodSection = ({
   category,
   categoryLabel,
-  faceTheme,
+  theme,
   items,
   addItemPlaceholder,
   onAddItem,
@@ -67,7 +67,7 @@ const MoodSection = ({
     <section className={category}>
       <header>
         <h2 title={categoryLabel}>
-          <FaceIcon theme={faceTheme} type={category} />
+          <FaceIcon theme={theme} type={category} />
         </h2>
         { handleAddItem && (
           <ExpandingTextEntry
@@ -102,7 +102,7 @@ MoodSection.propTypes = {
   category: PropTypes.string.isRequired,
   categoryLabel: PropTypes.string.isRequired,
   items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
-  faceTheme: PropTypes.string,
+  theme: PropTypes.string,
   addItemPlaceholder: PropTypes.string,
   onAddItem: PropTypes.func,
   onVote: PropTypes.func,
@@ -117,7 +117,7 @@ MoodSection.propTypes = {
 };
 
 MoodSection.defaultProps = {
-  faceTheme: '',
+  theme: '',
   addItemPlaceholder: '',
   onAddItem: undefined,
   onVote: undefined,

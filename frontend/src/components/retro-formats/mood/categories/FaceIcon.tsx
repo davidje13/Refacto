@@ -74,6 +74,7 @@ THEMES.set('silly', {
     sad: '\uD83D\uDCA9',
   },
 });
+
 const DEFAULT_THEME = THEMES.values().next().value;
 
 export function getTheme(name: string): Theme {

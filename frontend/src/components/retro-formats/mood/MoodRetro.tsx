@@ -120,7 +120,7 @@ export default ({
       autoScroll={!singleColumn}
       categoryLabel={category.title}
       category={category.id}
-      faceTheme={OPTIONS.faceTheme.read(retroOptions)}
+      theme={OPTIONS.theme.read(retroOptions)}
     />
   );
 

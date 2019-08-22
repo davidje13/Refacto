@@ -27,8 +27,8 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
     OPTIONS.alwaysShowAddAction.read(retro.options),
   );
-  const [faceTheme, setFaceTheme] = useState(
-    OPTIONS.faceTheme.read(retro.options),
+  const [theme, setTheme] = useState(
+    OPTIONS.theme.read(retro.options),
   );
 
   const [handleSubmit, sending, error] = useSubmissionCallback(() => {
@@ -42,7 +42,7 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
       options: {
         $seq: [
           OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
-          OPTIONS.faceTheme.specSet(faceTheme),
+          OPTIONS.theme.specSet(theme),
         ],
       },
     });
@@ -50,19 +50,19 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
     if (onSave) {
       onSave({ id: retro.id, slug });
     }
-  }, [name, slug, alwaysShowAddAction, faceTheme, dispatch, onSave]);
+  }, [name, slug, alwaysShowAddAction, theme, dispatch, onSave]);
 
-  const themeChoices = getThemes().map(([value, theme]) => (
+  const themeChoices = getThemes().map(([value, detail]) => (
     <label key={value}>
       <Input
-        name="face-theme"
+        name="theme"
         type="radio"
         value={value}
-        selected={faceTheme}
-        onChange={setFaceTheme}
+        selected={theme}
+        onChange={setTheme}
       />
-      <span className="fixed-column">{ theme.name }</span>
-      { ` ${theme.icons.happy} ${theme.icons.meh} ${theme.icons.sad}` }
+      <span className="fixed-column">{ detail.name }</span>
+      { ` ${detail.icons.happy} ${detail.icons.meh} ${detail.icons.sad}` }
     </label>
   ));
 
@@ -89,7 +89,7 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
         Sticky &ldquo;add action&rdquo; input
       </label>
       <fieldset>
-        <legend>Faces theme</legend>
+        <legend>Theme</legend>
         { themeChoices }
       </fieldset>
       { sending ? (<div className="sending">&hellip;</div>) : (
