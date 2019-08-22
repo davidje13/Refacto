@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { RetroItem } from 'refacto-entities';
 import { queries, css } from '../../test-helpers/queries';
@@ -10,7 +10,7 @@ jest.mock('./mood/MoodRetro', () => mockElement('mock-mood-retro'));
 jest.mock('./unknown/UnknownRetro', () => mockElement('mock-unknown-retro'));
 
 describe('Retro', () => {
-  it('forwards properties to the specified retro format', () => {
+  it('forwards properties to the specified retro format', async () => {
     const retroItems: RetroItem[] = [];
     const retroState = { foo: 'bar' };
 
@@ -23,6 +23,9 @@ describe('Retro', () => {
       />
     ), { queries });
 
+    await import('./mood/MoodRetro'); // wait for dynamic import
+    act(() => {});
+
     expect(dom).toContainElementWith(css('mock-mood-retro'));
     expect(dom.getBy(css('mock-mood-retro')).mockProps).toMatchObject({
       retroItems,
@@ -30,7 +33,7 @@ describe('Retro', () => {
     });
   });
 
-  it('displays UnknownRetro for unknown formats', () => {
+  it('displays UnknownRetro for unknown formats', async () => {
     const dom = render((
       <RetroFormatPicker
         retroFormat="nope"

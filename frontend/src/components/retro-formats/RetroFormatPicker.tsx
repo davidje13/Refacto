@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
 import { RetroItem } from 'refacto-entities';
-import MoodRetro from './mood/MoodRetro';
 import UnknownRetro from './unknown/UnknownRetro';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../api/dataStructurePropTypes';
@@ -21,12 +20,16 @@ interface PropsT extends ChildPropsT {
 }
 
 const formats = new Map<string, React.ComponentType<ChildPropsT>>();
-formats.set('mood', MoodRetro);
+formats.set('mood', React.lazy(() => import('./mood/MoodRetro')));
 
 const RetroFormatPicker = ({ retroFormat, ...props }: PropsT): React.ReactElement => {
   const RetroType = formats.get(retroFormat) || UnknownRetro;
 
-  return (<RetroType {...props} />);
+  return (
+    <Suspense fallback="">
+      <RetroType {...props} />
+    </Suspense>
+  );
 };
 
 RetroFormatPicker.propTypes = {
