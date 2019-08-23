@@ -31,7 +31,7 @@ describe('MoodItemPlain', () => {
   });
 
   it('marks the item as done if specified', () => {
-    const item = makeRetroItem({ done: true });
+    const item = makeRetroItem({ doneTime: 1 });
     const dom = render(<MoodItemPlain item={item} />, { queries });
 
     expect(dom).toContainElementWith(css('.done'));

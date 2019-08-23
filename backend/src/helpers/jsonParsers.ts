@@ -7,7 +7,7 @@ export const extractRetroItem = json.object<RetroItem>({
   created: json.number,
   message: json.string,
   votes: json.number,
-  done: json.boolean,
+  doneTime: json.number,
 });
 
 export const extractRetroData = json.object<RetroData>({

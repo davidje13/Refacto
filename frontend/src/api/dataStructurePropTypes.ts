@@ -28,7 +28,7 @@ export const propTypesShapeItem: Requireable<RetroItem | null> = exactShape({
   created: PropTypes.number.isRequired,
   message: PropTypes.string.isRequired,
   votes: PropTypes.number.isRequired,
-  done: PropTypes.bool.isRequired,
+  doneTime: PropTypes.number.isRequired,
 });
 
 export const propTypesShapeRetro: Requireable<Retro | null> = exactShape({

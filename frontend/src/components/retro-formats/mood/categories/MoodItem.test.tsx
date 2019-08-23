@@ -49,7 +49,7 @@ describe('MoodItem integration', () => {
 
   it('marks the item as done if specified', () => {
     const dom = render((
-      <MoodItem item={makeRetroItem({ done: true })} />
+      <MoodItem item={makeRetroItem({ doneTime: 1 })} />
     ), { queries });
 
     expect(dom).toContainElementWith(css('.mood-item.done'));

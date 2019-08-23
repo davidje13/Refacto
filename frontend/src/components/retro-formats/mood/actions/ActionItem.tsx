@@ -22,7 +22,9 @@ const ActionItem = ({
   onEdit,
   onDelete,
 }: PropsT): React.ReactElement => {
-  const handleToggleDone = useBoundCallback(onSetDone, item.id, !item.done);
+  const done = item.doneTime > 0;
+
+  const handleToggleDone = useBoundCallback(onSetDone, item.id, !done);
   const handleDelete = useBoundCallback(onDelete, item.id);
 
   const [editing, setEditing] = useState(false);
@@ -46,12 +48,12 @@ const ActionItem = ({
   }
 
   return (
-    <div className={classNames('action-item', { done: item.done })}>
+    <div className={classNames('action-item', { done })}>
       <div className="message">{ item.message }</div>
       <WrappedButton
         role="checkbox"
-        aria-checked={item.done}
-        title={item.done ? 'Mark as not done' : 'Mark as done'}
+        aria-checked={done}
+        title={done ? 'Mark as not done' : 'Mark as done'}
         className="toggle-done"
         onClick={handleToggleDone}
       />

@@ -4,7 +4,7 @@ export interface RetroItem {
   created: number;
   message: string;
   votes: number;
-  done: boolean;
+  doneTime: number;
 }
 
 export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
@@ -14,7 +14,7 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
     created: 0,
     message: '',
     votes: 0,
-    done: false,
+    doneTime: 0,
   }, details);
 }
 

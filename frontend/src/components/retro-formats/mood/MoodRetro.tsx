@@ -79,7 +79,7 @@ export default ({
     const items = refRetroItems.current;
     if (onComplete && items && done) {
       const allDone = items.every((item) => (
-        item.done ||
+        item.doneTime > 0 ||
         item.id === id ||
         item.category === 'action'
       ));

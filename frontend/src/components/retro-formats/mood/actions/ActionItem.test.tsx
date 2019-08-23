@@ -21,7 +21,7 @@ describe('ActionItem', () => {
   });
 
   it('marks the item as done if specified', () => {
-    const item = makeRetroItem({ done: true });
+    const item = makeRetroItem({ doneTime: 1 });
     const dom = render(<ActionItem item={item} />, { queries });
 
     expect(dom).toContainElementWith(css('.done'));

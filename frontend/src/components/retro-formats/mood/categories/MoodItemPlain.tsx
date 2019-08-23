@@ -20,7 +20,7 @@ const MoodItemPlain = ({
   onVote,
   onEdit,
 }: PropsT): React.ReactElement => (
-  <div className={classNames('mood-item', { done: item.done })}>
+  <div className={classNames('mood-item', { done: item.doneTime > 0 })}>
     <WrappedButton className="message" onClick={onSelect}>
       { item.message }
     </WrappedButton>

@@ -20,7 +20,7 @@ function makeItem(category: string, message: string): RetroItem {
     created: Date.now(),
     message,
     votes: 0,
-    done: false,
+    doneTime: 0,
   };
 }
 
@@ -53,7 +53,7 @@ export const editRetroItem = (itemId: string, message: string): RetroSpec | unde
 };
 
 export const setRetroItemDone = (itemId: string, done: boolean): RetroSpec => updateItem(itemId, {
-  done: { $set: done },
+  doneTime: { $set: done ? Date.now() : 0 },
 });
 
 export const upvoteRetroItem = (itemId: string): RetroSpec => updateItem(itemId, {
@@ -69,7 +69,7 @@ export const clearCovered = (): RetroSpec => ({
   items: {
     $seq: [
       { $deleteWhere: { key: 'category', not: 'action' } },
-      { $deleteWhere: { key: 'done', equals: true } },
+      { $deleteWhere: { key: 'doneTime', greaterThan: 0 } },
     ],
   },
 });
