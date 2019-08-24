@@ -5,6 +5,7 @@ import Input from '../common/Input';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
 import { Dispatch } from '../../api/SharedReducer';
+import actionsHandledCallback from '../../actions/actionsHandledCallback';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import OPTIONS from '../../helpers/optionManager';
 import './SettingsForm.less';
@@ -36,7 +37,6 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
       throw new Error('Cannot set blank name or slug');
     }
 
-    // TODO: await confirmation
     dispatch({
       name: { $set: name },
       options: {
@@ -46,10 +46,11 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
         ],
       },
     });
-
-    if (onSave) {
-      onSave({ id: retro.id, slug });
-    }
+    dispatch(actionsHandledCallback(() => {
+      if (onSave) { // TODO TypeScript#16
+        onSave({ id: retro.id, slug });
+      }
+    }));
   }, [name, slug, alwaysShowAddAction, theme, dispatch, onSave]);
 
   const themeChoices = getThemes().map(([value, detail]) => (
