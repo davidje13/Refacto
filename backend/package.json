@@ -14,7 +14,7 @@
     "core-js": "^3.2.1",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
     "jwt-simple": "^0.5.6",
-    "mongodb": "^3.3.0",
+    "mongodb": "^3.3.1",
     "node-fetch": "^2.6.0",
     "pwd-hasher": "git+https://github.com/davidje13/pwd-hasher.git#semver:^1.0.0",
     "refacto-entities": "file:../entities",

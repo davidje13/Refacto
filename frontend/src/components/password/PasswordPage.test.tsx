@@ -32,7 +32,7 @@ describe('PasswordPage', () => {
     const form = dom.getBy(css('form'));
     const fieldPassword = queries.getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'my-password' } });
-    await (act as any)(async () => {
+    await act(async () => {
       fireEvent.submit(form);
     });
 

@@ -28,17 +28,12 @@ interface RenderedApp {
   dom: RenderResult<typeof queries>;
 }
 
-function asyncAct(fn: () => Promise<any>): Promise<void> {
-  // TODO: awaiting https://github.com/DefinitelyTyped/DefinitelyTyped/pull/37554
-  return act(fn as any) as any as Promise<void>;
-}
-
 async function renderApp(location: string): Promise<RenderedApp> {
   const routerContext: StaticRouterContext = {};
   const helmetContext: FilledContext = {} as any;
 
   let dom: RenderResult<typeof queries>;
-  await asyncAct(async () => {
+  await act(async () => {
     dom = render((
       <HelmetProvider context={helmetContext}>
         <StaticRouter location={location} context={routerContext}>
@@ -96,7 +91,9 @@ describe('Application', () => {
     const form = dom.getBy(css('form'));
     const fieldPassword = queries.getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'anything' } });
-    await asyncAct(async () => fireEvent.submit(form));
+    await act(async () => {
+      fireEvent.submit(form);
+    });
 
     expect(dom).toContainElementWith(css('.page-retro'));
     const header2 = dom.getBy(css('.top-header h1'));
