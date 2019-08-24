@@ -79,6 +79,9 @@ const RetroPage = ({
           onCancel={hideArchivePopup}
         />
       ),
+      keys: {
+        Enter: performArchive,
+      },
     };
   }
 
@@ -115,7 +118,7 @@ const RetroPage = ({
           retroItems: retro.items,
           retroState: retro.state,
           dispatch: retroDispatch || undefined,
-          onComplete: showArchivePopup,
+          onComplete: canArchive ? showArchivePopup : undefined,
           archive: false,
         } : null}
       />

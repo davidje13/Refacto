@@ -12,13 +12,16 @@ export default function useGlobalKeyListener(
     ) {
       return;
     }
-    if (e.repeat) {
+    if (document.body.classList.contains('ReactModal__Body--open')) {
       return;
     }
-    // TODO: ignore if popup visible
     const fn = keyMaps[e.key];
     if (fn) {
-      fn();
+      e.preventDefault();
+      e.stopPropagation();
+      if (!e.repeat) {
+        fn();
+      }
     }
   }, Object.entries(keyMaps).flatMap((o) => o));
 }

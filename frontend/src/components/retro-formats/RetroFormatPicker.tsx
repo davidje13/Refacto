@@ -11,7 +11,7 @@ interface ChildPropsT {
   retroItems: RetroItem[];
   retroState: object;
   dispatch?: Dispatch<Retro>;
-  onComplete: () => void;
+  onComplete?: () => void;
   archive: boolean;
 }
 
@@ -44,7 +44,7 @@ RetroFormatPicker.propTypes = {
 
 RetroFormatPicker.defaultProps = {
   dispatch: undefined,
-  onComplete: (): void => {},
+  onComplete: undefined,
   archive: false,
 };
 

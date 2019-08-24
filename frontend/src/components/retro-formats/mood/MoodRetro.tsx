@@ -46,7 +46,7 @@ interface PropsT {
   retroItems: RetroItem[];
   retroState: MoodRetroStateT;
   dispatch?: Dispatch<Retro>;
-  onComplete: () => void;
+  onComplete?: () => void;
   archive: boolean;
 }
 
