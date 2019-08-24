@@ -1,16 +1,16 @@
 import React, { Suspense } from 'react';
 import PropTypes from 'prop-types';
-import { RetroItem } from 'refacto-entities';
+import { Retro, RetroItem } from 'refacto-entities';
 import UnknownRetro from './unknown/UnknownRetro';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../api/dataStructurePropTypes';
-import { RetroSpec } from '../../actions/retro';
+import { Dispatch } from '../../api/SharedReducer';
 
 interface ChildPropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: object;
-  dispatch?: (spec: RetroSpec) => void;
+  dispatch?: Dispatch<Retro>;
   onComplete: () => void;
   archive: boolean;
 }

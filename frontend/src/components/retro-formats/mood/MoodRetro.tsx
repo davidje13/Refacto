@@ -1,22 +1,31 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import classNames from 'classnames';
-import { RetroItem } from 'refacto-entities';
+import { Retro, RetroItem } from 'refacto-entities';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
 import {
-  RetroSpec,
-  setRetroState,
   addRetroItem,
   editRetroItem,
   setRetroItemDone,
   upvoteRetroItem,
   deleteRetroItem,
 } from '../../../actions/retro';
-import useBoxed from '../../../hooks/useBoxed';
+import {
+  MoodRetroStateT,
+  allItemsDoneCallback,
+  goNext,
+  goPrevious,
+  switchFocus,
+  setItemTimeout,
+  addRetroActionItem,
+} from '../../../actions/moodRetro';
+import { Dispatch } from '../../../api/SharedReducer';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
+import useBoundCallback from '../../../hooks/useBoundCallback';
 import useDispatchAction from '../../../hooks/useDispatchAction';
+import useGlobalKeyListener from '../../../hooks/useGlobalKeyListener';
 import OPTIONS from '../../../helpers/optionManager';
 import './MoodRetro.less';
 
@@ -32,20 +41,11 @@ const CATEGORIES: Category[] = [
   { id: 'sad', title: 'Sad', placeholder: 'It wasn\u2019t so great that\u2026' },
 ];
 
-const addRetroActionItem = addRetroItem.bind(null, 'action');
-
-const addExtraTime = (duration: number): RetroSpec => setRetroState({
-  focusedItemTimeout: Date.now() + duration,
-});
-
 interface PropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
-  retroState: {
-    focusedItemId?: string | null;
-    focusedItemTimeout?: number;
-  };
-  dispatch?: (spec: RetroSpec) => void;
+  retroState: MoodRetroStateT;
+  dispatch?: Dispatch<Retro>;
   onComplete: () => void;
   archive: boolean;
 }
@@ -64,44 +64,29 @@ export default ({
   const singleColumn = useWindowSize(({ width }) => (width <= 800), []);
   const localDateProvider = useLocalDateProvider();
 
+  const checkAutoArchive = useBoundCallback(allItemsDoneCallback, onComplete);
+
   const handleAddItem = useDispatchAction(dispatch, addRetroItem);
   const handleAddActionItem = useDispatchAction(dispatch, addRetroActionItem);
   const handleUpvoteItem = useDispatchAction(dispatch, upvoteRetroItem);
   const handleEditItem = useDispatchAction(dispatch, editRetroItem);
   const handleDeleteItem = useDispatchAction(dispatch, deleteRetroItem);
-  const handleAddExtraTime = useDispatchAction(dispatch, addExtraTime);
-  const handleSetActionItemDone = useDispatchAction(dispatch, setRetroItemDone);
+  const handleAddExtraTime = useDispatchAction(dispatch, setItemTimeout);
+  const handleSwitchFocus = useDispatchAction(dispatch, switchFocus);
+  const handleSetActionItemDone = useDispatchAction(
+    dispatch,
+    setRetroItemDone,
+  );
+  const handleSetMoodItemDone = useDispatchAction(
+    dispatch,
+    setRetroItemDone,
+    checkAutoArchive,
+  );
 
-  const refRetroItems = useBoxed(retroItems);
-  const handleSetMoodItemDone = useCallback((id, done) => {
-    dispatch!(setRetroItemDone(id, done));
-
-    const items = refRetroItems.current;
-    if (onComplete && items && done) {
-      const allDone = items.every((item) => (
-        item.doneTime > 0 ||
-        item.id === id ||
-        item.category === 'action'
-      ));
-      if (allDone) {
-        onComplete();
-      }
-    }
-  }, [dispatch, refRetroItems]);
-
-  const refFocusedItemId = useBoxed(focusedItemId);
-  const handleSwitchFocus = useCallback((id, markPreviousDone) => {
-    const focusedId = refFocusedItemId.current;
-
-    if (markPreviousDone && focusedId !== null && id !== focusedId) {
-      dispatch!(setRetroItemDone(focusedId, true));
-    }
-
-    dispatch!(setRetroState({
-      focusedItemId: id,
-      focusedItemTimeout: Date.now() + (5 * 60 * 1000 + 999),
-    }));
-  }, [dispatch, refFocusedItemId]);
+  useGlobalKeyListener({
+    ArrowRight: useDispatchAction(dispatch, goNext, checkAutoArchive),
+    ArrowLeft: useDispatchAction(dispatch, goPrevious),
+  });
 
   const createMoodSection = (category: Category): React.ReactElement => (
     <MoodSection
@@ -112,7 +97,7 @@ export default ({
       onVote={handleUpvoteItem}
       onEdit={handleEditItem}
       onDelete={handleDeleteItem}
-      onSwitchFocus={dispatch && handleSwitchFocus}
+      onSwitchFocus={handleSwitchFocus}
       onAddExtraTime={handleAddExtraTime}
       onSetDone={handleSetMoodItemDone}
       focusedItemId={focusedItemId}

@@ -5,6 +5,24 @@ interface Event<T> {
   id: number | null;
 }
 
+type SpecGenerator<T> = (state: T) => DispatchSpec<T>;
+type SpecSource<T> = Spec<T> | SpecGenerator<T> | null;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface SpecSourceL<T> extends Array<SpecSourceL<T> | SpecSource<T>> {}
+
+export type DispatchSpec<T> = SpecSourceL<T> | SpecSource<T>;
+export type Dispatch<T> = (spec: DispatchSpec<T>) => void;
+
+function toSpecSourceList<T>(spec: DispatchSpec<T>): SpecSource<T>[] {
+  if (!spec) {
+    return [];
+  }
+  if (Array.isArray(spec)) {
+    return spec.flatMap((c) => toSpecSourceList(c));
+  }
+  return [spec];
+}
+
 export default class SharedReducer<T> {
   private latestServerState?: T;
 
@@ -14,7 +32,7 @@ export default class SharedReducer<T> {
 
   private localChanges: Event<T>[] = [];
 
-  private pendingChanges: Spec<T>[] = [];
+  private pendingChanges: SpecSource<T>[] = [];
 
   private idCounter = 0;
 
@@ -41,14 +59,16 @@ export default class SharedReducer<T> {
     this.pendingChanges = [];
   }
 
-  public dispatch = (change: Spec<T>): void => {
-    if (!change) {
+  public dispatch: Dispatch<T> = (change) => {
+    const changeList = toSpecSourceList(change);
+
+    if (!changeList.length) {
       return;
     }
 
     if (!this.getState()) {
-      this.pendingChanges.push(change);
-    } else if (this.internalApply(change)) {
+      this.pendingChanges.push(...changeList);
+    } else if (this.internalApply(changeList)) {
       this.internalNotify();
     }
   };
@@ -90,8 +110,16 @@ export default class SharedReducer<T> {
     this.currentChange = undefined;
   };
 
-  private internalApply(change: Spec<T>): boolean {
+  private internalApplyPart(change: SpecSource<T>): boolean {
+    if (!change) {
+      return false;
+    }
+
     const oldState = this.getState()!;
+
+    if (typeof change === 'function') {
+      return this.internalApply(toSpecSourceList(change(oldState)));
+    }
 
     this.latestLocalState = update(oldState, change);
     if (this.latestLocalState === oldState) {
@@ -108,14 +136,38 @@ export default class SharedReducer<T> {
     return true;
   }
 
+  private internalApplyCombined(changes: Spec<T>[]): boolean {
+    return this.internalApplyPart(update.combine(changes));
+  }
+
+  private internalApply(changes: SpecSource<T>[]): boolean {
+    let anyChange = false;
+    const aggregate: Spec<T>[] = [];
+    changes.forEach((change) => {
+      if (change && typeof change !== 'function') {
+        aggregate.push(change);
+      } else {
+        if (aggregate.length > 0) {
+          anyChange = this.internalApplyCombined(aggregate) || anyChange;
+          aggregate.length = 0;
+        }
+        anyChange = this.internalApplyPart(change) || anyChange;
+      }
+    });
+    if (aggregate.length > 0) {
+      anyChange = this.internalApplyCombined(aggregate) || anyChange;
+    }
+    return anyChange;
+  }
+
   private internalApplyPendingChanges(): boolean {
     if (!this.pendingChanges.length || !this.getState()) {
       return false;
     }
 
-    const aggregate = update.combine(this.pendingChanges);
+    const anyChange = this.internalApply(this.pendingChanges);
     this.pendingChanges.length = 0;
-    return this.internalApply(aggregate);
+    return anyChange;
   }
 
   private handleMessage = ({ data }: { data: string }): void => {

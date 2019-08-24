@@ -20,7 +20,7 @@ interface PropsT {
   onEdit?: (id: string, message: string) => void;
   onDelete?: (id: string) => void;
   onSetDone?: (id: string, done: boolean) => void;
-  onSwitchFocus?: (id: string | null, markPreviousDone: boolean) => void;
+  onSwitchFocus?: (markPreviousDone: boolean, id: string | null) => void;
   onAddExtraTime?: (time: number) => void;
   focusedItemId: string | null;
   focusedItemTimeout: number;
@@ -45,22 +45,12 @@ const MoodSection = ({
   autoScroll,
 }: PropsT): React.ReactElement => {
   const handleAddItem = useBoundCallback(onAddItem, category);
-
-  const handleItemSelect = useCallback((id: string) => {
-    onSwitchFocus!(id, true);
-  }, [onSwitchFocus]);
-
-  const handleItemCancel = useCallback((id: string) => {
-    // TODO TypeScript#16
-    if (onSetDone) {
-      onSetDone(id, false);
-    }
-    onSwitchFocus!(null, false);
-  }, [onSwitchFocus, onSetDone]);
+  const handleItemSelect = useBoundCallback(onSwitchFocus, true);
+  const handleItemCancel = useBoundCallback(onSwitchFocus, false, null);
 
   const handleItemDone = useCallback((id: string) => {
     onSetDone!(id, true);
-    onSwitchFocus!(null, false);
+    onSwitchFocus!(false, null);
   }, [onSwitchFocus, onSetDone]);
 
   return (
@@ -88,9 +78,9 @@ const MoodSection = ({
           onVote,
           onEdit,
           onDelete,
-          onSelect: onSwitchFocus && handleItemSelect,
+          onSelect: handleItemSelect,
           onAddExtraTime,
-          onCancel: onSwitchFocus && handleItemCancel,
+          onCancel: handleItemCancel,
           onDone: onSwitchFocus && onSetDone && handleItemDone,
         }}
       />

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Retro } from 'refacto-entities';
 import Input from '../common/Input';
-import { RetroSpec } from '../../actions/retro';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
+import { Dispatch } from '../../api/SharedReducer';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import OPTIONS from '../../helpers/optionManager';
 import './SettingsForm.less';
@@ -17,7 +17,7 @@ interface SaveT {
 
 interface PropsT {
   retro: Retro;
-  dispatch: (spec: RetroSpec) => void;
+  dispatch: Dispatch<Retro>;
   onSave?: (data: SaveT) => void;
 }
 

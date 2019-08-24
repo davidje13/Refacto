@@ -1,7 +1,6 @@
-import { Spec } from 'json-immutability-helper';
 import { Retro } from 'refacto-entities';
 import SubscriptionTracker from './SubscriptionTracker';
-import SharedReducer from './SharedReducer';
+import SharedReducer, { Dispatch } from './SharedReducer';
 
 interface RetroKey {
   retroId: string;
@@ -16,7 +15,7 @@ export type RetroState = {
   error: any;
 };
 
-type RetroDispatch = (spec: Spec<Retro>) => void;
+export type RetroDispatch = Dispatch<Retro>;
 type RetroStateCallback = (state: RetroState) => void;
 
 interface RetroSubscription {

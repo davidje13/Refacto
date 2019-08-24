@@ -2,10 +2,7 @@ import { useState, useLayoutEffect } from 'react';
 import { Retro } from 'refacto-entities';
 import useNonce from '../useNonce';
 import { retroTracker } from '../../api/api';
-import { RetroState } from '../../api/RetroTracker';
-import { RetroSpec } from '../../actions/retro';
-
-type RetroDispatch = (spec: RetroSpec) => void;
+import { RetroState, RetroDispatch } from '../../api/RetroTracker';
 
 export type RetroReducerState = [
   Retro | null,

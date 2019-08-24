@@ -30,9 +30,9 @@ export interface RetroData {
   items: RetroItem[];
 }
 
-export interface Retro extends RetroSummary, RetroData {
+export interface Retro<StateT = Record<string, unknown>> extends RetroSummary, RetroData {
   ownerId: string;
-  state: Record<string, unknown>;
+  state: StateT;
 }
 
 export function makeRetro(details: Partial<Retro> = {}): Retro {
