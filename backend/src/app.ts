@@ -14,6 +14,7 @@ import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
 import InMemoryTopic from './queue/InMemoryTopic';
+import Topic from './queue/Topic';
 import TrackingTopicMap from './queue/TrackingTopicMap';
 import { ConfigT } from './config';
 
@@ -47,7 +48,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   const tokenManager = new TokenManager(config.token);
 
   const retroChangeSubs = new TrackingTopicMap(
-    (): InMemoryTopic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
+    (): Topic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
   );
 
   const ssoService = new SsoService(config.sso);

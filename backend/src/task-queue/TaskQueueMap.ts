@@ -1,12 +1,11 @@
 import AsyncTaskQueue from './AsyncTaskQueue';
-import { TaskQueueFactory, TaskQueue, Task } from './TaskQueue';
+import { TaskQueue, Task } from './TaskQueue';
 
 export default class TaskQueueMap<T> {
   private readonly queues = new Map<string, TaskQueue<T>>();
 
   public constructor(
-    private readonly queueFactory: TaskQueueFactory<T> =
-    (): TaskQueue<T> => new AsyncTaskQueue<T>(),
+    private readonly queueFactory = (): TaskQueue<T> => new AsyncTaskQueue<T>(),
   ) {}
 
   public push(key: string, task: Task<T>): Promise<T> {
