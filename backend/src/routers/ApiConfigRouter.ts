@@ -1,15 +1,9 @@
 import { Router } from 'websocket-express';
+import { ClientConfig } from 'refacto-entities';
 
-interface ClientConfig {
-  sso: {
-    [service: string]: {
-      authUrl: string;
-      clientId: string;
-    };
-  };
+interface ServerConfig {
+  sso: ClientConfig['sso'];
 }
-
-type ServerConfig = ClientConfig;
 
 function makeClientConfig(serverConfig: ServerConfig): ClientConfig {
   const clientConfig: ClientConfig = {

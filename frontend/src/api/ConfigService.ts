@@ -1,13 +1,5 @@
 import { ReplaySubject, Subject } from 'rxjs';
-
-export interface ClientConfig {
-  sso: {
-    [service: string]: {
-      authUrl: string;
-      clientId: string;
-    };
-  };
-}
+import { ClientConfig } from 'refacto-entities';
 
 export default class ConfigService {
   private readonly config = new ReplaySubject<ClientConfig>(1);

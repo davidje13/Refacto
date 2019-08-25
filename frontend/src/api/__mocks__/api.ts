@@ -4,10 +4,10 @@ import {
   Retro,
   RetroArchive,
   RetroSummary,
+  ClientConfig,
 } from 'refacto-entities';
 import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
-import { ClientConfig } from '../ConfigService';
 
 export type RetroState = {
   retro: Retro;

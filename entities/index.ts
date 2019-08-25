@@ -1,3 +1,12 @@
+export interface ClientConfig {
+  sso: {
+    [service: string]: {
+      authUrl: string;
+      clientId: string;
+    };
+  };
+}
+
 export interface RetroItem {
   id: string;
   category: string;
