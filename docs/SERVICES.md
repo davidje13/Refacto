@@ -89,3 +89,13 @@ both local testing and deployments. For example:
 ```bash
 SSO_GITHUB_CLIENT_ID=idhere SSO_GITHUB_CLIENT_SECRET=secrethere npm start
 ```
+
+## Other Integrations
+
+### haveibeenpwned Password Database
+
+The [haveibeenpwned password database](https://haveibeenpwned.com/Passwords)
+is automatically used for checking user-provided passwords (k-Anonymity
+ensures no passwords are leaked to the external service).
+
+No configuration is required.
