@@ -28,6 +28,7 @@ const ItemEditing = ({
       submitButtonTitle="Save changes"
       onSubmit={onSubmit}
       onCancel={onCancel}
+      forceMultiline
       extraOptions={[
         onCancel ? (
           <WrappedButton

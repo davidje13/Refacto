@@ -7,13 +7,22 @@ import useBoxed from '../../hooks/useBoxed';
 import Textarea from './Textarea';
 import './ExpandingTextEntry.less';
 
+function hasContent(o: React.ReactNode): boolean {
+  if (Array.isArray(o)) {
+    return o.length > 0;
+  }
+  return Boolean(o);
+}
+
 interface PropsT {
   onSubmit: (value: string) => void;
   onCancel?: () => void;
   placeholder: string;
   defaultValue: string;
   autoFocus: boolean;
+  forceMultiline: boolean;
   extraOptions?: React.ReactNode;
+  extraInputs?: React.ReactNode;
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
   className?: string;
@@ -26,6 +35,8 @@ const ExpandingTextEntry = ({
   placeholder,
   defaultValue,
   autoFocus,
+  forceMultiline,
+  extraInputs,
   extraOptions,
   submitButtonLabel,
   submitButtonTitle,
@@ -68,7 +79,7 @@ const ExpandingTextEntry = ({
     Escape: onCancel,
   });
 
-  const forceMultiline = Boolean(extraOptions);
+  const alwaysMultiline = forceMultiline || hasContent(extraInputs);
 
   /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
   /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // form click is assistive
@@ -78,7 +89,8 @@ const ExpandingTextEntry = ({
       onSubmit={handleSubmit}
       onMouseDown={handleFormMouseDown}
       className={classNames('text-entry', className, {
-        multiline: forceMultiline || textMultiline,
+        multiline: alwaysMultiline || textMultiline,
+        'has-value': (value !== ''),
       })}
     >
       <Textarea
@@ -89,10 +101,11 @@ const ExpandingTextEntry = ({
         sizeToFit
         onChange={setValue}
         onChangeMultiline={setTextMultiline}
-        multilineClass={forceMultiline ? undefined : 'multiline'}
+        multilineClass={alwaysMultiline ? undefined : 'multiline'}
         multilineClassElement={form}
         onKeyDown={handleKey}
       />
+      { extraInputs }
       <div className="buttons">
         { extraOptions }
         <button
@@ -116,6 +129,8 @@ ExpandingTextEntry.propTypes = {
   placeholder: PropTypes.string,
   defaultValue: PropTypes.string,
   autoFocus: PropTypes.bool,
+  forceMultiline: PropTypes.bool,
+  extraInputs: PropTypes.node,
   extraOptions: PropTypes.node,
   submitButtonLabel: PropTypes.node,
   submitButtonTitle: PropTypes.string,
@@ -128,6 +143,8 @@ ExpandingTextEntry.defaultProps = {
   placeholder: '',
   defaultValue: '',
   autoFocus: false,
+  forceMultiline: false,
+  extraInputs: null,
   extraOptions: null,
   submitButtonLabel: null,
   submitButtonTitle: null,

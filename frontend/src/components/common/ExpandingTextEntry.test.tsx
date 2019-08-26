@@ -104,24 +104,63 @@ describe('ExpandingTextEntry', () => {
     });
   });
 
-  describe('extraOptions', () => {
-    let dom: RenderResult<typeof queries>;
+  describe('extraInputs', () => {
+    it('displays extra inputs beside the textarea', () => {
+      const dom = render((
+        <ExpandingTextEntry
+          onSubmit={nop}
+          extraInputs={<em />}
+        />
+      ), { queries });
 
-    beforeEach(() => {
-      dom = render((
+      expect(dom).toContainElementWith(css('em'));
+    });
+
+    it('always applies the multiline class if extra inputs are given', () => {
+      const dom = render((
+        <ExpandingTextEntry
+          onSubmit={nop}
+          extraInputs={<em />}
+        />
+      ), { queries });
+
+      expect(dom).toContainElementWith(css('form.multiline'));
+    });
+
+    it('does not apply multiline if no items are provided', () => {
+      const dom = render((
+        <ExpandingTextEntry
+          onSubmit={nop}
+          extraInputs={[]}
+        />
+      ), { queries });
+
+      expect(dom).not.toContainElementWith(css('form.multiline'));
+    });
+  });
+
+  describe('extraOptions', () => {
+    it('displays extra options beside the submit button', () => {
+      const dom = render((
         <ExpandingTextEntry
           onSubmit={nop}
           extraOptions={<em />}
         />
       ), { queries });
-    });
 
-    it('displays extra options beside the submit button', () => {
       expect(dom).toContainElementWith(css('em'));
     });
 
-    it('always applies the multiline class if extra options are given', () => {
-      expect(dom).toContainElementWith(css('form.multiline'));
+    it('accepts lists', () => {
+      const dom = render((
+        <ExpandingTextEntry
+          onSubmit={nop}
+          extraOptions={[<em key="a" />, <strong key="b" />]}
+        />
+      ), { queries });
+
+      expect(dom).toContainElementWith(css('em'));
+      expect(dom).toContainElementWith(css('strong'));
     });
   });
 });
