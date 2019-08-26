@@ -185,6 +185,14 @@
       }
     }
 
+    &.has-value:not(:focus-within) {
+      background: rgba(255, 255, 255, 0.8);
+
+      textarea::placeholder {
+        color: @pale-text-on-white;
+      }
+    }
+
     &:focus-within {
       background: #FFFFFF;
 
