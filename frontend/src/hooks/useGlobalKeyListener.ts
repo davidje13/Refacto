@@ -1,8 +1,11 @@
 import useListener from './useListener';
+import useKeyHandler from './useKeyHandler';
 
 export default function useGlobalKeyListener(
   keyMaps: Record<string, (() => void) | undefined>,
 ): void {
+  const handler = useKeyHandler(keyMaps, { allowRepeat: false });
+
   useListener(window, 'keydown', (e: KeyboardEvent) => {
     const t = e.target as Element;
     if (
@@ -15,13 +18,6 @@ export default function useGlobalKeyListener(
     if (document.body.classList.contains('ReactModal__Body--open')) {
       return;
     }
-    const fn = keyMaps[e.key];
-    if (fn) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!e.repeat) {
-        fn();
-      }
-    }
-  }, Object.entries(keyMaps).flatMap((o) => o));
+    handler(e);
+  }, [handler]);
 }

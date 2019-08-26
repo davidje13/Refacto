@@ -1,18 +1,17 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 
 export default function useListener<E extends Event>(
   target: EventTarget | undefined,
   type: string,
   fn: (e: E) => void,
-  inputs: any[],
+  inputs?: any[],
 ): void {
-  const bound = useCallback(fn, inputs) as EventListener;
-
   useEffect(() => {
     if (!target) {
       return undefined;
     }
-    target.addEventListener(type, bound);
-    return (): void => target.removeEventListener(type, bound);
-  }, [target, type, bound]);
+    const func = fn as EventListener;
+    target.addEventListener(type, func);
+    return (): void => target.removeEventListener(type, func);
+  }, [target, type, ...(inputs || [fn])]);
 }

@@ -1,23 +1,21 @@
-import React from 'react';
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useLayoutEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { getEmptyHeight, getMultilClassHeights } from '../../helpers/elementMeasurement';
+import useListener from '../../hooks/useListener';
+import useKeyHandler from '../../hooks/useKeyHandler';
 import './ExpandingTextEntry.less';
 
 const NEWLINE = /(\r\n)|(\n\r?)/g;
 
 function sanitiseInput(value: string): string {
   return value.replace(NEWLINE, '\n');
-}
-
-function anyModifier(e: React.KeyboardEvent): boolean {
-  return (
-    e.ctrlKey ||
-    e.shiftKey ||
-    e.altKey ||
-    e.metaKey
-  );
 }
 
 interface PropsT {
@@ -33,87 +31,31 @@ interface PropsT {
   clearAfterSubmit: boolean;
 }
 
-interface StateT {
-  value: string;
-  baseHeight: number;
-  contentHeight: number;
-  contentHeightMultiline: number;
-}
+const ExpandingTextEntry = ({
+  onSubmit,
+  onCancel,
+  placeholder,
+  defaultValue,
+  autoFocus,
+  extraOptions,
+  submitButtonLabel,
+  submitButtonTitle,
+  className,
+  clearAfterSubmit,
+}: PropsT): React.ReactElement => {
+  const [value, setValue] = useState(defaultValue);
+  const [baseHeight, setBaseHeight] = useState(0);
+  const [contentHeight, setContentHeight] = useState({ single: 0, multiline: 0 });
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
-  public static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func,
-    placeholder: PropTypes.string,
-    defaultValue: PropTypes.string,
-    autoFocus: PropTypes.bool,
-    extraOptions: PropTypes.node,
-    submitButtonLabel: PropTypes.node,
-    submitButtonTitle: PropTypes.string,
-    className: PropTypes.string,
-    clearAfterSubmit: PropTypes.bool,
-  };
-
-  public static readonly defaultProps = {
-    onCancel: null,
-    placeholder: '',
-    defaultValue: '',
-    autoFocus: false,
-    extraOptions: null,
-    submitButtonLabel: null,
-    submitButtonTitle: null,
-    className: null,
-    clearAfterSubmit: false,
-  };
-
-  private textareaRef: React.RefObject<HTMLTextAreaElement>;
-
-  public constructor(props: PropsT) {
-    super(props);
-
-    const { defaultValue } = props;
-
-    this.state = {
-      value: defaultValue,
-      baseHeight: 0,
-      contentHeight: 0,
-      contentHeightMultiline: 0,
-    };
-    this.textareaRef = React.createRef();
-  }
-
-  public componentDidMount(): void {
-    window.addEventListener('resize', this.updateSize);
-
-    const textarea = this.textareaRef.current!;
-    const baseHeight = getEmptyHeight(textarea);
-    this.setState({
-      baseHeight,
-      contentHeight: baseHeight,
-      contentHeightMultiline: baseHeight,
-    });
-
-    const { value } = this.state;
-
-    if (value !== '') {
-      this.updateSize();
+  const updateSize = useCallback(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
     }
-  }
-
-  public componentWillUnmount(): void {
-    window.removeEventListener('resize', this.updateSize);
-  }
-
-  public updateSize = (): void => {
-    const textarea = this.textareaRef.current!;
 
     if (textarea.value === '') {
-      const { baseHeight } = this.state;
-
-      this.setState({
-        contentHeight: baseHeight,
-        contentHeightMultiline: baseHeight,
-      });
+      setContentHeight({ single: 0, multiline: 0 });
     } else {
       const height = getMultilClassHeights(
         textarea,
@@ -121,136 +63,130 @@ class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
         'multiline',
       );
 
-      this.setState({
-        contentHeight: height.withoutClass,
-        contentHeightMultiline: height.withClass,
+      setContentHeight({
+        single: height.withoutClass,
+        multiline: height.withClass,
       });
     }
-  };
+  }, [textareaRef, setContentHeight]);
 
-  public handleSubmit = (e: React.SyntheticEvent): void => {
-    e.preventDefault();
+  const clear = useCallback(() => {
+    setValue('');
+    setContentHeight({ single: 0, multiline: 0 });
+  }, [setValue, setContentHeight]);
 
-    const { onSubmit, clearAfterSubmit } = this.props;
-    const { value } = this.state;
+  const handleSubmit = useCallback((e?: React.SyntheticEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
 
-    if (value === '') {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+
+    const curValue = textarea.value;
+    if (curValue === '') {
       return;
     }
 
     if (clearAfterSubmit) {
-      this.clear();
+      clear();
     }
 
-    onSubmit(sanitiseInput(value));
-  };
+    onSubmit(sanitiseInput(curValue));
+  }, [textareaRef, onSubmit, clearAfterSubmit, clear]);
 
-  public handleCancel = (e: React.SyntheticEvent): void => {
-    const { onCancel } = this.props;
-
-    if (onCancel) {
-      e.preventDefault();
-      onCancel();
-    }
-  };
-
-  public handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
-    this.setState({ value: e.target.value });
-    this.updateSize();
-  };
-
-  public handleKey = (e: React.KeyboardEvent): void => {
-    if (anyModifier(e)) {
-      return;
-    }
-
-    switch (e.key) {
-      case 'Enter':
-        this.handleSubmit(e);
-        break;
-      case 'Escape':
-        this.handleCancel(e);
-        break;
-      default:
-    }
-  };
-
-  public focusMe = (e: React.SyntheticEvent): void => {
-    const textarea = this.textareaRef.current;
-    if (!textarea) {
-      return;
-    }
-    if (e.target === textarea.form) {
+  const focusMe = useCallback((e: React.SyntheticEvent) => {
+    const textarea = textareaRef.current;
+    if (textarea && e.target === textarea.form) {
       e.stopPropagation();
       e.preventDefault();
       textarea.focus();
     }
-  };
+  }, [textareaRef]);
 
-  public clear(): void {
-    const { baseHeight } = this.state;
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(e.target.value);
+  }, [setValue]);
 
-    this.setState({
-      value: '',
-      contentHeight: baseHeight,
-      contentHeightMultiline: baseHeight,
-    });
-  }
+  const handleKey = useKeyHandler({
+    Enter: handleSubmit,
+    Escape: onCancel,
+  });
 
-  public render(): React.ReactElement {
-    const {
-      placeholder,
-      className,
-      submitButtonLabel,
-      submitButtonTitle,
-      autoFocus,
-      extraOptions,
-    } = this.props;
+  useLayoutEffect(() => {
+    setBaseHeight(getEmptyHeight(textareaRef.current!));
+  }, [textareaRef, setBaseHeight, setContentHeight]);
 
-    const {
-      value,
-      baseHeight,
-      contentHeight,
-      contentHeightMultiline,
-    } = this.state;
+  useLayoutEffect(updateSize, [updateSize, value]);
 
-    const multiline = (extraOptions !== null) || (contentHeight > baseHeight);
-    const height = (multiline ? contentHeightMultiline : contentHeight);
+  useListener(window, 'resize', updateSize);
 
-    /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
-    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // form click is assistive
-    return (
-      <form
-        onSubmit={this.handleSubmit}
-        onMouseDown={this.focusMe}
-        className={classNames('text-entry', className, { multiline })}
+  const multiline = (extraOptions !== null) || (contentHeight.single > baseHeight);
+  const height = Math.max(
+    multiline ? contentHeight.multiline : contentHeight.single,
+    baseHeight,
+  );
+
+  /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
+  /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // form click is assistive
+  return (
+    <form
+      onSubmit={handleSubmit}
+      onMouseDown={focusMe}
+      className={classNames('text-entry', className, { multiline })}
+    >
+      <textarea
+        ref={textareaRef}
+        placeholder={placeholder}
+        value={value}
+        wrap="soft"
+        autoFocus={autoFocus}
+        onChange={handleChange}
+        onKeyDown={handleKey}
+        style={{ height: `${height}px` }}
+        autoComplete="off"
+      />
+      { extraOptions }
+      <button
+        type="submit"
+        className="submit"
+        title={submitButtonTitle}
+        disabled={value === ''}
       >
-        <textarea
-          ref={this.textareaRef}
-          placeholder={placeholder}
-          value={value}
-          wrap="soft"
-          autoFocus={autoFocus}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKey}
-          style={{ height: `${height}px` }}
-          autoComplete="off"
-        />
-        { extraOptions }
-        <button
-          type="submit"
-          className="submit"
-          title={submitButtonTitle}
-          disabled={value === ''}
-        >
-          { submitButtonLabel }
-        </button>
-      </form>
-    );
-    /* eslint-enable jsx-a11y/no-autofocus */
-    /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
-  }
-}
+        { submitButtonLabel }
+      </button>
+    </form>
+  );
+  /* eslint-enable jsx-a11y/no-autofocus */
+  /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
+};
+
+ExpandingTextEntry.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  placeholder: PropTypes.string,
+  defaultValue: PropTypes.string,
+  autoFocus: PropTypes.bool,
+  extraOptions: PropTypes.node,
+  submitButtonLabel: PropTypes.node,
+  submitButtonTitle: PropTypes.string,
+  className: PropTypes.string,
+  clearAfterSubmit: PropTypes.bool,
+};
+
+ExpandingTextEntry.defaultProps = {
+  onCancel: null,
+  placeholder: '',
+  defaultValue: '',
+  autoFocus: false,
+  extraOptions: null,
+  submitButtonLabel: null,
+  submitButtonTitle: null,
+  className: null,
+  clearAfterSubmit: false,
+};
 
 forbidExtraProps(ExpandingTextEntry);
 
