@@ -1,22 +1,11 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-} from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { getEmptyHeight, getMultilClassHeights } from '../../helpers/elementMeasurement';
-import useListener from '../../hooks/useListener';
 import useKeyHandler from '../../hooks/useKeyHandler';
+import useBoxed from '../../hooks/useBoxed';
+import Textarea from './Textarea';
 import './ExpandingTextEntry.less';
-
-const NEWLINE = /(\r\n)|(\n\r?)/g;
-
-function sanitiseInput(value: string): string {
-  return value.replace(NEWLINE, '\n');
-}
 
 interface PropsT {
   onSubmit: (value: string) => void;
@@ -44,109 +33,65 @@ const ExpandingTextEntry = ({
   clearAfterSubmit,
 }: PropsT): React.ReactElement => {
   const [value, setValue] = useState(defaultValue);
-  const [baseHeight, setBaseHeight] = useState(0);
-  const [contentHeight, setContentHeight] = useState({ single: 0, multiline: 0 });
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const updateSize = useCallback(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) {
-      return;
-    }
-
-    if (textarea.value === '') {
-      setContentHeight({ single: 0, multiline: 0 });
-    } else {
-      const height = getMultilClassHeights(
-        textarea,
-        textarea.form!,
-        'multiline',
-      );
-
-      setContentHeight({
-        single: height.withoutClass,
-        multiline: height.withClass,
-      });
-    }
-  }, [textareaRef, setContentHeight]);
-
-  const clear = useCallback(() => {
-    setValue('');
-    setContentHeight({ single: 0, multiline: 0 });
-  }, [setValue, setContentHeight]);
+  const [textMultiline, setTextMultiline] = useState(false);
+  const boxedValue = useBoxed(value);
+  const [form, setForm] = useState<HTMLFormElement | null>(null);
 
   const handleSubmit = useCallback((e?: React.SyntheticEvent) => {
     if (e) {
       e.preventDefault();
     }
 
-    const textarea = textareaRef.current;
-    if (!textarea) {
-      return;
-    }
-
-    const curValue = textarea.value;
+    const curValue = boxedValue.current;
     if (curValue === '') {
       return;
     }
 
     if (clearAfterSubmit) {
-      clear();
+      setValue('');
     }
 
-    onSubmit(sanitiseInput(curValue));
-  }, [textareaRef, onSubmit, clearAfterSubmit, clear]);
+    onSubmit(curValue);
+  }, [boxedValue, onSubmit, clearAfterSubmit, setValue]);
 
-  const focusMe = useCallback((e: React.SyntheticEvent) => {
-    const textarea = textareaRef.current;
-    if (textarea && e.target === textarea.form) {
-      e.stopPropagation();
-      e.preventDefault();
-      textarea.focus();
+  const handleFormMouseDown = useCallback((e: React.SyntheticEvent) => {
+    if (e.target !== e.currentTarget) {
+      return;
     }
-  }, [textareaRef]);
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
-  }, [setValue]);
+    e.stopPropagation();
+    e.preventDefault();
+    e.currentTarget.querySelector('textarea')!.focus();
+  }, []);
 
   const handleKey = useKeyHandler({
     Enter: handleSubmit,
     Escape: onCancel,
   });
 
-  useLayoutEffect(() => {
-    setBaseHeight(getEmptyHeight(textareaRef.current!));
-  }, [textareaRef, setBaseHeight, setContentHeight]);
-
-  useLayoutEffect(updateSize, [updateSize, value]);
-
-  useListener(window, 'resize', updateSize);
-
-  const multiline = (extraOptions !== null) || (contentHeight.single > baseHeight);
-  const height = Math.max(
-    multiline ? contentHeight.multiline : contentHeight.single,
-    baseHeight,
-  );
+  const forceMultiline = Boolean(extraOptions);
 
   /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
   /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // form click is assistive
   return (
     <form
+      ref={setForm}
       onSubmit={handleSubmit}
-      onMouseDown={focusMe}
-      className={classNames('text-entry', className, { multiline })}
+      onMouseDown={handleFormMouseDown}
+      className={classNames('text-entry', className, {
+        multiline: forceMultiline || textMultiline,
+      })}
     >
-      <textarea
-        ref={textareaRef}
+      <Textarea
         placeholder={placeholder}
         value={value}
         wrap="soft"
         autoFocus={autoFocus}
-        onChange={handleChange}
+        sizeToFit
+        onChange={setValue}
+        onChangeMultiline={setTextMultiline}
+        multilineClass={forceMultiline ? undefined : 'multiline'}
+        multilineClassElement={form}
         onKeyDown={handleKey}
-        style={{ height: `${height}px` }}
-        autoComplete="off"
       />
       { extraOptions }
       <button

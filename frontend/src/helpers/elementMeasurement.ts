@@ -71,3 +71,9 @@ export function getMultilClassHeights(
     (measure) => measureMultiClassHeights(classElement, className, measure),
   );
 }
+
+export function getHeight(
+  element: HTMLElement,
+): number {
+  return takeHeightMeasurements(element, (measure) => measure());
+}
