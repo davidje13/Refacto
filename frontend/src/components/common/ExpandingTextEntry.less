@@ -1,21 +1,25 @@
 .text-entry {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   background: #FFFFFF;
 
   textarea {
-    width: 100%;
+    flex: 1;
     background: none;
   }
 
-  &.multiline {
-    display: block;
-    text-align: right;
-    text-align: end;
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
-    textarea {
-      text-align: left;
-      text-align: start;
+  &.multiline .buttons {
+    flex: 100%;
+
+    :only-child {
+      /* align right */
+      margin-left: auto;
     }
   }
 }

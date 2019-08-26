@@ -93,15 +93,17 @@ const ExpandingTextEntry = ({
         multilineClassElement={form}
         onKeyDown={handleKey}
       />
-      { extraOptions }
-      <button
-        type="submit"
-        className="submit"
-        title={submitButtonTitle}
-        disabled={value === ''}
-      >
-        { submitButtonLabel }
-      </button>
+      <div className="buttons">
+        { extraOptions }
+        <button
+          type="submit"
+          className="submit"
+          title={submitButtonTitle}
+          disabled={value === ''}
+        >
+          { submitButtonLabel }
+        </button>
+      </div>
     </form>
   );
   /* eslint-enable jsx-a11y/no-autofocus */

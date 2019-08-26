@@ -115,9 +115,8 @@
       outline: none;
     }
 
-    .submit, .delete {
+    .submit, .delete, .cancel {
       margin: 8px;
-      padding: 12px 20px;
       border-radius: 4px;
       font-size: 0.9em;
       white-space: nowrap;
@@ -129,6 +128,7 @@
     }
 
     .submit {
+      padding: 12px 20px;
       font-weight: bold;
       background: @green-button-back;
       color: #000000;
@@ -139,9 +139,12 @@
       }
     }
 
+    .delete, .cancel {
+      padding: 4px 8px;
+    }
+
     .delete {
       float: left;
-      padding-left: 12px;
       color: @red-text-on-white;
 
       &::before {
@@ -150,13 +153,17 @@
       }
     }
 
+    .cancel {
+      color: @pale-text-on-white;
+    }
+
     &.multiline {
       textarea {
         padding-bottom: 8px;
       }
 
       button {
-        margin-top: 0;
+        margin-top: auto;
       }
     }
   }

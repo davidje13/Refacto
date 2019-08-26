@@ -28,11 +28,28 @@ const ItemEditing = ({
       submitButtonTitle="Save changes"
       onSubmit={onSubmit}
       onCancel={onCancel}
-      extraOptions={onDelete && (
-        <WrappedButton title="Delete" className="delete" onClick={onDelete}>
-          Delete
-        </WrappedButton>
-      )}
+      extraOptions={[
+        onCancel ? (
+          <WrappedButton
+            key="cancel"
+            title="Cancel"
+            className="cancel"
+            onClick={onCancel}
+          >
+            Cancel
+          </WrappedButton>
+        ) : null,
+        onDelete ? (
+          <WrappedButton
+            key="delete"
+            title="Delete"
+            className="delete"
+            onClick={onDelete}
+          >
+            Delete
+          </WrappedButton>
+        ) : null,
+      ]}
       autoFocus
     />
   </div>
