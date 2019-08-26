@@ -175,6 +175,18 @@ class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
     }
   };
 
+  public focusMe = (e: React.SyntheticEvent): void => {
+    const textarea = this.textareaRef.current;
+    if (!textarea) {
+      return;
+    }
+    if (e.target === textarea.form) {
+      e.stopPropagation();
+      e.preventDefault();
+      textarea.focus();
+    }
+  };
+
   public clear(): void {
     const { baseHeight } = this.state;
 
@@ -206,9 +218,11 @@ class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
     const height = (multiline ? contentHeightMultiline : contentHeight);
 
     /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // form click is assistive
     return (
       <form
         onSubmit={this.handleSubmit}
+        onMouseDown={this.focusMe}
         className={classNames('text-entry', className, { multiline })}
       >
         <textarea
@@ -234,6 +248,7 @@ class ExpandingTextEntry extends React.PureComponent<PropsT, StateT> {
       </form>
     );
     /* eslint-enable jsx-a11y/no-autofocus */
+    /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
   }
 }
 
