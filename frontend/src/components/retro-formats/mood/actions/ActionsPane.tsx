@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { RetroItem } from 'refacto-entities';
+import { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ActionSection from './ActionSection';
-import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
+import ItemEditor from '../ItemEditor';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
@@ -13,9 +13,9 @@ interface PropsT {
   items: RetroItem[];
   localDateProvider: LocalDateProvider;
   alwaysShowEntry: boolean;
-  onAddItem?: (message: string) => void;
+  onAddItem?: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
   onSetDone?: (id: string, done: boolean) => void;
-  onEdit?: (id: string, message: string) => void;
+  onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
   onDelete?: (id: string) => void;
 }
 
@@ -42,7 +42,7 @@ const ActionsPane = ({
             })}
           >
             <div className="new-action-item">
-              <ExpandingTextEntry
+              <ItemEditor
                 onSubmit={onAddItem}
                 submitButtonTitle="Add"
                 placeholder="Add an action item"

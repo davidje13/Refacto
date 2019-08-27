@@ -98,6 +98,9 @@ describe('MoodSection', () => {
     const textEntry = dom.getBy(css('mock-expanding-text-entry'));
     textEntry.mockProps.onSubmit('my message');
 
-    expect(onAddItem).toHaveBeenCalledWith('my-category', 'my message');
+    expect(onAddItem).toHaveBeenCalledWith(
+      'my-category',
+      { message: 'my message' },
+    );
   });
 });

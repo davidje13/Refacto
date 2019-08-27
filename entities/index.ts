@@ -7,11 +7,14 @@ export interface ClientConfig {
   };
 }
 
-export interface RetroItem {
+export interface UserProvidedRetroItemDetails {
+  message: string;
+}
+
+export interface RetroItem extends UserProvidedRetroItemDetails {
   id: string;
   category: string;
   created: number;
-  message: string;
   votes: number;
   doneTime: number;
 }

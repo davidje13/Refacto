@@ -1,5 +1,5 @@
 import { Spec } from 'json-immutability-helper';
-import { Retro, RetroItem } from 'refacto-entities';
+import { Retro, RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import { DispatchSpec } from '../api/SharedReducer';
 import uuidv4 from '../helpers/uuidv4';
 
@@ -12,31 +12,31 @@ function sanitiseInput(value: string): string {
     .replace(PADDING, '');
 }
 
-function makeItem(category: string, message: string): RetroItem {
-  return {
-    id: uuidv4(),
-    category,
-    created: Date.now(),
-    message,
-    votes: 0,
-    doneTime: 0,
-  };
-}
-
 export const setRetroState = (delta: object): DispatchSpec<Retro> => ({
   state: { $merge: delta },
 });
 
 export const addRetroItem = (
   category: string,
-  message: string,
+  { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
 ): DispatchSpec<Retro> => {
-  const sanitisedMessage = sanitiseInput(message);
+  const sanitisedMessage = sanitiseInput(message || '');
   if (!sanitisedMessage) {
     return null;
   }
+
+  const item: RetroItem = {
+    id: uuidv4(),
+    category,
+    created: Date.now(),
+    message: sanitisedMessage,
+    votes: 0,
+    doneTime: 0,
+    ...rest,
+  };
+
   return {
-    items: { $push: [makeItem(category, sanitisedMessage)] },
+    items: { $push: [item] },
   };
 };
 
@@ -52,15 +52,17 @@ function updateItem(
 
 export const editRetroItem = (
   itemId: string,
-  message: string,
+  { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
 ): DispatchSpec<Retro> => {
-  const sanitisedMessage = sanitiseInput(message);
-  if (!sanitisedMessage) {
-    return null;
+  const merge: Partial<RetroItem> = { ...rest };
+  if (message !== undefined) {
+    const sanitisedMessage = sanitiseInput(message);
+    if (!sanitisedMessage) {
+      return null;
+    }
+    merge.message = sanitisedMessage;
   }
-  return updateItem(itemId, {
-    message: { $set: sanitisedMessage },
-  });
+  return updateItem(itemId, { $merge: merge });
 };
 
 export const setRetroItemDone = (

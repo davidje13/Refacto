@@ -9,7 +9,7 @@ import './ExpandingTextEntry.less';
 
 function hasContent(o: React.ReactNode): boolean {
   if (Array.isArray(o)) {
-    return o.length > 0;
+    return o.filter((e) => e).length > 0;
   }
   return Boolean(o);
 }
@@ -25,7 +25,6 @@ interface PropsT {
   extraInputs?: React.ReactNode;
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
-  className?: string;
   clearAfterSubmit: boolean;
 }
 
@@ -40,7 +39,6 @@ const ExpandingTextEntry = ({
   extraOptions,
   submitButtonLabel,
   submitButtonTitle,
-  className,
   clearAfterSubmit,
 }: PropsT): React.ReactElement => {
   const [value, setValue] = useState(defaultValue);
@@ -88,7 +86,7 @@ const ExpandingTextEntry = ({
       ref={setForm}
       onSubmit={handleSubmit}
       onMouseDown={handleFormMouseDown}
-      className={classNames('text-entry', className, {
+      className={classNames('text-entry', {
         multiline: alwaysMultiline || textMultiline,
         'has-value': (value !== ''),
       })}
@@ -134,7 +132,6 @@ ExpandingTextEntry.propTypes = {
   extraOptions: PropTypes.node,
   submitButtonLabel: PropTypes.node,
   submitButtonTitle: PropTypes.string,
-  className: PropTypes.string,
   clearAfterSubmit: PropTypes.bool,
 };
 
@@ -148,7 +145,6 @@ ExpandingTextEntry.defaultProps = {
   extraOptions: null,
   submitButtonLabel: null,
   submitButtonTitle: null,
-  className: null,
   clearAfterSubmit: false,
 };
 

@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { RetroItem } from 'refacto-entities';
+import { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
-import ItemEditing from '../ItemEditing';
+import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
@@ -14,7 +14,7 @@ interface PropsT {
   focused: boolean;
   focusedItemTimeout: number;
   autoScroll: boolean;
-  onEdit?: (id: string, message: string) => void;
+  onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
   onAddExtraTime?: (time: number) => void;
   onVote?: (id: string) => void;
   onDelete?: (id: string) => void;
@@ -45,21 +45,29 @@ const MoodItem = ({
   const [editing, setEditing] = useState(false);
   const handleBeginEdit = useBoundCallback(setEditing, true);
   const handleCancelEdit = useBoundCallback(setEditing, false);
-  const handleSaveEdit = useCallback((message) => {
+  const handleSaveEdit = useCallback((
+    diff: Partial<UserProvidedRetroItemDetails>,
+  ) => {
     setEditing(false);
-    onEdit!(item.id, message);
+    onEdit!(item.id, diff);
   }, [setEditing, onEdit, item.id]);
 
   if (editing) {
+    /* eslint-disable jsx-a11y/no-autofocus */ // user triggered this
     return (
-      <ItemEditing
-        className="mood-item"
-        message={item.message}
-        onSubmit={handleSaveEdit}
-        onCancel={handleCancelEdit}
-        onDelete={handleDelete}
-      />
+      <div className="mood-item editing">
+        <ItemEditor
+          defaultItem={item}
+          submitButtonLabel="Save"
+          submitButtonTitle="Save changes"
+          onSubmit={handleSaveEdit}
+          onDelete={handleDelete}
+          onCancel={handleCancelEdit}
+          autoFocus
+        />
+      </div>
     );
+    /* eslint-enable jsx-a11y/no-autofocus */
   }
 
   if (focused) {

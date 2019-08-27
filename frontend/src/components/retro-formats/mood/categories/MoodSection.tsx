@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { RetroItem } from 'refacto-entities';
+import { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
-import ExpandingTextEntry from '../../../common/ExpandingTextEntry';
+import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
@@ -15,9 +15,15 @@ interface PropsT {
   items: RetroItem[];
   theme: string;
   addItemPlaceholder: string;
-  onAddItem?: (category: string, message: string) => void;
+  onAddItem?: (
+    category: string,
+    itemParts: Partial<UserProvidedRetroItemDetails>,
+  ) => void;
   onVote?: (id: string) => void;
-  onEdit?: (id: string, message: string) => void;
+  onEdit?: (
+    id: string,
+    diff: Partial<UserProvidedRetroItemDetails>,
+  ) => void;
   onDelete?: (id: string) => void;
   onSetDone?: (id: string, done: boolean) => void;
   onSwitchFocus?: (markPreviousDone: boolean, id: string | null) => void;
@@ -60,7 +66,7 @@ const MoodSection = ({
           <FaceIcon theme={theme} type={category} />
         </h2>
         { handleAddItem && (
-          <ExpandingTextEntry
+          <ItemEditor
             onSubmit={handleAddItem}
             submitButtonTitle="Add"
             placeholder={addItemPlaceholder}
