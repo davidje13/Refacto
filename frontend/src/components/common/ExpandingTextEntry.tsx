@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
+import isFocusable from '../../helpers/isFocusable';
 import useKeyHandler from '../../hooks/useKeyHandler';
 import useBoxed from '../../hooks/useBoxed';
 import Textarea from './Textarea';
@@ -63,13 +64,14 @@ const ExpandingTextEntry = ({
     onSubmit(curValue);
   }, [boxedValue, onSubmit, clearAfterSubmit, setValue]);
 
-  const handleFormMouseDown = useCallback((e: React.SyntheticEvent) => {
-    if (e.target !== e.currentTarget) {
+  const handleFormMouseDown = useCallback((e: React.MouseEvent) => {
+    if (isFocusable(e.target)) {
       return;
     }
+    const formElement = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
-    e.currentTarget.querySelector('textarea')!.focus();
+    formElement.querySelector('textarea')!.focus();
   }, []);
 
   const handleKey = useKeyHandler({
