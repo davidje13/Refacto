@@ -1,9 +1,11 @@
 import PropTypes, { Requireable } from 'prop-types';
+import propTypesNullable from 'prop-types-nullable';
 import {
-  RetroItem,
   RetroArchiveSummary,
   RetroSummary,
   Retro,
+  RetroItem,
+  RetroItemAttachment,
 } from 'refacto-entities';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 
@@ -22,11 +24,17 @@ export const propTypesShapeArchiveSummary: Requireable<RetroArchiveSummary | nul
   created: PropTypes.number.isRequired,
 });
 
+export const propTypesShapeItemAttachment: Requireable<RetroItemAttachment | null> = exactShape({
+  type: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+});
+
 export const propTypesShapeItem: Requireable<RetroItem | null> = exactShape({
   id: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   created: PropTypes.number.isRequired,
   message: PropTypes.string.isRequired,
+  attachment: propTypesNullable(propTypesShapeItemAttachment).isRequired,
   votes: PropTypes.number.isRequired,
   doneTime: PropTypes.number.isRequired,
 });

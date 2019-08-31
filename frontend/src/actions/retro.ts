@@ -30,6 +30,7 @@ export const addRetroItem = (
     category,
     created: Date.now(),
     message: sanitisedMessage,
+    attachment: null,
     votes: 0,
     doneTime: 0,
     ...rest,

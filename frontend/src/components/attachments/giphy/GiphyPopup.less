@@ -1,0 +1,89 @@
+@import (reference) '../../colours.less';
+
+.popup-giphy {
+  text-align: center;
+
+  p {
+    margin: 16px 0 0;
+  }
+
+  form {
+    display: flex;
+
+    input {
+      border: 1px solid @beige-shadow;
+      margin: 0;
+      padding: 8px 16px;
+      flex: 1;
+    }
+
+    button {
+      margin: 0 0 0 8px;
+      padding: 8px 16px;
+      background: #EEEEEE;
+      color: @green-text-on-white;
+      transition: box-shadow 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      &:active {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .credit {
+    text-align: center;
+    font-size: 0.8em;
+    margin-top: 4px;
+  }
+
+  .choices {
+    width: 800px;
+    max-width: calc(100vw - 128px);
+    margin-bottom: 32px;
+
+    button {
+      margin: 2px;
+      vertical-align: top;
+      background: #808080;
+      border: 1px solid #000000;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      img {
+        height: 100px;
+        min-width: 40px;
+        max-width: 200px;
+        display: block;
+      }
+
+      &:hover {
+        z-index: 1;
+        transform: scale(1.1);
+        box-shadow: 0 0 0 2px @green-shadow, 0 3px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  .dialog-options button {
+    margin: 0 16px;
+    padding: 8px 16px;
+    background: #EEEEEE;
+    color: @green-text-on-white;
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      box-shadow: none;
+    }
+  }
+}

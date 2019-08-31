@@ -1,12 +1,30 @@
-const baseTestConfig = {
-  password: {
-    workFactor: 1,
+import { ConfigT } from '../config';
+
+// Thanks, https://stackoverflow.com/a/51365037/1180785
+type RecursivePartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[] ? RecursivePartial<U>[] :
+    T[P] extends object ? RecursivePartial<T[P]> : T[P];
+};
+
+const baseTestConfig: ConfigT = {
+  port: 1,
+  forwardHost: '',
+  mockSsoPort: 0,
+  serverBindAddress: '',
+  password: { workFactor: 1, secretPepper: '' },
+  token: { secretPassphrase: '' },
+  db: { url: 'memory://' },
+  sso: {
+    google: { clientId: '', authUrl: '', tokenInfoUrl: '' },
+    github: {
+      clientId: '',
+      clientSecret: '',
+      authUrl: '',
+      accessTokenUrl: '',
+      userUrl: '',
+    },
   },
-  token: {},
-  db: {
-    url: 'memory://',
-  },
-  sso: {},
+  giphy: { baseUrl: '', apiKey: '' },
 };
 
 function isObj(x: unknown): x is Record<string, unknown> {
@@ -30,5 +48,5 @@ function deepMerge<T, U>(a: T, b?: U): T & U {
 }
 
 export default (
-  overrides: any = {},
-): any => deepMerge(baseTestConfig, overrides);
+  overrides: RecursivePartial<ConfigT> = {},
+): ConfigT => deepMerge(baseTestConfig, overrides);

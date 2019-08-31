@@ -3,11 +3,15 @@ import { ClientConfig } from 'refacto-entities';
 
 interface ServerConfig {
   sso: ClientConfig['sso'];
+  giphy: {
+    apiKey: string;
+  };
 }
 
 function makeClientConfig(serverConfig: ServerConfig): ClientConfig {
   const clientConfig: ClientConfig = {
     sso: {},
+    giphy: (serverConfig.giphy.apiKey !== ''),
   };
 
   Object.keys(serverConfig.sso).forEach((service) => {

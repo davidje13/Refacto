@@ -157,6 +157,34 @@
       color: @pale-text-on-white;
     }
 
+    .open-giphy {
+      display: none;
+      margin: auto 0 auto 8px;
+      min-width: 28px;
+      min-height: 28px;
+      background: center center / contain no-repeat url(../../../resources/giphy-icon.png);
+    }
+
+    figure {
+      display: none;
+      width: 100%;
+      margin: 4px 0;
+
+      img {
+        display: block;
+        margin: 0 auto 4px;
+        max-width: 100%;
+        height: 100px;
+      }
+
+      figcaption {
+        display: block;
+        font-size: 0.8em;
+        font-style: italic;
+        text-align: center;
+      }
+    }
+
     &.multiline {
       textarea {
         padding-bottom: 8px;
@@ -164,6 +192,16 @@
 
       button {
         margin-top: auto;
+      }
+    }
+
+    &.has-value {
+      .open-giphy {
+        display: block;
+      }
+
+      figure {
+        display: block;
       }
     }
   }

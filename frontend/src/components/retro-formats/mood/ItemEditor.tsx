@@ -1,9 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
+import Attachment from '../../attachments/Attachment';
+import GiphyButton from '../../attachments/giphy/GiphyButton';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
+import useConfig from '../../../hooks/data/useConfig';
 import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
 
 interface PropsT {
@@ -15,6 +18,7 @@ interface PropsT {
   autoFocus: boolean;
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
+  allowAttachments: boolean;
   clearAfterSubmit: boolean;
 }
 
@@ -23,19 +27,31 @@ const ItemEditor = ({
   onSubmit,
   onCancel,
   onDelete,
+  allowAttachments,
+  clearAfterSubmit,
   ...rest
 }: PropsT): React.ReactElement => {
+  const config = useConfig();
+
+  const [attachment, setAttachment] = useState(defaultItem ? defaultItem.attachment : null);
   const handleSubmit = useCallback((message: string) => {
     onSubmit({
       message,
+      attachment,
     });
-  }, [onSubmit]);
+    if (clearAfterSubmit) {
+      setAttachment(null);
+    }
+  }, [onSubmit, attachment, clearAfterSubmit, setAttachment]);
+
+  const attachmentElement = Attachment({ attachment });
 
   return (
     <ExpandingTextEntry
       defaultValue={defaultItem ? defaultItem.message : ''}
       onSubmit={handleSubmit}
       onCancel={onCancel}
+      extraInputs={attachmentElement}
       extraOptions={[
         onCancel ? (
           <WrappedButton
@@ -47,6 +63,7 @@ const ItemEditor = ({
             Cancel
           </WrappedButton>
         ) : null,
+
         onDelete ? (
           <WrappedButton
             key="delete"
@@ -57,8 +74,17 @@ const ItemEditor = ({
             Delete
           </WrappedButton>
         ) : null,
+
+        allowAttachments && config && config.giphy ? (
+          <GiphyButton
+            key="giphy"
+            defaultAttachment={attachment}
+            onChange={setAttachment}
+          />
+        ) : null,
       ]}
       forceMultiline={Boolean(onCancel || onDelete)}
+      clearAfterSubmit={clearAfterSubmit}
       {...rest}
     />
   );
@@ -73,6 +99,7 @@ ItemEditor.propTypes = {
   autoFocus: PropTypes.bool,
   submitButtonLabel: PropTypes.node,
   submitButtonTitle: PropTypes.string,
+  allowAttachments: PropTypes.bool,
   clearAfterSubmit: PropTypes.bool,
 };
 
@@ -84,6 +111,7 @@ ItemEditor.defaultProps = {
   autoFocus: false,
   submitButtonLabel: null,
   submitButtonTitle: null,
+  allowAttachments: false,
   clearAfterSubmit: false,
 };
 

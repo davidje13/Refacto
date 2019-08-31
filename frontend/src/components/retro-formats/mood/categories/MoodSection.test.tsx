@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from 'refacto-entities';
 import { queries, css } from '../../../../test-helpers/queries';
@@ -96,11 +96,13 @@ describe('MoodSection', () => {
     ), { queries });
 
     const textEntry = dom.getBy(css('mock-expanding-text-entry'));
-    textEntry.mockProps.onSubmit('my message');
+    act(() => {
+      textEntry.mockProps.onSubmit('my message');
+    });
 
     expect(onAddItem).toHaveBeenCalledWith(
       'my-category',
-      { message: 'my message' },
+      { message: 'my message', attachment: null },
     );
   });
 });

@@ -5,10 +5,17 @@ export interface ClientConfig {
       clientId: string;
     };
   };
+  giphy: boolean;
+}
+
+export interface RetroItemAttachment {
+  type: string;
+  url: string;
 }
 
 export interface UserProvidedRetroItemDetails {
   message: string;
+  attachment: RetroItemAttachment | null,
 }
 
 export interface RetroItem extends UserProvidedRetroItemDetails {
@@ -25,6 +32,7 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
     category: '',
     created: 0,
     message: '',
+    attachment: null,
     votes: 0,
     doneTime: 0,
   }, details);

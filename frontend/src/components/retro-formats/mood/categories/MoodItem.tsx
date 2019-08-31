@@ -63,6 +63,7 @@ const MoodItem = ({
           onSubmit={handleSaveEdit}
           onDelete={handleDelete}
           onCancel={handleCancelEdit}
+          allowAttachments
           autoFocus
         />
       </div>

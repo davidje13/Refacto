@@ -92,6 +92,21 @@ SSO_GITHUB_CLIENT_ID=idhere SSO_GITHUB_CLIENT_SECRET=secrethere npm start
 
 ## Other Integrations
 
+### Giphy
+
+You will need a Giphy API key:
+
+1. Go to <https://developers.giphy.com/dashboard/?create=true>
+2. Log in and provide an application name and description
+3. Record the API key.
+
+You can now invoke the application with the `GIPHY_API_KEY` environment
+variable set. This applies to both local testing and deployments. For example:
+
+```bash
+GIPHY_API_KEY=keyhere npm start
+```
+
 ### haveibeenpwned Password Database
 
 The [haveibeenpwned password database](https://haveibeenpwned.com/Passwords)

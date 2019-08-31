@@ -25,6 +25,7 @@ describe('WelcomePage', () => {
         sso: {
           google: { clientId: 'wheee', authUrl: 'http://example.com/wherever' },
         },
+        giphy: false,
       });
 
       const context = {};
@@ -40,6 +41,7 @@ describe('WelcomePage', () => {
     it('displays no login buttons if not configured', () => {
       mockConfigService.set({
         sso: {},
+        giphy: false,
       });
 
       const context = {};

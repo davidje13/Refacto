@@ -6,8 +6,10 @@ import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
 import ApiSsoRouter from './routers/ApiSsoRouter';
 import ApiRetrosRouter from './routers/ApiRetrosRouter';
+import ApiGiphyRouter from './routers/ApiGiphyRouter';
 import StaticRouter from './routers/StaticRouter';
 import TokenManager from './tokens/TokenManager';
+import GiphyService from './services/GiphyService';
 import SsoService from './services/SsoService';
 import RetroService, { TopicMessage } from './services/RetroService';
 import RetroArchiveService from './services/RetroArchiveService';
@@ -37,7 +39,7 @@ const CSP = [
   'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com',
   'font-src \'self\' https://fonts.gstatic.com',
   'connect-src \'self\' https://api.pwnedpasswords.com',
-  'img-src \'self\'',
+  'img-src \'self\' data: https://*.giphy.com',
   'form-action \'none\'',
 ].join('; ');
 
@@ -51,6 +53,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     (): Topic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
   );
 
+  const giphyService = new GiphyService(config.giphy);
   const ssoService = new SsoService(config.sso);
   const retroService = new RetroService(db, retroChangeSubs);
   const retroArchiveService = new RetroArchiveService(db);
@@ -90,6 +93,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     retroService,
     retroArchiveService,
   ));
+  app.use('/api/giphy', new ApiGiphyRouter(giphyService));
   app.use(new StaticRouter(config.forwardHost));
 
   const testHookApp = app as TestHookWebSocketExpress;

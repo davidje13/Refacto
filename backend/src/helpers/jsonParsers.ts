@@ -1,4 +1,9 @@
-import { RetroItem, RetroData, Retro } from 'refacto-entities';
+import {
+  RetroItem,
+  RetroItemAttachment,
+  RetroData,
+  Retro,
+} from 'refacto-entities';
 import json from './json';
 
 export const extractRetroItem = json.object<RetroItem>({
@@ -6,6 +11,10 @@ export const extractRetroItem = json.object<RetroItem>({
   category: json.string,
   created: json.number,
   message: json.string,
+  attachment: json.nullable(json.object<RetroItemAttachment>({
+    type: json.string,
+    url: json.string,
+  })),
   votes: json.number,
   doneTime: json.number,
 });

@@ -70,6 +70,7 @@ const MoodSection = ({
             onSubmit={handleAddItem}
             submitButtonTitle="Add"
             placeholder={addItemPlaceholder}
+            allowAttachments
             clearAfterSubmit
           />
         ) }

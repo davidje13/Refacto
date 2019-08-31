@@ -16,12 +16,22 @@ interface PropsT {
   onClose?: () => void;
 }
 
+function stopProp(e: Event): void {
+  e.stopPropagation();
+}
+
 const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
   const keys = data ? data.keys || {} : {}; // TODO TypeScript#16
 
   const closeHandler = useParameterlessCallback(onClose);
   const [modal, setModal] = useState<HTMLDivElement>();
+  useListener(modal, 'mousedown', stopProp);
+  useListener(modal, 'mouseup', stopProp);
+  useListener(modal, 'keyup', stopProp);
+  useListener(modal, 'keypress', stopProp);
+
   useListener(modal, 'keydown', (e: KeyboardEvent) => {
+    e.stopPropagation();
     const t = e.target as Element;
     if (
       t.tagName === 'INPUT' ||
@@ -33,7 +43,6 @@ const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
     const fn = keys[e.key];
     if (fn) {
       e.preventDefault();
-      e.stopPropagation();
       if (!e.repeat) {
         fn();
       }

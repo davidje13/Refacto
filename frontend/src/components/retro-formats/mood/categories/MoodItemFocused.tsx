@@ -6,6 +6,7 @@ import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
+import Attachment from '../../../attachments/Attachment';
 
 interface PropsT {
   item: RetroItem;
@@ -41,6 +42,7 @@ const MoodItemFocused = ({
       <div className="scroll-target" ref={ref} />
       <div className="message">{ item.message }</div>
       <VoteCount votes={item.votes} />
+      <Attachment attachment={item.attachment} />
       <WrappedButton title="Cancel" className="cancel" onClick={onCancel}>
         Cancel
       </WrappedButton>

@@ -26,5 +26,9 @@
       "accessTokenUrl": "https://github.com/login/oauth/access_token",
       "userUrl": "https://api.github.com/user"
     }
+  },
+  "giphy": {
+    "baseUrl": "https://api.giphy.com/v1",
+    "apiKey": ""
   }
 }
