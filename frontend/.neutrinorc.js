@@ -2,6 +2,7 @@ const airbnb = require('@neutrinojs/airbnb');
 const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const react = require('@neutrinojs/react');
+const styleMinify = require('@neutrinojs/style-minify');
 const typescript = require('neutrino-typescript');
 const typescriptLint = require('neutrino-typescript-eslint');
 const { baseRules, reactRules, testRules } = require('../eslint.js');
@@ -88,6 +89,7 @@ module.exports = {
         ],
       },
     }),
+    conditionalModule(() => process.env.NODE_ENV !== 'development', styleMinify()),
     (neutrino) => neutrino.config.stats('minimal'),
   ],
 };
