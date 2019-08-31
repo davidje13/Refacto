@@ -42,9 +42,9 @@ module.exports = {
     })),
     copy({
       patterns: [{
-        context: 'src/static',
+        context: 'src/resources/assets',
         from: '**/*',
-        to: 'static',
+        to: 'assets',
       }],
     }),
     jest({

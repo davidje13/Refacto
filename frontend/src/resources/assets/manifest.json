@@ -2,7 +2,7 @@
   "short_name": "Refacto",
   "name": "Refacto",
   "icons": [{
-    "src": "/static/favicon.png",
+    "src": "/favicon.png",
     "type": "image/png"
   }],
   "start_url": "/",
