@@ -64,6 +64,18 @@ export default ({
   const singleColumn = useWindowSize(({ width }) => (width <= 800), []);
   const localDateProvider = useLocalDateProvider();
 
+  const canFacilitate = (
+    !singleColumn ||
+    OPTIONS.enableMobileFacilitation.read(retroOptions)
+  );
+
+  function facilitate<T>(x: T): T | undefined {
+    if (canFacilitate) {
+      return x;
+    }
+    return undefined;
+  }
+
   const checkAutoArchive = useBoundCallback(allItemsDoneCallback, onComplete);
 
   const handleAddItem = useDispatchAction(dispatch, addRetroItem);
@@ -71,21 +83,18 @@ export default ({
   const handleUpvoteItem = useDispatchAction(dispatch, upvoteRetroItem);
   const handleEditItem = useDispatchAction(dispatch, editRetroItem);
   const handleDeleteItem = useDispatchAction(dispatch, deleteRetroItem);
-  const handleAddExtraTime = useDispatchAction(dispatch, setItemTimeout);
-  const handleSwitchFocus = useDispatchAction(dispatch, switchFocus);
-  const handleSetActionItemDone = useDispatchAction(
-    dispatch,
-    setRetroItemDone,
-  );
+  const handleAddExtraTime = useDispatchAction(dispatch, facilitate(setItemTimeout));
+  const handleSwitchFocus = useDispatchAction(dispatch, facilitate(switchFocus));
+  const handleSetActionItemDone = useDispatchAction(dispatch, setRetroItemDone);
   const handleSetMoodItemDone = useDispatchAction(
     dispatch,
-    setRetroItemDone,
+    facilitate(setRetroItemDone),
     checkAutoArchive,
   );
 
   useGlobalKeyListener({
-    ArrowRight: useDispatchAction(dispatch, goNext, checkAutoArchive),
-    ArrowLeft: useDispatchAction(dispatch, goPrevious),
+    ArrowRight: useDispatchAction(dispatch, facilitate(goNext), checkAutoArchive),
+    ArrowLeft: useDispatchAction(dispatch, facilitate(goPrevious)),
   });
 
   const createMoodSection = (category: Category): React.ReactElement => (

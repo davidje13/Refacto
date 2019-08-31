@@ -8,9 +8,11 @@ import Popup from '../common/Popup';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
 import useBoundCallback from '../../hooks/useBoundCallback';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
+import useWindowSize from '../../hooks/env/useWindowSize';
 import { clearCovered } from '../../actions/retro';
 import { archiveService } from '../../api/api';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
+import OPTIONS from '../../helpers/optionManager';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
 import './RetroPage.less';
@@ -33,6 +35,7 @@ const RetroPage = ({
     retroDispatch,
     retroError,
   ] = useRetroReducer(retroId, retroToken);
+  const smallScreen = useWindowSize(({ width }) => (width <= 800), []);
   const [archivePopupVisible, setArchivePopupVisible] = useState(false);
   const showArchivePopup = useBoundCallback(setArchivePopupVisible, true);
   const hideArchivePopup = useBoundCallback(setArchivePopupVisible, false);
@@ -63,6 +66,11 @@ const RetroPage = ({
     retroToken,
   ]);
 
+  const canFacilitate = (
+    !smallScreen ||
+    (retro && OPTIONS.enableMobileFacilitation.read(retro.options))
+  );
+
   const retroName = retro ? retro.name : slug; // TODO TypeScript#16
 
   if (retroTokenError === 'not found') {
@@ -88,7 +96,8 @@ const RetroPage = ({
   const canArchive = Boolean((
     retroDispatch &&
     retro && // TODO TypeScript#16
-    retro.items.length > 0
+    retro.items.length > 0 &&
+    canFacilitate
   ));
 
   // TODO TypeScript#16

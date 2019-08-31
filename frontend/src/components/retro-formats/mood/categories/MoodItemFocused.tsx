@@ -43,10 +43,10 @@ const MoodItemFocused = ({
       <div className="message">{ item.message }</div>
       <VoteCount votes={item.votes} />
       <Attachment attachment={item.attachment} />
-      <WrappedButton title="Cancel" className="cancel" onClick={onCancel}>
+      <WrappedButton title="Cancel" className="cancel" onClick={onCancel} hideIfDisabled>
         Cancel
       </WrappedButton>
-      <WrappedButton title="Done" className="close" onClick={onDone}>
+      <WrappedButton title="Done" className="close" onClick={onDone} hideIfDisabled>
         Done
       </WrappedButton>
       <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />

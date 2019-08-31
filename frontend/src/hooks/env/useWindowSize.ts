@@ -1,4 +1,5 @@
 import { useState, useLayoutEffect, useCallback } from 'react';
+import useDebounced from '../useDebounced';
 
 interface Size {
   width: number;
@@ -34,7 +35,8 @@ function useWindowSize<T>(
     conversion || passthrough,
     deps || (conversion === null ? [] : undefined) as any,
   ) as (size: Size) => T;
-  const [state, setState] = useState(() => conv(getWindowSize()));
+  const [state, setStateRaw] = useState(() => conv(getWindowSize()));
+  const setState = useDebounced(setStateRaw);
 
   useLayoutEffect(() => {
     const updateWindowSize = (): void => setState(conv(getWindowSize()));
