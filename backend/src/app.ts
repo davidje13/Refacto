@@ -6,9 +6,11 @@ import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
 import ApiSsoRouter from './routers/ApiSsoRouter';
 import ApiRetrosRouter from './routers/ApiRetrosRouter';
+import ApiPasswordCheckRouter from './routers/ApiPasswordCheckRouter';
 import ApiGiphyRouter from './routers/ApiGiphyRouter';
 import StaticRouter from './routers/StaticRouter';
 import TokenManager from './tokens/TokenManager';
+import PasswordCheckService from './services/PasswordCheckService';
 import GiphyService from './services/GiphyService';
 import SsoService from './services/SsoService';
 import RetroService, { TopicMessage } from './services/RetroService';
@@ -38,7 +40,7 @@ const CSP = [
   'script-src \'self\' \'unsafe-eval\'',
   'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com',
   'font-src \'self\' https://fonts.gstatic.com',
-  'connect-src \'self\' https://api.pwnedpasswords.com',
+  'connect-src \'self\'',
   'img-src \'self\' data: https://*.giphy.com',
   'form-action \'none\'',
 ].join('; ');
@@ -53,6 +55,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     (): Topic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
   );
 
+  const passwordCheckService = new PasswordCheckService(config.passwordCheck);
   const giphyService = new GiphyService(config.giphy);
   const ssoService = new SsoService(config.sso);
   const retroService = new RetroService(db, retroChangeSubs);
@@ -94,6 +97,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     retroService,
     retroArchiveService,
   ));
+  app.use('/api/password-check', new ApiPasswordCheckRouter(passwordCheckService));
   app.use('/api/giphy', new ApiGiphyRouter(giphyService));
   app.use(new StaticRouter(config.forwardHost));
 

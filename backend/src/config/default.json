@@ -7,6 +7,9 @@
     "workFactor": 10,
     "secretPepper": ""
   },
+  "passwordCheck": {
+    "baseUrl": "https://api.pwnedpasswords.com"
+  },
   "token": {
     "secretPassphrase": ""
   },

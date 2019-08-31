@@ -12,6 +12,7 @@ const baseTestConfig: ConfigT = {
   mockSsoPort: 0,
   serverBindAddress: '',
   password: { workFactor: 1, secretPepper: '' },
+  passwordCheck: { baseUrl: '' },
   token: { secretPassphrase: '' },
   db: { url: 'memory://' },
   sso: {

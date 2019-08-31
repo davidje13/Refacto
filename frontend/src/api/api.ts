@@ -7,6 +7,7 @@ import ArchiveService from './ArchiveService';
 import RetroTokenService from './RetroTokenService';
 import UserTokenService from './UserTokenService';
 import RetroService from './RetroService';
+import PasswordService from './PasswordService';
 import GiphyService from './GiphyService';
 import ObservableTracker from '../rxjs/ObservableTracker';
 import SingleObservableTracker from '../rxjs/SingleObservableTracker';
@@ -26,6 +27,7 @@ export const archiveService = new ArchiveService(API_BASE);
 export const retroTokenService = new RetroTokenService(API_BASE);
 export const retroService = new RetroService(API_BASE);
 export const userTokenService = new UserTokenService(API_BASE);
+export const passwordService = new PasswordService(API_BASE);
 export const giphyService = new GiphyService(API_BASE);
 
 export const retroTokenTracker = new ObservableTracker<string, string>();

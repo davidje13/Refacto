@@ -10,8 +10,8 @@ import {
   retroService,
   retroTokenService,
   retroTokenTracker,
+  passwordService,
 } from '../../api/api';
-import countPasswordBreaches from '../../api/PasswordChecker';
 import './RetroForm.less';
 
 function makeSlug(text: string): string {
@@ -75,7 +75,7 @@ const RetroForm = ({
     }
 
     try {
-      const count = await countPasswordBreaches(current);
+      const count = await passwordService.countPasswordBreaches(current);
       if (!passwordCheckNonce.check(nonce)) {
         return;
       }
@@ -94,7 +94,7 @@ const RetroForm = ({
     setPasswordConfRaw,
     passwordCheckNonce,
     setPasswordWarning,
-    countPasswordBreaches,
+    passwordService,
     MIN_PASSWORD_LENGTH,
   ]);
 
