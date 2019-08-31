@@ -72,6 +72,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     res.header('x-xss-protection', '1; mode=block');
     res.header('x-content-type-options', 'nosniff');
     res.header('content-security-policy', CSP);
+    res.header('referrer-policy', 'no-referrer');
     next();
   });
 

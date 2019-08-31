@@ -9,7 +9,7 @@ interface PropsT {
 
 const GiphyAttachment = ({ attachment: { url } }: PropsT): React.ReactElement => (
   <figure>
-    <img src={url} alt="Attachment" />
+    <img src={url} alt="Attachment" crossOrigin="anonymous" />
     <figcaption>Powered By GIPHY</figcaption>
   </figure>
 );
