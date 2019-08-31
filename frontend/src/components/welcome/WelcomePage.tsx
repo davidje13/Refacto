@@ -13,7 +13,7 @@ const WelcomePage = (): React.ReactElement => {
 
   if (userToken) {
     createLink = (
-      <p>
+      <p className="create">
         <Link className="link-create" to="/create">Create new retro</Link>
       </p>
     );
