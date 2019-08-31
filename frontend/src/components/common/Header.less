@@ -1,29 +1,42 @@
 @import (reference) '../colours.less';
 
 .top-header {
-  padding: 16px 12px;
+  display: flex;
   position: relative;
   box-shadow: 0 4px 3px -5px rgba(0, 0, 0, 0.5);
   background: @header-back;
+  text-align: left;
+
+  .back {
+    order: -1;
+    margin-right: 16px;
+
+    &::before {
+      content: "\2039";
+      padding-right: 4px;
+    }
+  }
 
   h1 {
+    flex: 1;
+    padding: 16px;
     font-size: 1.5em;
     line-height: 1.8rem;
     font-weight: bolder;
-    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
+    margin-left: 16px;
   }
 
   a, button {
     display: inline-block;
     padding: 16px 12px;
     box-sizing: border-box;
+    background: #FFFFFF;
     line-height: 1.8rem;
     height: 100%;
 
@@ -38,14 +51,23 @@
     }
   }
 
-  .back {
-    position: absolute;
-    top: 0;
-    left: 0;
+  @media (min-width: 600px) {
+    .back {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
 
-    &::before {
-      content: "\2039";
-      padding-right: 4px;
+    h1 {
+      margin: 0 64px;
+      text-align: center;
+      text-overflow: clip;
+    }
+
+    .menu {
+      position: absolute;
+      top: 0;
+      right: 0;
     }
   }
 }
