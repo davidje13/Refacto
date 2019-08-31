@@ -5,6 +5,7 @@ import {
   Redirect,
   RouteComponentProps,
 } from 'react-router-dom';
+import './App.less';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import LoginCallback from './login/LoginCallback';
@@ -17,7 +18,6 @@ import ArchiveListPage from './archive-list/ArchiveListPage';
 import ArchivePage from './archive/ArchivePage';
 import RetroSettingsPage from './retro-settings/RetroSettingsPage';
 import NotFoundPage from './not-found/NotFoundPage';
-import './App.less';
 
 const withParams = (
   Page: React.ComponentType<any>,

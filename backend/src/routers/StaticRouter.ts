@@ -11,7 +11,7 @@ function defaultExport<T>(module: { default: T }): T {
   return module as any as T;
 }
 
-const VERSIONED_FILE = /\..{4,}\.(css|js)$/;
+const VERSIONED_FILE = /\..{4,}\.(css|js|woff2?)$/;
 const VERSIONED_MAX_AGE = 365 * 24 * 60 * 60;
 const UNVERSIONED_MAX_AGE = 10 * 60;
 

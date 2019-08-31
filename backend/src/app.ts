@@ -33,13 +33,15 @@ interface TestHookWebSocketExpress extends WebSocketExpress {
   testHooks: TestHooks;
 }
 
+const devMode = process.env.NODE_ENV === 'development';
+
 const CSP = [
   'base-uri \'self\'',
   'default-src \'self\'',
   'object-src \'none\'',
-  'script-src \'self\' \'unsafe-eval\'',
-  'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com',
-  'font-src \'self\' https://fonts.gstatic.com',
+  `script-src 'self'${devMode ? ' \'unsafe-eval\'' : ''}`,
+  `style-src 'self'${devMode ? ' \'unsafe-inline\'' : ''}`,
+  'font-src \'self\'',
   'connect-src \'self\'',
   'img-src \'self\' data: https://*.giphy.com',
   'form-action \'none\'',
