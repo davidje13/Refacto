@@ -46,7 +46,7 @@
     padding: @base-padding @base-padding (@base-padding + 4px);
 
     > header {
-      margin: 0 0 @base-padding;
+      margin: 0 0 (@base-padding * 2);
       text-align: center;
 
       h2 {
@@ -208,7 +208,8 @@
 
   header .text-entry {
     border-radius: 4px;
-    transition: background 0.1s ease-out;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.08);
+    transition: background 0.1s ease-out, box-shadow 0.1s ease-out;
 
     textarea::placeholder {
       color: #FFFFFF;
@@ -225,6 +226,7 @@
 
     &.has-value:not(:focus-within) {
       background: rgba(255, 255, 255, 0.8);
+      box-shadow: none;
 
       textarea::placeholder {
         color: @pale-text-on-white;
@@ -233,6 +235,7 @@
 
     &:focus-within {
       background: #FFFFFF;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 
       textarea::placeholder {
         color: @pale-text-on-white;
@@ -269,7 +272,8 @@
 
         .new-action-item-hold {
           margin: @action-header-padding auto 0;
-          max-width: 24em;
+          min-width: 24em;
+          width: calc(100vw / 3 + 48px);
         }
 
         // new-action-item is sticky on the bottom of the page
@@ -288,7 +292,7 @@
 
           .new-action-item {
             pointer-events: initial;
-            padding: 16px 16px 8px;
+            padding: 8px;
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
             background: @beige-back;
