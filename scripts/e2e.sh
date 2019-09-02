@@ -26,6 +26,9 @@ if [[ -z "$TARGET_HOST" ]]; then
   export SSO_GOOGLE_AUTH_URL="$MOCK_SSO_HOST/auth";
   export SSO_GOOGLE_TOKEN_INFO_URL="$MOCK_SSO_HOST/tokeninfo";
 
+  echo 'Using randomised secrets';
+  export $(node "$BASEDIR/scripts/random-secrets.js" | tee /dev/stderr | xargs);
+
   PORT="$PORT" \
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
   SERVER_BIND_ADDRESS="localhost" \

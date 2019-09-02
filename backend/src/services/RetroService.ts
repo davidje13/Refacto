@@ -1,6 +1,6 @@
 import update, { Spec } from 'json-immutability-helper';
 import uuidv4 from 'uuid/v4';
-import { DB, Collection } from 'collection-storage';
+import { DB, Collection, encryptByRecordWithMasterKey } from 'collection-storage';
 import { Retro, RetroSummary } from 'refacto-entities';
 import UniqueIdProvider from '../helpers/UniqueIdProvider';
 import TaskQueueMap from '../task-queue/TaskQueueMap';
@@ -56,12 +56,20 @@ export default class RetroService {
 
   public constructor(
     db: DB,
+    encryptionKey: Buffer,
     private readonly retroChangeSubs: TopicMap<TopicMessage>,
   ) {
-    this.retroCollection = db.getCollection<Retro>('retro', {
+    const enc = encryptByRecordWithMasterKey<Retro>(
+      encryptionKey.toString('base64'),
+      db.getCollection('retro_key'),
+      128,
+    );
+
+    this.retroCollection = enc(['items'], db.getCollection('retro', {
       slug: { unique: true },
       ownerId: {},
-    });
+    }));
+
     this.idProvider = new UniqueIdProvider();
     this.taskQueues = new TaskQueueMap<void>();
   }

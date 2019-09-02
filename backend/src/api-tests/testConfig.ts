@@ -14,6 +14,7 @@ const baseTestConfig: ConfigT = {
   password: { workFactor: 1, secretPepper: '' },
   passwordCheck: { baseUrl: '' },
   token: { secretPassphrase: '' },
+  encryption: { secretKey: '' },
   db: { url: 'memory://' },
   sso: {
     google: { clientId: '', authUrl: '', tokenInfoUrl: '' },

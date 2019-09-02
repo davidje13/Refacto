@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { MemoryDb } from 'collection-storage';
 import { Spec } from 'json-immutability-helper';
 import { makeRetroItem, Retro } from 'refacto-entities';
@@ -62,7 +63,7 @@ describe('RetroService', () => {
     const topic = new TrackingTopicMap<TopicMessage>(
       (): Topic<TopicMessage> => new InMemoryTopic(),
     );
-    service = new RetroService(db, topic);
+    service = new RetroService(db, crypto.randomBytes(32), topic);
     r1 = await service.createRetro(
       'me',
       'my-retro',

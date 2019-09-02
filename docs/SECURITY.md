@@ -55,6 +55,32 @@ can only be re-hashed during a successful login.
 **If this value ever changes, all passwords will become invalid.
 If you specify a secret pepper, ensure it will never be lost!**
 
+## Data encryption
+
+All retro item data is encrypted in the database using aes-256-cbc,
+regardless of database choice. By default, a secret key of all zeros
+is used, providing no real protection. To get the benefits of data
+encryption, supply a secret key on startup.
+
+```bash
+ENCRYPTION_SECRET_KEY=0000000000000000000000000000000000000000000000000000000000000000 npm start
+```
+
+The secret key should be 32 random bytes (256 bits) encoded in
+base16 (hex). You can generate a random key with:
+
+```bash
+node scripts/random-secrets.js
+```
+
+Non-item data (such as the retro name, settings, and current state)
+is not encrypted.
+
+Currently it is not possible to cycle this secret value.
+
+**If this value ever changes, all retro data will be lost.
+If you specify a secret key, ensure it will never be lost!**
+
 ## Signed tokens
 
 All user and retro tokens are signed using the RSA256 algorithm.
@@ -104,7 +130,7 @@ will be complete.
        'readWriteAnyDatabase',
      ],
    });
-   
+
    use refacto
    db.createUser({
      user: 'refacto',

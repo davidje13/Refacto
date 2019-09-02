@@ -47,6 +47,17 @@ const CSP = [
   'form-action \'none\'',
 ].join('; ');
 
+function readKey(value: string, length: number): Buffer {
+  if (!value) {
+    return Buffer.alloc(length);
+  }
+  const buffer = Buffer.from(value, 'hex');
+  if (buffer.length !== length) {
+    throw new Error(`Invalid key size; expected ${length} bytes`);
+  }
+  return buffer;
+}
+
 export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   const db = await CollectionStorage.connect(config.db.url);
 
@@ -57,11 +68,13 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     (): Topic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
   );
 
+  const encryptionKey = readKey(config.encryption.secretKey, 32);
+
   const passwordCheckService = new PasswordCheckService(config.passwordCheck);
   const giphyService = new GiphyService(config.giphy);
   const ssoService = new SsoService(config.sso);
-  const retroService = new RetroService(db, retroChangeSubs);
-  const retroArchiveService = new RetroArchiveService(db);
+  const retroService = new RetroService(db, encryptionKey, retroChangeSubs);
+  const retroArchiveService = new RetroArchiveService(db, encryptionKey);
   const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
   const userAuthService = new UserAuthService(tokenManager);
   await userAuthService.initialise(db);
@@ -70,7 +83,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
 
   app.disable('x-powered-by');
   app.enable('case sensitive routing');
-  app.use(WebSocketExpress.json({ limit: 5 * 1024 }));
+  app.use(WebSocketExpress.json({ limit: 512 * 1024 }));
 
   app.useHTTP((req, res, next) => {
     res.header('x-frame-options', 'DENY');

@@ -13,6 +13,9 @@
   "token": {
     "secretPassphrase": ""
   },
+  "encryption": {
+    "secretKey": ""
+  },
   "db": {
     "url": "memory://refacto"
   },
