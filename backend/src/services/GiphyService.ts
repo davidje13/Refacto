@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import LruCache from '../helpers/LruCache';
+import { LruCache } from 'collection-storage';
 
 interface Config {
   baseUrl: string;

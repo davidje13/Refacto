@@ -3,7 +3,7 @@ import { JWTPayload } from 'websocket-express';
 import TokenManager, { KeyPair } from '../tokens/TokenManager';
 
 interface StoredKeyPair extends KeyPair {
-  id?: string;
+  id: string;
 }
 
 export default class UserAuthService {

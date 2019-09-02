@@ -4,6 +4,7 @@ import Hasher from 'pwd-hasher';
 import TokenManager from '../tokens/TokenManager';
 
 interface RetroAuth {
+  id: string;
   privateKey: string;
   publicKey: string;
   passwordHash: string;
