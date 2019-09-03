@@ -29,22 +29,32 @@ export interface RetroSubscription<MetaT> {
 
 const SENSITIVE_FIELDS: (keyof Retro)[] = ['id', 'ownerId', 'slug'];
 
-function checkSensitiveEdits(retro: Retro, newRetro: Retro): Retro {
-  Object.keys(newRetro).forEach((k) => {
-    if (!Object.prototype.hasOwnProperty.call(retro, k)) {
-      throw new Error(`Cannot add field ${k}`);
-    }
-  });
-  SENSITIVE_FIELDS.forEach((key) => {
-    if (retro[key] !== newRetro[key]) {
-      throw new Error(`Cannot edit field ${key}`);
-    }
-  });
+function specToDiff<T>(
+  original: T,
+  spec: Spec<T>,
+  validator: (v: unknown) => T,
+  blockedFields: string[],
+): Partial<T> {
+  const updated = update(original, spec);
 
-  // validate the final retro
   // (required because Spec<Retro> is not validated at request time
   // due to data structure complexity)
-  return extractRetro(newRetro);
+  const validated = validator(updated);
+
+  const diff: Partial<T> = {};
+  Object.keys(updated).forEach((k) => {
+    if (!Object.prototype.hasOwnProperty.call(original, k)) {
+      throw new Error(`Cannot add field ${k}`);
+    }
+    const key = k as keyof T & string;
+    if (updated[key] !== original[key]) {
+      if (blockedFields.includes(key)) {
+        throw new Error(`Cannot edit field ${key}`);
+      }
+      diff[key] = validated[key];
+    }
+  });
+  return diff;
 }
 
 export default class RetroService {
@@ -179,9 +189,8 @@ export default class RetroService {
       if (!retro) {
         throw new Error('Retro deleted');
       }
-      let newRetro = update(retro, change);
-      newRetro = checkSensitiveEdits(retro, newRetro);
-      await this.retroCollection.update('id', retroId, newRetro);
+      const diff = specToDiff(retro, change, extractRetro, SENSITIVE_FIELDS);
+      await this.retroCollection.update('id', retroId, diff);
     } catch (e) {
       this.retroChangeSubs.broadcast(retroId, {
         message: { error: e.message },
