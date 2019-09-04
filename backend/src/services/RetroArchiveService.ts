@@ -6,15 +6,16 @@ export default class RetroArchiveService {
   private readonly archiveCollection: Collection<RetroArchive>;
 
   public constructor(db: DB, encryptionKey: Buffer) {
-    const enc = encryptByRecordWithMasterKey<RetroArchive>(
-      encryptionKey.toString('base64'),
+    const enc = encryptByRecordWithMasterKey(
+      encryptionKey,
       db.getCollection('archive_key'),
       128,
     );
 
-    this.archiveCollection = enc(['items'], db.getCollection('archive', {
-      retroId: {},
-    }));
+    this.archiveCollection = enc<RetroArchive>()(
+      ['items'],
+      db.getCollection('archive', { retroId: {} }),
+    );
   }
 
   public async createArchive(

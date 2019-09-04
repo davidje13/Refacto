@@ -69,16 +69,19 @@ export default class RetroService {
     encryptionKey: Buffer,
     private readonly retroChangeSubs: TopicMap<TopicMessage>,
   ) {
-    const enc = encryptByRecordWithMasterKey<Retro>(
-      encryptionKey.toString('base64'),
+    const enc = encryptByRecordWithMasterKey(
+      encryptionKey,
       db.getCollection('retro_key'),
       128,
     );
 
-    this.retroCollection = enc(['items'], db.getCollection('retro', {
-      slug: { unique: true },
-      ownerId: {},
-    }));
+    this.retroCollection = enc<Retro>()(
+      ['items'],
+      db.getCollection('retro', {
+        slug: { unique: true },
+        ownerId: {},
+      }),
+    );
 
     this.idProvider = new UniqueIdProvider();
     this.taskQueues = new TaskQueueMap<void>();
