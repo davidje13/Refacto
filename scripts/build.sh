@@ -4,14 +4,13 @@ set -o pipefail;
 
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
-${PARALLEL_BUILD:=true}
 
 BUILD_PIDS="";
 
 function launch_build() {
   NAME="$1";
   echo "Building $NAME...";
-  if [[ "$PARALLEL_BUILD" == 'true' ]]; then
+  if [[ "${PARALLEL_BUILD:-true}" == 'true' ]]; then
     npm --prefix="$BASEDIR/$NAME" run build --silent 2>&1 | sed "s/^/$NAME: /" &
     BUILD_PIDS="$BUILD_PIDS $!";
   else
