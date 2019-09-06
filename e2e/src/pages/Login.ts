@@ -16,7 +16,7 @@ export default class Login<TargetPageT extends Page> extends Page {
   }
 
   public async submit(): Promise<TargetPageT> {
-    this.click(By.css('form button'));
+    await this.click(By.css('form button'));
 
     return new this.ExpectedTarget(this.driver).wait();
   }

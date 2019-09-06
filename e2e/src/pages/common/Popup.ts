@@ -21,7 +21,7 @@ export default class Popup extends PageFragment {
       return;
     }
 
-    this.driver.findElement(By.css('.popup-overlay')).click();
+    await this.driver.findElement(By.css('.popup-overlay')).click();
     await this.waitUntilDismissed();
   }
 }
