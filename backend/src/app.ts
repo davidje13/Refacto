@@ -83,7 +83,6 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
 
   app.disable('x-powered-by');
   app.enable('case sensitive routing');
-  app.use(WebSocketExpress.json({ limit: 512 * 1024 }));
 
   app.useHTTP((req, res, next) => {
     res.header('x-frame-options', 'DENY');

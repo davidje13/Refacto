@@ -1,5 +1,4 @@
-import {
-  Router,
+import WebSocketExpress, {
   requireBearerAuth,
   requireAuthScope,
   getAuthData,
@@ -16,7 +15,9 @@ import json from '../helpers/json';
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
 const MIN_PASSWORD_LENGTH = 8;
 
-export default class ApiRetrosRouter extends Router {
+const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
+
+export default class ApiRetrosRouter extends WebSocketExpress.Router {
   public constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -38,7 +39,7 @@ export default class ApiRetrosRouter extends Router {
       });
     });
 
-    this.post('/', userAuthMiddleware, async (req, res) => {
+    this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
       try {
         const userId = getAuthData(res).sub!;
         const { slug, name, password } = json.extractObject(req.body, {

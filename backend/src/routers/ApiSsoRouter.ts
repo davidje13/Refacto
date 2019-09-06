@@ -1,8 +1,10 @@
-import { Router } from 'websocket-express';
+import WebSocketExpress from 'websocket-express';
 import UserAuthService from '../services/UserAuthService';
 import SsoService from '../services/SsoService';
 
-export default class ApiSsoRouter extends Router {
+const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
+
+export default class ApiSsoRouter extends WebSocketExpress.Router {
   public constructor(
     userAuthService: UserAuthService,
     ssoService: SsoService,
@@ -11,7 +13,7 @@ export default class ApiSsoRouter extends Router {
 
     const tokenLifespan = 60 * 60 * 2;
 
-    this.post('/:name', async (req, res) => {
+    this.post('/:name', JSON_BODY, async (req, res) => {
       const { name } = req.params;
 
       if (!ssoService.supportsService(name)) {

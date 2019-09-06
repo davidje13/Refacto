@@ -1,13 +1,15 @@
-import { Router } from 'websocket-express';
+import WebSocketExpress from 'websocket-express';
 import RetroAuthService from '../services/RetroAuthService';
 
-export default class ApiAuthRouter extends Router {
+const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
+
+export default class ApiAuthRouter extends WebSocketExpress.Router {
   public constructor(retroAuthService: RetroAuthService) {
     super();
 
     const tokenLifespan = 60 * 60 * 24 * 30 * 6;
 
-    this.post('/tokens/:retroId', async (req, res) => {
+    this.post('/tokens/:retroId', JSON_BODY, async (req, res) => {
       const { retroId } = req.params;
       const { password } = req.body;
 
