@@ -95,6 +95,15 @@ export default ({
   useGlobalKeyListener({
     ArrowRight: useDispatchAction(dispatch, facilitate(goNext), checkAutoArchive),
     ArrowLeft: useDispatchAction(dispatch, facilitate(goPrevious)),
+    Enter: useDispatchAction(
+      dispatch,
+      facilitate(useBoundCallback(switchFocus, true, null)),
+      checkAutoArchive,
+    ),
+    Escape: useDispatchAction(
+      dispatch,
+      facilitate(useBoundCallback(switchFocus, false, null)),
+    ),
   });
 
   const createMoodSection = (category: Category): React.ReactElement => (

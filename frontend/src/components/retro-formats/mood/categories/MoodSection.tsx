@@ -72,6 +72,7 @@ const MoodSection = ({
             placeholder={addItemPlaceholder}
             allowAttachments
             clearAfterSubmit
+            blurOnCancel
           />
         ) }
       </header>

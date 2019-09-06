@@ -47,6 +47,8 @@ const ActionsPane = ({
                 submitButtonTitle="Add"
                 placeholder="Add an action item"
                 clearAfterSubmit
+                blurOnSubmit
+                blurOnCancel
               />
             </div>
           </div>

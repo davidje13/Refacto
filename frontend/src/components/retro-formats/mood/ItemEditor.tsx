@@ -20,6 +20,8 @@ interface PropsT {
   submitButtonTitle?: string;
   allowAttachments: boolean;
   clearAfterSubmit: boolean;
+  blurOnSubmit: boolean;
+  blurOnCancel: boolean;
 }
 
 const ItemEditor = ({
@@ -101,6 +103,8 @@ ItemEditor.propTypes = {
   submitButtonTitle: PropTypes.string,
   allowAttachments: PropTypes.bool,
   clearAfterSubmit: PropTypes.bool,
+  blurOnSubmit: PropTypes.bool,
+  blurOnCancel: PropTypes.bool,
 };
 
 ItemEditor.defaultProps = {
@@ -113,6 +117,8 @@ ItemEditor.defaultProps = {
   submitButtonTitle: null,
   allowAttachments: false,
   clearAfterSubmit: false,
+  blurOnSubmit: false,
+  blurOnCancel: false,
 };
 
 forbidExtraProps(ItemEditor);

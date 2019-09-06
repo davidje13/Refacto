@@ -27,6 +27,8 @@ interface PropsT {
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
   clearAfterSubmit: boolean;
+  blurOnSubmit: boolean;
+  blurOnCancel: boolean;
 }
 
 const ExpandingTextEntry = ({
@@ -41,11 +43,20 @@ const ExpandingTextEntry = ({
   submitButtonLabel,
   submitButtonTitle,
   clearAfterSubmit,
+  blurOnSubmit,
+  blurOnCancel,
 }: PropsT): React.ReactElement => {
   const [value, setValue] = useState(defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
   const boxedValue = useBoxed(value);
   const [form, setForm] = useState<HTMLFormElement | null>(null);
+
+  const blurElement = useCallback(() => {
+    const element = document.activeElement;
+    if (element instanceof HTMLElement) {
+      element.blur();
+    }
+  }, []);
 
   const handleSubmit = useCallback((e?: React.SyntheticEvent) => {
     if (e) {
@@ -57,12 +68,24 @@ const ExpandingTextEntry = ({
       return;
     }
 
+    if (blurOnSubmit) {
+      blurElement();
+    }
     if (clearAfterSubmit) {
       setValue('');
     }
 
     onSubmit(curValue);
-  }, [boxedValue, onSubmit, clearAfterSubmit, setValue]);
+  }, [boxedValue, onSubmit, blurOnSubmit, blurElement, clearAfterSubmit, setValue]);
+
+  const handleCancel = useCallback(() => {
+    if (blurOnCancel) {
+      blurElement();
+    }
+    if (onCancel) { // TODO TypeScript#16
+      onCancel();
+    }
+  }, [blurOnCancel, blurElement, onCancel]);
 
   const handleFormMouseDown = useCallback((e: React.MouseEvent) => {
     if (isFocusable(e.target)) {
@@ -76,7 +99,7 @@ const ExpandingTextEntry = ({
 
   const handleKey = useKeyHandler({
     Enter: handleSubmit,
-    Escape: onCancel,
+    Escape: handleCancel,
   });
 
   const alwaysMultiline = forceMultiline || hasContent(extraInputs);
@@ -135,6 +158,8 @@ ExpandingTextEntry.propTypes = {
   submitButtonLabel: PropTypes.node,
   submitButtonTitle: PropTypes.string,
   clearAfterSubmit: PropTypes.bool,
+  blurOnSubmit: PropTypes.bool,
+  blurOnCancel: PropTypes.bool,
 };
 
 ExpandingTextEntry.defaultProps = {
@@ -148,6 +173,8 @@ ExpandingTextEntry.defaultProps = {
   submitButtonLabel: null,
   submitButtonTitle: null,
   clearAfterSubmit: false,
+  blurOnSubmit: false,
+  blurOnCancel: false,
 };
 
 forbidExtraProps(ExpandingTextEntry);

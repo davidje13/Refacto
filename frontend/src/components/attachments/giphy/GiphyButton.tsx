@@ -33,6 +33,9 @@ const GiphyButton = ({ defaultAttachment, onChange }: PropsT): React.ReactElemen
           onCancel={hide}
         />
       ),
+      keys: {
+        Escape: hide,
+      },
     };
   }
 

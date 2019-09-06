@@ -89,6 +89,7 @@ const RetroPage = ({
       ),
       keys: {
         Enter: performArchive,
+        Escape: hideArchivePopup,
       },
     };
   }
