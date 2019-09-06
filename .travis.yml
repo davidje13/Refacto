@@ -7,14 +7,14 @@ addons:
     - google-chrome
     packages:
     - google-chrome-stable
-    - firefox
+#    - firefox
 before_install:
 - wget https://chromedriver.storage.googleapis.com/76.0.3809.126/chromedriver_linux64.zip
 - unzip chromedriver_linux64.zip
 - sudo install chromedriver /usr/local/bin
-- wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
-- tar xzf geckodriver-v0.24.0-linux64.tar.gz
-- sudo install geckodriver /usr/local/bin
+#- wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+#- tar xzf geckodriver-v0.24.0-linux64.tar.gz
+#- sudo install geckodriver /usr/local/bin
 env:
 - PARALLEL_BUILD=false PARALLEL_E2E=false
 cache:
