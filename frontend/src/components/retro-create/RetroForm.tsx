@@ -14,14 +14,6 @@ import {
 } from '../../api/api';
 import './RetroForm.less';
 
-function makeSlug(text: string): string {
-  return text.toLowerCase()
-    .replace(/['"]/g, '')
-    .replace(/[^a-z0-9_]+/g, '-')
-    .replace(/[-_]{2,}/g, '_')
-    .replace(/^[-_]+|[-_]+$/g, '');
-}
-
 interface CreationT {
   id: string;
   name: string;
@@ -35,8 +27,11 @@ interface PropsT {
   onCreate: (data: CreationT) => void;
 }
 
-const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
+const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';
+const VALID_SLUG = new RegExp(VALID_SLUG_PATTERN);
+const MAX_SLUG_LENGTH = 64;
 const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 512;
 
 enum SlugAvailability {
   BLANK,
@@ -45,6 +40,15 @@ enum SlugAvailability {
   FAILED,
   TAKEN,
   AVAILABLE,
+}
+
+function makeSlug(text: string): string {
+  return text.toLowerCase()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9_]+/g, '-')
+    .replace(/[-_]{2,}/g, '_')
+    .replace(/^[-_]+|[-_]+$/g, '')
+    .substr(0, MAX_SLUG_LENGTH);
 }
 
 const RetroForm = ({
@@ -73,6 +77,10 @@ const RetroForm = ({
       setPasswordWarning('This password is too short');
       return;
     }
+    if (current.length > MAX_PASSWORD_LENGTH) {
+      setPasswordWarning('This password is too long');
+      return;
+    }
 
     try {
       const count = await passwordService.countPasswordBreaches(current);
@@ -96,6 +104,7 @@ const RetroForm = ({
     setPasswordWarning,
     passwordService,
     MIN_PASSWORD_LENGTH,
+    MAX_PASSWORD_LENGTH,
   ]);
 
   const checkSlugNonce = useNonce();
@@ -106,7 +115,7 @@ const RetroForm = ({
       setSlugAvailability(SlugAvailability.BLANK);
       return;
     }
-    if (!VALID_SLUG.test(current)) {
+    if (!VALID_SLUG.test(current) || current.length > MAX_SLUG_LENGTH) {
       setSlugAvailability(SlugAvailability.INVALID);
       return;
     }
@@ -182,7 +191,7 @@ const RetroForm = ({
     case SlugAvailability.INVALID:
       slugChecker = (
         <div className="slug-checker invalid">
-          { 'Invalid \u20E0' }
+          { 'Invalid \u2715' }
         </div>
       );
       break;
@@ -201,7 +210,7 @@ const RetroForm = ({
     case SlugAvailability.TAKEN:
       slugChecker = (
         <div className="slug-checker taken">
-          { 'Taken \u20E0' }
+          { 'Taken \u2715' }
         </div>
       );
       break;
@@ -243,7 +252,8 @@ const RetroForm = ({
             placeholder={makeSlug(name)}
             value={slug}
             onChange={setSlug}
-            pattern="^[a-z0-9][a-z0-9_-]*$"
+            pattern={VALID_SLUG_PATTERN}
+            maxLength={MAX_SLUG_LENGTH}
           />
           <div className="slug-checker">
             { slugChecker }
@@ -259,6 +269,7 @@ const RetroForm = ({
           value={password}
           onChange={setPassword}
           minLength={MIN_PASSWORD_LENGTH}
+          maxLength={MAX_PASSWORD_LENGTH}
           required
         />
       </label>
