@@ -35,6 +35,7 @@ interface TestHookWebSocketExpress extends WebSocketExpress {
 
 const devMode = process.env.NODE_ENV === 'development';
 
+const CSP_DOMAIN_PLACEHOLDER = /\(domain\)/g;
 const CSP = [
   'base-uri \'self\'',
   'default-src \'self\'',
@@ -42,10 +43,22 @@ const CSP = [
   `script-src 'self'${devMode ? ' \'unsafe-eval\'' : ''}`,
   `style-src 'self'${devMode ? ' \'unsafe-inline\'' : ''}`,
   'font-src \'self\'',
-  'connect-src \'self\'',
+  // https://github.com/w3c/webappsec-csp/issues/7
+  `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
   'img-src \'self\' data: https://*.giphy.com',
   'form-action \'none\'',
 ].join('; ');
+
+function getHost(req: any): string {
+  const raw: string = req.hostname;
+  if (raw.includes(':')) {
+    return raw;
+  }
+  // Bug in express 4.x: hostname does not include port
+  // fixed in 5, but not released yet
+  // https://expressjs.com/en/guide/migrating-5.html#req.host
+  return `${raw}:*`;
+}
 
 function readKey(value: string, length: number): Buffer {
   if (!value) {
@@ -88,7 +101,8 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     res.header('x-frame-options', 'DENY');
     res.header('x-xss-protection', '1; mode=block');
     res.header('x-content-type-options', 'nosniff');
-    res.header('content-security-policy', CSP);
+    res.header('content-security-policy', CSP
+      .replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)));
     res.header('referrer-policy', 'no-referrer');
     next();
   });
