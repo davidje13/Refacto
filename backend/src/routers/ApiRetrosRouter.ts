@@ -19,6 +19,9 @@ const MAX_PASSWORD_LENGTH = 512;
 
 const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
 
+const PING = 'P';
+const PONG = 'p';
+
 export default class ApiRetrosRouter extends WebSocketExpress.Router {
   public constructor(
     userAuthService: UserAuthService,
@@ -103,6 +106,10 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
       ws.on('close', subscription.close);
 
       ws.on('message', (msg: string) => {
+        if (msg === PING) {
+          ws.send(PONG);
+          return;
+        }
         if (!hasAuthScope(res, 'write')) {
           res.sendError(403);
           return;

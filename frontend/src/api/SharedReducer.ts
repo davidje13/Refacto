@@ -13,6 +13,10 @@ interface SpecSourceL<T> extends Array<SpecSourceL<T> | SpecSource<T>> {}
 export type DispatchSpec<T> = SpecSourceL<T> | SpecSource<T>;
 export type Dispatch<T> = (spec: DispatchSpec<T>) => void;
 
+const PING = 'P';
+const PONG = 'p';
+const PING_INTERVAL = 20 * 1000;
+
 function toSpecSourceList<T>(spec: DispatchSpec<T>): SpecSource<T>[] {
   if (!spec) {
     return [];
@@ -38,6 +42,8 @@ export default class SharedReducer<T> {
 
   private ws: WebSocket;
 
+  private pingTimeout: number | null = null;
+
   public constructor(
     wsUrl: string,
     token: string,
@@ -47,7 +53,9 @@ export default class SharedReducer<T> {
     this.ws = new WebSocket(wsUrl);
     this.ws.addEventListener('message', this.handleMessage);
     this.ws.addEventListener('error', this.handleError);
+    this.ws.addEventListener('close', this.handleClose);
     this.ws.addEventListener('open', () => this.ws.send(token), { once: true });
+    this.queueNextPing();
   }
 
   public close(): void {
@@ -57,6 +65,9 @@ export default class SharedReducer<T> {
     this.currentChange = undefined;
     this.localChanges = [];
     this.pendingChanges = [];
+    if (this.pingTimeout !== null) {
+      window.clearTimeout(this.pingTimeout);
+    }
   }
 
   public dispatch: Dispatch<T> = (change) => {
@@ -86,6 +97,13 @@ export default class SharedReducer<T> {
       this.latestLocalState = state;
     }
     return this.latestLocalState;
+  }
+
+  private queueNextPing(): void {
+    if (this.pingTimeout !== null) {
+      window.clearTimeout(this.pingTimeout);
+    }
+    this.pingTimeout = window.setTimeout(this.sendPing, PING_INTERVAL);
   }
 
   private internalGetUniqueId(): number {
@@ -171,6 +189,11 @@ export default class SharedReducer<T> {
   }
 
   private handleMessage = ({ data }: { data: string }): void => {
+    this.queueNextPing();
+    if (data === PONG) {
+      return;
+    }
+
     const { change, id = null } = JSON.parse(data) as Event<T>;
     let changed = true;
 
@@ -194,10 +217,20 @@ export default class SharedReducer<T> {
     }
   };
 
+  private sendPing = (): void => {
+    this.ws.send(PING);
+  };
+
   private handleError = (): void => {
     // TODO TypeScript#16
     if (this.errorCallback) {
       this.errorCallback('Failed to connect');
+    }
+  };
+
+  private handleClose = (): void => {
+    if (this.pingTimeout !== null) {
+      window.clearTimeout(this.pingTimeout);
     }
   };
 }
