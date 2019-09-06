@@ -1,0 +1,21 @@
+language: node_js
+node_js: node
+os: linux
+addons:
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
+before_script:
+- wget https://chromedriver.storage.googleapis.com/76.0.3809.126/chromedriver_linux64.zip
+- unzip chromedriver_linux64.zip
+- sudo install chromedriver /usr/local/bin
+- wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
+- tar xzf geckodriver-v0.24.0-linux64.tar.gz
+- sudo install geckodriver /usr/local/bin
+cache:
+  directories:
+  - backend/node_modules
+  - frontend/node_modules
+  - e2e/node_modules
