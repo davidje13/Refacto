@@ -9,6 +9,7 @@ function getEnv<T>(name: string, def: T): T {
   if (value === undefined) {
     return def;
   }
+  delete process.env[name];
   if (typeof def === 'number') {
     if (value === '') {
       return def;
