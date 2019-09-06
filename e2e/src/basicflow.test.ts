@@ -78,11 +78,14 @@ describe('Running a retro', () => {
   });
 
   describe('second user journey', () => {
+    let password2: Password;
     let retro2: Retro;
 
     it('prompts for a password for the retro', async () => {
-      const password2 = await new Password(driver2, retroSlug).load();
+      password2 = await new Password(driver2, retroSlug).load();
+    });
 
+    it('loads the retro when the correct password is entered', async () => {
       await password2.setPassword(retroPassword);
       retro2 = await password2.submit();
 
