@@ -31,7 +31,7 @@ describe('Running a retro', () => {
   beforeAll(async () => {
     driver = buildDriver();
     driver2 = buildDriver();
-    jest.setTimeout(30000);
+    jest.setTimeout(Number(process.env.TEST_TIMEOUT || '10000'));
 
     userName = `e2e-test-user-${uniqueID}`;
     retroSlug = `e2e-test-retro-${uniqueID}`;

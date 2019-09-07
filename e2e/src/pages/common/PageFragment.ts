@@ -6,6 +6,10 @@ import {
 } from 'selenium-webdriver';
 
 export default abstract class PageFragment {
+  protected explicitWaitTimeout = Number(
+    process.env.EXPLICIT_WAIT_TIMEOUT || '5000',
+  );
+
   protected constructor(
     protected readonly driver: WebDriver,
     protected readonly locator: By,
@@ -22,7 +26,7 @@ export default abstract class PageFragment {
     await this.driver.wait(async () => {
       const state = await container.getText();
       return state !== oldState;
-    });
+    }, this.explicitWaitTimeout, 'Expected content to change but did not');
   }
 
   protected container(): WebElementPromise {

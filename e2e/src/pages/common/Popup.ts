@@ -13,7 +13,11 @@ export default class Popup extends PageFragment {
   }
 
   public async waitUntilDismissed(): Promise<void> {
-    await this.driver.wait(customUntil.noElementLocated(this.locator));
+    await this.driver.wait(
+      customUntil.noElementLocated(this.locator),
+      this.explicitWaitTimeout,
+      'Popup did not close',
+    );
   }
 
   public async dismiss(): Promise<void> {

@@ -16,7 +16,7 @@ before_install:
 #- tar xzf geckodriver-v0.24.0-linux64.tar.gz
 #- sudo install geckodriver /usr/local/bin
 env:
-- PARALLEL_BUILD=false PARALLEL_E2E=false
+- PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000
 cache:
   directories:
   - backend/node_modules

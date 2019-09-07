@@ -34,8 +34,16 @@ export default abstract class Page extends PageFragment {
   }
 
   public async wait(): Promise<this> {
-    await this.driver.wait(this.untilNavigated, 5000);
-    await this.driver.wait(untilNoLoaders, 5000);
+    await this.driver.wait(
+      this.untilNavigated,
+      this.explicitWaitTimeout,
+      `Failed to load page ${this.constructor.name}`,
+    );
+    await this.driver.wait(
+      untilNoLoaders,
+      this.explicitWaitTimeout,
+      `Loading indicator for page ${this.constructor.name} did not disappear`,
+    );
     // wait an additional frame to allow some async events (e.g. title changes)
     await this.driver.sleep(100);
     return this;
