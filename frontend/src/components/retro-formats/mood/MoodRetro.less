@@ -113,6 +113,7 @@
       padding: 20px 12px;
       font-size: 1.1em;
       outline: none;
+      max-height: 200px;
     }
 
     .submit, .delete, .cancel {
@@ -187,7 +188,8 @@
 
     &.multiline {
       textarea {
-        padding-bottom: 8px;
+        padding-bottom: 0;
+        margin-bottom: 8px;
       }
 
       button {
@@ -283,6 +285,7 @@
           position: relative;
           margin: -@add-action-max-scroll auto -8px;
           pointer-events: none;
+          z-index: 3;
 
           &:before {
             content: "";
