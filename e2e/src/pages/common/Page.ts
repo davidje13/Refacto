@@ -13,6 +13,14 @@ const HOST = process.env.TARGET_HOST!;
 
 const untilNoLoaders = customUntil.noElementLocated(By.css('.loader'));
 
+async function getDocumentHtml(driver: WebDriver): Promise<string> {
+  try {
+    return await driver.executeScript('return document.body.outerHTML');
+  } catch (e) {
+    return 'Failed to get HTML of document';
+  }
+}
+
 export default abstract class Page extends PageFragment {
   private readonly untilNavigated: WebElementCondition;
 
@@ -34,16 +42,24 @@ export default abstract class Page extends PageFragment {
   }
 
   public async wait(): Promise<this> {
-    await this.driver.wait(
-      this.untilNavigated,
-      this.explicitWaitTimeout,
-      `Failed to load page ${this.constructor.name}`,
-    );
-    await this.driver.wait(
-      untilNoLoaders,
-      this.explicitWaitTimeout,
-      `Loading indicator for page ${this.constructor.name} did not disappear`,
-    );
+    try {
+      await this.driver.wait(
+        this.untilNavigated,
+        this.explicitWaitTimeout,
+        `Failed to load page '${this.constructor.name}'`,
+      );
+      await this.driver.wait(
+        untilNoLoaders,
+        this.explicitWaitTimeout,
+        `Loading indicator for page '${this.constructor.name}' did not disappear`,
+      );
+    } catch (e) {
+      if (e instanceof Error) {
+        const content = await getDocumentHtml(this.driver);
+        e.message = `${e.message}\n\nPage content:\n\n${content}`;
+      }
+      throw e;
+    }
     // wait an additional frame to allow some async events (e.g. title changes)
     await this.driver.sleep(100);
     return this;

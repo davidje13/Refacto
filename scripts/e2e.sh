@@ -39,7 +39,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   trap "kill '$APP_PID'; false" EXIT;
 
   # Wait for startup
-  sleep 1;
+  sleep "${E2E_LAUNCH_DELAY:-1}";
 
   TARGET_HOST="http://localhost:$PORT/";
 fi;

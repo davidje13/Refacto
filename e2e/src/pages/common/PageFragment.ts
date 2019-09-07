@@ -23,10 +23,14 @@ export default abstract class PageFragment {
     const container = await this.container();
     const oldState = await container.getText();
     await fn();
-    await this.driver.wait(async () => {
-      const state = await container.getText();
-      return state !== oldState;
-    }, this.explicitWaitTimeout, 'Expected content to change but did not');
+    await this.driver.wait(
+      async () => {
+        const state = await container.getText();
+        return state !== oldState;
+      },
+      this.explicitWaitTimeout,
+      `Expected content to change but did not:\n\n${oldState}`,
+    );
   }
 
   protected container(): WebElementPromise {
