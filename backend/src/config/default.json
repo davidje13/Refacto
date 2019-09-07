@@ -3,6 +3,7 @@
   "forwardHost": "",
   "mockSsoPort": 0,
   "serverBindAddress": "",
+  "trustProxy": false,
   "password": {
     "workFactor": 10,
     "secretPepper": ""

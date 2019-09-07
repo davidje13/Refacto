@@ -8,6 +8,15 @@ proxy should also be configured to block or redirect HTTP traffic.
 
 Deploying to a platform-as-a-service will handle this automatically.
 
+When deploying behind a proxy, you should set `TRUST_PROXY=true`:
+
+```bash
+TRUST_PROXY=true npm start
+```
+
+(do not set this to `true` unless behind a trusted proxy which sets
+the `X-Forwarded-*` headers)
+
 ## Passwords
 
 All passwords are protected using the bcrypt hashing algorithm with a

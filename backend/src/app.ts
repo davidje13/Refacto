@@ -96,6 +96,9 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
 
   app.disable('x-powered-by');
   app.enable('case sensitive routing');
+  if (config.trustProxy) {
+    app.enable('trust proxy');
+  }
 
   app.useHTTP((req, res, next) => {
     res.header('x-frame-options', 'DENY');

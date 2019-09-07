@@ -11,6 +11,7 @@ const baseTestConfig: ConfigT = {
   forwardHost: '',
   mockSsoPort: 0,
   serverBindAddress: '',
+  trustProxy: false,
   password: { workFactor: 1, secretPepper: '' },
   passwordCheck: { baseUrl: '' },
   token: { secretPassphrase: '' },

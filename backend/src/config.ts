@@ -10,6 +10,27 @@ function getEnv<T>(name: string, def: T): T {
     return def;
   }
   delete process.env[name];
+  if (typeof def === 'boolean') {
+    const lower = value.toLowerCase();
+    if (
+      lower === 'true' ||
+      lower === 'yes' ||
+      lower === 'on' ||
+      lower === '1'
+    ) {
+      return true as (T & boolean);
+    }
+    if (
+      lower === 'false' ||
+      lower === 'no' ||
+      lower === 'off' ||
+      lower === '0' ||
+      lower === ''
+    ) {
+      return false as (T & boolean);
+    }
+    throw new Error(`Invalid value for ${name} (expected a boolean)`);
+  }
   if (typeof def === 'number') {
     if (value === '') {
       return def;
@@ -20,7 +41,10 @@ function getEnv<T>(name: string, def: T): T {
     }
     return numValue as (T & number);
   }
-  return value as (T & string);
+  if (typeof def === 'string') {
+    return value as (T & string);
+  }
+  throw new Error(`Unknown data type for ${name}`);
 }
 
 function makeSnake(name: string): string {
