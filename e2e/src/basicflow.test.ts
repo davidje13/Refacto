@@ -1,4 +1,5 @@
 import { WebDriver } from 'selenium-webdriver';
+import jasmineFailFast from './helpers/jasmineFailFast';
 import buildDriver from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
@@ -9,6 +10,8 @@ import RetroArchiveList from './pages/RetroArchiveList';
 import RetroArchive from './pages/RetroArchive';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
+
+jasmineFailFast(); // https://github.com/facebook/jest/issues/2867
 
 describe('Running a retro', () => {
   let driver: WebDriver;
