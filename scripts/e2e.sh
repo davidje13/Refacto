@@ -49,6 +49,7 @@ export TARGET_HOST;
 # Run tests
 
 E2E_PIDS="";
+FAILED='';
 
 function launch_e2e() {
   NAME="$1";
@@ -58,8 +59,9 @@ function launch_e2e() {
     npm --prefix="$BASEDIR/e2e" test --silent 2>&1 | sed "s/^/$NAME: /" &
     E2E_PIDS="$E2E_PIDS $!";
   else
-    SELENIUM_BROWSER="$NAME" \
-    npm --prefix="$BASEDIR/e2e" test --silent;
+    if ! SELENIUM_BROWSER="$NAME" npm --prefix="$BASEDIR/e2e" test --silent; then
+      FAILED='true';
+    fi;
     E2E_PIDS="-";
   fi;
 }
@@ -88,7 +90,6 @@ else
   echo >&2;
 fi;
 
-FAILED='';
 if [[ "$E2E_PIDS" != '' && "$E2E_PIDS" != '-' ]]; then
   for PID in $E2E_PIDS; do
     if ! wait "$PID"; then
@@ -109,6 +110,10 @@ if [[ "$E2E_PIDS" == '' ]]; then
 fi;
 
 if [[ "$FAILED" != '' ]]; then
+  echo;
+  echo 'Application logs:';
+  sed "s/^/> /" < "$LOGS/app.log";
+  echo;
   echo 'End-to-end tests failed.';
   false;
 fi;
