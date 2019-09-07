@@ -13,7 +13,7 @@ const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
 
 jasmineFailFast(); // https://github.com/facebook/jest/issues/2867
 
-describe('Running a retro', () => {
+describe('Refacto', () => {
   let driver: WebDriver;
   let driver2: WebDriver;
 
@@ -149,37 +149,41 @@ describe('Running a retro', () => {
     });
   });
 
-  it('clears items and completed action items when archiving', async () => {
-    await retro.toggleActionItemDone(1);
-    await retro.performArchive();
+  describe('archiving', () => {
+    it('clears items and completed action items when archiving', async () => {
+      await retro.toggleActionItemDone(1);
+      await retro.performArchive();
 
-    expect(await retro.getMoodItemLabels()).toEqual([]);
-    expect(await retro.getActionItemLabels()).toEqual(['another action']);
+      expect(await retro.getMoodItemLabels()).toEqual([]);
+      expect(await retro.getActionItemLabels()).toEqual(['another action']);
+    });
+
+    it('displays a list of archives', async () => {
+      archiveList = await retro.clickViewArchives();
+
+      const labels = await archiveList.getArchiveLabels();
+      expect(labels.length).toEqual(1);
+    });
+
+    it('displays archives in a read-only view', async () => {
+      archive = await archiveList.clickArchiveAtIndex(0);
+
+      expect(await archive.getTitle()).toContain('My Retro');
+      expect(await archive.getNameText()).toContain('My Retro');
+      expect(await archive.getActionItemLabels()).toEqual([
+        'another action',
+        'some action',
+      ]);
+    });
   });
 
-  it('displays a list of archives', async () => {
-    archiveList = await retro.clickViewArchives();
+  describe('security page', () => {
+    it('is accessible from the home page', async () => {
+      welcome = await new Welcome(driver).load();
+      const security = await welcome.clickSecurity();
 
-    const labels = await archiveList.getArchiveLabels();
-    expect(labels.length).toEqual(1);
-  });
-
-  it('displays archives in a read-only view', async () => {
-    archive = await archiveList.clickArchiveAtIndex(0);
-
-    expect(await archive.getTitle()).toContain('My Retro');
-    expect(await archive.getNameText()).toContain('My Retro');
-    expect(await archive.getActionItemLabels()).toEqual([
-      'another action',
-      'some action',
-    ]);
-  });
-
-  it('displays the security page', async () => {
-    welcome = await new Welcome(driver).load();
-    const security = await welcome.clickSecurity();
-
-    expect(await security.getTitle()).toEqual('Privacy & Security - Refacto');
-    expect(await security.getHeaderText()).toContain('Privacy & Security');
+      expect(await security.getTitle()).toEqual('Privacy & Security - Refacto');
+      expect(await security.getHeaderText()).toContain('Privacy & Security');
+    });
   });
 });
