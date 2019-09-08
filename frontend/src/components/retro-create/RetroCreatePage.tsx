@@ -21,6 +21,7 @@ const RetroCreatePage = ({ defaultSlug, history }: PropsT): React.ReactElement =
         documentTitle="New Retro - Refacto"
         title="New Retro"
         backLink={{ label: 'Home', action: '/' }}
+        links={[{ label: 'My Retros', action: '/retros' }]}
       />
       <RetroForm onCreate={handleCreate} defaultSlug={defaultSlug} />
     </article>

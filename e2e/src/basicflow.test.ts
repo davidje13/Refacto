@@ -3,7 +3,7 @@ import jasmineFailFast from './helpers/jasmineFailFast';
 import buildDriver from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
-import Login from './pages/Login';
+import SsoLogin from './pages/SsoLogin';
 import RetroCreate from './pages/RetroCreate';
 import Retro from './pages/Retro';
 import RetroArchiveList from './pages/RetroArchiveList';
@@ -22,7 +22,7 @@ describe('Refacto', () => {
   let retroPassword: string;
 
   let welcome: Welcome;
-  let login: Login<RetroCreate>;
+  let ssoLogin: SsoLogin<RetroCreate>;
   let create: RetroCreate;
   let retro: Retro;
   let archiveList: RetroArchiveList;
@@ -52,12 +52,12 @@ describe('Refacto', () => {
   });
 
   it('triggers a login flow when requested', async () => {
-    login = await welcome.clickLoginWithGoogle();
-    await login.setIdentifier(userName);
+    ssoLogin = await welcome.clickLoginWithGoogle();
+    await ssoLogin.setIdentifier(userName);
   });
 
   it('shows a retro creation screen after logging in', async () => {
-    create = await login.submit();
+    create = await ssoLogin.submit();
 
     expect(await create.getTitle()).toEqual('New Retro - Refacto');
     await create.setName('My Retro');

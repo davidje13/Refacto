@@ -1,6 +1,7 @@
 import { By, WebDriver, WebElement } from 'selenium-webdriver';
 import Page from './common/Page';
 import RetroArchive from './RetroArchive';
+import Retro from './Retro';
 
 export default class RetroArchiveList extends Page {
   private readonly slug: string;
@@ -8,6 +9,12 @@ export default class RetroArchiveList extends Page {
   public constructor(driver: WebDriver, slug: string) {
     super(driver, `/retros/${slug}/archives`, '.page-archive-list');
     this.slug = slug;
+  }
+
+  public async clickBack(): Promise<Retro> {
+    await this.click(By.linkText('Back to Retro'));
+
+    return new Retro(this.driver, this.slug).wait();
   }
 
   public async getArchiveLabels(): Promise<string[]> {

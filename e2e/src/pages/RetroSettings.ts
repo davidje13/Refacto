@@ -1,6 +1,7 @@
 import { By, WebDriver } from 'selenium-webdriver';
 import Page from './common/Page';
 import CBy from '../helpers/customBy';
+import Retro from './Retro';
 
 export default class RetroSettings extends Page {
   private readonly slug: string;
@@ -14,7 +15,9 @@ export default class RetroSettings extends Page {
     return this.setFormValue(By.css('input[name=name]'), name);
   }
 
-  public clickSave(): Promise<void> {
-    return this.click(CBy.buttonText('Save'));
+  public async clickSave(): Promise<Retro> {
+    await this.click(CBy.buttonText('Save'));
+
+    return new Retro(this.driver, this.slug).wait();
   }
 }

@@ -2,10 +2,23 @@ import { By, WebDriver, WebElement } from 'selenium-webdriver';
 import Page from './common/Page';
 import Password from './Password';
 import RetroCreate from './RetroCreate';
+import Welcome from './Welcome';
 
 export default class RetroList extends Page {
   public constructor(driver: WebDriver) {
     super(driver, '/retros', '.page-retro-list');
+  }
+
+  public async clickHome(): Promise<Welcome> {
+    await this.click(By.linkText('Home'));
+
+    return new Welcome(this.driver).wait();
+  }
+
+  public async clickCreateRetro(): Promise<RetroCreate> {
+    await this.click(By.linkText('Create Retro'));
+
+    return new RetroCreate(this.driver).wait();
   }
 
   public async clickRetroAtIndex(index: number): Promise<Password> {
@@ -13,12 +26,6 @@ export default class RetroList extends Page {
     await item.click();
 
     return new Password(this.driver, 'unknown').wait();
-  }
-
-  public async clickCreateRetro(): Promise<RetroCreate> {
-    await this.click(By.linkText('Create Retro'));
-
-    return new RetroCreate(this.driver).wait();
   }
 
   private getRetroItems(): Promise<WebElement[]> {

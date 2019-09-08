@@ -1,8 +1,9 @@
 import { By, WebDriver, WebElementPromise } from 'selenium-webdriver';
 import Page from './common/Page';
 import RetroCreate from './RetroCreate';
-import Login from './Login';
+import SsoLogin from './SsoLogin';
 import Security from './Security';
+import RetroList from './RetroList';
 
 export default class Welcome extends Page {
   public constructor(driver: WebDriver) {
@@ -19,10 +20,16 @@ export default class Welcome extends Page {
     return new RetroCreate(this.driver).wait();
   }
 
-  public async clickLoginWithGoogle(): Promise<Login<RetroCreate>> {
+  public async clickListRetros(): Promise<RetroList> {
+    await this.click(By.linkText('My Retros'));
+
+    return new RetroList(this.driver).wait();
+  }
+
+  public async clickLoginWithGoogle(): Promise<SsoLogin<RetroCreate>> {
     await this.click(By.css('.sso-google'));
 
-    return new Login<RetroCreate>(this.driver, RetroCreate).wait();
+    return new SsoLogin<RetroCreate>(this.driver, RetroCreate).wait();
   }
 
   public async clickSecurity(): Promise<Security> {
