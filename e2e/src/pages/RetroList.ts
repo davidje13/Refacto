@@ -3,10 +3,24 @@ import Page from './common/Page';
 import Password from './Password';
 import RetroCreate from './RetroCreate';
 import Welcome from './Welcome';
+import SsoLogin from './SsoLogin';
 
 export default class RetroList extends Page {
   public constructor(driver: WebDriver) {
     super(driver, '/retros', '.page-retro-list');
+  }
+
+  public async clickLoginWithGoogle(): Promise<SsoLogin<RetroList>> {
+    await this.click(By.css('.sso-google'));
+
+    return new SsoLogin<RetroList>(this.driver, RetroList).wait();
+  }
+
+  public async loginAs(identifier: string): Promise<RetroList> {
+    await this.click(By.css('.sso-google'));
+
+    const loginSso = await new SsoLogin<RetroList>(this.driver, RetroList).wait();
+    return loginSso.loginAs(identifier);
   }
 
   public async clickHome(): Promise<Welcome> {
@@ -21,7 +35,18 @@ export default class RetroList extends Page {
     return new RetroCreate(this.driver).wait();
   }
 
-  public async clickRetroAtIndex(index: number): Promise<Password> {
+  public async getRetroNames(): Promise<string[]> {
+    const items = await this.getRetroItems();
+    return Promise.all(items.map((item) => item.getText()));
+  }
+
+  public async clickRetroNamed(name: string): Promise<Password> {
+    const names = await this.getRetroNames();
+    const index = names.indexOf(name);
+    if (index === -1) {
+      throw new Error(`No retro named ${name}`);
+    }
+
     const item = await this.getRetroItemAtIndex(index);
     await item.click();
 

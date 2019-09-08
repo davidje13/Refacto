@@ -34,9 +34,7 @@ export default abstract class Page extends PageFragment {
   }
 
   public async load(): Promise<this> {
-    const path = url.resolve(HOST, this.subpath);
-    process.stdout.write(`Navigating to ${path}\n`);
-    await this.driver.get(path);
+    await this.navigate();
     await this.wait();
     return this;
   }
@@ -67,6 +65,12 @@ export default abstract class Page extends PageFragment {
 
   public getTitle(): Promise<string> {
     return this.driver.getTitle();
+  }
+
+  protected async navigate(): Promise<void> {
+    const path = url.resolve(HOST, this.subpath);
+    process.stdout.write(`Navigating to ${path}\n`);
+    await this.driver.get(path);
   }
 
   protected getPopup(className: string): Popup {

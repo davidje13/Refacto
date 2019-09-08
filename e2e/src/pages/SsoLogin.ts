@@ -20,4 +20,9 @@ export default class SsoLogin<TargetPageT extends Page> extends Page {
 
     return new this.ExpectedTarget(this.driver).wait();
   }
+
+  public async loginAs(identifier: string): Promise<TargetPageT> {
+    await this.setIdentifier(identifier);
+    return this.submit();
+  }
 }

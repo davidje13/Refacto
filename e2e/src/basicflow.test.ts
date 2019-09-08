@@ -3,8 +3,8 @@ import jasmineFailFast from './helpers/jasmineFailFast';
 import buildDriver from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
-import SsoLogin from './pages/SsoLogin';
 import RetroCreate from './pages/RetroCreate';
+import RetroList from './pages/RetroList';
 import Retro from './pages/Retro';
 import RetroArchiveList from './pages/RetroArchiveList';
 import RetroArchive from './pages/RetroArchive';
@@ -22,11 +22,8 @@ describe('Refacto', () => {
   let retroPassword: string;
 
   let welcome: Welcome;
-  let ssoLogin: SsoLogin<RetroCreate>;
   let create: RetroCreate;
   let retro: Retro;
-  let archiveList: RetroArchiveList;
-  let archive: RetroArchive;
 
   beforeAll(async () => {
     driver = buildDriver();
@@ -52,13 +49,12 @@ describe('Refacto', () => {
   });
 
   it('triggers a login flow when requested', async () => {
-    ssoLogin = await welcome.clickLoginWithGoogle();
+    const ssoLogin = await welcome.clickLoginWithGoogle();
     await ssoLogin.setIdentifier(userName);
+    create = await ssoLogin.submit();
   });
 
-  it('shows a retro creation screen after logging in', async () => {
-    create = await ssoLogin.submit();
-
+  it('returns to a retro creation screen', async () => {
     expect(await create.getTitle()).toEqual('New Retro - Refacto');
     await create.setName('My Retro');
     await create.setSlug(retroSlug);
@@ -150,6 +146,9 @@ describe('Refacto', () => {
   });
 
   describe('archiving', () => {
+    let archiveList: RetroArchiveList;
+    let archive: RetroArchive;
+
     it('clears items and completed action items when archiving', async () => {
       await retro.toggleActionItemDone(1);
       await retro.performArchive();
@@ -174,6 +173,43 @@ describe('Refacto', () => {
         'another action',
         'some action',
       ]);
+    });
+
+    it('offers a path back to the retro', async () => {
+      archiveList = await archive.clickBack();
+      retro = await archiveList.clickBack();
+
+      expect(await retro.getNameText()).toContain('My Retro');
+    });
+  });
+
+  describe('retro list', () => {
+    const retroName = 'My Retro Renamed';
+    let retroList: RetroList;
+
+    it('prompts to log in when loaded', async () => {
+      retroList = await new RetroList(driver).load();
+      retroList = await retroList.loginAs(userName);
+    });
+
+    it('displays retros created by the current user', async () => {
+      expect(await retroList.getRetroNames()).toEqual([retroName]);
+    });
+
+    it('loads the retro when clicked', async () => {
+      const password = await retroList.clickRetroNamed(retroName);
+
+      await password.setPassword(retroPassword);
+      retro = await password.submit();
+
+      expect(await retro.getNameText()).toEqual(retroName);
+    });
+
+    it('does not list retros from other users', async () => {
+      retroList = await new RetroList(driver).load();
+      retroList = await retroList.loginAs('nobody');
+
+      expect(await retroList.getRetroNames()).toEqual([]);
     });
   });
 
