@@ -13,6 +13,7 @@ interface ChildPropsT {
   dispatch?: Dispatch<Retro>;
   onComplete?: () => void;
   archive: boolean;
+  archiveTime?: number;
 }
 
 interface PropsT extends ChildPropsT {
@@ -44,12 +45,14 @@ RetroFormatPicker.propTypes = {
   dispatch: PropTypes.func,
   onComplete: PropTypes.func,
   archive: PropTypes.bool,
+  archiveTime: PropTypes.number,
 };
 
 RetroFormatPicker.defaultProps = {
   dispatch: undefined,
   onComplete: undefined,
   archive: false,
+  archiveTime: undefined,
 };
 
 forbidExtraProps(RetroFormatPicker);

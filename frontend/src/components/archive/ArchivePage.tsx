@@ -51,6 +51,7 @@ const ArchivePage = ({
           retroItems: archive.items,
           retroState: {},
           archive: true,
+          archiveTime: archive.created,
           onComplete: (): void => {},
         } : null}
       />

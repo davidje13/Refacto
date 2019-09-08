@@ -48,6 +48,7 @@ interface PropsT {
   dispatch?: Dispatch<Retro>;
   onComplete?: () => void;
   archive: boolean;
+  archiveTime?: number;
 }
 
 export default ({
@@ -60,9 +61,10 @@ export default ({
   onComplete,
   dispatch,
   archive,
+  archiveTime,
 }: PropsT): React.ReactElement => {
   const singleColumn = useWindowSize(({ width }) => (width <= 800), []);
-  const localDateProvider = useLocalDateProvider();
+  const localDateProvider = useLocalDateProvider(archiveTime);
 
   const canFacilitate = (
     !singleColumn ||

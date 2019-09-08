@@ -2,11 +2,21 @@ import { useState, useRef, useLayoutEffect } from 'react';
 import LocalDateProvider from '../../time/LocalDateProvider';
 import localDateTracker, { NowGetter } from '../../time/localDateTracker';
 
-export default function useLocalDateProvider(clock: NowGetter = Date): LocalDateProvider {
-  const [state, setState] = useState(() => new LocalDateProvider(clock.now()));
+function readTime(clock: NowGetter | number): number {
+  if (typeof clock === 'number') {
+    return clock;
+  }
+  return clock.now();
+}
+
+export default function useLocalDateProvider(clock: NowGetter | number = Date): LocalDateProvider {
+  const [state, setState] = useState(() => new LocalDateProvider(readTime(clock)));
   const stateRef = useRef(state);
 
   useLayoutEffect(() => {
+    if (typeof clock === 'number') {
+      return undefined;
+    }
     const tracker = localDateTracker(
       (provider) => {
         if (
