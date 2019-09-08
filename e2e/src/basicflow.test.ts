@@ -196,13 +196,9 @@ describe('Refacto', () => {
       expect(await retroList.getRetroNames()).toEqual([retroName]);
     });
 
-    it('loads the retro when clicked', async () => {
-      const password = await retroList.clickRetroNamed(retroName);
-
-      await password.setPassword(retroPassword);
-      retro = await password.submit();
-
-      expect(await retro.getNameText()).toEqual(retroName);
+    it('loads linked retros without needing a password', async () => {
+      retro = await retroList.clickRetroNamed(retroName);
+      expect(await retro.getActionItemLabels()).toEqual(['another action']);
     });
 
     it('does not list retros from other users', async () => {

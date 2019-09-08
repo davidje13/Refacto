@@ -108,7 +108,7 @@ describe('API single-sign-on', () => {
 
       expect(data.aud).toEqual('user');
       expect(data.sub).toEqual('google-my-external-id');
-      expect(data.provider).toEqual('google');
+      expect(data.iss).toEqual('google');
 
       await request(server)
         .get('/api/retros')

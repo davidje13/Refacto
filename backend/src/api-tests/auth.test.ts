@@ -2,9 +2,22 @@ import request from 'superwstest';
 import jwt from 'jwt-simple';
 import testConfig from './testConfig';
 import testServerRunner from './testServerRunner';
-import appFactory from '../app';
+import appFactory, { TestHooks } from '../app';
+
+function getUserToken(
+  { userAuthService }: TestHooks,
+  userId: string,
+): string {
+  return userAuthService.grantToken({
+    aud: 'user',
+    iss: 'test',
+    sub: userId,
+  });
+}
 
 describe('API auth', () => {
+  const ownerId = 'my-id';
+  let hooks: TestHooks;
   let retroId: string;
 
   const server = testServerRunner(async () => {
@@ -15,10 +28,53 @@ describe('API auth', () => {
       },
     }));
 
-    retroId = await app.testHooks.retroService.createRetro('', '', '', '');
-    await app.testHooks.retroAuthService.setPassword(retroId, 'password');
+    hooks = app.testHooks;
+
+    retroId = await hooks.retroService.createRetro(ownerId, '', '', '');
+    await hooks.retroAuthService.setPassword(retroId, 'password');
 
     return app.createServer();
+  });
+
+  describe('/api/auth/tokens/retro-id/user', () => {
+    it('responds with a token for the owner user', async () => {
+      const userToken = getUserToken(hooks, ownerId);
+
+      const response = await request(server)
+        .get(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.error).not.toBeTruthy();
+    });
+
+    it('rejects other users', async () => {
+      const userToken = getUserToken(hooks, 'not-my-id');
+
+      const response = await request(server)
+        .get(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.retroToken).not.toBeTruthy();
+      expect(response.body.error).toEqual('not retro owner');
+    });
+
+    it('responds HTTP Unauthorized if no credentials are given', async () => {
+      await request(server)
+        .get(`/api/auth/tokens/${retroId}/user`)
+        .expect(401);
+    });
+
+    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
+      await request(server)
+        .get(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', 'Bearer Foo')
+        .expect(401);
+    });
   });
 
   describe('/api/auth/tokens/retro-id', () => {

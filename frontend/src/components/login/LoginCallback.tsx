@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import handleLogin from './handleLogin';
 import Header from '../common/Header';
+import './LoginCallback.less';
 
 interface PropsT extends RouteComponentProps {
   service: string;
@@ -31,7 +32,7 @@ const LoginCallback = ({
   }, [setError]);
 
   return (
-    <article className="page-retro-create">
+    <article className="page-login-callback">
       <Header
         documentTitle="Refacto"
         title="Refacto"

@@ -22,11 +22,15 @@ interface PropsT extends ChildPropsT {
 const formats = new Map<string, React.ComponentType<ChildPropsT>>();
 formats.set('mood', React.lazy(() => import('./mood/MoodRetro')));
 
+const LOADER = (
+  <div className="loader">Loading&hellip;</div>
+);
+
 const RetroFormatPicker = ({ retroFormat, ...props }: PropsT): React.ReactElement => {
   const RetroType = formats.get(retroFormat) || UnknownRetro;
 
   return (
-    <Suspense fallback="">
+    <Suspense fallback={LOADER}>
       <RetroType {...props} />
     </Suspense>
   );

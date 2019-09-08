@@ -27,7 +27,7 @@ export default class UserAuthService {
     this.publicKey = keys.publicKey;
   }
 
-  public grantToken(tokenData: object): string {
+  public grantToken(tokenData: JWTPayload): string {
     if (!this.privateKey) {
       throw new Error('Not initialised');
     }

@@ -10,6 +10,20 @@ interface RetroAuth {
   passwordHash: string;
 }
 
+const tokenLifespan = 60 * 60 * 24 * 30 * 6;
+
+const USER_SCOPES = {
+  read: true,
+  readArchives: true,
+  write: true,
+};
+
+const PASSWORD_SCOPES = {
+  read: true,
+  readArchives: true,
+  write: true,
+};
+
 export default class RetroAuthService {
   private readonly retroAuthCollection: Collection<RetroAuth>;
 
@@ -39,10 +53,9 @@ export default class RetroAuthService {
     }
   }
 
-  public async exchangePassword(
+  public async grantForPassword(
     retroId: string,
     password: string,
-    tokenData: object,
   ): Promise<string | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['passwordHash']);
@@ -58,15 +71,30 @@ export default class RetroAuthService {
     if (this.hasher.needsRegenerate(retroData.passwordHash)) {
       this.setPassword(retroId, password, { cycleKeys: false });
     }
-    return this.grantToken(retroId, tokenData);
+    return this.grantToken(retroId, PASSWORD_SCOPES);
   }
 
-  public async grantToken(retroId: string, tokenData: JWTPayload): Promise<string | null> {
+  public grantOwnerToken(retroId: string): Promise<string | null> {
+    return this.grantToken(retroId, USER_SCOPES);
+  }
+
+  public async grantToken(
+    retroId: string,
+    scopes: Readonly<Record<string, boolean>>,
+  ): Promise<string | null> {
     const retroData = await this.retroAuthCollection
       .get('id', retroId, ['privateKey']);
     if (!retroData) {
       return null;
     }
+
+    const now = Math.floor(Date.now() / 1000);
+    const tokenData = {
+      iat: now,
+      exp: now + tokenLifespan,
+      aud: `retro-${retroId}`,
+      scopes,
+    };
 
     return this.tokenManager.signData(tokenData, retroData.privateKey);
   }

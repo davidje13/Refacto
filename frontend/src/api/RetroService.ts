@@ -5,6 +5,11 @@ interface RetroOptions {
   userToken: string;
 }
 
+export interface RetroCreationInfo {
+  id: string;
+  token: string;
+}
+
 export default class RetroService {
   public constructor(
     private readonly apiBase: string,
@@ -15,7 +20,7 @@ export default class RetroService {
     slug,
     password,
     userToken,
-  }: RetroOptions): Promise<string> {
+  }: RetroOptions): Promise<RetroCreationInfo> {
     const response = await fetch(
       `${this.apiBase}/retros`,
       {
@@ -32,6 +37,6 @@ export default class RetroService {
     if (response.status >= 300 || body.error) {
       throw new Error(body.error || 'Connection failed');
     }
-    return body.id;
+    return body;
   }
 }

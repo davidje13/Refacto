@@ -1,9 +1,9 @@
 import { By, WebDriver, WebElement } from 'selenium-webdriver';
 import Page from './common/Page';
-import Password from './Password';
 import RetroCreate from './RetroCreate';
 import Welcome from './Welcome';
 import SsoLogin from './SsoLogin';
+import Retro from './Retro';
 
 export default class RetroList extends Page {
   public constructor(driver: WebDriver) {
@@ -40,7 +40,7 @@ export default class RetroList extends Page {
     return Promise.all(items.map((item) => item.getText()));
   }
 
-  public async clickRetroNamed(name: string): Promise<Password> {
+  public async clickRetroNamed(name: string): Promise<Retro> {
     const names = await this.getRetroNames();
     const index = names.indexOf(name);
     if (index === -1) {
@@ -50,7 +50,7 @@ export default class RetroList extends Page {
     const item = await this.getRetroItemAtIndex(index);
     await item.click();
 
-    return new Password(this.driver, 'unknown').wait();
+    return new Retro(this.driver, 'unknown').wait();
   }
 
   private getRetroItems(): Promise<WebElement[]> {

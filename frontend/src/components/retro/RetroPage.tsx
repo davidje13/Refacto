@@ -101,23 +101,25 @@ const RetroPage = ({
     canFacilitate
   ));
 
+  const links = [
+    retroDispatch ? {
+      label: 'Settings',
+      action: `/retros/${slug}/settings`,
+    } : null,
+    canArchive ? {
+      label: 'Create Archive',
+      action: showArchivePopup,
+    } : null,
+    { label: 'Archives', action: `/retros/${slug}/archives` },
+  ];
+
   // TODO TypeScript#16
   return (
     <article className="page-retro">
       <Header
         documentTitle={`${retroName} - Refacto`}
         title={retroName}
-        links={[
-          retroDispatch ? {
-            label: 'Settings',
-            action: `/retros/${slug}/settings`,
-          } : null,
-          canArchive ? {
-            label: 'Create Archive',
-            action: showArchivePopup,
-          } : null,
-          { label: 'Archives', action: `/retros/${slug}/archives` },
-        ]}
+        links={retro ? links : []}
       />
       <Loader<typeof RetroFormatPicker>
         error={retroTokenError || retroError}

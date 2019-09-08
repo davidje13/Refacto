@@ -109,6 +109,26 @@ describe('RetroService', () => {
     });
   });
 
+  describe('isRetroOwnedByUser', () => {
+    it('returns true for retros owned by the user', async () => {
+      const owned = await service.isRetroOwnedByUser(r1, 'me');
+
+      expect(owned).toEqual(true);
+    });
+
+    it('returns false for retros not owned by the user', async () => {
+      const owned = await service.isRetroOwnedByUser(r2, 'me');
+
+      expect(owned).toEqual(false);
+    });
+
+    it('returns false for retros which do not exist', async () => {
+      const owned = await service.isRetroOwnedByUser('nope', 'me');
+
+      expect(owned).toEqual(false);
+    });
+  });
+
   describe('subscribeRetro', () => {
     it('returns the requested retro by ID', async () => {
       const subscription = await service.subscribeRetro(r2, nop);

@@ -161,13 +161,15 @@ class FakeUserTokenService {
 class FakeRetroTokenService {
   public capturedPassword: string | null = null;
 
+  public capturedUserToken: string | null = null;
+
   private data = new Map<string, string>();
 
   public setServerData(retroId: string, retroToken: string): void {
     this.data.set(retroId, retroToken);
   }
 
-  public async submitPassword(
+  public async getRetroTokenForPassword(
     retroId: string,
     password: string,
   ): Promise<string> {
@@ -177,6 +179,14 @@ class FakeRetroTokenService {
       throw new Error('some error');
     }
     return retroToken;
+  }
+
+  public async getRetroTokenForUser(
+    retroId: string,
+    userToken: string,
+  ): Promise<string | null> {
+    this.capturedUserToken = userToken;
+    throw new Error('not owner');
   }
 }
 

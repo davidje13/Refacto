@@ -9,7 +9,7 @@ function getUserToken(
 ): string {
   return userAuthService.grantToken({
     aud: 'user',
-    provider: 'test',
+    iss: 'test',
     sub: userId,
   });
 }
@@ -86,10 +86,10 @@ describe('API retros', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      const returnedId = response.body.id;
       const storedId = await hooks.retroService.getRetroIdForSlug(slug);
 
-      expect(returnedId).toEqual(storedId);
+      expect(response.body.id).toEqual(storedId);
+      expect(response.body.token).toBeTruthy();
     });
 
     it('responds HTTP Bad Request if data is missing', async () => {

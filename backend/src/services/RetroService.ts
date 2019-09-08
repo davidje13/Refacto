@@ -137,6 +137,14 @@ export default class RetroService {
       .getAll('ownerId', ownerId, ['id', 'slug', 'name']);
   }
 
+  public async isRetroOwnedByUser(retroId: string, ownerId: string): Promise<boolean> {
+    const retro = await this.retroCollection.get('id', retroId, ['ownerId']);
+    if (!retro) {
+      return false;
+    }
+    return retro.ownerId === ownerId;
+  }
+
   public async subscribeRetro<MetaT>(
     retroId: string,
     onChange: (message: ChangeInfo, meta?: MetaT) => void,

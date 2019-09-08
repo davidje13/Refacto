@@ -8,7 +8,6 @@ import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
   slugTracker,
   retroService,
-  retroTokenService,
   retroTokenTracker,
   passwordService,
 } from '../../api/api';
@@ -164,20 +163,16 @@ const RetroForm = ({
       throw new Error('Passwords do not match');
     }
 
-    const retroId = await retroService.create({
+    const { id, token } = await retroService.create({
       name,
       slug: resolvedSlug,
       password,
       userToken,
     });
-    const retroToken = await retroTokenService.submitPassword(
-      retroId,
-      password,
-    );
 
-    retroTokenTracker.set(retroId, retroToken);
+    retroTokenTracker.set(id, token);
     onCreate({
-      id: retroId,
+      id,
       slug: resolvedSlug,
       name,
       password,

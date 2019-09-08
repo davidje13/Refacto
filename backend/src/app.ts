@@ -118,7 +118,11 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     next();
   });
 
-  app.use('/api/auth', new ApiAuthRouter(retroAuthService));
+  app.use('/api/auth', new ApiAuthRouter(
+    userAuthService,
+    retroAuthService,
+    retroService,
+  ));
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
   app.use('/api/config', new ApiConfigRouter(config));
   app.use('/api/sso', new ApiSsoRouter(userAuthService, ssoService));

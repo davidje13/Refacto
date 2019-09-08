@@ -39,7 +39,7 @@ export default class ApiSsoRouter extends WebSocketExpress.Router {
           iat: now,
           exp: now + tokenLifespan,
           aud: 'user',
-          provider: name,
+          iss: name,
           sub: `${name}-${externalId}`,
         });
         res.status(200).json({ userToken });
