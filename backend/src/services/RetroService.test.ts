@@ -228,8 +228,35 @@ describe('RetroService', () => {
       await subscription!.send({ id: { $set: '123' } });
       expect(listener.latestError()).toEqual('Cannot edit field id');
 
+      subscription!.close();
+    });
+
+    it('allows changing slug to valid forms', async () => {
+      const listener = new ChangeListener();
+      const subscription = await service.subscribeRetro(r2, listener.onChange);
+
       await subscription!.send({ slug: { $set: 'wooo' } });
-      expect(listener.latestError()).toEqual('Cannot edit field slug');
+      expect(listener.latestError()).toEqual(undefined);
+
+      subscription!.close();
+    });
+
+    it('does not allow conflicting slugs', async () => {
+      const listener = new ChangeListener();
+      const subscription = await service.subscribeRetro(r2, listener.onChange);
+
+      await subscription!.send({ slug: { $set: 'my-retro' } });
+      expect(listener.latestError()).toEqual('URL is already taken');
+
+      subscription!.close();
+    });
+
+    it('rejects changing slug to invalid values', async () => {
+      const listener = new ChangeListener();
+      const subscription = await service.subscribeRetro(r2, listener.onChange);
+
+      await subscription!.send({ slug: { $set: 'NOPE' } });
+      expect(listener.latestError()).toEqual('Invalid URL');
 
       subscription!.close();
     });

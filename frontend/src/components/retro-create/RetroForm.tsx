@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Input from '../common/Input';
+import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
 import withUserToken from '../hocs/withUserToken';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import useNonce from '../../hooks/useNonce';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
-  slugTracker,
   retroService,
   retroTokenTracker,
   passwordService,
@@ -26,20 +26,8 @@ interface PropsT {
   onCreate: (data: CreationT) => void;
 }
 
-const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';
-const VALID_SLUG = new RegExp(VALID_SLUG_PATTERN);
-const MAX_SLUG_LENGTH = 64;
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
-
-enum SlugAvailability {
-  BLANK,
-  INVALID,
-  CHECKING,
-  FAILED,
-  TAKEN,
-  AVAILABLE,
-}
 
 function makeSlug(text: string): string {
   return text.toLowerCase()
@@ -55,12 +43,11 @@ const RetroForm = ({
   userToken,
   onCreate,
 }: PropsT): React.ReactElement => {
-  const [name, setNameRaw] = useState(defaultSlug || '');
-  const [slug, setSlugRaw] = useState(defaultSlug || '');
+  const [name, setName] = useState(defaultSlug || '');
+  const [slug, setSlug] = useState(defaultSlug || '');
   const [password, setPassword] = useState('');
   const [passwordConf, setPasswordConfRaw] = useState('');
   const [passwordWarning, setPasswordWarning] = useState<string | null>(null);
-  const [slugAvailability, setSlugAvailability] = useState(SlugAvailability.BLANK);
 
   const passwordCheckNonce = useNonce();
   const setPasswordConf = useCallback(async (current: string) => {
@@ -106,53 +93,6 @@ const RetroForm = ({
     MAX_PASSWORD_LENGTH,
   ]);
 
-  const checkSlugNonce = useNonce();
-  const checkSlug = useCallback(async (current: string) => {
-    const nonce = checkSlugNonce.next();
-
-    if (current === '') {
-      setSlugAvailability(SlugAvailability.BLANK);
-      return;
-    }
-    if (!VALID_SLUG.test(current) || current.length > MAX_SLUG_LENGTH) {
-      setSlugAvailability(SlugAvailability.INVALID);
-      return;
-    }
-
-    setSlugAvailability(SlugAvailability.CHECKING);
-    try {
-      const available = await slugTracker.isAvailable(current);
-      if (!checkSlugNonce.check(nonce)) {
-        return;
-      }
-      if (available) {
-        setSlugAvailability(SlugAvailability.AVAILABLE);
-      } else {
-        setSlugAvailability(SlugAvailability.TAKEN);
-      }
-    } catch (err) {
-      setSlugAvailability(SlugAvailability.FAILED);
-    }
-  }, [checkSlugNonce, slugTracker, setSlugAvailability]);
-
-  const setSlug = useCallback((current: string) => {
-    setSlugRaw(current);
-
-    if (current === '') {
-      checkSlug(makeSlug(name));
-    } else {
-      checkSlug(current);
-    }
-  }, [setSlugRaw, name, checkSlug]);
-
-  const setName = useCallback(async (current: string) => {
-    setNameRaw(current);
-
-    if (slug === '') {
-      checkSlug(makeSlug(current));
-    }
-  }, [setNameRaw, slug, checkSlug]);
-
   const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
     const resolvedSlug = slug || makeSlug(name);
     if (!name || !password || !resolvedSlug) {
@@ -179,48 +119,6 @@ const RetroForm = ({
     });
   }, [name, slug, password, passwordConf, userToken, onCreate]);
 
-  const retrosBaseUrl = `${document.location.host}/retros/`;
-
-  let slugChecker;
-  switch (slugAvailability) {
-    case SlugAvailability.INVALID:
-      slugChecker = (
-        <div className="slug-checker invalid">
-          { 'Invalid \u2715' }
-        </div>
-      );
-      break;
-    case SlugAvailability.CHECKING:
-      slugChecker = (
-        <div className="slug-checker checking" />
-      );
-      break;
-    case SlugAvailability.FAILED:
-      slugChecker = (
-        <div className="slug-checker failed">
-          { 'Unable to check availability' }
-        </div>
-      );
-      break;
-    case SlugAvailability.TAKEN:
-      slugChecker = (
-        <div className="slug-checker taken">
-          { 'Taken \u2715' }
-        </div>
-      );
-      break;
-    case SlugAvailability.AVAILABLE:
-      slugChecker = (
-        <div className="slug-checker available">
-          { 'Available \u2713' }
-        </div>
-      );
-      break;
-    default:
-      slugChecker = null;
-      break;
-  }
-
   return (
     <form onSubmit={handleSubmit} className="create-retro">
       <label>
@@ -239,21 +137,11 @@ const RetroForm = ({
         <div className="info">
           (may contain lowercase letters, numbers, dashes and underscores)
         </div>
-        <div className="prefixed-input">
-          <span className="prefix">{ retrosBaseUrl }</span>
-          <Input
-            name="slug"
-            type="text"
-            placeholder={makeSlug(name)}
-            value={slug}
-            onChange={setSlug}
-            pattern={VALID_SLUG_PATTERN}
-            maxLength={MAX_SLUG_LENGTH}
-          />
-          <div className="slug-checker">
-            { slugChecker }
-          </div>
-        </div>
+        <SlugEntry
+          placeholder={makeSlug(name)}
+          value={slug}
+          onChange={setSlug}
+        />
       </label>
       <label>
         Collaborator password

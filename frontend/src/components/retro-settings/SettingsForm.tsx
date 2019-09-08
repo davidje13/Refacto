@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Retro } from 'refacto-entities';
 import Input from '../common/Input';
+import SlugEntry from '../retro-create/SlugEntry';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
 import { Dispatch } from '../../api/SharedReducer';
@@ -24,7 +25,7 @@ interface PropsT {
 
 const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement => {
   const [name, setName] = useState(retro.name);
-  const [slug] = useState(retro.slug);
+  const [slug, setSlug] = useState(retro.slug);
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
     OPTIONS.alwaysShowAddAction.read(retro.options),
   );
@@ -39,6 +40,7 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
 
     dispatch({
       name: { $set: name },
+      slug: { $set: slug },
       options: {
         $seq: [
           OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
@@ -78,6 +80,17 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
           value={name}
           onChange={setName}
           required
+        />
+      </label>
+      <label>
+        Retro URL
+        <div className="info">
+          (may contain lowercase letters, numbers, dashes and underscores)
+        </div>
+        <SlugEntry
+          value={slug}
+          onChange={setSlug}
+          oldValue={retro.slug}
         />
       </label>
       <label>

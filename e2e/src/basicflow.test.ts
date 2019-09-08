@@ -124,6 +124,7 @@ describe('Refacto', () => {
       await retro2.expectChange(async () => {
         const settings = await retro.clickSettings();
         await settings.setName('My Retro Renamed');
+        await settings.setSlug(`${retroSlug}-renamed`);
         await settings.clickSave();
       });
 
@@ -131,9 +132,18 @@ describe('Refacto', () => {
       expect(await retro2.getNameText()).toEqual('My Retro Renamed');
     });
 
-    it('prompts to archive when the last item is completed', async () => {
+    it('switches URL automatically when slug changes', async () => {
+      const newSlug = `${retroSlug}-renamed`;
+      expect(await driver.getCurrentUrl()).toContain(newSlug);
+      expect(await driver2.getCurrentUrl()).toContain(newSlug);
+    });
+
+    it('maintains connectivity after changing URL', async () => {
       await retro.expectChange(() => retro2.focusMoodItem(0));
       await retro.expectChange(() => retro2.closeMoodItem(0));
+    });
+
+    it('prompts to archive when the last item is completed', async () => {
       expect(await retro2.getArchivePopup().exists()).toBeFalsy();
 
       await retro.expectChange(() => retro2.focusMoodItem(1));

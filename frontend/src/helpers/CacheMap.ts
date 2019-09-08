@@ -13,4 +13,8 @@ export default class CacheMap<K, V> {
     this.data.set(key, value);
     return value;
   }
+
+  public remove(key: K): void {
+    this.data.delete(key);
+  }
 }

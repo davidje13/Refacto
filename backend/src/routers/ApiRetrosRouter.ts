@@ -12,8 +12,6 @@ import RetroService, { ChangeInfo } from '../services/RetroService';
 import RetroArchiveService from '../services/RetroArchiveService';
 import json from '../helpers/json';
 
-const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
-const MAX_SLUG_LENGTH = 64;
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
 
@@ -62,12 +60,6 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
         if (password.length > MAX_PASSWORD_LENGTH) {
           throw new Error('Password is too long');
         }
-        if (slug.length > MAX_SLUG_LENGTH) {
-          throw new Error('URL is too long');
-        }
-        if (!VALID_SLUG.test(slug)) {
-          throw new Error('Invalid URL');
-        }
 
         const id = await retroService.createRetro(userId, slug, name, 'mood');
         await retroAuthService.setPassword(id, password);
@@ -75,8 +67,8 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
 
         res.status(200).json({ id, token });
       } catch (e) {
-        if (e.message === 'slug exists') {
-          res.status(409).json({ error: 'URL is already taken' });
+        if (e.message === 'URL is already taken') {
+          res.status(409).json({ error: e.message });
         } else {
           res.status(400).json({ error: e.message });
         }

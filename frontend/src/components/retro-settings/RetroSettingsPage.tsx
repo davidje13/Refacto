@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
+import useRouter from '../../hooks/env/useRouter';
 import { slugTracker } from '../../api/api';
 import SettingsForm from './SettingsForm';
 import './RetroSettingsPage.less';
 
-interface PropsT extends RouteComponentProps {
+interface PropsT {
   slug: string;
   retroId: string | null;
   retroToken: string | null;
@@ -20,8 +20,9 @@ const RetroSettingsPage = ({
   retroId,
   retroToken,
   retroTokenError,
-  history,
 }: PropsT): React.ReactElement => {
+  const { history } = useRouter();
+
   const [
     retro,
     retroDispatch,
@@ -59,4 +60,4 @@ RetroSettingsPage.defaultProps = {
   retroTokenError: null,
 };
 
-export default React.memo(withRetroTokenForSlug(withRouter(RetroSettingsPage)));
+export default React.memo(withRetroTokenForSlug(RetroSettingsPage));

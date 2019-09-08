@@ -27,7 +27,19 @@ export interface RetroSubscription<MetaT> {
   close: () => Promise<void>;
 }
 
-const SENSITIVE_FIELDS: (keyof Retro)[] = ['id', 'ownerId', 'slug'];
+const SENSITIVE_FIELDS: (keyof Retro)[] = ['id', 'ownerId'];
+
+const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
+const MAX_SLUG_LENGTH = 64;
+
+function validateSlug(slug: string): void {
+  if (slug.length > MAX_SLUG_LENGTH) {
+    throw new Error('URL is too long');
+  }
+  if (!VALID_SLUG.test(slug)) {
+    throw new Error('Invalid URL');
+  }
+}
 
 function specToDiff<T>(
   original: T,
@@ -55,6 +67,13 @@ function specToDiff<T>(
     }
   });
   return diff;
+}
+
+function dbErrorMessage(e: any): string {
+  if (e.message === 'duplicate' || e.code === 11000) {
+    return 'URL is already taken';
+  }
+  return e.message;
 }
 
 export default class RetroService {
@@ -101,6 +120,7 @@ export default class RetroService {
     name: string,
     format: string,
   ): Promise<string> {
+    validateSlug(slug);
     const id = uuidv4();
 
     try {
@@ -115,11 +135,7 @@ export default class RetroService {
         items: [],
       });
     } catch (e) {
-      if (e.message === 'duplicate' || e.code === 11000) {
-        throw new Error('slug exists');
-      } else {
-        throw e;
-      }
+      throw new Error(dbErrorMessage(e));
     }
 
     return id;
@@ -201,10 +217,13 @@ export default class RetroService {
         throw new Error('Retro deleted');
       }
       const diff = specToDiff(retro, change, extractRetro, SENSITIVE_FIELDS);
+      if (diff.slug) {
+        validateSlug(diff.slug);
+      }
       await this.retroCollection.update('id', retroId, diff);
     } catch (e) {
       this.retroChangeSubs.broadcast(retroId, {
-        message: { error: e.message },
+        message: { error: dbErrorMessage(e) },
         source,
         meta,
       });

@@ -30,7 +30,7 @@ describe('API auth', () => {
 
     hooks = app.testHooks;
 
-    retroId = await hooks.retroService.createRetro(ownerId, '', '', '');
+    retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
     return app.createServer();

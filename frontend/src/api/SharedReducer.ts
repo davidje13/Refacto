@@ -2,7 +2,12 @@ import update, { Spec } from 'json-immutability-helper';
 
 interface Event<T> {
   change: Spec<T>;
-  id: number | null;
+  id?: number;
+}
+
+interface ApiError {
+  error: string;
+  id?: number;
 }
 
 type SpecGenerator<T> = (state: T) => DispatchSpec<T>;
@@ -16,6 +21,10 @@ export type Dispatch<T> = (spec: DispatchSpec<T>) => void;
 const PING = 'P';
 const PONG = 'p';
 const PING_INTERVAL = 20 * 1000;
+
+function isError(m: any): m is ApiError {
+  return m.error !== undefined;
+}
 
 function toSpecSourceList<T>(spec: DispatchSpec<T>): SpecSource<T>[] {
   if (!spec) {
@@ -49,6 +58,7 @@ export default class SharedReducer<T> {
     token: string,
     private readonly changeCallback: ((state: T) => void) | undefined = undefined,
     private readonly errorCallback: ((error: string) => void) | undefined = undefined,
+    private readonly warningCallback: ((error: string) => void) | undefined = undefined,
   ) {
     this.ws = new WebSocket(wsUrl);
     this.ws.addEventListener('message', this.handleMessage);
@@ -194,21 +204,31 @@ export default class SharedReducer<T> {
       return;
     }
 
-    const { change, id = null } = JSON.parse(data) as Event<T>;
-    let changed = true;
+    const message = JSON.parse(data) as Event<T> | ApiError;
 
-    if (id !== null) {
-      const index = this.localChanges.findIndex((c) => (c.id === id));
-      if (index !== -1) {
-        this.localChanges.splice(index, 1);
+    const index = (message.id === undefined) ?
+      -1 : this.localChanges.findIndex((c) => (c.id === message.id));
+    if (index !== -1) {
+      this.localChanges.splice(index, 1);
+    }
+
+    let changed = true;
+    if (isError(message)) {
+      if (this.warningCallback) { // TODO TypeScript#16
+        this.warningCallback(`Update failed: ${message.error}`);
       }
+    } else {
       if (index === 0) {
         // removed the oldest pending change and applied it to the base
         // server state: nothing has changed
         changed = false;
       }
+      this.latestServerState = update(
+        this.latestServerState || ({} as any),
+        message.change,
+      );
     }
-    this.latestServerState = update(this.latestServerState || ({} as any), change);
+
     if (changed) {
       this.latestLocalState = undefined;
     }
@@ -222,8 +242,7 @@ export default class SharedReducer<T> {
   };
 
   private handleError = (): void => {
-    // TODO TypeScript#16
-    if (this.errorCallback) {
+    if (this.errorCallback) { // TODO TypeScript#16
       this.errorCallback('Failed to connect');
     }
   };

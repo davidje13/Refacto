@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import useRouter from '../../hooks/env/useRouter';
 import handleLogin from './handleLogin';
 import Header from '../common/Header';
 import './LoginCallback.less';
 
-interface PropsT extends RouteComponentProps {
+interface PropsT {
   service: string;
 }
 
-const LoginCallback = ({
-  history,
-  service,
-}: PropsT): React.ReactElement => {
+const LoginCallback = ({ service }: PropsT): React.ReactElement => {
+  const { history } = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -43,4 +41,4 @@ const LoginCallback = ({
   );
 };
 
-export default React.memo(withRouter(LoginCallback));
+export default React.memo(LoginCallback);

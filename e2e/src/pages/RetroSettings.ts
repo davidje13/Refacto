@@ -15,6 +15,10 @@ export default class RetroSettings extends Page {
     return this.setFormValue(By.css('input[name=name]'), name);
   }
 
+  public setSlug(slug: string): Promise<void> {
+    return this.setFormValue(By.css('input[name=slug]'), slug);
+  }
+
   public async clickSave(): Promise<Retro> {
     await this.click(CBy.buttonText('Save'));
 

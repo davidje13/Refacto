@@ -51,6 +51,10 @@ export default class SlugTracker {
     this.storage.get(slug).subject.next(id);
   }
 
+  public remove(slug: string): void {
+    this.storage.remove(slug);
+  }
+
   public async isAvailable(slug: string): Promise<boolean> {
     const result = await this.get(slug).pipe(first()).toPromise();
     if (result.hasValue) {

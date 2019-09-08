@@ -54,7 +54,7 @@ module.exports = {
     // https://github.com/evcohen/eslint-plugin-jsx-a11y/issues/455#issuecomment-403105932
     'jsx-a11y/label-has-associated-control': ['error', {
       depth: 2,
-      controlComponents: ['Input'],
+      controlComponents: ['Input', 'SlugEntry'],
     }],
     'jsx-a11y/label-has-for': ['off'],
 

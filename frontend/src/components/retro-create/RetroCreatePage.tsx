@@ -1,15 +1,16 @@
 import React, { useCallback } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Header from '../common/Header';
+import useRouter from '../../hooks/env/useRouter';
 import { slugTracker } from '../../api/api';
 import RetroForm from './RetroForm';
 import './RetroCreatePage.less';
 
-interface PropsT extends RouteComponentProps {
+interface PropsT {
   defaultSlug?: string;
 }
 
-const RetroCreatePage = ({ defaultSlug, history }: PropsT): React.ReactElement => {
+const RetroCreatePage = ({ defaultSlug }: PropsT): React.ReactElement => {
+  const { history } = useRouter();
   const handleCreate = useCallback(({ id, slug }) => {
     slugTracker.set(slug, id);
     history.push(`/retros/${slug}`);
@@ -28,4 +29,4 @@ const RetroCreatePage = ({ defaultSlug, history }: PropsT): React.ReactElement =
   );
 };
 
-export default React.memo(withRouter(RetroCreatePage));
+export default React.memo(RetroCreatePage);

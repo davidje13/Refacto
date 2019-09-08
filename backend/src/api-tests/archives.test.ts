@@ -168,7 +168,7 @@ describe('API retro archives', () => {
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async () => {
-      const otherRetroId = await hooks.retroService.createRetro('', '', '', '');
+      const otherRetroId = await hooks.retroService.createRetro('', 's', '', '');
 
       const otherArchiveId = await hooks.retroArchiveService
         .createArchive(otherRetroId, { format: 'mood', options: {}, items: [] });
