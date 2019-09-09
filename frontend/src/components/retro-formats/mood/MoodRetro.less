@@ -60,7 +60,7 @@
         text-shadow:
           0 4px 8px rgba(0, 0, 0, 0.2),
           0 2px 3px rgba(0, 0, 0, 0.2);
-        z-index: 2;
+        z-index: 1;
       }
     }
   }
@@ -86,7 +86,6 @@
   .tab-bar {
     position: sticky;
     top: 0;
-    z-index: 1;
   }
 
   .tab-item {
@@ -95,6 +94,7 @@
     font-weight: bolder;
     color: #FFFFFF;
     outline: none;
+    z-index: 1;
 
     transition: margin-top 0.1s ease-out, padding-bottom 0.1s ease-out;
   }
@@ -285,7 +285,7 @@
           position: relative;
           margin: -@add-action-max-scroll auto -8px;
           pointer-events: none;
-          z-index: 3;
+          z-index: 2;
 
           &:before {
             content: "";
