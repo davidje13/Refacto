@@ -11,7 +11,12 @@
 <link rel="manifest" href="/assets/manifest.json"/>
 </head>
 <body>
-<noscript>Please enable Javascript!</noscript>
-<div id="<%= htmlWebpackPlugin.options.appMountId %>"></div>
+<div id="<%= htmlWebpackPlugin.options.appMountId %>">
+  <div class="pre-load">
+    <p class="load">Loading&hellip;</p>
+    <p class="info">Page not loading? Make sure you are using a modern browser such as the latest version of Chrome, Firefox, Edge or Safari.</p>
+    <noscript><p class="noscript"><%= htmlWebpackPlugin.options.title %> requires JavaScript. Please enable scripts to continue.</p></noscript>
+  </div>
+</div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { configService } from './api/api';
 
 import './index.less';
+import './preload.less';
 import App from './components/App';
 
 // https://github.com/facebook/react/issues/16061

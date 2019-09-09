@@ -1,0 +1,50 @@
+.pre-load {
+  text-align: center;
+  font-size: 1.2em;
+  margin: 64px auto;
+  max-width: 450px;
+  line-height: 1.4;
+
+  .noscript {
+    background: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 32px;
+  }
+
+  .load {
+    margin: 32px 0;
+    animation: preload-fade-out 1s ease-out 5s both;
+  }
+
+  .info {
+    font-size: 0.8em;
+    animation: preload-fade-in 1s ease-out 5s both;
+  }
+}
+
+@keyframes preload-fade-out {
+  from {
+    opacity: 1;
+    margin-bottom: 32px;
+  }
+
+  to {
+    opacity: 0;
+    padding-top: 0;
+    margin-bottom: -32px;
+  }
+}
+
+@keyframes preload-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
