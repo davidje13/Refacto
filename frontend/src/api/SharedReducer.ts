@@ -10,8 +10,15 @@ interface ApiError {
   id?: number;
 }
 
-type SpecGenerator<T> = (state: T) => DispatchSpec<T>;
-type SpecSource<T> = Spec<T> | SpecGenerator<T> | null;
+type SyncCallback<T> = (state: T) => void;
+interface SpecGenerator<T> {
+  afterSync?: false;
+  (state: T): DispatchSpec<T>;
+}
+interface MarkedSyncCallback<T> extends SyncCallback<T> {
+  afterSync: true;
+}
+type SpecSource<T> = Spec<T> | SpecGenerator<T> | MarkedSyncCallback<T> | null;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SpecSourceL<T> extends Array<SpecSourceL<T> | SpecSource<T>> {}
 
@@ -36,6 +43,27 @@ function toSpecSourceList<T>(spec: DispatchSpec<T>): SpecSource<T>[] {
   return [spec];
 }
 
+function actionsHandledCallback<T>(callback?: (state: T) => void): SpecSource<T> {
+  if (!callback) {
+    return null;
+  }
+  return (state: T): null => {
+    callback(state);
+    return null;
+  };
+}
+
+function actionsSyncedCallback<T>(callback?: (state: T) => void): SpecSource<T> {
+  if (!callback) {
+    return null;
+  }
+  const fn = (state: T): void => callback(state);
+  fn.afterSync = true as true;
+  return fn;
+}
+
+export { actionsHandledCallback, actionsSyncedCallback };
+
 export default class SharedReducer<T> {
   private latestServerState?: T;
 
@@ -46,6 +74,10 @@ export default class SharedReducer<T> {
   private localChanges: Event<T>[] = [];
 
   private pendingChanges: SpecSource<T>[] = [];
+
+  private currentSyncCallbacks: SyncCallback<T>[] = [];
+
+  private syncCallbacks = new Map<number, SyncCallback<T>[]>();
 
   private idCounter = 0;
 
@@ -94,6 +126,21 @@ export default class SharedReducer<T> {
     }
   };
 
+  public addSyncCallback(callback: SyncCallback<T>): void {
+    if (this.currentChange !== undefined) {
+      this.currentSyncCallbacks.push(callback);
+      return;
+    }
+    const state = this.getState();
+    if (state === undefined) {
+      const initialSyncCallbacks = this.syncCallbacks.get(-1) || [];
+      initialSyncCallbacks.push(callback);
+      this.syncCallbacks.set(-1, initialSyncCallbacks);
+    } else {
+      callback(state);
+    }
+  }
+
   public getState(): T | undefined {
     if (!this.latestLocalState && this.latestServerState) {
       let state = this.latestServerState;
@@ -128,12 +175,25 @@ export default class SharedReducer<T> {
     this.changeCallback(this.getState()!);
   }
 
+  private internalApplySyncCallbacks(id: number): void {
+    const callbacks = this.syncCallbacks.get(id);
+    if (callbacks) {
+      this.syncCallbacks.delete(id);
+      const state = this.getState()!;
+      callbacks.forEach((fn) => fn(state));
+    }
+  }
+
   private internalSend = (): void => {
     const event = {
       change: this.currentChange!,
       id: this.internalGetUniqueId(),
     };
     this.localChanges.push(event);
+    if (this.currentSyncCallbacks.length > 0) {
+      this.syncCallbacks.set(event.id, this.currentSyncCallbacks);
+      this.currentSyncCallbacks = [];
+    }
     this.ws.send(JSON.stringify(event));
     this.currentChange = undefined;
   };
@@ -146,6 +206,10 @@ export default class SharedReducer<T> {
     const oldState = this.getState()!;
 
     if (typeof change === 'function') {
+      if (change.afterSync) {
+        this.addSyncCallback(change);
+        return false;
+      }
       return this.internalApply(toSpecSourceList(change(oldState)));
     }
 
@@ -204,6 +268,7 @@ export default class SharedReducer<T> {
       return;
     }
 
+    const isFirst = this.latestServerState === undefined;
     const message = JSON.parse(data) as Event<T> | ApiError;
 
     const index = (message.id === undefined) ?
@@ -234,6 +299,12 @@ export default class SharedReducer<T> {
     }
     if (this.internalApplyPendingChanges() || changed) {
       this.internalNotify();
+    }
+    if (isFirst) {
+      this.internalApplySyncCallbacks(-1);
+    }
+    if (message.id !== undefined) {
+      this.internalApplySyncCallbacks(message.id);
     }
   };
 

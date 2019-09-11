@@ -5,22 +5,16 @@ import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
-import { Dispatch } from '../../api/SharedReducer';
-import actionsHandledCallback from '../../actions/actionsHandledCallback';
+import { Dispatch, actionsSyncedCallback } from '../../api/SharedReducer';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import OPTIONS from '../../helpers/optionManager';
 import './SettingsForm.less';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
 
-interface SaveT {
-  id: string;
-  slug: string;
-}
-
 interface PropsT {
   retro: Retro;
   dispatch: Dispatch<Retro>;
-  onSave?: (data: SaveT) => void;
+  onSave?: (savedRetro: Retro) => void;
 }
 
 const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement => {
@@ -48,11 +42,7 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
         ],
       },
     });
-    dispatch(actionsHandledCallback(() => {
-      if (onSave) { // TODO TypeScript#16
-        onSave({ id: retro.id, slug });
-      }
-    }));
+    dispatch(actionsSyncedCallback(onSave));
   }, [name, slug, alwaysShowAddAction, theme, dispatch, onSave]);
 
   const themeChoices = getThemes().map(([value, detail]) => (

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
+import { Retro } from 'refacto-entities';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useRouter from '../../hooks/env/useRouter';
-import { slugTracker } from '../../api/api';
 import SettingsForm from './SettingsForm';
 import './RetroSettingsPage.less';
 
@@ -31,9 +31,8 @@ const RetroSettingsPage = ({
 
   const retroName = retro ? retro.name : slug; // TODO TypeScript#16
 
-  const handleSave = useCallback(({ id, slug: newSlug }) => {
-    slugTracker.set(newSlug, id);
-    history.push(`/retros/${newSlug}`);
+  const handleSave = useCallback((savedRetro: Retro) => {
+    history.push(`/retros/${savedRetro.slug}`);
   }, [history]);
 
   return (
