@@ -3,6 +3,7 @@ interface RetroOptions {
   slug: string;
   password: string;
   userToken: string;
+  importJson?: object | null;
 }
 
 export interface RetroCreationInfo {
@@ -20,7 +21,12 @@ export default class RetroService {
     slug,
     password,
     userToken,
+    importJson,
   }: RetroOptions): Promise<RetroCreationInfo> {
+    const requestBody: any = { name, slug, password };
+    if (importJson) {
+      requestBody.importJson = importJson;
+    }
     const response = await fetch(
       `${this.apiBase}/retros`,
       {
@@ -30,7 +36,7 @@ export default class RetroService {
           Authorization: `Bearer ${userToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, slug, password }),
+        body: JSON.stringify(requestBody),
       },
     );
     const body = await response.json();

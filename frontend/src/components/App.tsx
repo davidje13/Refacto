@@ -12,6 +12,7 @@ import LoginCallback from './login/LoginCallback';
 import WelcomePage from './welcome/WelcomePage';
 import SecurityPage from './security/SecurityPage';
 import RetroCreatePage from './retro-create/RetroCreatePage';
+import RetroImportPage from './retro-create/RetroImportPage';
 import RetroListPage from './retro-list/RetroListPage';
 import RetroPage from './retro/RetroPage';
 import ArchiveListPage from './archive-list/ArchiveListPage';
@@ -32,6 +33,7 @@ const App = (): React.ReactElement => (
       <Route path="/" exact render={withParams(WelcomePage)} />
       <Route path="/security" exact render={withParams(SecurityPage)} />
       <Route path="/create" exact render={withParams(RetroCreatePage)} />
+      <Route path="/create/import" exact render={withParams(RetroImportPage)} />
       <Route path="/retros" exact render={withParams(RetroListPage)} />
       <Route path="/retros/:slug" exact render={withParams(RetroPage)} />
       <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />

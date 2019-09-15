@@ -10,13 +10,14 @@ import UserAuthService from '../services/UserAuthService';
 import RetroAuthService from '../services/RetroAuthService';
 import RetroService, { ChangeInfo } from '../services/RetroService';
 import RetroArchiveService from '../services/RetroArchiveService';
-import { exportRetro } from '../export/RetroJsonExport';
+import { exportRetro, importRetroData, importTimestamp } from '../export/RetroJsonExport';
+import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import json from '../helpers/json';
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
 
-const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
+const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
 const PING = 'P';
 const PONG = 'p';
@@ -46,10 +47,16 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
     this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
       try {
         const userId = getAuthData(res).sub!;
-        const { slug, name, password } = json.extractObject(req.body, {
+        const {
+          slug,
+          name,
+          password,
+          importJson,
+        } = json.extractObject(req.body, {
           slug: json.string,
           name: json.string,
           password: json.string,
+          importJson: json.optional(extractExportedRetro),
         });
 
         if (!name) {
@@ -64,6 +71,23 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
 
         const id = await retroService.createRetro(userId, slug, name, 'mood');
         await retroAuthService.setPassword(id, password);
+
+        if (importJson) {
+          await retroService.updateRetro(id, {
+            $merge: importRetroData(importJson.current),
+          });
+
+          const archives = importJson.archives || [];
+
+          await Promise.all(archives.map(
+            (exportedArchive) => retroArchiveService.createArchive(
+              id,
+              importRetroData(exportedArchive.snapshot),
+              importTimestamp(exportedArchive.created),
+            ),
+          ));
+        }
+
         const token = await retroAuthService.grantOwnerToken(id);
 
         res.status(200).json({ id, token });

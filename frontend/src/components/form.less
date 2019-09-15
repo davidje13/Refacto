@@ -37,6 +37,33 @@
     width: auto;
   }
 
+  input[type='file'] {
+    background: #FFFFFF;
+    font-size: 1.2em;
+
+    &::-webkit-file-upload-button {
+      background: @green-button-dark;
+      border: none;
+      border-right: 1px solid @beige-shadow;
+      padding: 8px 16px;
+      margin: -8px;
+      font: inherit;
+      color: #000000;
+      cursor: pointer;
+    }
+
+    &::-ms-browse { /* Chrome bug: cannot combine with previous selector using comma */
+      background: @green-button-dark;
+      border: none;
+      border-right: 1px solid @beige-shadow;
+      padding: 8px 16px;
+      margin: -8px;
+      font: inherit;
+      color: #000000;
+      cursor: pointer;
+    }
+  }
+
   .fixed-column {
     display: inline-block;
     width: 120px;
@@ -142,13 +169,13 @@
 
   .warning, .error {
     font-weight: bolder;
-    margin: 16px 0 0;
+    margin: 16px 0;
   }
 
   .warning {
     color: @yellow-text-on-white;
 
-    &:before {
+    &::before {
       content: "\26A0\FE0F";
       margin-right: 4px;
     }
@@ -157,7 +184,7 @@
   .error {
     color: @red-text-on-white;
 
-    &:before {
+    &::before {
       content: "\2757\FE0F";
       margin-right: 4px;
     }

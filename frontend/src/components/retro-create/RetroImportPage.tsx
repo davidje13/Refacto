@@ -3,13 +3,9 @@ import Header from '../common/Header';
 import useRouter from '../../hooks/env/useRouter';
 import { slugTracker } from '../../api/api';
 import RetroForm from './RetroForm';
-import './RetroCreatePage.less';
+import './RetroImportPage.less';
 
-interface PropsT {
-  defaultSlug?: string;
-}
-
-const RetroCreatePage = ({ defaultSlug }: PropsT): React.ReactElement => {
+const RetroImportPage = (): React.ReactElement => {
   const { history } = useRouter();
   const handleCreate = useCallback(({ id, slug }) => {
     slugTracker.set(slug, id);
@@ -17,19 +13,18 @@ const RetroCreatePage = ({ defaultSlug }: PropsT): React.ReactElement => {
   }, [history]);
 
   return (
-    <article className="page-retro-create">
+    <article className="page-retro-import">
       <Header
-        documentTitle="New Retro - Refacto"
-        title="New Retro"
-        backLink={{ label: 'Home', action: '/' }}
+        documentTitle="Import Retro - Refacto"
+        title="Import Retro"
+        backLink={{ label: 'Create', action: '/create' }}
         links={[
-          { label: 'Import', action: '/create/import' },
           { label: 'My Retros', action: '/retros' },
         ]}
       />
-      <RetroForm onCreate={handleCreate} defaultSlug={defaultSlug} />
+      <RetroForm onCreate={handleCreate} showImport />
     </article>
   );
 };
 
-export default React.memo(RetroCreatePage);
+export default React.memo(RetroImportPage);

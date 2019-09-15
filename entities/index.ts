@@ -74,6 +74,7 @@ export interface RetroArchiveSummary {
 }
 
 export interface RetroArchive extends RetroArchiveSummary, RetroData {
+  imported: number | null;
   retroId: string;
 }
 
@@ -82,6 +83,7 @@ export function makeRetroArchive(details: Partial<RetroArchive> = {}): RetroArch
     id: '',
     retroId: '',
     created: 0,
+    imported: null,
     format: '',
     options: {},
     items: [],

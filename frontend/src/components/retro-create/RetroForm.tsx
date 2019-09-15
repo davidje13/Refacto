@@ -24,6 +24,7 @@ interface PropsT {
   defaultSlug?: string;
   userToken: string;
   onCreate: (data: CreationT) => void;
+  showImport?: boolean;
 }
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -38,16 +39,56 @@ function makeSlug(text: string): string {
     .substr(0, MAX_SLUG_LENGTH);
 }
 
+function readFileText(file: File): Promise<string> {
+  return new Promise((resolve, reject): void => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      resolve(reader.result as string);
+    });
+    reader.addEventListener('error', () => {
+      reject();
+    });
+    reader.readAsText(file, 'utf-8');
+  });
+}
+
 const RetroForm = ({
   defaultSlug,
   userToken,
   onCreate,
+  showImport,
 }: PropsT): React.ReactElement => {
   const [name, setName] = useState(defaultSlug || '');
   const [slug, setSlug] = useState(defaultSlug || '');
   const [password, setPassword] = useState('');
   const [passwordConf, setPasswordConfRaw] = useState('');
   const [passwordWarning, setPasswordWarning] = useState<string | null>(null);
+  const [importJson, setImportJson] = useState<object | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+
+  const importNonce = useNonce();
+  const handleImportChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = (e.target.files || [])[0];
+    setImportJson(null);
+    setImportError(null);
+    if (!file) {
+      return;
+    }
+    const nonce = importNonce.next();
+    try {
+      const content = await readFileText(file);
+      if (!importNonce.check(nonce)) {
+        return;
+      }
+
+      const json = JSON.parse(content);
+      setName(String(json.name || ''));
+      setSlug(String(json.url || ''));
+      setImportJson(json);
+    } catch (err) {
+      setImportError(err.message);
+    }
+  }, [importNonce, setName, setSlug, setImportJson, setImportError]);
 
   const passwordCheckNonce = useNonce();
   const setPasswordConf = useCallback(async (current: string) => {
@@ -94,6 +135,10 @@ const RetroForm = ({
   ]);
 
   const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
+    if (showImport && !importJson) {
+      throw new Error('Must specify valid file to import');
+    }
+
     const resolvedSlug = slug || makeSlug(name);
     if (!name || !password || !resolvedSlug) {
       throw new Error('Must specify name, password and URL');
@@ -108,6 +153,7 @@ const RetroForm = ({
       slug: resolvedSlug,
       password,
       userToken,
+      importJson,
     });
 
     retroTokenTracker.set(id, token);
@@ -117,10 +163,28 @@ const RetroForm = ({
       name,
       password,
     });
-  }, [name, slug, password, passwordConf, userToken, onCreate]);
+  }, [showImport, importJson, name, slug, password, passwordConf, userToken, onCreate]);
+
+  let importComponent: React.ReactNode = null;
+  if (showImport) {
+    importComponent = (
+      <label>
+        Import JSON File
+        <input
+          name="import"
+          type="file"
+          accept="application/json"
+          onChange={handleImportChange}
+          required
+        />
+      </label>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="create-retro">
+      { importComponent }
+      { importError ? (<div className="error">{ importError }</div>) : null }
       <label>
         Retro Name
         <Input
@@ -195,10 +259,12 @@ RetroForm.propTypes = {
   userToken: PropTypes.string.isRequired,
   onCreate: PropTypes.func.isRequired,
   defaultSlug: PropTypes.string,
+  showImport: PropTypes.bool,
 };
 
 RetroForm.defaultProps = {
   defaultSlug: undefined,
+  showImport: false,
 };
 
 forbidExtraProps(RetroForm);

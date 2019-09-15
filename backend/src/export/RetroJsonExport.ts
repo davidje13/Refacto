@@ -1,3 +1,4 @@
+import uuidv4 from 'uuid/v4';
 import {
   Retro,
   RetroData,
@@ -6,12 +7,12 @@ import {
   RetroArchive,
 } from 'refacto-entities';
 
-interface RetroItemAttachmentJsonExport {
+export interface RetroItemAttachmentJsonExport {
   type: string;
   url: string;
 }
 
-interface RetroItemJsonExport {
+export interface RetroItemJsonExport {
   created: string;
   category: string;
   message: string;
@@ -20,27 +21,31 @@ interface RetroItemJsonExport {
   attachment?: RetroItemAttachmentJsonExport;
 }
 
-interface RetroDataJsonExport {
+export interface RetroDataJsonExport {
   format: string;
   options: Record<string, unknown>;
   items: RetroItemJsonExport[];
 }
 
-interface RetroArchiveJsonExport {
+export interface RetroArchiveJsonExport {
   created: string;
   snapshot: RetroDataJsonExport;
 }
 
-interface RetroJsonExport {
+export interface RetroJsonExport {
   url: string;
   name: string;
   current: RetroDataJsonExport;
   archives?: RetroArchiveJsonExport[];
 }
 
-export function timestampToJson(timestamp: number): string {
+export function exportTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
   return date.toISOString();
+}
+
+export function importTimestamp(isoDate: string): number {
+  return Date.parse(isoDate);
 }
 
 export function exportRetroItemAttachment(
@@ -52,22 +57,45 @@ export function exportRetroItemAttachment(
   };
 }
 
+export function importRetroItemAttachment(
+  attachment: RetroItemAttachmentJsonExport,
+): RetroItemAttachment {
+  return {
+    type: attachment.type,
+    url: attachment.url,
+  };
+}
+
 export function exportRetroItem(
   item: RetroItem,
 ): RetroItemJsonExport {
   const result: RetroItemJsonExport = {
-    created: timestampToJson(item.created),
+    created: exportTimestamp(item.created),
     category: item.category,
     message: item.message,
     votes: item.votes,
   };
   if (item.doneTime > 0) {
-    result.completed = timestampToJson(item.doneTime);
+    result.completed = exportTimestamp(item.doneTime);
   }
   if (item.attachment) {
     result.attachment = exportRetroItemAttachment(item.attachment);
   }
   return result;
+}
+
+export function importRetroItem(
+  item: RetroItemJsonExport,
+): RetroItem {
+  return {
+    id: uuidv4(),
+    created: importTimestamp(item.created),
+    category: item.category,
+    message: item.message,
+    votes: item.votes,
+    doneTime: item.completed ? importTimestamp(item.completed) : 0,
+    attachment: item.attachment ? importRetroItemAttachment(item.attachment) : null,
+  };
 }
 
 export function exportRetroData(
@@ -79,11 +107,22 @@ export function exportRetroData(
     items: archive.items.map(exportRetroItem),
   };
 }
+
+export function importRetroData(
+  archive: RetroDataJsonExport,
+): RetroData {
+  return {
+    format: archive.format,
+    options: archive.options,
+    items: archive.items.map(importRetroItem),
+  };
+}
+
 export function exportRetroArchive(
   archive: RetroArchive,
 ): RetroArchiveJsonExport {
   return {
-    created: timestampToJson(archive.created),
+    created: exportTimestamp(archive.created),
     snapshot: exportRetroData(archive),
   };
 }

@@ -38,7 +38,10 @@ const RetroListPage = (): React.ReactElement => {
         documentTitle="My Retros - Refacto"
         title="My Retros"
         backLink={{ label: 'Home', action: '/' }}
-        links={[{ label: 'Create Retro', action: '/create' }]}
+        links={[
+          { label: 'Import', action: '/create/import' },
+          { label: 'Create Retro', action: '/create' },
+        ]}
       />
       { content }
     </article>

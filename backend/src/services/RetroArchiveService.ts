@@ -21,14 +21,16 @@ export default class RetroArchiveService {
   public async createArchive(
     retroId: string,
     data: RetroData,
+    created?: number,
   ): Promise<string> {
     const id = uuidv4();
-    const created = Date.now();
+    const now = Date.now();
 
     await this.archiveCollection.add({
       id,
       retroId,
-      created,
+      created: created || now,
+      imported: created ? now : null,
       format: data.format,
       options: data.options,
       items: data.items,
