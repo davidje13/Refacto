@@ -5,8 +5,12 @@ set -o pipefail;
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
 
-LOGS="$BASEDIR/e2e/build";
-mkdir -p "$LOGS";
+E2E_WORKDIR="$BASEDIR/e2e/build";
+DOWNLOADS="$E2E_WORKDIR/downloads";
+
+rm -rf "$E2E_WORKDIR" || true;
+mkdir -p "$E2E_WORKDIR";
+mkdir -p "$DOWNLOADS";
 
 if [[ -z "$TARGET_HOST" ]]; then
   PORT="${PORT:-5010}";
@@ -34,7 +38,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
   npm --prefix="$BUILDDIR" start --silent \
-    > "$LOGS/app.log" 2>&1 & APP_PID="$!";
+    > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
 
   trap "kill '$APP_PID'; false" EXIT;
 
@@ -112,7 +116,10 @@ fi;
 if [[ "$FAILED" != '' ]]; then
   echo;
   echo 'Application logs:';
-  sed "s/^/> /" < "$LOGS/app.log";
+  sed "s/^/> /" < "$E2E_WORKDIR/app.log";
+  echo;
+  echo 'Files downloaded:';
+  ls "$DOWNLOADS";
   echo;
   echo 'End-to-end tests failed.';
   false;

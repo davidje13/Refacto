@@ -5,6 +5,8 @@ import Welcome from './Welcome';
 import RetroList from './RetroList';
 
 export default class RetroCreate extends Page {
+  private slug?: string;
+
   public constructor(driver: WebDriver) {
     super(driver, '/create', '.page-retro-create');
   }
@@ -26,6 +28,7 @@ export default class RetroCreate extends Page {
   }
 
   public setSlug(slug: string): Promise<void> {
+    this.slug = slug;
     return this.setFormValue(By.css('form input[name=slug]'), slug);
   }
 
@@ -40,6 +43,6 @@ export default class RetroCreate extends Page {
   public async submit(): Promise<Retro> {
     await this.click(By.css('form button'));
 
-    return new Retro(this.driver, 'unknown').wait();
+    return new Retro(this.driver, this.slug || 'unknown').wait();
   }
 }

@@ -1,6 +1,6 @@
 import { WebDriver } from 'selenium-webdriver';
 import jasmineFailFast from './helpers/jasmineFailFast';
-import buildDriver from './helpers/selenium';
+import buildDriver, { supportsDownload } from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
 import RetroCreate from './pages/RetroCreate';
@@ -125,7 +125,7 @@ describe('Refacto', () => {
         const settings = await retro.clickSettings();
         await settings.setName('My Retro Renamed');
         await settings.setSlug(`${retroSlug}-renamed`);
-        await settings.clickSave();
+        retro = await settings.clickSave();
       });
 
       expect(await retro.getNameText()).toEqual('My Retro Renamed');
@@ -172,6 +172,16 @@ describe('Refacto', () => {
 
       const labels = await archiveList.getArchiveLabels();
       expect(labels.length).toEqual(1);
+    });
+
+    it('downloads the retro in JSON format', async () => {
+      if (!await supportsDownload(driver)) {
+        return; // skip download test
+      }
+
+      const content = await archiveList.clickExportJson();
+
+      expect(content).toContain('"My Retro Renamed"');
     });
 
     it('displays archives in a read-only view', async () => {

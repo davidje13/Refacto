@@ -61,7 +61,6 @@ const RetroPage = ({
     archiveService,
     retroDispatch,
     clearCovered,
-    retroId,
     retro,
     retroToken,
   ]);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
+import ApiDownload from '../common/ApiDownload';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useArchiveList from '../../hooks/data/useArchiveList';
@@ -43,6 +44,15 @@ const ArchiveListPage = ({
           archives,
         } : null}
       />
+      <div className="extra-links">
+        <ApiDownload
+          url={`retros/${retroId}/export/json`}
+          token={retroToken}
+          filename={`${slug}-export.json`}
+        >
+          Export as JSON
+        </ApiDownload>
+      </div>
     </article>
   );
 };

@@ -37,7 +37,9 @@ export default class RetroArchiveService {
     return id;
   }
 
-  public getRetroArchiveList(retroId: string): Promise<Readonly<RetroArchiveSummary>[]> {
+  public getRetroArchiveSummaries(
+    retroId: string,
+  ): Promise<Readonly<RetroArchiveSummary>[]> {
     return this.archiveCollection
       .getAll('retroId', retroId, ['id', 'created']);
   }
@@ -51,5 +53,11 @@ export default class RetroArchiveService {
       return null;
     }
     return archiveData;
+  }
+
+  public getRetroArchiveList(
+    retroId: string,
+  ): Promise<Readonly<RetroArchive[]>> {
+    return this.archiveCollection.getAll('retroId', retroId);
   }
 }

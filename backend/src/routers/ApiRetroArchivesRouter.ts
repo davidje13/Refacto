@@ -11,7 +11,7 @@ export default class ApiRetroArchivesRouter extends WebSocketExpress.Router {
     this.get('/', requireAuthScope('readArchives'), async (req, res) => {
       const { retroId } = req.params;
 
-      const archives = await retroArchiveService.getRetroArchiveList(retroId);
+      const archives = await retroArchiveService.getRetroArchiveSummaries(retroId);
       res.json({ archives });
     });
 

@@ -15,8 +15,8 @@ import SingleObservableTracker from '../rxjs/SingleObservableTracker';
 const { protocol, host } = document.location;
 const secure = (protocol !== 'http:');
 
-const API_BASE = '/api';
-const WS_BASE = `${secure ? 'wss' : 'ws'}://${host}${API_BASE}`;
+export const API_BASE = '/api';
+export const WS_BASE = `${secure ? 'wss' : 'ws'}://${host}${API_BASE}`;
 
 export const configService = new ConfigService(API_BASE);
 export const retroListTracker = new RetroListTracker(API_BASE);

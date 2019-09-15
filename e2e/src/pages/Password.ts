@@ -3,8 +3,11 @@ import Page from './common/Page';
 import Retro from './Retro';
 
 export default class Password extends Page {
+  private readonly slug: string;
+
   public constructor(driver: WebDriver, slug: string) {
     super(driver, `/retros/${slug}`, '.page-password');
+    this.slug = slug;
   }
 
   public setPassword(pass: string): Promise<void> {
@@ -14,6 +17,6 @@ export default class Password extends Page {
   public async submit(): Promise<Retro> {
     await this.click(By.css('form button'));
 
-    return new Retro(this.driver, 'unknown').wait();
+    return new Retro(this.driver, this.slug).wait();
   }
 }

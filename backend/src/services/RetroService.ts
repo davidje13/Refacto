@@ -161,6 +161,10 @@ export default class RetroService {
     return retro.ownerId === ownerId;
   }
 
+  public getRetro(retroId: string): Promise<Retro | null> {
+    return this.retroCollection.get('id', retroId);
+  }
+
   public async subscribeRetro<MetaT>(
     retroId: string,
     onChange: (message: ChangeInfo, meta?: MetaT) => void,

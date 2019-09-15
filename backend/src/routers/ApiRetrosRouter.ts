@@ -10,6 +10,7 @@ import UserAuthService from '../services/UserAuthService';
 import RetroAuthService from '../services/RetroAuthService';
 import RetroService, { ChangeInfo } from '../services/RetroService';
 import RetroArchiveService from '../services/RetroArchiveService';
+import { exportRetro } from '../export/RetroJsonExport';
 import json from '../helpers/json';
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -118,6 +119,29 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
         change: { $set: subscription.getInitialData() },
       }));
     });
+
+    this.get(
+      '/:retroId/export/json',
+      requireAuthScope('read'),
+      requireAuthScope('readArchives'),
+      async (req, res) => {
+        const { retroId } = req.params;
+
+        const retro = await retroService.getRetro(retroId);
+        if (!retro) {
+          res.status(404).end();
+          return;
+        }
+
+        const archives = await retroArchiveService.getRetroArchiveList(retroId);
+        const fileName = `${retro.slug}-export.json`;
+
+        const data = exportRetro(retro, archives);
+        res.header('content-disposition', `attachment; filename="${encodeURIComponent(fileName)}"`);
+        res.header('content-type', 'application/json; charset=utf-8');
+        res.send(JSON.stringify(data, null, 2)).end();
+      },
+    );
 
     this.use('/:retroId/archives', new ApiRetroArchivesRouter(
       retroArchiveService,

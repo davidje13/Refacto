@@ -4,7 +4,7 @@ import CBy from '../helpers/customBy';
 import Retro from './Retro';
 
 export default class RetroSettings extends Page {
-  private readonly slug: string;
+  private slug: string;
 
   public constructor(driver: WebDriver, slug: string) {
     super(driver, `/retros/${slug}/settings`, '.page-retro-settings');
@@ -16,6 +16,7 @@ export default class RetroSettings extends Page {
   }
 
   public setSlug(slug: string): Promise<void> {
+    this.slug = slug;
     return this.setFormValue(By.css('input[name=slug]'), slug);
   }
 
