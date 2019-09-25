@@ -39,4 +39,4 @@ const sourceJson = JSON.parse(fs.readFileSync(0, 'utf-8'));
 
 const resultJson = mutateAll(sourceJson, process.argv.slice(2));
 
-process.stdout.write(JSON.stringify(resultJson));
+process.stdout.write(JSON.stringify(resultJson, undefined, 2));
