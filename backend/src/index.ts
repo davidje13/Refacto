@@ -1,4 +1,5 @@
 import http from 'http';
+import util from 'util';
 import WebSocketExpress from 'websocket-express';
 import appFactory from './app';
 import config from './config';
@@ -45,15 +46,48 @@ if (module.hot) {
   module.hot.accept(['./app', './config'], refreshApp);
 }
 
+let mockSsoServer: http.Server | undefined;
+
 if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
   import('./mock-sso/sso')
     .then(({ default: ssoApp }) => {
-      ssoApp.listen(config.mockSsoPort, config.serverBindAddress);
+      mockSsoServer = ssoApp.listen(config.mockSsoPort, config.serverBindAddress);
     })
     .catch(() => {
       process.stderr.write('Failed to start mock SSO server\n');
     });
 }
+
+function getConnectionCount(s: http.Server): Promise<number> {
+  return util.promisify(s.getConnections.bind(s))();
+}
+
+async function shutdown(): Promise<void> {
+  const scCount = await getConnectionCount(server);
+  process.stdout.write(`Shutting down (open connections: ${scCount})\n`);
+
+  if (mockSsoServer) {
+    const mscCount = await getConnectionCount(mockSsoServer);
+    process.stdout.write(`Shutting down mock SSO server (open connections: ${mscCount})\n`);
+  }
+
+  await Promise.all([
+    util.promisify(server.close.bind(server))(),
+    mockSsoServer ? util.promisify(mockSsoServer.close.bind(mockSsoServer))() : undefined,
+  ]);
+
+  process.stdout.write('Shutdown complete\n');
+}
+
+let interrupted = false;
+process.on('SIGINT', () => {
+  // SIGINT is sent twice in quick succession, so ignore the second
+  if (!interrupted) {
+    interrupted = true;
+    process.stdout.write('\n');
+    shutdown();
+  }
+});
 
 refreshApp();

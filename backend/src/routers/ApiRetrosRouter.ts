@@ -136,7 +136,13 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
           change: json.record,
           id: json.optional(json.number),
         }));
-        subscription.send(message.change, message.id);
+
+        try {
+          res.beginTransaction();
+          subscription.send(message.change, message.id);
+        } finally {
+          res.endTransaction();
+        }
       });
 
       ws.send(JSON.stringify({

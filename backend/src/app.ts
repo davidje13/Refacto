@@ -99,6 +99,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   if (config.trustProxy) {
     app.enable('trust proxy');
   }
+  app.set('shutdown timeout', 5000);
 
   app.useHTTP((req, res, next) => {
     res.header('x-frame-options', 'DENY');
