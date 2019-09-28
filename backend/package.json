@@ -10,8 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.5.1",
+    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.5.2",
     "core-js": "^3.2.1",
+    "ioredis": "^4.14.1",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
     "jwt-simple": "^0.5.6",
     "mongodb": "^3.3.2",

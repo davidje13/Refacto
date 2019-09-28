@@ -43,6 +43,15 @@ on macOS and `/etc/mongod.conf` on Ubuntu.
 development, but you should lock it down further in deployments. See
 the [security documentation](./SECURITY.md) for details.*
 
+### Redis
+
+Redis is also supported for persisting data, but is experimental and
+not recommended for production deployments.
+
+```bash
+DB_URL=redis://localhost:6379/0 npm start
+```
+
 ## Authentication providers
 
 ### Google sign in
