@@ -74,6 +74,9 @@ module.exports = {
             },
           }],
         ],
+        plugins: [
+          '@babel/plugin-transform-runtime',
+        ],
       },
       style: {
         test: /\.(css|less)$/,

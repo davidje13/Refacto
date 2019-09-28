@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/runtime": "^7.6.2",
     "@openfonts/open-sans_all": "0.0.6",
     "classnames": "^2.2.6",
     "core-js": "^3.2.1",
@@ -27,6 +28,7 @@
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "7.x",
     "@babel/preset-env": "^7.6.2",
     "@neutrinojs/airbnb": "^9.0.0-rc.3",
     "@neutrinojs/copy": "^9.0.0-rc.3",
