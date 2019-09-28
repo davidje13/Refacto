@@ -8,12 +8,12 @@
     "test": "jest --runInBand"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
     "@neutrinojs/airbnb-base": "^9.0.0-rc.3",
     "@neutrinojs/jest": "^9.0.0-rc.3",
     "@neutrinojs/node": "^9.0.0-rc.3",
     "@types/jest": "^24.0.18",
-    "@types/selenium-webdriver": "^4.0.2",
+    "@types/selenium-webdriver": "^4.0.3",
     "core-js": "^3.2.1",
     "eslint": "^5.16.0",
     "eslint-plugin-eslint-comments": "^3.1.2",
@@ -21,9 +21,9 @@
     "neutrino": "^9.0.0-rc.3",
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.2",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.0",
-    "selenium-webdriver": "^4.0.0-alpha.4",
+    "selenium-webdriver": "^4.0.0-alpha.5",
     "typescript": "3.5.x",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.8"
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
   }
 }
