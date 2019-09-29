@@ -85,7 +85,7 @@ HEADLESS=false npm run test:e2e
 ```
 
 The server logs generated during the end-to-end test run are written
-to `e2e/build/app.log`.
+to `src/e2e/build/app.log`.
 
 ## Building
 
@@ -119,19 +119,19 @@ and build / test dependencies should be installed with `--save-dev`.
 ### Examples
 
 ```bash
-cd frontend
+cd src/frontend
 npm install --save react
 npm install --save-dev jest
 ```
 
 ```bash
-cd backend
+cd src/backend
 npm install --save express
 npm install --save-dev supertest
 ```
 
 ```bash
-cd e2e
+cd src/e2e
 npm install --save-dev selenium-webdriver
 ```
 
@@ -144,7 +144,7 @@ installed (see [Running tests](#running-tests)).
 ## Library documentation
 
 - React: <https://reactjs.org/docs/react-api.html>
-- `update`: <https://github.com/davidje13/json-immutability-helper> / <https://github.com/kolodny/immutability-helper>
+- `update`: <https://github.com/davidje13/json-immutability-helper> and <https://github.com/kolodny/immutability-helper>
 - React Router: <https://reacttraining.com/react-router/web/api>
 - Jest: <https://jestjs.io/docs/en/api>
 - React Testing Library <https://github.com/testing-library/react-testing-library>

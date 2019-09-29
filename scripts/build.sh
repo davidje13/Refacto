@@ -11,10 +11,10 @@ function launch_build() {
   NAME="$1";
   echo "Building $NAME...";
   if [[ "${PARALLEL_BUILD:-true}" == 'true' ]]; then
-    npm --prefix="$BASEDIR/$NAME" run build --silent 2>&1 | sed "s/^/$NAME: /" &
+    npm --prefix="$BASEDIR/src/$NAME" run build --silent 2>&1 | sed "s/^/$NAME: /" &
     BUILD_PIDS="$BUILD_PIDS $!";
   else
-    npm --prefix="$BASEDIR/$NAME" run build --silent;
+    npm --prefix="$BASEDIR/src/$NAME" run build --silent;
   fi;
 }
 
@@ -39,7 +39,7 @@ PRESERVE_NODE_MODULES='false';
 if [[
   -d "$BUILDDIR/node_modules" &&
   " $* " == *' --keep-deps '* &&
-  "$BUILDDIR/node_modules" -nt "$BASEDIR/backend/package.json"
+  "$BUILDDIR/node_modules" -nt "$BASEDIR/src/backend/package.json"
 ]]; then
   PRESERVE_NODE_MODULES='true';
 fi;
@@ -50,10 +50,10 @@ fi;
 
 echo 'Combining output...';
 rm -rf "$BUILDDIR" || true;
-cp -R "$BASEDIR/backend/build" "$BUILDDIR";
+cp -R "$BASEDIR/src/backend/build" "$BUILDDIR";
 rm -rf "$BUILDDIR/static" || true;
 mkdir -p "$BUILDDIR/static";
-cp -R "$BASEDIR/frontend/build/"* "$BUILDDIR/static";
+cp -R "$BASEDIR/src/frontend/build/"* "$BUILDDIR/static";
 
 if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
   echo 'Restoring node_modules...';
@@ -61,14 +61,14 @@ if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
 fi;
 
 echo 'Generating package.json...';
-< "$BASEDIR/backend/package.json" \
+< "$BASEDIR/src/backend/package.json" \
   grep -v '"file:' \
   | node "$BASEDIR/scripts/mutate-json.js" \
   'name="refacto-app"' \
   'scripts={"start": "node index.js"}' \
   'devDependencies=' \
   > "$BUILDDIR/package.json";
-cp "$BASEDIR/backend/package-lock.json" "$BUILDDIR";
+cp "$BASEDIR/src/backend/package-lock.json" "$BUILDDIR";
 cp "$BASEDIR/deployment/.dockerignore" "$BUILDDIR";
 
 echo 'Build complete.';

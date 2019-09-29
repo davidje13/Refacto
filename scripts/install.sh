@@ -21,11 +21,11 @@ fi
 
 install_subproject() {
   local PROJECT="$1";
-  if [[ ! -d "$BASEDIR/$PROJECT/node_modules" || "$FORCE" == 'true' ]]; then
+  if [[ ! -d "$BASEDIR/src/$PROJECT/node_modules" || "$FORCE" == 'true' ]]; then
     echo;
     echo "Installing $PROJECT dependencies...";
     DISABLE_OPENCOLLECTIVE=1 \
-    npm --prefix="$BASEDIR/$PROJECT" install --silent;
+    npm --prefix="$BASEDIR/src/$PROJECT" install --silent;
   fi;
 }
 

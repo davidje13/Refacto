@@ -9,10 +9,10 @@
     "lint": "./scripts/install.sh && node ./scripts/lint.js",
     "start": "./scripts/install.sh && ./scripts/start.sh",
     "test": "./scripts/install.sh && node ./scripts/lint.js && ./scripts/test.sh",
-    "test:backend": "npm --prefix=backend test --silent --",
-    "test:backend:watch": "npm --prefix=backend test --silent -- --watch",
-    "test:frontend": "npm --prefix=frontend test --silent --",
-    "test:frontend:watch": "npm --prefix=frontend test --silent -- --watch",
+    "test:backend": "npm --prefix=src/backend test --silent --",
+    "test:backend:watch": "npm --prefix=src/backend test --silent -- --watch",
+    "test:frontend": "npm --prefix=src/frontend test --silent --",
+    "test:frontend:watch": "npm --prefix=src/frontend test --silent -- --watch",
     "test:e2e": "./scripts/install.sh && ./scripts/e2e.sh"
   }
 }

@@ -29,7 +29,7 @@ echo 'Running frontend...';
 set +e;
 
 PORT="$APP_PORT" \
-npm --prefix="$BASEDIR/frontend" start --silent & APP_PID="$!";
+npm --prefix="$BASEDIR/src/frontend" start --silent & APP_PID="$!";
 
 trap "kill '$APP_PID'" EXIT;
 
@@ -39,4 +39,4 @@ PORT="$API_PORT" \
 FORWARD_HOST="http://localhost:$APP_PORT" \
 MOCK_SSO_PORT="$MOCK_SSO_PORT" \
 SERVER_BIND_ADDRESS="localhost" \
-npm --prefix="$BASEDIR/backend" start --silent;
+npm --prefix="$BASEDIR/src/backend" start --silent;

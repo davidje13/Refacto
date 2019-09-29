@@ -26,11 +26,11 @@ const baseDir = path.join(__dirname, '..');
   const failures = await Promise.all(packages.map(async (package) => {
     try {
       await execFile(eslintCommand, eslintArgs, {
-        cwd: path.join(baseDir, package),
+        cwd: path.join(baseDir, 'src', package),
         stdio: ['ignore', 'pipe', 'inherit'],
       });
       await execFile(tscCommand, tscArgs, {
-        cwd: path.join(baseDir, package),
+        cwd: path.join(baseDir, 'src', package),
         stdio: ['ignore', 'pipe', 'inherit'],
       });
       process.stderr.write(`Lint ${package} succeeded\n`);

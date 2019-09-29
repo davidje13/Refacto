@@ -5,11 +5,11 @@ BASEDIR="$(dirname "$0")/..";
 
 echo;
 echo 'Testing frontend...';
-npm --prefix="$BASEDIR/frontend" test --silent;
+npm --prefix="$BASEDIR/src/frontend" test --silent;
 
 echo;
 echo 'Testing backend...';
-npm --prefix="$BASEDIR/backend" test --silent;
+npm --prefix="$BASEDIR/src/backend" test --silent;
 
 echo;
 echo 'Running end-to-end tests...';
