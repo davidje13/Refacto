@@ -33,6 +33,9 @@ npm install --production
 PORT=8080 npm start
 ```
 
+See the [deployment documentation](docs/DEPLOYING.md) for more
+details and out-of-the-box examples.
+
 *Note: by default, Refacto will use an in-memory database and will not
 offer any login capabilities. See the sections below for details on
 integrations and security considerations.*
