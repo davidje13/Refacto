@@ -27,7 +27,7 @@ export default class GiphyService {
   public async search(
     query: string,
     limit: number,
-    lang: string = 'en',
+    lang = 'en',
   ): Promise<GifInfo[]> {
     if (!this.apiKey || !query || limit <= 0) {
       return [];

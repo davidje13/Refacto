@@ -15,9 +15,11 @@ module.exports = {
     airbnb({
       eslint: {
         // All sources are test-related
-        rules: Object.assign({}, baseRules, testRules, {
+        rules: {
+          ...baseRules,
+          ...testRules,
           '@typescript-eslint/no-floating-promises': ['error'],
-        }),
+        },
         baseConfig: {
           extends: [
             'plugin:eslint-comments/recommended',

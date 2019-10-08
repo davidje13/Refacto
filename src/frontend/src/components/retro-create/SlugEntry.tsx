@@ -90,7 +90,7 @@ const SlugEntry = ({
     case SlugAvailability.FAILED:
       slugChecker = (
         <div className="slug-checker failed">
-          { 'Unable to check availability' }
+          Unable to check availability
         </div>
       );
       break;

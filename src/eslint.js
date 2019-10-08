@@ -38,6 +38,7 @@ module.exports = {
     '@typescript-eslint/semi': ['error'],
     '@typescript-eslint/no-non-null-assertion': ['off'],
     '@typescript-eslint/no-explicit-any': ['off'],
+    'max-classes-per-file': ['error', 5],
   },
 
   reactRules: {
@@ -50,6 +51,8 @@ module.exports = {
     }],
     'react/jsx-one-expression-per-line': ['off'], // too buggy
     'react-hooks/rules-of-hooks': ['error'],
+    'react/jsx-fragments': ['error', 'element'],
+    'react/jsx-props-no-spreading': ['off'],
 
     // https://github.com/evcohen/eslint-plugin-jsx-a11y/issues/455#issuecomment-403105932
     'jsx-a11y/label-has-associated-control': ['error', {

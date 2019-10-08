@@ -37,10 +37,11 @@ class FakeRetroTracker {
     retroId: string,
     serverData: Partial<RetroState>,
   ): void {
-    this.data.set(retroId, Object.assign({
+    this.data.set(retroId, {
       retro: null,
       error: null,
-    }, serverData));
+      ...serverData,
+    });
   }
 
   public subscribe(
@@ -61,7 +62,7 @@ class FakeRetroTracker {
     }
 
     dispatchCallback(this.dispatch);
-    retroStateCallback(Object.assign({}, serverData));
+    retroStateCallback({ ...serverData });
 
     return {
       unsubscribe: (): void => {

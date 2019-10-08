@@ -6,7 +6,7 @@ function mutate(input = {}, path, value) {
   if (!path.length) {
     return value;
   }
-  const result = Object.assign({}, input);
+  const result = { ...input };
   if (value === undefined && path.length === 1) {
     delete result[path[0]];
   } else {

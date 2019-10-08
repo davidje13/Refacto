@@ -28,7 +28,7 @@ module.exports = {
         plugins: [
           'react-hooks',
         ],
-        rules: Object.assign({}, baseRules, reactRules),
+        rules: { ...baseRules, ...reactRules },
         baseConfig: {
           extends: [
             'plugin:eslint-comments/recommended',

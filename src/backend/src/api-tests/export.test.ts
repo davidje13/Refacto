@@ -9,11 +9,12 @@ function getRetroToken(
   retroId: string,
   scopes = {},
 ): Promise<string | null> {
-  return retroAuthService.grantToken(retroId, Object.assign({
+  return retroAuthService.grantToken(retroId, {
     read: true,
     readArchives: true,
     write: true,
-  }, scopes));
+    ...scopes,
+  });
 }
 
 describe('API retros', () => {
