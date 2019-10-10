@@ -52,6 +52,19 @@ not recommended for production deployments.
 DB_URL=redis://localhost:6379/0 npm start
 ```
 
+### PostgreSQL
+
+PostgreSQL is also supported for persisting data, but is not optimised
+for this type of data. For small deployments, it may be easier to
+securely configure PostgreSQL than MongoDB.
+
+You must create a database for Refacto to use. The schema will be
+auto-generated when the app starts.
+
+```bash
+DB_URL=postgresql://localhost:5432/refacto npm start
+```
+
 ## Authentication providers
 
 ### Google sign in
