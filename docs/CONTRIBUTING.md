@@ -102,6 +102,18 @@ npm install --production
 PORT=8080 npm start
 ```
 
+By default, no sign on services will be available. To use the Refacto Local
+Testing Google account, specify:
+
+```
+SSO_GOOGLE_CLIENT_ID=199202234207-la0v05druske1f1qoimg3sgkpua2nvc7.apps.googleusercontent.com \
+npm start
+```
+
+This client ID is configured for use on `localhost` on ports 80, 443, 8080,
+8443, and 5000. The client secret is not required, as Refacto does not access
+any personal data.
+
 See the [services documentation](./SERVICES.md) for details on
 setting up a database and integrating with authentication providers.
 
