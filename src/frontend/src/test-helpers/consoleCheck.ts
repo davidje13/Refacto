@@ -6,7 +6,7 @@ const spyConsole: any = console;
 
 interface CustomMatcherResult {
   pass: boolean;
-  message: string | (() => string);
+  message: () => string;
 }
 
 function checkConsoleOutput(
@@ -30,7 +30,7 @@ function checkConsoleOutput(
 
 declare global {
   namespace jest { // eslint-disable-line @typescript-eslint/no-namespace
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       toHaveReportedNoErrors: () => R;
       toHaveReportedNoWarnings: () => R;
     }

@@ -10,7 +10,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 interface CustomMatcherResult {
   pass: boolean;
-  message: string | (() => string);
+  message: () => string;
 }
 
 function toContainElementWith(
@@ -40,7 +40,7 @@ function toContainElementWith(
 
 declare global {
   namespace jest { // eslint-disable-line @typescript-eslint/no-namespace
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       toContainElementWith: (query: Query) => R;
     }
   }
