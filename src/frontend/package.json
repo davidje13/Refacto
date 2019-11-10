@@ -4,7 +4,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development",
-    "lint:eslint": "eslint --cache --format codeframe --ext mjs,jsx,js,tsx,ts --report-unused-disable-directives --max-warnings=0 src",
+    "lint:eslint": "eslint --format codeframe --ext mjs,jsx,js,tsx,ts --report-unused-disable-directives --max-warnings=0 src",
     "lint:tsc": "tsc",
     "lint": "npm run lint:eslint --silent && npm run lint:tsc --silent",
     "test": "jest"
@@ -53,11 +53,11 @@
     "less": "3.x",
     "less-loader": "5.x",
     "neutrino": "9.0.0-rc.4",
-    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.3",
-    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.1",
+    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.8",
+    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.3",
     "react-mock-element": "git+https://github.com/davidje13/react-mock-element.git#semver:^1.0.1",
     "timezone-mock": "1.x",
-    "typescript": "3.6.x",
+    "typescript": "3.7.x",
     "webpack": "4.x",
     "webpack-cli": "3.x",
     "webpack-dev-server": "3.x"

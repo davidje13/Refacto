@@ -19,10 +19,10 @@
     "eslint-plugin-eslint-comments": "3.x",
     "jest": "24.x",
     "neutrino": "9.0.0-rc.4",
-    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.3",
-    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.1",
+    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.8",
+    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.3",
     "selenium-webdriver": "4.0.0-alpha.5",
-    "typescript": "3.6.x",
+    "typescript": "3.7.x",
     "webpack": "4.x",
     "webpack-cli": "3.x"
   }

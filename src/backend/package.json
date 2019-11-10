@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.6.3",
+    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.6.4",
     "core-js": "3.x",
     "ioredis": "4.x",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
@@ -41,10 +41,10 @@
     "http-proxy-middleware": "0.x",
     "jest": "24.x",
     "neutrino": "9.0.0-rc.4",
-    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.3",
-    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.1",
+    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.8",
+    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.3",
     "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.8",
-    "typescript": "3.6.x",
+    "typescript": "3.7.x",
     "webpack": "4.x",
     "webpack-cli": "3.x"
   }
