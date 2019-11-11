@@ -30,26 +30,19 @@ class ChangeListener {
   }
 
   public latestChange(): Spec<Retro> | undefined {
-    if (this.messages.length === 0) {
-      return undefined;
-    }
-    const { message } = this.messages[this.messages.length - 1];
-    return message ? message.change : undefined;
+    return this.latestMessage()?.message?.change;
   }
 
   public latestError(): any | undefined {
-    if (this.messages.length === 0) {
-      return undefined;
-    }
-    const { message } = this.messages[this.messages.length - 1];
-    return message ? message.error : undefined;
+    return this.latestMessage()?.message?.error;
   }
 
   public latestMeta(): any {
-    if (this.messages.length === 0) {
-      return undefined;
-    }
-    return this.messages[this.messages.length - 1].meta;
+    return this.latestMessage()?.meta;
+  }
+
+  private latestMessage(): CapturedChange | undefined {
+    return this.messages[this.messages.length - 1];
   }
 }
 

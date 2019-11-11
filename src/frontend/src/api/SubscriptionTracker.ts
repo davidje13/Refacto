@@ -72,6 +72,6 @@ export default class SubscriptionTracker<K, S> {
   public find(id: K): S | null {
     const key = makeKey(id);
     const o = this.services.get(key);
-    return o ? o.service : null; // TODO TypeScript#16
+    return o?.service ?? null;
   }
 }

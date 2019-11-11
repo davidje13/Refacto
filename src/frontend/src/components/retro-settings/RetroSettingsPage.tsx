@@ -29,7 +29,7 @@ const RetroSettingsPage = ({
     retroError,
   ] = useRetroReducer(retroId, retroToken);
 
-  const retroName = retro ? retro.name : slug; // TODO TypeScript#16
+  const retroName = retro?.name ?? slug;
 
   const handleSave = useCallback((savedRetro: Retro) => {
     history.push(`/retros/${savedRetro.slug}`);

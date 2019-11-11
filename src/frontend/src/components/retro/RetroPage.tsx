@@ -70,7 +70,7 @@ const RetroPage = ({
     (retro && OPTIONS.enableMobileFacilitation.read(retro.options))
   );
 
-  const retroName = retro ? retro.name : slug; // TODO TypeScript#16
+  const retroName = retro?.name ?? slug;
 
   if (retroTokenError === 'not found') {
     return (<RetroCreatePage defaultSlug={slug} />);
@@ -95,7 +95,7 @@ const RetroPage = ({
 
   const canArchive = Boolean((
     retroDispatch &&
-    retro && // TODO TypeScript#16
+    retro &&
     retro.items.length > 0 &&
     canFacilitate
   ));
@@ -112,7 +112,6 @@ const RetroPage = ({
     { label: 'Archives', action: `/retros/${slug}/archives` },
   ];
 
-  // TODO TypeScript#16
   return (
     <article className="page-retro">
       <Header

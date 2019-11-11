@@ -59,9 +59,7 @@ const ExpandingTextEntry = ({
   }, []);
 
   const handleSubmit = useCallback((e?: React.SyntheticEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e?.preventDefault();
 
     const curValue = boxedValue.current;
     if (curValue === '') {
@@ -82,9 +80,7 @@ const ExpandingTextEntry = ({
     if (blurOnCancel) {
       blurElement();
     }
-    if (onCancel) { // TODO TypeScript#16
-      onCancel();
-    }
+    onCancel?.();
   }, [blurOnCancel, blurElement, onCancel]);
 
   const handleFormMouseDown = useCallback((e: React.MouseEvent) => {

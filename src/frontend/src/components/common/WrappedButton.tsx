@@ -27,10 +27,7 @@ const WrappedButton = ({
     return null;
   }
 
-  let resolvedTitle = (resolvedDisabled ? disabledTitle : null);
-  if (resolvedTitle === null) {
-    resolvedTitle = title;
-  }
+  const resolvedTitle = (resolvedDisabled ? disabledTitle : null) ?? title;
 
   return (
     <button

@@ -16,7 +16,7 @@ export default function useRetroList(
   );
 
   return [
-    retroListState ? retroListState.retros : null, // TODO TypeScript#16
+    retroListState?.retros ?? null,
     error,
   ];
 }

@@ -69,14 +69,14 @@ const focusNextItem = () => (
   { items }: Retro<MoodRetroStateT>,
 ): DispatchSpec<Retro> => {
   const next = pickNextItem(items);
-  return focusItem(next ? next.id : null); // TODO TypeScript#16
+  return focusItem(next?.id ?? null);
 };
 
 const focusPreviousItem = () => (
   { items }: Retro<MoodRetroStateT>,
 ): DispatchSpec<Retro> => {
   const next = pickPreviousItem(items);
-  return focusItem(next ? next.id : null); // TODO TypeScript#16
+  return focusItem(next?.id ?? null);
 };
 
 export const goNext = () => (

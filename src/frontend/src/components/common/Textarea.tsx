@@ -61,9 +61,7 @@ const Textarea = ({
       pixels: (multiline ? multi : single) || baseHeight,
     });
 
-    if (updateMultiline) { // TODO TypeScript#16
-      updateMultiline(multiline);
-    }
+    updateMultiline?.(multiline);
   }, [setHeight, baseHeightRef, updateMultiline]);
 
   const updateSize = useCallback(() => {

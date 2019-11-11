@@ -21,7 +21,7 @@ function stopProp(e: Event): void {
 }
 
 const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
-  const keys = data ? data.keys || {} : {}; // TODO TypeScript#16
+  const keys = data?.keys ?? {};
 
   const closeHandler = useParameterlessCallback(onClose);
   const [modal, setModal] = useState<HTMLDivElement>();

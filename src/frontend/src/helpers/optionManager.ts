@@ -4,7 +4,7 @@ class OptionType<T> {
   public constructor(private readonly key: string, private readonly def: T) {}
 
   public read(options?: Record<string, unknown>): T {
-    if (!options || options[this.key] === undefined) {
+    if (options?.[this.key] === undefined) {
       return this.def;
     }
     const value = options[this.key];

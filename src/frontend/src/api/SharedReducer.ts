@@ -169,10 +169,7 @@ export default class SharedReducer<T> {
   }
 
   private internalNotify(): void {
-    if (!this.changeCallback) {
-      return;
-    }
-    this.changeCallback(this.getState()!);
+    this.changeCallback?.(this.getState()!);
   }
 
   private internalApplySyncCallbacks(id: number): void {
@@ -279,9 +276,7 @@ export default class SharedReducer<T> {
 
     let changed = true;
     if (isError(message)) {
-      if (this.warningCallback) { // TODO TypeScript#16
-        this.warningCallback(`Update failed: ${message.error}`);
-      }
+      this.warningCallback?.(`Update failed: ${message.error}`);
     } else {
       if (index === 0) {
         // removed the oldest pending change and applied it to the base
@@ -313,9 +308,7 @@ export default class SharedReducer<T> {
   };
 
   private handleError = (): void => {
-    if (this.errorCallback) { // TODO TypeScript#16
-      this.errorCallback('Failed to connect');
-    }
+    this.errorCallback?.('Failed to connect');
   };
 
   private handleClose = (): void => {

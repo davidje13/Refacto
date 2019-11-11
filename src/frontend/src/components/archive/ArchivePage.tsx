@@ -29,7 +29,7 @@ const ArchivePage = ({
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archive, archiveError] = useArchive(retroId, archiveId, retroToken);
 
-  const retroName = retro ? retro.name : slug; // TODO TypeScript#16
+  const retroName = retro?.name ?? slug;
   let archiveName = 'Archive';
   if (archive) {
     archiveName = `${formatDate(archive.created)} Archive`;

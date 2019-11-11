@@ -35,7 +35,7 @@ const ItemEditor = ({
 }: PropsT): React.ReactElement => {
   const config = useConfig();
 
-  const [attachment, setAttachment] = useState(defaultItem ? defaultItem.attachment : null);
+  const [attachment, setAttachment] = useState(defaultItem?.attachment ?? null);
   const handleSubmit = useCallback((message: string) => {
     onSubmit({
       message,
@@ -50,7 +50,7 @@ const ItemEditor = ({
 
   return (
     <ExpandingTextEntry
-      defaultValue={defaultItem ? defaultItem.message : ''}
+      defaultValue={defaultItem?.message ?? ''}
       onSubmit={handleSubmit}
       onCancel={onCancel}
       extraInputs={attachmentElement}
@@ -77,7 +77,7 @@ const ItemEditor = ({
           </WrappedButton>
         ) : null,
 
-        allowAttachments && config && config.giphy ? (
+        allowAttachments && config?.giphy ? (
           <GiphyButton
             key="giphy"
             defaultAttachment={attachment}

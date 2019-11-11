@@ -28,9 +28,8 @@ const MoodItemFocused = ({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // TODO TypeScript#16
-    if (autoScroll && ref.current && ref.current.scrollIntoView) {
-      ref.current.scrollIntoView({
+    if (autoScroll) {
+      ref.current?.scrollIntoView?.({
         behavior: 'smooth',
         block: 'nearest',
       });

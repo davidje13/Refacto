@@ -17,7 +17,7 @@ export default function useArchiveList(
   );
 
   return [
-    archiveListState ? archiveListState.archives : null, // TODO TypeScript#16
+    archiveListState?.archives ?? null,
     error,
   ];
 }

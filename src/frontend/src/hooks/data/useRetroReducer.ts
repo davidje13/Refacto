@@ -86,7 +86,7 @@ export default function useRetroReducer(
   }, [retroState, slugChangeDetectionRef, history, replaceSlug]);
 
   return [
-    retroState ? retroState.retro : null, // TODO TypeScript#16
+    retroState?.retro ?? null,
     retroDispatch,
     error,
   ];

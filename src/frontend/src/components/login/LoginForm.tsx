@@ -30,7 +30,7 @@ interface PropsT {
 
 const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
   const config = useConfig();
-  const sso = config ? config.sso : {}; // TODO TypeScript#16
+  const sso = config?.sso ?? {};
   const googleConfig = sso.google;
   const githubConfig = sso.github;
 

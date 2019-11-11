@@ -19,7 +19,7 @@ import App from './components/App';
 
 function extractHelmetTitle(context: FilledContext): string {
   const match = />(.*)</.exec(context.helmet.title.toString());
-  return match ? match[1] : '';
+  return match?.[1] ?? '';
 }
 
 interface RenderedApp {

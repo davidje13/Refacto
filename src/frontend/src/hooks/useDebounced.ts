@@ -24,9 +24,7 @@ function useDebounced<T>(
     return (v: T): void => {
       if (ref.current !== v) {
         ref.current = v;
-        if (fn) { // TODO: TypeScript#16
-          fn(v);
-        }
+        fn?.(v);
       }
     };
   }, [fn, ref]);

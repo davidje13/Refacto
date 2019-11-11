@@ -41,9 +41,7 @@ class MockExpectation implements MockExpectationT {
   }
 
   public handle(request: MockRequest): void {
-    if (this.fn) {
-      this.fn(request);
-    }
+    this.fn?.(request);
   }
 
   public and(fn: (request: MockRequest) => void): void {

@@ -15,7 +15,7 @@ function bindExtractor<T extends BaseConfig>(
   extractor: (config: T, externalToken: string) => Promise<string>,
   config: T,
 ): ConfiguredExtractor | undefined {
-  if (!config || !config.clientId) {
+  if (!config?.clientId) {
     return undefined;
   }
   return extractor.bind(null, config);
