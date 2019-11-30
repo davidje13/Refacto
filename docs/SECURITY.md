@@ -122,7 +122,7 @@ reauthenticate.**
 ### User authentication (access control)
 
 Before configuring authentication, you should create the database,
-collections and indexes necessary; the `refacto` user will not have
+collections and indices necessary; the `refacto` user will not have
 permission to change these. You can do this by running the application
 without exposing it to the internet; after startup the configuration
 will be complete.
