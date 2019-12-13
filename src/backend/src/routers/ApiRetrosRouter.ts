@@ -5,10 +5,11 @@ import WebSocketExpress, {
   hasAuthScope,
   JWTPayload,
 } from 'websocket-express';
+import { websocketHandler } from 'shared-reducer-backend';
 import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
 import UserAuthService from '../services/UserAuthService';
 import RetroAuthService from '../services/RetroAuthService';
-import RetroService, { ChangeInfo } from '../services/RetroService';
+import RetroService from '../services/RetroService';
 import RetroArchiveService from '../services/RetroArchiveService';
 import { exportRetro, importRetroData, importTimestamp } from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
@@ -18,9 +19,6 @@ const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
-
-const PING = 'P';
-const PONG = 'p';
 
 export default class ApiRetrosRouter extends WebSocketExpress.Router {
   public constructor(
@@ -35,6 +33,8 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
       'user',
       (token): (JWTPayload | null) => userAuthService.readAndVerifyToken(token),
     );
+
+    const wsHandler = websocketHandler(retroService.retroBroadcaster);
 
     this.get('/', userAuthMiddleware, async (req, res) => {
       const userId = getAuthData(res).sub!;
@@ -73,7 +73,7 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
         await retroAuthService.setPassword(id, password);
 
         if (importJson) {
-          await retroService.updateRetro(id, {
+          await retroService.retroBroadcaster.update(id, {
             $merge: importRetroData(importJson.current),
           });
 
@@ -105,50 +105,10 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
       (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
     ));
 
-    this.ws('/:retroId', requireAuthScope('read'), async (req, res) => {
-      const { retroId } = req.params;
-      const ws = await res.accept();
-
-      const onChange = (msg: ChangeInfo, id?: number): void => {
-        const data = (id !== undefined) ? { id, ...msg } : msg;
-        ws.send(JSON.stringify(data));
-      };
-
-      const subscription = await retroService.subscribeRetro(retroId, onChange);
-
-      if (!subscription) {
-        res.sendError(404);
-        return;
-      }
-
-      ws.on('close', subscription.close);
-
-      ws.on('message', (msg: string) => {
-        if (msg === PING) {
-          ws.send(PONG);
-          return;
-        }
-        if (!hasAuthScope(res, 'write')) {
-          res.sendError(403);
-          return;
-        }
-        const message = json.parse(msg, json.object({
-          change: json.record,
-          id: json.optional(json.number),
-        }));
-
-        try {
-          res.beginTransaction();
-          subscription.send(message.change, message.id);
-        } finally {
-          res.endTransaction();
-        }
-      });
-
-      ws.send(JSON.stringify({
-        change: { $set: subscription.getInitialData() },
-      }));
-    });
+    this.ws('/:retroId', requireAuthScope('read'), wsHandler(
+      (req) => req.params.retroId,
+      (req, res) => retroService.getPermissions(hasAuthScope(res, 'write')),
+    ));
 
     this.get(
       '/:retroId/export/json',

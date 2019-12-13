@@ -6,12 +6,12 @@ import {
 } from 'refacto-entities';
 import json from './json';
 
-export const extractRetroItem = json.object<RetroItem>({
+export const extractRetroItem = json.exactObject<RetroItem>({
   id: json.string,
   category: json.string,
   created: json.number,
   message: json.string,
-  attachment: json.nullable(json.object<RetroItemAttachment>({
+  attachment: json.nullable(json.exactObject<RetroItemAttachment>({
     type: json.string,
     url: json.string,
   })),
@@ -19,13 +19,13 @@ export const extractRetroItem = json.object<RetroItem>({
   doneTime: json.number,
 });
 
-export const extractRetroData = json.object<RetroData>({
+export const extractRetroData = json.exactObject<RetroData>({
   format: json.string,
   options: json.record,
   items: json.array(extractRetroItem),
 });
 
-export const extractRetro = json.object<Retro>({
+export const extractRetro = json.exactObject<Retro>({
   id: json.string,
   slug: json.string,
   name: json.string,

@@ -1,26 +1,28 @@
 import crypto from 'crypto';
 import { MemoryDb } from 'collection-storage';
 import { Spec } from 'json-immutability-helper';
+import {
+  TopicMessage,
+  TrackingTopicMap,
+  InMemoryTopic,
+  ChangeInfo,
+  Subscription,
+} from 'shared-reducer-backend';
 import { makeRetroItem, Retro } from 'refacto-entities';
-import RetroService, { TopicMessage, ChangeInfo } from './RetroService';
-import TrackingTopicMap from '../queue/TrackingTopicMap';
-import InMemoryTopic from '../queue/InMemoryTopic';
-import Topic from '../queue/Topic';
-
-const nop = (): void => {};
+import RetroService from './RetroService';
 
 interface CapturedChange {
-  message: ChangeInfo;
+  message: ChangeInfo<Retro>;
   meta: any;
 }
 
 class ChangeListener {
   public readonly messages: CapturedChange[] = [];
 
-  public readonly onChange: (message: ChangeInfo, meta: any) => void;
+  public readonly onChange: (message: ChangeInfo<Retro>, meta: any) => void;
 
   public constructor() {
-    this.onChange = (message: ChangeInfo, meta: any): void => {
+    this.onChange = (message: ChangeInfo<Retro>, meta: any): void => {
       this.messages.push({ message, meta });
     };
   }
@@ -33,7 +35,7 @@ class ChangeListener {
     return this.latestMessage()?.message?.change;
   }
 
-  public latestError(): any | undefined {
+  public latestError(): string | undefined {
     return this.latestMessage()?.message?.error;
   }
 
@@ -53,8 +55,8 @@ describe('RetroService', () => {
 
   beforeEach(async () => {
     const db = new MemoryDb();
-    const topic = new TrackingTopicMap<TopicMessage>(
-      (): Topic<TopicMessage> => new InMemoryTopic(),
+    const topic = new TrackingTopicMap<TopicMessage<Retro>>(
+      () => new InMemoryTopic(),
     );
     service = new RetroService(db, crypto.randomBytes(32), topic);
     r1 = await service.createRetro(
@@ -69,7 +71,7 @@ describe('RetroService', () => {
       'My Second Retro',
       'other',
     );
-    await service.updateRetro(r2, {
+    await service.retroBroadcaster.update(r2, {
       state: { $set: { someRetroSpecificState: true } },
       items: { $push: [makeRetroItem({ id: 'yes' })] },
     });
@@ -122,20 +124,34 @@ describe('RetroService', () => {
     });
   });
 
-  describe('subscribeRetro', () => {
-    it('returns the requested retro by ID', async () => {
-      const subscription = await service.subscribeRetro(r2, nop);
-      const retro = subscription!.getInitialData();
-      subscription!.close();
+  describe('retroBroadcaster', () => {
+    let listener: ChangeListener;
+    let subscription: Subscription<Retro, void>;
+
+    beforeEach(async () => {
+      listener = new ChangeListener();
+      const sub = await service.retroBroadcaster.subscribe(
+        r2,
+        listener.onChange,
+        service.getPermissions(true),
+      );
+      if (!sub) {
+        throw new Error('Failed to subscribe to retro');
+      }
+      subscription = sub;
+    });
+
+    afterEach(() => subscription?.close());
+
+    it('connects to the backing retro data', async () => {
+      const retro = subscription.getInitialData();
 
       expect(retro).not.toBeNull();
       expect(retro.name).toEqual('My Second Retro');
     });
 
     it('returns full details', async () => {
-      const subscription = await service.subscribeRetro(r2, nop);
-      const retro = subscription!.getInitialData();
-      subscription!.close();
+      const retro = subscription.getInitialData();
 
       expect(retro).not.toBeNull();
       expect(retro.format).toEqual('other');
@@ -144,165 +160,70 @@ describe('RetroService', () => {
     });
 
     it('returns null if the ID is not found', async () => {
-      const subscription = await service.subscribeRetro('nope', nop);
+      const failedSubscription = await service.retroBroadcaster.subscribe(
+        'nope',
+        listener.onChange,
+        service.getPermissions(true),
+      );
 
-      expect(subscription).toBeNull();
-    });
-
-    it('sends updates when data changes', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      const change = { name: { $set: 'New name' } };
-      await subscription!.send(change);
-
-      expect(listener.messageCount()).toEqual(1);
-      expect(listener.latestChange()).toEqual(change);
-
-      subscription!.close();
-    });
-
-    it('sends updates between listeners when data changes', async () => {
-      const listener1 = new ChangeListener();
-      const listener2 = new ChangeListener();
-
-      const subscription1 = await service.subscribeRetro(r2, listener1.onChange);
-      const subscription2 = await service.subscribeRetro(r2, listener2.onChange);
-
-      const change = { name: { $set: 'New name' } };
-      await subscription1!.send(change);
-
-      expect(listener2.messageCount()).toEqual(1);
-      expect(listener2.latestChange()).toEqual(change);
-
-      subscription1!.close();
-      subscription2!.close();
-    });
-
-    it('reflects metadata back to the sender and no other listeners', async () => {
-      const listener1 = new ChangeListener();
-      const listener2 = new ChangeListener();
-
-      const subscription1 = await service.subscribeRetro(r2, listener1.onChange);
-      const subscription2 = await service.subscribeRetro(r2, listener2.onChange);
-
-      await subscription1!.send({ name: { $set: 'New name' } }, 'hello');
-
-      expect(listener1.latestMeta()).toEqual('hello');
-      expect(listener2.latestMeta()).toEqual(undefined);
-
-      subscription1!.close();
-      subscription2!.close();
-    });
-
-    it('stops sending updates after unsubscribing', async () => {
-      const listener1 = new ChangeListener();
-      const listener2 = new ChangeListener();
-
-      const subscription1 = await service.subscribeRetro(r2, listener1.onChange);
-      const subscription2 = await service.subscribeRetro(r2, listener2.onChange);
-      subscription2!.close();
-
-      const change = { name: { $set: 'New name' } };
-      await subscription1!.send(change);
-
-      expect(listener2.messageCount()).toEqual(0);
-
-      subscription1!.close();
+      expect(failedSubscription).toBeNull();
     });
 
     it('rejects attempts to change sensitive data', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ ownerId: { $set: 'me' } });
+      await subscription.send({ ownerId: { $set: 'me' } });
       expect(listener.latestError()).toEqual('Cannot edit field ownerId');
 
-      await subscription!.send({ id: { $set: '123' } });
+      await subscription.send({ id: { $set: '123' } });
       expect(listener.latestError()).toEqual('Cannot edit field id');
-
-      subscription!.close();
+      expect(listener.messageCount()).toEqual(2);
     });
 
     it('allows changing slug to valid forms', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ slug: { $set: 'wooo' } });
+      await subscription.send({ slug: { $set: 'wooo' } });
       expect(listener.latestError()).toEqual(undefined);
-
-      subscription!.close();
     });
 
     it('does not allow conflicting slugs', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ slug: { $set: 'my-retro' } });
+      await subscription.send({ slug: { $set: 'my-retro' } });
       expect(listener.latestError()).toEqual('URL is already taken');
-
-      subscription!.close();
+      expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects changing slug to invalid values', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ slug: { $set: 'NOPE' } });
+      await subscription.send({ slug: { $set: 'NOPE' } });
       expect(listener.latestError()).toEqual('Invalid URL');
-
-      subscription!.close();
+      expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to add new top-level fields', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ newThing: { $set: 'woo' } } as any);
-      expect(listener.latestError()).toEqual('Cannot add field newThing');
-
-      subscription!.close();
+      await subscription.send({ newThing: { $set: 'woo' } } as any);
+      expect(listener.latestError()).toEqual('Unexpected property newThing');
+      expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to delete top-level fields', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ $unset: ['ownerId'] });
+      await subscription.send({ $unset: ['ownerId'] });
       expect(listener.latestError()).toBeTruthy();
-
-      subscription!.close();
+      expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to modify retros in invalid ways', async () => {
-      const listener = new ChangeListener();
-      const subscription = await service.subscribeRetro(r2, listener.onChange);
-
-      await subscription!.send({ items: { $push: [{ nope: 7 }] } } as any);
+      await subscription.send({ items: { $push: [{ nope: 7 }] } } as any);
       expect(listener.latestError()).toBeTruthy();
-
-      subscription!.close();
+      expect(listener.messageCount()).toEqual(1);
     });
 
-    it('does not trigger updates for invalid edits', async () => {
-      const listener1 = new ChangeListener();
-      const listener2 = new ChangeListener();
+    it('rejects all writes in readonly mode', async () => {
+      const readSubscription = await service.retroBroadcaster.subscribe(
+        r2,
+        listener.onChange,
+        service.getPermissions(false),
+      );
 
-      const subscription1 = await service.subscribeRetro(r2, listener1.onChange);
-      const subscription2 = await service.subscribeRetro(r2, listener2.onChange);
+      await readSubscription!.send({ slug: { $set: 'wooo' } });
+      expect(listener.latestError()).toEqual('Cannot modify data');
 
-      const change = { newThing: { $set: 'woo' } } as any;
-      await subscription1!.send(change);
-
-      expect(listener2.messageCount()).toEqual(0);
-
-      const subscription3 = await service.subscribeRetro(r2, nop);
-      const retro = subscription3!.getInitialData();
-      expect((retro as any).newThing).toEqual(undefined);
-
-      subscription1!.close();
-      subscription2!.close();
-      subscription3!.close();
+      await readSubscription!.close();
     });
   });
 });

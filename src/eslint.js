@@ -39,6 +39,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': ['off'],
     '@typescript-eslint/no-explicit-any': ['off'],
     'max-classes-per-file': ['error', 5],
+    'import/extensions': ['error', 'never'],
   },
 
   reactRules: {

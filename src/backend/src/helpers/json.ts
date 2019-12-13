@@ -37,6 +37,20 @@ export default {
 
   object: jsonObject,
 
+  exactObject: <T>(maps: ObjectMapper<T>): Mapper<T> => {
+    const subExtract = jsonObject(maps);
+    const knownKeys = new Set(Object.keys(maps));
+
+    return (source: unknown): T => {
+      const result = subExtract(source);
+      const extraKey = Object.keys(source as object).find((k) => !knownKeys.has(k));
+      if (extraKey) {
+        throw new Error(`Unexpected property ${extraKey}`);
+      }
+      return result;
+    };
+  },
+
   record: (source: unknown): Record<string, unknown> => {
     if (!isJsonObject(source)) {
       throw new Error('Expected object');

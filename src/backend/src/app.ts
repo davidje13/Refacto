@@ -1,6 +1,13 @@
 import WebSocketExpress from 'websocket-express';
 import CollectionStorage from 'collection-storage';
 import Hasher from 'pwd-hasher';
+import {
+  TrackingTopicMap,
+  InMemoryTopic,
+  Topic,
+  TopicMessage,
+} from 'shared-reducer-backend';
+import { Retro } from 'refacto-entities';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
@@ -13,13 +20,10 @@ import TokenManager from './tokens/TokenManager';
 import PasswordCheckService from './services/PasswordCheckService';
 import GiphyService from './services/GiphyService';
 import SsoService from './services/SsoService';
-import RetroService, { TopicMessage } from './services/RetroService';
+import RetroService from './services/RetroService';
 import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
-import InMemoryTopic from './queue/InMemoryTopic';
-import Topic from './queue/Topic';
-import TrackingTopicMap from './queue/TrackingTopicMap';
 import { ConfigT } from './config';
 
 export interface TestHooks {
@@ -78,7 +82,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   const tokenManager = new TokenManager(config.token);
 
   const retroChangeSubs = new TrackingTopicMap(
-    (): Topic<TopicMessage> => new InMemoryTopic<TopicMessage>(),
+    (): Topic<TopicMessage<Retro>> => new InMemoryTopic(),
   );
 
   const encryptionKey = readKey(config.encryption.secretKey, 32);
