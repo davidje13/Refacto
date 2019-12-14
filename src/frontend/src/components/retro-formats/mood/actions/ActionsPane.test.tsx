@@ -75,7 +75,7 @@ describe('ActionsPane', () => {
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
-        onAddItem={(): void => {}}
+        onAddItem={(): void => undefined}
       />
     ), { queries });
 

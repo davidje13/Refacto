@@ -27,7 +27,7 @@ class FakeRetroTracker {
 
   private expectedRetroToken: string | null = null;
 
-  public dispatch = (): void => {};
+  public dispatch = (): void => undefined;
 
   public setExpectedToken(retroToken: string): void {
     this.expectedRetroToken = retroToken;

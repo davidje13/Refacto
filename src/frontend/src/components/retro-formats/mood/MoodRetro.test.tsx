@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 
 import MoodRetro from './MoodRetro';
 
-const nop = (): void => {};
+const nop = (): void => undefined;
 
 describe('MoodRetro', () => {
   it('renders without error', () => {

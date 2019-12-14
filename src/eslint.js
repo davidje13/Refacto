@@ -74,5 +74,7 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       'devDependencies': true,
     }],
+    'jest/no-mocks-import': ['off'],
+    'jest/expect-expect': ['off'],
   },
 };

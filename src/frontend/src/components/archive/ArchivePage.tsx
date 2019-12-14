@@ -52,7 +52,7 @@ const ArchivePage = ({
           retroState: {},
           archive: true,
           archiveTime: archive.created,
-          onComplete: (): void => {},
+          onComplete: (): void => undefined,
         } : null}
       />
     </article>

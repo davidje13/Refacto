@@ -225,6 +225,7 @@ describe('LocalDateProvider', () => {
 
   // There are problems with this timezone but it is difficult to tell if they
   // are real or caused by the mocking library itself.
+  // eslint-disable-next-line jest/no-commented-out-tests
 //  describe('with daylight savings time switching at midnight (Brazil/East)', () => {
 //    // 2006-11-05 [03:00 UTC 1162695600]: summer time (-2:00) begins
 //    // 00:00 winter time -> 01:00 winter time (lose 1 hour)

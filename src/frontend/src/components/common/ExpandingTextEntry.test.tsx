@@ -8,7 +8,7 @@ function setValue(input: HTMLElement, value: string): void {
   fireEvent.change(input, { target: { value } });
 }
 
-const nop = (): void => {};
+const nop = (): void => undefined;
 
 describe('ExpandingTextEntry', () => {
   describe('with no extra options', () => {

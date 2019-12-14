@@ -24,7 +24,7 @@ describe('Retro', () => {
     ), { queries });
 
     await import('./mood/MoodRetro'); // wait for dynamic import
-    act(() => {});
+    act(() => undefined);
 
     expect(dom).toContainElementWith(css('mock-mood-retro'));
     expect(dom.getBy(css('mock-mood-retro')).mockProps).toMatchObject({
