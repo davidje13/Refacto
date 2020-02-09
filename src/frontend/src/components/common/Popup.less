@@ -6,6 +6,7 @@
   bottom: 0;
   background: rgba(128, 128, 128, 0.5);
   z-index: 10;
+  backdrop-filter: blur(2px);
 
   animation: 0.2s ease popup-fade-in;
 
@@ -40,19 +41,33 @@
 @keyframes popup-fade-in {
   from {
     opacity: 0;
+    backdrop-filter: none;
   }
 
   to {
     opacity: 1;
+    backdrop-filter: blur(2px);
   }
 }
 
 @keyframes popup-float-in {
   from {
-    margin-top: -50px;
+    transform: translate(-50%, -50%) scale(0.9);
   }
 
   to {
-    margin-top: 0;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes popup-float-in {
+    from {
+      transform: translate(-50%, -50%);
+    }
+
+    to {
+      transform: translate(-50%, -50%);
+    }
   }
 }

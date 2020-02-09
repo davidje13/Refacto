@@ -86,6 +86,7 @@
   .tab-bar {
     position: sticky;
     top: 0;
+    z-index: 1;
   }
 
   .tab-item {
@@ -94,7 +95,6 @@
     font-weight: bolder;
     color: #FFFFFF;
     outline: none;
-    z-index: 1;
 
     transition: margin-top 0.1s ease-out, padding-bottom 0.1s ease-out;
   }
@@ -269,39 +269,53 @@
 
         h2 {
           text-align: center;
-          margin: @action-header-padding 0 calc(@action-header-padding - 16px);
+          margin: @action-header-padding 0;
+        }
+      }
+
+      .new-action-item .text-entry {
+        margin: 0 auto;
+        min-width: 24em;
+        width: calc(100vw / 3 + 48px);
+      }
+
+      // new-action-item is sticky on the bottom of the page
+      // but because it needs to escape its parent, this
+      // hierarchy is needed
+      .new-action-item-hold.always-visible {
+        position: relative;
+        margin: -@add-action-max-scroll 0 -8px;
+        pointer-events: none;
+        z-index: 2;
+
+        &::before {
+          content: "";
+          display: block;
+          height: @add-action-max-scroll;
         }
 
-        .new-action-item-hold {
-          margin: @action-header-padding auto 0;
-          min-width: 24em;
-          width: calc(100vw / 3 + 48px);
+        .new-action-item {
+          pointer-events: initial;
+          padding: 16px 0;
+          margin: -16px 0;
+          background: rgba(@beige-back, 0.9);
+          backdrop-filter: blur(2px);
+          @media (prefers-reduced-transparency: reduce) {
+            background: @beige-back;
+            backdrop-filter: none;
+          }
+          position: sticky;
+          bottom: 0;
         }
 
-        // new-action-item is sticky on the bottom of the page
-        // but because it needs to escape its parent, this
-        // hierarchy is needed
-        .new-action-item-hold.always-visible {
-          position: relative;
-          margin: -@add-action-max-scroll auto -8px;
-          pointer-events: none;
-          z-index: 2;
-
-          &::before {
-            content: "";
-            display: block;
-            height: @add-action-max-scroll;
+        .text-entry {
+          textarea {
+            padding-top: 12px;
+            padding-bottom: 12px;
           }
 
-          .new-action-item {
-            pointer-events: initial;
-            padding: 8px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            background: @beige-back;
-            box-shadow: 0 0 4px @beige-back;
-            position: sticky;
-            bottom: 0;
+          .submit {
+            padding: 6px 8px 6px 12px;
           }
         }
       }
