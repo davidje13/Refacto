@@ -2,14 +2,10 @@ language: node_js
 node_js: node
 os: linux
 addons:
-  apt:
-    sources:
-    - google-chrome
-    packages:
-    - google-chrome-stable
-#    - firefox
+  chrome: stable
+#  firefox: latest
 before_install:
-- wget https://chromedriver.storage.googleapis.com/78.0.3904.70/chromedriver_linux64.zip
+- wget https://chromedriver.storage.googleapis.com/80.0.3987.106/chromedriver_linux64.zip
 - unzip chromedriver_linux64.zip
 - sudo install chromedriver /usr/local/bin
 #- wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
