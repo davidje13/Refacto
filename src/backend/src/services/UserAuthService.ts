@@ -11,7 +11,10 @@ export default class UserAuthService {
 
   private publicKey?: string;
 
-  public constructor(private readonly tokenManager: TokenManager) {
+  public constructor(
+    private readonly tokenManager: TokenManager,
+    private readonly loginTokenLifespan = 60 * 60 * 2,
+  ) {
     this.tokenManager = tokenManager;
   }
 
@@ -26,6 +29,18 @@ export default class UserAuthService {
     this.privateKey = keys.privateKey;
     this.publicKey = keys.publicKey;
   }
+
+  public grantLoginToken = (userId: string, service: string): string => {
+    const now = Math.floor(Date.now() / 1000);
+
+    return this.grantToken({
+      iat: now,
+      exp: now + this.loginTokenLifespan,
+      aud: 'user',
+      iss: service,
+      sub: userId,
+    });
+  };
 
   public grantToken(tokenData: JWTPayload): string {
     if (!this.privateKey) {

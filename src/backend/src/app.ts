@@ -7,11 +7,11 @@ import {
   Topic,
   TopicMessage,
 } from 'shared-reducer-backend';
+import { buildAuthenticationBackend } from 'auth-backend';
 import type { Retro } from 'refacto-entities';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
-import ApiSsoRouter from './routers/ApiSsoRouter';
 import ApiRetrosRouter from './routers/ApiRetrosRouter';
 import ApiPasswordCheckRouter from './routers/ApiPasswordCheckRouter';
 import ApiGiphyRouter from './routers/ApiGiphyRouter';
@@ -19,7 +19,6 @@ import StaticRouter from './routers/StaticRouter';
 import { TokenManager } from './tokens/TokenManager';
 import PasswordCheckService from './services/PasswordCheckService';
 import GiphyService from './services/GiphyService';
-import SsoService from './services/SsoService';
 import RetroService from './services/RetroService';
 import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
@@ -89,12 +88,16 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
 
   const passwordCheckService = new PasswordCheckService(config.passwordCheck);
   const giphyService = new GiphyService(config.giphy);
-  const ssoService = new SsoService(config.sso);
   const retroService = new RetroService(db, encryptionKey, retroChangeSubs);
   const retroArchiveService = new RetroArchiveService(db, encryptionKey);
   const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
   const userAuthService = new UserAuthService(tokenManager);
   await userAuthService.initialise(db);
+
+  const sso = buildAuthenticationBackend(
+    config.sso,
+    userAuthService.grantLoginToken,
+  );
 
   const app = new WebSocketExpress();
 
@@ -129,8 +132,8 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     retroService,
   ));
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
-  app.use('/api/config', new ApiConfigRouter(config));
-  app.use('/api/sso', new ApiSsoRouter(userAuthService, ssoService));
+  app.use('/api/config', new ApiConfigRouter(config, sso.service.clientConfig));
+  app.useHTTP('/api/sso', sso.router);
   app.use('/api/retros', new ApiRetrosRouter(
     userAuthService,
     retroAuthService,

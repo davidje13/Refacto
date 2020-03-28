@@ -1,5 +1,6 @@
 import { Router } from 'websocket-express';
 import type { ClientConfig } from 'refacto-entities';
+import type { AuthenticationClientConfiguration } from 'auth-backend';
 
 interface ServerConfig {
   sso: ClientConfig['sso'];
@@ -8,33 +9,18 @@ interface ServerConfig {
   };
 }
 
-function makeClientConfig(serverConfig: ServerConfig): ClientConfig {
-  const clientConfig: ClientConfig = {
-    sso: {},
-    giphy: (serverConfig.giphy.apiKey !== ''),
-  };
-
-  Object.keys(serverConfig.sso).forEach((service) => {
-    const config = serverConfig.sso[service];
-    if (config.clientId) {
-      clientConfig.sso[service] = {
-        authUrl: config.authUrl,
-        clientId: config.clientId,
-      };
-    }
-  });
-
-  return clientConfig;
-}
-
 export default class ApiConfigRouter extends Router {
-  public constructor(serverConfig: ServerConfig) {
+  public constructor(
+    serverConfig: ServerConfig,
+    ssoClientConfig: AuthenticationClientConfiguration,
+  ) {
     super();
 
-    const clientConfig = makeClientConfig(serverConfig);
+    const clientConfig = {
+      sso: ssoClientConfig,
+      giphy: (serverConfig.giphy.apiKey !== ''),
+    };
 
-    this.get('/', (req, res) => {
-      res.json(clientConfig);
-    });
+    this.get('/', (req, res) => res.json(clientConfig));
   }
 }
