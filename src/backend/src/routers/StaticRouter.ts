@@ -2,15 +2,6 @@ import WebSocketExpress from 'websocket-express';
 import path from 'path';
 import basedir from '../basedir';
 
-// This function is required due to a typescript / babel mismatch
-// for default exports from dynamic imports
-function defaultExport<T>(module: { default: T }): T {
-  if (module.default) {
-    return module.default;
-  }
-  return module as any as T;
-}
-
 const VERSIONED_FILE = /\..{4,}\.(css|js|woff2?)$/;
 const VERSIONED_MAX_AGE = 365 * 24 * 60 * 60;
 const UNVERSIONED_MAX_AGE = 10 * 60;
@@ -22,9 +13,8 @@ export default class StaticRouter extends WebSocketExpress.Router {
     if (forwardHost) {
       // Dev mode: forward unknown requests to another service
       import('http-proxy-middleware')
-        .then((proxyModule) => {
-          const proxy = defaultExport(proxyModule);
-          this.useHTTP(proxy({ target: forwardHost, logLevel: 'warn' }));
+        .then(({ createProxyMiddleware }) => {
+          this.useHTTP(createProxyMiddleware({ target: forwardHost, logLevel: 'warn' }));
         })
         .catch((e) => {
           process.stderr.write((

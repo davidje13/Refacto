@@ -47,7 +47,7 @@
     "blocking-queue": "0.0.x",
     "eslint": "6.x",
     "eslint-plugin-eslint-comments": "3.x",
-    "eslint-plugin-react-hooks": "2.x",
+    "eslint-plugin-react-hooks": "3.x",
     "jest": "25.x",
     "less": "3.x",
     "less-loader": "5.x",
