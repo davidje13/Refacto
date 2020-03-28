@@ -1,7 +1,7 @@
-import { Collection, DB } from 'collection-storage';
-import { JWTPayload } from 'websocket-express';
-import Hasher from 'pwd-hasher';
-import TokenManager from '../tokens/TokenManager';
+import type { Collection, DB } from 'collection-storage';
+import type { JWTPayload } from 'websocket-express';
+import type Hasher from 'pwd-hasher';
+import type { TokenManager } from '../tokens/TokenManager';
 
 interface RetroAuth {
   id: string;

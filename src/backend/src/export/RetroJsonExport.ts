@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import {
+import type {
   Retro,
   RetroData,
   RetroItem,

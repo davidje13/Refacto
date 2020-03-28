@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Retro, RetroItem } from 'refacto-entities';
+import type { Retro, RetroItem } from 'refacto-entities';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
@@ -20,7 +20,7 @@ import {
   setItemTimeout,
   addRetroActionItem,
 } from '../../../actions/moodRetro';
-import { Dispatch } from '../../../api/SharedReducer';
+import type { Dispatch } from '../../../api/SharedReducer';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
 import useBoundCallback from '../../../hooks/useBoundCallback';

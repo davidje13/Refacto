@@ -1,4 +1,4 @@
-import { WebDriver, By } from 'selenium-webdriver';
+import type { WebDriver, By } from 'selenium-webdriver';
 
 export default {
   noElementLocated: (by: By) => async (driver: WebDriver): Promise<boolean> => {

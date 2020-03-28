@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { RetroItem } from 'refacto-entities';
+import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';

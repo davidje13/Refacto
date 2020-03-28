@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Retro } from 'refacto-entities';
+import type { Retro } from 'refacto-entities';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Validator } from 'prop-types';
+import type { Validator } from 'prop-types';
 
 // Based vaguely on airbnb prop-types-exact, but with no added dependencies
 

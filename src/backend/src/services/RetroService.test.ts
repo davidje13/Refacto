@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { MemoryDb } from 'collection-storage';
-import { Spec } from 'json-immutability-helper';
+import type { Spec } from 'json-immutability-helper';
 import {
   TopicMessage,
   TrackingTopicMap,

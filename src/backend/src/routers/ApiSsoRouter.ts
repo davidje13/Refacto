@@ -1,6 +1,6 @@
 import WebSocketExpress from 'websocket-express';
-import UserAuthService from '../services/UserAuthService';
-import SsoService from '../services/SsoService';
+import type UserAuthService from '../services/UserAuthService';
+import type SsoService from '../services/SsoService';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
 

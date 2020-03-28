@@ -19,8 +19,7 @@ interface MarkedSyncCallback<T> extends SyncCallback<T> {
   afterSync: true;
 }
 type SpecSource<T> = Spec<T> | SpecGenerator<T> | MarkedSyncCallback<T> | null;
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface SpecSourceL<T> extends Array<SpecSourceL<T> | SpecSource<T>> {}
+type SpecSourceL<T> = (SpecSourceL<T> | SpecSource<T>)[];
 
 export type DispatchSpec<T> = SpecSourceL<T> | SpecSource<T>;
 export type Dispatch<T> = (spec: DispatchSpec<T>) => void;

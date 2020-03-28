@@ -1,6 +1,6 @@
-import { DB } from 'collection-storage';
-import { JWTPayload } from 'websocket-express';
-import TokenManager, { KeyPair } from '../tokens/TokenManager';
+import type { DB } from 'collection-storage';
+import type { JWTPayload } from 'websocket-express';
+import type { TokenManager, KeyPair } from '../tokens/TokenManager';
 
 interface StoredKeyPair extends KeyPair {
   id: string;

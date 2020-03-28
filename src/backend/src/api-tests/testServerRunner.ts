@@ -1,6 +1,6 @@
-import { Server } from 'http';
-import { AddressInfo } from 'net';
-import WebSocketExpress from 'websocket-express';
+import type { Server } from 'http';
+import type { AddressInfo } from 'net';
+import type WebSocketExpress from 'websocket-express';
 
 type Runnable = Server | WebSocketExpress;
 

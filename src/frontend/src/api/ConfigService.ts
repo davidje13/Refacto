@@ -1,5 +1,5 @@
 import { ReplaySubject, Subject } from 'rxjs';
-import { ClientConfig } from 'refacto-entities';
+import type { ClientConfig } from 'refacto-entities';
 
 export default class ConfigService {
   private readonly config = new ReplaySubject<ClientConfig>(1);

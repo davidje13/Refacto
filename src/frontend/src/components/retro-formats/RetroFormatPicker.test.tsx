@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 import mockElement from 'react-mock-element';
-import { RetroItem } from 'refacto-entities';
+import type { RetroItem } from 'refacto-entities';
 import { queries, css } from '../../test-helpers/queries';
 
 import RetroFormatPicker from './RetroFormatPicker';

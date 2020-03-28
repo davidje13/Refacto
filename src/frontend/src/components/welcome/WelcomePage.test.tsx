@@ -3,7 +3,7 @@ import { StaticRouter, StaticRouterContext } from 'react-router-dom';
 import { render, fireEvent } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { configService, userTokenTracker } from '../../api/api';
-import * as mockApiTypes from '../../api/__mocks__/api';
+import type * as mockApiTypes from '../../api/__mocks__/api';
 import { queries, css } from '../../test-helpers/queries';
 
 import WelcomePage from './WelcomePage';

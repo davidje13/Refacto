@@ -1,4 +1,4 @@
-import { ConfigT } from '../config';
+import type { ConfigT } from '../config';
 
 // Thanks, https://stackoverflow.com/a/51365037/1180785
 type RecursivePartial<T> = {

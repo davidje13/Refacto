@@ -1,6 +1,6 @@
 import http from 'http';
 import util from 'util';
-import WebSocketExpress from 'websocket-express';
+import type WebSocketExpress from 'websocket-express';
 import appFactory from './app';
 import config from './config';
 

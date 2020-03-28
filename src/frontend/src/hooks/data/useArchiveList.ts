@@ -1,4 +1,4 @@
-import { RetroArchive } from 'refacto-entities';
+import type { RetroArchive } from 'refacto-entities';
 import useObservable, { ObservableState } from '../useObservable';
 import { archiveTracker } from '../../api/api';
 

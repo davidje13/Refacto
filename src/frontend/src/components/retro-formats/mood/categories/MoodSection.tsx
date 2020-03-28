@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';

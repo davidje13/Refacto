@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { userTokenTracker, retroListTracker } from '../../api/api';
-import * as mockApiTypes from '../../api/__mocks__/api';
+import type * as mockApiTypes from '../../api/__mocks__/api';
 import { queries, css } from '../../test-helpers/queries';
 
 import RetroListPage from './RetroListPage';

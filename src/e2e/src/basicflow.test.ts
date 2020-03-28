@@ -1,13 +1,13 @@
-import { WebDriver } from 'selenium-webdriver';
+import type { WebDriver } from 'selenium-webdriver';
 import jasmineFailFast from './helpers/jasmineFailFast';
 import buildDriver, { supportsDownload } from './helpers/selenium';
 import Welcome from './pages/Welcome';
 import Password from './pages/Password';
-import RetroCreate from './pages/RetroCreate';
+import type RetroCreate from './pages/RetroCreate';
 import RetroList from './pages/RetroList';
-import Retro from './pages/Retro';
-import RetroArchiveList from './pages/RetroArchiveList';
-import RetroArchive from './pages/RetroArchive';
+import type Retro from './pages/Retro';
+import type RetroArchiveList from './pages/RetroArchiveList';
+import type RetroArchive from './pages/RetroArchive';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
 

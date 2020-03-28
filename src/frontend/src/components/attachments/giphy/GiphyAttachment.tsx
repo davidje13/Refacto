@@ -1,5 +1,5 @@
 import React from 'react';
-import { RetroItemAttachment } from 'refacto-entities';
+import type { RetroItemAttachment } from 'refacto-entities';
 import { propTypesShapeItemAttachment } from '../../../api/dataStructurePropTypes';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
 

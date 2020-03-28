@@ -1,5 +1,5 @@
 import WebSocketExpress, { requireAuthScope } from 'websocket-express';
-import RetroArchiveService from '../services/RetroArchiveService';
+import type RetroArchiveService from '../services/RetroArchiveService';
 import { extractRetroData } from '../helpers/jsonParsers';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });

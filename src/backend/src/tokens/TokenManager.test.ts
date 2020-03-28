@@ -1,4 +1,4 @@
-import TokenManager, { KeyPair } from './TokenManager';
+import { TokenManager, KeyPair } from './TokenManager';
 
 const JWT_PATTERN = /^([a-zA-Z0-9_-]+(\.|$)){3}$/;
 

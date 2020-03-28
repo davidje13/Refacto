@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { RetroItem } from 'refacto-entities';
+import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';

@@ -1,6 +1,6 @@
 import { of as rxjsOf, throwError, Observable } from 'rxjs';
-import { Spec } from 'json-immutability-helper';
-import {
+import type { Spec } from 'json-immutability-helper';
+import type {
   Retro,
   RetroArchive,
   RetroSummary,

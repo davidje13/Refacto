@@ -4,12 +4,12 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { Retro } from 'refacto-entities';
+import type { RouteComponentProps } from 'react-router-dom';
+import type { Retro } from 'refacto-entities';
 import useNonce from '../useNonce';
 import useRouter from '../env/useRouter';
 import { retroTracker, slugTracker } from '../../api/api';
-import { RetroState, RetroDispatch } from '../../api/RetroTracker';
+import type { RetroState, RetroDispatch } from '../../api/RetroTracker';
 
 export type RetroReducerState = [
   Retro | null,

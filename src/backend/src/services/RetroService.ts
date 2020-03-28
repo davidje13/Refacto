@@ -9,7 +9,7 @@ import {
   ReadOnly,
   ReadWriteStruct,
 } from 'shared-reducer-backend';
-import { Retro, RetroSummary } from 'refacto-entities';
+import type { Retro, RetroSummary } from 'refacto-entities';
 import { extractRetro } from '../helpers/jsonParsers';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;

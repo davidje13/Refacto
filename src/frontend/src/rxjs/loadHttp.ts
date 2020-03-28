@@ -1,6 +1,6 @@
 import { map, catchError } from 'rxjs/operators';
 import { ajax, AjaxRequest } from 'rxjs/ajax';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 interface HttpError {
   status: number;

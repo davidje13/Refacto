@@ -1,5 +1,5 @@
 import { Router } from 'websocket-express';
-import { ClientConfig } from 'refacto-entities';
+import type { ClientConfig } from 'refacto-entities';
 
 interface ServerConfig {
   sso: ClientConfig['sso'];

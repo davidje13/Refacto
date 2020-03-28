@@ -1,4 +1,4 @@
-import {
+import type {
   By,
   WebDriver,
   WebElementPromise,

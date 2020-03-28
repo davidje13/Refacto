@@ -23,7 +23,7 @@ const generateKeyPair = util.promisify(
   ),
 );
 
-export default class TokenManager {
+export class TokenManager {
   private readonly secretPassphrase: string;
 
   private readonly modulusLength = 2048;

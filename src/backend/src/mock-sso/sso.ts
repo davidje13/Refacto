@@ -1,6 +1,6 @@
 import WebSocketExpress from 'websocket-express';
 import uuidv4 from 'uuid/v4';
-import TokenManager, { KeyPair } from '../tokens/TokenManager';
+import { TokenManager, KeyPair } from '../tokens/TokenManager';
 
 // This is used for local development and smoke testing; it simulates a
 // Google sign in handshake.

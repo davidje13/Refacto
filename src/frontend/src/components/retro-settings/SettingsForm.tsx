@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Retro } from 'refacto-entities';
+import type { Retro } from 'refacto-entities';
 import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';

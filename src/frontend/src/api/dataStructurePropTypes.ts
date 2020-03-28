@@ -1,6 +1,6 @@
 import PropTypes, { Requireable } from 'prop-types';
 import propTypesNullable from 'prop-types-nullable';
-import {
+import type {
   RetroArchiveSummary,
   RetroSummary,
   Retro,

@@ -6,7 +6,7 @@ import {
 } from 'selenium-webdriver';
 import Page from './common/Page';
 import PageFragment from './common/PageFragment';
-import Popup from './common/Popup';
+import type Popup from './common/Popup';
 import RetroArchiveList from './RetroArchiveList';
 import RetroSettings from './RetroSettings';
 import CBy from '../helpers/customBy';

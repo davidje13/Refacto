@@ -7,7 +7,7 @@ import {
   Topic,
   TopicMessage,
 } from 'shared-reducer-backend';
-import { Retro } from 'refacto-entities';
+import type { Retro } from 'refacto-entities';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
@@ -16,7 +16,7 @@ import ApiRetrosRouter from './routers/ApiRetrosRouter';
 import ApiPasswordCheckRouter from './routers/ApiPasswordCheckRouter';
 import ApiGiphyRouter from './routers/ApiGiphyRouter';
 import StaticRouter from './routers/StaticRouter';
-import TokenManager from './tokens/TokenManager';
+import { TokenManager } from './tokens/TokenManager';
 import PasswordCheckService from './services/PasswordCheckService';
 import GiphyService from './services/GiphyService';
 import SsoService from './services/SsoService';
@@ -24,7 +24,7 @@ import RetroService from './services/RetroService';
 import RetroArchiveService from './services/RetroArchiveService';
 import RetroAuthService from './services/RetroAuthService';
 import UserAuthService from './services/UserAuthService';
-import { ConfigT } from './config';
+import type { ConfigT } from './config';
 
 export interface TestHooks {
   retroService: RetroService;

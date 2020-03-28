@@ -8,7 +8,7 @@ import {
   retroTracker,
   archiveTracker,
 } from '../../api/api';
-import * as mockApiTypes from '../../api/__mocks__/api';
+import type * as mockApiTypes from '../../api/__mocks__/api';
 import { queries, css } from '../../test-helpers/queries';
 
 import ArchivePage from './ArchivePage';

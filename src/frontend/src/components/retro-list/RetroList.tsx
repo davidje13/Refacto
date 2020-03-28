@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RetroSummary } from 'refacto-entities';
+import type { RetroSummary } from 'refacto-entities';
 import RetroLink from './RetroLink';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { propTypesShapeRetroSummary } from '../../api/dataStructurePropTypes';

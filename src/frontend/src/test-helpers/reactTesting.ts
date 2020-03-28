@@ -1,10 +1,4 @@
 import { cleanup, RenderResult } from '@testing-library/react';
-import {
-  matcherHint,
-  printReceived,
-  printExpected,
-  MatcherHintOptions,
-} from 'jest-matcher-utils';
 import { queryAllBy, Query } from './queries';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -14,7 +8,7 @@ interface CustomMatcherResult {
 }
 
 function toContainElementWith(
-  this: MatcherHintOptions,
+  this: jest.MatcherContext,
   base: RenderResult,
   query: Query,
 ): CustomMatcherResult {
@@ -28,12 +22,12 @@ function toContainElementWith(
   return {
     pass: queryAllBy(element, query).length > 0,
     message: (): string => [
-      matcherHint(`${this.isNot ? '.not' : ''}.toContainElementWith`, 'element', 'query'),
+      this.utils.matcherHint(`${this.isNot ? '.not' : ''}.toContainElementWith`, 'element', 'query'),
       '',
       'Expected',
-      `  ${printExpected(expected)}`,
+      `  ${this.utils.printExpected(expected)}`,
       'Received',
-      `  ${printReceived(element)}`,
+      `  ${this.utils.printReceived(element)}`,
     ].join('\n'),
   };
 }

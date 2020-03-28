@@ -8,7 +8,7 @@ import {
   retroTokenTracker,
   retroTracker,
 } from '../../api/api';
-import * as mockApiTypes from '../../api/__mocks__/api';
+import type * as mockApiTypes from '../../api/__mocks__/api';
 import { queries, placeholderText } from '../../test-helpers/queries';
 
 import RetroSettingsPage from './RetroSettingsPage';

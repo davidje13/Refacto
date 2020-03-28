@@ -7,10 +7,10 @@ import WebSocketExpress, {
 } from 'websocket-express';
 import { websocketHandler } from 'shared-reducer-backend';
 import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
-import UserAuthService from '../services/UserAuthService';
-import RetroAuthService from '../services/RetroAuthService';
-import RetroService from '../services/RetroService';
-import RetroArchiveService from '../services/RetroArchiveService';
+import type UserAuthService from '../services/UserAuthService';
+import type RetroAuthService from '../services/RetroAuthService';
+import type RetroService from '../services/RetroService';
+import type RetroArchiveService from '../services/RetroArchiveService';
 import { exportRetro, importRetroData, importTimestamp } from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import json from '../helpers/json';

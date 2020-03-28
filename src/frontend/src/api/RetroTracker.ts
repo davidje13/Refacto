@@ -1,4 +1,4 @@
-import { Retro } from 'refacto-entities';
+import type { Retro } from 'refacto-entities';
 import SubscriptionTracker from './SubscriptionTracker';
 import SharedReducer, { Dispatch } from './SharedReducer';
 

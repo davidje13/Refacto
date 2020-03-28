@@ -1,5 +1,5 @@
-import { Retro, RetroItem } from 'refacto-entities';
-import { DispatchSpec } from '../api/SharedReducer';
+import type { Retro, RetroItem } from 'refacto-entities';
+import type { DispatchSpec } from '../api/SharedReducer';
 import {
   setRetroItemDone,
   setRetroState,

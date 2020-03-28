@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ActionSection from './ActionSection';
 import ItemEditor from '../ItemEditor';
 import forbidExtraProps from '../../../../helpers/forbidExtraProps';

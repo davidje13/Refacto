@@ -1,4 +1,4 @@
-import { RetroItem } from 'refacto-entities';
+import type { RetroItem } from 'refacto-entities';
 
 interface CategoryStats {
   total: number;

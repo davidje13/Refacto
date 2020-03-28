@@ -1,5 +1,3 @@
-import 'jest'; /* eslint-disable-line jest/no-jest-import */ // mark as module
-
 const spyConsole: any = console;
 
 // Automatically fail tests if errors or warnings are logged to the console
@@ -65,3 +63,5 @@ afterEach(() => {
   spyConsole.error.mockRestore();
   spyConsole.warn.mockRestore();
 });
+
+export default 0; // mark as module

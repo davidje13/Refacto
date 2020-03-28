@@ -1,6 +1,6 @@
-import { Spec } from 'json-immutability-helper';
-import { Retro, RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
-import { DispatchSpec } from '../api/SharedReducer';
+import type { Spec } from 'json-immutability-helper';
+import type { Retro, RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { DispatchSpec } from '../api/SharedReducer';
 import uuidv4 from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;

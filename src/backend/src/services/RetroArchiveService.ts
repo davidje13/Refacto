@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4';
 import { DB, Collection, encryptByRecordWithMasterKey } from 'collection-storage';
-import { RetroArchive, RetroData, RetroArchiveSummary } from 'refacto-entities';
+import type { RetroArchive, RetroData, RetroArchiveSummary } from 'refacto-entities';
 
 export default class RetroArchiveService {
   private readonly archiveCollection: Collection<RetroArchive>;

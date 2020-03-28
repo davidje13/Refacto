@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { RetroItem } from 'refacto-entities';
+import type { RetroItem } from 'refacto-entities';
 import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
 
 function itemCreatedComparator(a: RetroItem, b: RetroItem): number {

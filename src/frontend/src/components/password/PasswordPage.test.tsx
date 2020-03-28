@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
-import * as mockApiTypes from '../../api/__mocks__/api';
+import type * as mockApiTypes from '../../api/__mocks__/api';
 import { queries, css } from '../../test-helpers/queries';
 
 import PasswordPage from './PasswordPage';

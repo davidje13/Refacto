@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { RetroItemAttachment } from 'refacto-entities';
+import type { RetroItemAttachment } from 'refacto-entities';
 import Popup from '../../common/Popup';
 import WrappedButton from '../../common/WrappedButton';
 import forbidExtraProps from '../../../helpers/forbidExtraProps';
