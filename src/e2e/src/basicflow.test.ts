@@ -1,21 +1,21 @@
-import type { WebDriver } from 'selenium-webdriver';
 import jasmineFailFast from './helpers/jasmineFailFast';
-import buildDriver, { supportsDownload } from './helpers/selenium';
-import Welcome from './pages/Welcome';
-import Password from './pages/Password';
+import { buildDriver, supportsDownload } from './helpers/selenium';
+import type Welcome from './pages/Welcome';
+import type Password from './pages/Password';
 import type RetroCreate from './pages/RetroCreate';
-import RetroList from './pages/RetroList';
+import type RetroList from './pages/RetroList';
 import type Retro from './pages/Retro';
 import type RetroArchiveList from './pages/RetroArchiveList';
 import type RetroArchive from './pages/RetroArchive';
+import SiteMap from './pages/SiteMap';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
 
 jasmineFailFast(); // https://github.com/facebook/jest/issues/2867
 
 describe('Refacto', () => {
-  let driver: WebDriver;
-  let driver2: WebDriver;
+  let user1: SiteMap;
+  let user2: SiteMap;
 
   let userName: string;
   let retroSlug: string;
@@ -26,8 +26,8 @@ describe('Refacto', () => {
   let retro: Retro;
 
   beforeAll(async () => {
-    driver = buildDriver();
-    driver2 = buildDriver();
+    user1 = new SiteMap(buildDriver());
+    user2 = new SiteMap(buildDriver());
     jest.setTimeout(Number(process.env.TEST_TIMEOUT || '10000'));
 
     userName = `e2e-test-user-${uniqueID}`;
@@ -36,13 +36,13 @@ describe('Refacto', () => {
   });
 
   afterAll(async () => {
-    await Promise.all([driver.quit(), driver2.quit()]);
+    await Promise.all([user1.quit(), user2.quit()]);
   });
 
   // Tests run sequentially in a single (pair of) browser sessions
 
   it('loads the welcome page', async () => {
-    welcome = await new Welcome(driver).load();
+    welcome = await user1.navigateToWelcome();
 
     expect(await welcome.getTitle()).toEqual('Refacto');
     expect(await welcome.getHeaderText()).toContain('Refacto');
@@ -81,7 +81,7 @@ describe('Refacto', () => {
     let retro2: Retro;
 
     it('prompts for a password for the retro', async () => {
-      password2 = await new Password(driver2, retroSlug).load();
+      password2 = await user2.navigateToRetroPassword(retroSlug);
     });
 
     it('loads the retro when the correct password is entered', async () => {
@@ -134,8 +134,8 @@ describe('Refacto', () => {
 
     it('switches URL automatically when slug changes', async () => {
       const newSlug = `${retroSlug}-renamed`;
-      expect(await driver.getCurrentUrl()).toContain(newSlug);
-      expect(await driver2.getCurrentUrl()).toContain(newSlug);
+      expect(await user1.getCurrentUrl()).toContain(newSlug);
+      expect(await user2.getCurrentUrl()).toContain(newSlug);
     });
 
     it('maintains connectivity after changing URL', async () => {
@@ -175,7 +175,7 @@ describe('Refacto', () => {
     });
 
     it('downloads the retro in JSON format', async () => {
-      if (!await supportsDownload(driver)) {
+      if (!await supportsDownload(user1.driver)) {
         return; // skip download test
       }
 
@@ -208,7 +208,7 @@ describe('Refacto', () => {
     let retroList: RetroList;
 
     it('prompts to log in when loaded', async () => {
-      retroList = await new RetroList(driver).load();
+      retroList = await user1.navigateToRetroList();
       retroList = await retroList.loginAs(userName);
     });
 
@@ -222,7 +222,7 @@ describe('Refacto', () => {
     });
 
     it('does not list retros from other users', async () => {
-      retroList = await new RetroList(driver).load();
+      retroList = await user1.navigateToRetroList();
       retroList = await retroList.loginAs('nobody');
 
       expect(await retroList.getRetroNames()).toEqual([]);
@@ -231,7 +231,7 @@ describe('Refacto', () => {
 
   describe('security page', () => {
     it('is accessible from the home page', async () => {
-      welcome = await new Welcome(driver).load();
+      welcome = await user1.navigateToWelcome();
       const security = await welcome.clickSecurity();
 
       expect(await security.getTitle()).toEqual('Privacy & Security - Refacto');

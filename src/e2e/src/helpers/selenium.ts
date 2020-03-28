@@ -57,7 +57,7 @@ export async function supportsDownload(driver: WebDriver): Promise<boolean> {
   return false;
 }
 
-export default function buildDriver(): WebDriver {
+export function buildDriver(): WebDriver {
   return new webdriver.Builder()
     .forBrowser('chrome')
     .setChromeOptions(chromeOptions)
