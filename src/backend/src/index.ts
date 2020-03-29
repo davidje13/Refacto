@@ -1,6 +1,7 @@
 import http from 'http';
 import util from 'util';
 import type WebSocketExpress from 'websocket-express';
+import { buildMockSsoApp } from 'auth-backend';
 import appFactory from './app';
 import config from './config';
 
@@ -50,13 +51,14 @@ let mockSsoServer: http.Server | undefined;
 
 if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
-  import('./mock-sso/sso')
-    .then(({ default: ssoApp }) => {
-      mockSsoServer = ssoApp.listen(config.mockSsoPort, config.serverBindAddress);
-    })
-    .catch(() => {
-      process.stderr.write('Failed to start mock SSO server\n');
-    });
+  try {
+    mockSsoServer = buildMockSsoApp().listen(
+      config.mockSsoPort,
+      config.serverBindAddress,
+    );
+  } catch (e) {
+    process.stderr.write('Failed to start mock SSO server\n');
+  }
 }
 
 function getConnectionCount(s: http.Server): Promise<number> {
