@@ -1,5 +1,6 @@
 import {
   By,
+  Key,
   WebDriver,
   WebElementPromise,
   WebElement,
@@ -71,9 +72,30 @@ export default class Retro extends Page {
     await items[index].findElement(By.css('.message')).click();
   }
 
-  public async closeMoodItem(index: number): Promise<void> {
+  public async cancelMoodItem(index: number): Promise<void> {
     const items = await this.getMoodItems();
-    await items[index].findElement(By.css('.close')).click();
+    await items[index].findElement(By.css('.cancel')).click();
+  }
+
+  public async continueMoodItem(index: number): Promise<void> {
+    const items = await this.getMoodItems();
+    await items[index].findElement(By.css('.continue')).click();
+  }
+
+  public pressReturn(): Promise<void> {
+    return this.sendKeys(Key.RETURN);
+  }
+
+  public pressEscape(): Promise<void> {
+    return this.sendKeys(Key.ESCAPE);
+  }
+
+  public pressLeftArrow(): Promise<void> {
+    return this.sendKeys(Key.ARROW_LEFT);
+  }
+
+  public pressRightArrow(): Promise<void> {
+    return this.sendKeys(Key.ARROW_RIGHT);
   }
 
   public async getMoodItemLabels(): Promise<string[]> {

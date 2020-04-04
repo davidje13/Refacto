@@ -20,7 +20,7 @@ interface PropsT {
   onDelete?: (id: string) => void;
   onSelect?: (id: string) => void;
   onCancel?: (id: string) => void;
-  onDone?: (id: string) => void;
+  onContinue?: (id: string) => void;
 }
 
 const MoodItem = ({
@@ -34,13 +34,13 @@ const MoodItem = ({
   onDelete,
   onSelect,
   onCancel,
-  onDone,
+  onContinue,
 }: PropsT): React.ReactElement => {
   const handleVote = useBoundCallback(onVote, item.id);
   const handleDelete = useBoundCallback(onDelete, item.id);
   const handleSelect = useBoundCallback(onSelect, item.id);
   const handleCancel = useBoundCallback(onCancel, item.id);
-  const handleDone = useBoundCallback(onDone, item.id);
+  const handleContinue = useBoundCallback(onContinue, item.id);
 
   const [editing, setEditing] = useState(false);
   const handleBeginEdit = useBoundCallback(setEditing, true);
@@ -79,7 +79,7 @@ const MoodItem = ({
         onAddExtraTime={onAddExtraTime}
         autoScroll={autoScroll}
         onCancel={handleCancel}
-        onDone={handleDone}
+        onContinue={handleContinue}
       />
     );
   }
@@ -105,7 +105,7 @@ MoodItem.propTypes = {
   onSelect: PropTypes.func,
   onAddExtraTime: PropTypes.func,
   onCancel: PropTypes.func,
-  onDone: PropTypes.func,
+  onContinue: PropTypes.func,
 };
 
 MoodItem.defaultProps = {
@@ -118,7 +118,7 @@ MoodItem.defaultProps = {
   onSelect: undefined,
   onAddExtraTime: undefined,
   onCancel: undefined,
-  onDone: undefined,
+  onContinue: undefined,
 };
 
 forbidExtraProps(MoodItem);

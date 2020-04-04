@@ -140,14 +140,14 @@ describe('Refacto', () => {
 
     it('maintains connectivity after changing URL', async () => {
       await retro.expectChange(() => retro2.focusMoodItem(0));
-      await retro.expectChange(() => retro2.closeMoodItem(0));
+      await retro.expectChange(() => retro2.pressReturn());
     });
 
     it('prompts to archive when the last item is completed', async () => {
       expect(await retro2.getArchivePopup().exists()).toBeFalsy();
 
       await retro.expectChange(() => retro2.focusMoodItem(1));
-      await retro.expectChange(() => retro2.closeMoodItem(1));
+      await retro.expectChange(() => retro2.pressReturn());
       expect(await retro2.getArchivePopup().exists()).toBeTruthy();
 
       // ...but does not prompt other viewers

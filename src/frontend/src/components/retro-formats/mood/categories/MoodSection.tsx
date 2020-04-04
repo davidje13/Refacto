@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import FaceIcon from './FaceIcon';
@@ -25,6 +25,9 @@ interface PropsT {
     diff: Partial<UserProvidedRetroItemDetails>,
   ) => void;
   onDelete?: (id: string) => void;
+  onSelect?: (id: string) => void;
+  onCancel?: (id: string) => void;
+  onContinue?: (id: string) => void;
   onSetDone?: (id: string, done: boolean) => void;
   onSwitchFocus?: (markPreviousDone: boolean, id: string | null) => void;
   onAddExtraTime?: (time: number) => void;
@@ -43,21 +46,15 @@ const MoodSection = ({
   onVote,
   onEdit,
   onDelete,
-  onSetDone,
-  onSwitchFocus,
+  onSelect,
+  onCancel,
+  onContinue,
   onAddExtraTime,
   focusedItemId,
   focusedItemTimeout,
   autoScroll,
 }: PropsT): React.ReactElement => {
   const handleAddItem = useBoundCallback(onAddItem, category);
-  const handleItemSelect = useBoundCallback(onSwitchFocus, true);
-  const handleItemCancel = useBoundCallback(onSwitchFocus, false, null);
-
-  const handleItemDone = useCallback((id: string) => {
-    onSetDone!(id, true);
-    onSwitchFocus!(false, null);
-  }, [onSwitchFocus, onSetDone]);
 
   return (
     <section className={category}>
@@ -86,10 +83,10 @@ const MoodSection = ({
           onVote,
           onEdit,
           onDelete,
-          onSelect: handleItemSelect,
+          onSelect,
           onAddExtraTime,
-          onCancel: handleItemCancel,
-          onDone: onSwitchFocus && onSetDone && handleItemDone,
+          onCancel,
+          onContinue,
         }}
       />
     </section>
@@ -106,8 +103,9 @@ MoodSection.propTypes = {
   onVote: PropTypes.func,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  onSwitchFocus: PropTypes.func,
-  onSetDone: PropTypes.func,
+  onSelect: PropTypes.func,
+  onCancel: PropTypes.func,
+  onContinue: PropTypes.func,
   onAddExtraTime: PropTypes.func,
   focusedItemId: PropTypes.string,
   focusedItemTimeout: PropTypes.number,
@@ -121,8 +119,9 @@ MoodSection.defaultProps = {
   onVote: undefined,
   onEdit: undefined,
   onDelete: undefined,
-  onSwitchFocus: undefined,
-  onSetDone: undefined,
+  onSelect: undefined,
+  onCancel: undefined,
+  onContinue: undefined,
   onAddExtraTime: undefined,
   focusedItemId: null,
   focusedItemTimeout: 0,

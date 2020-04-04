@@ -71,12 +71,7 @@ export default ({
     OPTIONS.enableMobileFacilitation.read(retroOptions)
   );
 
-  function facilitate<T>(x: T): T | undefined {
-    if (canFacilitate) {
-      return x;
-    }
-    return undefined;
-  }
+  const facilitate = canFacilitate ? useBoundCallback : (): undefined => undefined;
 
   const checkAutoArchive = useBoundCallback(allItemsDoneCallback, onComplete);
 
@@ -86,26 +81,20 @@ export default ({
   const handleEditItem = useDispatchAction(dispatch, editRetroItem);
   const handleDeleteItem = useDispatchAction(dispatch, deleteRetroItem);
   const handleAddExtraTime = useDispatchAction(dispatch, facilitate(setItemTimeout));
-  const handleSwitchFocus = useDispatchAction(dispatch, facilitate(switchFocus));
+  const handleSelectItem = useDispatchAction(dispatch, facilitate(switchFocus, true));
   const handleSetActionItemDone = useDispatchAction(dispatch, setRetroItemDone);
-  const handleSetMoodItemDone = useDispatchAction(
-    dispatch,
-    facilitate(setRetroItemDone),
-    checkAutoArchive,
-  );
+  const handleGoNext = useDispatchAction(dispatch, facilitate(goNext), checkAutoArchive);
+  const handleGoPrevious = useDispatchAction(dispatch, facilitate(goPrevious));
 
   useGlobalKeyListener({
-    ArrowRight: useDispatchAction(dispatch, facilitate(goNext), checkAutoArchive),
-    ArrowLeft: useDispatchAction(dispatch, facilitate(goPrevious)),
+    ArrowRight: handleGoNext,
+    ArrowLeft: handleGoPrevious,
     Enter: useDispatchAction(
       dispatch,
-      facilitate(useBoundCallback(switchFocus, true, null)),
+      facilitate(switchFocus, true, null),
       checkAutoArchive,
     ),
-    Escape: useDispatchAction(
-      dispatch,
-      facilitate(useBoundCallback(switchFocus, false, null)),
-    ),
+    Escape: useDispatchAction(dispatch, facilitate(switchFocus, false, null)),
   });
 
   const createMoodSection = (category: Category): React.ReactElement => (
@@ -117,9 +106,10 @@ export default ({
       onVote={handleUpvoteItem}
       onEdit={handleEditItem}
       onDelete={handleDeleteItem}
-      onSwitchFocus={handleSwitchFocus}
+      onSelect={handleSelectItem}
+      onCancel={handleGoPrevious}
+      onContinue={handleGoNext}
       onAddExtraTime={handleAddExtraTime}
-      onSetDone={handleSetMoodItemDone}
       focusedItemId={focusedItemId}
       focusedItemTimeout={focusedItemTimeout}
       autoScroll={!singleColumn}

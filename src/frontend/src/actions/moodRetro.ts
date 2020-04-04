@@ -79,18 +79,30 @@ const focusPreviousItem = () => (
   return focusItem(next?.id ?? null);
 };
 
-export const goNext = () => (
+export const goNext = (expectedFocusedItemId?: string) => (
   { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-): DispatchSpec<Retro> => [
-  setRetroItemDone(focusedItemId, true),
-  focusNextItem(),
-  setItemTimeout(INITIAL_TIMEOUT),
-];
+): DispatchSpec<Retro> => {
+  if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
+    return null;
+  }
 
-export const goPrevious = () => (
+  return [
+    setRetroItemDone(focusedItemId, true),
+    focusNextItem(),
+    setItemTimeout(INITIAL_TIMEOUT),
+  ];
+};
+
+export const goPrevious = (expectedFocusedItemId?: string) => (
   { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-): DispatchSpec<Retro> => [
-  setRetroItemDone(focusedItemId, false),
-  focusPreviousItem(),
-  setItemTimeout(0),
-];
+): DispatchSpec<Retro> => {
+  if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
+    return null;
+  }
+
+  return [
+    setRetroItemDone(focusedItemId, false),
+    focusPreviousItem(),
+    setItemTimeout(0),
+  ];
+};

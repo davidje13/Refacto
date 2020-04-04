@@ -76,4 +76,8 @@ export default abstract class Page extends PageFragment {
   protected getPopup(className: string): Popup {
     return new Popup(this.driver, className);
   }
+
+  protected sendKeys(...keys: Array<string|Promise<string>>): Promise<void> {
+    return this.driver.actions().sendKeys(...keys).perform();
+  }
 }

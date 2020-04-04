@@ -14,7 +14,7 @@ interface PropsT {
   autoScroll: boolean;
   onAddExtraTime?: (time: number) => void;
   onCancel?: () => void;
-  onDone?: () => void;
+  onContinue?: () => void;
 }
 
 const MoodItemFocused = ({
@@ -23,7 +23,7 @@ const MoodItemFocused = ({
   autoScroll,
   onAddExtraTime,
   onCancel,
-  onDone,
+  onContinue,
 }: PropsT): React.ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -42,11 +42,11 @@ const MoodItemFocused = ({
       <div className="message">{ item.message }</div>
       <VoteCount votes={item.votes} />
       <Attachment attachment={item.attachment} />
-      <WrappedButton title="Cancel" className="cancel" onClick={onCancel} hideIfDisabled>
-        Cancel
+      <WrappedButton title="Back (left arrow)" className="cancel" onClick={onCancel} hideIfDisabled>
+        back
       </WrappedButton>
-      <WrappedButton title="Done" className="close" onClick={onDone} hideIfDisabled>
-        Done
+      <WrappedButton title="Next (right arrow)" className="continue" onClick={onContinue} hideIfDisabled>
+        Next
       </WrappedButton>
       <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />
     </div>
@@ -59,7 +59,7 @@ MoodItemFocused.propTypes = {
   autoScroll: PropTypes.bool,
   onAddExtraTime: PropTypes.func,
   onCancel: PropTypes.func,
-  onDone: PropTypes.func,
+  onContinue: PropTypes.func,
 };
 
 MoodItemFocused.defaultProps = {
@@ -67,7 +67,7 @@ MoodItemFocused.defaultProps = {
   onAddExtraTime: undefined,
   autoScroll: false,
   onCancel: undefined,
-  onDone: undefined,
+  onContinue: undefined,
 };
 
 forbidExtraProps(MoodItemFocused);
