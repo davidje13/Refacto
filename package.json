@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "./scripts/install.sh && ./scripts/build.sh",
+    "build": "SKIP_E2E_DEPS=true ./scripts/install.sh && ./scripts/build.sh",
     "clean": "./scripts/clean.sh",
     "install": "./scripts/install.sh --force",
     "lint": "./scripts/install.sh && node ./scripts/lint.js",
-    "start": "./scripts/install.sh && ./scripts/start.sh",
+    "start": "SKIP_E2E_DEPS=true ./scripts/install.sh && ./scripts/start.sh",
     "test": "./scripts/install.sh && node ./scripts/lint.js && ./scripts/test.sh",
     "test:backend": "npm --prefix=src/backend test --silent --",
     "test:backend:watch": "npm --prefix=src/backend test --silent -- --watch",

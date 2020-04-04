@@ -31,4 +31,6 @@ install_subproject() {
 
 install_subproject 'frontend';
 install_subproject 'backend';
-install_subproject 'e2e';
+if [[ "${SKIP_E2E_DEPS:-false}" != 'true' ]]; then
+  install_subproject 'e2e';
+fi;
