@@ -50,7 +50,7 @@ module.exports = {
     jest({
       setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
     }),
-    react({
+    (neutrino) => neutrino.use(react({
       html: {
         template: 'src/resources/html-template.ejs',
         favicon: 'src/resources/favicon.png',
@@ -67,15 +67,31 @@ module.exports = {
             targets: {
               browsers: [
                 'last 1 chrome version',
-//                'last 1 firefox version',
+                'last 1 firefox version',
+                'last 1 ios version',
 //                'last 1 edge version',
 //                'last 1 safari version',
               ],
             },
+
+            // corejs is not actually used;
+            // this config forces build errors if a polyfil is required:
+            // feature request: https://github.com/babel/babel/issues/11379
+            useBuiltIns: 'usage',
+            corejs: 3,
+            exclude: [
+              // false positives:
+              'web.dom-collections.iterator', // other array types
+              'es.string.replace',            // unused flag 's'
+              'web.url',                      // unused URL.methods
+              'es.typed-array.uint8-array',   // unused UInt8Array constructors
+            ],
           }],
         ],
         plugins: [
-          '@babel/plugin-transform-runtime',
+          ['@babel/plugin-transform-runtime', {
+            version: '^' + neutrino.getDependencyVersion('@babel/runtime').version,
+          }],
         ],
       },
       style: {
@@ -91,7 +107,7 @@ module.exports = {
           },
         ],
       },
-    }),
+    })),
     conditionalModule(() => process.env.NODE_ENV !== 'development', styleMinify()),
     (neutrino) => neutrino.config.stats('minimal'),
   ],

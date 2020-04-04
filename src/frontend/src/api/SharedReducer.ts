@@ -217,7 +217,7 @@ export default class SharedReducer<T> {
 
     if (this.currentChange === undefined) {
       this.currentChange = change;
-      setImmediate(this.internalSend);
+      setTimeout(this.internalSend, 0);
     } else {
       this.currentChange = update.combine([this.currentChange, change]);
     }

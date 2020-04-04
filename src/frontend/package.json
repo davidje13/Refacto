@@ -10,10 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime": "7.x",
+    "@babel/runtime": "7.9.x",
     "@openfonts/open-sans_all": "0.0.6",
     "classnames": "2.x",
-    "core-js": "3.x",
     "js-sha1": "0.6.x",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
     "prop-types": "15.x",
