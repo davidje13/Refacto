@@ -4,6 +4,8 @@ A complete from-scratch re-write of
 [Postfacto](https://github.com/pivotal/postfacto), with a focus on
 simplified code, development, and deployment.
 
+![Refacto](docs/screenshot.png)
+
 ## Running locally
 
 Requires [Node.js](https://nodejs.org/en/).
