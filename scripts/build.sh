@@ -56,31 +56,7 @@ mkdir -p "$BUILDDIR/static";
 cp -R "$BASEDIR/src/frontend/build/"* "$BUILDDIR/static";
 
 echo 'Compressing static resources...';
-function checkCompressed() {
-  COMPRESSED="$1";
-  RAW="${COMPRESSED%.*}";
-  # Delete compressed files which offer little or no size benefit
-  if (( "$(wc -c < "$COMPRESSED")" + 300 > "$(wc -c < "$RAW")" )); then
-    rm "$COMPRESSED";
-  fi;
-}
-export -f checkCompressed;
-
-if which gzip >/dev/null; then
-  echo '- gzip...';
-  gzip --best --keep --no-name --recursive "$BUILDDIR/static";
-  find "$BUILDDIR/static" -name '*.gz' -exec bash -c 'checkCompressed "$1"' bash {} \;;
-else
-  echo '- skipping gzip (executable not found)' >&2;
-fi;
-
-if which brotli >/dev/null; then
-  echo '- br...';
-  find "$BUILDDIR/static" -type f -not -name '*.gz' -exec brotli --best --keep {} \;;
-  find "$BUILDDIR/static" -name '*.br' -exec bash -c 'checkCompressed "$1"' bash {} \;;
-else
-  echo '- skipping brotli (executable not found)' >&2;
-fi;
+node "$BASEDIR/scripts/compress.js" "$BUILDDIR/static";
 
 if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
   echo 'Restoring node_modules...';
