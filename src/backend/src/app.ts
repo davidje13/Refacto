@@ -142,6 +142,9 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   ));
   app.use('/api/password-check', new ApiPasswordCheckRouter(passwordCheckService));
   app.use('/api/giphy', new ApiGiphyRouter(giphyService));
+  app.useHTTP('/api', (req, res) => {
+    res.status(404).send();
+  });
   app.use(new StaticRouter(config.forwardHost));
 
   const testHookApp = app as TestHookWebSocketExpress;
