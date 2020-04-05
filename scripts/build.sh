@@ -60,7 +60,7 @@ function checkCompressed() {
   COMPRESSED="$1";
   RAW="${COMPRESSED%.*}";
   # Delete compressed files which offer little or no size benefit
-  if (( "$(stat -f '%Uz' "$COMPRESSED")" + 300 > "$(stat -f '%Uz' "$RAW")" )); then
+  if (( "$(wc -c < "$COMPRESSED")" + 300 > "$(wc -c < "$RAW")" )); then
     rm "$COMPRESSED";
   fi;
 }
