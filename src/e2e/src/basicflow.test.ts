@@ -1,5 +1,5 @@
 import jasmineFailFast from './helpers/jasmineFailFast';
-import { buildDriver, supportsDownload } from './helpers/selenium';
+import buildDriver from './helpers/selenium';
 import type Welcome from './pages/Welcome';
 import type Password from './pages/Password';
 import type RetroCreate from './pages/RetroCreate';
@@ -175,10 +175,6 @@ describe('Refacto', () => {
     });
 
     it('downloads the retro in JSON format', async () => {
-      if (!await supportsDownload(user1.driver)) {
-        return; // skip download test
-      }
-
       const content = await archiveList.clickExportJson();
 
       expect(content).toContain('"My Retro Renamed"');

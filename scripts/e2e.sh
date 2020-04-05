@@ -57,6 +57,10 @@ FAILED='';
 
 function launch_e2e() {
   NAME="$1";
+  if [[ -n "$BROWSER" && "$BROWSER" != "$NAME" ]]; then
+    echo "Skipping E2E testing in $NAME";
+    return;
+  fi;
   echo "E2E testing in $NAME...";
   if [[ "$PARALLEL_E2E" == 'true' ]]; then
     SELENIUM_BROWSER="$NAME" \
