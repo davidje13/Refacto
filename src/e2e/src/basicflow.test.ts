@@ -1,5 +1,6 @@
 import jasmineFailFast from './helpers/jasmineFailFast';
 import buildDriver from './helpers/selenium';
+import { Mbps } from './helpers/downloadProfiler';
 import type Welcome from './pages/Welcome';
 import type Password from './pages/Password';
 import type RetroCreate from './pages/RetroCreate';
@@ -41,9 +42,15 @@ describe('Refacto', () => {
 
   // Tests run sequentially in a single (pair of) browser sessions
 
-  it('loads the welcome page', async () => {
-    welcome = await user1.navigateToWelcome();
+  it('loads quickly', async () => {
+    const elapsedSeconds = await user1.getDownloadTime(async () => {
+      welcome = await user1.navigateToWelcome();
+    }, Mbps(1.0));
 
+    expect(elapsedSeconds).toBeLessThan(3);
+  });
+
+  it('begins on the welcome page', async () => {
     expect(await welcome.getTitle()).toEqual('Refacto');
     expect(await welcome.getHeaderText()).toContain('Refacto');
   });
