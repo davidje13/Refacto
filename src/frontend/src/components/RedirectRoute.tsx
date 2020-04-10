@@ -13,6 +13,7 @@ interface RedirectProps {
   children?: never;
 }
 
+// https://github.com/molefrog/wouter/issues/114
 const Redirect = ({ to, replace }: RedirectProps): null => {
   const [, push] = useLocation();
   useLayoutEffect(() => push(to, replace), []);
