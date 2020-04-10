@@ -23,7 +23,7 @@ import {
 import type { Dispatch } from '../../../api/SharedReducer';
 import useWindowSize from '../../../hooks/env/useWindowSize';
 import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
-import useBoundCallback from '../../../hooks/useBoundCallback';
+import useBoundCallback, { useConditionalBoundCallback } from '../../../hooks/useBoundCallback';
 import useDispatchAction from '../../../hooks/useDispatchAction';
 import useGlobalKeyListener from '../../../hooks/useGlobalKeyListener';
 import OPTIONS from '../../../helpers/optionManager';
@@ -71,7 +71,7 @@ export default ({
     OPTIONS.enableMobileFacilitation.read(retroOptions)
   );
 
-  const facilitate = canFacilitate ? useBoundCallback : (): undefined => undefined;
+  const facilitate = useConditionalBoundCallback(canFacilitate);
 
   const checkAutoArchive = useBoundCallback(allItemsDoneCallback, onComplete);
 
