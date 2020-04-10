@@ -38,6 +38,10 @@ const baseDir = path.join(__dirname, '..');
     } catch (err) {
       process.stderr.write(`Lint ${package} failed:\n\n`);
       process.stderr.write(err.stdout);
+      if (err.stderr) {
+        process.stderr.write('\n');
+        process.stderr.write(err.stderr);
+      }
       process.stderr.write('\n\n');
       return true;
     }
