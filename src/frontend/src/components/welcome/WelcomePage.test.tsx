@@ -1,9 +1,10 @@
 import React from 'react';
-import { StaticRouter, StaticRouterContext } from 'react-router-dom';
+import { Router } from 'wouter';
 import { render, fireEvent } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { configService, userTokenTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
+import staticLocationHook from '../../test-helpers/staticLocationHook';
 import { queries, css } from '../../test-helpers/queries';
 
 import WelcomePage from './WelcomePage';
@@ -28,11 +29,10 @@ describe('WelcomePage', () => {
         giphy: false,
       });
 
-      const context = {};
       const dom = render((
-        <StaticRouter location="/" context={context}>
+        <Router hook={staticLocationHook()}>
           <WelcomePage />
-        </StaticRouter>
+        </Router>
       ), { queries });
 
       expect(dom).toContainElementWith(css('.sso-google'));
@@ -44,11 +44,10 @@ describe('WelcomePage', () => {
         giphy: false,
       });
 
-      const context = {};
       const dom = render((
-        <StaticRouter location="/" context={context}>
+        <Router hook={staticLocationHook()}>
           <WelcomePage />
-        </StaticRouter>
+        </Router>
       ), { queries });
 
       expect(dom).not.toContainElementWith(css('.sso-google'));
@@ -61,16 +60,16 @@ describe('WelcomePage', () => {
     });
 
     it('displays a link to create a new retro', () => {
-      const context: StaticRouterContext = {};
+      const locationHook = staticLocationHook();
       const dom = render((
-        <StaticRouter location="/" context={context}>
+        <Router hook={locationHook}>
           <WelcomePage />
-        </StaticRouter>
+        </Router>
       ), { queries });
 
       const link = dom.getBy(css('a.link-create'));
       fireEvent.click(link);
-      expect(context.url).toEqual('/create');
+      expect(locationHook.locationHistory).toEqual(['/', '/create']);
     });
   });
 });

@@ -1,30 +1,31 @@
 import React from 'react';
-import { StaticRouter, StaticRouterContext } from 'react-router-dom';
+import { Router } from 'wouter';
 import { render, fireEvent } from '@testing-library/react';
 import { formatDateTime } from '../../time/formatters';
+import staticLocationHook from '../../test-helpers/staticLocationHook';
 import { queries, css, text } from '../../test-helpers/queries';
 
 import ArchiveLink from './ArchiveLink';
 
 describe('ArchiveLink', () => {
   it('links to the archive', () => {
-    const context: StaticRouterContext = {};
+    const locationHook = staticLocationHook('/');
     const dom = render((
-      <StaticRouter location="/" context={context}>
+      <Router hook={locationHook}>
         <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />
-      </StaticRouter>
+      </Router>
     ), { queries });
 
     fireEvent.click(dom.getBy(css('.archive-link')));
 
-    expect(context.url).toEqual('/retros/bar/archives/a1');
+    expect(locationHook.locationHistory).toEqual(['/', '/retros/bar/archives/a1']);
   });
 
   it('displays the time of the archive', () => {
     const dom = render((
-      <StaticRouter location="/" context={{}}>
+      <Router hook={staticLocationHook('/')}>
         <ArchiveLink retroSlug="bar" archiveId="a1" created={0} />
-      </StaticRouter>
+      </Router>
     ), { queries });
 
     expect(dom).toContainElementWith(text(formatDateTime(0)));

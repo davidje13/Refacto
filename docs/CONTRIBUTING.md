@@ -157,7 +157,7 @@ installed (see [Running tests](#running-tests)).
 
 - React: <https://reactjs.org/docs/react-api.html>
 - `update`: <https://github.com/davidje13/json-immutability-helper> and <https://github.com/kolodny/immutability-helper>
-- React Router: <https://reacttraining.com/react-router/web/api>
+- Wouter: <https://github.com/molefrog/wouter>
 - Jest: <https://jestjs.io/docs/en/api>
 - React Testing Library <https://github.com/testing-library/react-testing-library>
 - Jest DOM Matchers <https://github.com/testing-library/jest-dom>

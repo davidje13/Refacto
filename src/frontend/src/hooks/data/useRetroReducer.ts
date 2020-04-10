@@ -4,10 +4,9 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import type { RouteComponentProps } from 'react-router-dom';
+import { useLocation, PushCallback } from 'wouter';
 import type { Retro } from 'refacto-entities';
 import useNonce from '../useNonce';
-import useRouter from '../env/useRouter';
 import { retroTracker, slugTracker } from '../../api/api';
 import type { RetroState, RetroDispatch } from '../../api/RetroTracker';
 
@@ -20,11 +19,11 @@ export type RetroReducerState = [
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/)/;
 
 function replaceSlug(
-  history: RouteComponentProps['history'],
+  oldPath: string,
+  setLocation: PushCallback,
   newSlug: string,
   retroId: string,
 ): void {
-  const oldPath = history.location.pathname;
   const match = RETRO_SLUG_PATH.exec(oldPath);
   if (!match) {
     return;
@@ -38,14 +37,14 @@ function replaceSlug(
   const oldPrefix = `/retros/${oldSlug}`;
   const newPrefix = `/retros/${newSlug}`;
   const newPath = newPrefix + oldPath.substr(oldPrefix.length);
-  history.replace(newPath, history.location.state);
+  setLocation(newPath, true);
 }
 
 export default function useRetroReducer(
   retroId: string | null,
   retroToken: string | null,
 ): RetroReducerState {
-  const { history } = useRouter();
+  const [location, setLocation] = useLocation();
   const slugChangeDetectionRef = useRef<string>();
   const [retroState, setRetroState] = useState<RetroState | null>(null);
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(null);
@@ -81,9 +80,9 @@ export default function useRetroReducer(
     const { slug } = retroState.retro;
     if (slugChangeDetectionRef.current !== slug) {
       slugChangeDetectionRef.current = slug;
-      replaceSlug(history, slug, retroId);
+      replaceSlug(location, setLocation, slug, retroId);
     }
-  }, [retroState, slugChangeDetectionRef, history, replaceSlug]);
+  }, [retroState, slugChangeDetectionRef, location, setLocation, replaceSlug]);
 
   return [
     retroState?.retro ?? null,

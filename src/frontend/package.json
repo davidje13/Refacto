@@ -22,9 +22,9 @@
     "react-helmet-async": "1.x",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.1",
     "react-modal": "3.x",
-    "react-router-dom": "5.x",
     "refacto-entities": "file:../entities",
-    "rxjs": "6.x"
+    "rxjs": "6.x",
+    "wouter": "2.x"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "7.x",
@@ -42,7 +42,6 @@
     "@types/react-dom": "16.x",
     "@types/react-helmet": "5.0.10",
     "@types/react-modal": "3.x",
-    "@types/react-router-dom": "5.x",
     "blocking-queue": "0.0.x",
     "eslint": "6.x",
     "eslint-plugin-eslint-comments": "3.x",

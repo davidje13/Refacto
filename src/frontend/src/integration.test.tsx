@@ -1,5 +1,5 @@
 import React from 'react';
-import { StaticRouter, StaticRouterContext } from 'react-router-dom';
+import { Router } from 'wouter';
 import { HelmetProvider, FilledContext } from 'react-helmet-async';
 import {
   render,
@@ -8,6 +8,7 @@ import {
   RenderResult,
 } from '@testing-library/react';
 import { makeRetro } from 'refacto-entities';
+import staticLocationHook, { StaticLocationHook } from './test-helpers/staticLocationHook';
 import { queries, css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
@@ -23,28 +24,28 @@ function extractHelmetTitle(context: FilledContext): string {
 }
 
 interface RenderedApp {
-  routerContext: StaticRouterContext;
+  locationHook: StaticLocationHook;
   currentTitle: () => string;
   dom: RenderResult<typeof queries>;
 }
 
 async function renderApp(location: string): Promise<RenderedApp> {
-  const routerContext: StaticRouterContext = {};
+  const locationHook = staticLocationHook(location);
   const helmetContext: FilledContext = {} as any;
 
   let dom: RenderResult<typeof queries>;
   await act(async () => {
     dom = render((
       <HelmetProvider context={helmetContext}>
-        <StaticRouter location={location} context={routerContext}>
+        <Router hook={locationHook}>
           <App />
-        </StaticRouter>
+        </Router>
       </HelmetProvider>
     ), { queries });
   });
 
   return {
-    routerContext,
+    locationHook,
     currentTitle: (): string => extractHelmetTitle(helmetContext),
     dom: dom!,
   };
@@ -101,9 +102,9 @@ describe('Application', () => {
   });
 
   it('redirects to retros url for short unknown urls', async () => {
-    const { routerContext } = await renderApp('/nope');
+    const { locationHook } = await renderApp('/nope');
 
-    expect(routerContext.url).toEqual('/retros/nope');
+    expect(locationHook.locationHistory).toEqual(['/retros/nope']);
   });
 
   it('renders not found page at unknown urls', async () => {

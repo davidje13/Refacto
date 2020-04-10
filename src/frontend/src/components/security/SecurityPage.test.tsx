@@ -1,5 +1,6 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Router } from 'wouter';
+import staticLocationHook from 'wouter/static-location';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { queries, css } from '../../test-helpers/queries';
@@ -10,11 +11,10 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('SecurityPage', () => {
   it('displays static content with anchors', () => {
-    const context = {};
     const dom = render((
-      <StaticRouter location="/" context={context}>
+      <Router hook={staticLocationHook()}>
         <SecurityPage />
-      </StaticRouter>
+      </Router>
     ), { queries });
 
     expect(dom).toContainElementWith(css('#passwords'));

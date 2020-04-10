@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useRouter from '../../hooks/env/useRouter';
+import { useLocation } from 'wouter';
 import handleLogin from './handleLogin';
 import Header from '../common/Header';
 import './LoginCallback.less';
@@ -9,7 +9,7 @@ interface PropsT {
 }
 
 const LoginCallback = ({ service }: PropsT): React.ReactElement => {
-  const { history } = useRouter();
+  const [, setLocation] = useLocation();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const LoginCallback = ({ service }: PropsT): React.ReactElement => {
     handleLogin(service, nonce, { search, hash })
       .then((redirect) => {
         window.sessionStorage.removeItem('login-nonce');
-        history.replace(redirect);
+        setLocation(redirect, true);
       })
       .catch((err) => {
         setError(err.message);

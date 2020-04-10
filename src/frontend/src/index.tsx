@@ -1,7 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { configService } from './api/api';
 
@@ -21,11 +20,9 @@ Modal.setAppElement(root);
 configService.load().then(() => {
   ReactDOM.render(
     <HelmetProvider>
-      <BrowserRouter>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </BrowserRouter>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
     </HelmetProvider>,
     root,
   );

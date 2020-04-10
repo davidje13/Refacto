@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import Header, { HeaderLinks } from '../common/Header';
 import LoginForm from '../login/LoginForm';
 import useUserToken from '../../hooks/data/useUserToken';

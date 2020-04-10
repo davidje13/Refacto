@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import WrappedButton from './WrappedButton';
 
 export interface LinkPropsT extends Omit<React.HTMLAttributes<HTMLElement>, 'onClick'> {

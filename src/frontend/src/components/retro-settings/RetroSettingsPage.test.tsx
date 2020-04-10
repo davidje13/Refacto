@@ -1,5 +1,6 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Router } from 'wouter';
+import staticLocationHook from 'wouter/static-location';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from 'refacto-entities';
@@ -27,12 +28,10 @@ describe('RetroSettingsPage', () => {
   });
 
   it('renders basic settings', () => {
-    const context = {};
-
     const dom = render((
-      <StaticRouter location="/" context={context}>
+      <Router hook={staticLocationHook()}>
         <RetroSettingsPage slug="my-slug" />
-      </StaticRouter>
+      </Router>
     ), { queries });
 
     expect(dom).toContainElementWith(placeholderText('retro name'));

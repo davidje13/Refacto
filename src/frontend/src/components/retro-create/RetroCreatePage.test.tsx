@@ -1,5 +1,6 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Router } from 'wouter';
+import staticLocationHook from 'wouter/static-location';
 import { render } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 
@@ -9,12 +10,10 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('RetroCreatePage', () => {
   it('renders without error', () => {
-    const context = {};
-
     render((
-      <StaticRouter location="/" context={context}>
+      <Router hook={staticLocationHook()}>
         <RetroCreatePage />
-      </StaticRouter>
+      </Router>
     ));
   });
 });

@@ -1,22 +1,23 @@
 import React from 'react';
-import { StaticRouter, StaticRouterContext } from 'react-router-dom';
+import { Router } from 'wouter';
 import { render, fireEvent } from '@testing-library/react';
+import staticLocationHook from '../../test-helpers/staticLocationHook';
 import { queries, text } from '../../test-helpers/queries';
 
 import RetroLink from './RetroLink';
 
 describe('RetroLink', () => {
   it('links to the retro slug', () => {
-    const context: StaticRouterContext = {};
+    const locationHook = staticLocationHook();
     const dom = render((
-      <StaticRouter location="/" context={context}>
+      <Router hook={locationHook}>
         <RetroLink name="Foo" slug="bar" />
-      </StaticRouter>
+      </Router>
     ), { queries });
 
     const button = dom.getBy(text('Foo'));
     fireEvent.click(button);
 
-    expect(context.url).toEqual('/retros/bar');
+    expect(locationHook.locationHistory).toEqual(['/', '/retros/bar']);
   });
 });

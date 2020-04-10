@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
+import { useLocation } from 'wouter';
 import Header from '../common/Header';
-import useRouter from '../../hooks/env/useRouter';
 import { slugTracker } from '../../api/api';
 import RetroForm from './RetroForm';
 import './RetroCreatePage.less';
@@ -10,11 +10,11 @@ interface PropsT {
 }
 
 const RetroCreatePage = ({ defaultSlug }: PropsT): React.ReactElement => {
-  const { history } = useRouter();
+  const [, setLocation] = useLocation();
   const handleCreate = useCallback(({ id, slug }) => {
     slugTracker.set(slug, id);
-    history.push(`/retros/${slug}`);
-  }, [history]);
+    setLocation(`/retros/${slug}`);
+  }, [setLocation]);
 
   return (
     <article className="page-retro-create">

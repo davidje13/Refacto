@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
+import { useLocation } from 'wouter';
 import type { Retro } from 'refacto-entities';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
-import useRouter from '../../hooks/env/useRouter';
 import SettingsForm from './SettingsForm';
 import './RetroSettingsPage.less';
 
@@ -21,7 +21,7 @@ const RetroSettingsPage = ({
   retroToken,
   retroTokenError,
 }: PropsT): React.ReactElement => {
-  const { history } = useRouter();
+  const [, setLocation] = useLocation();
 
   const [
     retro,
@@ -32,8 +32,8 @@ const RetroSettingsPage = ({
   const retroName = retro?.name ?? slug;
 
   const handleSave = useCallback((savedRetro: Retro) => {
-    history.push(`/retros/${savedRetro.slug}`);
-  }, [history]);
+    setLocation(`/retros/${savedRetro.slug}`);
+  }, [setLocation]);
 
   return (
     <article className="page-retro-settings">

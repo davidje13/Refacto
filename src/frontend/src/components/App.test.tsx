@@ -1,5 +1,6 @@
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { Router } from 'wouter';
+import staticLocationHook from 'wouter/static-location';
 import { HelmetProvider } from 'react-helmet-async';
 import { render } from '@testing-library/react';
 
@@ -9,9 +10,9 @@ describe('App', () => {
   it('renders without error', () => {
     render((
       <HelmetProvider>
-        <StaticRouter location="/" context={{}}>
+        <Router hook={staticLocationHook('/')}>
           <App />
-        </StaticRouter>
+        </Router>
       </HelmetProvider>
     ));
   });

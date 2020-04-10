@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Route,
   Switch,
-  Redirect,
   RouteComponentProps,
-} from 'react-router-dom';
+} from 'wouter';
 import './App.less';
+import RedirectRoute from './RedirectRoute';
 import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import LoginCallback from './login/LoginCallback';
@@ -22,28 +22,28 @@ import NotFoundPage from './not-found/NotFoundPage';
 
 const withParams = (
   Page: React.ComponentType<any>,
-) => ({ match }: RouteComponentProps): React.ReactElement => (
-  <Page {...match.params} />
+) => ({ params }: RouteComponentProps): React.ReactElement => (
+  <Page {...params} />
 );
 
 const App = (): React.ReactElement => (
   <React.Fragment>
     <Switch>
-      <Route path="/sso/:service" exact render={withParams(LoginCallback)} />
-      <Route path="/" exact render={withParams(WelcomePage)} />
-      <Route path="/security" exact render={withParams(SecurityPage)} />
-      <Route path="/create" exact render={withParams(RetroCreatePage)} />
-      <Route path="/create/import" exact render={withParams(RetroImportPage)} />
-      <Route path="/retros" exact render={withParams(RetroListPage)} />
-      <Route path="/retros/:slug" exact render={withParams(RetroPage)} />
-      <Route path="/retros/:slug/archives" exact render={withParams(ArchiveListPage)} />
-      <Route path="/retros/:slug/archives/:archiveId" exact render={withParams(ArchivePage)} />
-      <Route path="/retros/:slug/settings" exact render={withParams(RetroSettingsPage)} />
+      <Route path="/sso/:service" component={withParams(LoginCallback)} />
+      <Route path="/" component={withParams(WelcomePage)} />
+      <Route path="/security" component={withParams(SecurityPage)} />
+      <Route path="/create" component={withParams(RetroCreatePage)} />
+      <Route path="/create/import" component={withParams(RetroImportPage)} />
+      <Route path="/retros" component={withParams(RetroListPage)} />
+      <Route path="/retros/:slug" component={withParams(RetroPage)} />
+      <Route path="/retros/:slug/archives" component={withParams(ArchiveListPage)} />
+      <Route path="/retros/:slug/archives/:archiveId" component={withParams(ArchivePage)} />
+      <Route path="/retros/:slug/settings" component={withParams(RetroSettingsPage)} />
 
-      <Redirect from="/retro/:slug" exact to="/retros/:slug" />
-      <Redirect from="/:slug" exact to="/retros/:slug" />
+      <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />
+      <RedirectRoute path="/:slug" to="/retros/:slug" replace />
 
-      <Route render={withParams(NotFoundPage)} />
+      <Route path="/:rest*" component={withParams(NotFoundPage)} />
     </Switch>
     <Footer />
   </React.Fragment>
