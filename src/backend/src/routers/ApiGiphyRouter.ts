@@ -13,6 +13,11 @@ export default class ApiGiphyRouter extends Router {
         return;
       }
 
+      if (lang && typeof lang !== 'string') {
+        res.status(400).end();
+        return;
+      }
+
       try {
         const gifs = await service.search(q, 10, lang);
 

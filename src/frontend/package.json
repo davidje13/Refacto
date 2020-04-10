@@ -51,7 +51,7 @@
     "less": "3.x",
     "less-loader": "5.x",
     "neutrino": "9.x",
-    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.10",
+    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.12",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.5",
     "react-mock-element": "git+https://github.com/davidje13/react-mock-element.git#semver:^1.0.1",
     "timezone-mock": "1.x",

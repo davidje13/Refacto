@@ -18,7 +18,7 @@
     "eslint-plugin-eslint-comments": "3.x",
     "jest": "25.x",
     "neutrino": "9.x",
-    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.10",
+    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.12",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.5",
     "selenium-webdriver": "4.0.0-alpha.7",
     "typescript": "3.8.x",

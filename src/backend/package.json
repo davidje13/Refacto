@@ -42,7 +42,7 @@
     "http-proxy-middleware": "1.x",
     "jest": "25.x",
     "neutrino": "9.x",
-    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.10",
+    "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.12",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.0.5",
     "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.12",
     "typescript": "3.8.x",
