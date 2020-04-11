@@ -22,8 +22,8 @@ function makeState(redirect: string): string {
 }
 
 interface PropsT {
-  message: string | null;
-  redirect: string | null;
+  message?: string | null;
+  redirect?: string | null;
 }
 
 const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
@@ -83,11 +83,6 @@ const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
       </p>
     </div>
   );
-};
-
-LoginForm.defaultProps = {
-  message: null,
-  redirect: null,
 };
 
 export default React.memo(LoginForm);

@@ -11,7 +11,7 @@ interface PropsT<C, P> {
 function Loader<C extends React.ElementType>({
   Component,
   componentProps,
-  loadingMessage,
+  loadingMessage = 'Loading\u2026',
   error,
 }: PropsT<C, React.ComponentPropsWithRef<C>>): React.ReactElement {
   if (error) {
@@ -24,10 +24,5 @@ function Loader<C extends React.ElementType>({
 
   return (<Component {...componentProps} />);
 }
-
-Loader.defaultProps = {
-  loadingMessage: 'Loading\u2026',
-  error: null,
-};
 
 export default Loader;

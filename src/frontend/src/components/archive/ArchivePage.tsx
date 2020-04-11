@@ -56,8 +56,4 @@ const ArchivePage = ({
   );
 };
 
-ArchivePage.defaultProps = {
-  retroTokenError: null,
-};
-
 export default React.memo(withRetroTokenForSlug(ArchivePage));

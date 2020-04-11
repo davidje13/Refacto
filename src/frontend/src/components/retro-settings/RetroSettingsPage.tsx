@@ -55,8 +55,4 @@ const RetroSettingsPage = ({
   );
 };
 
-RetroSettingsPage.defaultProps = {
-  retroTokenError: null,
-};
-
 export default React.memo(withRetroTokenForSlug(RetroSettingsPage));

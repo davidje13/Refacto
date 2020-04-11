@@ -66,8 +66,4 @@ const Input = ({
   );
 };
 
-Input.defaultProps = {
-  onChange: undefined,
-};
-
 export default React.memo(Input);

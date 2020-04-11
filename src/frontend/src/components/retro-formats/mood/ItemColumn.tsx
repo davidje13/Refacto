@@ -42,8 +42,4 @@ function ItemColumn<P extends Partial<ItemPropsP>>({
   );
 }
 
-ItemColumn.defaultProps = {
-  focusedItemId: null,
-};
-
 export default ItemColumn;

@@ -14,8 +14,8 @@ function actionItemWithinRange(from: number, to: number) {
 interface PropsT {
   title: string;
   items: RetroItem[];
-  rangeFrom: number;
-  rangeTo: number;
+  rangeFrom?: number;
+  rangeTo?: number;
   onSetDone?: (id: string, done: boolean) => void;
   onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
   onDelete?: (id: string) => void;
@@ -24,8 +24,8 @@ interface PropsT {
 const ActionSection = ({
   title,
   items,
-  rangeFrom,
-  rangeTo,
+  rangeFrom = Number.NEGATIVE_INFINITY,
+  rangeTo = Number.POSITIVE_INFINITY,
   onSetDone,
   onEdit,
   onDelete,
@@ -45,13 +45,5 @@ const ActionSection = ({
     />
   </section>
 );
-
-ActionSection.defaultProps = {
-  rangeFrom: Number.NEGATIVE_INFINITY,
-  rangeTo: Number.POSITIVE_INFINITY,
-  onSetDone: undefined,
-  onEdit: undefined,
-  onDelete: undefined,
-};
 
 export default React.memo(ActionSection);

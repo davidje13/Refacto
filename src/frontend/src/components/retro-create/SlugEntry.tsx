@@ -17,14 +17,14 @@ enum SlugAvailability {
 }
 
 interface PropsT {
-  placeholder: string;
+  placeholder?: string;
   value: string;
   onChange: (v: string) => void;
   oldValue?: string;
 }
 
 const SlugEntry = ({
-  placeholder,
+  placeholder = '',
   value,
   onChange,
   oldValue,
@@ -129,11 +129,6 @@ const SlugEntry = ({
       </div>
     </div>
   );
-};
-
-SlugEntry.defaultProps = {
-  placeholder: '',
-  oldValue: undefined,
 };
 
 export default React.memo(SlugEntry);

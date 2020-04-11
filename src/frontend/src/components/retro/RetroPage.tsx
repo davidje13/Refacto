@@ -134,8 +134,4 @@ const RetroPage = ({
   );
 };
 
-RetroPage.defaultProps = {
-  retroTokenError: null,
-};
-
 export default React.memo(withRetroTokenForSlug(RetroPage));

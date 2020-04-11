@@ -11,14 +11,14 @@ interface PropsT {
   onSubmit: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
   onCancel?: () => void;
   onDelete?: () => void;
-  placeholder: string;
-  autoFocus: boolean;
+  placeholder?: string;
+  autoFocus?: boolean;
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
-  allowAttachments: boolean;
-  clearAfterSubmit: boolean;
-  blurOnSubmit: boolean;
-  blurOnCancel: boolean;
+  allowAttachments?: boolean;
+  clearAfterSubmit?: boolean;
+  blurOnSubmit?: boolean;
+  blurOnCancel?: boolean;
 }
 
 const ItemEditor = ({
@@ -26,8 +26,8 @@ const ItemEditor = ({
   onSubmit,
   onCancel,
   onDelete,
-  allowAttachments,
-  clearAfterSubmit,
+  allowAttachments = false,
+  clearAfterSubmit = false,
   ...rest
 }: PropsT): React.ReactElement => {
   const config = useConfig();
@@ -87,20 +87,6 @@ const ItemEditor = ({
       {...rest}
     />
   );
-};
-
-ItemEditor.defaultProps = {
-  defaultItem: undefined,
-  onCancel: null,
-  onDelete: null,
-  placeholder: '',
-  autoFocus: false,
-  submitButtonLabel: null,
-  submitButtonTitle: null,
-  allowAttachments: false,
-  clearAfterSubmit: false,
-  blurOnSubmit: false,
-  blurOnCancel: false,
 };
 
 export default React.memo(ItemEditor);

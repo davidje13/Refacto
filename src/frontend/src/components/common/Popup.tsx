@@ -69,8 +69,4 @@ const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
   );
 };
 
-Popup.defaultProps = {
-  onClose: undefined,
-};
-
 export default Popup;

@@ -5,8 +5,8 @@ import SlugEntry from '../retro-create/SlugEntry';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import { Dispatch, actionsSyncedCallback } from '../../api/SharedReducer';
 import OPTIONS from '../../helpers/optionManager';
-import './SettingsForm.less';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
+import './SettingsForm.less';
 
 interface PropsT {
   retro: Retro;
@@ -14,7 +14,11 @@ interface PropsT {
   onSave?: (savedRetro: Retro) => void;
 }
 
-const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement => {
+const SettingsForm = ({
+  retro,
+  dispatch,
+  onSave,
+}: PropsT): React.ReactElement => {
   const [name, setName] = useState(retro.name);
   const [slug, setSlug] = useState(retro.slug);
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
@@ -103,10 +107,6 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
       ) : null }
     </form>
   );
-};
-
-SettingsForm.defaultProps = {
-  onSave: undefined,
 };
 
 export default React.memo(SettingsForm);

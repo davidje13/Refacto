@@ -8,8 +8,8 @@ export type HeaderLinks = (LinkPropsT | null)[];
 interface PropsT {
   documentTitle: string;
   title: string;
-  backLink: LinkPropsT | null;
-  links: HeaderLinks;
+  backLink?: LinkPropsT | null;
+  links?: HeaderLinks;
 }
 
 function nonNull<T>(o: T | null): o is T {
@@ -20,7 +20,7 @@ const Header = ({
   documentTitle,
   title,
   backLink,
-  links,
+  links = [],
 }: PropsT): React.ReactElement => (
   <header className="top-header">
     <Title title={documentTitle} />
@@ -33,10 +33,5 @@ const Header = ({
     </div>
   </header>
 );
-
-Header.defaultProps = {
-  backLink: null,
-  links: [],
-};
 
 export default React.memo(Header);

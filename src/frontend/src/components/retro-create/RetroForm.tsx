@@ -54,7 +54,7 @@ const RetroForm = ({
   defaultSlug,
   userToken,
   onCreate,
-  showImport,
+  showImport = false,
 }: PropsT): React.ReactElement => {
   const [name, setName] = useState(defaultSlug || '');
   const [slug, setSlug] = useState(defaultSlug || '');
@@ -251,11 +251,6 @@ const RetroForm = ({
       ) : null }
     </form>
   );
-};
-
-RetroForm.defaultProps = {
-  defaultSlug: undefined,
-  showImport: false,
 };
 
 export default React.memo(withUserToken(RetroForm, 'Sign in to create a retro'));

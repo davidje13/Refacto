@@ -8,9 +8,9 @@ import './MoodItem.less';
 
 interface PropsT {
   item: RetroItem;
-  focused: boolean;
-  focusedItemTimeout: number;
-  autoScroll: boolean;
+  focused?: boolean;
+  focusedItemTimeout?: number;
+  autoScroll?: boolean;
   onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
   onAddExtraTime?: (time: number) => void;
   onVote?: (id: string) => void;
@@ -22,9 +22,9 @@ interface PropsT {
 
 const MoodItem = ({
   item,
-  focused,
-  focusedItemTimeout,
-  autoScroll,
+  focused = false,
+  focusedItemTimeout = 0,
+  autoScroll = false,
   onEdit,
   onAddExtraTime,
   onVote,
@@ -89,19 +89,6 @@ const MoodItem = ({
       onSelect={handleSelect}
     />
   );
-};
-
-MoodItem.defaultProps = {
-  focused: false,
-  focusedItemTimeout: 0,
-  autoScroll: false,
-  onVote: undefined,
-  onEdit: undefined,
-  onDelete: undefined,
-  onSelect: undefined,
-  onAddExtraTime: undefined,
-  onCancel: undefined,
-  onContinue: undefined,
 };
 
 export default React.memo(MoodItem);

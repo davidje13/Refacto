@@ -31,7 +31,7 @@ React.TextareaHTMLAttributes<HTMLTextAreaElement>, (
   onChange?: (v: string) => void;
   onChangeMultiline?: (v: boolean) => void;
   value?: string;
-  sizeToFit: boolean;
+  sizeToFit?: boolean;
   multilineClass?: string;
   multilineClassElement?: HTMLElement | null;
 }
@@ -39,8 +39,8 @@ React.TextareaHTMLAttributes<HTMLTextAreaElement>, (
 const Textarea = ({
   onChange,
   onChangeMultiline,
-  value,
-  sizeToFit,
+  value = '',
+  sizeToFit = false,
   multilineClass,
   multilineClassElement,
   className,
@@ -128,14 +128,6 @@ const Textarea = ({
       {...rest}
     />
   );
-};
-
-Textarea.defaultProps = {
-  onChange: undefined,
-  onChangeMultiline: undefined,
-  value: '',
-  sizeToFit: false,
-  multilineClass: undefined,
 };
 
 export default Textarea;

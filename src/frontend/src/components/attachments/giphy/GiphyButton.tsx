@@ -6,7 +6,7 @@ import useBoundCallback from '../../../hooks/useBoundCallback';
 import GiphyPopup from './GiphyPopup';
 
 interface PropsT {
-  defaultAttachment: RetroItemAttachment | null;
+  defaultAttachment?: RetroItemAttachment | null;
   onChange: (attachment: RetroItemAttachment | null) => void;
 }
 
@@ -47,10 +47,6 @@ const GiphyButton = ({ defaultAttachment, onChange }: PropsT): React.ReactElemen
       <Popup data={popup} onClose={hide} />
     </React.Fragment>
   );
-};
-
-GiphyButton.defaultProps = {
-  defaultAttachment: null,
 };
 
 export default React.memo(GiphyButton);

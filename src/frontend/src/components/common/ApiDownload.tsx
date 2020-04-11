@@ -62,8 +62,4 @@ const ApiDownload = ({
   );
 };
 
-ApiDownload.defaultProps = {
-  children: null,
-};
-
 export default React.memo(ApiDownload);

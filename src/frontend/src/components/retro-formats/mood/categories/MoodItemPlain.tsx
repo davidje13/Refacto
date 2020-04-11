@@ -31,10 +31,4 @@ const MoodItemPlain = ({
   </div>
 );
 
-MoodItemPlain.defaultProps = {
-  onSelect: undefined,
-  onVote: undefined,
-  onEdit: undefined,
-};
-
 export default React.memo(MoodItemPlain);

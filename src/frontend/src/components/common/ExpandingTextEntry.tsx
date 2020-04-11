@@ -16,33 +16,33 @@ function hasContent(o: React.ReactNode): boolean {
 interface PropsT {
   onSubmit: (value: string) => void;
   onCancel?: () => void;
-  placeholder: string;
-  defaultValue: string;
-  autoFocus: boolean;
-  forceMultiline: boolean;
+  placeholder?: string;
+  defaultValue?: string;
+  autoFocus?: boolean;
+  forceMultiline?: boolean;
   extraOptions?: React.ReactNode;
   extraInputs?: React.ReactNode;
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
-  clearAfterSubmit: boolean;
-  blurOnSubmit: boolean;
-  blurOnCancel: boolean;
+  clearAfterSubmit?: boolean;
+  blurOnSubmit?: boolean;
+  blurOnCancel?: boolean;
 }
 
 const ExpandingTextEntry = ({
   onSubmit,
   onCancel,
-  placeholder,
-  defaultValue,
-  autoFocus,
-  forceMultiline,
+  placeholder = '',
+  defaultValue = '',
+  autoFocus = false,
+  forceMultiline = false,
   extraInputs,
   extraOptions,
   submitButtonLabel,
   submitButtonTitle,
-  clearAfterSubmit,
-  blurOnSubmit,
-  blurOnCancel,
+  clearAfterSubmit = false,
+  blurOnSubmit = false,
+  blurOnCancel = false,
 }: PropsT): React.ReactElement => {
   const [value, setValue] = useState(defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
@@ -138,21 +138,6 @@ const ExpandingTextEntry = ({
   );
   /* eslint-enable jsx-a11y/no-autofocus */
   /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
-};
-
-ExpandingTextEntry.defaultProps = {
-  onCancel: null,
-  placeholder: '',
-  defaultValue: '',
-  autoFocus: false,
-  forceMultiline: false,
-  extraInputs: null,
-  extraOptions: null,
-  submitButtonLabel: null,
-  submitButtonTitle: null,
-  clearAfterSubmit: false,
-  blurOnSubmit: false,
-  blurOnCancel: false,
 };
 
 export default ExpandingTextEntry;

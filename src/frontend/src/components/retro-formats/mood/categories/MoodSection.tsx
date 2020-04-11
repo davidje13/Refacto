@@ -10,8 +10,8 @@ interface PropsT {
   category: string;
   categoryLabel: string;
   items: RetroItem[];
-  theme: string;
-  addItemPlaceholder: string;
+  theme?: string;
+  addItemPlaceholder?: string;
   onAddItem?: (
     category: string,
     itemParts: Partial<UserProvidedRetroItemDetails>,
@@ -28,17 +28,17 @@ interface PropsT {
   onSetDone?: (id: string, done: boolean) => void;
   onSwitchFocus?: (markPreviousDone: boolean, id: string | null) => void;
   onAddExtraTime?: (time: number) => void;
-  focusedItemId: string | null;
-  focusedItemTimeout: number;
-  autoScroll: boolean;
+  focusedItemId?: string | null;
+  focusedItemTimeout?: number;
+  autoScroll?: boolean;
 }
 
 const MoodSection = ({
   category,
   categoryLabel,
-  theme,
+  theme = '',
   items,
-  addItemPlaceholder,
+  addItemPlaceholder = '',
   onAddItem,
   onVote,
   onEdit,
@@ -48,8 +48,8 @@ const MoodSection = ({
   onContinue,
   onAddExtraTime,
   focusedItemId,
-  focusedItemTimeout,
-  autoScroll,
+  focusedItemTimeout = 0,
+  autoScroll = false,
 }: PropsT): React.ReactElement => {
   const handleAddItem = useBoundCallback(onAddItem, category);
 
@@ -88,22 +88,6 @@ const MoodSection = ({
       />
     </section>
   );
-};
-
-MoodSection.defaultProps = {
-  theme: '',
-  addItemPlaceholder: '',
-  onAddItem: undefined,
-  onVote: undefined,
-  onEdit: undefined,
-  onDelete: undefined,
-  onSelect: undefined,
-  onCancel: undefined,
-  onContinue: undefined,
-  onAddExtraTime: undefined,
-  focusedItemId: null,
-  focusedItemTimeout: 0,
-  autoScroll: false,
 };
 
 export default React.memo(MoodSection);

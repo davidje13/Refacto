@@ -73,10 +73,4 @@ const ActionItem = ({
   );
 };
 
-ActionItem.defaultProps = {
-  onSetDone: undefined,
-  onEdit: undefined,
-  onDelete: undefined,
-};
-
 export default React.memo(ActionItem);

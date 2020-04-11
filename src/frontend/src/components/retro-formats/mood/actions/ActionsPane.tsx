@@ -9,7 +9,7 @@ import { formatDate } from '../../../../time/formatters';
 interface PropsT {
   items: RetroItem[];
   localDateProvider: LocalDateProvider;
-  alwaysShowEntry: boolean;
+  alwaysShowEntry?: boolean;
   onAddItem?: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
   onSetDone?: (id: string, done: boolean) => void;
   onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
@@ -19,7 +19,7 @@ interface PropsT {
 const ActionsPane = ({
   items,
   localDateProvider,
-  alwaysShowEntry,
+  alwaysShowEntry = false,
   onAddItem,
   onSetDone,
   onEdit,
@@ -78,14 +78,6 @@ const ActionsPane = ({
       />
     </section>
   );
-};
-
-ActionsPane.defaultProps = {
-  alwaysShowEntry: false,
-  onAddItem: null,
-  onSetDone: null,
-  onEdit: null,
-  onDelete: null,
 };
 
 export default React.memo(ActionsPane);

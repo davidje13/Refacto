@@ -8,7 +8,10 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
 }
 
-const Timer = ({ targetTime, onAddExtraTime }: PropsT): React.ReactElement => {
+const Timer = ({
+  targetTime,
+  onAddExtraTime,
+}: PropsT): React.ReactElement => {
   const remaining = useCountdown(targetTime, 1000);
 
   let component;
@@ -19,10 +22,6 @@ const Timer = ({ targetTime, onAddExtraTime }: PropsT): React.ReactElement => {
   }
 
   return (<div className="timer">{ component }</div>);
-};
-
-Timer.defaultProps = {
-  onAddExtraTime: undefined,
 };
 
 export default React.memo(Timer);

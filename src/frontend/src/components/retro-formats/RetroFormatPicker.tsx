@@ -13,8 +13,9 @@ interface ChildPropsT {
   archiveTime?: number;
 }
 
-interface PropsT extends ChildPropsT {
+interface PropsT extends Omit<ChildPropsT, 'archive'> {
   retroFormat: string;
+  archive?: boolean;
 }
 
 const formats = new Map<string, React.ComponentType<ChildPropsT>>();
@@ -24,21 +25,18 @@ const LOADER = (
   <div className="loader">Loading&hellip;</div>
 );
 
-const RetroFormatPicker = ({ retroFormat, ...props }: PropsT): React.ReactElement => {
+const RetroFormatPicker = ({
+  retroFormat,
+  archive = false,
+  ...props
+}: PropsT): React.ReactElement => {
   const RetroType = formats.get(retroFormat) || UnknownRetro;
 
   return (
     <Suspense fallback={LOADER}>
-      <RetroType {...props} />
+      <RetroType archive={archive} {...props} />
     </Suspense>
   );
-};
-
-RetroFormatPicker.defaultProps = {
-  dispatch: undefined,
-  onComplete: undefined,
-  archive: false,
-  archiveTime: undefined,
 };
 
 export default React.memo(RetroFormatPicker);

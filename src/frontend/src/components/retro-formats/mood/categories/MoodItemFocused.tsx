@@ -7,8 +7,8 @@ import Attachment from '../../../attachments/Attachment';
 
 interface PropsT {
   item: RetroItem;
-  focusedItemTimeout: number;
-  autoScroll: boolean;
+  focusedItemTimeout?: number;
+  autoScroll?: boolean;
   onAddExtraTime?: (time: number) => void;
   onCancel?: () => void;
   onContinue?: () => void;
@@ -16,8 +16,8 @@ interface PropsT {
 
 const MoodItemFocused = ({
   item,
-  focusedItemTimeout,
-  autoScroll,
+  focusedItemTimeout = 0,
+  autoScroll = false,
   onAddExtraTime,
   onCancel,
   onContinue,
@@ -48,14 +48,6 @@ const MoodItemFocused = ({
       <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />
     </div>
   );
-};
-
-MoodItemFocused.defaultProps = {
-  focusedItemTimeout: 0,
-  onAddExtraTime: undefined,
-  autoScroll: false,
-  onCancel: undefined,
-  onContinue: undefined,
 };
 
 export default React.memo(MoodItemFocused);

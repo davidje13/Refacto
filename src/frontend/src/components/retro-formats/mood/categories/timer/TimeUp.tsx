@@ -6,7 +6,9 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
 }
 
-const TimeUp = ({ onAddExtraTime }: PropsT): React.ReactElement => {
+const TimeUp = ({
+  onAddExtraTime,
+}: PropsT): React.ReactElement => {
   const extraMinutes = 2;
 
   const extraTime = extraMinutes * 60 * 1000 + 999;
@@ -21,10 +23,6 @@ const TimeUp = ({ onAddExtraTime }: PropsT): React.ReactElement => {
       </WrappedButton>
     </React.Fragment>
   );
-};
-
-TimeUp.defaultProps = {
-  onAddExtraTime: undefined,
 };
 
 export default React.memo(TimeUp);

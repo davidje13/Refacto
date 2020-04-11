@@ -20,8 +20,4 @@ const VoteCount = ({
   </WrappedButton>
 );
 
-VoteCount.defaultProps = {
-  onVote: undefined,
-};
-
 export default React.memo(VoteCount);

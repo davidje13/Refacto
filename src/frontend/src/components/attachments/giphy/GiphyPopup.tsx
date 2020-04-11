@@ -9,7 +9,7 @@ import type { GifInfo } from '../../../api/GiphyService';
 import './GiphyPopup.less';
 
 interface PropsT {
-  defaultAttachment: RetroItemAttachment | null;
+  defaultAttachment?: RetroItemAttachment | null;
   onConfirm: (attachment: RetroItemAttachment | null) => void;
   onCancel: () => void;
 }
@@ -69,10 +69,6 @@ const GiphyPopup = ({
       </p>
     </div>
   );
-};
-
-GiphyPopup.defaultProps = {
-  defaultAttachment: null,
 };
 
 export default React.memo(GiphyPopup);
