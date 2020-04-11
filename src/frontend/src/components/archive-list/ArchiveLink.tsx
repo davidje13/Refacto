@@ -13,8 +13,8 @@ const ArchiveLink = ({
   archiveId,
   created,
 }: PropsT): React.ReactElement => (
-  <Link to={`/retros/${retroSlug}/archives/${archiveId}`}>
-    <div className="archive-link">{ formatDateTime(created) }</div>
+  <Link className="archive-link" to={`/retros/${retroSlug}/archives/${archiveId}`}>
+    { formatDateTime(created) }
   </Link>
 );
 

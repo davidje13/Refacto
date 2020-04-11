@@ -7,9 +7,7 @@ interface PropsT {
 }
 
 const RetroLink = ({ name, slug }: PropsT): React.ReactElement => (
-  <Link to={`/retros/${slug}`}>
-    <div className="retro-link">{ name }</div>
-  </Link>
+  <Link className="retro-link" to={`/retros/${slug}`}>{ name }</Link>
 );
 
 export default React.memo(RetroLink);
