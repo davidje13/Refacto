@@ -3,36 +3,35 @@ import useSlug from '../../hooks/data/useSlug';
 import useRetroToken from '../../hooks/data/useRetroToken';
 import PasswordPage from '../password/PasswordPage';
 
-interface InputPropsT {
-  slug: string | null;
+interface ChildPropsT {
+  slug: string;
+  retroId: string | null;
+  retroToken: string | null;
+  retroTokenError: string | null;
 }
 
-type Unwrapped<P> = Omit<P, 'retroId' | 'retroToken' | 'retroTokenError'>;
+type WrapperProps<P> = Omit<P, 'retroId' | 'retroToken' | 'retroTokenError'>;
 
-export default function withRetroTokenForSlug<P extends InputPropsT>(
+export default <P extends ChildPropsT>(
   Component: React.ComponentType<P>,
-): React.ComponentType<Unwrapped<P>> {
-  const Wrapped = ({ slug, ...params }: Unwrapped<P>): React.ReactElement => {
-    const [retroId, slugError] = useSlug(slug);
-    const [retroToken, tokenError] = useRetroToken(retroId);
+) => ({ slug, ...params }: WrapperProps<P>): React.ReactElement => {
+  const [retroId, slugError] = useSlug(slug);
+  const [retroToken, tokenError] = useRetroToken(retroId);
 
-    const error = slugError || tokenError;
+  const error = slugError || tokenError;
 
-    if (retroId && !retroToken && !error) {
-      return (<PasswordPage slug={slug!} retroId={retroId} />);
-    }
+  if (retroId && !retroToken && !error) {
+    return (<PasswordPage slug={slug} retroId={retroId} />);
+  }
 
-    const AnyComponent = Component as React.ComponentType<any>;
-    return (
-      <AnyComponent
-        slug={slug}
-        retroId={retroId}
-        retroToken={retroToken}
-        retroTokenError={error}
-        {...params}
-      />
-    );
-  };
-
-  return Wrapped;
-}
+  const AnyComponent = Component as React.ComponentType<any>;
+  return (
+    <AnyComponent
+      slug={slug}
+      retroId={retroId}
+      retroToken={retroToken}
+      retroTokenError={error}
+      {...params}
+    />
+  );
+};

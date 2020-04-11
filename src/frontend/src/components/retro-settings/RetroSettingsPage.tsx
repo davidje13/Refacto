@@ -8,19 +8,12 @@ import useRetroReducer from '../../hooks/data/useRetroReducer';
 import SettingsForm from './SettingsForm';
 import './RetroSettingsPage.less';
 
-interface PropsT {
-  slug: string;
-  retroId: string | null;
-  retroToken: string | null;
-  retroTokenError?: string | null;
-}
-
 export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}: PropsT) => {
+}) => {
   const [, setLocation] = useLocation();
 
   const [

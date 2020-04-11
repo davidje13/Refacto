@@ -8,19 +8,12 @@ import useArchiveList from '../../hooks/data/useArchiveList';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
-interface PropsT {
-  slug: string;
-  retroId: string | null;
-  retroToken: string | null;
-  retroTokenError?: string | null;
-}
-
 export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}: PropsT) => {
+}) => {
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archives, archivesError] = useArchiveList(retroId, retroToken);
 

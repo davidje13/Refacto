@@ -19,19 +19,12 @@ import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
 import './RetroPage.less';
 
-interface PropsT {
-  slug: string;
-  retroId: string | null;
-  retroToken: string | null;
-  retroTokenError?: string | null;
-}
-
 export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}: PropsT) => {
+}) => {
   const [
     retro,
     retroDispatch,

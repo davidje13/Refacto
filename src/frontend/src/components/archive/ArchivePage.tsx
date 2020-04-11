@@ -13,7 +13,7 @@ interface PropsT {
   retroId: string | null;
   archiveId: string;
   retroToken: string | null;
-  retroTokenError?: string | null;
+  retroTokenError: string | null;
 }
 
 export default memo(withRetroTokenForSlug(({
