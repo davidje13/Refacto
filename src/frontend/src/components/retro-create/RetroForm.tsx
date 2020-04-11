@@ -11,7 +11,7 @@ import {
 } from '../../api/api';
 import './RetroForm.less';
 
-interface CreationT {
+export interface CreationT {
   id: string;
   name: string;
   slug: string;
