@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
@@ -21,7 +21,7 @@ interface PropsT {
   blurOnCancel?: boolean;
 }
 
-const ItemEditor = ({
+export default memo(({
   defaultItem,
   onSubmit,
   onCancel,
@@ -29,7 +29,7 @@ const ItemEditor = ({
   allowAttachments = false,
   clearAfterSubmit = false,
   ...rest
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const config = useConfig();
 
   const [attachment, setAttachment] = useState(defaultItem?.attachment ?? null);
@@ -87,6 +87,4 @@ const ItemEditor = ({
       {...rest}
     />
   );
-};
-
-export default React.memo(ItemEditor);
+});

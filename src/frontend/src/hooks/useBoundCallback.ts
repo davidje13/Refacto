@@ -63,7 +63,6 @@ export const useConditionalBoundCallback = (
   }
 
   // must still use useMutatedCallback so hooks are called in same order if condition changes
-  /* eslint-disable-next-line react-hooks/rules-of-hooks */
   return (_: any, ...bound: any[]): undefined => useMutatedCallback(
     undefined,
     undefined,

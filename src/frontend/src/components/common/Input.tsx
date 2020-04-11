@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 
 type Callback<T> = (value: T) => void;
 
@@ -30,14 +30,14 @@ type PropsT = InheritT & ({
   onChange?: Callback<boolean>;
 });
 
-const Input = ({
+export default memo(({
   type,
   value,
   selected,
   checked,
   onChange,
   ...rest
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const changeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (!onChange) {
       return;
@@ -64,6 +64,4 @@ const Input = ({
       {...rest}
     />
   );
-};
-
-export default React.memo(Input);
+});

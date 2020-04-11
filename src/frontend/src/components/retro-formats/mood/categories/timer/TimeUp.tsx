@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import WrappedButton from '../../../../common/WrappedButton';
 import useBoundCallback from '../../../../../hooks/useBoundCallback';
 
@@ -6,9 +6,9 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
 }
 
-const TimeUp = ({
+export default memo(({
   onAddExtraTime,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const extraMinutes = 2;
 
   const extraTime = extraMinutes * 60 * 1000 + 999;
@@ -23,6 +23,4 @@ const TimeUp = ({
       </WrappedButton>
     </React.Fragment>
   );
-};
-
-export default React.memo(TimeUp);
+});

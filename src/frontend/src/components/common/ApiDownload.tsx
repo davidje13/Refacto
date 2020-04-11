@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { API_BASE } from '../../api/api';
 import './ApiDownload.less';
 
@@ -9,12 +9,12 @@ interface PropsT {
   children: React.ReactChild;
 }
 
-const ApiDownload = ({
+export default memo(({
   url,
   token,
   filename,
   children,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   // Thanks, https://stackoverflow.com/a/43133108/1180785
 
   const [pending, setPending] = useState(false);
@@ -60,6 +60,4 @@ const ApiDownload = ({
       { children }
     </a>
   );
-};
-
-export default React.memo(ApiDownload);
+});

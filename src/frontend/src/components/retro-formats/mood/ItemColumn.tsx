@@ -24,12 +24,12 @@ interface PropsT<P> {
   itemProps: Omit<P, 'item' | 'focused'>;
 }
 
-function ItemColumn<P extends Partial<ItemPropsP>>({
+export default <P extends Partial<ItemPropsP>>({
   items,
   ItemType,
   focusedItemId,
   itemProps,
-}: PropsT<P>): React.ReactElement {
+}: PropsT<P>): React.ReactElement => {
   const AnyItemType = ItemType as any;
   return (
     <ul className="item-column">
@@ -40,6 +40,4 @@ function ItemColumn<P extends Partial<ItemPropsP>>({
       )) }
     </ul>
   );
-}
-
-export default ItemColumn;
+};

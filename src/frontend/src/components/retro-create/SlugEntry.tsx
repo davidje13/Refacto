@@ -1,4 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  memo,
+} from 'react';
 import Input from '../common/Input';
 import useNonce from '../../hooks/useNonce';
 import { slugTracker } from '../../api/api';
@@ -23,12 +28,12 @@ interface PropsT {
   oldValue?: string;
 }
 
-const SlugEntry = ({
+export default memo(({
   placeholder = '',
   value,
   onChange,
   oldValue,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [slugAvailability, setSlugAvailability] = useState(SlugAvailability.BLANK);
   const checkSlugNonce = useNonce();
   const checkSlug = useCallback(async (current: string) => {
@@ -129,6 +134,4 @@ const SlugEntry = ({
       </div>
     </div>
   );
-};
-
-export default React.memo(SlugEntry);
+});

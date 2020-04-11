@@ -13,7 +13,9 @@ interface PropsT {
 const TYPES = new Map<string, React.ComponentType<ChildPropsT>>();
 TYPES.set('giphy', GiphyAttachment);
 
-const Attachment = ({ attachment }: PropsT): React.ReactElement | null => {
+export default ({
+  attachment,
+}: PropsT): React.ReactElement | null => {
   if (attachment) {
     const Type = TYPES.get(attachment.type);
     if (Type) {
@@ -22,5 +24,3 @@ const Attachment = ({ attachment }: PropsT): React.ReactElement | null => {
   }
   return null;
 };
-
-export default Attachment;

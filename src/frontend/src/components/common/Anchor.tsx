@@ -1,10 +1,12 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 
 interface PropsT {
   tag: string;
 }
 
-const Anchor = ({ tag }: PropsT): React.ReactElement => {
+export default memo(({
+  tag,
+}: PropsT) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -15,6 +17,4 @@ const Anchor = ({ tag }: PropsT): React.ReactElement => {
   }, [ref, tag]);
 
   return (<span ref={ref} id={tag} />);
-};
-
-export default React.memo(Anchor);
+});

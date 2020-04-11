@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import type { Retro } from 'refacto-entities';
 import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
@@ -14,11 +14,11 @@ interface PropsT {
   onSave?: (savedRetro: Retro) => void;
 }
 
-const SettingsForm = ({
+export default memo(({
   retro,
   dispatch,
   onSave,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [name, setName] = useState(retro.name);
   const [slug, setSlug] = useState(retro.slug);
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
@@ -107,6 +107,4 @@ const SettingsForm = ({
       ) : null }
     </form>
   );
-};
-
-export default React.memo(SettingsForm);
+});

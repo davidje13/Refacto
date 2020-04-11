@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import type { RetroItemAttachment } from 'refacto-entities';
 import WrappedButton from '../../common/WrappedButton';
 import Input from '../../common/Input';
@@ -14,11 +14,11 @@ interface PropsT {
   onCancel: () => void;
 }
 
-const GiphyPopup = ({
+export default memo(({
   defaultAttachment,
   onConfirm,
   onCancel,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState<GifInfo[]>([]);
 
@@ -69,6 +69,4 @@ const GiphyPopup = ({
       </p>
     </div>
   );
-};
-
-export default React.memo(GiphyPopup);
+});

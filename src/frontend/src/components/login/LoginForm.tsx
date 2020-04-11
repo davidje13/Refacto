@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import useConfig from '../../hooks/data/useConfig';
 import './LoginForm.less';
 
@@ -26,7 +26,10 @@ interface PropsT {
   redirect?: string | null;
 }
 
-const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
+export default memo(({
+  message,
+  redirect,
+}: PropsT) => {
   const config = useConfig();
   const sso = config?.sso ?? {};
   const googleConfig = sso.google;
@@ -83,6 +86,4 @@ const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
       </p>
     </div>
   );
-};
-
-export default React.memo(LoginForm);
+});

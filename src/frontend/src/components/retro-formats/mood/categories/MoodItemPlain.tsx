@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import classNames from 'classnames';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
@@ -11,12 +11,12 @@ interface PropsT {
   onEdit?: () => void;
 }
 
-const MoodItemPlain = ({
+export default memo(({
   item,
   onSelect,
   onVote,
   onEdit,
-}: PropsT): React.ReactElement => (
+}: PropsT) => (
   <div className={classNames('mood-item', { done: item.doneTime > 0 })}>
     <WrappedButton className="message" onClick={onSelect}>
       { item.message }
@@ -29,6 +29,4 @@ const MoodItemPlain = ({
       hideIfDisabled
     />
   </div>
-);
-
-export default React.memo(MoodItemPlain);
+));

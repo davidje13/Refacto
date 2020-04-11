@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import classNames from 'classnames';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ItemEditor from '../ItemEditor';
@@ -13,12 +13,12 @@ interface PropsT {
   onDelete?: (id: string) => void;
 }
 
-const ActionItem = ({
+export default memo(({
   item,
   onSetDone,
   onEdit,
   onDelete,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const done = item.doneTime > 0;
 
   const handleToggleDone = useBoundCallback(onSetDone, item.id, !done);
@@ -71,6 +71,4 @@ const ActionItem = ({
       />
     </div>
   );
-};
-
-export default React.memo(ActionItem);
+});

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { RetroArchiveSummary } from 'refacto-entities';
 import ArchiveLink from './ArchiveLink';
 
@@ -23,7 +23,10 @@ interface PropsT {
   archives: RetroArchiveSummary[];
 }
 
-const ArchiveList = ({ slug, archives }: PropsT): React.ReactElement => {
+export default memo(({
+  slug,
+  archives,
+}: PropsT) => {
   if (!archives.length) {
     return (<p>This retro has no archives.</p>);
   }
@@ -37,6 +40,4 @@ const ArchiveList = ({ slug, archives }: PropsT): React.ReactElement => {
       )) }
     </ul>
   );
-};
-
-export default React.memo(ArchiveList);
+});

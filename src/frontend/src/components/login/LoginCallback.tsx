@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { useLocation } from 'wouter';
 import handleLogin from './handleLogin';
 import Header from '../common/Header';
@@ -8,7 +8,9 @@ interface PropsT {
   service: string;
 }
 
-const LoginCallback = ({ service }: PropsT): React.ReactElement => {
+export default memo(({
+  service,
+}: PropsT) => {
   const [, setLocation] = useLocation();
   const [error, setError] = useState<string | null>(null);
 
@@ -39,6 +41,4 @@ const LoginCallback = ({ service }: PropsT): React.ReactElement => {
       <p>{ error ? `Login failed: ${error}` : 'Logging in\u2026' }</p>
     </article>
   );
-};
-
-export default React.memo(LoginCallback);
+});

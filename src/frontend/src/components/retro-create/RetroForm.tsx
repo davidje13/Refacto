@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import Input from '../common/Input';
 import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
 import withUserToken from '../hocs/withUserToken';
@@ -50,12 +50,12 @@ function readFileText(file: File): Promise<string> {
   });
 }
 
-const RetroForm = ({
+export default memo(withUserToken('Sign in to create a retro', ({
   defaultSlug,
   userToken,
   onCreate,
   showImport = false,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [name, setName] = useState(defaultSlug || '');
   const [slug, setSlug] = useState(defaultSlug || '');
   const [password, setPassword] = useState('');
@@ -251,6 +251,4 @@ const RetroForm = ({
       ) : null }
     </form>
   );
-};
-
-export default React.memo(withUserToken(RetroForm, 'Sign in to create a retro'));
+}));

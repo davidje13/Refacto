@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
@@ -14,14 +14,14 @@ interface PropsT {
   onContinue?: () => void;
 }
 
-const MoodItemFocused = ({
+export default memo(({
   item,
   focusedItemTimeout = 0,
   autoScroll = false,
   onAddExtraTime,
   onCancel,
   onContinue,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,6 +48,4 @@ const MoodItemFocused = ({
       <Timer targetTime={focusedItemTimeout} onAddExtraTime={onAddExtraTime} />
     </div>
   );
-};
-
-export default React.memo(MoodItemFocused);
+});

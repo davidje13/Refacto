@@ -1,4 +1,9 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  memo,
+} from 'react';
 import ArchivePopup from './ArchivePopup';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
@@ -21,12 +26,12 @@ interface PropsT {
   retroTokenError?: string | null;
 }
 
-const RetroPage = ({
+export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [
     retro,
     retroDispatch,
@@ -132,6 +137,4 @@ const RetroPage = ({
       <Popup data={popup} onClose={hideArchivePopup} />
     </article>
   );
-};
-
-export default React.memo(withRetroTokenForSlug(RetroPage));
+}));

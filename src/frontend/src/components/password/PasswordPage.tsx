@@ -11,7 +11,10 @@ interface PropsT {
   retroId: string;
 }
 
-const PasswordPage = ({ slug, retroId }: PropsT): React.ReactElement => {
+export default ({
+  slug,
+  retroId,
+}: PropsT): React.ReactElement => {
   const [password, setPassword] = useState('');
   const [userToken] = useUserToken();
   const [checkingUser, setCheckingUser] = useState(false);
@@ -81,5 +84,3 @@ const PasswordPage = ({ slug, retroId }: PropsT): React.ReactElement => {
     </article>
   );
 };
-
-export default PasswordPage;

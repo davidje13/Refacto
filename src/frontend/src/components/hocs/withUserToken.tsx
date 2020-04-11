@@ -5,8 +5,8 @@ import useUserToken from '../../hooks/data/useUserToken';
 type Unwrapped<P> = Omit<P, 'userToken'>;
 
 export default function withUserToken<P>(
+  message: string,
   Component: React.ComponentType<P>,
-  message = 'Sign in',
 ): React.ComponentType<Unwrapped<P>> {
   return (params): React.ReactElement => {
     const [userToken] = useUserToken();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { RetroSummary } from 'refacto-entities';
 import RetroLink from './RetroLink';
 
@@ -6,7 +6,9 @@ interface PropsT {
   retros: RetroSummary[];
 }
 
-const RetroList = ({ retros }: PropsT): React.ReactElement => {
+export default memo(({
+  retros,
+}: PropsT) => {
   if (!retros.length) {
     return (
       <p>You do not have any retros yet!</p>
@@ -22,6 +24,4 @@ const RetroList = ({ retros }: PropsT): React.ReactElement => {
       )) }
     </ul>
   );
-};
-
-export default React.memo(RetroList);
+});

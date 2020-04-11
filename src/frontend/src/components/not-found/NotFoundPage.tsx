@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Header from '../common/Header';
 import './NotFoundPage.less';
 
-const NotFoundPage = (): React.ReactElement => (
+export default memo(() => (
   <article className="page-not-found">
     <Header
       documentTitle="Not Found - Refacto"
@@ -11,6 +11,4 @@ const NotFoundPage = (): React.ReactElement => (
     />
     <p>Sorry, that page was not found.</p>
   </article>
-);
-
-export default React.memo(NotFoundPage);
+));

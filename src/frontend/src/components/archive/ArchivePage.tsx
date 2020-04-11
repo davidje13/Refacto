@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
@@ -16,13 +16,13 @@ interface PropsT {
   retroTokenError?: string | null;
 }
 
-const ArchivePage = ({
+export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   archiveId,
   retroToken,
   retroTokenError,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archive, archiveError] = useArchive(retroId, archiveId, retroToken);
 
@@ -54,6 +54,4 @@ const ArchivePage = ({
       />
     </article>
   );
-};
-
-export default React.memo(withRetroTokenForSlug(ArchivePage));
+}));

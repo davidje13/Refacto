@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'wouter';
 import { formatDateTime } from '../../time/formatters';
 
@@ -8,14 +8,12 @@ interface PropsT {
   created: number;
 }
 
-const ArchiveLink = ({
+export default memo(({
   retroSlug,
   archiveId,
   created,
-}: PropsT): React.ReactElement => (
+}: PropsT) => (
   <Link className="archive-link" to={`/retros/${retroSlug}/archives/${archiveId}`}>
     { formatDateTime(created) }
   </Link>
-);
-
-export default React.memo(ArchiveLink);
+));

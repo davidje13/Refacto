@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import LoginForm from '../login/LoginForm';
@@ -7,7 +7,7 @@ import useRetroList from '../../hooks/data/useRetroList';
 import RetroList from './RetroList';
 import './RetroListPage.less';
 
-const RetroListPage = (): React.ReactElement => {
+export default memo(() => {
   const [userToken] = useUserToken();
   const [retroList, error] = useRetroList(userToken);
 
@@ -45,6 +45,4 @@ const RetroListPage = (): React.ReactElement => {
       { content }
     </article>
   );
-};
-
-export default React.memo(RetroListPage);
+});

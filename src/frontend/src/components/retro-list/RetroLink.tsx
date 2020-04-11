@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'wouter';
 
 interface PropsT {
@@ -6,8 +6,9 @@ interface PropsT {
   slug: string;
 }
 
-const RetroLink = ({ name, slug }: PropsT): React.ReactElement => (
+export default memo(({
+  name,
+  slug,
+}: PropsT) => (
   <Link className="retro-link" to={`/retros/${slug}`}>{ name }</Link>
-);
-
-export default React.memo(RetroLink);
+));

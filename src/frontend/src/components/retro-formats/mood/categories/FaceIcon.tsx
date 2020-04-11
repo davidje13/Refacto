@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './FaceIcon.less';
 
 type Type = 'happy' | 'meh' | 'sad';
@@ -88,10 +88,11 @@ interface PropsT {
   theme: string;
 }
 
-const FaceIcon = ({ theme, type }: PropsT): React.ReactElement => (
+export default memo(({
+  theme,
+  type,
+}: PropsT) => (
   <div className="face-icon">
     { getTheme(theme).icons[type as Type] }
   </div>
-);
-
-export default React.memo(FaceIcon);
+));

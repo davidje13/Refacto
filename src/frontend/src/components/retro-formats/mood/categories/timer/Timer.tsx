@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import useCountdown from 'react-hook-countdown';
 import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
@@ -8,10 +8,10 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
 }
 
-const Timer = ({
+export default memo(({
   targetTime,
   onAddExtraTime,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const remaining = useCountdown(targetTime, 1000);
 
   let component;
@@ -22,6 +22,4 @@ const Timer = ({
   }
 
   return (<div className="timer">{ component }</div>);
-};
-
-export default React.memo(Timer);
+});

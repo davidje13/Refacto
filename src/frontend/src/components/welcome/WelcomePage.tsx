@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'wouter';
 import Header, { HeaderLinks } from '../common/Header';
 import LoginForm from '../login/LoginForm';
 import useUserToken from '../../hooks/data/useUserToken';
 import './WelcomePage.less';
 
-const WelcomePage = (): React.ReactElement => {
+export default memo(() => {
   const [userToken] = useUserToken();
 
   let createLink: React.ReactNode;
@@ -48,6 +48,4 @@ const WelcomePage = (): React.ReactElement => {
       </p>
     </article>
   );
-};
-
-export default React.memo(WelcomePage);
+});

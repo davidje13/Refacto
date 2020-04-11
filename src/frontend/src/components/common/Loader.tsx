@@ -8,12 +8,12 @@ interface PropsT<C, P> {
   error?: string | null;
 }
 
-function Loader<C extends React.ElementType>({
+export default <C extends React.ElementType>({
   Component,
   componentProps,
   loadingMessage = 'Loading\u2026',
   error,
-}: PropsT<C, React.ComponentPropsWithRef<C>>): React.ReactElement {
+}: PropsT<C, React.ComponentPropsWithRef<C>>): React.ReactElement => {
   if (error) {
     return (<div className="loader error">{ error }</div>);
   }
@@ -23,6 +23,4 @@ function Loader<C extends React.ElementType>({
   }
 
   return (<Component {...componentProps} />);
-}
-
-export default Loader;
+};

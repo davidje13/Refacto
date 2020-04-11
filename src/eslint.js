@@ -51,7 +51,6 @@ module.exports = {
       'ignoreNonDOM': false,
     }],
     'react/jsx-one-expression-per-line': ['off'], // too buggy
-    'react-hooks/rules-of-hooks': ['error'],
     'react/jsx-fragments': ['error', 'element'],
     'react/jsx-props-no-spreading': ['off'],
 
@@ -64,6 +63,7 @@ module.exports = {
 
     // https://github.com/facebook/react/issues/14920#issuecomment-471328990
     'react-hooks/exhaustive-deps': ['off'], // does not support spread yet
+    'react-hooks/rules-of-hooks': ['off'], // does not recognise functions passed to HOCs
 
     'react/jsx-filename-extension': ['error', {
       'extensions': ['jsx', 'tsx'],

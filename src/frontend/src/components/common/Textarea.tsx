@@ -36,7 +36,7 @@ React.TextareaHTMLAttributes<HTMLTextAreaElement>, (
   multilineClassElement?: HTMLElement | null;
 }
 
-const Textarea = ({
+export default ({
   onChange,
   onChangeMultiline,
   value = '',
@@ -129,5 +129,3 @@ const Textarea = ({
     />
   );
 };
-
-export default Textarea;

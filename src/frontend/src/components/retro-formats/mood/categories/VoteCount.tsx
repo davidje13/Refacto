@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import WrappedButton from '../../../common/WrappedButton';
 
 interface PropsT {
@@ -6,10 +6,10 @@ interface PropsT {
   onVote?: () => void;
 }
 
-const VoteCount = ({
+export default memo(({
   votes,
   onVote,
-}: PropsT): React.ReactElement => (
+}: PropsT) => (
   <WrappedButton
     className="vote"
     title="Agree with this"
@@ -18,6 +18,4 @@ const VoteCount = ({
   >
     {votes}
   </WrappedButton>
-);
-
-export default React.memo(VoteCount);
+));

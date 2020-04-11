@@ -25,9 +25,6 @@ module.exports = {
     // isolation
     conditionalModule(() => process.env.NODE_ENV !== 'development', airbnb({
       eslint: {
-        plugins: [
-          'react-hooks',
-        ],
         rules: { ...baseRules, ...reactRules },
         baseConfig: {
           extends: [

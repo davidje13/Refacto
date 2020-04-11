@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'wouter';
 import WrappedButton from './WrappedButton';
 
@@ -7,16 +7,14 @@ export interface LinkPropsT extends Omit<React.HTMLAttributes<HTMLElement>, 'onC
   action: string | (() => void);
 }
 
-const HeaderLinkItem = ({
+export default memo(({
   label,
   action,
   ...props
-}: LinkPropsT): React.ReactElement => {
+}: LinkPropsT) => {
   if (typeof action === 'string') {
     return (<Link to={action} {...props}>{ label }</Link>);
   }
 
   return (<WrappedButton onClick={action} {...props}>{ label }</WrappedButton>);
-};
-
-export default React.memo(HeaderLinkItem);
+});

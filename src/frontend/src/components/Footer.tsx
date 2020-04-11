@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './Footer.less';
 
-const Footer = (): React.ReactElement => (
+export default memo(() => (
   <footer className="page-footer">
     Refacto (
     <a
@@ -13,6 +13,4 @@ const Footer = (): React.ReactElement => (
     </a>
     )
   </footer>
-);
-
-export default React.memo(Footer);
+));

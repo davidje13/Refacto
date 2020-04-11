@@ -17,7 +17,10 @@ function stopProp(e: Event): void {
   e.stopPropagation();
 }
 
-const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
+export default ({
+  data,
+  onClose,
+}: PropsT): React.ReactElement | null => {
   const keys = data?.keys ?? {};
 
   const closeHandler = useParameterlessCallback(onClose);
@@ -68,5 +71,3 @@ const Popup = ({ data, onClose }: PropsT): React.ReactElement | null => {
     </Modal>
   );
 };
-
-export default Popup;

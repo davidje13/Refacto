@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import { useLocation } from 'wouter';
 import type { Retro } from 'refacto-entities';
 import Header from '../common/Header';
@@ -15,12 +15,12 @@ interface PropsT {
   retroTokenError?: string | null;
 }
 
-const RetroSettingsPage = ({
+export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const [, setLocation] = useLocation();
 
   const [
@@ -53,6 +53,4 @@ const RetroSettingsPage = ({
       />
     </article>
   );
-};
-
-export default React.memo(withRetroTokenForSlug(RetroSettingsPage));
+}));

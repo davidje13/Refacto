@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
@@ -33,7 +33,7 @@ interface PropsT {
   autoScroll?: boolean;
 }
 
-const MoodSection = ({
+export default memo(({
   category,
   categoryLabel,
   theme = '',
@@ -50,7 +50,7 @@ const MoodSection = ({
   focusedItemId,
   focusedItemTimeout = 0,
   autoScroll = false,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const handleAddItem = useBoundCallback(onAddItem, category);
 
   return (
@@ -88,6 +88,4 @@ const MoodSection = ({
       />
     </section>
   );
-};
-
-export default React.memo(MoodSection);
+});

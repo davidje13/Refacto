@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Header from '../common/Header';
 import Anchor from '../common/Anchor';
 import './SecurityPage.less';
 
-const SecurityPage = (): React.ReactElement => (
+export default memo(() => (
   <article className="page-security">
     <Header
       documentTitle="Privacy &amp; Security - Refacto"
@@ -90,6 +90,4 @@ const SecurityPage = (): React.ReactElement => (
       </p>
     </section>
   </article>
-);
-
-export default React.memo(SecurityPage);
+));

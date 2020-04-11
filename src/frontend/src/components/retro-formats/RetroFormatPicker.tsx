@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, memo, lazy } from 'react';
 import type { Retro, RetroItem } from 'refacto-entities';
 import UnknownRetro from './unknown/UnknownRetro';
 import type { Dispatch } from '../../api/SharedReducer';
@@ -19,17 +19,17 @@ interface PropsT extends Omit<ChildPropsT, 'archive'> {
 }
 
 const formats = new Map<string, React.ComponentType<ChildPropsT>>();
-formats.set('mood', React.lazy(() => import('./mood/MoodRetro')));
+formats.set('mood', lazy(() => import('./mood/MoodRetro')));
 
 const LOADER = (
   <div className="loader">Loading&hellip;</div>
 );
 
-const RetroFormatPicker = ({
+export default memo(({
   retroFormat,
   archive = false,
   ...props
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const RetroType = formats.get(retroFormat) || UnknownRetro;
 
   return (
@@ -37,6 +37,4 @@ const RetroFormatPicker = ({
       <RetroType archive={archive} {...props} />
     </Suspense>
   );
-};
-
-export default React.memo(RetroFormatPicker);
+});

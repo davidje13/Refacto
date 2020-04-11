@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface PropsT {
   remaining: number;
 }
 
-const TimeRemaining = ({ remaining }: PropsT): React.ReactElement => (
+export default memo(({
+  remaining,
+}: PropsT) => (
   <p className="countdown">
     { Math.floor(remaining / 1000 / 60) }
     :
     { String(Math.floor(remaining / 1000) % 60).padStart(2, '0') }
   </p>
-);
-
-export default React.memo(TimeRemaining);
+));

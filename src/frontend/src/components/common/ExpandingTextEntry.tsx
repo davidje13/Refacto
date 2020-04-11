@@ -29,7 +29,7 @@ interface PropsT {
   blurOnCancel?: boolean;
 }
 
-const ExpandingTextEntry = ({
+export default ({
   onSubmit,
   onCancel,
   placeholder = '',
@@ -139,5 +139,3 @@ const ExpandingTextEntry = ({
   /* eslint-enable jsx-a11y/no-autofocus */
   /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
 };
-
-export default ExpandingTextEntry;

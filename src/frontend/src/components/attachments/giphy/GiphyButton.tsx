@@ -1,4 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, {
+  Fragment,
+  useState,
+  useCallback,
+  memo,
+} from 'react';
 import type { RetroItemAttachment } from 'refacto-entities';
 import Popup from '../../common/Popup';
 import WrappedButton from '../../common/WrappedButton';
@@ -10,7 +15,10 @@ interface PropsT {
   onChange: (attachment: RetroItemAttachment | null) => void;
 }
 
-const GiphyButton = ({ defaultAttachment, onChange }: PropsT): React.ReactElement => {
+export default memo(({
+  defaultAttachment,
+  onChange,
+}: PropsT) => {
   const [visible, setVisible] = useState(false);
   const show = useBoundCallback(setVisible, true);
   const hide = useBoundCallback(setVisible, false);
@@ -37,7 +45,7 @@ const GiphyButton = ({ defaultAttachment, onChange }: PropsT): React.ReactElemen
   }
 
   return (
-    <React.Fragment>
+    <Fragment>
       <WrappedButton
         key="giphy"
         title="Add GIPHY image"
@@ -45,8 +53,6 @@ const GiphyButton = ({ defaultAttachment, onChange }: PropsT): React.ReactElemen
         onClick={show}
       />
       <Popup data={popup} onClose={hide} />
-    </React.Fragment>
+    </Fragment>
   );
-};
-
-export default React.memo(GiphyButton);
+});

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
@@ -20,7 +20,7 @@ interface PropsT {
   onContinue?: (id: string) => void;
 }
 
-const MoodItem = ({
+export default memo(({
   item,
   focused = false,
   focusedItemTimeout = 0,
@@ -32,7 +32,7 @@ const MoodItem = ({
   onSelect,
   onCancel,
   onContinue,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const handleVote = useBoundCallback(onVote, item.id);
   const handleDelete = useBoundCallback(onDelete, item.id);
   const handleSelect = useBoundCallback(onSelect, item.id);
@@ -89,6 +89,4 @@ const MoodItem = ({
       onSelect={handleSelect}
     />
   );
-};
-
-export default React.memo(MoodItem);
+});

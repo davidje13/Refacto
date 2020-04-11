@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import classNames from 'classnames';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ActionSection from './ActionSection';
@@ -16,7 +16,7 @@ interface PropsT {
   onDelete?: (id: string) => void;
 }
 
-const ActionsPane = ({
+export default memo(({
   items,
   localDateProvider,
   alwaysShowEntry = false,
@@ -24,7 +24,7 @@ const ActionsPane = ({
   onSetDone,
   onEdit,
   onDelete,
-}: PropsT): React.ReactElement => {
+}: PropsT) => {
   const today = localDateProvider.getMidnightTimestamp();
   const lastWeek = localDateProvider.getMidnightTimestamp(-7);
 
@@ -78,6 +78,4 @@ const ActionsPane = ({
       />
     </section>
   );
-};
-
-export default React.memo(ActionsPane);
+});

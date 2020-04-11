@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Route,
   Switch,
@@ -25,8 +25,8 @@ const withParams = (
   <Page {...params} />
 );
 
-const App = (): React.ReactElement => (
-  <React.Fragment>
+export default (): React.ReactElement => (
+  <Fragment>
     <Switch>
       <Route path="/sso/:service" component={withParams(LoginCallback)} />
       <Route path="/" component={withParams(WelcomePage)} />
@@ -45,7 +45,5 @@ const App = (): React.ReactElement => (
       <Route path="/:rest*" component={withParams(NotFoundPage)} />
     </Switch>
     <Footer />
-  </React.Fragment>
+  </Fragment>
 );
-
-export default App;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
 import { configService } from './api/api';
@@ -17,5 +17,5 @@ const root = document.getElementById('root')!;
 Modal.setAppElement(root);
 
 configService.load().then(() => {
-  ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, root);
+  ReactDOM.render(<StrictMode><App /></StrictMode>, root);
 });

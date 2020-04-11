@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import classNames from 'classnames';
 import './TabControl.less';
 
@@ -18,7 +18,9 @@ interface PropsT {
   tabs: TabT[];
 }
 
-const TabControl = ({ tabs }: PropsT): React.ReactElement => {
+export default memo(({
+  tabs,
+}: PropsT) => {
   const [activeKey, setActiveKey] = useState('');
   const active = getActive(tabs, activeKey);
 
@@ -51,6 +53,4 @@ const TabControl = ({ tabs }: PropsT): React.ReactElement => {
       { active.content }
     </section>
   );
-};
-
-export default React.memo(TabControl);
+});

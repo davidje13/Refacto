@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import { useLocation } from 'wouter';
 import Header from '../common/Header';
 import { slugTracker } from '../../api/api';
 import RetroForm from './RetroForm';
 import './RetroImportPage.less';
 
-const RetroImportPage = (): React.ReactElement => {
+export default memo(() => {
   const [, setLocation] = useLocation();
   const handleCreate = useCallback(({ id, slug }) => {
     slugTracker.set(slug, id);
@@ -25,6 +25,4 @@ const RetroImportPage = (): React.ReactElement => {
       <RetroForm onCreate={handleCreate} showImport />
     </article>
   );
-};
-
-export default React.memo(RetroImportPage);
+});

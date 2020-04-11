@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ActionItem from './ActionItem';
 import ItemColumn from '../ItemColumn';
@@ -21,7 +21,7 @@ interface PropsT {
   onDelete?: (id: string) => void;
 }
 
-const ActionSection = ({
+export default memo(({
   title,
   items,
   rangeFrom = Number.NEGATIVE_INFINITY,
@@ -29,7 +29,7 @@ const ActionSection = ({
   onSetDone,
   onEdit,
   onDelete,
-}: PropsT): React.ReactElement => (
+}: PropsT) => (
   <section>
     <header>
       <h3>{title}</h3>
@@ -44,6 +44,4 @@ const ActionSection = ({
       }}
     />
   </section>
-);
-
-export default React.memo(ActionSection);
+));

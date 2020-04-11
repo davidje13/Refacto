@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 
 interface PropsT extends React.HTMLAttributes<HTMLElement> {
@@ -10,7 +10,7 @@ interface PropsT extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
 }
 
-const WrappedButton = ({
+export default memo(({
   onClick,
   disabled = false,
   hideIfDisabled = false,
@@ -18,7 +18,7 @@ const WrappedButton = ({
   disabledTitle,
   children,
   ...props
-}: PropsT): React.ReactElement | null => {
+}: PropsT) => {
   const handleClick = useParameterlessCallback(onClick);
   const resolvedDisabled = disabled || !onClick;
 
@@ -39,6 +39,4 @@ const WrappedButton = ({
       { children }
     </button>
   );
-};
-
-export default React.memo(WrappedButton);
+});
