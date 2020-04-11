@@ -2,7 +2,6 @@ import React from 'react';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import LoginForm from '../login/LoginForm';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import useUserToken from '../../hooks/data/useUserToken';
 import useRetroList from '../../hooks/data/useRetroList';
 import RetroList from './RetroList';
@@ -47,7 +46,5 @@ const RetroListPage = (): React.ReactElement => {
     </article>
   );
 };
-
-forbidExtraProps(RetroListPage);
 
 export default React.memo(RetroListPage);

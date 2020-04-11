@@ -1,8 +1,6 @@
 import React, { useState, useLayoutEffect } from 'react';
-import PropTypes from 'prop-types';
 import Header from '../common/Header';
 import Input from '../common/Input';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import useUserToken from '../../hooks/data/useUserToken';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
@@ -83,12 +81,5 @@ const PasswordPage = ({ slug, retroId }: PropsT): React.ReactElement => {
     </article>
   );
 };
-
-PasswordPage.propTypes = {
-  slug: PropTypes.string.isRequired,
-  retroId: PropTypes.string.isRequired,
-};
-
-forbidExtraProps(PasswordPage);
 
 export default PasswordPage;

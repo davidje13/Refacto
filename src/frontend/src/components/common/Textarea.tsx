@@ -4,7 +4,6 @@ import React, {
   useCallback,
   useLayoutEffect,
 } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import useListener from '../../hooks/useListener';
 import useDebounced from '../../hooks/useDebounced';
@@ -129,14 +128,6 @@ const Textarea = ({
       {...rest}
     />
   );
-};
-
-Textarea.propTypes = {
-  onChange: PropTypes.func,
-  onChangeMultiline: PropTypes.func,
-  value: PropTypes.string,
-  sizeToFit: PropTypes.bool,
-  multilineClass: PropTypes.string,
 };
 
 Textarea.defaultProps = {

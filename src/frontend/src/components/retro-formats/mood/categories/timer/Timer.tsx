@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import useCountdown from 'react-hook-countdown';
 import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
-import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
 interface PropsT {
   targetTime: number;
@@ -23,15 +21,8 @@ const Timer = ({ targetTime, onAddExtraTime }: PropsT): React.ReactElement => {
   return (<div className="timer">{ component }</div>);
 };
 
-Timer.propTypes = {
-  targetTime: PropTypes.number.isRequired,
-  onAddExtraTime: PropTypes.func,
-};
-
 Timer.defaultProps = {
   onAddExtraTime: undefined,
 };
-
-forbidExtraProps(Timer);
 
 export default React.memo(Timer);

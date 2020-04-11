@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 interface PropsT {
   tag: string;
@@ -16,10 +15,6 @@ const Anchor = ({ tag }: PropsT): React.ReactElement => {
   }, [ref, tag]);
 
   return (<span ref={ref} id={tag} />);
-};
-
-Anchor.protoTypes = {
-  tag: PropTypes.string.isRequired,
 };
 
 export default React.memo(Anchor);

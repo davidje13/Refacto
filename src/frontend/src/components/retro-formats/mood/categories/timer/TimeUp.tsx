@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import WrappedButton from '../../../../common/WrappedButton';
 import useBoundCallback from '../../../../../hooks/useBoundCallback';
-import forbidExtraProps from '../../../../../helpers/forbidExtraProps';
 
 interface PropsT {
   onAddExtraTime?: (time: number) => void;
@@ -25,14 +23,8 @@ const TimeUp = ({ onAddExtraTime }: PropsT): React.ReactElement => {
   );
 };
 
-TimeUp.propTypes = {
-  onAddExtraTime: PropTypes.func,
-};
-
 TimeUp.defaultProps = {
   onAddExtraTime: undefined,
 };
-
-forbidExtraProps(TimeUp);
 
 export default React.memo(TimeUp);

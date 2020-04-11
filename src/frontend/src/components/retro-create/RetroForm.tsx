@@ -1,11 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import Input from '../common/Input';
 import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
 import withUserToken from '../hocs/withUserToken';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import useNonce from '../../hooks/useNonce';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import {
   retroService,
   retroTokenTracker,
@@ -255,18 +253,9 @@ const RetroForm = ({
   );
 };
 
-RetroForm.propTypes = {
-  userToken: PropTypes.string.isRequired,
-  onCreate: PropTypes.func.isRequired,
-  defaultSlug: PropTypes.string,
-  showImport: PropTypes.bool,
-};
-
 RetroForm.defaultProps = {
   defaultSlug: undefined,
   showImport: false,
 };
-
-forbidExtraProps(RetroForm);
 
 export default React.memo(withUserToken(RetroForm, 'Sign in to create a retro'));

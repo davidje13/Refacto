@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
 import useConfig from '../../hooks/data/useConfig';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './LoginForm.less';
 
 function randomString(): string {
@@ -87,16 +85,9 @@ const LoginForm = ({ message, redirect }: PropsT): React.ReactElement => {
   );
 };
 
-LoginForm.propTypes = {
-  message: PropTypes.string,
-  redirect: PropTypes.string,
-};
-
 LoginForm.defaultProps = {
   message: null,
   redirect: null,
 };
-
-forbidExtraProps(LoginForm);
 
 export default React.memo(LoginForm);

@@ -1,7 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { API_BASE } from '../../api/api';
 import './ApiDownload.less';
 
@@ -65,17 +62,8 @@ const ApiDownload = ({
   );
 };
 
-ApiDownload.propTypes = {
-  url: PropTypes.string.isRequired,
-  token: nullable(PropTypes.string).isRequired,
-  filename: PropTypes.string.isRequired,
-  children: PropTypes.node,
-};
-
 ApiDownload.defaultProps = {
   children: null,
 };
-
-forbidExtraProps(ApiDownload);
 
 export default React.memo(ApiDownload);

@@ -1,7 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './Loader.less';
 
 interface PropsT<C, P> {
@@ -28,18 +25,9 @@ function Loader<C extends React.ElementType>({
   return (<Component {...componentProps} />);
 }
 
-Loader.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  componentProps: nullable(PropTypes.shape({})).isRequired,
-  loadingMessage: PropTypes.node,
-  error: PropTypes.string,
-};
-
 Loader.defaultProps = {
   loadingMessage: 'Loading\u2026',
   error: null,
 };
-
-forbidExtraProps(Loader);
 
 export default Loader;

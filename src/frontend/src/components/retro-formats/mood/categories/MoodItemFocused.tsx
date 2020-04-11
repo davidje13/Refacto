@@ -1,11 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import Attachment from '../../../attachments/Attachment';
 
 interface PropsT {
@@ -53,15 +50,6 @@ const MoodItemFocused = ({
   );
 };
 
-MoodItemFocused.propTypes = {
-  item: propTypesShapeItem.isRequired,
-  focusedItemTimeout: PropTypes.number,
-  autoScroll: PropTypes.bool,
-  onAddExtraTime: PropTypes.func,
-  onCancel: PropTypes.func,
-  onContinue: PropTypes.func,
-};
-
 MoodItemFocused.defaultProps = {
   focusedItemTimeout: 0,
   onAddExtraTime: undefined,
@@ -69,7 +57,5 @@ MoodItemFocused.defaultProps = {
   onCancel: undefined,
   onContinue: undefined,
 };
-
-forbidExtraProps(MoodItemFocused);
 
 export default React.memo(MoodItemFocused);

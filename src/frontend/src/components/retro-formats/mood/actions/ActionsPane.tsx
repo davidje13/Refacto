@@ -1,12 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ActionSection from './ActionSection';
 import ItemEditor from '../ItemEditor';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
-import LocalDateProvider from '../../../../time/LocalDateProvider';
+import type LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
 
 interface PropsT {
@@ -83,16 +80,6 @@ const ActionsPane = ({
   );
 };
 
-ActionsPane.propTypes = {
-  items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
-  localDateProvider: PropTypes.instanceOf(LocalDateProvider).isRequired,
-  alwaysShowEntry: PropTypes.bool,
-  onAddItem: PropTypes.func,
-  onSetDone: PropTypes.func,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-};
-
 ActionsPane.defaultProps = {
   alwaysShowEntry: false,
   onAddItem: null,
@@ -100,7 +87,5 @@ ActionsPane.defaultProps = {
   onEdit: null,
   onDelete: null,
 };
-
-forbidExtraProps(ActionsPane);
 
 export default React.memo(ActionsPane);

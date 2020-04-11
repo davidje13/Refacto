@@ -1,9 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import Input from '../common/Input';
 import useNonce from '../../hooks/useNonce';
 import { slugTracker } from '../../api/api';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 
 export const MAX_SLUG_LENGTH = 64;
 const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';
@@ -133,18 +131,9 @@ const SlugEntry = ({
   );
 };
 
-SlugEntry.propTypes = {
-  placeholder: PropTypes.string,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  oldValue: PropTypes.string,
-};
-
 SlugEntry.defaultProps = {
   placeholder: '',
   oldValue: undefined,
 };
-
-forbidExtraProps(SlugEntry);
 
 export default React.memo(SlugEntry);

@@ -1,9 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import type { RetroArchiveSummary } from 'refacto-entities';
 import ArchiveLink from './ArchiveLink';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeArchiveSummary } from '../../api/dataStructurePropTypes';
 
 function archiveCreatedComparator(
   a: RetroArchiveSummary,
@@ -41,12 +38,5 @@ const ArchiveList = ({ slug, archives }: PropsT): React.ReactElement => {
     </ul>
   );
 };
-
-ArchiveList.propTypes = {
-  slug: PropTypes.string.isRequired,
-  archives: PropTypes.arrayOf(propTypesShapeArchiveSummary).isRequired,
-};
-
-forbidExtraProps(ArchiveList);
 
 export default React.memo(ArchiveList);

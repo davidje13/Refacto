@@ -1,7 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import isFocusable from '../../helpers/isFocusable';
 import useKeyHandler from '../../hooks/useKeyHandler';
 import useBoxed from '../../hooks/useBoxed';
@@ -142,22 +140,6 @@ const ExpandingTextEntry = ({
   /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
 };
 
-ExpandingTextEntry.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func,
-  placeholder: PropTypes.string,
-  defaultValue: PropTypes.string,
-  autoFocus: PropTypes.bool,
-  forceMultiline: PropTypes.bool,
-  extraInputs: PropTypes.node,
-  extraOptions: PropTypes.node,
-  submitButtonLabel: PropTypes.node,
-  submitButtonTitle: PropTypes.string,
-  clearAfterSubmit: PropTypes.bool,
-  blurOnSubmit: PropTypes.bool,
-  blurOnCancel: PropTypes.bool,
-};
-
 ExpandingTextEntry.defaultProps = {
   onCancel: null,
   placeholder: '',
@@ -172,7 +154,5 @@ ExpandingTextEntry.defaultProps = {
   blurOnSubmit: false,
   blurOnCancel: false,
 };
-
-forbidExtraProps(ExpandingTextEntry);
 
 export default ExpandingTextEntry;

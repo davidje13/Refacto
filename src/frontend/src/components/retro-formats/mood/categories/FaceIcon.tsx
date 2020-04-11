@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
 import './FaceIcon.less';
 
 type Type = 'happy' | 'meh' | 'sad';
@@ -95,12 +93,5 @@ const FaceIcon = ({ theme, type }: PropsT): React.ReactElement => (
     { getTheme(theme).icons[type as Type] }
   </div>
 );
-
-FaceIcon.propTypes = {
-  theme: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-};
-
-forbidExtraProps(FaceIcon);
 
 export default React.memo(FaceIcon);

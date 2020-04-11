@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 
 interface PropsT extends React.HTMLAttributes<HTMLElement> {
@@ -40,15 +39,6 @@ const WrappedButton = ({
       { children }
     </button>
   );
-};
-
-WrappedButton.propTypes = {
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  hideIfDisabled: PropTypes.bool,
-  title: PropTypes.string,
-  disabledTitle: PropTypes.string,
-  children: PropTypes.node,
 };
 
 WrappedButton.defaultProps = {

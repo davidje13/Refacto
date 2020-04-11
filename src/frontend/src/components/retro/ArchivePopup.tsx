@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import WrappedButton from '../common/WrappedButton';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './ArchivePopup.less';
 
 interface PropsT {
@@ -22,12 +20,5 @@ const ArchivePopup = ({ onConfirm, onCancel }: PropsT): React.ReactElement => (
     </p>
   </div>
 );
-
-ArchivePopup.propTypes = {
-  onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-};
-
-forbidExtraProps(ArchivePopup);
 
 export default React.memo(ArchivePopup);

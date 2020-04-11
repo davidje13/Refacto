@@ -1,9 +1,6 @@
 import React, { Suspense } from 'react';
-import PropTypes from 'prop-types';
 import type { Retro, RetroItem } from 'refacto-entities';
 import UnknownRetro from './unknown/UnknownRetro';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../api/dataStructurePropTypes';
 import type { Dispatch } from '../../api/SharedReducer';
 
 interface ChildPropsT {
@@ -37,24 +34,11 @@ const RetroFormatPicker = ({ retroFormat, ...props }: PropsT): React.ReactElemen
   );
 };
 
-RetroFormatPicker.propTypes = {
-  retroFormat: PropTypes.string.isRequired,
-  retroOptions: PropTypes.shape({}).isRequired,
-  retroItems: PropTypes.arrayOf(propTypesShapeItem).isRequired,
-  retroState: PropTypes.shape({}).isRequired,
-  dispatch: PropTypes.func,
-  onComplete: PropTypes.func,
-  archive: PropTypes.bool,
-  archiveTime: PropTypes.number,
-};
-
 RetroFormatPicker.defaultProps = {
   dispatch: undefined,
   onComplete: undefined,
   archive: false,
   archiveTime: undefined,
 };
-
-forbidExtraProps(RetroFormatPicker);
 
 export default React.memo(RetroFormatPicker);

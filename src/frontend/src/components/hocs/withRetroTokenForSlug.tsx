@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import useSlug from '../../hooks/data/useSlug';
 import useRetroToken from '../../hooks/data/useRetroToken';
 import PasswordPage from '../password/PasswordPage';
@@ -34,10 +33,6 @@ export default function withRetroTokenForSlug<P extends InputPropsT>(
       />
     );
   };
-
-  Wrapped.propTypes = {
-    slug: PropTypes.string.isRequired,
-  } as any;
 
   return Wrapped;
 }

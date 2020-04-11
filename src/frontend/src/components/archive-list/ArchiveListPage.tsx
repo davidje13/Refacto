@@ -1,13 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import ApiDownload from '../common/ApiDownload';
 import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
 import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useArchiveList from '../../hooks/data/useArchiveList';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
@@ -57,17 +54,8 @@ const ArchiveListPage = ({
   );
 };
 
-ArchiveListPage.propTypes = {
-  slug: PropTypes.string.isRequired,
-  retroId: nullable(PropTypes.string).isRequired,
-  retroToken: nullable(PropTypes.string).isRequired,
-  retroTokenError: PropTypes.string,
-};
-
 ArchiveListPage.defaultProps = {
   retroTokenError: null,
 };
-
-forbidExtraProps(ArchiveListPage);
 
 export default React.memo(withRetroTokenForSlug(ArchiveListPage));

@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 type Callback<T> = (value: T) => void;
 
@@ -65,10 +64,6 @@ const Input = ({
       {...rest}
     />
   );
-};
-
-Input.propTypes = {
-  onChange: PropTypes.func,
 };
 
 Input.defaultProps = {

@@ -15,8 +15,6 @@
     "classnames": "2.x",
     "js-sha1": "0.6.x",
     "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
-    "prop-types": "15.x",
-    "prop-types-nullable": "git+https://github.com/davidje13/prop-types-nullable.git#semver:^1.0.1",
     "react": "16.x",
     "react-dom": "16.x",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.1",

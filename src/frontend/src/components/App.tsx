@@ -6,7 +6,6 @@ import {
 } from 'wouter';
 import './App.less';
 import RedirectRoute from './RedirectRoute';
-import forbidExtraProps from '../helpers/forbidExtraProps';
 import Footer from './Footer';
 import LoginCallback from './login/LoginCallback';
 import WelcomePage from './welcome/WelcomePage';
@@ -48,7 +47,5 @@ const App = (): React.ReactElement => (
     <Footer />
   </React.Fragment>
 );
-
-forbidExtraProps(App);
 
 export default App;

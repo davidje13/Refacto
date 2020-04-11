@@ -1,11 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
 interface PropsT {
   item: RetroItem;
@@ -34,19 +31,10 @@ const MoodItemPlain = ({
   </div>
 );
 
-MoodItemPlain.propTypes = {
-  item: propTypesShapeItem.isRequired,
-  onSelect: PropTypes.func,
-  onVote: PropTypes.func,
-  onEdit: PropTypes.func,
-};
-
 MoodItemPlain.defaultProps = {
   onSelect: undefined,
   onVote: undefined,
   onEdit: undefined,
 };
-
-forbidExtraProps(MoodItemPlain);
 
 export default React.memo(MoodItemPlain);

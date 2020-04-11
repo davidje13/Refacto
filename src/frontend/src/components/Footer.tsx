@@ -1,5 +1,4 @@
 import React from 'react';
-import forbidExtraProps from '../helpers/forbidExtraProps';
 import './Footer.less';
 
 const Footer = (): React.ReactElement => (
@@ -15,7 +14,5 @@ const Footer = (): React.ReactElement => (
     )
   </footer>
 );
-
-forbidExtraProps(Footer);
 
 export default React.memo(Footer);

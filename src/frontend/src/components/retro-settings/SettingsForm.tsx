@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import type { Retro } from 'refacto-entities';
 import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
-import { propTypesShapeRetro } from '../../api/dataStructurePropTypes';
 import { Dispatch, actionsSyncedCallback } from '../../api/SharedReducer';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import OPTIONS from '../../helpers/optionManager';
 import './SettingsForm.less';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
@@ -108,16 +105,8 @@ const SettingsForm = ({ retro, dispatch, onSave }: PropsT): React.ReactElement =
   );
 };
 
-SettingsForm.propTypes = {
-  retro: propTypesShapeRetro.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  onSave: PropTypes.func,
-};
-
 SettingsForm.defaultProps = {
   onSave: undefined,
 };
-
-forbidExtraProps(SettingsForm);
 
 export default React.memo(SettingsForm);

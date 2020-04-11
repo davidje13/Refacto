@@ -1,6 +1,4 @@
 import React, { useState, useCallback, useRef } from 'react';
-import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
 import ArchivePopup from './ArchivePopup';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
@@ -11,7 +9,6 @@ import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useWindowSize from '../../hooks/env/useWindowSize';
 import { clearCovered } from '../../actions/retro';
 import { archiveService } from '../../api/api';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import OPTIONS from '../../helpers/optionManager';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
@@ -137,17 +134,8 @@ const RetroPage = ({
   );
 };
 
-RetroPage.propTypes = {
-  slug: PropTypes.string.isRequired,
-  retroId: nullable(PropTypes.string).isRequired,
-  retroToken: nullable(PropTypes.string).isRequired,
-  retroTokenError: PropTypes.string,
-};
-
 RetroPage.defaultProps = {
   retroTokenError: null,
 };
-
-forbidExtraProps(RetroPage);
 
 export default React.memo(withRetroTokenForSlug(RetroPage));

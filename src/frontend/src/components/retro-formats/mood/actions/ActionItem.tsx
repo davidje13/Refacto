@@ -1,12 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ItemEditor from '../ItemEditor';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './ActionItem.less';
 
 interface PropsT {
@@ -76,19 +73,10 @@ const ActionItem = ({
   );
 };
 
-ActionItem.propTypes = {
-  item: propTypesShapeItem.isRequired,
-  onSetDone: PropTypes.func,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-};
-
 ActionItem.defaultProps = {
   onSetDone: undefined,
   onEdit: undefined,
   onDelete: undefined,
 };
-
-forbidExtraProps(ActionItem, { alsoAllow: ['focused'] });
 
 export default React.memo(ActionItem);

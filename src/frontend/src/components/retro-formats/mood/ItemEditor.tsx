@@ -1,13 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
 import Attachment from '../../attachments/Attachment';
 import GiphyButton from '../../attachments/giphy/GiphyButton';
-import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import useConfig from '../../../hooks/data/useConfig';
-import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
 
 interface PropsT {
   defaultItem?: RetroItem;
@@ -92,21 +89,6 @@ const ItemEditor = ({
   );
 };
 
-ItemEditor.propTypes = {
-  defaultItem: propTypesShapeItem,
-  onSubmit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func,
-  onDelete: PropTypes.func,
-  placeholder: PropTypes.string,
-  autoFocus: PropTypes.bool,
-  submitButtonLabel: PropTypes.node,
-  submitButtonTitle: PropTypes.string,
-  allowAttachments: PropTypes.bool,
-  clearAfterSubmit: PropTypes.bool,
-  blurOnSubmit: PropTypes.bool,
-  blurOnCancel: PropTypes.bool,
-};
-
 ItemEditor.defaultProps = {
   defaultItem: undefined,
   onCancel: null,
@@ -120,7 +102,5 @@ ItemEditor.defaultProps = {
   blurOnSubmit: false,
   blurOnCancel: false,
 };
-
-forbidExtraProps(ItemEditor);
 
 export default React.memo(ItemEditor);

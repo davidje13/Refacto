@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import type { RetroItem } from 'refacto-entities';
-import { propTypesShapeItem } from '../../../api/dataStructurePropTypes';
 
 function itemCreatedComparator(a: RetroItem, b: RetroItem): number {
   // sort newer-to-older
@@ -43,13 +41,6 @@ function ItemColumn<P extends Partial<ItemPropsP>>({
     </ul>
   );
 }
-
-ItemColumn.propTypes = {
-  items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
-  ItemType: PropTypes.elementType.isRequired,
-  focusedItemId: PropTypes.string,
-  itemProps: PropTypes.shape({}).isRequired,
-};
 
 ItemColumn.defaultProps = {
   focusedItemId: null,

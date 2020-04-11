@@ -1,8 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import nullable from 'prop-types-nullable';
-import HeaderLinkItem, { propTypesLink, LinkPropsT } from './HeaderLinkItem';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
+import HeaderLinkItem, { LinkPropsT } from './HeaderLinkItem';
 import { Title } from '../../hooks/env/useTitle';
 import './Header.less';
 
@@ -36,17 +33,6 @@ const Header = ({
     </div>
   </header>
 );
-
-const shapeLink = PropTypes.shape(propTypesLink);
-
-Header.propTypes = {
-  documentTitle: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  backLink: shapeLink,
-  links: PropTypes.arrayOf(nullable(shapeLink)),
-};
-
-forbidExtraProps(Header);
 
 Header.defaultProps = {
   backLink: null,

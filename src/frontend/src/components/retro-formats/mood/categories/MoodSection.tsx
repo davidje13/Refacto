@@ -1,13 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 
 interface PropsT {
   category: string;
@@ -93,25 +90,6 @@ const MoodSection = ({
   );
 };
 
-MoodSection.propTypes = {
-  category: PropTypes.string.isRequired,
-  categoryLabel: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(propTypesShapeItem).isRequired,
-  theme: PropTypes.string,
-  addItemPlaceholder: PropTypes.string,
-  onAddItem: PropTypes.func,
-  onVote: PropTypes.func,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onSelect: PropTypes.func,
-  onCancel: PropTypes.func,
-  onContinue: PropTypes.func,
-  onAddExtraTime: PropTypes.func,
-  focusedItemId: PropTypes.string,
-  focusedItemTimeout: PropTypes.number,
-  autoScroll: PropTypes.bool,
-};
-
 MoodSection.defaultProps = {
   theme: '',
   addItemPlaceholder: '',
@@ -127,7 +105,5 @@ MoodSection.defaultProps = {
   focusedItemTimeout: 0,
   autoScroll: false,
 };
-
-forbidExtraProps(MoodSection);
 
 export default React.memo(MoodSection);

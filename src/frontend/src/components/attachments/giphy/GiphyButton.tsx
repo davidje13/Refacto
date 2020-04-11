@@ -1,11 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import type { RetroItemAttachment } from 'refacto-entities';
 import Popup from '../../common/Popup';
 import WrappedButton from '../../common/WrappedButton';
-import forbidExtraProps from '../../../helpers/forbidExtraProps';
 import useBoundCallback from '../../../hooks/useBoundCallback';
-import { propTypesShapeItemAttachment } from '../../../api/dataStructurePropTypes';
 import GiphyPopup from './GiphyPopup';
 
 interface PropsT {
@@ -52,15 +49,8 @@ const GiphyButton = ({ defaultAttachment, onChange }: PropsT): React.ReactElemen
   );
 };
 
-GiphyButton.propTypes = {
-  defaultAttachment: propTypesShapeItemAttachment,
-  onChange: PropTypes.func.isRequired,
-};
-
 GiphyButton.defaultProps = {
   defaultAttachment: null,
 };
-
-forbidExtraProps(GiphyButton);
 
 export default React.memo(GiphyButton);

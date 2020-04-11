@@ -1,7 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import './TabControl.less';
 
 interface TabT {
@@ -54,16 +52,5 @@ const TabControl = ({ tabs }: PropsT): React.ReactElement => {
     </section>
   );
 };
-
-TabControl.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.shape(forbidExtraProps({
-    key: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    className: PropTypes.string,
-    content: PropTypes.node.isRequired,
-  }))).isRequired,
-};
-
-forbidExtraProps(TabControl);
 
 export default React.memo(TabControl);

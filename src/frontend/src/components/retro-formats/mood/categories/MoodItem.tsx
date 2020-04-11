@@ -1,12 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import forbidExtraProps from '../../../../helpers/forbidExtraProps';
-import { propTypesShapeItem } from '../../../../api/dataStructurePropTypes';
 import './MoodItem.less';
 
 interface PropsT {
@@ -94,20 +91,6 @@ const MoodItem = ({
   );
 };
 
-MoodItem.propTypes = {
-  item: propTypesShapeItem.isRequired,
-  focused: PropTypes.bool,
-  focusedItemTimeout: PropTypes.number,
-  autoScroll: PropTypes.bool,
-  onVote: PropTypes.func,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onSelect: PropTypes.func,
-  onAddExtraTime: PropTypes.func,
-  onCancel: PropTypes.func,
-  onContinue: PropTypes.func,
-};
-
 MoodItem.defaultProps = {
   focused: false,
   focusedItemTimeout: 0,
@@ -120,7 +103,5 @@ MoodItem.defaultProps = {
   onCancel: undefined,
   onContinue: undefined,
 };
-
-forbidExtraProps(MoodItem);
 
 export default React.memo(MoodItem);

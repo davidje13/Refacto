@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'wouter';
-import forbidExtraProps from '../../helpers/forbidExtraProps';
 import { formatDateTime } from '../../time/formatters';
 
 interface PropsT {
@@ -19,13 +17,5 @@ const ArchiveLink = ({
     <div className="archive-link">{ formatDateTime(created) }</div>
   </Link>
 );
-
-ArchiveLink.propTypes = {
-  retroSlug: PropTypes.string.isRequired,
-  archiveId: PropTypes.string.isRequired,
-  created: PropTypes.number.isRequired,
-};
-
-forbidExtraProps(ArchiveLink);
 
 export default React.memo(ArchiveLink);
