@@ -114,7 +114,7 @@ export default memo(withRetroTokenForSlug(({
         title={retroName}
         links={retro ? links : []}
       />
-      <Loader<typeof RetroFormatPicker>
+      <Loader
         error={retroTokenError || retroError}
         Component={RetroFormatPicker}
         componentProps={retro ? {

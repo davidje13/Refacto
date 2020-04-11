@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { Fragment, memo } from 'react';
 import WrappedButton from '../../../../common/WrappedButton';
 import useBoundCallback from '../../../../../hooks/useBoundCallback';
 
@@ -16,11 +16,11 @@ export default memo(({
   const extraTimeLabel = `+${extraMinutes} more minutes`;
 
   return (
-    <React.Fragment>
+    <Fragment>
       <p className="timeup">Time&rsquo;s up!</p>
       <WrappedButton onClick={handleAddExtraTime} hideIfDisabled>
         { extraTimeLabel }
       </WrappedButton>
-    </React.Fragment>
+    </Fragment>
   );
 });

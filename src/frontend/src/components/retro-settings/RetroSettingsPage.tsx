@@ -35,7 +35,7 @@ export default memo(withRetroTokenForSlug(({
         title={`${retroName} Settings`}
         backLink={{ label: 'Back to Retro', action: `/retros/${slug}` }}
       />
-      <Loader<typeof SettingsForm>
+      <Loader
         Component={SettingsForm}
         componentProps={retro ? {
           retro,

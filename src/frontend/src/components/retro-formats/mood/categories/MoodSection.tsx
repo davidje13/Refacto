@@ -70,7 +70,7 @@ export default memo(({
           />
         ) }
       </header>
-      <ItemColumn<React.ComponentPropsWithRef<typeof MoodItem>>
+      <ItemColumn
         items={items.filter((item) => (item.category === category))}
         ItemType={MoodItem}
         focusedItemId={focusedItemId}

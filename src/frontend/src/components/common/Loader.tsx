@@ -1,9 +1,9 @@
 import React from 'react';
 import './Loader.less';
 
-interface PropsT<C, P> {
+interface PropsT<C extends React.ElementType> {
   Component: C;
-  componentProps: P | null;
+  componentProps: React.ComponentPropsWithRef<C> | null;
   loadingMessage?: React.ReactNode;
   error?: string | null;
 }
@@ -13,7 +13,7 @@ export default <C extends React.ElementType>({
   componentProps,
   loadingMessage = 'Loading\u2026',
   error,
-}: PropsT<C, React.ComponentPropsWithRef<C>>): React.ReactElement => {
+}: PropsT<C>): React.ReactElement => {
   if (error) {
     return (<div className="loader error">{ error }</div>);
   }

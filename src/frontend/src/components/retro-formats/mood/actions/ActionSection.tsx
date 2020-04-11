@@ -34,7 +34,7 @@ export default memo(({
     <header>
       <h3>{title}</h3>
     </header>
-    <ItemColumn<React.ComponentPropsWithRef<typeof ActionItem>>
+    <ItemColumn
       items={items.filter(actionItemWithinRange(rangeFrom, rangeTo))}
       ItemType={ActionItem}
       itemProps={{

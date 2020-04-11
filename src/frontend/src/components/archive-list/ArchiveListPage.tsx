@@ -26,7 +26,7 @@ export default memo(withRetroTokenForSlug(({
         title={`${retroName} Archives`}
         backLink={{ label: 'Back to Retro', action: `/retros/${slug}` }}
       />
-      <Loader<typeof ArchiveList>
+      <Loader
         error={retroTokenError || archivesError}
         Component={ArchiveList}
         componentProps={archives ? {

@@ -15,7 +15,7 @@ export default memo(() => {
 
   if (userToken) {
     content = (
-      <Loader<typeof RetroList>
+      <Loader
         error={error}
         Component={RetroList}
         componentProps={retroList ? {

@@ -39,7 +39,7 @@ export default memo(withRetroTokenForSlug(({
         title={`${retroName} (${archiveName})`}
         backLink={{ label: 'Archives', action: `/retros/${slug}/archives` }}
       />
-      <Loader<typeof RetroFormatPicker>
+      <Loader
         error={retroTokenError || archiveError}
         Component={RetroFormatPicker}
         componentProps={archive ? {

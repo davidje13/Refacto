@@ -17,27 +17,24 @@ interface ItemPropsP {
   focused: boolean;
 }
 
-interface PropsT<P> {
+interface PropsT<C extends React.ElementType> {
   items: RetroItem[];
-  ItemType: React.ComponentType<P>;
+  ItemType: C;
   focusedItemId?: string | null;
-  itemProps: Omit<P, 'item' | 'focused'>;
+  itemProps: Omit<React.ComponentPropsWithRef<C>, 'item' | 'focused'>;
 }
 
-export default <P extends Partial<ItemPropsP>>({
+export default <C extends React.ElementType<ItemPropsP>>({
   items,
   ItemType,
   focusedItemId,
   itemProps,
-}: PropsT<P>): React.ReactElement => {
-  const AnyItemType = ItemType as any;
-  return (
-    <ul className="item-column">
-      { sortItems(items).map((item) => (
-        <li key={item.id}>
-          <AnyItemType item={item} focused={item.id === focusedItemId} {...itemProps} />
-        </li>
-      )) }
-    </ul>
-  );
-};
+}: PropsT<C>): React.ReactElement => (
+  <ul className="item-column">
+    { sortItems(items).map((item) => (
+      <li key={item.id}>
+        <ItemType item={item} focused={item.id === focusedItemId} {...itemProps as any} />
+      </li>
+    )) }
+  </ul>
+);
