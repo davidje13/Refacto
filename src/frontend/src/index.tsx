@@ -1,7 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
 import ReactDOM from 'react-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import { configService } from './api/api';
 
 import './index.less';
@@ -18,12 +17,5 @@ const root = document.getElementById('root')!;
 Modal.setAppElement(root);
 
 configService.load().then(() => {
-  ReactDOM.render(
-    <HelmetProvider>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </HelmetProvider>,
-    root,
-  );
+  ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, root);
 });

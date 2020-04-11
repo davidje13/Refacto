@@ -1,45 +1,37 @@
 import React from 'react';
 import { Router } from 'wouter';
-import { HelmetProvider, FilledContext } from 'react-helmet-async';
 import { render, fireEvent } from '@testing-library/react';
 import staticLocationHook from '../../test-helpers/staticLocationHook';
+import staticTitleHook from '../../test-helpers/staticTitleHook';
 import { queries, css } from '../../test-helpers/queries';
+import { TitleContext } from '../../hooks/env/useTitle';
 
 import Header from './Header';
 
-// https://github.com/staylor/react-helmet-async/issues/61
-(HelmetProvider as any).canUseDOM = false;
-
-function extractHelmetTitle(context: FilledContext): string {
-  const match = />(.*)</.exec(context.helmet.title.toString());
-  return match?.[1] ?? '';
-}
-
 describe('Header', () => {
   it('sets the document and page title', () => {
-    const helmetContext: FilledContext = {} as any;
+    const titleHook = staticTitleHook();
 
     const dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={titleHook}>
         <Router hook={staticLocationHook()}>
           <Header
             documentTitle="doc-title"
             title="page-title"
           />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
 
-    expect(extractHelmetTitle(helmetContext)).toEqual('doc-title');
+    expect(titleHook.currentTitle).toEqual('doc-title');
     expect(dom.getBy(css('h1'))).toHaveTextContent('page-title');
   });
 
   it('displays a back link if specified', () => {
     const locationHook = staticLocationHook();
-    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={staticTitleHook()}>
         <Router hook={locationHook}>
           <Header
             documentTitle="doc-title"
@@ -47,7 +39,7 @@ describe('Header', () => {
             backLink={{ label: 'back-label', action: 'back-url' }}
           />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
 
     const backLink = dom.getBy(css('.back'));
@@ -58,10 +50,8 @@ describe('Header', () => {
   });
 
   it('displays a menu of links if specified', () => {
-    const helmetContext: FilledContext = {} as any;
-
     const dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={staticTitleHook()}>
         <Router hook={staticLocationHook()}>
           <Header
             documentTitle="doc-title"
@@ -72,7 +62,7 @@ describe('Header', () => {
             ]}
           />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
 
     const links = dom.getAllBy(css('.menu > *'));
@@ -82,10 +72,8 @@ describe('Header', () => {
   });
 
   it('skips null menu items', () => {
-    const helmetContext: FilledContext = {} as any;
-
     const dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={staticTitleHook()}>
         <Router hook={staticLocationHook()}>
           <Header
             documentTitle="doc-title"
@@ -97,7 +85,7 @@ describe('Header', () => {
             ]}
           />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
 
     const links = dom.getAllBy(css('.menu > *'));
@@ -107,10 +95,9 @@ describe('Header', () => {
 
   it('routes to the given URL when a menu item is clicked', () => {
     const locationHook = staticLocationHook();
-    const helmetContext: FilledContext = {} as any;
 
     const dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={staticTitleHook()}>
         <Router hook={locationHook}>
           <Header
             documentTitle="doc-title"
@@ -120,7 +107,7 @@ describe('Header', () => {
             ]}
           />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
 
     const links = dom.getAllBy(css('.menu > *'));
@@ -130,11 +117,10 @@ describe('Header', () => {
   });
 
   it('invokes the given callback when a menu item is clicked', () => {
-    const helmetContext: FilledContext = {} as any;
     const clickCallback = jest.fn().mockName('clickCallback');
 
     const dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={staticTitleHook()}>
         <Router hook={staticLocationHook()}>
           <Header
             documentTitle="doc-title"
@@ -144,7 +130,7 @@ describe('Header', () => {
             ]}
           />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
 
     const links = dom.getAllBy(css('.menu > *'));

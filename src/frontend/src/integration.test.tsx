@@ -1,6 +1,5 @@
 import React from 'react';
 import { Router } from 'wouter';
-import { HelmetProvider, FilledContext } from 'react-helmet-async';
 import {
   render,
   fireEvent,
@@ -9,56 +8,46 @@ import {
 } from '@testing-library/react';
 import { makeRetro } from 'refacto-entities';
 import staticLocationHook, { StaticLocationHook } from './test-helpers/staticLocationHook';
+import staticTitleHook, { StaticTitleHook } from './test-helpers/staticTitleHook';
 import { queries, css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
+import { TitleContext } from './hooks/env/useTitle';
 
 import App from './components/App';
 
-// https://github.com/staylor/react-helmet-async/issues/61
-(HelmetProvider as any).canUseDOM = false;
-
-function extractHelmetTitle(context: FilledContext): string {
-  const match = />(.*)</.exec(context.helmet.title.toString());
-  return match?.[1] ?? '';
-}
-
 interface RenderedApp {
   locationHook: StaticLocationHook;
-  currentTitle: () => string;
+  titleHook: StaticTitleHook;
   dom: RenderResult<typeof queries>;
 }
 
 async function renderApp(location: string): Promise<RenderedApp> {
   const locationHook = staticLocationHook(location);
-  const helmetContext: FilledContext = {} as any;
+  const titleHook = staticTitleHook();
 
   let dom: RenderResult<typeof queries>;
   await act(async () => {
     dom = render((
-      <HelmetProvider context={helmetContext}>
+      <TitleContext value={titleHook}>
         <Router hook={locationHook}>
           <App />
         </Router>
-      </HelmetProvider>
+      </TitleContext>
     ), { queries });
   });
 
-  return {
-    locationHook,
-    currentTitle: (): string => extractHelmetTitle(helmetContext),
-    dom: dom!,
-  };
+  return { locationHook, titleHook, dom: dom! };
 }
 
 describe('Application', () => {
   it('renders welcome page at root', async () => {
-    const { dom, currentTitle } = await renderApp('/');
+    const { dom, titleHook } = await renderApp('/');
 
     expect(dom).toContainElementWith(css('.page-welcome'));
     expect(dom).not.toContainElementWith(css('.page-retro'));
 
-    expect(currentTitle()).toEqual('Refacto');
+    expect(titleHook.currentTitle).toEqual('Refacto');
   });
 
   it('renders retro list page at /retros', async () => {

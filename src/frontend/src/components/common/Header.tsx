@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import nullable from 'prop-types-nullable';
-import { Helmet } from 'react-helmet-async';
 import HeaderLinkItem, { propTypesLink, LinkPropsT } from './HeaderLinkItem';
 import forbidExtraProps from '../../helpers/forbidExtraProps';
+import { Title } from '../../hooks/env/useTitle';
 import './Header.less';
 
 export type HeaderLinks = (LinkPropsT | null)[];
@@ -26,7 +26,7 @@ const Header = ({
   links,
 }: PropsT): React.ReactElement => (
   <header className="top-header">
-    <Helmet title={documentTitle} />
+    <Title title={documentTitle} />
     <h1>{ title }</h1>
     { backLink && (<HeaderLinkItem className="back" {...backLink} />) }
     <div className="menu">
