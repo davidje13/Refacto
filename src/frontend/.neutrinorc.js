@@ -100,6 +100,8 @@ module.exports = {
             useId: 'less',
             options: {
               sourcemap: true,
+              math: 'strict',
+              strictUnits: true,
             },
           },
         ],

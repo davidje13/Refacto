@@ -247,24 +247,18 @@
 
   &.multi-column {
     .columns {
-      display: flex;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       min-height: 50vh;
-
-      > section {
-        flex: 1;
-        max-width: 33.3334%;
-      }
     }
 
     section.actions {
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       padding: 0;
 
       > header {
-        flex: 0 0 100%;
+        grid-column: 1 / 4;
         margin-bottom: (@action-header-padding + 4px);
 
         h2 {
@@ -279,9 +273,9 @@
         width: calc(100vw / 3 + 48px);
       }
 
-      // new-action-item is sticky on the bottom of the page
-      // but because it needs to escape its parent, this
-      // hierarchy is needed
+      /* new-action-item is sticky on the bottom of the page
+       * but because it needs to escape its parent, this
+       * hierarchy is needed */
       .new-action-item-hold.always-visible {
         position: relative;
         margin: -@add-action-max-scroll 0 -8px;
@@ -321,8 +315,6 @@
       }
 
       > section {
-        flex: 1;
-        max-width: 33.3334%;
         padding: 0 @base-padding 32px;
       }
     }
