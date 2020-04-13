@@ -71,7 +71,7 @@ export default memo(({
             className="sso-google"
             onClick={handleGoogleClick}
           >
-            Sign in with Google
+            Continue with Google
           </button>
         ) : null }
         { githubConfig ? (
@@ -80,7 +80,7 @@ export default memo(({
             className="sso-github"
             onClick={handleGitHubClick}
           >
-            Sign in with GitHub
+            Continue with GitHub
           </button>
         ) : null }
       </p>

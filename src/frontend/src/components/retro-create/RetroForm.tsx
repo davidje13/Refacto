@@ -50,7 +50,7 @@ function readFileText(file: File): Promise<string> {
   });
 }
 
-export default memo(withUserToken('Sign in to create a retro', ({
+export default memo(withUserToken('Register an account to create a retro', ({
   defaultSlug,
   userToken,
   onCreate,

@@ -14,13 +14,13 @@ export default memo(() => {
   if (userToken) {
     createLink = (
       <p className="create">
-        <Link className="link-create" to="/create">Create new retro</Link>
+        <Link className="link-create" to="/create">Create a new retro</Link>
       </p>
     );
     links = [{ label: 'My Retros', action: '/retros' }];
   } else {
     createLink = (
-      <LoginForm message="Sign in to create a new retro" redirect="/create" />
+      <LoginForm message="Register an account to create a new retro" redirect="/create" />
     );
     links = [];
   }

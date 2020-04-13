@@ -24,11 +24,7 @@ export default memo(() => {
       />
     );
   } else {
-    content = (
-      <LoginForm
-        message="Sign in to see your existing retros or create new ones"
-      />
-    );
+    content = (<LoginForm message="Sign in to see your existing retros or create a new one" />);
   }
 
   return (
