@@ -44,7 +44,7 @@ const CSP = [
   'default-src \'self\'',
   'object-src \'none\'',
   `script-src 'self'${devMode ? ' \'unsafe-eval\'' : ''}`,
-  `style-src 'self'${devMode ? ' \'unsafe-inline\'' : ''}`,
+  `style-src 'self' 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='${devMode ? ' \'unsafe-inline\'' : ''}`,
   'font-src \'self\'',
   // https://github.com/w3c/webappsec-csp/issues/7
   `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,

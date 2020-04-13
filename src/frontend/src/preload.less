@@ -1,6 +1,6 @@
 .pre-load {
   text-align: center;
-  font-size: 1.2em;
+  font: 1.2em sans-serif;
   margin: 64px auto;
   max-width: 450px;
   line-height: 1.4;
@@ -22,7 +22,7 @@
 
   .info {
     font-size: 0.8em;
-    animation: preload-fade-in 1s ease-out 5s both;
+    animation: fade-in 1s ease-out 5s both; /* defined in html-template.ejs */
   }
 }
 
@@ -36,15 +36,5 @@
     opacity: 0;
     padding-top: 0;
     margin-bottom: -32px;
-  }
-}
-
-@keyframes preload-fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
   }
 }
