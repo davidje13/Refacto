@@ -40,16 +40,16 @@ const devMode = process.env.NODE_ENV === 'development';
 
 const CSP_DOMAIN_PLACEHOLDER = /\(domain\)/g;
 const CSP = [
-  'base-uri \'self\'',
-  'default-src \'self\'',
-  'object-src \'none\'',
-  `script-src 'self'${devMode ? ' \'unsafe-eval\'' : ''}`,
-  `style-src 'self' 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='${devMode ? ' \'unsafe-inline\'' : ''}`,
-  'font-src \'self\'',
+  "base-uri 'self'",
+  "default-src 'self'",
+  "object-src 'none'",
+  `script-src 'self'${devMode ? " 'unsafe-eval'" : ''}`,
+  `style-src 'self'${devMode ? " 'unsafe-inline'" : " 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='"}`,
+  "font-src 'self'",
   // https://github.com/w3c/webappsec-csp/issues/7
   `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
-  'img-src \'self\' data: https://*.giphy.com',
-  'form-action \'none\'',
+  "img-src 'self' data: https://*.giphy.com",
+  "form-action 'none'",
 ].join('; ');
 
 function getHost(req: any): string {
