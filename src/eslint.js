@@ -8,7 +8,6 @@ module.exports = {
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/await-thenable': ['error'],
     '@typescript-eslint/ban-ts-ignore': ['error'],
-    '@typescript-eslint/func-call-spacing': ['error'],
     '@typescript-eslint/member-ordering': ['error'],
 //    '@typescript-eslint/no-floating-promises': ['error'],
     '@typescript-eslint/no-for-in-array': ['error'],
@@ -16,9 +15,6 @@ module.exports = {
     '@typescript-eslint/no-this-alias': ['error'],
     '@typescript-eslint/no-unnecessary-qualifier': ['error'],
     '@typescript-eslint/no-unnecessary-type-assertion': ['error'],
-    'no-useless-constructor': ['off'],
-    'no-empty-function': ['off'],
-    '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/prefer-function-type': ['error'],
     '@typescript-eslint/prefer-includes': ['error'],
     '@typescript-eslint/prefer-regexp-exec': ['error'],
@@ -33,13 +29,9 @@ module.exports = {
     '@typescript-eslint/no-parameter-properties': ['error', {
       'allows': ['private readonly', 'protected readonly'],
     }],
-    '@typescript-eslint/no-unused-vars': ['error'],
-    'babel/semi': ['off'],
-    '@typescript-eslint/semi': ['error'],
     '@typescript-eslint/no-non-null-assertion': ['off'],
     '@typescript-eslint/no-explicit-any': ['off'],
     'max-classes-per-file': ['error', 5],
-    'import/extensions': ['error', 'never'],
   },
 
   reactRules: {
