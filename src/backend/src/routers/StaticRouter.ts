@@ -31,6 +31,7 @@ export default class StaticRouter extends WebSocketExpress.Router {
       const staticRouter = expressStaticGzip(staticDir, {
         enableBrotli: true,
         orderPreference: ['br'],
+        index: false,
         serveStatic: {
           maxAge: UNVERSIONED_MAX_AGE * 1000,
           redirect: false,
@@ -49,6 +50,7 @@ export default class StaticRouter extends WebSocketExpress.Router {
       // Single page app: serve index.html for any unknown GET request
       this.get('*', (req, res, next) => {
         req.url = '/index.html';
+        res.header('Link', '</api/config>; rel=preload; as=fetch; crossorigin');
         staticRouter(req, res, next);
       });
     }
