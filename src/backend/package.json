@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "auth-backend": "git+https://github.com/davidje13/auth-backend.git#semver:^1.0.2",
-    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.8.1",
+    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.8.2",
     "express-static-gzip": "^2.0.6",
     "ioredis": "4.x",
     "jwt-simple": "0.5.x",
