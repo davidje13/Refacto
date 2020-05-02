@@ -1,5 +1,5 @@
 import type { Retro, RetroItem } from 'refacto-entities';
-import type { DispatchSpec } from '../api/SharedReducer';
+import type { DispatchSpec } from 'shared-reducer-frontend';
 import {
   setRetroItemDone,
   setRetroState,
@@ -34,14 +34,14 @@ function pickPreviousItem(items: RetroItem[]): RetroItem | undefined {
 
 export const allItemsDoneCallback = (
   callback?: () => void,
-) => (
-  { items }: Retro<MoodRetroStateT>,
-): null => {
-  if (callback && !pickNextItem(items)) {
-    callback();
-  }
-  return null;
-};
+): DispatchSpec<Retro> => [
+  ({ items }: Retro<MoodRetroStateT>): null => {
+    if (callback && !pickNextItem(items)) {
+      callback();
+    }
+    return null;
+  },
+];
 
 export const setItemTimeout = (
   duration: number,
@@ -50,19 +50,21 @@ export const setItemTimeout = (
 });
 
 export const focusItem = (id: string | null): DispatchSpec<Retro> => [
-  setRetroItemDone(id, false),
-  setRetroState({ focusedItemId: id }),
+  ...setRetroItemDone(id, false),
+  ...setRetroState({ focusedItemId: id }),
 ];
 
 export const switchFocus = (
   markPreviousDone: boolean,
   id: string | null,
-) => (
-  { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
 ): DispatchSpec<Retro> => [
-  markPreviousDone ? setRetroItemDone(focusedItemId, true) : null,
-  focusItem(id),
-  setItemTimeout(INITIAL_TIMEOUT),
+  (
+    { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
+  ): DispatchSpec<Retro> => [
+    ...(markPreviousDone ? setRetroItemDone(focusedItemId, true) : []),
+    ...focusItem(id),
+    ...setItemTimeout(INITIAL_TIMEOUT),
+  ],
 ];
 
 const focusNextItem = () => (
@@ -79,30 +81,34 @@ const focusPreviousItem = () => (
   return focusItem(next?.id ?? null);
 };
 
-export const goNext = (expectedFocusedItemId?: string) => (
-  { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-): DispatchSpec<Retro> => {
-  if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
-    return null;
-  }
+export const goNext = (expectedFocusedItemId?: string): DispatchSpec<Retro> => [
+  (
+    { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
+  ): DispatchSpec<Retro> => {
+    if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
+      return [];
+    }
 
-  return [
-    setRetroItemDone(focusedItemId, true),
-    focusNextItem(),
-    setItemTimeout(INITIAL_TIMEOUT),
-  ];
-};
+    return [
+      ...setRetroItemDone(focusedItemId, true),
+      focusNextItem(),
+      ...setItemTimeout(INITIAL_TIMEOUT),
+    ];
+  },
+];
 
-export const goPrevious = (expectedFocusedItemId?: string) => (
-  { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-): DispatchSpec<Retro> => {
-  if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
-    return null;
-  }
+export const goPrevious = (expectedFocusedItemId?: string): DispatchSpec<Retro> => [
+  (
+    { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
+  ): DispatchSpec<Retro> => {
+    if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
+      return [];
+    }
 
-  return [
-    setRetroItemDone(focusedItemId, false),
-    focusPreviousItem(),
-    setItemTimeout(0),
-  ];
-};
+    return [
+      ...setRetroItemDone(focusedItemId, false),
+      focusPreviousItem(),
+      ...setItemTimeout(0),
+    ];
+  },
+];

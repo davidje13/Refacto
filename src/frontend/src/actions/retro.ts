@@ -1,6 +1,5 @@
-import type { Spec } from 'json-immutability-helper';
+import type { Spec, DispatchSpec } from 'shared-reducer-frontend';
 import type { Retro, RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
-import type { DispatchSpec } from '../api/SharedReducer';
 import uuidv4 from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
@@ -12,9 +11,9 @@ function sanitiseInput(value: string): string {
     .replace(PADDING, '');
 }
 
-export const setRetroState = (delta: object): DispatchSpec<Retro> => ({
-  state: { $merge: delta },
-});
+export const setRetroState = (delta: object): DispatchSpec<Retro> => [
+  { state: ['merge', delta] },
+];
 
 export const addRetroItem = (
   category: string,
@@ -22,7 +21,7 @@ export const addRetroItem = (
 ): DispatchSpec<Retro> => {
   const sanitisedMessage = sanitiseInput(message || '');
   if (!sanitisedMessage) {
-    return null;
+    return [];
   }
 
   const item: RetroItem = {
@@ -36,9 +35,7 @@ export const addRetroItem = (
     ...rest,
   };
 
-  return {
-    items: { $push: [item] },
-  };
+  return [{ items: ['push', item] }];
 };
 
 function updateItem(
@@ -46,9 +43,9 @@ function updateItem(
   updater: Spec<RetroItem>,
 ): DispatchSpec<Retro> {
   if (itemId === null) {
-    return null;
+    return [];
   }
-  return { items: { $updateWhere: [['id', itemId], updater] } };
+  return [{ items: ['updateWhere', ['id', itemId], updater] }];
 }
 
 export const editRetroItem = (
@@ -59,38 +56,37 @@ export const editRetroItem = (
   if (message !== undefined) {
     const sanitisedMessage = sanitiseInput(message);
     if (!sanitisedMessage) {
-      return null;
+      return [];
     }
     merge.message = sanitisedMessage;
   }
-  return updateItem(itemId, { $merge: merge });
+  return updateItem(itemId, ['merge', merge]);
 };
 
 export const setRetroItemDone = (
   itemId: string | null,
   done: boolean,
 ): DispatchSpec<Retro> => updateItem(itemId, {
-  doneTime: { $set: done ? Date.now() : 0 },
+  doneTime: ['=', done ? Date.now() : 0],
 });
 
 export const upvoteRetroItem = (
   itemId: string,
 ): DispatchSpec<Retro> => updateItem(itemId, {
-  votes: { $add: 1 },
+  votes: ['+', 1],
 });
 
 export const deleteRetroItem = (
   itemId: string,
-): DispatchSpec<Retro> => ({
-  items: { $deleteWhere: ['id', itemId] },
-});
+): DispatchSpec<Retro> => [
+  { items: ['deleteWhere', ['id', itemId]] },
+];
 
-export const clearCovered = (): DispatchSpec<Retro> => ({
-  state: { $set: {} },
-  items: {
-    $seq: [
-      { $deleteWhere: { key: 'category', not: 'action' } },
-      { $deleteWhere: { key: 'doneTime', greaterThan: 0 } },
-    ],
-  },
-});
+export const clearCovered = (): DispatchSpec<Retro> => [{
+  state: ['=', {}],
+  items: [
+    'seq',
+    ['deleteWhere', { key: 'category', not: 'action' }],
+    ['deleteWhere', { key: 'doneTime', greaterThan: 0 }],
+  ],
+}];

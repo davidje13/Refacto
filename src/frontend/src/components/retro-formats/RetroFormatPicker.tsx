@@ -1,7 +1,7 @@
 import React, { Suspense, memo, lazy } from 'react';
 import type { Retro, RetroItem } from 'refacto-entities';
+import type { Dispatch } from 'shared-reducer-frontend';
 import UnknownRetro from './unknown/UnknownRetro';
-import type { Dispatch } from '../../api/SharedReducer';
 
 interface ChildPropsT {
   retroOptions: Record<string, unknown>;

@@ -52,20 +52,3 @@ function useBoundCallback<R, A extends any[]>(
 }
 
 export default useBoundCallback;
-
-type ConditionalUseBoundCallback = typeof useBoundCallback | ((...p: any[]) => undefined);
-
-export const useConditionalBoundCallback = (
-  condition: boolean,
-): ConditionalUseBoundCallback => {
-  if (condition) {
-    return useBoundCallback;
-  }
-
-  // must still use useMutatedCallback so hooks are called in same order if condition changes
-  return (_: any, ...bound: any[]): undefined => useMutatedCallback(
-    undefined,
-    undefined,
-    bound.map(() => null),
-  );
-};

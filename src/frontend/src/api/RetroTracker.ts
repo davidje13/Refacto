@@ -1,6 +1,6 @@
 import type { Retro } from 'refacto-entities';
+import SharedReducer, { Dispatch } from 'shared-reducer-frontend';
 import SubscriptionTracker from './SubscriptionTracker';
-import SharedReducer, { Dispatch } from './SharedReducer';
 
 interface RetroKey {
   retroId: string;

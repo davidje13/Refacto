@@ -1,4 +1,4 @@
-import type { Spec } from 'json-immutability-helper';
+import type { Spec } from 'shared-reducer-frontend';
 
 class OptionType<T> {
   public constructor(private readonly key: string, private readonly def: T) {}
@@ -18,9 +18,9 @@ class OptionType<T> {
 
   public specSet(value: T): Spec<Record<string, unknown>> {
     if (value === undefined || value === this.def) {
-      return { $unset: [this.key] };
+      return { [this.key]: ['unset'] };
     }
-    return { [this.key]: { $set: value } };
+    return { [this.key]: ['=', value] };
   }
 }
 

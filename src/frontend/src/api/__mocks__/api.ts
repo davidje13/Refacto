@@ -1,5 +1,5 @@
 import { of as rxjsOf, throwError, Observable } from 'rxjs';
-import type { Spec } from 'json-immutability-helper';
+import type { Spec } from 'shared-reducer-frontend';
 import type {
   Retro,
   RetroArchive,

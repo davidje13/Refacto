@@ -73,9 +73,10 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
         await retroAuthService.setPassword(id, password);
 
         if (importJson) {
-          await retroService.retroBroadcaster.update(id, {
-            $merge: importRetroData(importJson.current),
-          });
+          await retroService.retroBroadcaster.update(id, [
+            'merge',
+            importRetroData(importJson.current),
+          ]);
 
           const archives = importJson.archives || [];
 

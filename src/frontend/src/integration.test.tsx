@@ -69,7 +69,7 @@ describe('Application', () => {
       .andRespondJsonOk({ retroToken: 'my-token' });
 
     mockWsExpect('/api/retros/id-foobar', (ws: WebSocket) => {
-      ws.send(JSON.stringify({ change: { $set: retro } }));
+      ws.send(JSON.stringify({ change: ['=', retro] }));
     });
 
     const { dom } = await renderApp('/retros/slug-foobar');

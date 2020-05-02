@@ -14,13 +14,13 @@
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
     "js-sha1": "0.6.x",
-    "json-immutability-helper": "git+https://github.com/davidje13/json-immutability-helper.git#semver:^1.0.3",
     "react": "16.x",
     "react-dom": "16.x",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.1",
     "react-modal": "3.x",
     "refacto-entities": "file:../entities",
     "rxjs": "6.x",
+    "shared-reducer-frontend": "git+https://github.com/davidje13/shared-reducer-frontend.git#semver:^2.0.2",
     "wouter": "2.x"
   },
   "devDependencies": {

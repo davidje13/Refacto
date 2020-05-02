@@ -1,9 +1,9 @@
 import React, { useState, memo } from 'react';
 import type { Retro } from 'refacto-entities';
+import { Dispatch, actionsSyncedCallback } from 'shared-reducer-frontend';
 import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
-import { Dispatch, actionsSyncedCallback } from '../../api/SharedReducer';
 import OPTIONS from '../../helpers/optionManager';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
 import './SettingsForm.less';
@@ -33,17 +33,18 @@ export default memo(({
       throw new Error('Cannot set blank name or slug');
     }
 
-    dispatch({
-      name: { $set: name },
-      slug: { $set: slug },
-      options: {
-        $seq: [
+    dispatch([
+      {
+        name: ['=', name],
+        slug: ['=', slug],
+        options: [
+          'seq',
           OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
           OPTIONS.theme.specSet(theme),
         ],
       },
-    });
-    dispatch(actionsSyncedCallback(onSave));
+      actionsSyncedCallback(onSave),
+    ]);
   }, [name, slug, alwaysShowAddAction, theme, dispatch, onSave]);
 
   const themeChoices = getThemes().map(([value, detail]) => (

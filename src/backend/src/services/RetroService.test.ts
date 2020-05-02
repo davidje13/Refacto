@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { MemoryDb } from 'collection-storage';
-import type { Spec } from 'json-immutability-helper';
 import {
+  Spec,
   TopicMessage,
   TrackingTopicMap,
   InMemoryTopic,
@@ -72,8 +72,8 @@ describe('RetroService', () => {
       'other',
     );
     await service.retroBroadcaster.update(r2, {
-      state: { $set: { someRetroSpecificState: true } },
-      items: { $push: [makeRetroItem({ id: 'yes' })] },
+      state: ['=', { someRetroSpecificState: true }],
+      items: ['push', makeRetroItem({ id: 'yes' })],
     });
   });
 
@@ -170,45 +170,45 @@ describe('RetroService', () => {
     });
 
     it('rejects attempts to change sensitive data', async () => {
-      await subscription.send({ ownerId: { $set: 'me' } });
+      await subscription.send({ ownerId: ['=', 'me'] });
       expect(listener.latestError()).toEqual('Cannot edit field ownerId');
 
-      await subscription.send({ id: { $set: '123' } });
+      await subscription.send({ id: ['=', '123'] });
       expect(listener.latestError()).toEqual('Cannot edit field id');
       expect(listener.messageCount()).toEqual(2);
     });
 
     it('allows changing slug to valid forms', async () => {
-      await subscription.send({ slug: { $set: 'wooo' } });
+      await subscription.send({ slug: ['=', 'wooo'] });
       expect(listener.latestError()).toEqual(undefined);
     });
 
     it('does not allow conflicting slugs', async () => {
-      await subscription.send({ slug: { $set: 'my-retro' } });
+      await subscription.send({ slug: ['=', 'my-retro'] });
       expect(listener.latestError()).toEqual('URL is already taken');
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects changing slug to invalid values', async () => {
-      await subscription.send({ slug: { $set: 'NOPE' } });
+      await subscription.send({ slug: ['=', 'NOPE'] });
       expect(listener.latestError()).toEqual('Invalid URL');
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to add new top-level fields', async () => {
-      await subscription.send({ newThing: { $set: 'woo' } } as any);
+      await subscription.send({ newThing: ['=', 'woo'] } as any);
       expect(listener.latestError()).toEqual('Unexpected property newThing');
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to delete top-level fields', async () => {
-      await subscription.send({ $unset: ['ownerId'] });
+      await subscription.send({ ownerId: ['unset'] as any });
       expect(listener.latestError()).toBeTruthy();
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to modify retros in invalid ways', async () => {
-      await subscription.send({ items: { $push: [{ nope: 7 }] } } as any);
+      await subscription.send({ items: ['push', { nope: 7 } as any] });
       expect(listener.latestError()).toBeTruthy();
       expect(listener.messageCount()).toEqual(1);
     });
@@ -220,7 +220,7 @@ describe('RetroService', () => {
         service.getPermissions(false),
       );
 
-      await readSubscription!.send({ slug: { $set: 'wooo' } });
+      await readSubscription!.send({ slug: ['=', 'wooo'] });
       expect(listener.latestError()).toEqual('Cannot modify data');
 
       await readSubscription!.close();
