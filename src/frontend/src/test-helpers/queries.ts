@@ -9,7 +9,7 @@ import {
   queryAllByTestId,
   queryAllByText,
   queryAllByTitle,
-  WaitForElementOptions,
+  waitForOptions,
 } from '@testing-library/react';
 
 type HTMLElementList = NodeListOf<HTMLElement> | HTMLElement[];
@@ -159,7 +159,7 @@ export const getBy = (
 export const findAllBy = (
   container: HTMLElement,
   query: Query,
-  waitOptions: WaitForElementOptions,
+  waitOptions: waitForOptions,
 ): Promise<HTMLElement[]> => waitForElement(
   () => getAllBy(container, query),
   waitOptions,
@@ -168,7 +168,7 @@ export const findAllBy = (
 export const findBy = (
   container: HTMLElement,
   query: Query,
-  waitOptions: WaitForElementOptions,
+  waitOptions: waitForOptions,
 ): Promise<HTMLElement> => waitForElement(
   () => getBy(container, query),
   waitOptions,
