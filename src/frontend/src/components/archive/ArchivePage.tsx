@@ -14,6 +14,7 @@ interface PropsT {
   archiveId: string;
   retroToken: string | null;
   retroTokenError: string | null;
+  group?: string;
 }
 
 export default memo(withRetroTokenForSlug(({
@@ -22,6 +23,7 @@ export default memo(withRetroTokenForSlug(({
   archiveId,
   retroToken,
   retroTokenError,
+  group,
 }: PropsT) => {
   const [retro] = useRetroReducer(retroId, retroToken);
   const [archive, archiveError] = useArchive(retroId, archiveId, retroToken);
@@ -47,6 +49,7 @@ export default memo(withRetroTokenForSlug(({
           retroOptions: archive.options,
           retroItems: archive.items,
           retroState: {},
+          group,
           archive: true,
           archiveTime: archive.created,
           onComplete: (): void => undefined,

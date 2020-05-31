@@ -35,8 +35,10 @@ export default (): React.ReactElement => (
       <Route path="/create/import" component={withParams(RetroImportPage)} />
       <Route path="/retros" component={withParams(RetroListPage)} />
       <Route path="/retros/:slug" component={withParams(RetroPage)} />
+      <Route path="/retros/:slug/groups/:group" component={withParams(RetroPage)} />
       <Route path="/retros/:slug/archives" component={withParams(ArchiveListPage)} />
       <Route path="/retros/:slug/archives/:archiveId" component={withParams(ArchivePage)} />
+      <Route path="/retros/:slug/archives/:archiveId/groups/:group" component={withParams(ArchivePage)} />
       <Route path="/retros/:slug/settings" component={withParams(RetroSettingsPage)} />
 
       <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />

@@ -5,12 +5,17 @@ import ActionSection from './ActionSection';
 import ItemEditor from '../ItemEditor';
 import type LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
+import useBoundCallback from '../../../../hooks/useBoundCallback';
 
 interface PropsT {
   items: RetroItem[];
   localDateProvider: LocalDateProvider;
   alwaysShowEntry?: boolean;
-  onAddItem?: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
+  group?: string;
+  onAddItem?: (
+    group: string | undefined,
+    itemParts: Partial<UserProvidedRetroItemDetails>,
+  ) => void;
   onSetDone?: (id: string, done: boolean) => void;
   onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
   onDelete?: (id: string) => void;
@@ -20,11 +25,13 @@ export default memo(({
   items,
   localDateProvider,
   alwaysShowEntry = false,
+  group,
   onAddItem,
   onSetDone,
   onEdit,
   onDelete,
 }: PropsT) => {
+  const handleAddItem = useBoundCallback(onAddItem, group);
   const today = localDateProvider.getMidnightTimestamp();
   const lastWeek = localDateProvider.getMidnightTimestamp(-7);
 
@@ -32,7 +39,7 @@ export default memo(({
     <section className="actions">
       <header>
         <h2>Action items</h2>
-        { onAddItem && (
+        { handleAddItem && (
           <div
             className={classNames('new-action-item-hold', {
               'always-visible': alwaysShowEntry,
@@ -40,7 +47,7 @@ export default memo(({
           >
             <div className="new-action-item">
               <ItemEditor
-                onSubmit={onAddItem}
+                onSubmit={handleAddItem}
                 submitButtonTitle="Add"
                 placeholder="Add an action item"
                 clearAfterSubmit
@@ -54,6 +61,7 @@ export default memo(({
       <ActionSection
         items={items}
         title={`Today (${formatDate(today)})`}
+        group={group}
         rangeFrom={today}
         onSetDone={onSetDone}
         onEdit={onEdit}
@@ -62,6 +70,7 @@ export default memo(({
       <ActionSection
         items={items}
         title="Past Week"
+        group={undefined}
         rangeFrom={lastWeek}
         rangeTo={today}
         onSetDone={onSetDone}
@@ -71,6 +80,7 @@ export default memo(({
       <ActionSection
         items={items}
         title="Older"
+        group={undefined}
         rangeTo={lastWeek}
         onSetDone={onSetDone}
         onEdit={onEdit}

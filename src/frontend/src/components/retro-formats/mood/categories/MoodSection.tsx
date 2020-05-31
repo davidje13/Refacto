@@ -9,11 +9,13 @@ import useBoundCallback from '../../../../hooks/useBoundCallback';
 interface PropsT {
   category: string;
   categoryLabel: string;
+  group?: string;
   items: RetroItem[];
   theme?: string;
   addItemPlaceholder?: string;
   onAddItem?: (
     category: string,
+    group: string | undefined,
     itemParts: Partial<UserProvidedRetroItemDetails>,
   ) => void;
   onVote?: (id: string) => void;
@@ -33,9 +35,20 @@ interface PropsT {
   autoScroll?: boolean;
 }
 
+function itemFilter(
+  group: string | undefined,
+  category: string,
+) {
+  return (item: RetroItem): boolean => (
+    item.category === category &&
+    (!item.group || !group || item.group === group)
+  );
+}
+
 export default memo(({
   category,
   categoryLabel,
+  group,
   theme = '',
   items,
   addItemPlaceholder = '',
@@ -51,7 +64,7 @@ export default memo(({
   focusedItemTimeout = 0,
   autoScroll = false,
 }: PropsT) => {
-  const handleAddItem = useBoundCallback(onAddItem, category);
+  const handleAddItem = useBoundCallback(onAddItem, category, group);
 
   return (
     <section className={category}>
@@ -71,7 +84,7 @@ export default memo(({
         ) }
       </header>
       <ItemColumn
-        items={items.filter((item) => (item.category === category))}
+        items={items.filter(itemFilter(group, category))}
         ItemType={MoodItem}
         focusedItemId={focusedItemId}
         itemProps={{

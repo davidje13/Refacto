@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
-import { DB, Collection, encryptByRecordWithMasterKey } from 'collection-storage';
+import {
+  DB,
+  Collection,
+  encryptByRecordWithMasterKey,
+  migrate,
+} from 'collection-storage';
 import {
   Broadcaster,
   TopicMap,
@@ -47,13 +52,15 @@ export default class RetroService {
       128,
     );
 
-    this.retroCollection = enc<Retro>()(
+    this.retroCollection = migrate({
+      groupStates: (v) => (v || {}),
+    }, enc<Retro>()(
       ['items'],
       db.getCollection('retro', {
         slug: { unique: true },
         ownerId: {},
       }),
-    );
+    ));
 
     const model = new CollectionStorageModel(
       this.retroCollection,
@@ -102,6 +109,7 @@ export default class RetroService {
         name,
         ownerId,
         state: {},
+        groupStates: {},
         format,
         options: {},
         items: [],

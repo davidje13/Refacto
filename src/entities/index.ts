@@ -24,6 +24,7 @@ export interface RetroItem extends UserProvidedRetroItemDetails {
   created: number;
   votes: number;
   doneTime: number;
+  group?: string;
 }
 
 export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
@@ -35,6 +36,7 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
     attachment: null,
     votes: 0,
     doneTime: 0,
+    group: undefined,
   }, details);
 }
 
@@ -53,6 +55,7 @@ export interface RetroData {
 export interface Retro<StateT = Record<string, unknown>> extends RetroSummary, RetroData {
   ownerId: string;
   state: StateT;
+  groupStates: Record<string, StateT>;
 }
 
 export function makeRetro(details: Partial<Retro> = {}): Retro {
@@ -62,6 +65,7 @@ export function makeRetro(details: Partial<Retro> = {}): Retro {
     name: '',
     ownerId: '',
     state: {},
+    groupStates: {},
     format: '',
     options: {},
     items: [],

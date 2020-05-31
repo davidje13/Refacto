@@ -32,7 +32,7 @@ export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
 
 export const extractExportedRetroData = json.object<RetroDataJsonExport>({
   format: json.string,
-  options: json.record,
+  options: json.record(json.any),
   items: json.array(extractExportedRetroItem),
 });
 

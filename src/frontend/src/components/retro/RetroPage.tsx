@@ -4,6 +4,7 @@ import React, {
   useRef,
   memo,
 } from 'react';
+import type { Retro } from 'refacto-entities';
 import ArchivePopup from './ArchivePopup';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
@@ -19,12 +20,30 @@ import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import RetroCreatePage from '../retro-create/RetroCreatePage';
 import './RetroPage.less';
 
+const BLANK_STATE = {};
+
+function getState<T>(retro: Retro<T>, group?: string): T {
+  if (!group) {
+    return retro.state;
+  }
+  return retro.groupStates[group] || (BLANK_STATE as T);
+}
+
+interface PropsT {
+  slug: string;
+  retroId: string | null;
+  retroToken: string | null;
+  retroTokenError: string | null;
+  group?: string;
+}
+
 export default memo(withRetroTokenForSlug(({
   slug,
   retroId,
   retroToken,
   retroTokenError,
-}) => {
+  group,
+}: PropsT) => {
   const [
     retro,
     retroDispatch,
@@ -37,7 +56,7 @@ export default memo(withRetroTokenForSlug(({
 
   const isArchiving = useRef(false);
   const performArchive = useCallback(() => {
-    if (isArchiving.current) {
+    if (isArchiving.current || group) {
       return;
     }
     isArchiving.current = true;
@@ -58,6 +77,7 @@ export default memo(withRetroTokenForSlug(({
     clearCovered,
     retro,
     retroToken,
+    group,
   ]);
 
   const canFacilitate = (
@@ -92,7 +112,8 @@ export default memo(withRetroTokenForSlug(({
     retroDispatch &&
     retro &&
     retro.items.length > 0 &&
-    canFacilitate
+    canFacilitate &&
+    !group
   ));
 
   const links = [
@@ -112,6 +133,10 @@ export default memo(withRetroTokenForSlug(({
       <Header
         documentTitle={`${retroName} - Refacto`}
         title={retroName}
+        backLink={group ? {
+          label: 'Main Retro',
+          action: `/retros/${slug}`,
+        } : null}
         links={retro ? links : []}
       />
       <Loader
@@ -121,7 +146,8 @@ export default memo(withRetroTokenForSlug(({
           retroFormat: retro.format,
           retroOptions: retro.options,
           retroItems: retro.items,
-          retroState: retro.state,
+          retroState: getState(retro, group),
+          group,
           dispatch: retroDispatch || undefined,
           onComplete: canArchive ? showArchivePopup : undefined,
           archive: false,

@@ -17,11 +17,12 @@ export const extractRetroItem = json.exactObject<RetroItem>({
   })),
   votes: json.number,
   doneTime: json.number,
+  group: json.optional(json.string),
 });
 
 export const extractRetroData = json.exactObject<RetroData>({
   format: json.string,
-  options: json.record,
+  options: json.record(json.any),
   items: json.array(extractRetroItem),
 });
 
@@ -30,8 +31,9 @@ export const extractRetro = json.exactObject<Retro>({
   slug: json.string,
   name: json.string,
   ownerId: json.string,
-  state: json.record,
+  state: json.record(json.any),
+  groupStates: json.record(json.record(json.any)),
   format: json.string,
-  options: json.record,
+  options: json.record(json.any),
   items: json.array(extractRetroItem),
 });

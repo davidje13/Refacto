@@ -16,27 +16,41 @@ const INITIAL_TIMEOUT = (5 * 60 * 1000 + 999);
 
 export const addRetroActionItem = addRetroItem.bind(null, 'action');
 
-function moodItem(item: RetroItem): boolean {
-  return item.category !== 'action';
+const moodItem = (group: string | undefined) => (item: RetroItem): boolean => (
+  (!group || !item.group || item.group === group) &&
+  item.category !== 'action'
+);
+
+function pickNextItem(
+  group: string | undefined,
+  items: RetroItem[],
+): RetroItem | undefined {
+  return autoFacilitate(items.filter(moodItem(group)), ['happy', 'meh']);
 }
 
-function pickNextItem(items: RetroItem[]): RetroItem | undefined {
-  return autoFacilitate(items.filter(moodItem), ['happy', 'meh']);
-}
-
-function pickPreviousItem(items: RetroItem[]): RetroItem | undefined {
+function pickPreviousItem(
+  group: string | undefined,
+  items: RetroItem[],
+): RetroItem | undefined {
   const history = items
-    .filter(moodItem)
+    .filter(moodItem(group))
     .filter((item) => item.doneTime > 0)
     .sort((a, b) => b.doneTime - a.doneTime);
   return history[0];
+}
+
+function getState<T>(retro: Retro<T>, group?: string): T {
+  if (!group) {
+    return retro.state;
+  }
+  return retro.groupStates[group] || ({} as T);
 }
 
 export const allItemsDoneCallback = (
   callback?: () => void,
 ): DispatchSpec<Retro> => [
   ({ items }: Retro<MoodRetroStateT>): null => {
-    if (callback && !pickNextItem(items)) {
+    if (callback && !pickNextItem(undefined, items)) {
       callback();
     }
     return null;
@@ -44,71 +58,84 @@ export const allItemsDoneCallback = (
 ];
 
 export const setItemTimeout = (
+  group: string | undefined,
   duration: number,
-): DispatchSpec<Retro> => setRetroState({
+): DispatchSpec<Retro> => setRetroState(group, {
   focusedItemTimeout: Date.now() + duration,
 });
 
-export const focusItem = (id: string | null): DispatchSpec<Retro> => [
+export const focusItem = (
+  group: string | undefined,
+  id: string | null,
+): DispatchSpec<Retro> => [
   ...setRetroItemDone(id, false),
-  ...setRetroState({ focusedItemId: id }),
+  ...setRetroState(group, { focusedItemId: id }),
 ];
 
 export const switchFocus = (
+  group: string | undefined,
   markPreviousDone: boolean,
   id: string | null,
 ): DispatchSpec<Retro> => [
-  (
-    { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-  ): DispatchSpec<Retro> => [
-    ...(markPreviousDone ? setRetroItemDone(focusedItemId, true) : []),
-    ...focusItem(id),
-    ...setItemTimeout(INITIAL_TIMEOUT),
-  ],
+  (retro): DispatchSpec<Retro> => {
+    const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
+
+    return [
+      ...((markPreviousDone && focusedItemId) ? setRetroItemDone(focusedItemId, true) : []),
+      ...focusItem(group, id),
+      ...setItemTimeout(group, INITIAL_TIMEOUT),
+    ];
+  },
 ];
 
-const focusNextItem = () => (
+const focusNextItem = (group: string | undefined) => (
   { items }: Retro<MoodRetroStateT>,
 ): DispatchSpec<Retro> => {
-  const next = pickNextItem(items);
-  return focusItem(next?.id ?? null);
+  const next = pickNextItem(group, items);
+  return focusItem(group, next?.id ?? null);
 };
 
-const focusPreviousItem = () => (
+const focusPreviousItem = (group: string | undefined) => (
   { items }: Retro<MoodRetroStateT>,
 ): DispatchSpec<Retro> => {
-  const next = pickPreviousItem(items);
-  return focusItem(next?.id ?? null);
+  const next = pickPreviousItem(group, items);
+  return focusItem(group, next?.id ?? null);
 };
 
-export const goNext = (expectedFocusedItemId?: string): DispatchSpec<Retro> => [
-  (
-    { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-  ): DispatchSpec<Retro> => {
+export const goNext = (
+  group: string | undefined,
+  expectedFocusedItemId?: string,
+): DispatchSpec<Retro> => [
+  (retro): DispatchSpec<Retro> => {
+    const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
+
     if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
       return [];
     }
 
     return [
       ...setRetroItemDone(focusedItemId, true),
-      focusNextItem(),
-      ...setItemTimeout(INITIAL_TIMEOUT),
+      focusNextItem(group),
+      ...setItemTimeout(group, INITIAL_TIMEOUT),
     ];
   },
 ];
 
-export const goPrevious = (expectedFocusedItemId?: string): DispatchSpec<Retro> => [
-  (
-    { state: { focusedItemId = null } }: Retro<MoodRetroStateT>,
-  ): DispatchSpec<Retro> => {
+export const goPrevious = (
+  group: string | undefined,
+  expectedFocusedItemId?: string,
+): DispatchSpec<Retro> => [
+  (retro): DispatchSpec<Retro> => {
+    const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
+
     if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
       return [];
     }
 
     return [
       ...setRetroItemDone(focusedItemId, false),
-      focusPreviousItem(),
-      ...setItemTimeout(0),
+      focusPreviousItem(group),
+      ...setItemTimeout(group, 0),
     ];
   },
 ];

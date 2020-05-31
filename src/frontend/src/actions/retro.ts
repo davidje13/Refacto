@@ -11,12 +11,19 @@ function sanitiseInput(value: string): string {
     .replace(PADDING, '');
 }
 
-export const setRetroState = (delta: object): DispatchSpec<Retro> => [
-  { state: ['merge', delta] },
-];
+export const setRetroState = (
+  group: string | undefined,
+  delta: object,
+): DispatchSpec<Retro> => {
+  if (!group) {
+    return [{ state: ['merge', delta] }];
+  }
+  return [{ groupStates: { [group]: ['merge', delta, {}] } }];
+};
 
 export const addRetroItem = (
   category: string,
+  group: string | undefined,
   { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
 ): DispatchSpec<Retro> => {
   const sanitisedMessage = sanitiseInput(message || '');
@@ -27,6 +34,7 @@ export const addRetroItem = (
   const item: RetroItem = {
     id: uuidv4(),
     category,
+    group,
     created: Date.now(),
     message: sanitisedMessage,
     attachment: null,
@@ -84,6 +92,7 @@ export const deleteRetroItem = (
 
 export const clearCovered = (): DispatchSpec<Retro> => [{
   state: ['=', {}],
+  groupStates: ['=', {}],
   items: [
     'seq',
     ['deleteWhere', { key: 'category', not: 'action' }],

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "auth-backend": "git+https://github.com/davidje13/auth-backend.git#semver:^1.0.2",
-    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.8.2",
+    "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.8.3",
     "express-static-gzip": "^2.0.6",
     "ioredis": "4.x",
     "jwt-simple": "0.5.x",
@@ -42,7 +42,7 @@
     "jest": "25.x",
     "neutrino": "9.x",
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.12",
-    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.1.1",
+    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.2.2",
     "superwstest": "git+https://github.com/davidje13/superwstest.git#semver:^1.0.12",
     "typescript": "3.8.x",
     "webpack": "4.x",

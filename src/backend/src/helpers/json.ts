@@ -20,6 +20,8 @@ const jsonObject = <T>(maps: ObjectMapper<T>) => (source: unknown): T => {
   return result;
 };
 
+const jsonAny = (source: unknown): unknown => source;
+
 export default {
   nullable: <T>(submap: Mapper<T>) => (source: unknown): T | null => {
     if (source === null) {
@@ -34,6 +36,8 @@ export default {
     }
     return submap(source);
   },
+
+  any: jsonAny,
 
   object: jsonObject,
 
@@ -51,16 +55,26 @@ export default {
     };
   },
 
-  record: (source: unknown): Record<string, unknown> => {
+  record: <V>(valueMap: Mapper<V>) => (source: unknown): Record<string, V> => {
     if (!isJsonObject(source)) {
       throw new Error('Expected object');
     }
-    return source;
+    if (valueMap === jsonAny) {
+      return source as Record<string, V>;
+    }
+    const mapped: Record<string, V> = {};
+    Object.keys(source).forEach((key) => {
+      mapped[key] = valueMap(source[key]);
+    });
+    return mapped;
   },
 
   array: <T>(map: Mapper<T>) => (source: unknown): T[] => {
     if (!Array.isArray(source)) {
       throw new Error('Expected array');
+    }
+    if (map === jsonAny) {
+      return source as T[];
     }
     return source.map(map);
   },

@@ -15,6 +15,7 @@ export interface RetroItemAttachmentJsonExport {
 export interface RetroItemJsonExport {
   created: string;
   category: string;
+  group?: string;
   message: string;
   votes: number;
   completed?: string;
@@ -72,6 +73,7 @@ export function exportRetroItem(
   const result: RetroItemJsonExport = {
     created: exportTimestamp(item.created),
     category: item.category,
+    group: item.group,
     message: item.message,
     votes: item.votes,
   };
@@ -91,6 +93,7 @@ export function importRetroItem(
     id: uuidv4(),
     created: importTimestamp(item.created),
     category: item.category,
+    group: item.group,
     message: item.message,
     votes: item.votes,
     doneTime: item.completed ? importTimestamp(item.completed) : 0,

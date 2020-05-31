@@ -7,6 +7,7 @@ interface ChildPropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: object;
+  group?: string;
   dispatch?: Dispatch<Retro>;
   onComplete?: () => void;
   archive: boolean;

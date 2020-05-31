@@ -45,6 +45,7 @@ interface PropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: MoodRetroStateT;
+  group?: string;
   dispatch?: Dispatch<Retro>;
   onComplete?: () => void;
   archive: boolean;
@@ -58,8 +59,9 @@ export default ({
     focusedItemTimeout = 0,
   },
   retroItems,
-  onComplete,
+  group,
   dispatch,
+  onComplete,
   archive,
   archiveTime,
 }: PropsT): React.ReactElement => {
@@ -81,17 +83,17 @@ export default ({
   const handleUpvoteItem = useAction(upvoteRetroItem);
   const handleEditItem = useAction(editRetroItem);
   const handleDeleteItem = useAction(deleteRetroItem);
-  const handleAddExtraTime = useFacilitatorAction(setItemTimeout);
-  const handleSelectItem = useFacilitatorAction(useBoundCallback(switchFocus, true));
+  const handleAddExtraTime = useFacilitatorAction(useBoundCallback(setItemTimeout, group));
+  const handleSelectItem = useFacilitatorAction(useBoundCallback(switchFocus, group, true));
   const handleSetActionItemDone = useAction(setRetroItemDone);
-  const handleGoNext = useFacilitatorAction(goNext, checkAutoArchive);
-  const handleGoPrevious = useFacilitatorAction(goPrevious);
+  const handleGoNext = useFacilitatorAction(useBoundCallback(goNext, group), checkAutoArchive);
+  const handleGoPrevious = useFacilitatorAction(useBoundCallback(goPrevious, group));
 
   useGlobalKeyListener({
     ArrowRight: handleGoNext,
     ArrowLeft: handleGoPrevious,
-    Enter: useFacilitatorAction(useBoundCallback(switchFocus, true, null), checkAutoArchive),
-    Escape: useFacilitatorAction(useBoundCallback(switchFocus, false, null)),
+    Enter: useFacilitatorAction(useBoundCallback(switchFocus, group, true, null), checkAutoArchive),
+    Escape: useFacilitatorAction(useBoundCallback(switchFocus, group, false, null)),
   });
 
   const createMoodSection = (category: Category): React.ReactElement => (
@@ -112,6 +114,7 @@ export default ({
       autoScroll={!singleColumn}
       categoryLabel={category.title}
       category={category.id}
+      group={group}
       theme={OPTIONS.theme.read(retroOptions)}
     />
   );
@@ -119,6 +122,7 @@ export default ({
   const actionSection = (
     <ActionsPane
       items={retroItems}
+      group={group}
       alwaysShowEntry={OPTIONS.alwaysShowAddAction.read(retroOptions)}
       onAddItem={handleAddActionItem}
       onSetDone={handleSetActionItemDone}

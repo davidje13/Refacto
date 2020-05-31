@@ -102,6 +102,31 @@ describe('MoodSection', () => {
 
     expect(onAddItem).toHaveBeenCalledWith(
       'my-category',
+      undefined,
+      { message: 'my message', attachment: null },
+    );
+  });
+
+  it('adds the current group to new items', () => {
+    const onAddItem = jest.fn().mockName('onAddItem');
+    const dom = render((
+      <MoodSection
+        category="my-category"
+        group="foo"
+        categoryLabel=""
+        items={[]}
+        onAddItem={onAddItem}
+      />
+    ), { queries });
+
+    const textEntry = dom.getBy(css('mock-expanding-text-entry'));
+    act(() => {
+      textEntry.mockProps.onSubmit('my message');
+    });
+
+    expect(onAddItem).toHaveBeenCalledWith(
+      'my-category',
+      'foo',
       { message: 'my message', attachment: null },
     );
   });
