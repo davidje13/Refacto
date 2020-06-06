@@ -4,6 +4,6 @@
   "dependencies": {
   },
   "devDependencies": {
-    "typescript": "3.8.x"
+    "typescript": "3.9.x"
   }
 }

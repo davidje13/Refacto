@@ -99,9 +99,11 @@ module.exports = {
             loader: 'less-loader',
             useId: 'less',
             options: {
-              sourcemap: true,
-              math: 'strict',
-              strictUnits: true,
+              sourceMap: true,
+              lessOptions: {
+                math: 'strict',
+                strictUnits: true,
+              },
             },
           },
         ],
