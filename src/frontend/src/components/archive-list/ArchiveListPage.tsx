@@ -1,48 +1,44 @@
 import React, { memo } from 'react';
+import type { RetroPagePropsT } from '../RetroRouter';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
 import ApiDownload from '../common/ApiDownload';
-import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
-import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useArchiveList from '../../hooks/data/useArchiveList';
 import ArchiveList from './ArchiveList';
 import './ArchiveListPage.less';
 
-export default memo(withRetroTokenForSlug(({
-  slug,
-  retroId,
-  retroToken,
-  retroTokenError,
-}) => {
-  const [retro] = useRetroReducer(retroId, retroToken);
-  const [archives, archivesError] = useArchiveList(retroId, retroToken);
+type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'>;
 
-  const retroName = retro?.name ?? slug;
+export default memo(({
+  retroToken,
+  retro,
+}: PropsT) => {
+  const [archives, archivesError] = useArchiveList(retro.id, retroToken);
 
   return (
     <article className="page-archive-list">
       <Header
-        documentTitle={`Archives - ${retroName} - Refacto`}
-        title={`${retroName} Archives`}
-        backLink={{ label: 'Back to Retro', action: `/retros/${slug}` }}
+        documentTitle={`Archives - ${retro.name} - Refacto`}
+        title={`${retro.name} Archives`}
+        backLink={{ label: 'Back to Retro', action: `/retros/${retro.slug}` }}
       />
       <Loader
-        error={retroTokenError || archivesError}
+        error={archivesError}
         Component={ArchiveList}
         componentProps={archives ? {
-          slug,
+          slug: retro.slug,
           archives,
         } : null}
       />
       <div className="extra-links">
         <ApiDownload
-          url={`retros/${retroId}/export/json`}
+          url={`retros/${retro.id}/export/json`}
           token={retroToken}
-          filename={`${slug}-export.json`}
+          filename={`${retro.slug}-export.json`}
         >
           Export as JSON
         </ApiDownload>
       </div>
     </article>
   );
-}));
+});

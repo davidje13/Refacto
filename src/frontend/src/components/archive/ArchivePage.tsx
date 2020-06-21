@@ -1,34 +1,25 @@
 import React, { memo } from 'react';
+import type { RetroPagePropsT } from '../RetroRouter';
 import Header from '../common/Header';
 import Loader from '../common/Loader';
-import withRetroTokenForSlug from '../hocs/withRetroTokenForSlug';
-import useRetroReducer from '../../hooks/data/useRetroReducer';
 import useArchive from '../../hooks/data/useArchive';
 import { formatDate } from '../../time/formatters';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './ArchivePage.less';
 
-interface PropsT {
-  slug: string;
-  retroId: string | null;
+type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
   archiveId: string;
-  retroToken: string | null;
-  retroTokenError: string | null;
   group?: string;
-}
+};
 
-export default memo(withRetroTokenForSlug(({
-  slug,
-  retroId,
-  archiveId,
+export default memo(({
   retroToken,
-  retroTokenError,
+  retro,
+  archiveId,
   group,
 }: PropsT) => {
-  const [retro] = useRetroReducer(retroId, retroToken);
-  const [archive, archiveError] = useArchive(retroId, archiveId, retroToken);
+  const [archive, archiveError] = useArchive(retro.id, archiveId, retroToken);
 
-  const retroName = retro?.name ?? slug;
   let archiveName = 'Archive';
   if (archive) {
     archiveName = `${formatDate(archive.created)} Archive`;
@@ -37,12 +28,12 @@ export default memo(withRetroTokenForSlug(({
   return (
     <article className="page-archive">
       <Header
-        documentTitle={`${archiveName} - ${retroName} - Refacto`}
-        title={`${retroName} (${archiveName})`}
-        backLink={{ label: 'Archives', action: `/retros/${slug}/archives` }}
+        documentTitle={`${archiveName} - ${retro.name} - Refacto`}
+        title={`${retro.name} (${archiveName})`}
+        backLink={{ label: 'Archives', action: `/retros/${retro.slug}/archives` }}
       />
       <Loader
-        error={retroTokenError || archiveError}
+        error={archiveError}
         Component={RetroFormatPicker}
         componentProps={archive ? {
           retroFormat: archive.format,
@@ -57,4 +48,4 @@ export default memo(withRetroTokenForSlug(({
       />
     </article>
   );
-}));
+});

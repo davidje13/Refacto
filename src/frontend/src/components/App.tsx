@@ -1,50 +1,36 @@
-import React, { Fragment } from 'react';
-import {
-  Route,
-  Switch,
-  RouteComponentProps,
-} from 'wouter';
-import './App.less';
+import React, { Fragment, ReactNode } from 'react';
+import { Route, Switch } from 'wouter';
 import RedirectRoute from './RedirectRoute';
 import Footer from './Footer';
 import LoginCallback from './login/LoginCallback';
+import RetroRouter from './RetroRouter';
 import WelcomePage from './welcome/WelcomePage';
 import SecurityPage from './security/SecurityPage';
 import RetroCreatePage from './retro-create/RetroCreatePage';
 import RetroImportPage from './retro-create/RetroImportPage';
 import RetroListPage from './retro-list/RetroListPage';
-import RetroPage from './retro/RetroPage';
-import ArchiveListPage from './archive-list/ArchiveListPage';
-import ArchivePage from './archive/ArchivePage';
-import RetroSettingsPage from './retro-settings/RetroSettingsPage';
 import NotFoundPage from './not-found/NotFoundPage';
-
-const withParams = (
-  Page: React.ComponentType<any>,
-) => ({ params }: RouteComponentProps): React.ReactElement => (
-  <Page {...params} />
-);
+import './App.less';
 
 export default (): React.ReactElement => (
   <Fragment>
     <Switch>
-      <Route path="/sso/:service" component={withParams(LoginCallback)} />
-      <Route path="/" component={withParams(WelcomePage)} />
-      <Route path="/security" component={withParams(SecurityPage)} />
-      <Route path="/create" component={withParams(RetroCreatePage)} />
-      <Route path="/create/import" component={withParams(RetroImportPage)} />
-      <Route path="/retros" component={withParams(RetroListPage)} />
-      <Route path="/retros/:slug" component={withParams(RetroPage)} />
-      <Route path="/retros/:slug/groups/:group" component={withParams(RetroPage)} />
-      <Route path="/retros/:slug/archives" component={withParams(ArchiveListPage)} />
-      <Route path="/retros/:slug/archives/:archiveId" component={withParams(ArchivePage)} />
-      <Route path="/retros/:slug/archives/:archiveId/groups/:group" component={withParams(ArchivePage)} />
-      <Route path="/retros/:slug/settings" component={withParams(RetroSettingsPage)} />
+      <Route path="/sso/:service">
+        { ({ service }): ReactNode => <LoginCallback service={service} /> }
+      </Route>
+      <Route path="/"><WelcomePage /></Route>
+      <Route path="/security"><SecurityPage /></Route>
+      <Route path="/create"><RetroCreatePage /></Route>
+      <Route path="/create/import"><RetroImportPage /></Route>
+      <Route path="/retros"><RetroListPage /></Route>
+      <Route path="/retros/:slug/:rest*">
+        { ({ slug }): ReactNode => <RetroRouter slug={slug} /> }
+      </Route>
 
       <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />
       <RedirectRoute path="/:slug" to="/retros/:slug" replace />
 
-      <Route path="/:rest*" component={withParams(NotFoundPage)} />
+      <Route path="/:rest*"><NotFoundPage /></Route>
     </Switch>
     <Footer />
   </Fragment>
