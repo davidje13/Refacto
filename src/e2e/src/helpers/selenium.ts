@@ -25,6 +25,12 @@ const firefoxOptions = new firefox.Options()
   .setPreference('browser.download.useDownloadDir', true)
   .setPreference('browser.helperApps.neverAsk.saveToDisk', 'application/json');
 
+if (process.env.DOCKER === 'true') {
+  // Prevent crashes in Docker
+  // (see https://developers.google.com/web/tools/puppeteer/troubleshooting#tips)
+  chromeOptions.addArguments('disable-dev-shm-usage', 'no-sandbox');
+}
+
 if (headless) {
   chromeOptions.headless();
   firefoxOptions.headless();
