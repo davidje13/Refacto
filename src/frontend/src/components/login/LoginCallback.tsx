@@ -27,7 +27,12 @@ export default memo(({
         setLocation(redirect, true);
       })
       .catch((err) => {
-        setError(err.message);
+        if (err.message === 'unrecognised login details') {
+          // GitLab shows a bare link to the /sso/login URL on the confirmation page
+          setLocation('/', true);
+        } else {
+          setError(err.message);
+        }
       });
   }, [setError]);
 

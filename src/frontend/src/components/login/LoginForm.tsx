@@ -34,6 +34,7 @@ export default memo(({
   const sso = config?.sso ?? {};
   const googleConfig = sso.google;
   const githubConfig = sso.github;
+  const gitlabConfig = sso.gitlab;
 
   const resolvedRedirect = redirect || document.location.pathname;
   const domain = document.location.origin;
@@ -61,6 +62,17 @@ export default memo(({
     document.location.href = url.toString();
   }, [resolvedRedirect, domain, githubConfig]);
 
+  const handleGitLabClick = useCallback(() => {
+    const targetUrl = new URL('/sso/gitlab', domain);
+    const url = new URL(gitlabConfig.authUrl);
+    url.searchParams.set('redirect_uri', targetUrl.toString());
+    url.searchParams.set('state', makeState(resolvedRedirect));
+    url.searchParams.set('response_type', 'token');
+    url.searchParams.set('scope', 'openid');
+    url.searchParams.set('client_id', gitlabConfig.clientId);
+    document.location.href = url.toString();
+  }, [resolvedRedirect, domain, gitlabConfig]);
+
   return (
     <div className="login-form">
       { message ? (<p>{ message }</p>) : null }
@@ -81,6 +93,15 @@ export default memo(({
             onClick={handleGitHubClick}
           >
             Continue with GitHub
+          </button>
+        ) : null }
+        { gitlabConfig ? (
+          <button
+            type="button"
+            className="sso-gitlab"
+            onClick={handleGitLabClick}
+          >
+            Continue with GitLab
           </button>
         ) : null }
       </p>

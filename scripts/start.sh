@@ -7,7 +7,7 @@ API_PORT="${PORT:-5000}";
 (( APP_PORT = API_PORT + 1 ));
 
 MOCK_SSO='true';
-if [[ -n "$SSO_GOOGLE_CLIENT_ID" || -n "$SSO_GITHUB_CLIENT_ID" ]]; then
+if [[ -n "$SSO_GOOGLE_CLIENT_ID" || -n "$SSO_GITHUB_CLIENT_ID" || -n "$SSO_GITLAB_CLIENT_ID" ]]; then
   MOCK_SSO='false';
 fi;
 if [[ " $* " == *' --mock-sso '* ]]; then

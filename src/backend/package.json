@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "auth-backend": "git+https://github.com/davidje13/auth-backend.git#semver:^1.0.2",
+    "auth-backend": "git+https://github.com/davidje13/auth-backend.git#semver:^1.0.3",
     "collection-storage": "git+https://github.com/davidje13/collection-storage.git#semver:^1.8.3",
     "express-static-gzip": "2.x",
     "ioredis": "4.x",

@@ -52,6 +52,7 @@ TOKEN_SECRET_PASSPHRASE= \
 SSO_GOOGLE_CLIENT_ID= \
 SSO_GITHUB_CLIENT_ID= \
 SSO_GITHUB_CLIENT_SECRET= \
+SSO_GITLAB_CLIENT_ID= \
 GIPHY_API_KEY= \
 docker-compose -f deployment/docker-compose.yml up
 ```

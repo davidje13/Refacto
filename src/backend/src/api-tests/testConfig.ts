@@ -26,6 +26,7 @@ const baseTestConfig: ConfigT = {
       accessTokenUrl: '',
       userUrl: '',
     },
+    gitlab: { clientId: '', authUrl: '', tokenInfoUrl: '' },
   },
   giphy: { baseUrl: '', apiKey: '' },
 };

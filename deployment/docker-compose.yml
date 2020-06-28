@@ -16,6 +16,7 @@ services:
     - SSO_GOOGLE_CLIENT_ID
     - SSO_GITHUB_CLIENT_ID
     - SSO_GITHUB_CLIENT_SECRET
+    - SSO_GITLAB_CLIENT_ID
     - GIPHY_API_KEY
     depends_on:
     - db

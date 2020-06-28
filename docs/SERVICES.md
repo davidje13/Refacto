@@ -112,6 +112,36 @@ both local testing and deployments. For example:
 SSO_GITHUB_CLIENT_ID=idhere SSO_GITHUB_CLIENT_SECRET=secrethere npm start
 ```
 
+### GitLab sign in
+
+You will need a GitLab client ID:
+
+1. Go to <https://gitlab.com/profile/applications>
+2. Set the "Redirect URI" to match your deployment with
+   `/sso/gitlab` appended to the end. e.g. for local
+   testing, this could be `http://localhost:5000/sso/gitlab`
+3. Untick the "confidential" option. You do not need to enable
+   any scopes.
+4. Record the application ID (you will not need the secret).
+
+You can now invoke the application with the `SSO_GITLAB_CLIENT_ID`
+environment variable set. This applies to both local testing and
+deployments. For example:
+
+```bash
+SSO_GITLAB_CLIENT_ID=idhere npm start
+```
+
+To use a self-hosted GitLab deployment, you will also need to set
+the auth and token info URLs:
+
+```bash
+SSO_GITLAB_AUTH_URL=https://gitlab.example.com/oauth/authorize \
+SSO_GITLAB_TOKEN_INFO_URL=https://gitlab.example.com/oauth/token/info \
+SSO_GITLAB_CLIENT_ID=idhere \
+npm start
+```
+
 ## Other Integrations
 
 ### Giphy

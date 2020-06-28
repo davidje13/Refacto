@@ -22,6 +22,9 @@ export default async function handleLogin(
   } else if (service === 'github') {
     externalToken = searchParams.get('code');
     state = searchParams.get('state');
+  } else if (service === 'gitlab') {
+    externalToken = hashParams.get('access_token');
+    state = hashParams.get('state');
   }
 
   if (!externalToken) {
