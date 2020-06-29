@@ -14,9 +14,7 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 const mockRetroTokenService = retroTokenService as any as typeof mockApiTypes.retroTokenService;
 
 function getToken(retroId: string): Promise<string> {
-  return new Promise((resolve): void => {
-    retroTokenTracker.get(retroId).pipe(first()).subscribe(resolve);
-  });
+  return retroTokenTracker.get(retroId).pipe(first()).toPromise();
 }
 
 describe('PasswordPage', () => {
