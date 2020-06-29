@@ -13,7 +13,6 @@
     "@babel/runtime": "7.10.x",
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
-    "js-sha1": "0.6.x",
     "react": "16.x",
     "react-dom": "16.x",
     "react-hook-countdown": "git+https://github.com/davidje13/react-hook-countdown.git#semver:^1.0.1",

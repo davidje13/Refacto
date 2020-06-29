@@ -1,4 +1,5 @@
 import React from 'react';
+import { first } from 'rxjs/operators';
 import { render, fireEvent, act } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
@@ -14,10 +15,7 @@ const mockRetroTokenService = retroTokenService as any as typeof mockApiTypes.re
 
 function getToken(retroId: string): Promise<string> {
   return new Promise((resolve): void => {
-    const sub = retroTokenTracker.get(retroId).subscribe((retroToken) => {
-      resolve(retroToken);
-      sub.unsubscribe();
-    });
+    retroTokenTracker.get(retroId).pipe(first()).subscribe(resolve);
   });
 }
 

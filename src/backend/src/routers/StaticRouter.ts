@@ -13,6 +13,7 @@ export default class StaticRouter extends WebSocketExpress.Router {
 
     if (forwardHost) {
       // Dev mode: forward unknown requests to another service
+      // eslint-disable-next-line import/no-extraneous-dependencies
       import('http-proxy-middleware')
         .then(({ createProxyMiddleware }) => {
           this.useHTTP(createProxyMiddleware({ target: forwardHost, logLevel: 'warn' }));

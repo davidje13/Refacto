@@ -1,4 +1,4 @@
-import sha1 from 'js-sha1';
+import { sha1 } from '../helpers/crypto';
 
 export default class PasswordService {
   public constructor(
@@ -6,7 +6,7 @@ export default class PasswordService {
   ) {}
 
   public async countPasswordBreaches(password: string): Promise<number> {
-    const passwordHash = sha1(password).toUpperCase();
+    const passwordHash = (await sha1(password)).toUpperCase();
     const key = passwordHash.substr(0, 5);
     const rest = passwordHash.substr(5);
 

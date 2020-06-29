@@ -34,6 +34,7 @@ React.TextareaHTMLAttributes<HTMLTextAreaElement>, (
   sizeToFit?: boolean;
   multilineClass?: string;
   multilineClassElement?: HTMLElement | null;
+  className?: string;
 }
 
 export default ({

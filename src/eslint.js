@@ -46,6 +46,8 @@ module.exports = {
     'react/jsx-fragments': ['error', 'element'],
     'react/jsx-props-no-spreading': ['off'],
 
+    'react/require-default-props': ['off'],
+
     // https://github.com/evcohen/eslint-plugin-jsx-a11y/issues/455#issuecomment-403105932
     'jsx-a11y/label-has-associated-control': ['error', {
       depth: 2,

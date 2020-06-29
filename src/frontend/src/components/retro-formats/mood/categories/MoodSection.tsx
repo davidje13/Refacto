@@ -27,8 +27,6 @@ interface PropsT {
   onSelect?: (id: string) => void;
   onCancel?: (id: string) => void;
   onContinue?: (id: string) => void;
-  onSetDone?: (id: string, done: boolean) => void;
-  onSwitchFocus?: (markPreviousDone: boolean, id: string | null) => void;
   onAddExtraTime?: (time: number) => void;
   focusedItemId?: string | null;
   focusedItemTimeout?: number;

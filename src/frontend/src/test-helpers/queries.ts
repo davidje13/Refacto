@@ -90,7 +90,6 @@ export const title = (value: string, ...options: any[]): Query => ({
   queryAll: (container): HTMLElement[] => queryAllByTitle(container, value, ...options),
 });
 
-
 export const queryAllBy = (
   container: HTMLElement,
   query: Query,

@@ -1,22 +1,10 @@
 import React, { useCallback, memo } from 'react';
 import useConfig from '../../hooks/data/useConfig';
+import { toHex, randomBytes } from '../../helpers/crypto';
 import './LoginForm.less';
 
-function randomString(): string {
-  const array = new Uint8Array(10);
-  crypto.getRandomValues(array);
-
-  const pad = '00';
-  let result = '';
-  for (let i = 0; i < array.length; i += 1) {
-    const v = array[i].toString(16);
-    result += `${pad.substr(v.length)}${v}`;
-  }
-  return result;
-}
-
 function makeState(redirect: string): string {
-  const nonce = randomString();
+  const nonce = toHex(randomBytes(10));
   window.sessionStorage.setItem('login-nonce', nonce);
   return JSON.stringify({ nonce, redirect });
 }
