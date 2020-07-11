@@ -4,8 +4,8 @@ import path from 'path';
 import basedir from '../basedir';
 
 const VERSIONED_FILE = /\..{4,}\.(css|js|woff2?)(\.(br|gz))?$/;
-const VERSIONED_MAX_AGE = 365 * 24 * 60 * 60;
-const UNVERSIONED_MAX_AGE = 10 * 60;
+const VERSIONED_CACHE_CONTROL = `public, max-age=${365 * 24 * 60 * 60}, stale-if-error=${365 * 24 * 60 * 60}, immutable`;
+const UNVERSIONED_CACHE_CONTROL = `public, max-age=${10 * 60}, stale-if-error=${24 * 60 * 60}`;
 
 export default class StaticRouter extends WebSocketExpress.Router {
   public constructor(forwardHost: string | null = null) {
@@ -34,14 +34,13 @@ export default class StaticRouter extends WebSocketExpress.Router {
         orderPreference: ['br'],
         index: false,
         serveStatic: {
-          maxAge: UNVERSIONED_MAX_AGE * 1000,
+          cacheControl: false,
           redirect: false,
           setHeaders: (res, filePath): void => {
             if (VERSIONED_FILE.test(filePath)) {
-              res.header(
-                'cache-control',
-                `public, max-age=${VERSIONED_MAX_AGE}, immutable`,
-              );
+              res.header('cache-control', VERSIONED_CACHE_CONTROL);
+            } else {
+              res.header('cache-control', UNVERSIONED_CACHE_CONTROL);
             }
           },
         },

@@ -3,7 +3,7 @@ import type PasswordCheckService from '../services/PasswordCheckService';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
 
-const MAX_AGE = 60 * 60 * 24 * 30;
+const CACHE_CONTROL = `public, max-age=${30 * 24 * 60 * 60}, stale-if-error=${60 * 24 * 60 * 60}, immutable`;
 
 export default class ApiPasswordCheckRouter extends Router {
   public constructor(service: PasswordCheckService) {
@@ -18,7 +18,7 @@ export default class ApiPasswordCheckRouter extends Router {
 
       try {
         const data = await service.getBreachesRange(range);
-        res.header('cache-control', `public, max-age=${MAX_AGE}, immutable`);
+        res.header('cache-control', CACHE_CONTROL);
         res.removeHeader('expires');
         res.removeHeader('pragma');
         res.end(data);

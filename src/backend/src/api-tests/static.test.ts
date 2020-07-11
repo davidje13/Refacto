@@ -12,7 +12,8 @@ describe('API static content', () => {
       const response = await request(server)
         .get('/')
         .expect(200)
-        .expect('Content-Type', /text\/html/);
+        .expect('Content-Type', /text\/html/)
+        .expect('Vary', 'Accept-Encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
@@ -32,7 +33,8 @@ describe('API static content', () => {
         .set('Accept-Encoding', 'gzip')
         .expect(200)
         .expect('Content-Type', /text\/html/)
-        .expect('Content-Encoding', 'gzip');
+        .expect('Content-Encoding', 'gzip')
+        .expect('Vary', 'Accept-Encoding');
 
       expect(response.text).toContain('<title>Example Compressed Static Resource</title>');
     });
@@ -41,7 +43,8 @@ describe('API static content', () => {
       const response = await request(server)
         .get('/foobar')
         .expect(200)
-        .expect('Content-Type', /text\/html/);
+        .expect('Content-Type', /text\/html/)
+        .expect('Vary', 'Accept-Encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
@@ -52,9 +55,19 @@ describe('API static content', () => {
         .set('Accept-Encoding', 'gzip')
         .expect(200)
         .expect('Content-Type', /text\/html/)
-        .expect('Content-Encoding', 'gzip');
+        .expect('Content-Encoding', 'gzip')
+        .expect('Vary', 'Accept-Encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
+    });
+
+    it('omits Vary: Content-Type for files with no compressed version', async () => {
+      const response = await request(server)
+        .get('/example.abc123.js')
+        .expect(200);
+
+      const vary = response.header.vary || '';
+      expect(vary).not.toContain('Content-Type');
     });
 
     it('adds common headers', async () => {
@@ -74,17 +87,17 @@ describe('API static content', () => {
     it('manages cache control', async () => {
       await request(server)
         .get('/')
-        .expect('Cache-Control', 'public, max-age=600')
+        .expect('Cache-Control', 'public, max-age=600, stale-if-error=86400')
         .expect('ETag', /.+/);
 
       await request(server)
         .get('/example.abc123.js')
-        .expect('Cache-Control', 'public, max-age=31536000, immutable')
+        .expect('Cache-Control', 'public, max-age=31536000, stale-if-error=31536000, immutable')
         .expect('ETag', /.+/);
 
       await request(server)
         .get('/foobar')
-        .expect('Cache-Control', 'public, max-age=600')
+        .expect('Cache-Control', 'public, max-age=600, stale-if-error=86400')
         .expect('ETag', /.+/);
     });
 
