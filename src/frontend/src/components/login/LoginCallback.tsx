@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { useLocation } from 'wouter';
 import handleLogin from './handleLogin';
 import Header from '../common/Header';
+import storage from './storage';
 import './LoginCallback.less';
 
 interface PropsT {
@@ -16,14 +17,10 @@ export default memo(({
 
   useEffect(() => {
     const { search, hash } = document.location;
-    const nonce = window.sessionStorage.getItem('login-nonce');
-    if (!nonce) {
-      setError('');
-      return;
-    }
+    const nonce = storage.getItem('login-nonce');
     handleLogin(service, nonce, { search, hash })
       .then((redirect) => {
-        window.sessionStorage.removeItem('login-nonce');
+        storage.removeItem('login-nonce');
         setLocation(redirect, { replace: true });
       })
       .catch((err) => {
@@ -31,6 +28,7 @@ export default memo(({
           // GitLab shows a bare link to the /sso/login URL on the confirmation page
           setLocation('/', { replace: true });
         } else {
+          storage.removeItem('login-nonce');
           setError(err.message);
         }
       });

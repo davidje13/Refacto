@@ -1,11 +1,12 @@
 import React, { useCallback, memo } from 'react';
 import useConfig from '../../hooks/data/useConfig';
 import { toHex, randomBytes } from '../../helpers/crypto';
+import storage from './storage';
 import './LoginForm.less';
 
 function makeState(redirect: string): string {
   const nonce = toHex(randomBytes(10));
-  window.sessionStorage.setItem('login-nonce', nonce);
+  storage.setItem('login-nonce', nonce);
   return JSON.stringify({ nonce, redirect });
 }
 

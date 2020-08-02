@@ -7,7 +7,7 @@ interface LocationT {
 
 export default async function handleLogin(
   service: string,
-  localNonce: string,
+  localNonce: string | null,
   { search, hash }: LocationT,
 ): Promise<string> {
   let externalToken = null;
@@ -32,7 +32,12 @@ export default async function handleLogin(
   }
 
   const { redirect, nonce } = JSON.parse(state!);
-  if (!localNonce || nonce !== localNonce) {
+  if (!localNonce) {
+    // TODO: could we safely continue the login if we ignore the given redirect?
+    // Not sure what the attack scenarios are here
+    throw new Error('possible cross-site request forgery (you may need to enable local storage)');
+  }
+  if (nonce !== localNonce) {
     throw new Error('possible cross-site request forgery');
   }
 

@@ -115,6 +115,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     res.header('content-security-policy', CSP
       .replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)));
     res.header('referrer-policy', 'no-referrer');
+    res.header('cross-origin-opener-policy', 'same-origin');
     res.header('cross-origin-embedder-policy', 'require-corp');
     next();
   });
@@ -124,6 +125,7 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     res.header('expires', '0');
     res.header('pragma', 'no-cache');
     res.removeHeader('content-security-policy');
+    res.removeHeader('cross-origin-opener-policy');
     res.removeHeader('cross-origin-embedder-policy');
     next();
   });
