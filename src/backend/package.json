@@ -31,7 +31,7 @@
     "@neutrinojs/copy": "9.x",
     "@neutrinojs/jest": "9.x",
     "@neutrinojs/node": "9.x",
-    "@types/jest": "25.x",
+    "@types/jest": "26.x",
     "@types/node-fetch": "2.x",
     "@types/uuid": "8.x",
     "@types/webpack-env": "1.x",

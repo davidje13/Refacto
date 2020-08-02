@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router } from 'wouter';
+import staticLocationHook from 'wouter/static-location';
 import {
   render,
   fireEvent,
@@ -7,7 +8,6 @@ import {
   RenderResult,
 } from '@testing-library/react';
 import { makeRetro } from 'refacto-entities';
-import staticLocationHook, { StaticLocationHook } from './test-helpers/staticLocationHook';
 import staticTitleHook, { StaticTitleHook } from './test-helpers/staticTitleHook';
 import { queries, css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
@@ -17,13 +17,13 @@ import { TitleContext } from './hooks/env/useTitle';
 import App from './components/App';
 
 interface RenderedApp {
-  locationHook: StaticLocationHook;
+  locationHook: ReturnType<typeof staticLocationHook>;
   titleHook: StaticTitleHook;
   dom: RenderResult<typeof queries>;
 }
 
 async function renderApp(location: string): Promise<RenderedApp> {
-  const locationHook = staticLocationHook(location);
+  const locationHook = staticLocationHook(location, { record: true });
   const titleHook = staticTitleHook();
 
   let dom: RenderResult<typeof queries>;
@@ -93,7 +93,7 @@ describe('Application', () => {
   it('redirects to retros url for short unknown urls', async () => {
     const { locationHook } = await renderApp('/nope');
 
-    expect(locationHook.locationHistory).toEqual(['/retros/nope']);
+    expect(locationHook.history).toEqual(['/retros/nope']);
   });
 
   it('renders not found page at unknown urls', async () => {

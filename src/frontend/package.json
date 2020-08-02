@@ -33,7 +33,7 @@
     "@testing-library/jest-dom": "5.x",
     "@testing-library/react": "10.x",
     "@types/classnames": "2.x",
-    "@types/jest": "25.x",
+    "@types/jest": "26.x",
     "@types/react": "16.x",
     "@types/react-dom": "16.x",
     "@types/react-modal": "3.x",

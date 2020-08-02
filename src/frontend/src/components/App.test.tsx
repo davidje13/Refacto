@@ -8,7 +8,7 @@ import App from './App';
 describe('App', () => {
   it('renders without error', () => {
     render((
-      <Router hook={staticLocationHook('/')}>
+      <Router hook={staticLocationHook('/', { record: true })}>
         <App />
       </Router>
     ));

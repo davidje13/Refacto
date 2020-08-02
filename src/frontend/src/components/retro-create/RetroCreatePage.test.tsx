@@ -11,7 +11,7 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 describe('RetroCreatePage', () => {
   it('renders without error', () => {
     render((
-      <Router hook={staticLocationHook()}>
+      <Router hook={staticLocationHook('/', { record: true })}>
         <RetroCreatePage />
       </Router>
     ));

@@ -46,6 +46,7 @@ module.exports = {
     'react/jsx-fragments': ['error', 'element'],
     'react/jsx-props-no-spreading': ['off'],
 
+    'react/prop-types': ['off'],
     'react/require-default-props': ['off'],
 
     // https://github.com/evcohen/eslint-plugin-jsx-a11y/issues/455#issuecomment-403105932

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Router } from 'wouter';
+import staticLocationHook from 'wouter/static-location';
 import { render, fireEvent } from '@testing-library/react';
 import mockElement from 'react-mock-element';
 import { configService, userTokenTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
-import staticLocationHook from '../../test-helpers/staticLocationHook';
 import { queries, css } from '../../test-helpers/queries';
 
 import WelcomePage from './WelcomePage';
@@ -30,7 +30,7 @@ describe('WelcomePage', () => {
       });
 
       const dom = render((
-        <Router hook={staticLocationHook()}>
+        <Router hook={staticLocationHook('/', { record: true })}>
           <WelcomePage />
         </Router>
       ), { queries });
@@ -45,7 +45,7 @@ describe('WelcomePage', () => {
       });
 
       const dom = render((
-        <Router hook={staticLocationHook()}>
+        <Router hook={staticLocationHook('/', { record: true })}>
           <WelcomePage />
         </Router>
       ), { queries });
@@ -60,7 +60,7 @@ describe('WelcomePage', () => {
     });
 
     it('displays a link to create a new retro', () => {
-      const locationHook = staticLocationHook();
+      const locationHook = staticLocationHook('/', { record: true });
       const dom = render((
         <Router hook={locationHook}>
           <WelcomePage />
@@ -69,7 +69,7 @@ describe('WelcomePage', () => {
 
       const link = dom.getBy(css('a.link-create'));
       fireEvent.click(link);
-      expect(locationHook.locationHistory).toEqual(['/', '/create']);
+      expect(locationHook.history).toEqual(['/', '/create']);
     });
   });
 });

@@ -1,5 +1,11 @@
-import React, { useLayoutEffect } from 'react';
-import { useLocation, Route, RouteProps } from 'wouter';
+import React from 'react';
+import {
+  Route,
+  RouteProps,
+  Redirect,
+  HookNavigationOptions,
+  LocationHook,
+} from 'wouter';
 
 const groupRx = /:([A-Za-z0-9_]+)([?+*]?)/g;
 const makePath = (
@@ -7,22 +13,10 @@ const makePath = (
   params: Record<string, string>,
 ): string => pattern.replace(groupRx, (_, name) => params[name]);
 
-interface RedirectProps {
+type RedirectRouteProps = HookNavigationOptions<LocationHook> & {
+  path: RouteProps['path'];
   to: string;
-  replace?: boolean;
   children?: never;
-}
-
-// https://github.com/molefrog/wouter/issues/114
-const Redirect = ({ to, replace }: RedirectProps): null => {
-  const [, push] = useLocation();
-  useLayoutEffect(() => push(to, replace), []);
-  return null;
-};
-
-type RedirectRouteProps = RedirectProps & RouteProps<{}> & {
-  children?: never;
-  component?: never;
 };
 
 export default ({ to, ...props }: RedirectRouteProps): React.ReactElement | null => Route({

@@ -12,7 +12,7 @@
     "@neutrinojs/airbnb-base": "9.x",
     "@neutrinojs/jest": "9.x",
     "@neutrinojs/node": "9.x",
-    "@types/jest": "25.x",
+    "@types/jest": "26.x",
     "@types/selenium-webdriver": "4.x",
     "eslint": "7.x",
     "eslint-plugin-eslint-comments": "3.x",

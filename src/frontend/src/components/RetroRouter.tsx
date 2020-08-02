@@ -9,7 +9,7 @@ import {
   Route,
   Switch,
   useLocation,
-  PushCallback,
+  LocationHook,
 } from 'wouter';
 import type { Retro } from 'refacto-entities';
 import type { RetroState, RetroDispatch } from '../api/RetroTracker';
@@ -33,9 +33,11 @@ type RetroReducerState = [
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/)/;
 
+type SetLocation = ReturnType<LocationHook>[1];
+
 function replaceSlug(
   oldPath: string,
-  setLocation: PushCallback,
+  setLocation: SetLocation,
   newSlug: string,
   retroId: string,
 ): void {
@@ -52,7 +54,7 @@ function replaceSlug(
   const oldPrefix = `/retros/${oldSlug}`;
   const newPrefix = `/retros/${newSlug}`;
   const newPath = newPrefix + oldPath.substr(oldPrefix.length);
-  setLocation(newPath, true);
+  setLocation(newPath, { replace: true });
 }
 
 function useRetroReducer(

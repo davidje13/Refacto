@@ -24,12 +24,12 @@ export default memo(({
     handleLogin(service, nonce, { search, hash })
       .then((redirect) => {
         window.sessionStorage.removeItem('login-nonce');
-        setLocation(redirect, true);
+        setLocation(redirect, { replace: true });
       })
       .catch((err) => {
         if (err.message === 'unrecognised login details') {
           // GitLab shows a bare link to the /sso/login URL on the confirmation page
-          setLocation('/', true);
+          setLocation('/', { replace: true });
         } else {
           setError(err.message);
         }

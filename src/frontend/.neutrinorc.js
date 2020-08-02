@@ -46,6 +46,9 @@ module.exports = {
     }),
     jest({
       setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
+      moduleNameMapper: {
+        '^wouter/(.*)$': 'wouter/cjs/$1', // https://github.com/webpack/webpack/issues/9509
+      },
     }),
     (neutrino) => neutrino.use(react({
       html: {

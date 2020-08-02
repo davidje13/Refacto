@@ -13,7 +13,7 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 describe('RetroSettingsPage', () => {
   it('renders basic settings', () => {
     const dom = render((
-      <Router hook={staticLocationHook()}>
+      <Router hook={staticLocationHook('/', { record: true })}>
         <RetroSettingsPage retro={makeRetro()} retroDispatch={(): null => null} />
       </Router>
     ), { queries });

@@ -12,7 +12,7 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 describe('SecurityPage', () => {
   it('displays static content with anchors', () => {
     const dom = render((
-      <Router hook={staticLocationHook()}>
+      <Router hook={staticLocationHook('/', { record: true })}>
         <SecurityPage />
       </Router>
     ), { queries });
