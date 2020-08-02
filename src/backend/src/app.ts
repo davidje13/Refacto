@@ -45,11 +45,11 @@ const CSP = [
   "object-src 'none'",
   `script-src 'self'${devMode ? " 'unsafe-eval'" : ''}`,
   `style-src 'self'${devMode ? " 'unsafe-inline'" : " 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='"}`,
-  "font-src 'self'",
   // https://github.com/w3c/webappsec-csp/issues/7
   `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",
+  "frame-ancestors 'none'",
 ].join('; ');
 
 function getHost(req: any): string {
@@ -115,6 +115,8 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     res.header('content-security-policy', CSP
       .replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)));
     res.header('referrer-policy', 'no-referrer');
+    res.header('cross-origin-opener-policy', 'same-origin');
+    res.header('cross-origin-embedder-policy', 'require-corp');
     next();
   });
 
@@ -123,6 +125,8 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
     res.header('expires', '0');
     res.header('pragma', 'no-cache');
     res.removeHeader('content-security-policy');
+    res.removeHeader('cross-origin-opener-policy');
+    res.removeHeader('cross-origin-embedder-policy');
     next();
   });
 
