@@ -5,6 +5,9 @@ module.exports = {
   baseRules: {
     'arrow-parens': ['error', 'always'],
     'operator-linebreak': ['error', 'after'],
+    'import/no-extraneous-dependencies': ['error', {
+      'optionalDependencies': true,
+    }],
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/await-thenable': ['error'],
     '@typescript-eslint/ban-ts-ignore': ['error'],

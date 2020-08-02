@@ -69,6 +69,7 @@ echo 'Generating package.json...';
   | node "$BASEDIR/scripts/mutate-json.js" \
   'name="refacto-app"' \
   'scripts={"start": "node index.js"}' \
+  'optionalDependencies=' \
   'devDependencies=' \
   > "$BUILDDIR/package.json";
 cp "$BASEDIR/src/backend/package-lock.json" "$BUILDDIR";
