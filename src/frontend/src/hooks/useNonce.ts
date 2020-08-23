@@ -1,6 +1,6 @@
 import { useRef, useMemo } from 'react';
 
-type NonceT = object;
+type NonceT = object; /* eslint-disable-line @typescript-eslint/ban-types */
 
 interface NonceRef {
   next(): NonceT;

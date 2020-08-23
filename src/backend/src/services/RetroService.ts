@@ -49,7 +49,7 @@ export default class RetroService {
     const enc = encryptByRecordWithMasterKey(
       encryptionKey,
       db.getCollection('retro_key'),
-      128,
+      { keyCache: { capacity: 128 } },
     );
 
     this.retroCollection = migrate({

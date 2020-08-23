@@ -4,7 +4,7 @@ type ObjectMapper<T> = {
   [K in keyof T]: Mapper<T[K]>;
 };
 
-function isJsonObject(source: unknown): source is Record<any, unknown> {
+function isJsonObject(source: unknown): source is Record<string, unknown> {
   return source && typeof source === 'object';
 }
 
@@ -15,7 +15,7 @@ const jsonObject = <T>(maps: ObjectMapper<T>) => (source: unknown): T => {
   const result: T = {} as any;
   Object.keys(maps).forEach((k) => {
     const key = k as keyof T;
-    result[key] = maps[key](source[key]);
+    result[key] = maps[key](source[k]);
   });
   return result;
 };
@@ -47,7 +47,8 @@ export default {
 
     return (source: unknown): T => {
       const result = subExtract(source);
-      const extraKey = Object.keys(source as object).find((k) => !knownKeys.has(k));
+      const extraKey = Object.keys(source as Record<string, unknown>)
+        .find((k) => !knownKeys.has(k));
       if (extraKey) {
         throw new Error(`Unexpected property ${extraKey}`);
       }

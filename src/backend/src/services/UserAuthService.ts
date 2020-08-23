@@ -1,5 +1,6 @@
 import type { DB } from 'collection-storage';
 import type { JWTPayload } from 'websocket-express';
+import type { JsonData } from 'refacto-entities';
 import type { TokenManager, KeyPair } from '../tokens/TokenManager';
 
 interface StoredKeyPair extends KeyPair {
@@ -46,13 +47,13 @@ export default class UserAuthService {
     if (!this.privateKey) {
       throw new Error('Not initialised');
     }
-    return this.tokenManager.signData(tokenData, this.privateKey);
+    return this.tokenManager.signData(tokenData as JsonData, this.privateKey);
   }
 
   public readAndVerifyToken(userToken: string): JWTPayload | null {
     if (!this.publicKey) {
       throw new Error('Not initialised');
     }
-    return this.tokenManager.readAndVerifySigned(userToken, this.publicKey);
+    return this.tokenManager.readAndVerifySigned(userToken, this.publicKey) as JWTPayload;
   }
 }

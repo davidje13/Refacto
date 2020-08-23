@@ -1,3 +1,5 @@
+export type JsonData = { [P: string]: JsonData } | JsonData[] | string | number | boolean | null;
+
 export interface ClientConfig {
   sso: {
     [service: string]: {

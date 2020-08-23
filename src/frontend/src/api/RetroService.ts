@@ -1,9 +1,11 @@
+import type { JsonData } from 'refacto-entities';
+
 interface RetroOptions {
   name: string;
   slug: string;
   password: string;
   userToken: string;
-  importJson?: object | null;
+  importJson?: JsonData;
 }
 
 export interface RetroCreationInfo {
@@ -23,7 +25,7 @@ export default class RetroService {
     userToken,
     importJson,
   }: RetroOptions): Promise<RetroCreationInfo> {
-    const requestBody: any = { name, slug, password };
+    const requestBody: JsonData = { name, slug, password };
     if (importJson) {
       requestBody.importJson = importJson;
     }

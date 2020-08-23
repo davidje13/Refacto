@@ -1,6 +1,7 @@
 import crypto, { KeyObject } from 'crypto';
 import util from 'util';
 import jwt from 'jwt-simple';
+import type { JsonData } from 'refacto-entities';
 
 export interface KeyPair {
   publicKey: string;
@@ -12,7 +13,7 @@ type GenerateKeyPairCallback = (err: Error | null, keyPair: KeyPair) => void;
 const generateKeyPair = util.promisify(
   (
     type: string,
-    options: object,
+    options: Record<string, unknown>,
     callback: GenerateKeyPairCallback,
   ): void => crypto.generateKeyPair(
     type as any,
@@ -50,7 +51,7 @@ export class TokenManager {
     });
   }
 
-  public signData(data: object, privateKey: string | Buffer): string {
+  public signData(data: Readonly<JsonData>, privateKey: string | Buffer): string {
     const key = crypto.createPrivateKey({
       key: privateKey,
       format: 'pem',
@@ -59,7 +60,10 @@ export class TokenManager {
     return jwt.encode(data, key as any, this.algorithm);
   }
 
-  public readAndVerifySigned(token: string, publicKey: string | KeyObject): object | null {
+  public readAndVerifySigned(
+    token: string,
+    publicKey: string | KeyObject,
+  ): JsonData | null {
     try {
       return jwt.decode(token, publicKey as any, false, this.algorithm);
     } catch (e) {

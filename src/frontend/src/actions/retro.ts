@@ -13,7 +13,7 @@ function sanitiseInput(value: string): string {
 
 export const setRetroState = (
   group: string | undefined,
-  delta: object,
+  delta: Record<string, unknown>,
 ): DispatchSpec<Retro> => {
   if (!group) {
     return [{ state: ['merge', delta] }];

@@ -1,4 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
+import type { JsonData } from 'refacto-entities';
 import Input from '../common/Input';
 import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
 import withUserToken from '../hocs/withUserToken';
@@ -61,7 +62,7 @@ export default memo(withUserToken('Register an account to create a retro', ({
   const [password, setPassword] = useState('');
   const [passwordConf, setPasswordConfRaw] = useState('');
   const [passwordWarning, setPasswordWarning] = useState<string | null>(null);
-  const [importJson, setImportJson] = useState<object | null>(null);
+  const [importJson, setImportJson] = useState<JsonData>(null);
   const [importError, setImportError] = useState<string | null>(null);
 
   const importNonce = useNonce();

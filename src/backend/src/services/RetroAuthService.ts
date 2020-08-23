@@ -109,6 +109,6 @@ export default class RetroAuthService {
     return this.tokenManager.readAndVerifySigned(
       retroToken,
       retroData.publicKey,
-    );
+    ) as JWTPayload;
   }
 }

@@ -1,4 +1,5 @@
 import { Subject as MockSubject } from 'rxjs';
+import type { JsonData } from 'refacto-entities';
 
 type FetchFn = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
@@ -56,14 +57,14 @@ class MockExpectation implements MockExpectationT {
     this.fn = (request): void => request.respondOk(body, init);
   }
 
-  public andRespondJsonOk(body: object, init?: RequestInit): void {
+  public andRespondJsonOk(body: Readonly<JsonData>, init?: RequestInit): void {
     this.fn = (request): void => request.respondJsonOk(body, init);
   }
 }
 
 interface ResponseWrapper {
   status: number;
-  json: () => object;
+  json: () => Promise<JsonData>;
 }
 
 interface InitWithStatus extends RequestInit {
@@ -107,7 +108,7 @@ class MockRequest {
     // const response = new Response(body, init)
     const response = {
       status: init.status || 200,
-      json: (): Promise<object> => Promise.resolve(JSON.parse(body!)),
+      json: (): Promise<JsonData> => Promise.resolve(JSON.parse(body!)),
     };
     this.internalResolve!(response);
     this.close();
@@ -117,7 +118,7 @@ class MockRequest {
     this.respond(body, { status: 200, ...init });
   }
 
-  public respondJsonOk(body: object = {}, init: RequestInit = {}): void {
+  public respondJsonOk(body: Readonly<JsonData> = {}, init: RequestInit = {}): void {
     this.respond(JSON.stringify(body), {
       status: 200,
       headers: {
@@ -198,7 +199,7 @@ const mockFetch = new MockFetch();
 // eslint-disable-next-line import/prefer-default-export
 export function mockFetchExpect(
   url: string,
-  options?: object,
+  options?: RequestInit,
 ): MockExpectation {
   return mockFetch.expect(url, options);
 }

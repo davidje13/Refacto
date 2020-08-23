@@ -113,11 +113,11 @@ describe('localDateTracker', () => {
 
   it('stops checking if stop is called', () => {
     mockClock.set(day2 - 100000);
-    const { stop } = localDateTracker(callback, mockClock);
+    const tracker = localDateTracker(callback, mockClock);
 
     callback.mockClear();
 
-    stop();
+    tracker.stop();
     mockClock.advanceByTime(105000);
     expect(callback).not.toHaveBeenCalled();
   });

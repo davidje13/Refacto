@@ -9,7 +9,7 @@ export default class RetroArchiveService {
     const enc = encryptByRecordWithMasterKey(
       encryptionKey,
       db.getCollection('archive_key'),
-      128,
+      { keyCache: { capacity: 128 } },
     );
 
     this.archiveCollection = enc<RetroArchive>()(

@@ -6,7 +6,7 @@ import UnknownRetro from './unknown/UnknownRetro';
 interface ChildPropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
-  retroState: object;
+  retroState: Record<string, unknown>;
   group?: string;
   dispatch?: Dispatch<Retro>;
   onComplete?: () => void;

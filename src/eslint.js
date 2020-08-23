@@ -10,7 +10,6 @@ module.exports = {
     }],
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/await-thenable': ['error'],
-    '@typescript-eslint/ban-ts-ignore': ['error'],
     '@typescript-eslint/member-ordering': ['error'],
 //    '@typescript-eslint/no-floating-promises': ['error'],
     '@typescript-eslint/no-for-in-array': ['error'],
