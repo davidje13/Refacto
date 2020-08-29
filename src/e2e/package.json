@@ -19,7 +19,7 @@
     "jest": "26.x",
     "neutrino": "9.x",
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.13",
-    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.2.3",
+    "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.3.0",
     "selenium-webdriver": "4.0.0-alpha.7",
     "typescript": "4.0.x",
     "webpack": "4.x",
