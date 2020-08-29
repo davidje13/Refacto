@@ -42,7 +42,7 @@
     "eslint-plugin-eslint-comments": "3.x",
     "jest": "26.x",
     "less": "3.x",
-    "less-loader": "6.x",
+    "less-loader": "7.x",
     "neutrino": "9.x",
     "neutrino-typescript": "git+https://github.com/davidje13/neutrino-typescript#semver:^1.0.13",
     "neutrino-typescript-eslint": "git+https://github.com/davidje13/neutrino-typescript-eslint#semver:^1.2.3",
