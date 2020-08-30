@@ -3,8 +3,8 @@ const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const react = require('@neutrinojs/react');
 const styleMinify = require('@neutrinojs/style-minify');
-const typescript = require('neutrino-typescript');
-const typescriptLint = require('neutrino-typescript-eslint');
+const typescript = require('neutrinojs-typescript');
+const typescriptLint = require('neutrinojs-typescript-eslint');
 const { baseRules, reactRules, testRules } = require('../eslint.js');
 
 const conditionalModule = (pred, mod) => (neutrino) => {

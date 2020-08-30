@@ -1,8 +1,8 @@
 const airbnb = require('@neutrinojs/airbnb-base');
 const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
-const typescript = require('neutrino-typescript');
-const typescriptLint = require('neutrino-typescript-eslint');
+const typescript = require('neutrinojs-typescript');
+const typescriptLint = require('neutrinojs-typescript-eslint');
 const { baseRules, testRules } = require('../eslint.js');
 
 module.exports = {

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import useCountdown from 'react-hook-countdown';
+import useCountdown from 'react-hook-final-countdown';
 import TimeRemaining from './TimeRemaining';
 import TimeUp from './TimeUp';
 

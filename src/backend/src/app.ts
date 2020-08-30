@@ -7,7 +7,7 @@ import {
   Topic,
   TopicMessage,
 } from 'shared-reducer-backend';
-import { buildAuthenticationBackend } from 'auth-backend';
+import { buildAuthenticationBackend } from 'authentication-backend';
 import type { Retro } from 'refacto-entities';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';

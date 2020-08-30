@@ -1,6 +1,6 @@
 import { Router } from 'websocket-express';
 import type { ClientConfig } from 'refacto-entities';
-import type { AuthenticationClientConfiguration } from 'auth-backend';
+import type { AuthenticationClientConfiguration } from 'authentication-backend';
 
 interface ServerConfig {
   sso: ClientConfig['sso'];

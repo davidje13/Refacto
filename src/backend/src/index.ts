@@ -1,7 +1,7 @@
 import http from 'http';
 import util from 'util';
 import type WebSocketExpress from 'websocket-express';
-import { buildMockSsoApp } from 'auth-backend';
+import { buildMockSsoApp } from 'authentication-backend';
 import appFactory from './app';
 import config from './config';
 
