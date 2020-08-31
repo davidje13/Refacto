@@ -18,7 +18,12 @@ module.exports = {
     tests: 'src',
   },
   use: [
-    typescript(),
+    typescript({ tsconfig: {
+      compilerOptions: {
+        strict: true,
+        typeRoots: ['src/types', 'node_modules/@types'],
+      },
+    } }),
     typescriptLint(),
     // exclude linting from development as it is very buggy (lots of false
     // positives) when used with webpack dev server, but works fine in

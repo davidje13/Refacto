@@ -2,10 +2,11 @@
   "name": "refacto-backend",
   "private": true,
   "scripts": {
+    "prebuild": "rewrite-tsconfig",
     "build": "webpack --mode production",
     "start": "webpack --watch --mode development",
-    "lint:eslint": "eslint --format codeframe --ext mjs,jsx,js,tsx,ts --report-unused-disable-directives --max-warnings=0 src",
-    "lint:tsc": "tsc",
+    "lint:eslint": "rewrite-tsconfig && eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
+    "lint:tsc": "rewrite-tsconfig && tsc",
     "lint": "npm run lint:eslint --silent && npm run lint:tsc --silent",
     "test": "jest"
   },

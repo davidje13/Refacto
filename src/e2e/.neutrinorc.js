@@ -10,7 +10,11 @@ module.exports = {
     tests: 'src',
   },
   use: [
-    typescript(),
+    typescript({ tsconfig: {
+      compilerOptions: {
+        strict: true,
+      },
+    } }),
     typescriptLint(),
     airbnb({
       eslint: {
