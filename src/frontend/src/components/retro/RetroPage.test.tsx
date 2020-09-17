@@ -1,8 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from 'refacto-entities';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import RetroPage from './RetroPage';
 
@@ -17,7 +17,7 @@ describe('RetroPage', () => {
         retro={makeRetro()}
         retroDispatch={(): null => null}
       />
-    ), { queries });
+    ));
     expect(dom).toContainElementWith(css('mock-retro-format-picker'));
   });
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
-import { render } from '@testing-library/react';
+import { render } from 'flexible-testing-library-react';
 
 import App from './App';
 

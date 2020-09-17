@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, RenderResult } from '@testing-library/react';
-import { queries, css } from '../../test-helpers/queries';
+import { render, fireEvent, RenderResult } from 'flexible-testing-library-react';
+import { css } from '../../test-helpers/queries';
 
 import TabControl from './TabControl';
 
@@ -19,11 +19,11 @@ describe('TabControl', () => {
     },
   ];
 
-  let dom: RenderResult<typeof queries>;
+  let dom: RenderResult;
   let headers: HTMLElement[];
 
   beforeEach(() => {
-    dom = render(<TabControl tabs={tabs} />, { queries });
+    dom = render(<TabControl tabs={tabs} />);
     headers = dom.getAllBy(css('button'));
   });
 

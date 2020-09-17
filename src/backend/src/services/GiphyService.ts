@@ -11,6 +11,24 @@ interface GifInfo {
   medium: string;
 }
 
+/* eslint-disable camelcase */ // external API
+interface GiphyResponseResource {
+  url: string;
+}
+
+interface GiphyResponseGif {
+  images: {
+    fixed_height: GiphyResponseResource;
+    fixed_height_small: GiphyResponseResource;
+  };
+}
+
+interface GiphyResponse {
+  status: number;
+  data: ReadonlyArray<GiphyResponseGif>;
+}
+/* eslint-enable camelcase */
+
 export default class GiphyService {
   private readonly baseUrl: string;
 
@@ -43,7 +61,7 @@ export default class GiphyService {
       const result = await fetch(
         `${this.baseUrl}/gifs/search?${params.toString()}`,
       );
-      const resultJson = await result.json();
+      const resultJson = await result.json() as GiphyResponse;
 
       if (resultJson.status === 400) {
         throw new Error();
@@ -60,7 +78,7 @@ export default class GiphyService {
         throw new Error();
       }
 
-      return resultJson.data.map((gif: any) => ({
+      return resultJson.data.map((gif) => ({
         small: gif.images.fixed_height_small.url.split('?')[0],
         medium: gif.images.fixed_height.url.split('?')[0],
       }));

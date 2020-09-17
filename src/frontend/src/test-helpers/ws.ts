@@ -39,7 +39,7 @@ class MockWebSocketClient {
         },
         receive: (): Promise<string> => this.messages.pop(),
       };
-      expected.scriptFn(ws as any as WebSocket);
+      expected.scriptFn(ws as unknown as WebSocket);
       this.dispatchEvent('close', new CloseEvent('close'));
     });
   }

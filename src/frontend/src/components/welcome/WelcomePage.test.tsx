@@ -1,19 +1,19 @@
 import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { configService, userTokenTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import WelcomePage from './WelcomePage';
 
 jest.mock('../../api/api');
 jest.mock('../common/Header', () => mockElement('mock-header'));
 
-const mockUserTokenTracker = userTokenTracker as any as typeof mockApiTypes.userTokenTracker;
-const mockConfigService = configService as any as typeof mockApiTypes.configService;
+const mockUserTokenTracker = userTokenTracker as unknown as typeof mockApiTypes.userTokenTracker;
+const mockConfigService = configService as unknown as typeof mockApiTypes.configService;
 
 describe('WelcomePage', () => {
   describe('signed out', () => {
@@ -33,7 +33,7 @@ describe('WelcomePage', () => {
         <Router hook={staticLocationHook('/', { record: true })}>
           <WelcomePage />
         </Router>
-      ), { queries });
+      ));
 
       expect(dom).toContainElementWith(css('.sso-google'));
     });
@@ -48,7 +48,7 @@ describe('WelcomePage', () => {
         <Router hook={staticLocationHook('/', { record: true })}>
           <WelcomePage />
         </Router>
-      ), { queries });
+      ));
 
       expect(dom).not.toContainElementWith(css('.sso-google'));
     });
@@ -65,7 +65,7 @@ describe('WelcomePage', () => {
         <Router hook={locationHook}>
           <WelcomePage />
         </Router>
-      ), { queries });
+      ));
 
       const link = dom.getBy(css('a.link-create'));
       fireEvent.click(link);

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from 'flexible-testing-library-react';
 import staticTitleHook from '../../test-helpers/staticTitleHook';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 import { TitleContext } from '../../hooks/env/useTitle';
 
 import Header from './Header';
@@ -21,7 +21,7 @@ describe('Header', () => {
           />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
 
     expect(titleHook.currentTitle).toEqual('doc-title');
     expect(dom.getBy(css('h1'))).toHaveTextContent('page-title');
@@ -40,7 +40,7 @@ describe('Header', () => {
           />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
 
     const backLink = dom.getBy(css('.back'));
     expect(backLink).toHaveTextContent('back-label');
@@ -63,7 +63,7 @@ describe('Header', () => {
           />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
 
     const links = dom.getAllBy(css('.menu > *'));
     expect(links.length).toEqual(2);
@@ -86,7 +86,7 @@ describe('Header', () => {
           />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
 
     const links = dom.getAllBy(css('.menu > *'));
     expect(links.length).toEqual(2);
@@ -108,7 +108,7 @@ describe('Header', () => {
           />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
 
     const links = dom.getAllBy(css('.menu > *'));
 
@@ -131,7 +131,7 @@ describe('Header', () => {
           />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
 
     const links = dom.getAllBy(css('.menu > *'));
 

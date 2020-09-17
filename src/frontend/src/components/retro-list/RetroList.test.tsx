@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { queries, css, textFragment } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import RetroList from './RetroList';
 
@@ -11,7 +11,7 @@ describe('RetroList', () => {
   const emptyLabel = 'do not have any retros';
 
   it('displays a message if there are no retros', () => {
-    const dom = render(<RetroList retros={[]} />, { queries });
+    const dom = render(<RetroList retros={[]} />);
 
     expect(dom).toContainElementWith(textFragment(emptyLabel));
   });
@@ -22,7 +22,7 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const dom = render(<RetroList retros={retros} />, { queries });
+    const dom = render(<RetroList retros={retros} />);
 
     expect(dom).not.toContainElementWith(textFragment(emptyLabel));
   });
@@ -33,7 +33,7 @@ describe('RetroList', () => {
       { id: 'u2', slug: 'b', name: 'R2' },
     ];
 
-    const dom = render(<RetroList retros={retros} />, { queries });
+    const dom = render(<RetroList retros={retros} />);
 
     const links = dom.getAllBy(css('mock-retro-link'));
 

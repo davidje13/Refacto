@@ -12,7 +12,7 @@ import {
   LocationHook,
 } from 'wouter';
 import type { Retro } from 'refacto-entities';
-import type { RetroState, RetroDispatch } from '../api/RetroTracker';
+import type { RetroState, RetroDispatch, RetroError } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
 import useNonce from '../hooks/useNonce';
 import RetroCreatePage from './retro-create/RetroCreatePage';
@@ -28,7 +28,7 @@ import RedirectRoute from './RedirectRoute';
 type RetroReducerState = [
   Retro | null,
   RetroDispatch | null,
-  any,
+  RetroError,
 ];
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/)/;
@@ -65,7 +65,7 @@ function useRetroReducer(
   const slugChangeDetectionRef = useRef<string>();
   const [retroState, setRetroState] = useState<RetroState | null>(null);
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(null);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<RetroError>(null);
   const nonce = useNonce();
 
   // This cannot be useEffect; the websocket would be closed & reopened
@@ -85,7 +85,7 @@ function useRetroReducer(
       retroToken,
       (dispatch: RetroDispatch) => nonce.check(myNonce) && setRetroDispatch(() => dispatch),
       (data: RetroState) => nonce.check(myNonce) && setRetroState(data),
-      (err: any) => nonce.check(myNonce) && setError(err),
+      (err: RetroError) => nonce.check(myNonce) && setError(err),
     );
     return (): void => subscription.unsubscribe();
   }, [retroTracker, setRetroState, setRetroDispatch, setError, retroId, retroToken]);

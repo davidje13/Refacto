@@ -1,9 +1,9 @@
 import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
-import { render } from '@testing-library/react';
+import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import SecurityPage from './SecurityPage';
 
@@ -15,7 +15,7 @@ describe('SecurityPage', () => {
       <Router hook={staticLocationHook('/', { record: true })}>
         <SecurityPage />
       </Router>
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(css('#passwords'));
   });

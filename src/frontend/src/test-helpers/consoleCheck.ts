@@ -2,16 +2,11 @@ const spyConsole: any = console;
 
 // Automatically fail tests if errors or warnings are logged to the console
 
-interface CustomMatcherResult {
-  pass: boolean;
-  message: () => string;
-}
-
 function checkConsoleOutput(
   console: Record<string, jest.Mock<void, [...string[]]>>,
   methodName: string,
   friendlyName: string,
-): CustomMatcherResult {
+): jest.CustomMatcherResult {
   const lines = console[methodName].mock.calls;
   if (lines.length) {
     return {
@@ -27,8 +22,8 @@ function checkConsoleOutput(
 }
 
 declare global {
-  namespace jest { // eslint-disable-line @typescript-eslint/no-namespace
-    interface Matchers<R, T> {
+  namespace jest {
+    interface Matchers<R> {
       toHaveReportedNoErrors: () => R;
       toHaveReportedNoWarnings: () => R;
     }
@@ -36,10 +31,10 @@ declare global {
 }
 
 expect.extend({
-  toHaveReportedNoErrors(console): CustomMatcherResult {
+  toHaveReportedNoErrors(console): jest.CustomMatcherResult {
     return checkConsoleOutput(console, 'error', 'error');
   },
-  toHaveReportedNoWarnings(console): CustomMatcherResult {
+  toHaveReportedNoWarnings(console): jest.CustomMatcherResult {
     return checkConsoleOutput(console, 'warn', 'warning');
   },
 });

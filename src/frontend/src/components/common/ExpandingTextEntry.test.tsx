@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, fireEvent, RenderResult } from '@testing-library/react';
-import { queries, css } from '../../test-helpers/queries';
+import { render, fireEvent, RenderResult } from 'flexible-testing-library-react';
+import { css } from '../../test-helpers/queries';
 
 import ExpandingTextEntry from './ExpandingTextEntry';
 
@@ -13,12 +13,12 @@ const nop = (): void => undefined;
 describe('ExpandingTextEntry', () => {
   describe('with no extra options', () => {
     let onSubmit: jest.Mock<(value: string) => void>;
-    let dom: RenderResult<typeof queries>;
+    let dom: RenderResult;
     let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
       onSubmit = jest.fn().mockName('onSubmit');
-      dom = render(<ExpandingTextEntry onSubmit={onSubmit} />, { queries });
+      dom = render(<ExpandingTextEntry onSubmit={onSubmit} />);
       textarea = dom.getBy(css('textarea')) as HTMLTextAreaElement;
     });
 
@@ -59,7 +59,7 @@ describe('ExpandingTextEntry', () => {
 
   describe('onCancel', () => {
     let onCancel: jest.Mock<() => void>;
-    let dom: RenderResult<typeof queries>;
+    let dom: RenderResult;
     let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
@@ -70,7 +70,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           onCancel={onCancel}
         />
-      ), { queries });
+      ));
       textarea = dom.getBy(css('textarea')) as HTMLTextAreaElement;
     });
 
@@ -83,7 +83,7 @@ describe('ExpandingTextEntry', () => {
   });
 
   describe('clearAfterSubmit', () => {
-    let dom: RenderResult<typeof queries>;
+    let dom: RenderResult;
     let textarea: HTMLTextAreaElement;
 
     beforeEach(() => {
@@ -92,7 +92,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           clearAfterSubmit
         />
-      ), { queries });
+      ));
       textarea = dom.getBy(css('textarea')) as HTMLTextAreaElement;
     });
 
@@ -111,7 +111,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           extraInputs={<em />}
         />
-      ), { queries });
+      ));
 
       expect(dom).toContainElementWith(css('em'));
     });
@@ -122,7 +122,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           extraInputs={<em />}
         />
-      ), { queries });
+      ));
 
       expect(dom).toContainElementWith(css('form.multiline'));
     });
@@ -133,7 +133,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           extraInputs={[]}
         />
-      ), { queries });
+      ));
 
       expect(dom).not.toContainElementWith(css('form.multiline'));
     });
@@ -146,7 +146,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           extraOptions={<em />}
         />
-      ), { queries });
+      ));
 
       expect(dom).toContainElementWith(css('em'));
     });
@@ -157,7 +157,7 @@ describe('ExpandingTextEntry', () => {
           onSubmit={nop}
           extraOptions={[<em key="a" />, <strong key="b" />]}
         />
-      ), { queries });
+      ));
 
       expect(dom).toContainElementWith(css('em'));
       expect(dom).toContainElementWith(css('strong'));

@@ -20,11 +20,11 @@ function isMaterialized(
 
 export default function useObservable<T>(
   observableGenerator: () => (Observable<T | Notification<T>> | undefined),
-  args: any[] = [],
+  deps: React.DependencyList = [],
   { materialized = 'detect' }: ObservableOptions = {},
 ): ObservableState<T> {
   const [state, setState] = useState<ObservableState<T>>([null, null]);
-  const generator = useCallback(observableGenerator, args);
+  const generator = useCallback(observableGenerator, deps);
 
   useLayoutEffect(() => {
     setState([null, null]);

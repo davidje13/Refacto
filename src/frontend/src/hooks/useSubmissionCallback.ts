@@ -18,7 +18,7 @@ type SubmissionT = [
 
 export default function useSubmissionCallback(
   fn: () => Promise<void> | void,
-  inputs: any[],
+  deps: React.DependencyList,
 ): SubmissionT {
   const [state, setState] = useState<StateT>({ sending: false });
   const sendingRef = useRef(false);
@@ -54,7 +54,7 @@ export default function useSubmissionCallback(
         setState({ sending: false, error: String(err.message) });
       }
     }
-  }, [sendingRef, setState, isMounted, fn, ...inputs]);
+  }, [sendingRef, setState, isMounted, fn, ...deps]);
 
   return [
     handleSubmit,

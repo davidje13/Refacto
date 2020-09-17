@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, act } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from 'refacto-entities';
-import { queries, css } from '../../../../test-helpers/queries';
+import { css } from '../../../../test-helpers/queries';
 
 import MoodSection from './MoodSection';
 import MoodItem from './MoodItem';
@@ -16,7 +16,7 @@ describe('MoodSection', () => {
   it('displays a given category title', () => {
     const dom = render((
       <MoodSection category="woo" categoryLabel="woo title" items={[]} />
-    ), { queries });
+    ));
 
     expect(dom.getBy(css('h2'))).toHaveAttribute('title', 'woo title');
   });
@@ -24,7 +24,7 @@ describe('MoodSection', () => {
   it('propagates focused ID', () => {
     const dom = render((
       <MoodSection category="" categoryLabel="" items={[]} focusedItemId="b" />
-    ), { queries });
+    ));
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -39,7 +39,7 @@ describe('MoodSection', () => {
     ];
     const dom = render((
       <MoodSection category="abc" categoryLabel="" items={items} />
-    ), { queries });
+    ));
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -55,7 +55,7 @@ describe('MoodSection', () => {
     ];
     const dom = render((
       <MoodSection category="yay" categoryLabel="" items={items} />
-    ), { queries });
+    ));
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -66,7 +66,7 @@ describe('MoodSection', () => {
   it('does not render an input field if no callback is provided', () => {
     const dom = render((
       <MoodSection category="" categoryLabel="" items={[]} />
-    ), { queries });
+    ));
 
     expect(dom).not.toContainElementWith(css('mock-expanding-text-entry'));
   });
@@ -79,7 +79,7 @@ describe('MoodSection', () => {
         items={[]}
         onAddItem={nop}
       />
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(css('mock-expanding-text-entry'));
   });
@@ -93,7 +93,7 @@ describe('MoodSection', () => {
         items={[]}
         onAddItem={onAddItem}
       />
-    ), { queries });
+    ));
 
     const textEntry = dom.getBy(css('mock-expanding-text-entry'));
     act(() => {
@@ -117,7 +117,7 @@ describe('MoodSection', () => {
         items={[]}
         onAddItem={onAddItem}
       />
-    ), { queries });
+    ));
 
     const textEntry = dom.getBy(css('mock-expanding-text-entry'));
     act(() => {

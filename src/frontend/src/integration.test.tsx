@@ -6,10 +6,11 @@ import {
   fireEvent,
   act,
   RenderResult,
-} from '@testing-library/react';
+  getBy,
+} from 'flexible-testing-library-react';
 import { makeRetro } from 'refacto-entities';
 import staticTitleHook, { StaticTitleHook } from './test-helpers/staticTitleHook';
-import { queries, css } from './test-helpers/queries';
+import { css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
 import { TitleContext } from './hooks/env/useTitle';
@@ -19,14 +20,14 @@ import App from './components/App';
 interface RenderedApp {
   locationHook: ReturnType<typeof staticLocationHook>;
   titleHook: StaticTitleHook;
-  dom: RenderResult<typeof queries>;
+  dom: RenderResult;
 }
 
 async function renderApp(location: string): Promise<RenderedApp> {
   const locationHook = staticLocationHook(location, { record: true });
   const titleHook = staticTitleHook();
 
-  let dom: RenderResult<typeof queries>;
+  let dom: RenderResult;
   await act(async () => {
     dom = render((
       <TitleContext value={titleHook}>
@@ -34,7 +35,7 @@ async function renderApp(location: string): Promise<RenderedApp> {
           <App />
         </Router>
       </TitleContext>
-    ), { queries });
+    ));
   });
 
   return { locationHook, titleHook, dom: dom! };
@@ -79,7 +80,7 @@ describe('Application', () => {
     expect(header1).toHaveTextContent('Password for slug-foobar');
 
     const form = dom.getBy(css('form'));
-    const fieldPassword = queries.getBy(form, css('input[type=password]'));
+    const fieldPassword = getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'anything' } });
     await act(async () => {
       fireEvent.submit(form);

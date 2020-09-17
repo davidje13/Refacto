@@ -1,8 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from 'refacto-entities';
-import { queries, css } from '../../../../test-helpers/queries';
+import { css } from '../../../../test-helpers/queries';
 
 import ActionSection from './ActionSection';
 import ActionItem from './ActionItem';
@@ -13,7 +13,7 @@ describe('ActionSection', () => {
   it('displays a given title', () => {
     const dom = render((
       <ActionSection title="my title" items={[]} />
-    ), { queries });
+    ));
 
     expect(dom.getBy(css('h3'))).toHaveTextContent('my title');
   });
@@ -25,7 +25,7 @@ describe('ActionSection', () => {
     ];
     const dom = render((
       <ActionSection title="" items={items} />
-    ), { queries });
+    ));
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -41,7 +41,7 @@ describe('ActionSection', () => {
     ];
     const dom = render((
       <ActionSection title="" items={items} />
-    ), { queries });
+    ));
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -63,7 +63,7 @@ describe('ActionSection', () => {
         rangeFrom={10}
         rangeTo={20}
       />
-    ), { queries });
+    ));
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({

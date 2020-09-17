@@ -4,7 +4,7 @@ export default function useListener<E extends Event>(
   target: EventTarget | undefined,
   type: string,
   fn: (e: E) => void,
-  inputs?: any[],
+  deps?: React.DependencyList,
 ): void {
   useEffect(() => {
     if (!target) {
@@ -13,5 +13,5 @@ export default function useListener<E extends Event>(
     const func = fn as EventListener;
     target.addEventListener(type, func);
     return (): void => target.removeEventListener(type, func);
-  }, [target, type, ...(inputs || [fn])]);
+  }, [target, type, ...(deps || [fn])]);
 }

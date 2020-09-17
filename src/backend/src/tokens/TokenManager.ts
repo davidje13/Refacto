@@ -1,4 +1,4 @@
-import crypto, { KeyObject } from 'crypto';
+import crypto, { KeyLike } from 'crypto';
 import util from 'util';
 import jwt from 'jwt-simple';
 import type { JsonData } from 'refacto-entities';
@@ -57,14 +57,16 @@ export class TokenManager {
       format: 'pem',
       passphrase: this.secretPassphrase,
     });
+    // https://github.com/hokaccha/node-jwt-simple/pull/98
     return jwt.encode(data, key as any, this.algorithm);
   }
 
   public readAndVerifySigned(
     token: string,
-    publicKey: string | KeyObject,
+    publicKey: KeyLike,
   ): JsonData | null {
     try {
+      // https://github.com/hokaccha/node-jwt-simple/pull/98
       return jwt.decode(token, publicKey as any, false, this.algorithm);
     } catch (e) {
       return null;

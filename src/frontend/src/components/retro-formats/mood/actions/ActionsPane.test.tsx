@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, RenderResult } from '@testing-library/react';
+import { render, RenderResult } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from 'refacto-entities';
-import { queries, css } from '../../../../test-helpers/queries';
+import { css } from '../../../../test-helpers/queries';
 
 import ActionsPane from './ActionsPane';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
@@ -17,7 +17,7 @@ describe('ActionsPane', () => {
     makeRetroItem({ id: '3' }),
   ];
 
-  let dom: RenderResult<typeof queries>;
+  let dom: RenderResult;
   let sections: HTMLElement[];
   let localDateProvider: LocalDateProvider;
 
@@ -31,7 +31,7 @@ describe('ActionsPane', () => {
         items={items}
         localDateProvider={localDateProvider}
       />
-    ), { queries });
+    ));
     sections = dom.getAllBy(css('mock-action-section'));
   });
 
@@ -77,7 +77,7 @@ describe('ActionsPane', () => {
         localDateProvider={localDateProvider}
         onAddItem={(): void => undefined}
       />
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(css('mock-expanding-text-entry'));
   });

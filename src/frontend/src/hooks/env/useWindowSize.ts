@@ -18,25 +18,23 @@ function passthrough(x: Size): Size {
 }
 
 function useWindowSize(
-  conversion?: null,
-  deps?: null,
+  conversion?: undefined,
+  deps?: undefined,
 ): Size;
 
 function useWindowSize<T>(
   conversion: (size: Size) => T,
-  deps?: string[] | null,
+  deps?: React.DependencyList,
 ): T;
 
 function useWindowSize<T>(
-  conversion: ((size: Size) => T) | null = null,
-  deps: string[] | null = null,
+  conversion?: (size: Size) => T,
+  deps?: React.DependencyList,
 ): T {
-  const conv = useCallback(
-    conversion || passthrough,
-    deps || (conversion === null ? [] : undefined) as any,
-  ) as (size: Size) => T;
+  const resolvedConversion = (conversion || passthrough) as (size: Size) => T;
+  const conv = useCallback(resolvedConversion, deps || [resolvedConversion]);
   const [state, setStateRaw] = useState(() => conv(getWindowSize()));
-  const setState = useDebounced(setStateRaw);
+  const setState = useDebounced(setStateRaw, state);
 
   useLayoutEffect(() => {
     const updateWindowSize = (): void => setState(conv(getWindowSize()));

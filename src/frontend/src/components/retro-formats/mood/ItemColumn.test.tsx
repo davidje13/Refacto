@@ -1,8 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from 'refacto-entities';
-import { queries, css } from '../../../test-helpers/queries';
+import { css } from '../../../test-helpers/queries';
 
 import ItemColumn from './ItemColumn';
 
@@ -14,7 +14,7 @@ describe('ItemColumn', () => {
     const item2 = makeRetroItem({ id: 'b' });
     const dom = render((
       <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
-    ), { queries });
+    ));
 
     expect(dom.getAllBy(css('my-item')).length).toEqual(2);
   });
@@ -24,7 +24,7 @@ describe('ItemColumn', () => {
     const item2 = makeRetroItem({ id: 'b', created: 200 });
     const dom = render((
       <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
-    ), { queries });
+    ));
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps.item).toEqual(item2);
@@ -35,7 +35,7 @@ describe('ItemColumn', () => {
     const item = makeRetroItem();
     const dom = render((
       <ItemColumn items={[item]} ItemType={Item} itemProps={{ foo: 'bar' }} />
-    ), { queries });
+    ));
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps.foo).toEqual('bar');
@@ -45,7 +45,7 @@ describe('ItemColumn', () => {
     const item = makeRetroItem();
     const dom = render((
       <ItemColumn items={[item]} ItemType={Item} itemProps={{}} />
-    ), { queries });
+    ));
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps.focused).toEqual(false);
@@ -60,7 +60,7 @@ describe('ItemColumn', () => {
         focusedItemId={item.id}
         itemProps={{}}
       />
-    ), { queries });
+    ));
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps.focused).toEqual(true);

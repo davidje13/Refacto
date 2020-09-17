@@ -6,16 +6,9 @@ import type {
   RetroSummary,
   ClientConfig,
 } from 'refacto-entities';
+import type { RetroState } from '../RetroTracker';
 import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
-
-export type RetroState = {
-  retro: Retro;
-  error: null;
-} | {
-  retro: null;
-  error: any;
-};
 
 type RetroDispatch = (spec: Spec<Retro>) => void;
 type RetroStateCallback = (state: RetroState) => void;
@@ -115,18 +108,18 @@ class FakeArchiveTracker {
   public getList(
     retroId: string,
     retroToken: string,
-  ): Observable<{ archives: any[] }> {
+  ): Observable<{ archives: RetroArchive[] }> {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       return throwError(`Incorrect retro token: ${retroToken}`);
     }
 
-    const archives: any[] = [];
+    const archives: RetroArchive[] = [];
     const serverData = this.data.get(retroId);
     if (serverData) {
-      serverData.forEach((archive: any, archiveId: string) => {
+      serverData.forEach((archive: RetroArchive, archiveId: string) => {
         archives.push({
+          ...archive,
           id: archiveId,
-          created: archive.created,
         });
       });
     }

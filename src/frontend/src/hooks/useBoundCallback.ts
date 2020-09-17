@@ -1,54 +1,25 @@
 import useMutatedCallback from './useMutatedCallback';
 
-// https://github.com/Microsoft/TypeScript/issues/16746
-// https://github.com/microsoft/TypeScript/issues/6229
+function useBoundCallback(
+  fn: undefined,
+  ...bound: readonly unknown[]
+): undefined;
 
-function useBoundCallback<R, B extends any[]>(
-  fn: (...args: B) => R
-): (...args: B) => R;
+function useBoundCallback<R, Bound extends readonly unknown[], Rest extends readonly unknown[]>(
+  fn: (...args: [...Bound, ...Rest]) => R,
+  ...bound: Bound
+): ((...args: Rest) => R);
 
-function useBoundCallback<R, A1, B extends any[]>(
-  fn: (a1: A1, ...args: B) => R,
-  a1: A1
-): (...args: B) => R;
+function useBoundCallback<R, Bound extends readonly unknown[], Rest extends readonly unknown[]>(
+  fn: ((...args: [...Bound, ...Rest]) => R) | undefined,
+  ...bound: Bound
+): ((...args: Rest) => R) | undefined;
 
-function useBoundCallback<R, A1, B extends any[]>(
-  fn: ((a1: A1, ...args: B) => R) | undefined,
-  a1: A1
-): ((...args: B) => R) | undefined;
-
-function useBoundCallback<R, A1, A2, B extends any[]>(
-  fn: (a1: A1, a2: A2, ...args: B) => R,
-  a1: A1,
-  a2: A2,
-): (...args: B) => R;
-
-function useBoundCallback<R, A1, A2, B extends any[]>(
-  fn: ((a1: A1, a2: A2, ...args: B) => R) | undefined,
-  a1: A1,
-  a2: A2,
-): ((...args: B) => R) | undefined;
-
-function useBoundCallback<R, A1, A2, A3, B extends any[]>(
-  fn: ((a1: A1, a2: A2, a3: A3, ...args: B) => R) | undefined,
-  a1: A1,
-  a2: A2,
-  a3: A3,
-): ((...args: B) => R) | undefined;
-
-function useBoundCallback<R, A1, A2, A3, A4, B extends any[]>(
-  fn: ((a1: A1, a2: A2, a3: A3, a4: A4, ...args: B) => R) | undefined,
-  a1: A1,
-  a2: A2,
-  a3: A3,
-  a4: A4,
-): ((...args: B) => R) | undefined;
-
-function useBoundCallback<R, A extends any[]>(
-  fn: ((...args: any[]) => R) | undefined,
-  ...bound: A
-): ((...args: any[]) => R) | undefined {
-  return useMutatedCallback(fn, (...args: any[]) => [...bound, ...args], bound);
+function useBoundCallback<R, Bound extends readonly unknown[], Rest extends readonly unknown[]>(
+  fn: ((...args: [...Bound, ...Rest]) => R) | undefined,
+  ...bound: Bound
+): ((...args: Rest) => R) | undefined {
+  return useMutatedCallback(fn, (...args: Rest): [...Bound, ...Rest] => [...bound, ...args], bound);
 }
 
 export default useBoundCallback;

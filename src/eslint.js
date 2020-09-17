@@ -13,6 +13,7 @@ module.exports = {
     '@typescript-eslint/member-ordering': ['error'],
 //    '@typescript-eslint/no-floating-promises': ['error'],
     '@typescript-eslint/no-for-in-array': ['error'],
+    '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],
     '@typescript-eslint/no-require-imports': ['error'],
     '@typescript-eslint/no-this-alias': ['error'],
     '@typescript-eslint/no-unnecessary-qualifier': ['error'],
@@ -21,7 +22,7 @@ module.exports = {
     '@typescript-eslint/prefer-includes': ['error'],
     '@typescript-eslint/prefer-regexp-exec': ['error'],
     '@typescript-eslint/prefer-string-starts-ends-with': ['error'],
-    '@typescript-eslint/require-array-sort-compare': ['error'],
+    '@typescript-eslint/require-array-sort-compare': ['error', { ignoreStringArrays: true }],
     '@typescript-eslint/restrict-plus-operands': ['error'],
     '@typescript-eslint/unbound-method': ['error'],
     '@typescript-eslint/explicit-function-return-type': ['error', {

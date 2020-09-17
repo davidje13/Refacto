@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { queries, css, textFragment } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import ArchiveList from './ArchiveList';
 
@@ -11,7 +11,7 @@ describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
     const dom = render((
       <ArchiveList slug="foo" archives={[]} />
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(textFragment('has no archives'));
   });
@@ -23,7 +23,7 @@ describe('ArchiveList', () => {
     ];
     const dom = render((
       <ArchiveList slug="foo" archives={archives} />
-    ), { queries });
+    ));
 
     expect(dom).not.toContainElementWith(textFragment('has no archives'));
   });
@@ -36,7 +36,7 @@ describe('ArchiveList', () => {
 
     const dom = render((
       <ArchiveList slug="foo" archives={archives} />
-    ), { queries });
+    ));
 
     const links = dom.getAllBy(css('mock-archive-link'));
 
@@ -62,7 +62,7 @@ describe('ArchiveList', () => {
 
     const dom = render((
       <ArchiveList slug="foo" archives={archives} />
-    ), { queries });
+    ));
 
     const links = dom.getAllBy(css('mock-archive-link'));
 

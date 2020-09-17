@@ -52,7 +52,7 @@ const CSP = [
   "frame-ancestors 'none'",
 ].join('; ');
 
-function getHost(req: any): string {
+function getHost(req: { hostname: string }): string {
   const raw: string = req.hostname;
   if (raw.includes(':')) {
     return raw;

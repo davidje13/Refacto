@@ -1,8 +1,6 @@
 function canonicalJSON(o: any): string {
   if (o && typeof o === 'object' && !Array.isArray(o)) {
-    const keys = Object.keys(o).slice();
-    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
-    keys.sort(); // just need consistency
+    const keys = Object.keys(o).slice().sort();
     const content = keys
       .map((key) => `${JSON.stringify(key)}:${canonicalJSON(o[key])}`)
       .join(',');

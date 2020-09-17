@@ -1,16 +1,21 @@
 import useMutatedCallback from './useMutatedCallback';
 
-function useParameterlessCallback<R, A extends any[]>(
+function useParameterlessCallback(
+  fn: undefined,
+  ...overrideParams: readonly unknown[]
+): undefined;
+
+function useParameterlessCallback<R, A extends readonly unknown[]>(
   fn: (...args: A) => R,
   ...overrideParams: A
 ): () => R;
 
-function useParameterlessCallback<R, A extends any[]>(
+function useParameterlessCallback<R, A extends readonly unknown[]>(
   fn: ((...args: A) => R) | undefined,
   ...overrideParams: A
 ): (() => R) | undefined;
 
-function useParameterlessCallback<R, A extends any[]>(
+function useParameterlessCallback<R, A extends readonly unknown[]>(
   fn: ((...args: A) => R) | undefined,
   ...overrideParams: A
 ): (() => R) | undefined {

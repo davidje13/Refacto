@@ -1,8 +1,7 @@
 import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
-import { render, fireEvent } from '@testing-library/react';
-import { queries, text } from '../../test-helpers/queries';
+import { render, fireEvent, text } from 'flexible-testing-library-react';
 
 import RetroLink from './RetroLink';
 
@@ -13,7 +12,7 @@ describe('RetroLink', () => {
       <Router hook={locationHook}>
         <RetroLink name="Foo" slug="bar" />
       </Router>
-    ), { queries });
+    ));
 
     const button = dom.getBy(text('Foo'));
     fireEvent.click(button);

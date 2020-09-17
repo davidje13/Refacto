@@ -1,17 +1,22 @@
 import React from 'react';
 import { first } from 'rxjs/operators';
-import { render, fireEvent, act } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  act,
+  getBy,
+} from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import PasswordPage from './PasswordPage';
 
 jest.mock('../../api/api');
 jest.mock('../common/Header', () => mockElement('mock-header'));
 
-const mockRetroTokenService = retroTokenService as any as typeof mockApiTypes.retroTokenService;
+const mockRetroTokenService = retroTokenService as unknown as typeof mockApiTypes.retroTokenService;
 
 function getToken(retroId: string): Promise<string> {
   return retroTokenTracker.get(retroId).pipe(first()).toPromise();
@@ -23,10 +28,10 @@ describe('PasswordPage', () => {
 
     const dom = render((
       <PasswordPage slug="abc" retroId="myRetroId" />
-    ), { queries });
+    ));
 
     const form = dom.getBy(css('form'));
-    const fieldPassword = queries.getBy(form, css('input[type=password]'));
+    const fieldPassword = getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'my-password' } });
     await act(async () => {
       fireEvent.submit(form);

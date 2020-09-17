@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { queries, css, textFragment } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import Loader from './Loader';
 
@@ -14,7 +14,7 @@ describe('Loader', () => {
         Component={Component}
         componentProps={null}
       />
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(textFragment('Loading'));
     expect(dom).not.toContainElementWith(css('my-component'));
@@ -27,7 +27,7 @@ describe('Loader', () => {
         componentProps={null}
         loadingMessage="foobar"
       />
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(textFragment('foobar'));
   });
@@ -38,7 +38,7 @@ describe('Loader', () => {
         Component={Component}
         componentProps={{ custom: 'foo' }}
       />
-    ), { queries });
+    ));
 
     expect(dom).not.toContainElementWith(textFragment('Loading'));
 

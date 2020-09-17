@@ -160,7 +160,7 @@ installed (see [Running tests](#running-tests)).
 - `update`: <https://github.com/davidje13/json-immutability-helper>
 - Wouter: <https://github.com/molefrog/wouter>
 - Jest: <https://jestjs.io/docs/en/api>
-- React Testing Library <https://github.com/testing-library/react-testing-library>
+- Flexible Testing Library React <https://github.com/davidje13/flexible-testing-library-react>
 - Jest DOM Matchers <https://github.com/testing-library/jest-dom>
 - Supertest: <https://github.com/visionmedia/supertest> and <https://visionmedia.github.io/superagent/>
 - Selenium: <https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/>

@@ -1,12 +1,12 @@
 import type { DispatchSpec } from 'shared-reducer-frontend';
 import { useMemo } from 'react';
 
-type Action<A extends any[]> = (...args: A) => void;
+type Action<A extends readonly unknown[]> = (...args: A) => void;
 
 export default <T>(
   dispatch: ((spec: DispatchSpec<T>) => void) | undefined,
   condition = true,
-) => <A extends any[]>(
+) => <A extends readonly unknown[]>(
   action: ((...args: A) => DispatchSpec<T>) | undefined,
   ...followupActions: DispatchSpec<T>
 ): Action<A> | undefined => useMemo(

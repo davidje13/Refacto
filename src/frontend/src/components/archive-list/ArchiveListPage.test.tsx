@@ -1,10 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from 'refacto-entities';
 import { archiveTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import ArchiveListPage from './ArchiveListPage';
 
@@ -12,7 +12,7 @@ jest.mock('../../api/api');
 jest.mock('../common/Header', () => mockElement('mock-header'));
 jest.mock('./ArchiveList', () => mockElement('mock-archive-list'));
 
-const mockArchiveTracker = archiveTracker as any as typeof mockApiTypes.archiveTracker;
+const mockArchiveTracker = archiveTracker as unknown as typeof mockApiTypes.archiveTracker;
 
 describe('ArchiveListPage', () => {
   beforeEach(() => {
@@ -25,7 +25,7 @@ describe('ArchiveListPage', () => {
         retro={makeRetro({ id: 'r1' })}
         retroToken="token-1"
       />
-    ), { queries });
+    ));
     expect(dom).toContainElementWith(css('mock-archive-list'));
   });
 });

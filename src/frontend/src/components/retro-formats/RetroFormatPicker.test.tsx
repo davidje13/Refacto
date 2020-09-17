@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, act } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import type { RetroItem } from 'refacto-entities';
-import { queries, css } from '../../test-helpers/queries';
+import { css } from '../../test-helpers/queries';
 
 import RetroFormatPicker from './RetroFormatPicker';
 
@@ -21,7 +21,7 @@ describe('Retro', () => {
         retroItems={retroItems}
         retroState={retroState}
       />
-    ), { queries });
+    ));
 
     await import('./mood/MoodRetro'); // wait for dynamic import
     act(() => undefined);
@@ -41,7 +41,7 @@ describe('Retro', () => {
         retroItems={[]}
         retroState={{}}
       />
-    ), { queries });
+    ));
 
     expect(dom).toContainElementWith(css('mock-unknown-retro'));
     expect(dom).not.toContainElementWith(css('mock-mood-retro'));

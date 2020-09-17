@@ -2,6 +2,8 @@ import type { Retro } from 'refacto-entities';
 import SharedReducer, { Dispatch } from 'shared-reducer-frontend';
 import SubscriptionTracker from './SubscriptionTracker';
 
+export type RetroError = any;
+
 interface RetroKey {
   retroId: string;
   retroToken: string;
@@ -12,7 +14,7 @@ export type RetroState = {
   error: null;
 } | {
   retro: null;
-  error: any;
+  error: RetroError;
 };
 
 export type RetroDispatch = Dispatch<Retro>;
@@ -86,8 +88,8 @@ export default class RetroTracker {
     retroToken: string,
     dispatchCallback: (dispatch: RetroDispatch) => void,
     retroStateCallback: RetroStateCallback,
-    // TODO
-    errorCallback: (err: any) => void, /* eslint-disable-line @typescript-eslint/no-unused-vars */
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */ // TODO
+    errorCallback: (err: RetroError) => void,
   ): RetroSubscription {
     const sub = this.subscriptionTracker.subscribe({ retroId, retroToken });
     dispatchCallback(sub.service.reducer.dispatch);

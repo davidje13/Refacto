@@ -38,6 +38,6 @@ export default (
   });
 
   return new Proxy({}, {
-    get: (o, prop: keyof Server): any => server![prop],
+    get: (o, prop: keyof Server): unknown => server![prop],
   }) as Readonly<Server>;
 };
