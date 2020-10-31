@@ -16,6 +16,8 @@ npm install --production
 PORT=8080 node index.js
 ```
 
+You will need to have NodeJS 14 or newer installed.
+
 You can build on this to configure a database and authentication
 providers. Some examples are given below;
 
