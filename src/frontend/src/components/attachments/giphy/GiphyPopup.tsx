@@ -47,7 +47,7 @@ export default memo(({
       key={medium}
       onClick={(): void => onConfirm({ type: 'giphy', url: medium })}
     >
-      <img src={small} alt="Insert" crossOrigin="anonymous" />
+      <img src={small} alt="Insert" crossOrigin="anonymous" referrerPolicy="no-referrer" />
     </WrappedButton>
   ));
 
