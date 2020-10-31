@@ -13,7 +13,7 @@ variable when running (defaults to 5000):
 ```bash
 cd build
 npm install --production
-PORT=8080 npm start
+PORT=8080 node index.js
 ```
 
 You can build on this to configure a database and authentication

@@ -37,8 +37,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
   SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
-  npm --prefix="$BUILDDIR" start --silent \
-    > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
+  node "$BUILDDIR/index.js" > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
 
   trap "kill '$APP_PID'; false" EXIT;
 
