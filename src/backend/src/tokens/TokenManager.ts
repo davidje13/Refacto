@@ -36,13 +36,15 @@ export class TokenManager {
   }
 
   public generateKeys(): Promise<KeyPair> {
+    const secret = this.secretPassphrase;
+
     return generateKeyPair('rsa', {
       modulusLength: this.modulusLength,
       privateKeyEncoding: {
         type: 'pkcs8',
         format: 'pem',
-        cipher: 'aes-256-cbc',
-        passphrase: this.secretPassphrase,
+        cipher: secret ? 'aes-256-cbc' : undefined,
+        passphrase: secret || undefined,
       },
       publicKeyEncoding: {
         type: 'spki',
