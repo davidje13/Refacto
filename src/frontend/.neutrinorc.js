@@ -44,7 +44,7 @@ module.exports = {
     })),
     copy({
       patterns: [{
-        context: 'src/resources/assets',
+        context: 'resources/assets',
         from: '**/*',
         to: 'assets',
       }],
@@ -57,8 +57,8 @@ module.exports = {
     }),
     (neutrino) => neutrino.use(react({
       html: {
-        template: 'src/resources/html-template.ejs',
-        favicon: 'src/resources/favicon.png',
+        template: 'resources/html-template.ejs',
+        favicon: 'resources/favicon.png',
         title: 'Refacto',
       },
       devServer: {
