@@ -37,9 +37,9 @@ export default class StaticRouter extends WebSocketExpress.Router {
           redirect: false,
           setHeaders: (res, filePath): void => {
             if (VERSIONED_FILE.test(filePath)) {
-              res.header('cache-control', VERSIONED_CACHE_CONTROL);
+              res.setHeader('cache-control', VERSIONED_CACHE_CONTROL);
             } else {
-              res.header('cache-control', UNVERSIONED_CACHE_CONTROL);
+              res.setHeader('cache-control', UNVERSIONED_CACHE_CONTROL);
             }
           },
         },

@@ -32,7 +32,7 @@ const baseTestConfig: ConfigT = {
 };
 
 function isObj(x: unknown): x is Record<string, unknown> {
-  return x && typeof x === 'object';
+  return Boolean(x && typeof x === 'object');
 }
 
 function deepMerge<T, U>(a: T, b?: U): T & U {

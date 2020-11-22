@@ -5,7 +5,7 @@ type ObjectMapper<T> = {
 };
 
 function isJsonObject(source: unknown): source is Record<string, unknown> {
-  return source && typeof source === 'object';
+  return Boolean(source && typeof source === 'object');
 }
 
 const jsonObject = <T>(maps: ObjectMapper<T>) => (source: unknown): T => {
