@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'flexible-testing-library-react';
+import { act, render, fireEvent } from 'flexible-testing-library-react';
 import { css } from '../../../../test-helpers/queries';
 
 import VoteCount from './VoteCount';
@@ -26,5 +26,32 @@ describe('VoteCount', () => {
     fireEvent.click(voteButton);
 
     expect(onVote).toHaveBeenCalled();
+  });
+
+  it('blocks repeated votes in a short time period', async () => {
+    const onVote = jest.fn().mockName('onVote');
+    const dom = render(<VoteCount votes={3} onVote={onVote} />);
+
+    const voteButton = dom.getBy(css('button.vote'));
+    expect(voteButton).toBeEnabled();
+    fireEvent.click(voteButton);
+    fireEvent.click(voteButton);
+
+    expect(onVote).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows repeated votes after a delay', async () => {
+    const onVote = jest.fn().mockName('onVote');
+    const dom = render(<VoteCount votes={3} onVote={onVote} />);
+
+    const voteButton = dom.getBy(css('button.vote'));
+    expect(voteButton).toBeEnabled();
+    fireEvent.click(voteButton);
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+    fireEvent.click(voteButton);
+
+    expect(onVote).toHaveBeenCalledTimes(2);
   });
 });

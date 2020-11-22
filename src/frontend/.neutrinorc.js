@@ -13,6 +13,17 @@ const conditionalModule = (pred, mod) => (neutrino) => {
   }
 };
 
+const svgr = () => (neutrino) => neutrino.config.module
+  .rule('svgr')
+  .test(/\.svgr?$/) // https://github.com/neutrinojs/neutrino/issues/1650
+  .issuer({ test: /\.[tj]sx?$/ })
+  .use('@svgr/webpack')
+  .loader(require.resolve('@svgr/webpack'))
+  .options({ svgoConfig: { plugins: { removeViewBox: false } } })
+  .end()
+  .use('url')
+  .loader(require.resolve('url-loader'));
+
 module.exports = {
   options: {
     tests: 'src',
@@ -53,8 +64,10 @@ module.exports = {
       setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
       moduleNameMapper: {
         '^wouter/(.*)$': 'wouter/cjs/$1', // https://github.com/webpack/webpack/issues/9509
+        '\\.svgr$': '<rootDir>/src/test-helpers/svgr.ts', // https://github.com/neutrinojs/neutrino/issues/1650
       },
     }),
+    svgr(),
     (neutrino) => neutrino.use(react({
       html: {
         template: 'resources/html-template.ejs',

@@ -31,6 +31,7 @@
     "@neutrinojs/jest": "9.x",
     "@neutrinojs/react": "9.x",
     "@neutrinojs/style-minify": "9.x",
+    "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "5.x",
     "@types/classnames": "2.x",
     "@types/jest": "26.x",
