@@ -60,20 +60,19 @@
       display: none;
     }
 
-    &::after {
-      content: "\2713";
-      display: inline-block;
+    .tick {
       position: absolute;
       top: 50%;
-      right: 4px;
-      width: 2.5rem;
-      height: 2.5rem;
-      margin-top: -1.25rem;
-      font-size: 2em;
-      text-align: center;
-      line-height: 2.5rem;
+      right: 8px;
+      width: 2rem;
+      height: 2rem;
+      margin-top: -1rem;
       pointer-events: none;
-      color: var(--punchout);
+      fill: var(--punchout);
+      stroke: var(--punchout);
+      filter: brightness(0.85);
+      stroke-width: 1px;
+      stroke-linejoin: round;
     }
   }
 

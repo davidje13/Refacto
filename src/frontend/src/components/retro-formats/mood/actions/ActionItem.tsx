@@ -4,6 +4,7 @@ import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ItemEditor from '../ItemEditor';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { ReactComponent as Tick } from '../../../../../resources/tick.svgr';
 import './ActionItem.less';
 
 interface PropsT {
@@ -61,7 +62,9 @@ export default memo(({
         title={done ? 'Mark as not done' : 'Mark as done'}
         className="toggle-done"
         onClick={handleToggleDone}
-      />
+      >
+        <Tick />
+      </WrappedButton>
       <WrappedButton
         title="Edit"
         className="edit"

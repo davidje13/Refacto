@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
+import { ReactComponent as Tick } from '../../../../../resources/tick.svgr';
 
 interface PropsT {
   item: RetroItem;
@@ -16,17 +17,22 @@ export default memo(({
   onSelect,
   onVote,
   onEdit,
-}: PropsT) => (
-  <div className={classNames('mood-item', { done: item.doneTime > 0 })}>
-    <WrappedButton className="message" onClick={onSelect}>
-      { item.message }
-    </WrappedButton>
-    <VoteCount votes={item.votes} onVote={onVote} />
-    <WrappedButton
-      title="Edit"
-      className="edit"
-      onClick={onEdit}
-      hideIfDisabled
-    />
-  </div>
-));
+}: PropsT) => {
+  const done = item.doneTime > 0;
+
+  return (
+    <div className={classNames('mood-item', { done })}>
+      <WrappedButton className="message" onClick={onSelect}>
+        { item.message }
+      </WrappedButton>
+      <VoteCount votes={item.votes} onVote={onVote} />
+      <WrappedButton
+        title="Edit"
+        className="edit"
+        onClick={onEdit}
+        hideIfDisabled
+      />
+      { done && <Tick className="tick" /> }
+    </div>
+  );
+});

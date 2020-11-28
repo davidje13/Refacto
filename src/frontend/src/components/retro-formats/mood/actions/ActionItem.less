@@ -29,55 +29,74 @@
     line-height: 1rem;
     font-weight: bolder;
     border-radius: 1px;
-    outline: none; /* shapes to fit text overflowing box */
+    outline: none; /* custom focus ring */
 
-    font-size: 0;
-    color: transparent;
-    transition: font-size 0.1s ease-in, color 0.1s ease-in;
+    &:focus::after {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      margin: -12px;
+      border-radius: 1px;
+      top: 50%;
+      left: 50%;
+      /* fake focus ring to replace outline */
+      box-shadow: 0 0 1px 5px #FFFFFF, 0 0 1px 6px #CC6600;
+    }
 
     &::before {
       content: "";
       position: absolute;
-      width: 28px;
-      height: 28px;
-      margin: -14px;
+      width: 30px;
+      height: 30px;
+      margin: -15px;
       top: 50%;
       left: 50%;
-      border: 4px solid @beige-icon;
+      border: 2px solid @beige-icon;
       box-sizing: border-box;
       background: #FFFFFF;
-      border-radius: 1px;
+      border-radius: 4px;
+      z-index: 1;
+      box-shadow: 0 0 0 -2px @green-button-back;
     }
 
-    &::after {
+    svg {
       pointer-events: none;
       position: absolute;
-      left: -10px;
-      right: -10px;
+      width: 30px;
+      height: 30px;
+      margin: -18px -11px;
+      left: 50%;
       top: 50%;
-      line-height: 1rem;
-      margin-top: -0.5rem;
-      text-align: center;
-      content: "\2713";
-    }
-
-    &:focus::before {
-      /* fake focus ring to replace outline */
-      box-shadow: 0 0 1px 3px #FFFFFF, 0 0 1px 4px #CC6600;
+      fill: black;
+      stroke: white;
+      stroke-width: 2px;
+      paint-order: stroke;
+      z-index: 1;
+      opacity: 0;
+      transform: scale(0);
+      transform-origin: 30% 70%;
+      transition: transform 0.1s step-end, opacity 0.1s ease-out;
     }
 
     &:active::before {
-      width: 26px;
-      height: 26px;
-      margin: -13px;
-      box-shadow: 0 0 1px 4px #FFFFFF, 0 0 1px 5px #CC6600;
+      width: 28px;
+      height: 28px;
+      margin: -14px;
     }
   }
 
   &.done .toggle-done {
-    transition: font-size 0.1s ease-out;
-    font-size: 3em;
-    color: @green-icon;
+    &::before {
+      transition: box-shadow 0.5s ease-out;
+      box-shadow: 0 0 10px 30px transparent;
+    }
+
+    svg {
+      transition: transform 0.3s cubic-bezier(0.5, 2.5, 0.6, 1);
+      opacity: 1;
+      transform: none;
+    }
   }
 
   .edit {
