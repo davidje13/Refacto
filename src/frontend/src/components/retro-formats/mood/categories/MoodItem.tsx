@@ -4,6 +4,7 @@ import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
 import './MoodItem.less';
 
 interface PropsT {
@@ -55,7 +56,7 @@ export default memo(({
       <div className="mood-item editing">
         <ItemEditor
           defaultItem={item}
-          submitButtonLabel="Save"
+          submitButtonLabel={<React.Fragment><TickBold /> Save</React.Fragment>}
           submitButtonTitle="Save changes"
           onSubmit={handleSaveEdit}
           onDelete={handleDelete}

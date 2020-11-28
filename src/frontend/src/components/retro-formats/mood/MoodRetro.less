@@ -137,9 +137,10 @@
       background: @green-button-back;
       color: #000000;
 
-      &::before {
-        content: "\2713";
-        padding-right: 5px;
+      svg {
+        fill: currentColor;
+        width: 0.9em;
+        height: 0.9em;
       }
     }
 
@@ -312,7 +313,7 @@
           }
 
           .submit {
-            padding: 6px 8px 6px 12px;
+            padding: 6px 12px;
           }
         }
       }

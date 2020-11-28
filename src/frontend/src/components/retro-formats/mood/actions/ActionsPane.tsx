@@ -6,6 +6,7 @@ import ItemEditor from '../ItemEditor';
 import type LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
 
 interface PropsT {
   items: RetroItem[];
@@ -48,6 +49,7 @@ export default memo(({
             <div className="new-action-item">
               <ItemEditor
                 onSubmit={handleAddItem}
+                submitButtonLabel={<TickBold />}
                 submitButtonTitle="Add"
                 placeholder="Add an action item"
                 clearAfterSubmit

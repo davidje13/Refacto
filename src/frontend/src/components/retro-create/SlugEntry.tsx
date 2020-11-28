@@ -7,6 +7,7 @@ import React, {
 import Input from '../common/Input';
 import useNonce from '../../hooks/useNonce';
 import { slugTracker } from '../../api/api';
+import { ReactComponent as TickBold } from '../../../resources/tick-bold.svgr';
 
 export const MAX_SLUG_LENGTH = 64;
 const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';
@@ -107,7 +108,7 @@ export default memo(({
     case SlugAvailability.AVAILABLE:
       slugChecker = (
         <div className="slug-checker available">
-          { 'Available \u2713' }
+          Available <TickBold />
         </div>
       );
       break;

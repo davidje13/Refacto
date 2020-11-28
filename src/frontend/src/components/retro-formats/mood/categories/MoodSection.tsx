@@ -5,6 +5,7 @@ import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
 
 interface PropsT {
   category: string;
@@ -73,6 +74,7 @@ export default memo(({
         { handleAddItem && (
           <ItemEditor
             onSubmit={handleAddItem}
+            submitButtonLabel={<TickBold />}
             submitButtonTitle="Add"
             placeholder={addItemPlaceholder}
             allowAttachments

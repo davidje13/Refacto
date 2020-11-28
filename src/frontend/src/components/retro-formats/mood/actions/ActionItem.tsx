@@ -5,6 +5,7 @@ import ItemEditor from '../ItemEditor';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
 import { ReactComponent as Tick } from '../../../../../resources/tick.svgr';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
 import './ActionItem.less';
 
 interface PropsT {
@@ -41,7 +42,7 @@ export default memo(({
       <div className="action-item editing">
         <ItemEditor
           defaultItem={item}
-          submitButtonLabel="Save"
+          submitButtonLabel={<React.Fragment><TickBold /> Save</React.Fragment>}
           submitButtonTitle="Save changes"
           onSubmit={handleSaveEdit}
           onDelete={handleDelete}

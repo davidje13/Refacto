@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
-import { ReactComponent as Tick } from '../../../../../resources/tick.svgr';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
 
 interface PropsT {
   item: RetroItem;
@@ -32,7 +32,7 @@ export default memo(({
         onClick={onEdit}
         hideIfDisabled
       />
-      { done && <Tick className="tick" /> }
+      { done && <TickBold className="tick" /> }
     </div>
   );
 });
