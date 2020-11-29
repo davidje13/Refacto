@@ -19,7 +19,7 @@ const svgr = () => (neutrino) => neutrino.config.module
   .issuer({ test: /\.[tj]sx?$/ })
   .use('@svgr/webpack')
   .loader(require.resolve('@svgr/webpack'))
-  .options({ svgoConfig: { plugins: { removeViewBox: false } } })
+  .options({ titleProp: true, svgoConfig: { plugins: { removeViewBox: false } } })
   .end()
   .use('url')
   .loader(require.resolve('url-loader'));

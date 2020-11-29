@@ -2,6 +2,7 @@ import React, { useState, useCallback, memo } from 'react';
 import type { JsonData } from 'refacto-entities';
 import Input from '../common/Input';
 import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
+import Alert from '../common/Alert';
 import withUserToken from '../hocs/withUserToken';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import useNonce from '../../hooks/useNonce';
@@ -183,7 +184,7 @@ export default memo(withUserToken('Register an account to create a retro', ({
   return (
     <form onSubmit={handleSubmit} className="create-retro">
       { importComponent }
-      { importError ? (<div className="error">{ importError }</div>) : null }
+      <Alert message={importError} />
       <label>
         Retro Name
         <Input
@@ -230,26 +231,22 @@ export default memo(withUserToken('Register an account to create a retro', ({
           required
         />
       </label>
-      { passwordWarning ? (
-        <div className="warning">
-          { `${passwordWarning} \u2014 ` }
-          <a
-            href="/security#passwords"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn more
-          </a>
-        </div>
-      ) : null }
+      <Alert warning message={passwordWarning} show={Boolean(passwordWarning)}>
+        { ' \u2014 ' }
+        <a
+          href="/security#passwords"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn more
+        </a>
+      </Alert>
       { sending ? (<div className="sending">&hellip;</div>) : (
         <button type="submit" title="Create Retro">
           Create
         </button>
       ) }
-      { error ? (
-        <div className="error">{ error }</div>
-      ) : null }
+      <Alert message={error} />
     </form>
   );
 }));

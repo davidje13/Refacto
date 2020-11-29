@@ -1,0 +1,22 @@
+@import (reference) '../colours.less';
+
+.alert-message {
+  font-weight: bolder;
+  margin: 16px 0;
+
+  svg {
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: -0.25em;
+    margin-right: 4px;
+    fill: currentColor;
+  }
+
+  &.warning {
+    color: @yellow-text-on-white;
+  }
+
+  &.error {
+    color: @red-text-on-white;
+  }
+}

@@ -41,26 +41,29 @@
     background: #FFFFFF;
     font-size: 1.2em;
 
-    &::-webkit-file-upload-button {
+    /* these styles are all the same but for whatever reason
+       cannot be combined with commas, so use a mixin instead: */
+    .file-button() {
       background: @green-button-dark;
       border: none;
       border-right: 1px solid @beige-shadow;
       padding: 8px 16px;
-      margin: -8px;
+      margin: -8px 12px -8px -8px;
       font: inherit;
       color: #000000;
       cursor: pointer;
     }
 
-    &::-ms-browse { /* Chrome bug: cannot combine with previous selector using comma */
-      background: @green-button-dark;
-      border: none;
-      border-right: 1px solid @beige-shadow;
-      padding: 8px 16px;
-      margin: -8px;
-      font: inherit;
-      color: #000000;
-      cursor: pointer;
+    &::file-selector-button {
+      .file-button;
+    }
+
+    &::-webkit-file-upload-button {
+      .file-button;
+    }
+
+    &::-ms-browse {
+      .file-button;
     }
   }
 
@@ -103,14 +106,15 @@
     position: absolute;
     top: 100%;
     right: 0;
-    margin: 2px;
-    font-size: 0.7em;
+    margin: 4px;
+    font-size: 0.7rem;
     white-space: nowrap;
 
     svg {
       fill: currentColor;
-      width: 1em;
-      height: 1em;
+      width: 0.9em;
+      height: 0.9em;
+      vertical-align: -0.1em;
     }
 
     &.checking {
@@ -171,28 +175,5 @@
 
   .sending {
     background: @beige-shadow;
-  }
-
-  .warning, .error {
-    font-weight: bolder;
-    margin: 16px 0;
-  }
-
-  .warning {
-    color: @yellow-text-on-white;
-
-    &::before {
-      content: "\26A0\FE0F";
-      margin-right: 4px;
-    }
-  }
-
-  .error {
-    color: @red-text-on-white;
-
-    &::before {
-      content: "\2757\FE0F";
-      margin-right: 4px;
-    }
   }
 }

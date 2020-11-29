@@ -3,6 +3,7 @@ import type { Retro } from 'refacto-entities';
 import { Dispatch, actionsSyncedCallback } from 'shared-reducer-frontend';
 import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
+import Alert from '../common/Alert';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import OPTIONS from '../../helpers/optionManager';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
@@ -103,9 +104,7 @@ export default memo(({
           Save
         </button>
       ) }
-      { error ? (
-        <div className="error">{ error }</div>
-      ) : null }
+      <Alert message={error} />
     </form>
   );
 });

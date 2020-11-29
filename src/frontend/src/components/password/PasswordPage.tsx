@@ -4,6 +4,7 @@ import Input from '../common/Input';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
 import useUserToken from '../../hooks/data/useUserToken';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
+import Alert from '../common/Alert';
 import './PasswordPage.less';
 
 interface PropsT {
@@ -77,9 +78,7 @@ export default ({
             Go
           </button>
         ) }
-        { error ? (
-          <div className="error">{ error }</div>
-        ) : null }
+        <Alert message={error} />
       </form>
     </article>
   );

@@ -8,6 +8,7 @@ import Input from '../common/Input';
 import useNonce from '../../hooks/useNonce';
 import { slugTracker } from '../../api/api';
 import { ReactComponent as TickBold } from '../../../resources/tick-bold.svgr';
+import { ReactComponent as Cross } from '../../../resources/cross.svgr';
 
 export const MAX_SLUG_LENGTH = 64;
 const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';
@@ -80,37 +81,19 @@ export default memo(({
   let slugChecker;
   switch (slugAvailability) {
     case SlugAvailability.INVALID:
-      slugChecker = (
-        <div className="slug-checker invalid">
-          { 'Invalid \u2715' }
-        </div>
-      );
+      slugChecker = (<div className="slug-checker invalid">Invalid <Cross /></div>);
       break;
     case SlugAvailability.CHECKING:
-      slugChecker = (
-        <div className="slug-checker checking" />
-      );
+      slugChecker = (<div className="slug-checker checking" />);
       break;
     case SlugAvailability.FAILED:
-      slugChecker = (
-        <div className="slug-checker failed">
-          Unable to check availability
-        </div>
-      );
+      slugChecker = (<div className="slug-checker failed">Unable to check availability</div>);
       break;
     case SlugAvailability.TAKEN:
-      slugChecker = (
-        <div className="slug-checker taken">
-          { 'Taken \u2715' }
-        </div>
-      );
+      slugChecker = (<div className="slug-checker taken">Taken <Cross /></div>);
       break;
     case SlugAvailability.AVAILABLE:
-      slugChecker = (
-        <div className="slug-checker available">
-          Available <TickBold />
-        </div>
-      );
+      slugChecker = (<div className="slug-checker available">Available <TickBold /></div>);
       break;
     default:
       slugChecker = null;
@@ -130,9 +113,7 @@ export default memo(({
         maxLength={MAX_SLUG_LENGTH}
         required={placeholder === ''}
       />
-      <div className="slug-checker">
-        { slugChecker }
-      </div>
+      { slugChecker }
     </div>
   );
 });
