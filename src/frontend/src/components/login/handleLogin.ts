@@ -33,8 +33,9 @@ export default async function handleLogin(
 
   const { redirect, nonce } = JSON.parse(state!);
   if (!localNonce) {
-    // TODO: could we safely continue the login if we ignore the given redirect?
-    // Not sure what the attack scenarios are here
+    // nonce checking ensures the token we receive is actually the result of our initial request
+    // (i.e. an attacker has not invoked the redirect URI with their own token so that the user
+    // is logged in as the wrong account). If we cannot validate this, the login cannot continue.
     throw new Error('possible cross-site request forgery (you may need to enable local storage)');
   }
   if (nonce !== localNonce) {

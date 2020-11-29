@@ -6,7 +6,11 @@ import './LoginForm.less';
 
 function makeState(redirect: string): string {
   const nonce = toHex(randomBytes(10));
-  storage.setItem('login-nonce', nonce);
+  if (!storage.setItem('login-nonce', nonce)) {
+    /* eslint-disable-next-line no-alert */ // rare, not important enough for custom async popup
+    window.alert('You must enable session cookies or storage in your browser settings to log in');
+    throw new Error('insufficient browser permissions to log in');
+  }
   return JSON.stringify({ nonce, redirect });
 }
 
