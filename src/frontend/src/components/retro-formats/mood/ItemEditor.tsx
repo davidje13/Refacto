@@ -55,7 +55,7 @@ export default memo(({
       extraInputs={attachmentElement}
       preSubmitOptions={[
         allowAttachments && config?.giphy ? (
-          <div className="attachments">
+          <div className="attachments" key="attachments">
             <div className="label">Extras:</div>
             <GiphyButton
               key="giphy"
