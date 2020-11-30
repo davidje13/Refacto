@@ -5,6 +5,8 @@ import WrappedButton from '../../common/WrappedButton';
 import Attachment from '../../attachments/Attachment';
 import GiphyButton from '../../attachments/giphy/GiphyButton';
 import useConfig from '../../../hooks/data/useConfig';
+import { ReactComponent as Cross } from '../../../../resources/cross.svgr';
+import { ReactComponent as Delete } from '../../../../resources/delete.svgr';
 
 interface PropsT {
   defaultItem?: RetroItem;
@@ -51,16 +53,16 @@ export default memo(({
       onSubmit={handleSubmit}
       onCancel={onCancel}
       extraInputs={attachmentElement}
-      extraOptions={[
-        onCancel ? (
-          <WrappedButton
-            key="cancel"
-            title="Cancel"
-            className="cancel"
-            onClick={onCancel}
-          >
-            Cancel
-          </WrappedButton>
+      preSubmitOptions={[
+        allowAttachments && config?.giphy ? (
+          <div className="attachments">
+            <div className="label">Extras:</div>
+            <GiphyButton
+              key="giphy"
+              defaultAttachment={attachment}
+              onChange={setAttachment}
+            />
+          </div>
         ) : null,
 
         onDelete ? (
@@ -70,16 +72,20 @@ export default memo(({
             className="delete"
             onClick={onDelete}
           >
-            Delete
+            <Delete /> Delete
           </WrappedButton>
         ) : null,
-
-        allowAttachments && config?.giphy ? (
-          <GiphyButton
-            key="giphy"
-            defaultAttachment={attachment}
-            onChange={setAttachment}
-          />
+      ]}
+      postSubmitOptions={[
+        onCancel ? (
+          <WrappedButton
+            key="cancel"
+            title="Cancel"
+            className="cancel"
+            onClick={onCancel}
+          >
+            <Cross />
+          </WrappedButton>
         ) : null,
       ]}
       forceMultiline={Boolean(onCancel || onDelete)}

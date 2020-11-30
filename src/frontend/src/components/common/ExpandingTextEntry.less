@@ -11,11 +11,13 @@
   .buttons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
+    align-items: center;
   }
 
   &.multiline .buttons {
     flex: 100%;
+    align-items: flex-end;
 
     :only-child {
       /* align right */

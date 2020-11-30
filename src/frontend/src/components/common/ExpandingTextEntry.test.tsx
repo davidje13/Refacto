@@ -139,28 +139,33 @@ describe('ExpandingTextEntry', () => {
     });
   });
 
-  describe('extraOptions', () => {
+  describe('pre-/postSubmitOptions', () => {
     it('displays extra options beside the submit button', () => {
       const dom = render((
         <ExpandingTextEntry
           onSubmit={nop}
-          extraOptions={<em />}
+          preSubmitOptions={<em />}
+          postSubmitOptions={<strong />}
         />
       ));
 
       expect(dom).toContainElementWith(css('em'));
+      expect(dom).toContainElementWith(css('strong'));
     });
 
     it('accepts lists', () => {
       const dom = render((
         <ExpandingTextEntry
           onSubmit={nop}
-          extraOptions={[<em key="a" />, <strong key="b" />]}
+          preSubmitOptions={[<em key="a" />, <strong key="b" />]}
+          postSubmitOptions={[<b key="a" />, <i key="b" />]}
         />
       ));
 
       expect(dom).toContainElementWith(css('em'));
       expect(dom).toContainElementWith(css('strong'));
+      expect(dom).toContainElementWith(css('b'));
+      expect(dom).toContainElementWith(css('i'));
     });
   });
 });

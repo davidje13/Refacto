@@ -20,7 +20,8 @@ interface PropsT {
   defaultValue?: string;
   autoFocus?: boolean;
   forceMultiline?: boolean;
-  extraOptions?: React.ReactNode;
+  preSubmitOptions?: React.ReactNode;
+  postSubmitOptions?: React.ReactNode;
   extraInputs?: React.ReactNode;
   submitButtonLabel?: React.ReactNode;
   submitButtonTitle?: string;
@@ -37,7 +38,8 @@ export default ({
   autoFocus = false,
   forceMultiline = false,
   extraInputs,
-  extraOptions,
+  preSubmitOptions,
+  postSubmitOptions,
   submitButtonLabel,
   submitButtonTitle,
   clearAfterSubmit = false,
@@ -124,7 +126,7 @@ export default ({
       />
       { extraInputs }
       <div className="buttons">
-        { extraOptions }
+        { preSubmitOptions }
         <button
           type="submit"
           className="submit"
@@ -133,6 +135,7 @@ export default ({
         >
           { submitButtonLabel }
         </button>
+        { postSubmitOptions }
       </div>
     </form>
   );
