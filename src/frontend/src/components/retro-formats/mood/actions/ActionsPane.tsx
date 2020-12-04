@@ -6,7 +6,7 @@ import ItemEditor from '../ItemEditor';
 import type LocalDateProvider from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
   items: RetroItem[];

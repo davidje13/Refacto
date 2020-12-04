@@ -4,7 +4,7 @@ import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';
 import './MoodItem.less';
 
 interface PropsT {

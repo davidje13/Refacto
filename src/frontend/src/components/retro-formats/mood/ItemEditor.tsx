@@ -5,8 +5,8 @@ import WrappedButton from '../../common/WrappedButton';
 import Attachment from '../../attachments/Attachment';
 import GiphyButton from '../../attachments/giphy/GiphyButton';
 import useConfig from '../../../hooks/data/useConfig';
-import { ReactComponent as Cross } from '../../../../resources/cross.svgr';
-import { ReactComponent as Delete } from '../../../../resources/delete.svgr';
+import { ReactComponent as Cross } from '../../../../resources/cross.svg';
+import { ReactComponent as Delete } from '../../../../resources/delete.svg';
 
 interface PropsT {
   defaultItem?: RetroItem;

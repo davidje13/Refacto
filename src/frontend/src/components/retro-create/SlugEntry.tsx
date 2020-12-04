@@ -7,8 +7,8 @@ import React, {
 import Input from '../common/Input';
 import useNonce from '../../hooks/useNonce';
 import { slugTracker } from '../../api/api';
-import { ReactComponent as TickBold } from '../../../resources/tick-bold.svgr';
-import { ReactComponent as Cross } from '../../../resources/cross.svgr';
+import { ReactComponent as TickBold } from '../../../resources/tick-bold.svg';
+import { ReactComponent as Cross } from '../../../resources/cross.svg';
 
 export const MAX_SLUG_LENGTH = 64;
 const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';

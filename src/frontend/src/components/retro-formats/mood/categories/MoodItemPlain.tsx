@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import type { RetroItem } from 'refacto-entities';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
-import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svgr';
+import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
   item: RetroItem;
