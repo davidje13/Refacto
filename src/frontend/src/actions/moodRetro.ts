@@ -1,5 +1,5 @@
 import type { Retro, RetroItem } from 'refacto-entities';
-import type { DispatchSpec } from 'shared-reducer-frontend';
+import type { RetroDispatchSpec } from '../api/RetroTracker';
 import {
   setRetroItemDone,
   setRetroState,
@@ -48,7 +48,7 @@ function getState<T>(retro: Retro<T>, group?: string): T {
 
 export const allItemsDoneCallback = (
   callback?: () => void,
-): DispatchSpec<Retro> => [
+): RetroDispatchSpec => [
   ({ items }: Retro<MoodRetroStateT>): null => {
     if (callback && !pickNextItem(undefined, items)) {
       callback();
@@ -60,14 +60,14 @@ export const allItemsDoneCallback = (
 export const setItemTimeout = (
   group: string | undefined,
   duration: number,
-): DispatchSpec<Retro> => setRetroState(group, {
+): RetroDispatchSpec => setRetroState(group, {
   focusedItemTimeout: Date.now() + duration,
 });
 
 export const focusItem = (
   group: string | undefined,
   id: string | null,
-): DispatchSpec<Retro> => [
+): RetroDispatchSpec => [
   ...setRetroItemDone(id, false),
   ...setRetroState(group, { focusedItemId: id }),
 ];
@@ -76,8 +76,8 @@ export const switchFocus = (
   group: string | undefined,
   markPreviousDone: boolean,
   id: string | null,
-): DispatchSpec<Retro> => [
-  (retro): DispatchSpec<Retro> => {
+): RetroDispatchSpec => [
+  (retro): RetroDispatchSpec => {
     const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
 
     return [
@@ -90,14 +90,14 @@ export const switchFocus = (
 
 const focusNextItem = (group: string | undefined) => (
   { items }: Retro<MoodRetroStateT>,
-): DispatchSpec<Retro> => {
+): RetroDispatchSpec => {
   const next = pickNextItem(group, items);
   return focusItem(group, next?.id ?? null);
 };
 
 const focusPreviousItem = (group: string | undefined) => (
   { items }: Retro<MoodRetroStateT>,
-): DispatchSpec<Retro> => {
+): RetroDispatchSpec => {
   const next = pickPreviousItem(group, items);
   return focusItem(group, next?.id ?? null);
 };
@@ -105,8 +105,8 @@ const focusPreviousItem = (group: string | undefined) => (
 export const goNext = (
   group: string | undefined,
   expectedFocusedItemId?: string,
-): DispatchSpec<Retro> => [
-  (retro): DispatchSpec<Retro> => {
+): RetroDispatchSpec => [
+  (retro): RetroDispatchSpec => {
     const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
 
     if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
@@ -124,8 +124,8 @@ export const goNext = (
 export const goPrevious = (
   group: string | undefined,
   expectedFocusedItemId?: string,
-): DispatchSpec<Retro> => [
-  (retro): DispatchSpec<Retro> => {
+): RetroDispatchSpec => [
+  (retro): RetroDispatchSpec => {
     const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
 
     if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {

@@ -1,5 +1,6 @@
-import type { Spec, DispatchSpec } from 'shared-reducer-frontend';
-import type { Retro, RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { Spec } from 'json-immutability-helper';
+import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroDispatchSpec } from '../api/RetroTracker';
 import uuidv4 from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
@@ -14,7 +15,7 @@ function sanitiseInput(value: string): string {
 export const setRetroState = (
   group: string | undefined,
   delta: Record<string, unknown>,
-): DispatchSpec<Retro> => {
+): RetroDispatchSpec => {
   if (!group) {
     return [{ state: ['merge', delta] }];
   }
@@ -25,7 +26,7 @@ export const addRetroItem = (
   category: string,
   group: string | undefined,
   { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
-): DispatchSpec<Retro> => {
+): RetroDispatchSpec => {
   const sanitisedMessage = sanitiseInput(message || '');
   if (!sanitisedMessage) {
     return [];
@@ -49,7 +50,7 @@ export const addRetroItem = (
 function updateItem(
   itemId: string | null,
   updater: Spec<RetroItem>,
-): DispatchSpec<Retro> {
+): RetroDispatchSpec {
   if (itemId === null) {
     return [];
   }
@@ -59,7 +60,7 @@ function updateItem(
 export const editRetroItem = (
   itemId: string,
   { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
-): DispatchSpec<Retro> => {
+): RetroDispatchSpec => {
   const merge: Partial<RetroItem> = { ...rest };
   if (message !== undefined) {
     const sanitisedMessage = sanitiseInput(message);
@@ -74,23 +75,23 @@ export const editRetroItem = (
 export const setRetroItemDone = (
   itemId: string | null,
   done: boolean,
-): DispatchSpec<Retro> => updateItem(itemId, {
+): RetroDispatchSpec => updateItem(itemId, {
   doneTime: ['=', done ? Date.now() : 0],
 });
 
 export const upvoteRetroItem = (
   itemId: string,
-): DispatchSpec<Retro> => updateItem(itemId, {
+): RetroDispatchSpec => updateItem(itemId, {
   votes: ['+', 1],
 });
 
 export const deleteRetroItem = (
   itemId: string,
-): DispatchSpec<Retro> => [
+): RetroDispatchSpec => [
   { items: ['deleteWhere', ['id', itemId]] },
 ];
 
-export const clearCovered = (): DispatchSpec<Retro> => [{
+export const clearCovered = (): RetroDispatchSpec => [{
   state: ['=', {}],
   groupStates: ['=', {}],
   items: [

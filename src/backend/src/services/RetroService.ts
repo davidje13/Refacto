@@ -1,3 +1,5 @@
+import listCommands from 'json-immutability-helper/commands/list';
+import { context, Spec } from 'json-immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 import {
   DB,
@@ -7,8 +9,6 @@ import {
 } from 'collection-storage';
 import {
   Broadcaster,
-  TopicMap,
-  TopicMessage,
   CollectionStorageModel,
   Permission,
   ReadOnly,
@@ -37,14 +37,13 @@ function dbErrorMessage(e: any): string {
 }
 
 export default class RetroService {
-  public readonly retroBroadcaster: Broadcaster<Retro>;
+  public readonly retroBroadcaster: Broadcaster<Retro, Spec<Retro>>;
 
   private readonly retroCollection: Collection<Retro>;
 
   public constructor(
     db: DB,
     encryptionKey: Buffer,
-    retroChangeSubs: TopicMap<TopicMessage<Retro>>,
   ) {
     const enc = encryptByRecordWithMasterKey(
       encryptionKey,
@@ -74,11 +73,13 @@ export default class RetroService {
       (e) => new Error(dbErrorMessage(e)),
     );
 
-    this.retroBroadcaster = new Broadcaster<Retro>(model, retroChangeSubs);
+    this.retroBroadcaster = Broadcaster.for<Retro>(model)
+      .withReducer<Spec<Retro>>(context.with(listCommands))
+      .build();
   }
 
   // eslint-disable-next-line class-methods-use-this
-  public getPermissions(allowWrite: boolean): Permission<Retro> {
+  public getPermissions(allowWrite: boolean): Permission<Retro, Spec<Retro>> {
     if (allowWrite) {
       return new ReadWriteStruct(['id', 'ownerId']);
     }

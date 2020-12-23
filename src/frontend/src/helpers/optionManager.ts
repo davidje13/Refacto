@@ -1,4 +1,4 @@
-import type { Spec } from 'shared-reducer-frontend';
+import type { Spec } from 'json-immutability-helper';
 
 class OptionType<T> {
   public constructor(private readonly key: string, private readonly def: T) {}

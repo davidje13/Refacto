@@ -1,14 +1,7 @@
 import WebSocketExpress from 'websocket-express';
 import CollectionStorage from 'collection-storage';
 import Hasher from 'pwd-hasher';
-import {
-  TrackingTopicMap,
-  InMemoryTopic,
-  Topic,
-  TopicMessage,
-} from 'shared-reducer-backend';
 import { buildAuthenticationBackend } from 'authentication-backend';
-import type { Retro } from 'refacto-entities';
 import ApiConfigRouter from './routers/ApiConfigRouter';
 import ApiAuthRouter from './routers/ApiAuthRouter';
 import ApiSlugsRouter from './routers/ApiSlugsRouter';
@@ -80,15 +73,11 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
-  const retroChangeSubs = new TrackingTopicMap(
-    (): Topic<TopicMessage<Retro>> => new InMemoryTopic(),
-  );
-
   const encryptionKey = readKey(config.encryption.secretKey, 32);
 
   const passwordCheckService = new PasswordCheckService(config.passwordCheck);
   const giphyService = new GiphyService(config.giphy);
-  const retroService = new RetroService(db, encryptionKey, retroChangeSubs);
+  const retroService = new RetroService(db, encryptionKey);
   const retroArchiveService = new RetroArchiveService(db, encryptionKey);
   const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
   const userAuthService = new UserAuthService(tokenManager);

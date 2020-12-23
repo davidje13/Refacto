@@ -1,28 +1,22 @@
 import crypto from 'crypto';
 import { MemoryDb } from 'collection-storage';
-import {
-  Spec,
-  TopicMessage,
-  TrackingTopicMap,
-  InMemoryTopic,
-  ChangeInfo,
-  Subscription,
-} from 'shared-reducer-backend';
+import type { Spec } from 'json-immutability-helper';
+import type { ChangeInfo, Subscription } from 'shared-reducer-backend';
 import { makeRetroItem, Retro } from 'refacto-entities';
 import RetroService from './RetroService';
 
 interface CapturedChange {
-  message: ChangeInfo<Retro>;
+  message: ChangeInfo<Spec<Retro>>;
   meta: any;
 }
 
 class ChangeListener {
   public readonly messages: CapturedChange[] = [];
 
-  public readonly onChange: (message: ChangeInfo<Retro>, meta: any) => void;
+  public readonly onChange: (message: ChangeInfo<Spec<Retro>>, meta: any) => void;
 
   public constructor() {
-    this.onChange = (message: ChangeInfo<Retro>, meta: any): void => {
+    this.onChange = (message: ChangeInfo<Spec<Retro>>, meta: any): void => {
       this.messages.push({ message, meta });
     };
   }
@@ -55,10 +49,7 @@ describe('RetroService', () => {
 
   beforeEach(async () => {
     const db = new MemoryDb();
-    const topic = new TrackingTopicMap<TopicMessage<Retro>>(
-      () => new InMemoryTopic(),
-    );
-    service = new RetroService(db, crypto.randomBytes(32), topic);
+    service = new RetroService(db, crypto.randomBytes(32));
     r1 = await service.createRetro(
       'me',
       'my-retro',
@@ -126,7 +117,7 @@ describe('RetroService', () => {
 
   describe('retroBroadcaster', () => {
     let listener: ChangeListener;
-    let subscription: Subscription<Retro, void>;
+    let subscription: Subscription<Retro, Spec<Retro>, void>;
 
     beforeEach(async () => {
       listener = new ChangeListener();

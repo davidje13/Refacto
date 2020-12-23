@@ -70,7 +70,7 @@ describe('Application', () => {
       .andRespondJsonOk({ retroToken: 'my-token' });
 
     mockWsExpect('/api/retros/id-foobar', (ws: WebSocket) => {
-      ws.send(JSON.stringify({ change: ['=', retro] }));
+      ws.send(JSON.stringify({ init: retro }));
     });
 
     const { dom } = await renderApp('/retros/slug-foobar');
@@ -85,6 +85,7 @@ describe('Application', () => {
     await act(async () => {
       fireEvent.submit(form);
     });
+    await Promise.resolve(); // password -> checking, then checking -> retro
 
     expect(dom).toContainElementWith(css('.page-retro'));
     const header2 = dom.getBy(css('.top-header h1'));

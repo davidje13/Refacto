@@ -38,12 +38,12 @@ describe('API retro websocket', () => {
   });
 
   describe('ws://api/retros/retro-id', () => {
-    it('sends initial replace-all retro data for known retro IDs', async () => {
+    it('sends initial retro data for known retro IDs', async () => {
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
-        .expectJson(({ change }) => (change[0] === '=' && change[1].name === 'My Retro'))
+        .expectJson(({ init }) => (init.name === 'My Retro'))
         .close()
         .expectClosed();
     });
@@ -62,7 +62,7 @@ describe('API retro websocket', () => {
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
-        .expectJson(({ change }) => (change[1].name === 'bar'))
+        .expectJson(({ init }) => (init.name === 'bar'))
         .close()
         .expectClosed();
     });
@@ -81,7 +81,7 @@ describe('API retro websocket', () => {
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
-        .expectJson(({ change }) => (change[1].name === 'My Retro'))
+        .expectJson(({ init }) => (init.name === 'My Retro'))
         .close()
         .expectClosed();
     });

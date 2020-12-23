@@ -1,6 +1,7 @@
 import React, { useState, memo } from 'react';
 import type { Retro } from 'refacto-entities';
-import { Dispatch, actionsSyncedCallback } from 'shared-reducer-frontend';
+import { actionsSyncedCallback } from 'shared-reducer-frontend';
+import type { RetroDispatch } from '../../api/RetroTracker';
 import Input from '../common/Input';
 import SlugEntry from '../retro-create/SlugEntry';
 import Alert from '../common/Alert';
@@ -11,7 +12,7 @@ import './SettingsForm.less';
 
 interface PropsT {
   retro: Retro;
-  dispatch: Dispatch<Retro>;
+  dispatch: RetroDispatch;
   onSave?: (savedRetro: Retro) => void;
 }
 

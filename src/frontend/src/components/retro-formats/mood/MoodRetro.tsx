@@ -1,10 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { Retro, RetroItem } from 'refacto-entities';
-import type { Dispatch } from 'shared-reducer-frontend';
+import type { RetroItem } from 'refacto-entities';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';
+import type { RetroDispatch } from '../../../api/RetroTracker';
 import {
   addRetroItem,
   editRetroItem,
@@ -46,7 +46,7 @@ interface PropsT {
   retroItems: RetroItem[];
   retroState: MoodRetroStateT;
   group?: string;
-  dispatch?: Dispatch<Retro>;
+  dispatch?: RetroDispatch;
   onComplete?: () => void;
   archive: boolean;
   archiveTime?: number;

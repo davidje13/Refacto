@@ -1,6 +1,6 @@
 import React, { Suspense, memo, lazy } from 'react';
-import type { Retro, RetroItem } from 'refacto-entities';
-import type { Dispatch } from 'shared-reducer-frontend';
+import type { RetroItem } from 'refacto-entities';
+import type { RetroDispatch } from '../../api/RetroTracker';
 import UnknownRetro from './unknown/UnknownRetro';
 
 interface ChildPropsT {
@@ -8,7 +8,7 @@ interface ChildPropsT {
   retroItems: RetroItem[];
   retroState: Record<string, unknown>;
   group?: string;
-  dispatch?: Dispatch<Retro>;
+  dispatch?: RetroDispatch;
   onComplete?: () => void;
   archive: boolean;
   archiveTime?: number;

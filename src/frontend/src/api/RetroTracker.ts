@@ -1,5 +1,7 @@
+import listCommands from 'json-immutability-helper/commands/list';
+import { context, Spec } from 'json-immutability-helper';
 import type { Retro } from 'refacto-entities';
-import SharedReducer, { Dispatch } from 'shared-reducer-frontend';
+import SharedReducer, { Dispatch, DispatchSpec } from 'shared-reducer-frontend';
 import SubscriptionTracker from './SubscriptionTracker';
 
 export type RetroError = any;
@@ -17,7 +19,8 @@ export type RetroState = {
   error: RetroError;
 };
 
-export type RetroDispatch = Dispatch<Retro>;
+export type RetroDispatchSpec = DispatchSpec<Retro, Spec<Retro>>;
+export type RetroDispatch = Dispatch<Retro, Spec<Retro>>;
 type RetroStateCallback = (state: RetroState) => void;
 
 interface RetroSubscription {
@@ -25,7 +28,7 @@ interface RetroSubscription {
 }
 
 class RetroWrapper {
-  public readonly reducer: SharedReducer<Retro>;
+  public readonly reducer: SharedReducer<Retro, Spec<Retro>>;
 
   private readonly retroStateCallbacks = new Set<RetroStateCallback>();
 
@@ -44,12 +47,12 @@ class RetroWrapper {
       this.retroStateCallbacks.forEach((fn) => fn(state));
     };
 
-    this.reducer = new SharedReducer<Retro>(
-      `${wsBase}/retros/${retroId}`,
-      retroToken,
-      (data): void => setState({ retro: data, error: null }),
-      (err): void => setState({ retro: null, error: err }),
-    );
+    this.reducer = SharedReducer
+      .for<Retro>(`${wsBase}/retros/${retroId}`, (data): void => setState({ retro: data, error: null }))
+      .withReducer(context.with(listCommands))
+      .withToken(retroToken)
+      .withErrorHandler((err): void => setState({ retro: null, error: err }))
+      .build();
   }
 
   public addStateCallback(stateCallback: RetroStateCallback): void {
