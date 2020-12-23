@@ -2,6 +2,7 @@ import type { Collection, DB } from 'collection-storage';
 import type { JWTPayload } from 'websocket-express';
 import type Hasher from 'pwd-hasher';
 import type { TokenManager } from '../tokens/TokenManager';
+import json from '../helpers/json';
 
 interface RetroAuth {
   id: string;
@@ -23,6 +24,21 @@ const PASSWORD_SCOPES = {
   readArchives: true,
   write: true,
 };
+
+const extractJwtPayload = json.object<JWTPayload>({
+  iss: json.optional(json.string),
+  iat: json.optional(json.number),
+  nbf: json.optional(json.number),
+  exp: json.optional(json.number),
+  sub: json.optional(json.string),
+  aud: json.optional(json.string),
+  jti: json.optional(json.string),
+  scopes: json.optional(json.oneOf(
+    json.array(json.string),
+    json.record(json.boolean),
+    json.string,
+  )),
+});
 
 export default class RetroAuthService {
   private readonly retroAuthCollection: Collection<RetroAuth>;
@@ -106,9 +122,13 @@ export default class RetroAuthService {
       return null;
     }
 
-    return this.tokenManager.readAndVerifySigned(
+    const raw = this.tokenManager.readAndVerifySigned(
       retroToken,
       retroData.publicKey,
-    ) as JWTPayload;
+    );
+    if (!raw) {
+      return null;
+    }
+    return extractJwtPayload(raw);
   }
 }

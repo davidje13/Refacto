@@ -37,6 +37,18 @@ export default {
     return submap(source);
   },
 
+  oneOf: <Ts extends unknown[]>(...options: ObjectMapper<Ts>) => (source: unknown): Ts[number] => {
+    let err = new Error('No matching type');
+    for (let i = 0; i < options.length; i += 1) {
+      try {
+        return options[i](source);
+      } catch (e) {
+        err = e;
+      }
+    }
+    throw err;
+  },
+
   any: jsonAny,
 
   object: jsonObject,
@@ -64,8 +76,17 @@ export default {
       return source as Record<string, V>;
     }
     const mapped: Record<string, V> = {};
-    Object.keys(source).forEach((key) => {
-      mapped[key] = valueMap(source[key]);
+    Object.entries(source).forEach(([key, value]) => {
+      if (mapped[key]) {
+        Object.defineProperty(mapped, key, {
+          value,
+          enumerable: true,
+          configurable: true,
+          writable: true,
+        });
+      } else {
+        mapped[key] = valueMap(value);
+      }
     });
     return mapped;
   },
@@ -77,7 +98,7 @@ export default {
     if (map === jsonAny) {
       return source as T[];
     }
-    return source.map(map);
+    return Array.prototype.map.call(source, map) as T[];
   },
 
   string: (source: unknown): string => {
