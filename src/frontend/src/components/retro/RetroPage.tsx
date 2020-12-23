@@ -52,6 +52,9 @@ export default memo(({
       isArchiving.current = false;
       retroDispatch!(clearCovered());
       hideArchivePopup();
+    }).catch((e) => {
+      /* eslint-disable-next-line no-console */ // TODO: report failure to user
+      console.error('Failed to create archive', e);
     });
   }, [
     isArchiving,

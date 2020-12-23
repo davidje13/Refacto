@@ -31,7 +31,7 @@ class MockWebSocketClient {
       error: [],
     };
 
-    Promise.resolve().then(() => {
+    void Promise.resolve().then(() => {
       this.dispatchEvent('open', new CustomEvent('open'));
       const ws = {
         send: (data: string): void => {

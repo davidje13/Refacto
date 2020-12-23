@@ -101,7 +101,10 @@ export default class RetroTracker {
     return {
       unsubscribe: (): void => {
         sub.service.removeStateCallback(retroStateCallback);
-        sub.unsubscribe();
+        sub.unsubscribe().catch((e) => {
+          /* eslint-disable-next-line no-console */ // record non-critical error
+          console.warn(`Failed to unsubscribe from retro ${retroId}`, e);
+        });
       },
     };
   }

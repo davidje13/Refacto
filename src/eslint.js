@@ -5,13 +5,14 @@ module.exports = {
   baseRules: {
     'arrow-parens': ['error', 'always'],
     'operator-linebreak': ['error', 'after'],
+    'no-void': ['error', { allowAsStatement: true }],
     'import/no-extraneous-dependencies': ['error', {
       'optionalDependencies': true,
     }],
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/await-thenable': ['error'],
     '@typescript-eslint/member-ordering': ['error'],
-//    '@typescript-eslint/no-floating-promises': ['error'],
+    '@typescript-eslint/no-floating-promises': ['error'],
     '@typescript-eslint/no-for-in-array': ['error'],
     '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],
     '@typescript-eslint/no-require-imports': ['error'],

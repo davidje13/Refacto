@@ -1,11 +1,6 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  memo,
-} from 'react';
+import React, { memo } from 'react';
+import useAwaited from 'react-hook-awaited';
 import Input from '../common/Input';
-import useNonce from '../../hooks/useNonce';
 import { slugTracker } from '../../api/api';
 import { ReactComponent as TickBold } from '../../../resources/tick-bold.svg';
 import { ReactComponent as Cross } from '../../../resources/cross.svg';
@@ -17,8 +12,6 @@ const VALID_SLUG = new RegExp(VALID_SLUG_PATTERN);
 enum SlugAvailability {
   BLANK,
   INVALID,
-  CHECKING,
-  FAILED,
   TAKEN,
   AVAILABLE,
 }
@@ -30,74 +23,50 @@ interface PropsT {
   oldValue?: string;
 }
 
+const availabilityJsx: Record<SlugAvailability, React.ReactNode> = {
+  [SlugAvailability.BLANK]: null,
+  [SlugAvailability.INVALID]: (<div className="slug-checker invalid">Invalid <Cross /></div>),
+  [SlugAvailability.TAKEN]: (<div className="slug-checker taken">Taken <Cross /></div>),
+  [SlugAvailability.AVAILABLE]: (<div className="slug-checker available">Available <TickBold /></div>),
+};
+
 export default memo(({
   placeholder = '',
   value,
   onChange,
   oldValue,
 }: PropsT) => {
-  const [slugAvailability, setSlugAvailability] = useState(SlugAvailability.BLANK);
-  const checkSlugNonce = useNonce();
-  const checkSlug = useCallback(async (current: string) => {
-    const nonce = checkSlugNonce.next();
-
-    if (current === '') {
-      setSlugAvailability(SlugAvailability.BLANK);
-      return;
-    }
-    if (current === oldValue) {
-      setSlugAvailability(SlugAvailability.AVAILABLE);
-      return;
-    }
-    if (!VALID_SLUG.test(current) || current.length > MAX_SLUG_LENGTH) {
-      setSlugAvailability(SlugAvailability.INVALID);
-      return;
-    }
-
-    setSlugAvailability(SlugAvailability.CHECKING);
-    try {
-      const available = await slugTracker.isAvailable(current);
-      if (!checkSlugNonce.check(nonce)) {
-        return;
-      }
-      if (available) {
-        setSlugAvailability(SlugAvailability.AVAILABLE);
-      } else {
-        setSlugAvailability(SlugAvailability.TAKEN);
-      }
-    } catch (err) {
-      setSlugAvailability(SlugAvailability.FAILED);
-    }
-  }, [checkSlugNonce, slugTracker, setSlugAvailability, oldValue]);
-
   const active = value || placeholder;
-
-  useEffect(() => {
-    checkSlug(active);
-  }, [active, checkSlug]);
+  const slugAvailability = useAwaited<SlugAvailability>(async () => {
+    if (active === '') {
+      return SlugAvailability.BLANK;
+    }
+    if (active === oldValue) {
+      return SlugAvailability.AVAILABLE;
+    }
+    if (!VALID_SLUG.test(active) || active.length > MAX_SLUG_LENGTH) {
+      return SlugAvailability.INVALID;
+    }
+    if (!await slugTracker.isAvailable(active)) {
+      return SlugAvailability.TAKEN;
+    }
+    return SlugAvailability.AVAILABLE;
+  }, [active, slugTracker, oldValue]);
 
   const retrosBaseUrl = `${document.location.host}/retros/`;
 
-  let slugChecker;
-  switch (slugAvailability) {
-    case SlugAvailability.INVALID:
-      slugChecker = (<div className="slug-checker invalid">Invalid <Cross /></div>);
-      break;
-    case SlugAvailability.CHECKING:
+  let slugChecker: React.ReactNode;
+  switch (slugAvailability.state) {
+    case 'pending':
       slugChecker = (<div className="slug-checker checking" />);
       break;
-    case SlugAvailability.FAILED:
+    case 'rejected':
       slugChecker = (<div className="slug-checker failed">Unable to check availability</div>);
       break;
-    case SlugAvailability.TAKEN:
-      slugChecker = (<div className="slug-checker taken">Taken <Cross /></div>);
+    case 'resolved':
+      slugChecker = availabilityJsx[slugAvailability.data];
       break;
-    case SlugAvailability.AVAILABLE:
-      slugChecker = (<div className="slug-checker available">Available <TickBold /></div>);
-      break;
-    default:
-      slugChecker = null;
-      break;
+    // no default
   }
 
   return (

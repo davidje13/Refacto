@@ -25,7 +25,7 @@ export default class UserAuthService {
       .get('id', 'user-auth', ['privateKey', 'publicKey']);
     if (!keys) {
       keys = await this.tokenManager.generateKeys();
-      configCollection.add({ id: 'user-auth', ...keys });
+      await configCollection.add({ id: 'user-auth', ...keys });
     }
     this.privateKey = keys.privateKey;
     this.publicKey = keys.publicKey;

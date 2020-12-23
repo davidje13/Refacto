@@ -18,4 +18,8 @@ Modal.setAppElement(root);
 
 configService.load().then(() => {
   ReactDOM.render(<StrictMode><App /></StrictMode>, root);
+}).catch((e) => {
+  root.innerText = 'Failed to load. Please try again later.';
+  // eslint-disable-next-line no-console
+  console.error('Failed to load config', e);
 });

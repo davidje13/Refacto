@@ -88,8 +88,10 @@ process.on('SIGINT', () => {
   if (!interrupted) {
     interrupted = true;
     process.stdout.write('\n');
-    shutdown();
+    shutdown().catch((e) => {
+      process.stderr.write(`Failed to shutdown server: ${e}\n`);
+    });
   }
 });
 
-refreshApp();
+void refreshApp();

@@ -69,7 +69,7 @@ export default class RetroAuthService {
     }
 
     if (this.hasher.needsRegenerate(retroData.passwordHash)) {
-      this.setPassword(retroId, password, { cycleKeys: false });
+      await this.setPassword(retroId, password, { cycleKeys: false });
     }
     return this.grantToken(retroId, PASSWORD_SCOPES);
   }
