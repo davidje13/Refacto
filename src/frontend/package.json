@@ -47,7 +47,7 @@
     "jest": "26.x",
     "less": "3.x",
     "less-loader": "7.x",
-    "neutrino": "9.3.x",
+    "neutrino": "9.x",
     "neutrinojs-typescript": "1.x",
     "neutrinojs-typescript-eslint": "1.x",
     "react-mock-element": "1.x",
