@@ -73,6 +73,7 @@ export default memo(({
         </h2>
         { handleAddItem && (
           <ItemEditor
+            identifier={`new-item-${category}`}
             onSubmit={handleAddItem}
             submitButtonLabel={<TickBold />}
             submitButtonTitle="Add"

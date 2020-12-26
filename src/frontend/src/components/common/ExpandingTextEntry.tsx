@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import classNames from 'classnames';
 import isFocusable from '../../helpers/isFocusable';
 import useKeyHandler from '../../hooks/useKeyHandler';
+import useStateMap from '../../hooks/useStateMap';
 import useBoxed from '../../hooks/useBoxed';
 import Textarea from './Textarea';
 import './ExpandingTextEntry.less';
@@ -18,6 +19,7 @@ interface PropsT {
   onCancel?: () => void;
   placeholder?: string;
   defaultValue?: string;
+  identifier?: string;
   autoFocus?: boolean;
   forceMultiline?: boolean;
   preSubmitOptions?: React.ReactNode;
@@ -35,6 +37,7 @@ export default ({
   onCancel,
   placeholder = '',
   defaultValue = '',
+  identifier,
   autoFocus = false,
   forceMultiline = false,
   extraInputs,
@@ -46,7 +49,7 @@ export default ({
   blurOnSubmit = false,
   blurOnCancel = false,
 }: PropsT): React.ReactElement => {
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useStateMap(identifier, 'value', defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
   const boxedValue = useBoxed(value);
   const [form, setForm] = useState<HTMLFormElement | null>(null);

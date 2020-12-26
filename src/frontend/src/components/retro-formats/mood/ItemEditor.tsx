@@ -1,15 +1,17 @@
-import React, { useState, useCallback, memo } from 'react';
+import React, { useCallback, memo } from 'react';
 import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
 import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
 import Attachment from '../../attachments/Attachment';
 import GiphyButton from '../../attachments/giphy/GiphyButton';
 import useConfig from '../../../hooks/data/useConfig';
+import useStateMap from '../../../hooks/useStateMap';
 import { ReactComponent as Cross } from '../../../../resources/cross.svg';
 import { ReactComponent as Delete } from '../../../../resources/delete.svg';
 
 interface PropsT {
   defaultItem?: RetroItem;
+  identifier?: string;
   onSubmit: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
   onCancel?: () => void;
   onDelete?: () => void;
@@ -25,6 +27,7 @@ interface PropsT {
 
 export default memo(({
   defaultItem,
+  identifier,
   onSubmit,
   onCancel,
   onDelete,
@@ -34,7 +37,7 @@ export default memo(({
 }: PropsT) => {
   const config = useConfig();
 
-  const [attachment, setAttachment] = useState(defaultItem?.attachment ?? null);
+  const [attachment, setAttachment] = useStateMap(identifier, 'attachment', defaultItem?.attachment ?? null);
   const handleSubmit = useCallback((message: string) => {
     onSubmit({
       message,
@@ -50,6 +53,7 @@ export default memo(({
   return (
     <ExpandingTextEntry
       defaultValue={defaultItem?.message ?? ''}
+      identifier={identifier}
       onSubmit={handleSubmit}
       onCancel={onCancel}
       extraInputs={attachmentElement}

@@ -23,6 +23,7 @@ import ArchivePage from './archive/ArchivePage';
 import RetroSettingsPage from './retro-settings/RetroSettingsPage';
 import useSlug from '../hooks/data/useSlug';
 import useRetroToken from '../hooks/data/useRetroToken';
+import { StateMapProvider } from '../hooks/useStateMap';
 import RedirectRoute from './RedirectRoute';
 
 type RetroReducerState = [
@@ -154,27 +155,29 @@ export default ({
   };
 
   return (
-    <Switch>
-      <Route path="/retros/:slug"><RetroPage {...retroParams} /></Route>
-      <Route path="/retros/:slug/groups/:group">
-        { ({ group }): ReactNode => <RetroPage {...retroParams} group={group} /> }
-      </Route>
-      <Route path="/retros/:slug/archives"><ArchiveListPage {...retroParams} /></Route>
-      <Route path="/retros/:slug/archives/:archiveId">
-        { ({ archiveId }): ReactNode => <ArchivePage {...retroParams} archiveId={archiveId} /> }
-      </Route>
-      <Route path="/retros/:slug/archives/:archiveId/groups/:group">
-        { ({ archiveId, group }): ReactNode => (
-          <ArchivePage
-            {...retroParams}
-            archiveId={archiveId}
-            group={group}
-          />
-        ) }
-      </Route>
-      <Route path="/retros/:slug/settings"><RetroSettingsPage {...retroParams} /></Route>
+    <StateMapProvider scope={slug}>
+      <Switch>
+        <Route path="/retros/:slug"><RetroPage {...retroParams} /></Route>
+        <Route path="/retros/:slug/groups/:group">
+          { ({ group }): ReactNode => <RetroPage {...retroParams} group={group} /> }
+        </Route>
+        <Route path="/retros/:slug/archives"><ArchiveListPage {...retroParams} /></Route>
+        <Route path="/retros/:slug/archives/:archiveId">
+          { ({ archiveId }): ReactNode => <ArchivePage {...retroParams} archiveId={archiveId} /> }
+        </Route>
+        <Route path="/retros/:slug/archives/:archiveId/groups/:group">
+          { ({ archiveId, group }): ReactNode => (
+            <ArchivePage
+              {...retroParams}
+              archiveId={archiveId}
+              group={group}
+            />
+          ) }
+        </Route>
+        <Route path="/retros/:slug/settings"><RetroSettingsPage {...retroParams} /></Route>
 
-      <RedirectRoute path="/retros/:slug/:rest*" to="/retros/:slug" replace />
-    </Switch>
+        <RedirectRoute path="/retros/:slug/:rest*" to="/retros/:slug" replace />
+      </Switch>
+    </StateMapProvider>
   );
 };

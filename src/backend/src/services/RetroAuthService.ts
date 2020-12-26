@@ -122,10 +122,7 @@ export default class RetroAuthService {
       return null;
     }
 
-    const raw = this.tokenManager.readAndVerifySigned(
-      retroToken,
-      retroData.publicKey,
-    );
+    const raw = this.tokenManager.readAndVerifySigned(retroToken, retroData.publicKey);
     if (!raw) {
       return null;
     }

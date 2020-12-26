@@ -48,6 +48,7 @@ export default memo(({
           >
             <div className="new-action-item">
               <ItemEditor
+                identifier="new-action"
                 onSubmit={handleAddItem}
                 submitButtonLabel={<TickBold />}
                 submitButtonTitle="Add"
