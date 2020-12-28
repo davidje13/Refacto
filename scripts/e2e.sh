@@ -38,7 +38,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
   node \
-    --disable-proto=throw \
+    --disable-proto throw \
     "$BUILDDIR/index.js" \
     > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
   # TODO: --disallow-code-generation-from-strings (https://github.com/dougwilson/nodejs-depd/issues/41)

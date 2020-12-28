@@ -57,7 +57,7 @@ module.exports = {
     }),
     banner({
       pluginId: 'shebang',
-      banner: '#!/usr/bin/env -S node --disable-proto=delete', // TODO: --disallow-code-generation-from-strings (https://github.com/dougwilson/nodejs-depd/issues/41)
+      banner: '#!/usr/bin/env -S node --disable-proto delete', // TODO: --disallow-code-generation-from-strings (https://github.com/dougwilson/nodejs-depd/issues/41)
       raw: true,
       entryOnly: true,
     }),
