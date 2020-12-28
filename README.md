@@ -32,7 +32,7 @@ variable when running (defaults to 5000):
 ```bash
 cd build
 npm install --production
-PORT=8080 node index.js
+PORT=8080 ./index.js
 ```
 
 See the [deployment documentation](docs/DEPLOYING.md) for more

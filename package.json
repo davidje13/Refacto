@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "SKIP_E2E_DEPS=true ./scripts/install.sh && ./scripts/build.sh",
-    "clean": "./scripts/clean.sh",
-    "install": "./scripts/install.sh --force",
-    "lint": "./scripts/install.sh && node ./scripts/lint.js",
-    "start": "SKIP_E2E_DEPS=true ./scripts/install.sh && ./scripts/start.sh",
-    "test": "./scripts/install.sh && node ./scripts/lint.js && ./scripts/test.sh",
+    "build": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/build.sh",
+    "clean": "scripts/clean.sh",
+    "install": "scripts/install.sh --force",
+    "lint": "scripts/install.sh && scripts/lint.js",
+    "start": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/start.sh",
+    "test": "scripts/install.sh && scripts/lint.js && scripts/test.sh",
     "test:backend": "npm --prefix=src/backend test --silent --",
     "test:backend:watch": "npm --prefix=src/backend test --silent -- --watch",
     "test:frontend": "npm --prefix=src/frontend test --silent --",
     "test:frontend:watch": "npm --prefix=src/frontend test --silent -- --watch",
-    "test:e2e": "./scripts/install.sh && ./scripts/e2e.sh"
+    "test:e2e": "scripts/install.sh && scripts/e2e.sh"
   }
 }

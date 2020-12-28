@@ -15,4 +15,4 @@ WORKDIR /refacto
 COPY --from=builder /refacto /refacto
 USER refacto
 EXPOSE 5000
-CMD ["node", "index.js"]
+CMD ["./index.js"]

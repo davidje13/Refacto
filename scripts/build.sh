@@ -54,9 +54,10 @@ cp -R "$BASEDIR/src/backend/build" "$BUILDDIR";
 rm -rf "$BUILDDIR/static" || true;
 mkdir -p "$BUILDDIR/static";
 cp -R "$BASEDIR/src/frontend/build/"* "$BUILDDIR/static";
+chmod +x "$BUILDDIR/index.js";
 
 echo 'Compressing static resources...';
-node "$BASEDIR/scripts/compress.js" "$BUILDDIR/static";
+"$BASEDIR/scripts/compress.js" "$BUILDDIR/static";
 
 if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
   echo 'Restoring node_modules...';
@@ -66,9 +67,9 @@ fi;
 echo 'Generating package.json...';
 < "$BASEDIR/src/backend/package.json" \
   grep -v '"file:' \
-  | node "$BASEDIR/scripts/mutate-json.js" \
+  | "$BASEDIR/scripts/mutate-json.js" \
   'name="refacto-app"' \
-  'scripts={"start": "node index.js"}' \
+  'scripts={"start": "./index.js"}' \
   'optionalDependencies=' \
   'devDependencies=' \
   > "$BUILDDIR/package.json";

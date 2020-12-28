@@ -13,7 +13,7 @@ variable when running (defaults to 5000):
 ```bash
 cd build
 npm install --production
-PORT=8080 node index.js
+PORT=8080 ./index.js
 ```
 
 You will need to have NodeJS 14 or newer installed.
@@ -29,7 +29,7 @@ See [SERVICES.md](./SERVICES.md) for details.
 For a secure deployment, you will also need a collection of secrets:
 
 ```bash
-node scripts/random-secrets.js
+./scripts/random-secrets.js
 ```
 
 ## Docker Compose

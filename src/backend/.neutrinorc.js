@@ -2,6 +2,7 @@ const airbnb = require('@neutrinojs/airbnb-base');
 const copy = require('@neutrinojs/copy');
 const jest = require('@neutrinojs/jest');
 const node = require('@neutrinojs/node');
+const banner = require('@neutrinojs/banner');
 const typescript = require('neutrinojs-typescript');
 const typescriptLint = require('neutrinojs-typescript-eslint');
 const { baseRules, testRules } = require('../eslint.js');
@@ -53,6 +54,12 @@ module.exports = {
           'transform-dynamic-import',
         ],
       },
+    }),
+    banner({
+      pluginId: 'shebang',
+      banner: '#!/usr/bin/env node --disable-proto=delete', // TODO: --disallow-code-generation-from-strings (https://github.com/dougwilson/nodejs-depd/issues/41)
+      raw: true,
+      entryOnly: true,
     }),
     (neutrino) => neutrino.config.externals([nodeExternals({ whitelist: [/^webpack/, /^refacto-entities$/] })]),
     (neutrino) => neutrino.config.stats('minimal'),

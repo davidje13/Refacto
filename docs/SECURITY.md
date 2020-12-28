@@ -11,7 +11,7 @@ Deploying to a platform-as-a-service will handle this automatically.
 When deploying behind a proxy, you should set `TRUST_PROXY=true`:
 
 ```bash
-TRUST_PROXY=true node index.js
+TRUST_PROXY=true ./index.js
 ```
 
 (do not set this to `true` unless behind a trusted proxy which sets
@@ -28,7 +28,7 @@ If you have a powerful webserver, you can increase the hash work
 factor:
 
 ```bash
-PASSWORD_WORK_FACTOR=12 node index.js
+PASSWORD_WORK_FACTOR=12 ./index.js
 ```
 
 This value can be changed with each deployment (and should slowly
@@ -55,7 +55,7 @@ store this value is in a deployment pipeline configuration, or a
 configuration server.
 
 ```bash
-PASSWORD_SECRET_PEPPER=asecretwhichmustnotbeknown node index.js
+PASSWORD_SECRET_PEPPER=asecretwhichmustnotbeknown ./index.js
 ```
 
 Currently it is not possible to cycle this secret value, as passwords
@@ -63,6 +63,23 @@ can only be re-hashed during a successful login.
 
 **If this value ever changes, all passwords will become invalid.
 If you specify a secret pepper, ensure it will never be lost!**
+
+## NodeJS runtime flags
+
+When launched with `./index.js`, node hardening flags are applied
+automatically. If you need to customise the NodeJS flags, you should
+be sure to specify these as well:
+
+```
+node --disable-proto=delete index.js
+```
+
+Note that these must be included *before* the `index.js` argument.
+
+If you do not need to specify custom flags, it is recommended to
+stick with using `./index.js` to launch the application instead of
+`node index.js`, as the former will automatically get new security
+flags as they are added.
 
 ## Data encryption
 
@@ -72,14 +89,14 @@ is used, providing no real protection. To get the benefits of data
 encryption, supply a secret key on startup.
 
 ```bash
-ENCRYPTION_SECRET_KEY=0000000000000000000000000000000000000000000000000000000000000000 node index.js
+ENCRYPTION_SECRET_KEY=0000000000000000000000000000000000000000000000000000000000000000 ./index.js
 ```
 
 The secret key should be 32 random bytes (256 bits) encoded in
 base16 (hex). You can generate a random key with:
 
 ```bash
-node scripts/random-secrets.js
+./scripts/random-secrets.js
 ```
 
 Non-item data (such as the retro name, settings, and current state)
@@ -110,7 +127,7 @@ value is in a deployment pipeline configuration, or a configuration
 server.
 
 ```bash
-TOKEN_SECRET_PASSPHRASE=asecretwhichmustnotbeknown node index.js
+TOKEN_SECRET_PASSPHRASE=asecretwhichmustnotbeknown ./index.js
 ```
 
 **If this value ever changes, you will need to regenerate all key
@@ -166,7 +183,7 @@ mongo --authenticationDatabase admin -u admin -p
 And configure Refacto to connect as the `refacto` user:
 
 ```bash
-DB_URL=mongodb://refacto:<pass>@localhost:27017/refacto node index.js
+DB_URL=mongodb://refacto:<pass>@localhost:27017/refacto ./index.js
 ```
 
 <https://docs.mongodb.com/manual/tutorial/enable-authentication/>
@@ -216,7 +233,7 @@ sudo service mongod restart
 After enabling security, change the database URL when starting Refacto:
 
 ```bash
-DB_URL=mongodb://localhost:27017/refacto?ssl=true node index.js
+DB_URL=mongodb://localhost:27017/refacto?ssl=true ./index.js
 ```
 
 Note that after enabling this, unless you also configure identity

@@ -31,13 +31,17 @@ if [[ -z "$TARGET_HOST" ]]; then
   export SSO_GOOGLE_TOKEN_INFO_URL="$MOCK_SSO_HOST/tokeninfo";
 
   echo 'Using randomised secrets';
-  export $(node "$BASEDIR/scripts/random-secrets.js" | tee /dev/stderr | xargs);
+  export $("$BASEDIR/scripts/random-secrets.js" | tee /dev/stderr | xargs);
 
   PORT="$PORT" \
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
   SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
-  node "$BUILDDIR/index.js" > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
+  node \
+    --disable-proto=throw \
+    "$BUILDDIR/index.js" \
+    > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
+  # TODO: --disallow-code-generation-from-strings (https://github.com/dougwilson/nodejs-depd/issues/41)
 
   trap "kill '$APP_PID'; false" EXIT;
 
