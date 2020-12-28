@@ -14,7 +14,6 @@
     "authentication-backend": "1.x",
     "collection-storage": "3.x",
     "express-static-gzip": "2.x",
-    "http-proxy-middleware": "*",
     "ioredis": "4.x",
     "json-immutability-helper": "3.x",
     "jwt-simple": "0.5.x",
