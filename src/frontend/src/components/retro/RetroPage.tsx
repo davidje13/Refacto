@@ -16,6 +16,7 @@ import { archiveService } from '../../api/api';
 import OPTIONS from '../../helpers/optionManager';
 import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
 import './RetroPage.less';
+import InvitePopup from './InvitePopup';
 
 const BLANK_STATE = {};
 
@@ -40,6 +41,9 @@ export default memo(({
   const [archivePopupVisible, setArchivePopupVisible] = useState(false);
   const showArchivePopup = useBoundCallback(setArchivePopupVisible, true);
   const hideArchivePopup = useBoundCallback(setArchivePopupVisible, false);
+  const [invitePopupVisible, setInvitePopupVisible] = useState(false);
+  const showInvitePopup = useBoundCallback(setInvitePopupVisible, true);
+  const hideInvitePopup = useBoundCallback(setInvitePopupVisible, false);
 
   const isArchiving = useRef(false);
   const performArchive = useCallback(() => {
@@ -69,12 +73,12 @@ export default memo(({
 
   const canFacilitate = (
     !smallScreen ||
-    (retro && OPTIONS.enableMobileFacilitation.read(retro.options))
+    (OPTIONS.enableMobileFacilitation.read(retro.options))
   );
 
-  let popup = null;
+  let archivePopup = null;
   if (retroDispatch && archivePopupVisible) {
-    popup = {
+    archivePopup = {
       title: 'Create Archive',
       content: (
         <ArchivePopup
@@ -89,6 +93,18 @@ export default memo(({
     };
   }
 
+  let invitePopup = null;
+  if (invitePopupVisible) {
+    invitePopup = {
+      title: 'Invite',
+      content: (<InvitePopup onClose={hideInvitePopup} />),
+      keys: {
+        Enter: hideInvitePopup,
+        Escape: hideInvitePopup,
+      },
+    };
+  }
+
   const canArchive = Boolean((
     retroDispatch &&
     retro &&
@@ -98,6 +114,7 @@ export default memo(({
   ));
 
   const links = [
+    { label: 'Invite', action: showInvitePopup },
     retroDispatch ? {
       label: 'Settings',
       action: `/retros/${retro.slug}/settings`,
@@ -130,7 +147,8 @@ export default memo(({
         onComplete={canArchive ? showArchivePopup : undefined}
         archive={false}
       />
-      <Popup data={popup} onClose={hideArchivePopup} />
+      <Popup data={archivePopup} onClose={hideArchivePopup} />
+      <Popup data={invitePopup} onClose={hideInvitePopup} />
     </article>
   );
 });

@@ -15,6 +15,7 @@
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
     "json-immutability-helper": "3.x",
+    "lean-qr": "1.x",
     "react": "17.x",
     "react-dom": "17.x",
     "react-hook-awaited": "1.x",

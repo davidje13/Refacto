@@ -13,7 +13,7 @@ export default memo(({
 }: PropsT) => (
   <div className="popup-archive">
     <p>Archive and clear this retro?</p>
-    <p>
+    <p className="dialog-options">
       <WrappedButton onClick={onCancel}>
         Cancel
       </WrappedButton>

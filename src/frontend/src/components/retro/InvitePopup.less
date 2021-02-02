@@ -1,8 +1,26 @@
 @import (reference) '../colours.less';
 
-.popup-archive {
+.popup-invite {
   p {
     margin: 16px 0 0;
+  }
+
+  .link {
+    text-align: center;
+    font-size: 1.8em;
+    display: block;
+    padding: 10px 20px;
+    background: @beige-back;
+    border-radius: 5px;
+    word-wrap: break-word;
+    user-select: all;
+  }
+
+  .qr-code {
+    display: block;
+    width: 350px;
+    max-width: ~"calc(min(100%, 50vh))";
+    margin: 0 auto;
   }
 
   .dialog-options {
