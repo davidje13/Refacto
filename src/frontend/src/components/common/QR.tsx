@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, memo } from 'react';
-import { generate, mode, correction } from 'lean-qr';
+import { generate, correction } from 'lean-qr';
 import './QR.less';
 
 interface PropsT {
@@ -12,7 +12,7 @@ export default memo(({ content }: PropsT) => {
   useEffect(() => {
     if (canvasRef.current) {
       try {
-        const code = generate(mode.iso8859_1(content), { minCorrectionLevel: correction.Q });
+        const code = generate(content, { minCorrectionLevel: correction.Q });
         code.toCanvas(canvasRef.current);
       } catch (e) {
         canvasRef.current.width = 1;
