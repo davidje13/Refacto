@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime": "7.12.x",
+    "@babel/runtime": "7.13.x",
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
     "json-immutability-helper": "3.x",
@@ -46,14 +46,14 @@
     "eslint-plugin-eslint-comments": "3.x",
     "flexible-testing-library-react": "1.x",
     "jest": "26.x",
-    "less": "3.x",
+    "less": "4.x",
     "less-loader": "7.x",
     "neutrino": "9.x",
     "neutrinojs-typescript": "1.x",
     "neutrinojs-typescript-eslint": "1.x",
     "react-mock-element": "1.x",
     "timezone-mock": "1.x",
-    "typescript": "4.1.x",
+    "typescript": "4.2.x",
     "webpack": "4.x",
     "webpack-cli": "3.x",
     "webpack-dev-server": "3.x"
