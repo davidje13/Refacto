@@ -2,27 +2,23 @@
   "name": "refacto-e2e",
   "private": true,
   "scripts": {
-    "lint:eslint": "rewrite-tsconfig && eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
-    "lint:tsc": "rewrite-tsconfig && tsc",
+    "lint:eslint": "eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
+    "lint:tsc": "tsc",
     "lint": "npm run lint:eslint --silent && npm run lint:tsc --silent",
     "test": "jest --runInBand"
   },
   "devDependencies": {
     "@babel/preset-env": "7.x",
-    "@neutrinojs/airbnb-base": "9.x",
-    "@neutrinojs/jest": "9.x",
-    "@neutrinojs/node": "9.x",
+    "@babel/preset-typescript": "7.x",
     "@types/jest": "26.x",
     "@types/selenium-webdriver": "4.x",
     "eslint": "7.x",
+    "eslint-config-airbnb-base": "14.x",
     "eslint-plugin-eslint-comments": "3.x",
+    "eslint-plugin-jest": "24.x",
     "jest": "26.x",
-    "neutrino": "9.x",
-    "neutrinojs-typescript": "1.x",
-    "neutrinojs-typescript-eslint": "1.x",
     "selenium-webdriver": "4.0.0-beta.2",
     "typescript": "4.2.x",
-    "webpack": "4.x",
-    "webpack-cli": "3.x"
+    "typescript-eslint-converter": "1.x"
   }
 }
