@@ -28,8 +28,13 @@ export default class ApiRetroArchivesRouter extends WebSocketExpress.Router {
         const id = await retroArchiveService.createArchive(retroId, data);
 
         res.status(200).json({ id });
-      } catch (e) {
-        res.status(400).json({ error: e.message });
+      } catch (e: unknown) {
+        if (!(e instanceof Error)) {
+          process.stderr.write(`Unexpected error: ${e}\n`);
+          res.status(400).json({ error: 'Internal error' });
+        } else {
+          res.status(400).json({ error: e.message });
+        }
       }
     });
 

@@ -4,6 +4,7 @@ import {
   Observable,
   Notification,
   Subject,
+  firstValueFrom,
 } from 'rxjs';
 import {
   map,
@@ -11,7 +12,6 @@ import {
   materialize,
   filter,
   shareReplay,
-  first,
 } from 'rxjs/operators';
 import loadHttp from '../rxjs/loadHttp';
 import CacheMap from '../helpers/CacheMap';
@@ -25,7 +25,7 @@ function ajaxSubject<R>(url: string, mapping: (o: any) => R): StoredT<R> {
   const subject = new BehaviorSubject<R | undefined>(undefined);
   const observable = subject.pipe(
     switchMap((v) => (
-      v ? of(v) : loadHttp(url).pipe(map(mapping))
+      v ? of(v) : loadHttp({ url }).pipe(map(mapping))
     ).pipe(materialize())),
     filter(({ kind }) => (kind !== 'C')),
     shareReplay(1),
@@ -56,8 +56,8 @@ export default class SlugTracker {
   }
 
   public async isAvailable(slug: string): Promise<boolean> {
-    const result = await this.get(slug).pipe(first()).toPromise();
-    if (result.hasValue) {
+    const result = await firstValueFrom(this.get(slug));
+    if (result.kind === 'N') {
       return false;
     }
     if (result.error === 'not found') {

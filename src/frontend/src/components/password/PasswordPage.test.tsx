@@ -1,5 +1,5 @@
 import React from 'react';
-import { first } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import {
   render,
   fireEvent,
@@ -19,7 +19,7 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 const mockRetroTokenService = retroTokenService as unknown as typeof mockApiTypes.retroTokenService;
 
 function getToken(retroId: string): Promise<string> {
-  return retroTokenTracker.get(retroId).pipe(first()).toPromise();
+  return firstValueFrom(retroTokenTracker.get(retroId));
 }
 
 describe('PasswordPage', () => {

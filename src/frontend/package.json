@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/runtime": "7.13.x",
+    "@babel/runtime": "7.15.x",
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
     "json-immutability-helper": "3.x",
@@ -22,7 +22,7 @@
     "react-hook-final-countdown": "1.x",
     "react-modal": "3.x",
     "refacto-entities": "file:../entities",
-    "rxjs": "6.x",
+    "rxjs": "7.x",
     "shared-reducer-frontend": "3.x",
     "wouter": "2.x"
   },
@@ -53,7 +53,7 @@
     "neutrinojs-typescript-eslint": "1.x",
     "react-mock-element": "1.x",
     "timezone-mock": "1.x",
-    "typescript": "4.2.x",
+    "typescript": "4.4.x",
     "webpack": "4.x",
     "webpack-cli": "3.x",
     "webpack-dev-server": "3.x"

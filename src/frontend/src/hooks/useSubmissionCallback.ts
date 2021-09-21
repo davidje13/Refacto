@@ -51,7 +51,11 @@ export default function useSubmissionCallback(
     } catch (err) {
       sendingRef.current = false;
       if (isMounted.current) {
-        setState({ sending: false, error: String(err.message) });
+        if (err instanceof Error) {
+          setState({ sending: false, error: err.message });
+        } else {
+          setState({ sending: false, error: String(err) });
+        }
       }
     }
   }, [sendingRef, setState, isMounted, fn, ...deps]);

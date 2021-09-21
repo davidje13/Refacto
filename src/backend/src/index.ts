@@ -35,9 +35,13 @@ async function refreshApp(): Promise<void> {
       activeApp = newApp;
       activeApp.attach(server);
     }
-  } catch (e) {
+  } catch (e: unknown) {
     process.stderr.write('Failed to start server\n');
-    process.stderr.write(`${e.message}\n`);
+    if (e instanceof Error) {
+      process.stderr.write(`${e.message}\n`);
+    } else {
+      process.stderr.write(`${e}\n`);
+    }
     process.exit(1);
   }
 }

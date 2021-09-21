@@ -25,7 +25,7 @@ npm test
 *Note:* the end-to-end tests will be skipped unless you have installed
 `chromedriver` and/or `geckodriver`. You can find these at:
 
-* <http://chromedriver.chromium.org/downloads>
+* <https://chromedriver.chromium.org/downloads>
 * <https://github.com/mozilla/geckodriver/releases>
 
 After downloading, unpack the files and run:

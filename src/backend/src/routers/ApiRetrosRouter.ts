@@ -92,8 +92,11 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
         const token = await retroAuthService.grantOwnerToken(id);
 
         res.status(200).json({ id, token });
-      } catch (e) {
-        if (e.message === 'URL is already taken') {
+      } catch (e: unknown) {
+        if (!(e instanceof Error)) {
+          process.stderr.write(`Unexpected error: ${e}\n`);
+          res.status(400).json({ error: 'Internal error' });
+        } else if (e.message === 'URL is already taken') {
           res.status(409).json({ error: e.message });
         } else {
           res.status(400).json({ error: e.message });

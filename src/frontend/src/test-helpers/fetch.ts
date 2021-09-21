@@ -1,12 +1,20 @@
 import { Subject as MockSubject } from 'rxjs';
 import type { JsonData } from 'refacto-entities';
 
+interface AjaxConfig {
+  url: string;
+  body?: any;
+  method?: string;
+  headers?: Readonly<Record<string, any>>;
+}
+
 type FetchFn = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
 jest.mock('rxjs/ajax', () => ({
-  ajax: (url: string): MockSubject<unknown> => {
+  ajax: (config: AjaxConfig): MockSubject<unknown> => {
     const subject = new MockSubject();
-    ((global as any).fetch as FetchFn)(url)
+    const init = { method: config.method, headers: config.headers };
+    ((global as any).fetch as FetchFn)(config.url, init)
       .then(async (response) => {
         if (response.status >= 300) {
           subject.error({ status: response.status });

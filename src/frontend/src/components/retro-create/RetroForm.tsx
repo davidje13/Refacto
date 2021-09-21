@@ -85,8 +85,12 @@ export default memo(withUserToken('Register an account to create a retro', ({
       setName(String(json.name || ''));
       setSlug(String(json.url || ''));
       setImportJson(json);
-    } catch (err) {
-      setImportError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setImportError(err.message);
+      } else {
+        setImportError('Internal error');
+      }
     }
   }, [importNonce, setName, setSlug, setImportJson, setImportError]);
 
