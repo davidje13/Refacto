@@ -13,10 +13,11 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - { node: '14', upload: true }
-          - { node: 'latest', upload: false }
+          - { node: '*', upload: false }
     steps:
       - name: Install Node
         uses: actions/setup-node@v2
