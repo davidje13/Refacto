@@ -43,7 +43,7 @@ describe('API retros', () => {
       'nope',
     );
 
-    return app.createServer();
+    return app;
   });
 
   describe('/api/retros', () => {

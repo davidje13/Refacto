@@ -16,7 +16,7 @@ describe('API slugs', () => {
       'mood',
     );
 
-    return app.createServer();
+    return app;
   });
 
   describe('/api/slugs/slug', () => {

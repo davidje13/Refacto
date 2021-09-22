@@ -34,7 +34,7 @@ describe('API retro websocket', () => {
 
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    return app.createServer();
+    return app;
   });
 
   describe('ws://api/retros/retro-id', () => {

@@ -1,15 +1,14 @@
 import http from 'http';
 import util from 'util';
-import type WebSocketExpress from 'websocket-express';
 import { buildMockSsoApp } from 'authentication-backend';
-import appFactory from './app';
+import appFactory, { App } from './app';
 import config from './config';
 
 // This file exists mainly to enable hot module replacement.
 // app.js is the main entry point for the application.
 // (changes to index.js will not trigger HMR)
 
-let activeApp: WebSocketExpress | null = null;
+let activeApp: App | null = null;
 const server = http.createServer();
 
 function startServer(): void {
@@ -27,13 +26,17 @@ async function refreshApp(): Promise<void> {
     const newApp = await appFactory(config); // app import updated by HMR magic
 
     if (latestNonce === currentNonce) {
-      if (activeApp) {
-        activeApp.detach(server);
+      const oldApp = activeApp;
+      if (oldApp) {
+        oldApp.express.detach(server);
       } else {
         startServer();
       }
       activeApp = newApp;
-      activeApp.attach(server);
+      activeApp.express.attach(server);
+      if (oldApp) {
+        await oldApp.close();
+      }
     }
   } catch (e: unknown) {
     process.stderr.write('Failed to start server\n');
@@ -82,6 +85,7 @@ async function shutdown(): Promise<void> {
     util.promisify(server.close.bind(server))(),
     mockSsoServer ? util.promisify(mockSsoServer.close.bind(mockSsoServer))() : undefined,
   ]);
+  await activeApp?.close();
 
   process.stdout.write('Shutdown complete\n');
 }

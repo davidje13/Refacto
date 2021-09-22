@@ -42,7 +42,7 @@ describe('API retro archives', () => {
 
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    return app.createServer();
+    return app;
   });
 
   describe('/api/retros/retro-id/archives', () => {

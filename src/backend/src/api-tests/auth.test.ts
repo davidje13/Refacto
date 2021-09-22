@@ -33,7 +33,7 @@ describe('API auth', () => {
     retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    return app.createServer();
+    return app;
   });
 
   describe('/api/auth/tokens/retro-id/user', () => {

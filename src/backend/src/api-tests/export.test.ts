@@ -41,7 +41,7 @@ describe('API retros', () => {
 
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    return app.createServer();
+    return app;
   });
 
   describe('/api/retros/retro-id/export/json', () => {

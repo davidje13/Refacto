@@ -25,8 +25,14 @@ export interface TestHooks {
   userAuthService: UserAuthService;
 }
 
-interface TestHookWebSocketExpress extends WebSocketExpress {
-  testHooks: TestHooks;
+export class App {
+  /* eslint-disable @typescript-eslint/no-parameter-properties */ // struct-type object
+  constructor(
+    public readonly express: WebSocketExpress,
+    public readonly testHooks: TestHooks,
+    public readonly close: () => void | Promise<void>,
+  ) {}
+  /* eslint-enable @typescript-eslint/no-parameter-properties */
 }
 
 const devMode = process.env.NODE_ENV === 'development';
@@ -67,7 +73,7 @@ function readKey(value: string, length: number): Buffer {
   return buffer;
 }
 
-export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
+export default async (config: ConfigT): Promise<App> => {
   const db = await CollectionStorage.connect(config.db.url);
 
   const hasher = new Hasher(config.password);
@@ -140,13 +146,14 @@ export default async (config: ConfigT): Promise<TestHookWebSocketExpress> => {
   });
   app.use(new StaticRouter(config.forwardHost));
 
-  const testHookApp = app as TestHookWebSocketExpress;
-  testHookApp.testHooks = {
-    retroService,
-    retroArchiveService,
-    retroAuthService,
-    userAuthService,
-  };
-
-  return testHookApp;
+  return new App(
+    app,
+    {
+      retroService,
+      retroArchiveService,
+      retroAuthService,
+      userAuthService,
+    },
+    db.close.bind(db),
+  );
 };
