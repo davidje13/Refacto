@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Install Node
         uses: actions/setup-node@v2
-        with: { node-version: ${{ matrix.node }} }
+        with: { node-version: "${{ matrix.node }}" }
       - name: Install Browsers
         run: |
           apt-get update
