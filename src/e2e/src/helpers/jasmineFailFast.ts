@@ -3,7 +3,7 @@
 // (not using npm package due to stale dependencies)
 
 export default function register(): any {
-  const env = (jasmine as any).getEnv();
+  const env = (global.jasmine as any).getEnv();
 
   const specs: any[] = [];
   const suites: any[] = [];

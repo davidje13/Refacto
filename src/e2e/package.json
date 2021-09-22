@@ -10,13 +10,13 @@
   "devDependencies": {
     "@babel/preset-env": "7.x",
     "@babel/preset-typescript": "7.x",
-    "@types/jest": "26.x",
+    "@types/jest": "27.x",
     "@types/selenium-webdriver": "4.x",
     "eslint": "7.x",
     "eslint-config-airbnb-base": "14.x",
     "eslint-plugin-eslint-comments": "3.x",
     "eslint-plugin-jest": "24.x",
-    "jest": "26.x",
+    "jest": "27.x",
     "selenium-webdriver": "4.0.0-rc-1",
     "typescript": "4.4.x",
     "typescript-eslint-converter": "1.x"
