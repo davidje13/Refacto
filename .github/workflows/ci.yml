@@ -19,12 +19,6 @@ jobs:
           - { node: '14', upload: true }
           - { node: '16', upload: false }
     steps:
-      - name: Install Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-          cache: npm
-          cache-dependency-path: 'src/*/package-lock.json'
       - name: Install Browsers
         run: |
           sudo apt-get update
@@ -39,6 +33,12 @@ jobs:
           install geckodriver /usr/local/bin
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: 'src/*/package-lock.json'
       - name: Build and Test
         run: npm test
       - name: Bundle
