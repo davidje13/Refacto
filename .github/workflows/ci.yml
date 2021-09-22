@@ -1,0 +1,51 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - { node: '14', upload: true }
+          - { node: 'latest', upload: false }
+    steps:
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with: { node-version: ${{ matrix.node }} }
+      - name: Install Browsers
+        run: |
+          apt-get update
+          wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          apt-get install -y ./google-chrome-stable_current_amd64.deb
+          apt-get install -y iceweasel
+          wget --no-verbose https://chromedriver.storage.googleapis.com/94.0.4606.41/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          install chromedriver /usr/local/bin
+          wget --no-verbose https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -O geckodriver-linux64.tar.gz
+          tar -xf geckodriver-linux64.tar.gz
+          install geckodriver /usr/local/bin
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build and Test
+        run: npm test
+      - name: Bundle
+        run: |
+          cd build
+          rm -r node_modules
+          tar -czf ../build.tar.gz .
+      - name: Upload Bundle
+        if: ${{ matrix.upload }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: refacto-node${{ matrix.node }}
+          retention-days: 1
+          if-no-files-found: error
+          path: build.tar.gz
