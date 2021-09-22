@@ -15,7 +15,6 @@
     "eslint": "7.x",
     "eslint-config-airbnb-base": "14.x",
     "eslint-plugin-eslint-comments": "3.x",
-    "eslint-plugin-import": "2.x",
     "eslint-plugin-jest": "24.x",
     "jest": "26.x",
     "selenium-webdriver": "4.0.0-rc-1",

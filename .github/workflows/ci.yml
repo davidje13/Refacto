@@ -19,20 +19,17 @@ jobs:
           - { node: '14', upload: true }
           - { node: '16', upload: false }
     steps:
-      - name: Install Browsers
-        run: |
-          sudo apt-get update
-          wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-          sudo apt-get install -y firefox
-          wget --no-verbose https://chromedriver.storage.googleapis.com/94.0.4606.41/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip
-          install chromedriver /usr/local/bin
-          wget --no-verbose https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -O geckodriver-linux64.tar.gz
-          tar -xf geckodriver-linux64.tar.gz
-          install geckodriver /usr/local/bin
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Clear Incompatible package-lock.json Files
+        if: ${{ matrix.node == '14' }}
+        run: |
+          # Node 14 is having trouble with nested dependencies, likely due to
+          # lockfile v2 not being as backwards-compatible as it is supposed to be.
+          if cat src/*/package-lock.json | grep '"lockfileVersion": 2' >/dev/null; then
+            echo "Lockfile V2 detected; deleting (will pull in latest versions and create new lockfiles for this build)"
+            rm src/*/package-lock.json
+          fi
       - name: Install Node
         uses: actions/setup-node@v2
         with:
