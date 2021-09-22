@@ -17,17 +17,17 @@ jobs:
       matrix:
         include:
           - { node: '14', upload: true }
-          - { node: '*', upload: false }
+          - { node: '16', upload: false }
     steps:
       - name: Install Node
         uses: actions/setup-node@v2
         with: { node-version: "${{ matrix.node }}" }
       - name: Install Browsers
         run: |
-          apt-get update
+          sudo apt-get update
           wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          apt-get install -y ./google-chrome-stable_current_amd64.deb
-          apt-get install -y iceweasel
+          sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
+          sudo apt-get install -y iceweasel
           wget --no-verbose https://chromedriver.storage.googleapis.com/94.0.4606.41/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           install chromedriver /usr/local/bin
