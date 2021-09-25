@@ -29,23 +29,12 @@ jobs:
           install geckodriver /usr/local/bin
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Clear Incompatible package-lock.json Files
-        if: ${{ matrix.node == '14' }}
-        run: |
-          # Node 14 is having trouble with nested dependencies, likely due to
-          # lockfile v2 not being as backwards-compatible as it is supposed to be.
-          if cat src/*/package-lock.json | grep '"lockfileVersion": 2' >/dev/null; then
-            echo "Lockfile V2 detected; deleting (will pull in latest versions and create new lockfiles for this build)"
-            rm src/*/package-lock.json
-          fi
       - name: Install Node
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-          cache-dependency-path: |
-            src/*/package-lock.json
-            src/*/package.json
+          cache-dependency-path: 'src/*/package-lock.json'
       - name: Build and Test
         run: npm test
       - name: Bundle
