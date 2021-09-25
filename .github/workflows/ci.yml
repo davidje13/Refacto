@@ -57,21 +57,29 @@ jobs:
           name: refacto
       - name: Unpack
         run: |
-          ls -al
           tar -xf build.tar.gz
           rm build.tar.gz
       - name: Smoke Test
         run: |
           npm install --production
-          npm start > stdout.log & PID=$!
-          sleep 3
+          ./index.js > stdout.log & PID=$!
+          sleep 5
           if ! grep 'Available at' <stdout.log >/dev/null; then
             cat stdout.log
             echo "Application failed to launch" >&2
             exit 1
           fi
+
+          wget localhost:5000 -O test-index.html
+          if ! grep 'src="/assets/' <test-index.html >/dev/null; then
+            cat stdout.log
+            echo "Unexpected main page response" >&2
+            cat test-index.html
+            exit 1
+          fi;
+
           kill -2 "$PID"
-          sleep 1
+          sleep 5
           if ! grep 'Shutdown complete' <stdout.log >/dev/null; then
             cat stdout.log
             echo "Application failed to shut down" >&2
