@@ -19,6 +19,14 @@ jobs:
           - { node: '14', upload: true }
           - { node: '16', upload: false }
     steps:
+      - name: Install Latest Firefox
+        run: |
+          # The pre-bundled Firefox / geckodriver fails to load the site during testing; update both to latest
+          sudo apt-get update
+          sudo apt-get install -y firefox
+          wget --no-verbose https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -O geckodriver-linux64.tar.gz
+          tar -xf geckodriver-linux64.tar.gz
+          install geckodriver /usr/local/bin
       - name: Checkout
         uses: actions/checkout@v2
       - name: Clear Incompatible package-lock.json Files
