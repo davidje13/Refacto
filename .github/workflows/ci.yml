@@ -103,15 +103,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           NAME=$(date -u '+%Y%m%d-%H%M%S')
+          echo "Creating release $NAME..."
           wget \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
             --post-data="$(jq -n --arg n "$NAME" --arg c "$COMMIT" '{tag_name: $n, target_commitish: $c}')" \
-            '$API_BASE/releases' -O release.json
+            "$API_BASE/releases" -O release.json
+          cat release.json
+          echo "Uploading bundle..."
           UPLOAD_URL=$(jq -r '.upload_url' <release.json | sed 's/{[^}]*}//')
           wget \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
             --header='Content-Type: application/gzip' \
             --post-file='build.tar.gz' \
-            '$UPLOAD_URL' -O release-file.json
+            "$UPLOAD_URL" -O release-file.json
+          cat release-file.json
+          echo "Done."
