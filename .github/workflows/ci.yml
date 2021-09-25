@@ -12,19 +12,13 @@ on:
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          #- { node: '14', upload: '-node14' }
-          - { node: '16', upload: '' }
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: "16"
           cache: npm
           cache-dependency-path: 'src/*/package-lock.json'
       - name: Build and Test
@@ -35,10 +29,9 @@ jobs:
           rm -r node_modules
           tar -czf ../build.tar.gz .
       - name: Upload Bundle
-        if: ${{ matrix.upload != null }}
         uses: actions/upload-artifact@v2
         with:
-          name: refacto${{ matrix.upload }}
+          name: refacto
           retention-days: 1
           if-no-files-found: error
           path: build.tar.gz
