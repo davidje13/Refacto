@@ -85,3 +85,33 @@ jobs:
             echo "Application failed to shut down" >&2
             exit 1
           fi
+
+  create_release:
+    needs:
+      - smoke_test
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' && github.head_ref == null }}
+    steps:
+      - name: Download Bundle
+        uses: actions/download-artifact@v2
+        with:
+          name: refacto
+      - name: Create Release
+        env:
+          API_BASE: 'https://api.github.com/repos/${{ github.repository }}'
+          COMMIT: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NAME=$(date -u '+%Y%m%d-%H%M%S')
+          wget \
+            --header='Accept: application/vnd.github.v3+json' \
+            --header="Authorization: token $GITHUB_TOKEN" \
+            --post-data="$(jq -n --arg n "$NAME" --arg c "$COMMIT" '{tag_name: $n, target_commitish: $c}')" \
+            '$API_BASE/releases' -O release.json
+          UPLOAD_URL=$(jq -r '.upload_url' <release.json | sed 's/{[^}]*}//')
+          wget \
+            --header='Accept: application/vnd.github.v3+json' \
+            --header="Authorization: token $GITHUB_TOKEN" \
+            --header='Content-Type: application/gzip' \
+            --post-file='build.tar.gz' \
+            '$UPLOAD_URL' -O release-file.json
