@@ -34,7 +34,7 @@ jobs:
           cache: npm
           cache-dependency-path: 'src/*/package-lock.json'
       - name: Build and Test
-        run: npm test
+        run: PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 npm test
       - name: Bundle
         run: |
           cd build
