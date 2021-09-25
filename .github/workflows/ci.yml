@@ -16,15 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { node: '14', upload: true }
-          - { node: '16', upload: false }
+          #- { node: '14', upload: '-node14' }
+          - { node: '16', upload: '' }
     steps:
-      - name: Install Latest Geckodriver
-        run: |
-          # The pre-bundled geckodriver fails to load the site during testing; update to latest
-          wget --no-verbose https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -O geckodriver-linux64.tar.gz
-          tar -xf geckodriver-linux64.tar.gz
-          install geckodriver /usr/local/bin
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Node
@@ -41,10 +35,50 @@ jobs:
           rm -r node_modules
           tar -czf ../build.tar.gz .
       - name: Upload Bundle
-        if: ${{ matrix.upload }}
+        if: ${{ matrix.upload != null }}
         uses: actions/upload-artifact@v2
         with:
-          name: refacto-node${{ matrix.node }}
+          name: refacto${{ matrix.upload }}
           retention-days: 1
           if-no-files-found: error
           path: build.tar.gz
+
+  smoke_test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { node: '14' }
+          - { node: '16' }
+    steps:
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Download Bundle
+        uses: actions/download-artifact@v2
+        with:
+          name: refacto
+      - name: Unpack
+        run: |
+          ls -al
+          tar -xf build.tar.gz
+          rm build.tar.gz
+      - name: Smoke Test
+        run: |
+          npm install --production
+          npm start > stdout.log & PID=$!
+          sleep 3
+          if ! grep 'Available at' <stdout.log >/dev/null; then
+            cat stdout.log
+            echo "Application failed to launch" >&2
+            exit 1
+          fi
+          kill -2 "$PID"
+          sleep 1
+          if ! grep 'Shutdown complete' <stdout.log >/dev/null; then
+            cat stdout.log
+            echo "Application failed to shut down" >&2
+            exit 1
+          fi
