@@ -44,6 +44,8 @@ jobs:
           path: build.tar.gz
 
   smoke_test:
+    needs:
+      - build_and_test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
