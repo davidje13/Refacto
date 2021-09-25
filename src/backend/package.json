@@ -7,7 +7,7 @@
     "start": "webpack --watch --mode development",
     "lint:eslint": "rewrite-tsconfig && eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
     "lint:tsc": "rewrite-tsconfig && tsc",
-    "lint": "npm run lint:eslint --silent && npm run lint:tsc --silent",
+    "lint": "npm run lint:eslint --quiet && npm run lint:tsc --quiet",
     "test": "jest"
   },
   "dependencies": {

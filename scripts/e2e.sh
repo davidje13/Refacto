@@ -20,7 +20,7 @@ if [[ -z "$TARGET_HOST" ]]; then
 
   if [[ ! -d "$BUILDDIR/node_modules" ]]; then
     echo "Installing production dependencies...";
-    npm --prefix="$BUILDDIR" install --production --silent;
+    npm --prefix="$BUILDDIR" install --production --quiet;
   fi;
 
   echo 'Using mock authentication provider';
@@ -67,10 +67,10 @@ function launch_e2e() {
   echo "E2E testing in $NAME...";
   if [[ "$PARALLEL_E2E" == 'true' ]]; then
     SELENIUM_BROWSER="$NAME" \
-    npm --prefix="$BASEDIR/src/e2e" test --silent 2>&1 | sed "s/^/$NAME: /" &
+    npm --prefix="$BASEDIR/src/e2e" test --quiet 2>&1 | sed "s/^/$NAME: /" &
     E2E_PIDS="$E2E_PIDS $!";
   else
-    if ! SELENIUM_BROWSER="$NAME" npm --prefix="$BASEDIR/src/e2e" test --silent; then
+    if ! SELENIUM_BROWSER="$NAME" npm --prefix="$BASEDIR/src/e2e" test --quiet; then
       FAILED='true';
     fi;
     E2E_PIDS="-";

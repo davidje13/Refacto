@@ -11,10 +11,10 @@ function launch_build() {
   NAME="$1";
   echo "Building $NAME...";
   if [[ "${PARALLEL_BUILD:-true}" == 'true' ]]; then
-    npm --prefix="$BASEDIR/src/$NAME" run build --silent 2>&1 | sed "s/^/$NAME: /" &
+    npm --prefix="$BASEDIR/src/$NAME" run build --quiet 2>&1 | sed "s/^/$NAME: /" &
     BUILD_PIDS="$BUILD_PIDS $!";
   else
-    npm --prefix="$BASEDIR/src/$NAME" run build --silent;
+    npm --prefix="$BASEDIR/src/$NAME" run build --quiet;
   fi;
 }
 

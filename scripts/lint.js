@@ -13,10 +13,10 @@ const baseDir = path.join(__dirname, '..');
   process.stdout.write('Linting...\n');
 
   const eslintCommand = 'npm';
-  const eslintArgs = ['run', 'lint:eslint', '--silent', '--'];
+  const eslintArgs = ['run', 'lint:eslint', '--quiet', '--'];
 
   const tscCommand = 'npm';
-  const tscArgs = ['run', 'lint:tsc', '--silent', '--'];
+  const tscArgs = ['run', 'lint:tsc', '--quiet', '--'];
 
   if (process.stdout.isTTY) {
     eslintArgs.push('--color');

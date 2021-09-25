@@ -25,7 +25,7 @@ install_subproject() {
     echo;
     echo "Installing $PROJECT dependencies...";
     DISABLE_OPENCOLLECTIVE=1 \
-    npm --prefix="$BASEDIR/src/$PROJECT" install --silent;
+    npm --prefix="$BASEDIR/src/$PROJECT" install --quiet;
   fi;
 }
 

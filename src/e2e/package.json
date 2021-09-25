@@ -4,7 +4,7 @@
   "scripts": {
     "lint:eslint": "eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
     "lint:tsc": "tsc",
-    "lint": "npm run lint:eslint --silent && npm run lint:tsc --silent",
+    "lint": "npm run lint:eslint --quiet && npm run lint:tsc --quiet",
     "test": "jest --runInBand"
   },
   "devDependencies": {
