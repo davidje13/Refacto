@@ -69,7 +69,7 @@ describe('Application', () => {
     mockFetchExpect('/api/auth/tokens/id-foobar')
       .andRespondJsonOk({ retroToken: 'my-token' });
 
-    mockWsExpect('/api/retros/id-foobar', (ws: WebSocket) => {
+    mockWsExpect('/api/retros/id-foobar', (ws) => {
       ws.send(JSON.stringify({ init: retro }));
     });
 

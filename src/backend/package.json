@@ -13,6 +13,7 @@
   "dependencies": {
     "authentication-backend": "1.x",
     "collection-storage": "3.x",
+    "express": "4.x",
     "express-static-gzip": "2.x",
     "ioredis": "4.x",
     "json-immutability-helper": "3.x",
@@ -25,7 +26,8 @@
     "shared-reducer-backend": "3.x",
     "source-map-support": "0.5.x",
     "uuid": "8.x",
-    "websocket-express": "1.x"
+    "websocket-express": "2.x",
+    "ws": "8.x"
   },
   "optionalDependencies": {
     "http-proxy-middleware": "*"

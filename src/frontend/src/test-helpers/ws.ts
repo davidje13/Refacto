@@ -1,6 +1,11 @@
 import BlockingQueue from 'blocking-queue';
 
-type ScriptFn = (socket: WebSocket) => void;
+export interface MockWebSocketConnection {
+  send: (data: string) => void;
+  receive: () => Promise<string>;
+}
+
+type ScriptFn = (socket: MockWebSocketConnection) => void;
 type ListenerFn = (e: Event) => void;
 
 interface Expectation {
@@ -33,13 +38,12 @@ class MockWebSocketClient {
 
     void Promise.resolve().then(() => {
       this.dispatchEvent('open', new CustomEvent('open'));
-      const ws = {
-        send: (data: string): void => {
+      expected.scriptFn({
+        send: (data: string) => {
           this.dispatchEvent('message', new MessageEvent('message', { data }));
         },
-        receive: (): Promise<string> => this.messages.pop(),
-      };
-      expected.scriptFn(ws as unknown as WebSocket);
+        receive: () => this.messages.pop(),
+      });
       this.dispatchEvent('close', new CloseEvent('close'));
     });
   }
@@ -96,7 +100,6 @@ class MockWebSocket {
 
 const mockWebSocket = new MockWebSocket();
 
-// eslint-disable-next-line import/prefer-default-export
 export function mockWsExpect(url: string, scriptFn: ScriptFn): void {
   MockWebSocketClient.expect(url, scriptFn);
 }
