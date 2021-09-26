@@ -119,6 +119,6 @@ jobs:
             --header="Authorization: token $GITHUB_TOKEN" \
             --header='Content-Type: application/gzip' \
             --post-file='build.tar.gz' \
-            "$UPLOAD_URL" -O release-file.json
+            "$UPLOAD_URL?name=build.tar.gz" -O release-file.json
           cat release-file.json
           echo "Done."
