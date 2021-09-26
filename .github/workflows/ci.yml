@@ -91,6 +91,8 @@ jobs:
       - smoke_test
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/master' && github.head_ref == null }}
+    permissions:
+      contents: write
     steps:
       - name: Download Bundle
         uses: actions/download-artifact@v2
