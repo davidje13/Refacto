@@ -104,7 +104,7 @@ jobs:
         run: |
           NAME=$(date -u '+%Y%m%d-%H%M%S')
           echo "Creating release $NAME..."
-          wget \
+          wget -S \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
             --post-data="$(jq -n --arg n "$NAME" --arg c "$COMMIT" '{tag_name: $n, target_commitish: $c}')" \
@@ -112,7 +112,7 @@ jobs:
           cat release.json
           echo "Uploading bundle..."
           UPLOAD_URL=$(jq -r '.upload_url' <release.json | sed 's/{[^}]*}//')
-          wget \
+          wget -S \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
             --header='Content-Type: application/gzip' \
