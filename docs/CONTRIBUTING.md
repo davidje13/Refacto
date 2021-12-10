@@ -164,3 +164,20 @@ installed (see [Running tests](#running-tests)).
 - Jest DOM Matchers <https://github.com/testing-library/jest-dom>
 - Supertest: <https://github.com/visionmedia/supertest> and <https://visionmedia.github.io/superagent/>
 - Selenium: <https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/>
+
+## Troubleshooting
+
+### `error:0308010C:digital envelope routines::unsupported`
+
+This project uses an old version of WebPack which is incompatible with Node 17. You can either
+downgrade to Node 16, or use the following command to build:
+
+```bash
+NODE_OPTIONS=--openssl-legacy-provider npm run build
+```
+
+(same change for `test` etc.)
+
+Specifically, WebPack uses an old OpenSSL algorithm for generating file hashes. This is not a
+security risk, and the resulting executable can (and should) be executed without using the
+legacy provider.

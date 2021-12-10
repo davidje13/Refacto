@@ -3,7 +3,7 @@ before_script:
 - wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 - apt-get install -y ./google-chrome-stable_current_amd64.deb
 - apt-get install -y iceweasel
-- wget --no-verbose https://chromedriver.storage.googleapis.com/94.0.4606.41/chromedriver_linux64.zip
+- wget --no-verbose https://chromedriver.storage.googleapis.com/96.0.4664.45/chromedriver_linux64.zip
 - unzip chromedriver_linux64.zip
 - install chromedriver /usr/local/bin
 - wget --no-verbose https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -O geckodriver-linux64.tar.gz
@@ -15,8 +15,8 @@ node:14:
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
-node:latest:
-  image: node:latest
+node:16:
+  image: node:16
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 

@@ -46,6 +46,7 @@ jobs:
         include:
           - { node: '14' }
           - { node: '16' }
+          - { node: '17' }
     steps:
       - name: Install Node
         uses: actions/setup-node@v2
