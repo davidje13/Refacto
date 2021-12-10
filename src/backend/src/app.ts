@@ -51,6 +51,20 @@ const CSP = [
   "frame-ancestors 'none'",
 ].join('; ');
 
+const PERMISSIONS_POLICY = [
+  'accelerometer=()',
+  'autoplay=()',
+  'camera=()',
+  'geolocation=()',
+  'gyroscope=()',
+  'interest-cohort=()',
+  'magnetometer=()',
+  'microphone=()',
+  'payment=()',
+  'sync-xhr=()',
+  'usb=()',
+].join(', ');
+
 function getHost(req: { hostname: string }): string {
   const raw: string = req.hostname;
   if (raw.includes(':')) {
@@ -109,8 +123,10 @@ export default async (config: ConfigT): Promise<App> => {
     res.header('x-content-type-options', 'nosniff');
     res.header('content-security-policy', CSP
       .replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)));
+    res.header('permissions-policy', PERMISSIONS_POLICY);
     res.header('referrer-policy', 'no-referrer');
     res.header('cross-origin-opener-policy', 'same-origin');
+    res.header('cross-origin-resource-policy', 'same-origin');
     res.header('cross-origin-embedder-policy', 'require-corp');
     next();
   });
@@ -120,6 +136,8 @@ export default async (config: ConfigT): Promise<App> => {
     res.header('expires', '0');
     res.header('pragma', 'no-cache');
     res.removeHeader('content-security-policy');
+    res.removeHeader('permissions-policy');
+    res.removeHeader('referrer-policy');
     res.removeHeader('cross-origin-opener-policy');
     res.removeHeader('cross-origin-embedder-policy');
     next();

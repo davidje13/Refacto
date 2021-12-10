@@ -52,8 +52,7 @@ echo 'Combining output...';
 rm -rf "$BUILDDIR" || true;
 cp -R "$BASEDIR/src/backend/build" "$BUILDDIR";
 rm -rf "$BUILDDIR/static" || true;
-mkdir -p "$BUILDDIR/static";
-cp -R "$BASEDIR/src/frontend/build/"* "$BUILDDIR/static";
+cp -R "$BASEDIR/src/frontend/build" "$BUILDDIR/static";
 chmod +x "$BUILDDIR/index.js";
 
 echo 'Compressing static resources...';
