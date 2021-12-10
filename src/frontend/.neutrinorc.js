@@ -53,7 +53,7 @@ module.exports = {
     copy({
       patterns: [{
         context: 'resources/static',
-        from: '{.*/**/*,*}',
+        from: '{.*/**/*,**/*}',
         to: '.',
       }],
     }),
