@@ -7,10 +7,10 @@ addons:
   chrome: stable
   firefox: latest
 before_install:
-- wget https://chromedriver.storage.googleapis.com/94.0.4606.41/chromedriver_linux64.zip
+- wget https://chromedriver.storage.googleapis.com/100.0.4896.60/chromedriver_linux64.zip
 - unzip chromedriver_linux64.zip
 - sudo install chromedriver /usr/local/bin
-- wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz -O geckodriver-linux64.tar.gz
+- wget https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux32.tar.gz -O geckodriver-linux64.tar.gz
 - tar -xf geckodriver-linux64.tar.gz
 - sudo install geckodriver /usr/local/bin
 env:
