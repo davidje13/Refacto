@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import classNames from 'classnames';
 import './FaceIcon.less';
 
 type Type = 'happy' | 'meh' | 'sad';
@@ -6,6 +7,7 @@ type Type = 'happy' | 'meh' | 'sad';
 interface Theme {
   name: string;
   icons: Record<Type, string>;
+  extraClassName?: string;
 }
 
 const THEMES = new Map<string, Theme>();
@@ -73,6 +75,16 @@ THEMES.set('silly', {
   },
 });
 
+THEMES.set('boring-faces', {
+  name: 'Faces (padded)',
+  icons: {
+    happy: '\uD83D\uDE03',
+    meh: '\uD83E\uDD28',
+    sad: '\uD83D\uDE22',
+  },
+  extraClassName: 'boring',
+});
+
 const DEFAULT_THEME = THEMES.values().next().value;
 
 export function getTheme(name: string): Theme {
@@ -91,8 +103,11 @@ interface PropsT {
 export default memo(({
   theme,
   type,
-}: PropsT) => (
-  <div className="face-icon">
-    { getTheme(theme).icons[type as Type] }
-  </div>
-));
+}: PropsT) => {
+  const { icons, extraClassName } = getTheme(theme);
+  return (
+    <div className={classNames('face-icon', extraClassName)}>
+      { icons[type as Type] }
+    </div>
+  );
+});
