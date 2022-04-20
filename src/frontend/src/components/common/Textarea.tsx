@@ -107,7 +107,9 @@ export default ({
 
   const style: Record<string, string> = {};
   if (sizeToFit) {
-    style.height = `${height.pixels}px`;
+    // +1 as Chrome seems to add an extra pixel now from somewhere when rendering,
+    // so we must avoid the scrollbar appearing (presumably due to some rounding)
+    style.height = `${height.pixels + 1}px`;
   }
 
   const extraClassNames: Record<string, boolean> = {};
