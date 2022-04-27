@@ -171,6 +171,16 @@
 
 .has-focused .mood-item:not(.focused):not(.editing):not(.done) {
   opacity: 0.7;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+
+  .message:not(:disabled)  {
+    cursor: pointer;
+  }
+}
+
+.multi-column.has-focused .mood-item:not(.focused):not(.editing):not(.done):hover {
+  transform: translate(0, -1px);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .archive .mood-item.done {

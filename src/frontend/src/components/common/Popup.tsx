@@ -4,12 +4,15 @@ import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 import useListener from '../../hooks/useListener';
 import './Popup.less';
 
+export interface PopupData {
+  title: string;
+  hideTitle?: boolean;
+  content: React.ReactNode;
+  keys?: Record<string, () => void>;
+}
+
 interface PropsT {
-  data: null | {
-    title: string;
-    content: React.ReactNode;
-    keys?: Record<string, () => void>;
-  };
+  data: PopupData | null;
   onClose?: () => void;
 }
 
@@ -66,7 +69,7 @@ export default ({
       contentRef={setModal}
       aria={{ labelledby: 'modal-heading' }}
     >
-      <h1 id="modal-heading">{ data.title }</h1>
+      <h1 id="modal-heading" className={data.hideTitle ? 'hidden' : ''}>{ data.title }</h1>
       { data.content }
     </Modal>
   );

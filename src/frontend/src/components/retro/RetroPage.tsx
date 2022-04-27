@@ -8,7 +8,7 @@ import type { Retro } from 'refacto-entities';
 import type { RetroPagePropsT } from '../RetroRouter';
 import ArchivePopup from './ArchivePopup';
 import Header from '../common/Header';
-import Popup from '../common/Popup';
+import Popup, { PopupData } from '../common/Popup';
 import useBoundCallback from '../../hooks/useBoundCallback';
 import useWindowSize from '../../hooks/env/useWindowSize';
 import { clearCovered } from '../../actions/retro';
@@ -76,7 +76,7 @@ export default memo(({
     (OPTIONS.enableMobileFacilitation.read(retro.options))
   );
 
-  let archivePopup = null;
+  let archivePopup: PopupData | null = null;
   if (retroDispatch && archivePopupVisible) {
     archivePopup = {
       title: 'Create Archive',
@@ -93,10 +93,11 @@ export default memo(({
     };
   }
 
-  let invitePopup = null;
+  let invitePopup: PopupData | null = null;
   if (invitePopupVisible) {
     invitePopup = {
       title: 'Invite',
+      hideTitle: true,
       content: (<InvitePopup onClose={hideInvitePopup} />),
       keys: {
         Enter: hideInvitePopup,

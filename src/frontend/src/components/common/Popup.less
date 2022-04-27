@@ -6,9 +6,8 @@
   bottom: 0;
   background: rgba(128, 128, 128, 0.5);
   z-index: 10;
-  backdrop-filter: blur(2px);
 
-  animation: 0.2s ease popup-fade-in;
+  animation: 0.2s ease popup-fade-in, 0.05s 0.2s step-end forwards popup-blur-background;
 
   .popup-content {
     position: absolute;
@@ -34,6 +33,11 @@
       font-size: 1.5em;
       text-align: center;
       margin-bottom: 16px;
+
+      &.hidden {
+        /* still visible to screen readers due to aria-labelledby */
+        display: none;
+      }
     }
   }
 }
@@ -41,11 +45,19 @@
 @keyframes popup-fade-in {
   from {
     opacity: 0;
-    backdrop-filter: none;
   }
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes popup-blur-background {
+  from {
+    backdrop-filter: none;
+  }
+
+  to {
     backdrop-filter: blur(2px);
   }
 }
