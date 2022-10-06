@@ -58,8 +58,14 @@ export default memo(({
         selected={theme}
         onChange={setTheme}
       />
-      <span className="fixed-column">{ detail.name }</span>
-      { ` ${detail.icons.happy} ${detail.icons.meh} ${detail.icons.sad}` }
+      <span className="row">
+        <span className="theme-row">
+          <span className="name">{ detail.name }</span>
+          <span className="preview">{ detail.icons.happy }</span>
+          <span className="preview">{ detail.icons.meh }</span>
+          <span className="preview">{ detail.icons.sad }</span>
+        </span>
+      </span>
     </label>
   ));
 
@@ -98,7 +104,9 @@ export default memo(({
       </label>
       <fieldset>
         <legend>Theme</legend>
-        { themeChoices }
+        <div className="picker">
+          { themeChoices }
+        </div>
       </fieldset>
       { sending ? (<div className="sending">&hellip;</div>) : (
         <button type="submit" title="Save Changes">
