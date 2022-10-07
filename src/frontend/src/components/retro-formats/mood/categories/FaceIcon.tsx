@@ -12,6 +12,9 @@ interface Theme {
 
 const THEMES = new Map<string, Theme>();
 
+const FEMALE = '\u200D\u2640';
+const MALE = '\u200D\u2642';
+
 THEMES.set('faces', {
   name: 'Faces',
   icons: {
@@ -21,10 +24,28 @@ THEMES.set('faces', {
   },
 });
 
+THEMES.set('intense', {
+  name: 'Intense',
+  icons: {
+    happy: '\uD83E\uDD29',
+    meh: '\uD83D\uDE11',
+    sad: '\uD83E\uDD2F',
+  },
+});
+
+THEMES.set('symbols', {
+  name: 'Symbols',
+  icons: {
+    happy: '\uD83C\uDF89',
+    meh: '\u2753',
+    sad: '\uD83D\uDCA5',
+  },
+});
+
 THEMES.set('cats', {
   name: 'Cats',
   icons: {
-    happy: '\uD83D\uDE3A',
+    happy: '\uD83D\uDE3B',
     meh: '\uD83D\uDC31',
     sad: '\uD83D\uDE3F',
   },
@@ -72,6 +93,42 @@ THEMES.set('silly', {
     happy: '\uD83E\uDD73',
     meh: '\uD83E\uDD16',
     sad: '\uD83D\uDCA9',
+  },
+});
+
+THEMES.set('body', {
+  name: 'Body Parts',
+  icons: {
+    happy: '\uD83D\uDCAA',
+    meh: '\uD83D\uDC40',
+    sad: '\uD83E\uDEE5',
+  },
+});
+
+THEMES.set('gestures-a', {
+  name: 'Gestures (A)',
+  icons: {
+    happy: `\uD83D\uDE46${FEMALE}`,
+    meh: `\uD83E\uDD37${MALE}`,
+    sad: `\uD83E\uDD26${FEMALE}`,
+  },
+});
+
+THEMES.set('gestures-b', {
+  name: 'Gestures (B)',
+  icons: {
+    happy: `\uD83D\uDE46${MALE}`,
+    meh: `\uD83E\uDD37${FEMALE}`,
+    sad: `\uD83E\uDD26${MALE}`,
+  },
+});
+
+THEMES.set('poses', {
+  name: 'Poses',
+  icons: {
+    happy: '\uD83E\uDD38',
+    meh: '\uD83E\uDDD8',
+    sad: '\uD83E\uDDCE',
   },
 });
 
