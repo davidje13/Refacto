@@ -1,0 +1,47 @@
+@import (reference) '../colours.less';
+
+.picker-input {
+  background: #FFFFFF;
+  overflow-y: auto;
+
+  > label {
+    display: block;
+    position: relative;
+    border-bottom: 1px solid @beige-shadow;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    > span {
+      display: block;
+      cursor: pointer;
+
+      &:hover {
+        background: @beige-back;
+      }
+    }
+
+    /* class name and type included to ensure high specificity */
+    > input.picker-hidden[type='radio'] {
+      margin: 0;
+      position: absolute;
+      left: -10px;
+      width: 1px;
+      height: 100%;
+      box-sizing: border-box;
+
+      &:focus-visible {
+        outline: none;
+
+        + span {
+          box-shadow: inset 0 0 0 2px #005FCC;
+        }
+      }
+
+      &:checked + span {
+        background: hsl(200, 30%, 84%);
+      }
+    }
+  }
+}

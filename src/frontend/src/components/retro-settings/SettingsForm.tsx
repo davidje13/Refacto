@@ -3,6 +3,7 @@ import type { Retro } from 'refacto-entities';
 import { actionsSyncedCallback } from 'shared-reducer-frontend';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import Input from '../common/Input';
+import PickerInput from '../common/PickerInput';
 import SlugEntry from '../retro-create/SlugEntry';
 import Alert from '../common/Alert';
 import useSubmissionCallback from '../../hooks/useSubmissionCallback';
@@ -49,25 +50,17 @@ export default memo(({
     ]);
   }, [name, slug, alwaysShowAddAction, theme, dispatch, onSave]);
 
-  const themeChoices = getThemes().map(([value, detail]) => (
-    <label key={value}>
-      <Input
-        name="theme"
-        type="radio"
-        value={value}
-        selected={theme}
-        onChange={setTheme}
-      />
-      <span className="row">
-        <span className="theme-row">
-          <span className="name">{ detail.name }</span>
-          <span className="preview">{ detail.icons.happy }</span>
-          <span className="preview">{ detail.icons.meh }</span>
-          <span className="preview">{ detail.icons.sad }</span>
-        </span>
+  const themeChoices = getThemes().map(([value, detail]) => ({
+    value,
+    label: (
+      <span className="theme-row">
+        <span className="name">{ detail.name }</span>
+        <span className="preview">{ detail.icons.happy }</span>
+        <span className="preview">{ detail.icons.meh }</span>
+        <span className="preview">{ detail.icons.sad }</span>
       </span>
-    </label>
-  ));
+    ),
+  }));
 
   return (
     <form onSubmit={handleSubmit} className="retro-settings">
@@ -104,9 +97,13 @@ export default memo(({
       </label>
       <fieldset>
         <legend>Theme</legend>
-        <div className="picker">
-          { themeChoices }
-        </div>
+        <PickerInput
+          className="theme"
+          name="theme"
+          value={theme}
+          onChange={setTheme}
+          options={themeChoices}
+        />
       </fieldset>
       { sending ? (<div className="sending">&hellip;</div>) : (
         <button type="submit" title="Save Changes">
