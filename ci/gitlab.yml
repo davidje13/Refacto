@@ -10,13 +10,13 @@ before_script:
 - tar -xf geckodriver-linux64.tar.gz
 - install geckodriver /usr/local/bin
 
-node:14:
-  image: node:14
+node:16:
+  image: node:16
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
-node:16:
-  image: node:16
+node:18:
+  image: node:18
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 

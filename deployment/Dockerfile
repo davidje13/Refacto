@@ -1,4 +1,4 @@
-FROM node:14-alpine AS builder
+FROM node:18-alpine AS builder
 RUN apk add --no-cache \
   g++ \
   git \
@@ -9,7 +9,7 @@ WORKDIR /refacto
 COPY . .
 RUN DISABLE_OPENCOLLECTIVE=1 npm install --production
 
-FROM node:14-alpine
+FROM node:18-alpine
 RUN addgroup -S refacto && adduser -S refacto -G refacto
 WORKDIR /refacto
 COPY --from=builder /refacto /refacto

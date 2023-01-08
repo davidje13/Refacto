@@ -169,15 +169,17 @@ installed (see [Running tests](#running-tests)).
 
 ### `error:0308010C:digital envelope routines::unsupported`
 
-This project uses an old version of WebPack which is incompatible with Node 17. You can either
-downgrade to Node 16, or use the following command to build:
+This project uses an old version of WebPack which is incompatible with Node 17+.
+If you see this error, set the following environment variable for the command you are running:
 
 ```bash
-NODE_OPTIONS=--openssl-legacy-provider npm run build
+NODE_OPTIONS=--openssl-legacy-provider
 ```
-
-(same change for `test` etc.)
 
 Specifically, WebPack uses an old OpenSSL algorithm for generating file hashes. This is not a
 security risk, and the resulting executable can (and should) be executed without using the
 legacy provider.
+
+Fixing this properly requires updating to the next major version of WebPack, which is unfortunately
+not compatible with the NeutrinoJS build system used here. It will be necessary to replace neutrino
+with per-tool configuration to do the update.
