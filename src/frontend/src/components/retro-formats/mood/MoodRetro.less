@@ -93,7 +93,7 @@
   .tab-bar {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2; /* above action item checkboxes */
   }
 
   .tab-item {
@@ -353,7 +353,7 @@
         position: relative;
         margin: -@add-action-max-scroll 0 -8px;
         pointer-events: none;
-        z-index: 2;
+        z-index: 2; /* above face icons */
 
         &::before {
           content: "";

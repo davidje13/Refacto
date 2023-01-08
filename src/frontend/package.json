@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "prebuild": "rewrite-tsconfig",
-    "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server --mode development",
     "lint:eslint": "rewrite-tsconfig && eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
     "lint:tsc": "rewrite-tsconfig && tsc",
     "lint": "npm run lint:eslint --quiet && npm run lint:tsc --quiet",
