@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "strict": true,
-    "importsNotUsedAsValues": "error",
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",

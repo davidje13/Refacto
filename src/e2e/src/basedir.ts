@@ -4,5 +4,7 @@
 // (without this hack, it is impossible to get a consistent
 // relative __dirname in any non-root-directory script)
 
-const basedir = __dirname;
+import { dirname } from 'node:path';
+
+const basedir = dirname(new URL(import.meta.url).pathname);
 export default basedir;

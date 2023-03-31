@@ -22,19 +22,6 @@ Run all tests:
 npm test
 ```
 
-*Note:* the end-to-end tests will be skipped unless you have installed
-`chromedriver` and/or `geckodriver`. You can find these at:
-
-* <https://chromedriver.chromium.org/downloads>
-* <https://github.com/mozilla/geckodriver/releases>
-
-After downloading, unpack the files and run:
-
-```bash
-install chromedriver /usr/local/bin
-install geckodriver /usr/local/bin
-```
-
 ### Testing frontend only
 
 ```bash
@@ -75,8 +62,11 @@ a real client ID), then run the end-to-end tests against that
 deployment:
 
 ```bash
-TARGET_HOST=http://localhost:5000/ npm run test:e2e
+TARGET_HOST=http://localhost:5000/ MODE=dev npm run test:e2e
 ```
+
+(`MODE=dev` disables the download time test, as the site is much
+larger when built in dev mode via `npm start`)
 
 Run end-to-end tests with non-headless browsers:
 

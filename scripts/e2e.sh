@@ -77,29 +77,8 @@ function launch_e2e() {
   fi;
 }
 
-if which chromedriver > /dev/null; then
-  launch_e2e 'chrome';
-else
-  echo 'Skipping E2E testing in Chrome' >&2;
-  echo >&2;
-  echo 'To run end to end tests in Chrome:' >&2;
-  echo '- download chromedriver from http://chromedriver.chromium.org/downloads' >&2;
-  echo '- unzip' >&2;
-  echo '- run command: install chromedriver /usr/local/bin' >&2;
-  echo >&2;
-fi;
-
-if which geckodriver > /dev/null; then
-  launch_e2e 'firefox';
-else
-  echo 'Skipping E2E testing in Firefox' >&2;
-  echo >&2;
-  echo 'To run end to end tests in Firefox:' >&2;
-  echo '- download geckodriver from https://github.com/mozilla/geckodriver/releases' >&2;
-  echo '- extract the file' >&2;
-  echo '- run command: install geckodriver /usr/local/bin' >&2;
-  echo >&2;
-fi;
+launch_e2e 'chrome';
+launch_e2e 'firefox';
 
 if [[ "$E2E_PIDS" != '' && "$E2E_PIDS" != '-' ]]; then
   for PID in $E2E_PIDS; do

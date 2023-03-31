@@ -1,4 +1,3 @@
-import jasmineFailFast from './helpers/jasmineFailFast';
 import buildDriver from './helpers/selenium';
 import { Mbps } from './helpers/downloadProfiler';
 import type Welcome from './pages/Welcome';
@@ -9,12 +8,12 @@ import type Retro from './pages/Retro';
 import type RetroArchiveList from './pages/RetroArchiveList';
 import type RetroArchive from './pages/RetroArchive';
 import SiteMap from './pages/SiteMap';
+import 'lean-test';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
+const timeout = Number(process.env.TEST_TIMEOUT || '30000');
 
-jasmineFailFast(); // https://github.com/facebook/jest/issues/2867
-
-describe('Refacto', () => {
+describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   let user1: SiteMap;
   let user2: SiteMap;
 
@@ -29,7 +28,6 @@ describe('Refacto', () => {
   beforeAll(async () => {
     user1 = new SiteMap(buildDriver());
     user2 = new SiteMap(buildDriver());
-    jest.setTimeout(Number(process.env.TEST_TIMEOUT || '10000'));
 
     userName = `e2e-test-user-${uniqueID}`;
     retroSlug = `e2e-test-retro-${uniqueID}`;
@@ -37,17 +35,19 @@ describe('Refacto', () => {
   });
 
   afterAll(async () => {
-    await Promise.all([user1.quit(), user2.quit()]);
+    await Promise.all([user1?.quit(), user2?.quit()]);
   });
 
   // Tests run sequentially in a single (pair of) browser sessions
 
   it('loads quickly', async () => {
-    const elapsedSeconds = await user1.getDownloadTime(async () => {
+    const estimatedSeconds = await user1.getDownloadTime(async () => {
       welcome = await user1.navigateToWelcome();
     }, Mbps(1.0));
 
-    expect(elapsedSeconds).toBeLessThan(3);
+    if (process.env.MODE !== 'dev') {
+      expect(estimatedSeconds).toBeLessThan(3);
+    }
   });
 
   it('begins on the welcome page', async () => {
@@ -83,7 +83,7 @@ describe('Refacto', () => {
     expect(await retro.getMoodItemLabels()).toEqual(['hurrah', 'yay']);
   });
 
-  describe('second user journey', () => {
+  describe('second user journey', { stopAtFirstFailure: true }, () => {
     let password2: Password;
     let retro2: Retro;
 
@@ -162,7 +162,7 @@ describe('Refacto', () => {
     });
   });
 
-  describe('archiving', () => {
+  describe('archiving', { stopAtFirstFailure: true }, () => {
     let archiveList: RetroArchiveList;
     let archive: RetroArchive;
 
@@ -206,7 +206,7 @@ describe('Refacto', () => {
     });
   });
 
-  describe('retro list', () => {
+  describe('retro list', { stopAtFirstFailure: true }, () => {
     const retroName = 'My Retro Renamed';
     let retroList: RetroList;
 
@@ -232,7 +232,7 @@ describe('Refacto', () => {
     });
   });
 
-  describe('security page', () => {
+  describe('security page', { stopAtFirstFailure: true }, () => {
     it('is accessible from the home page', async () => {
       welcome = await user1.navigateToWelcome();
       const security = await welcome.clickSecurity();

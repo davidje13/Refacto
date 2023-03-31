@@ -1,7 +1,9 @@
 import webdriver, { WebDriver } from 'selenium-webdriver';
-import chrome from 'selenium-webdriver/chrome';
-import firefox from 'selenium-webdriver/firefox';
+import chrome from 'selenium-webdriver/chrome.js';
+import firefox from 'selenium-webdriver/firefox.js';
 import { downloadDir } from './downloads';
+import 'chromedriver';
+import 'geckodriver';
 
 // Set SELENIUM_BROWSER environment variable to switch browser
 
@@ -32,7 +34,7 @@ if (process.env.DOCKER === 'true') {
 }
 
 if (headless) {
-  chromeOptions.headless();
+  chromeOptions.addArguments('--headless=new');
   firefoxOptions.headless();
 }
 

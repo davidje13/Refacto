@@ -1,15 +1,9 @@
-import { promisify } from 'util';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import { readFile, mkdir } from 'node:fs/promises';
 import basedir from '../basedir';
 
-const readFile = promisify(fs.readFile);
-
 export const downloadDir = path.resolve(path.join(basedir, '..', 'build', 'downloads'));
-
-if (!fs.existsSync(downloadDir)) {
-  fs.mkdirSync(downloadDir);
-}
+await mkdir(downloadDir, { recursive: true });
 
 export async function waitForFile(
   name: string,

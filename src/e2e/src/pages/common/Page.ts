@@ -1,4 +1,3 @@
-import url from 'url';
 import {
   By,
   until,
@@ -9,7 +8,10 @@ import customUntil from '../../helpers/customUntil';
 import PageFragment from './PageFragment';
 import Popup from './Popup';
 
-const HOST = process.env.TARGET_HOST!;
+const HOST = process.env.TARGET_HOST ?? '';
+if (!HOST) {
+  throw new Error('Must configure TARGET_HOST');
+}
 
 const untilNoLoaders = customUntil.noElementLocated(By.css('.loader'));
 
@@ -29,7 +31,7 @@ export default abstract class Page extends PageFragment {
     private readonly subpath: string,
     expectedCSS: string,
   ) {
-    super(driver, By.tagName('body'));
+    super(driver, By.css('body'));
     this.untilNavigated = until.elementLocated(By.css(expectedCSS));
   }
 
@@ -68,7 +70,7 @@ export default abstract class Page extends PageFragment {
   }
 
   protected async navigate(): Promise<void> {
-    const path = url.resolve(HOST, this.subpath);
+    const path = new URL(this.subpath, HOST).toString();
     process.stdout.write(`Navigating to ${path}\n`);
     await this.driver.get(path);
   }

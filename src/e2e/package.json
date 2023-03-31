@@ -2,23 +2,20 @@
   "name": "refacto-e2e",
   "private": true,
   "scripts": {
-    "lint:eslint": "eslint --format codeframe --report-unused-disable-directives --max-warnings=0 src",
-    "lint:tsc": "tsc",
-    "lint": "npm run lint:eslint --quiet && npm run lint:tsc --quiet",
-    "test": "jest --runInBand"
+    "format": "prettier --write .",
+    "lint:tsc": "tsc --quiet",
+    "lint:eslint": "true",
+    "lint": "tsc --quiet && prettier --check .",
+    "test": "rm -r build/downloads || true; lean-test --preprocess tsc"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.x",
-    "@babel/preset-typescript": "7.x",
-    "@types/jest": "27.x",
+    "@types/node": "18.x",
     "@types/selenium-webdriver": "4.x",
-    "eslint": "7.x",
-    "eslint-config-airbnb-base": "14.x",
-    "eslint-plugin-eslint-comments": "3.x",
-    "eslint-plugin-jest": "24.x",
-    "jest": "27.x",
-    "selenium-webdriver": "4.0.0-rc-1",
-    "typescript": "4.4.x",
-    "typescript-eslint-converter": "1.x"
+    "chromedriver": "111.x",
+    "geckodriver": "3.2.x",
+    "lean-test": "2.x",
+    "prettier": "2.8.7",
+    "selenium-webdriver": "4.x",
+    "typescript": "5.x"
   }
 }
