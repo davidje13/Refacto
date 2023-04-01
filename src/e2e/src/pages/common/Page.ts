@@ -1,29 +1,24 @@
-import {
-  By,
-  until,
-  WebDriver,
-  WebElementCondition,
-} from 'selenium-webdriver';
-import customUntil from '../../helpers/customUntil';
-import PageFragment from './PageFragment';
-import Popup from './Popup';
+import { By, until, WebDriver, WebElementCondition } from 'selenium-webdriver';
+import { untilNoElementLocated } from '../../helpers/customUntil';
+import { PageFragment } from './PageFragment';
+import { Popup } from './Popup';
 
 const HOST = process.env.TARGET_HOST ?? '';
 if (!HOST) {
   throw new Error('Must configure TARGET_HOST');
 }
 
-const untilNoLoaders = customUntil.noElementLocated(By.css('.loader'));
+const untilNoLoaders = untilNoElementLocated(By.css('.loader'));
 
-async function getDocumentHtml(driver: WebDriver): Promise<string> {
+async function getDocumentHtml(driver: WebDriver) {
   try {
-    return await driver.executeScript('return document.body.outerHTML');
+    return await driver.executeScript<string>('return document.body.outerHTML');
   } catch (e) {
     return 'Failed to get HTML of document';
   }
 }
 
-export default abstract class Page extends PageFragment {
+export abstract class Page extends PageFragment {
   private readonly untilNavigated: WebElementCondition;
 
   protected constructor(
@@ -35,13 +30,13 @@ export default abstract class Page extends PageFragment {
     this.untilNavigated = until.elementLocated(By.css(expectedCSS));
   }
 
-  public async load(): Promise<this> {
+  public async load() {
     await this.navigate();
     await this.wait();
     return this;
   }
 
-  public async wait(): Promise<this> {
+  public async wait() {
     try {
       await this.driver.wait(
         this.untilNavigated,
@@ -65,21 +60,24 @@ export default abstract class Page extends PageFragment {
     return this;
   }
 
-  public getTitle(): Promise<string> {
+  public getTitle() {
     return this.driver.getTitle();
   }
 
-  protected async navigate(): Promise<void> {
+  protected async navigate() {
     const path = new URL(this.subpath, HOST).toString();
     process.stdout.write(`Navigating to ${path}\n`);
     await this.driver.get(path);
   }
 
-  protected getPopup(className: string): Popup {
+  protected getPopup(className: string) {
     return new Popup(this.driver, className);
   }
 
-  protected sendKeys(...keys: Array<string|Promise<string>>): Promise<void> {
-    return this.driver.actions().sendKeys(...keys).perform();
+  protected async sendKeys(...keys: Array<string | Promise<string>>) {
+    await this.driver
+      .actions()
+      .sendKeys(...keys)
+      .perform();
   }
 }

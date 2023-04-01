@@ -1,13 +1,13 @@
-import buildDriver from './helpers/selenium';
-import { Mbps } from './helpers/downloadProfiler';
-import type Welcome from './pages/Welcome';
-import type Password from './pages/Password';
-import type RetroCreate from './pages/RetroCreate';
-import type RetroList from './pages/RetroList';
-import type Retro from './pages/Retro';
-import type RetroArchiveList from './pages/RetroArchiveList';
-import type RetroArchive from './pages/RetroArchive';
-import SiteMap from './pages/SiteMap';
+import { buildDriver } from './helpers/selenium';
+import { getDownloadedBytes, Mbps } from './helpers/downloadProfiler';
+import type { Welcome } from './pages/Welcome';
+import type { Password } from './pages/Password';
+import type { RetroCreate } from './pages/RetroCreate';
+import type { RetroList } from './pages/RetroList';
+import type { Retro } from './pages/Retro';
+import type { RetroArchiveList } from './pages/RetroArchiveList';
+import type { RetroArchive } from './pages/RetroArchive';
+import { SiteMap } from './pages/SiteMap';
 import 'lean-test';
 
 const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
@@ -35,15 +35,16 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   });
 
   afterAll(async () => {
-    await Promise.all([user1?.quit(), user2?.quit()]);
+    await Promise.all([user1?.driver.quit(), user2?.driver.quit()]);
   });
 
   // Tests run sequentially in a single (pair of) browser sessions
 
   it('loads quickly', async () => {
-    const estimatedSeconds = await user1.getDownloadTime(async () => {
+    const bytes = await getDownloadedBytes(user1.driver, async () => {
       welcome = await user1.navigateToWelcome();
-    }, Mbps(1.0));
+    });
+    const estimatedSeconds = bytes / Mbps(1.0);
 
     if (process.env.MODE !== 'dev') {
       expect(estimatedSeconds).toBeLessThan(3);
@@ -103,26 +104,21 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     });
 
     it('synchronises activity (A -> B) in real time', async () => {
-      await retro2.expectChange(
-        () => retro.getActionItemEntry().enter('some action'),
+      await retro2.expectChange(() =>
+        retro.getActionItemEntry().enter('some action'),
       );
 
-      const expectedActions1 = [
-        'some action',
-      ];
+      const expectedActions1 = ['some action'];
       expect(await retro.getActionItemLabels()).toEqual(expectedActions1);
       expect(await retro2.getActionItemLabels()).toEqual(expectedActions1);
     });
 
     it('synchronises activity (B -> A) in real time', async () => {
-      await retro.expectChange(
-        () => retro2.getActionItemEntry().enter('another action'),
+      await retro.expectChange(() =>
+        retro2.getActionItemEntry().enter('another action'),
       );
 
-      const expectedActions2 = [
-        'another action',
-        'some action',
-      ];
+      const expectedActions2 = ['another action', 'some action'];
       expect(await retro.getActionItemLabels()).toEqual(expectedActions2);
       expect(await retro2.getActionItemLabels()).toEqual(expectedActions2);
     });
@@ -141,8 +137,8 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
 
     it('switches URL automatically when slug changes', async () => {
       const newSlug = `${retroSlug}-renamed`;
-      expect(await user1.getCurrentUrl()).toContain(newSlug);
-      expect(await user2.getCurrentUrl()).toContain(newSlug);
+      expect(await user1.driver.getCurrentUrl()).toContain(newSlug);
+      expect(await user2.driver.getCurrentUrl()).toContain(newSlug);
     });
 
     it('maintains connectivity after changing URL', async () => {

@@ -1,145 +1,135 @@
-import {
-  By,
-  Key,
-  WebDriver,
-  WebElementPromise,
-  WebElement,
-} from 'selenium-webdriver';
-import Page from './common/Page';
-import PageFragment from './common/PageFragment';
-import type Popup from './common/Popup';
-import RetroArchiveList from './RetroArchiveList';
-import RetroSettings from './RetroSettings';
-import CBy from '../helpers/customBy';
+import { By, Key, WebDriver } from 'selenium-webdriver';
+import { Page } from './common/Page';
+import { PageFragment } from './common/PageFragment';
+import { RetroArchiveList } from './RetroArchiveList';
+import { RetroSettings } from './RetroSettings';
+import { byButtonText } from '../helpers/customBy';
 
 class ItemEntry extends PageFragment {
-  public setText(value: string): Promise<void> {
+  public setText(value: string) {
     return this.setFormValue(By.css('textarea'), value);
   }
 
-  public submit(): Promise<void> {
+  public submit() {
     return this.click(By.css('button'));
   }
 
-  public async enter(value: string): Promise<void> {
+  public async enter(value: string) {
     await this.setText(value);
     await this.submit();
   }
 }
 
-export default class Retro extends Page {
-  private readonly slug: string;
-
-  public constructor(driver: WebDriver, slug: string) {
+export class Retro extends Page {
+  public constructor(driver: WebDriver, private readonly slug: string) {
     super(driver, `/retros/${slug}`, '.page-retro');
-    this.slug = slug;
   }
 
-  public getNameText(): Promise<string> {
+  public getNameText() {
     return this.getName().getText();
   }
 
-  public getHappyItemEntry(): ItemEntry {
+  public getHappyItemEntry() {
     return new ItemEntry(this.driver, By.css('.happy .text-entry'));
   }
 
-  public getMehItemEntry(): ItemEntry {
+  public getMehItemEntry() {
     return new ItemEntry(this.driver, By.css('.meh .text-entry'));
   }
 
-  public getSadItemEntry(): ItemEntry {
+  public getSadItemEntry() {
     return new ItemEntry(this.driver, By.css('.sad .text-entry'));
   }
 
-  public getActionItemEntry(): ItemEntry {
+  public getActionItemEntry() {
     return new ItemEntry(this.driver, By.css('.actions .text-entry'));
   }
 
-  public async toggleActionItemDone(index: number): Promise<void> {
+  public async toggleActionItemDone(index: number) {
     const items = await this.getActionItems();
     await items[index].findElement(By.css('.toggle-done')).click();
   }
 
   public async getActionItemLabels(): Promise<string[]> {
     const items = await this.getActionItems();
-    return Promise.all(items.map(
-      (item) => item.findElement(By.css('.message')).getText(),
-    ));
+    return Promise.all(
+      items.map((item) => item.findElement(By.css('.message')).getText()),
+    );
   }
 
-  public async focusMoodItem(index: number): Promise<void> {
+  public async focusMoodItem(index: number) {
     const items = await this.getMoodItems();
     await items[index].findElement(By.css('.message')).click();
   }
 
-  public async cancelMoodItem(index: number): Promise<void> {
+  public async cancelMoodItem(index: number) {
     const items = await this.getMoodItems();
     await items[index].findElement(By.css('.cancel')).click();
   }
 
-  public async continueMoodItem(index: number): Promise<void> {
+  public async continueMoodItem(index: number) {
     const items = await this.getMoodItems();
     await items[index].findElement(By.css('.continue')).click();
   }
 
-  public pressReturn(): Promise<void> {
+  public pressReturn() {
     return this.sendKeys(Key.RETURN);
   }
 
-  public pressEscape(): Promise<void> {
+  public pressEscape() {
     return this.sendKeys(Key.ESCAPE);
   }
 
-  public pressLeftArrow(): Promise<void> {
+  public pressLeftArrow() {
     return this.sendKeys(Key.ARROW_LEFT);
   }
 
-  public pressRightArrow(): Promise<void> {
+  public pressRightArrow() {
     return this.sendKeys(Key.ARROW_RIGHT);
   }
 
   public async getMoodItemLabels(): Promise<string[]> {
     const items = await this.getMoodItems();
-    return Promise.all(items.map(
-      (item) => item.findElement(By.css('.message')).getText(),
-    ));
+    return Promise.all(
+      items.map((item) => item.findElement(By.css('.message')).getText()),
+    );
   }
 
-  public getArchivePopup(): Popup {
+  public getArchivePopup() {
     return this.getPopup('popup-archive');
   }
 
-  public async performArchive(): Promise<void> {
+  public async performArchive() {
     const popup = this.getArchivePopup();
-    if (!await popup.exists()) {
-      await this.click(CBy.buttonText('Create Archive'));
+    if (!(await popup.exists())) {
+      await this.click(byButtonText('Create Archive'));
     }
 
     await popup.clickButton('Archive');
     await popup.waitUntilDismissed();
   }
 
-  public async clickViewArchives(): Promise<RetroArchiveList> {
+  public async clickViewArchives() {
     await this.click(By.linkText('Archives'));
 
     return new RetroArchiveList(this.driver, this.slug).wait();
   }
 
-  public async clickSettings(): Promise<RetroSettings> {
+  public async clickSettings() {
     await this.click(By.linkText('Settings'));
 
     return new RetroSettings(this.driver, this.slug).wait();
   }
 
-  private getName(): WebElementPromise {
+  private getName() {
     return this.findElement(By.css('.top-header h1'));
   }
 
-  private getActionItems(): Promise<WebElement[]> {
+  private getActionItems() {
     return this.findElements(By.css('.action-item'));
   }
 
-  private getMoodItems(): Promise<WebElement[]> {
+  private getMoodItems() {
     return this.findElements(By.css('.mood-item'));
   }
 }

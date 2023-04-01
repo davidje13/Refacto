@@ -1,8 +1,11 @@
 import path from 'node:path';
-import { readFile, mkdir } from 'node:fs/promises';
-import basedir from '../basedir';
+import { readFile, mkdir, rm } from 'node:fs/promises';
+import { basedir } from '../basedir';
 
-export const downloadDir = path.resolve(path.join(basedir, '..', 'build', 'downloads'));
+export const downloadDir = path.resolve(
+  path.join(basedir, '..', 'build', 'downloads'),
+);
+await rm(downloadDir, { recursive: true, force: true });
 await mkdir(downloadDir, { recursive: true });
 
 export async function waitForFile(
@@ -14,10 +17,8 @@ export async function waitForFile(
 
   do {
     try {
-      // eslint-disable-next-line no-await-in-loop
       return await readFile(fileName, { encoding: 'utf-8' });
     } catch (e) {
-      // eslint-disable-next-line no-await-in-loop
       await new Promise((res): void => {
         setTimeout(res, 100);
       });

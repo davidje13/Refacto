@@ -1,11 +1,6 @@
-import type {
-  By,
-  WebDriver,
-  WebElementPromise,
-  WebElement,
-} from 'selenium-webdriver';
+import type { By, WebDriver } from 'selenium-webdriver';
 
-export default abstract class PageFragment {
+export abstract class PageFragment {
   protected explicitWaitTimeout = Number(
     process.env.EXPLICIT_WAIT_TIMEOUT || '5000',
   );
@@ -15,11 +10,11 @@ export default abstract class PageFragment {
     protected readonly locator: By,
   ) {}
 
-  public async exists(): Promise<boolean> {
+  public async exists() {
     return (await this.driver.findElements(this.locator)).length > 0;
   }
 
-  public async expectChange(fn: () => (void | Promise<void>)): Promise<void> {
+  public async expectChange(fn: () => void | Promise<void>): Promise<void> {
     const container = await this.container();
     const oldState = await container.getText();
     await fn();
@@ -33,25 +28,25 @@ export default abstract class PageFragment {
     );
   }
 
-  protected container(): WebElementPromise {
+  protected container() {
     return this.driver.findElement(this.locator);
   }
 
-  protected findElement(selector: By): WebElementPromise {
+  protected findElement(selector: By) {
     return this.container().findElement(selector);
   }
 
-  protected findElements(selector: By): Promise<WebElement[]> {
+  protected findElements(selector: By) {
     return this.container().findElements(selector);
   }
 
-  protected async setFormValue(selector: By, value: string): Promise<void> {
+  protected async setFormValue(selector: By, value: string) {
     const element = this.findElement(selector);
     await element.clear();
     await element.sendKeys(value);
   }
 
-  protected click(selector: By): Promise<void> {
+  protected click(selector: By) {
     return this.findElement(selector).click();
   }
 }

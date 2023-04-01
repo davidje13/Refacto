@@ -1,13 +1,8 @@
-import {
-  By,
-  WebDriver,
-  WebElementPromise,
-  WebElement,
-} from 'selenium-webdriver';
-import Page from './common/Page';
-import RetroArchiveList from './RetroArchiveList';
+import { By, WebDriver } from 'selenium-webdriver';
+import { Page } from './common/Page';
+import { RetroArchiveList } from './RetroArchiveList';
 
-export default class RetroArchive extends Page {
+export class RetroArchive extends Page {
   private readonly slug: string;
 
   public constructor(driver: WebDriver, slug: string, archiveId: string) {
@@ -15,28 +10,28 @@ export default class RetroArchive extends Page {
     this.slug = slug;
   }
 
-  public async clickBack(): Promise<RetroArchiveList> {
+  public async clickBack() {
     await this.click(By.linkText('Archives'));
 
     return new RetroArchiveList(this.driver, this.slug).wait();
   }
 
-  public getNameText(): Promise<string> {
+  public getNameText() {
     return this.getName().getText();
   }
 
   public async getActionItemLabels(): Promise<string[]> {
     const items = await this.getActionItems();
-    return Promise.all(items.map(
-      (item) => item.findElement(By.css('.message')).getText(),
-    ));
+    return Promise.all(
+      items.map((item) => item.findElement(By.css('.message')).getText()),
+    );
   }
 
-  private getName(): WebElementPromise {
+  private getName() {
     return this.findElement(By.css('.top-header h1'));
   }
 
-  private getActionItems(): Promise<WebElement[]> {
+  private getActionItems() {
     return this.findElements(By.css('.action-item'));
   }
 }

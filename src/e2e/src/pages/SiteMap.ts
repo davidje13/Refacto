@@ -1,23 +1,20 @@
 import type { WebDriver } from 'selenium-webdriver';
-import WrappedDriver from './common/WrappedDriver';
-import Welcome from './Welcome';
-import Password from './Password';
-import RetroList from './RetroList';
+import { Welcome } from './Welcome';
+import { Password } from './Password';
+import { RetroList } from './RetroList';
 
-export default class SiteMap extends WrappedDriver {
-  public constructor(driver: WebDriver) {
-    super(driver);
-  }
+export class SiteMap {
+  public constructor(public readonly driver: WebDriver) {}
 
-  public navigateToWelcome(): Promise<Welcome> {
+  public navigateToWelcome() {
     return new Welcome(this.driver).load();
   }
 
-  public navigateToRetroList(): Promise<RetroList> {
+  public navigateToRetroList() {
     return new RetroList(this.driver).load();
   }
 
-  public navigateToRetroPassword(slug: string): Promise<Password> {
+  public navigateToRetroPassword(slug: string) {
     return new Password(this.driver, slug).load();
   }
 }

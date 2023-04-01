@@ -1,27 +1,27 @@
 import { By, WebDriver } from 'selenium-webdriver';
-import customUntil from '../../helpers/customUntil';
-import CBy from '../../helpers/customBy';
-import PageFragment from './PageFragment';
+import { untilNoElementLocated } from '../../helpers/customUntil';
+import { byButtonText } from '../../helpers/customBy';
+import { PageFragment } from './PageFragment';
 
-export default class Popup extends PageFragment {
+export class Popup extends PageFragment {
   public constructor(driver: WebDriver, className: string) {
     super(driver, By.css(`.popup-content .${className}`));
   }
 
-  public async clickButton(label: string): Promise<void> {
-    await this.click(CBy.buttonText(label));
+  public async clickButton(label: string) {
+    await this.click(byButtonText(label));
   }
 
-  public async waitUntilDismissed(): Promise<void> {
+  public async waitUntilDismissed() {
     await this.driver.wait(
-      customUntil.noElementLocated(this.locator),
+      untilNoElementLocated(this.locator),
       this.explicitWaitTimeout,
       'Popup did not close',
     );
   }
 
-  public async dismiss(): Promise<void> {
-    if (!await this.exists()) {
+  public async dismiss() {
+    if (!(await this.exists())) {
       return;
     }
 

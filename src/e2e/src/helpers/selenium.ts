@@ -1,4 +1,4 @@
-import webdriver, { WebDriver } from 'selenium-webdriver';
+import webdriver from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome.js';
 import firefox from 'selenium-webdriver/firefox.js';
 import { downloadDir } from './downloads';
@@ -38,10 +38,9 @@ if (headless) {
   firefoxOptions.headless();
 }
 
-export default function buildDriver(): WebDriver {
-  return new webdriver.Builder()
+export const buildDriver = () =>
+  new webdriver.Builder()
     .forBrowser('chrome')
     .setChromeOptions(chromeOptions)
     .setFirefoxOptions(firefoxOptions)
     .build();
-}

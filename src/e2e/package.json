@@ -3,10 +3,10 @@
   "private": true,
   "scripts": {
     "format": "prettier --write .",
-    "lint:tsc": "tsc --quiet",
+    "lint:tsc": "tsc",
     "lint:eslint": "true",
-    "lint": "tsc --quiet && prettier --check .",
-    "test": "rm -r build/downloads || true; lean-test --preprocess tsc"
+    "lint": "tsc && prettier --check .",
+    "test": "lean-test --preprocess tsc"
   },
   "devDependencies": {
     "@types/node": "18.x",

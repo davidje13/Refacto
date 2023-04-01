@@ -6,5 +6,4 @@
 
 import { dirname } from 'node:path';
 
-const basedir = dirname(new URL(import.meta.url).pathname);
-export default basedir;
+export const basedir = dirname(new URL(import.meta.url).pathname);

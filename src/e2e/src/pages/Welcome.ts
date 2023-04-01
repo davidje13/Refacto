@@ -1,38 +1,38 @@
-import { By, WebDriver, WebElementPromise } from 'selenium-webdriver';
-import Page from './common/Page';
-import RetroCreate from './RetroCreate';
-import SsoLogin from './SsoLogin';
-import Security from './Security';
-import RetroList from './RetroList';
+import { By, WebDriver } from 'selenium-webdriver';
+import { Page } from './common/Page';
+import { RetroCreate } from './RetroCreate';
+import { SsoLogin } from './SsoLogin';
+import { Security } from './Security';
+import { RetroList } from './RetroList';
 
-export default class Welcome extends Page {
+export class Welcome extends Page {
   public constructor(driver: WebDriver) {
     super(driver, '/', '.page-welcome');
   }
 
-  public getHeaderText(): Promise<string> {
+  public getHeaderText() {
     return this.getHeader().getText();
   }
 
-  public async clickCreateRetro(): Promise<RetroCreate> {
+  public async clickCreateRetro() {
     await this.click(By.css('.link-create'));
 
     return new RetroCreate(this.driver).wait();
   }
 
-  public async clickListRetros(): Promise<RetroList> {
+  public async clickListRetros() {
     await this.click(By.linkText('My Retros'));
 
     return new RetroList(this.driver).wait();
   }
 
-  public async clickLoginWithGoogle(): Promise<SsoLogin<RetroCreate>> {
+  public async clickLoginWithGoogle() {
     await this.click(By.css('.sso-google'));
 
     return new SsoLogin<RetroCreate>(this.driver, RetroCreate).wait();
   }
 
-  public async clickSecurity(): Promise<Security> {
+  public async clickSecurity() {
     const element = this.findElement(By.css('.link-security'));
     // avoid opening a new tab, as this is difficult to manage
     await this.driver.executeScript(
@@ -44,7 +44,7 @@ export default class Welcome extends Page {
     return new Security(this.driver).wait();
   }
 
-  private getHeader(): WebElementPromise {
+  private getHeader() {
     return this.findElement(By.css('h1'));
   }
 }

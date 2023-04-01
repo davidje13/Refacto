@@ -1,19 +1,17 @@
 import type { WebDriver } from 'selenium-webdriver';
 
-function getResourcesSignature(driver: WebDriver): Promise<unknown> {
-  return driver.executeScript(
+const getResourcesSignature = (driver: WebDriver) =>
+  driver.executeScript<string>(
     'return JSON.stringify(performance.getEntriesByType("resource")[0]);',
   );
-}
 
-function snapshotDownloadedBytes(driver: WebDriver): Promise<number> {
-  return driver.executeScript(`
+const snapshotDownloadedBytes = (driver: WebDriver) =>
+  driver.executeScript<number>(`
     return performance
       .getEntriesByType("resource")
       .map((x) => x.transferSize)
       .reduce((a, b) => (a + b), 0);
   `);
-}
 
 export async function getDownloadedBytes(
   driver: WebDriver,
@@ -34,6 +32,4 @@ export async function getDownloadedBytes(
   return end - begin;
 }
 
-export function Mbps(bits: number): number {
-  return (bits * 1000000) / 8;
-}
+export const Mbps = (bits: number) => (bits * 1000000) / 8;
