@@ -35,7 +35,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   });
 
   afterAll(async () => {
-    await Promise.all([user1?.driver.quit(), user2?.driver.quit()]);
+    await Promise.all([user1?.close(), user2?.close()]);
   });
 
   // Tests run sequentially in a single (pair of) browser sessions

@@ -1,11 +1,15 @@
 {
   "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
+    "lib": ["es2022"],
+    "types": ["node"],
+    "target": "es2022",
     "module": "esnext",
     "moduleResolution": "node",
-    "noEmit": true,
-    "resolveJsonModule": true
+    "noEmit": true
+  },
+  "typeAcquisition": {
+    "enable": false
   },
   "include": ["src"]
 }

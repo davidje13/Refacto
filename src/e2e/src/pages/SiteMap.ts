@@ -17,4 +17,8 @@ export class SiteMap {
   public navigateToRetroPassword(slug: string) {
     return new Password(this.driver, slug).load();
   }
+
+  public close() {
+    return this.driver.quit();
+  }
 }
