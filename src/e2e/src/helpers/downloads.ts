@@ -1,9 +1,10 @@
-import path from 'node:path';
+import { dirname, resolve, join } from 'node:path';
 import { readFile, mkdir, rm } from 'node:fs/promises';
-import { basedir } from '../basedir';
 
-export const downloadDir = path.resolve(
-  path.join(basedir, '..', 'build', 'downloads'),
+export const selfdir = dirname(new URL(import.meta.url).pathname);
+
+export const downloadDir = resolve(
+  join(selfdir, '..', '..', 'build', 'downloads'),
 );
 await rm(downloadDir, { recursive: true, force: true });
 await mkdir(downloadDir, { recursive: true });
@@ -12,7 +13,7 @@ export async function waitForFile(
   name: string,
   timeout: number,
 ): Promise<string> {
-  const fileName = path.join(downloadDir, name);
+  const fileName = join(downloadDir, name);
   const exp = Date.now() + timeout;
 
   do {

@@ -37,7 +37,11 @@ export class RetroArchiveList extends Page {
   }
 
   private async getArchiveItemAtIndex(index: number) {
-    const all = await this.getArchiveItems();
-    return all[index];
+    const items = await this.getArchiveItems();
+    const item = items[index];
+    if (!item) {
+      throw new Error(`No archive item at index ${index}`);
+    }
+    return item;
   }
 }

@@ -9,6 +9,7 @@
     "test": "lean-test --preprocess tsc"
   },
   "devDependencies": {
+    "@tsconfig/strictest": "2.x",
     "@types/node": "18.x",
     "@types/selenium-webdriver": "4.x",
     "chromedriver": "111.x",

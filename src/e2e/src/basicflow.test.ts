@@ -10,8 +10,8 @@ import type { RetroArchive } from './pages/RetroArchive';
 import { SiteMap } from './pages/SiteMap';
 import 'lean-test';
 
-const uniqueID = `${process.env.SELENIUM_BROWSER}-${Date.now()}`;
-const timeout = Number(process.env.TEST_TIMEOUT || '30000');
+const uniqueID = `${process.env['SELENIUM_BROWSER']}-${Date.now()}`;
+const timeout = Number(process.env['TEST_TIMEOUT'] || '30000');
 
 describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   let user1: SiteMap;
@@ -46,7 +46,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     });
     const estimatedSeconds = bytes / Mbps(1.0);
 
-    if (process.env.MODE !== 'dev') {
+    if (process.env['MODE'] !== 'dev') {
       expect(estimatedSeconds).toBeLessThan(3);
     }
   });

@@ -1,12 +1,10 @@
 {
+  "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
-    "strict": true,
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
     "resolveJsonModule": true
   },
   "include": ["src"]

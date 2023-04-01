@@ -3,7 +3,7 @@ import { untilNoElementLocated } from '../../helpers/customUntil';
 import { PageFragment } from './PageFragment';
 import { Popup } from './Popup';
 
-const HOST = process.env.TARGET_HOST ?? '';
+const HOST = process.env['TARGET_HOST'] ?? '';
 if (!HOST) {
   throw new Error('Must configure TARGET_HOST');
 }

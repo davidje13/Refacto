@@ -2,7 +2,7 @@ import type { By, WebDriver } from 'selenium-webdriver';
 
 export abstract class PageFragment {
   protected explicitWaitTimeout = Number(
-    process.env.EXPLICIT_WAIT_TIMEOUT || '5000',
+    process.env['EXPLICIT_WAIT_TIMEOUT'] || '5000',
   );
 
   protected constructor(

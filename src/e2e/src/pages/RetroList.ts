@@ -61,7 +61,11 @@ export class RetroList extends Page {
   }
 
   private async getRetroItemAtIndex(index: number) {
-    const all = await this.getRetroItems();
-    return all[index];
+    const items = await this.getRetroItems();
+    const item = items[index];
+    if (!item) {
+      throw new Error(`No retro item at index ${index}`);
+    }
+    return item;
   }
 }

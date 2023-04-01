@@ -11,7 +11,7 @@ export class SsoLogin<TargetPageT extends Page> extends Page {
     super(driver, '/', 'input[name=identifier]');
   }
 
-  public setIdentifier(identifier: string): Promise<void> {
+  public setIdentifier(identifier: string) {
     return this.setFormValue(By.css('form input[name=identifier]'), identifier);
   }
 

@@ -7,7 +7,7 @@ import 'geckodriver';
 
 // Set SELENIUM_BROWSER environment variable to switch browser
 
-const headless = process.env.HEADLESS !== 'false';
+const headless = process.env['HEADLESS'] !== 'false';
 
 const width = 900; // ensure non-mobile display
 const height = 500;
@@ -27,7 +27,7 @@ const firefoxOptions = new firefox.Options()
   .setPreference('browser.download.useDownloadDir', true)
   .setPreference('browser.helperApps.neverAsk.saveToDisk', 'application/json');
 
-if (process.env.DOCKER === 'true') {
+if (process.env['DOCKER'] === 'true') {
   // Prevent crashes in Docker
   // (see https://developers.google.com/web/tools/puppeteer/troubleshooting#tips)
   chromeOptions.addArguments('disable-dev-shm-usage', 'no-sandbox');

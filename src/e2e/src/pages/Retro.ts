@@ -47,7 +47,11 @@ export class Retro extends Page {
 
   public async toggleActionItemDone(index: number) {
     const items = await this.getActionItems();
-    await items[index].findElement(By.css('.toggle-done')).click();
+    const item = items[index];
+    if (!item) {
+      throw new Error(`No action item at index ${index}`);
+    }
+    await item.findElement(By.css('.toggle-done')).click();
   }
 
   public async getActionItemLabels(): Promise<string[]> {
@@ -58,18 +62,18 @@ export class Retro extends Page {
   }
 
   public async focusMoodItem(index: number) {
-    const items = await this.getMoodItems();
-    await items[index].findElement(By.css('.message')).click();
+    const item = await this.getMoodItemAtIndex(index);
+    await item.findElement(By.css('.message')).click();
   }
 
   public async cancelMoodItem(index: number) {
-    const items = await this.getMoodItems();
-    await items[index].findElement(By.css('.cancel')).click();
+    const item = await this.getMoodItemAtIndex(index);
+    await item.findElement(By.css('.cancel')).click();
   }
 
   public async continueMoodItem(index: number) {
-    const items = await this.getMoodItems();
-    await items[index].findElement(By.css('.continue')).click();
+    const item = await this.getMoodItemAtIndex(index);
+    await item.findElement(By.css('.continue')).click();
   }
 
   public pressReturn() {
@@ -131,5 +135,14 @@ export class Retro extends Page {
 
   private getMoodItems() {
     return this.findElements(By.css('.mood-item'));
+  }
+
+  private async getMoodItemAtIndex(index: number) {
+    const items = await this.getMoodItems();
+    const item = items[index];
+    if (!item) {
+      throw new Error(`No mood item at index ${index}`);
+    }
+    return item;
   }
 }
