@@ -3,7 +3,7 @@ import type {
   RetroItemAttachment,
   RetroData,
   Retro,
-} from 'refacto-entities';
+} from '../shared/api-entities';
 import json from './json';
 
 export const extractRetroItem = json.exactObject<RetroItem>({

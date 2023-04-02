@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
-import { DB, Collection, encryptByRecordWithMasterKey } from 'collection-storage';
-import type { RetroArchive, RetroData, RetroArchiveSummary } from 'refacto-entities';
+import cs from 'collection-storage';
+import type { RetroArchive, RetroData, RetroArchiveSummary } from '../shared/api-entities';
 
-export default class RetroArchiveService {
-  private readonly archiveCollection: Collection<RetroArchive>;
+export class RetroArchiveService {
+  private readonly archiveCollection: cs.Collection<RetroArchive>;
 
-  public constructor(db: DB, encryptionKey: Buffer) {
-    const enc = encryptByRecordWithMasterKey(
+  public constructor(db: cs.DB, encryptionKey: Buffer) {
+    const enc = cs.encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('archive_key'),
       { keyCache: { capacity: 128 } },

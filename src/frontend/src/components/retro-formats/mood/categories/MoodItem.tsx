@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
-import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared/api-entities';
 import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditor from '../ItemEditor';

@@ -1,5 +1,5 @@
 import { Subject as MockSubject } from 'rxjs';
-import type { JsonData } from 'refacto-entities';
+import type { JsonData } from '../shared/api-entities';
 
 interface AjaxConfig {
   url: string;

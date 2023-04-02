@@ -1,4 +1,4 @@
-import type { Retro, RetroData } from 'refacto-entities';
+import type { Retro, RetroData } from '../shared/api-entities';
 
 interface ArchiveOptions {
   retro: Retro;

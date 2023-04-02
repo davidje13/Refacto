@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import classNames from 'classnames';
-import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared/api-entities';
 import ActionSection from './ActionSection';
 import ItemEditor from '../ItemEditor';
 import type LocalDateProvider from '../../../../time/LocalDateProvider';

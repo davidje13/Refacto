@@ -1,6 +1,6 @@
 import React, { useState, useCallback, memo } from 'react';
 import classNames from 'classnames';
-import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared/api-entities';
 import ItemEditor from '../ItemEditor';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';

@@ -1,32 +1,36 @@
 import WebSocketExpress from 'websocket-express';
 import request from 'superwstest';
 import jwt from 'jwt-simple';
-import testConfig from './testConfig';
-import testServerRunner, { addressToString } from './testServerRunner';
-import appFactory from '../app';
+import { testConfig } from './testConfig';
+import { testServerRunner, addressToString } from './testServerRunner';
+import { appFactory } from '../app';
 
 describe('/api/sso/service', () => {
-  const mockSsoServer = testServerRunner(() => {
-    const ssoApp = new WebSocketExpress();
-    ssoApp.use(WebSocketExpress.urlencoded({ extended: false }));
-    ssoApp.get('/', (req, res) => res.json({
+  const MOCK_SSO = testServerRunner(() => {
+    const ssoApp = new WebSocketExpress.default();
+    ssoApp.use(WebSocketExpress.default.urlencoded({ extended: false }));
+    ssoApp.get('/', (_, res) => res.json({
       aud: 'my-client-id',
       sub: 'my-external-id',
     }));
-    return ssoApp.createServer();
+    return { run: ssoApp.createServer() };
   });
 
-  const server = testServerRunner(() => appFactory(testConfig({
-    sso: {
-      google: {
-        clientId: 'my-client-id',
-        authUrl: 'foo',
-        tokenInfoUrl: addressToString(mockSsoServer.address()!),
+  const APP = testServerRunner(async (getTyped) => ({
+    run: await appFactory(testConfig({
+      sso: {
+        google: {
+          clientId: 'my-client-id',
+          authUrl: 'foo',
+          tokenInfoUrl: addressToString(getTyped(MOCK_SSO).server.address()!),
+        },
       },
-    },
-  })));
+    })),
+  }));
 
-  it('returns a signed JWT token with the user ID', async () => {
+  it('returns a signed JWT token with the user ID', async (props) => {
+    const { server } = props.getTyped(APP);
+
     const response = await request(server)
       .post('/api/sso/google')
       .send({ externalToken: 'my-external-token' })

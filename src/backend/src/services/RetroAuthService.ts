@@ -40,7 +40,7 @@ const extractJwtPayload = json.object<JWTPayload>({
   )),
 });
 
-export default class RetroAuthService {
+export class RetroAuthService {
   private readonly retroAuthCollection: Collection<RetroAuth>;
 
   public constructor(

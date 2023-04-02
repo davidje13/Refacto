@@ -1,9 +1,9 @@
 import crypto from 'crypto';
-import { MemoryDb } from 'collection-storage';
+import cs from 'collection-storage';
 import type { Spec } from 'json-immutability-helper';
 import type { ChangeInfo, Subscription } from 'shared-reducer-backend';
-import { makeRetroItem, Retro } from 'refacto-entities';
-import RetroService from './RetroService';
+import { makeRetroItem, type Retro } from '../shared/api-entities';
+import { RetroService } from './RetroService';
 
 interface CapturedChange {
   message: ChangeInfo<Spec<Retro>>;
@@ -48,7 +48,7 @@ describe('RetroService', () => {
   let r2: string;
 
   beforeEach(async () => {
-    const db = new MemoryDb();
+    const db = new cs.MemoryDb();
     service = new RetroService(db, crypto.randomBytes(32));
     r1 = await service.createRetro(
       'me',
@@ -137,14 +137,14 @@ describe('RetroService', () => {
     it('connects to the backing retro data', async () => {
       const retro = subscription.getInitialData();
 
-      expect(retro).not.toBeNull();
+      expect(retro).not(toBeNull());
       expect(retro.name).toEqual('My Second Retro');
     });
 
     it('returns full details', async () => {
       const retro = subscription.getInitialData();
 
-      expect(retro).not.toBeNull();
+      expect(retro).not(toBeNull());
       expect(retro.format).toEqual('other');
       expect(retro.items.length).toEqual(1);
       expect(retro.state).toEqual({ someRetroSpecificState: true });

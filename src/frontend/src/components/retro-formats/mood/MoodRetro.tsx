@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import type { RetroItem } from 'refacto-entities';
+import type { RetroItem } from '../../../shared/api-entities';
 import MoodSection from './categories/MoodSection';
 import ActionsPane from './actions/ActionsPane';
 import TabControl from '../../common/TabControl';

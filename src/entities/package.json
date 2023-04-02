@@ -1,9 +1,0 @@
-{
-  "name": "refacto-entities",
-  "private": true,
-  "dependencies": {
-  },
-  "devDependencies": {
-    "typescript": "4.4.x"
-  }
-}

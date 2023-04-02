@@ -1,6 +1,6 @@
 import React, { useCallback, memo } from 'react';
 import { useLocation } from 'wouter';
-import type { Retro } from 'refacto-entities';
+import type { Retro } from '../../shared/api-entities';
 import type { RetroPagePropsT } from '../RetroRouter';
 import Header from '../common/Header';
 import SettingsForm from './SettingsForm';

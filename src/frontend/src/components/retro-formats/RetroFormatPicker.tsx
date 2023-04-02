@@ -1,5 +1,5 @@
 import React, { Suspense, memo, lazy } from 'react';
-import type { RetroItem } from 'refacto-entities';
+import type { RetroItem } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import UnknownRetro from './unknown/UnknownRetro';
 

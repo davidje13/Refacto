@@ -1,5 +1,5 @@
-import { Router } from 'websocket-express';
-import type { ClientConfig } from 'refacto-entities';
+import WebSocketExpress from 'websocket-express';
+import type { ClientConfig } from '../shared/api-entities';
 import type { AuthenticationClientConfiguration } from 'authentication-backend';
 
 interface ServerConfig {
@@ -9,7 +9,7 @@ interface ServerConfig {
   };
 }
 
-export default class ApiConfigRouter extends Router {
+export class ApiConfigRouter extends WebSocketExpress.Router {
   public constructor(
     serverConfig: ServerConfig,
     ssoClientConfig: AuthenticationClientConfiguration,
@@ -21,6 +21,6 @@ export default class ApiConfigRouter extends Router {
       giphy: (serverConfig.giphy.apiKey !== ''),
     };
 
-    this.get('/', (req, res) => res.json(clientConfig));
+    this.get('/', (_, res) => res.json(clientConfig));
   }
 }

@@ -3,7 +3,7 @@ import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import { act, render, placeholderText } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { makeRetro } from 'refacto-entities';
+import { makeRetro } from '../../shared/api-entities';
 
 import RetroSettingsPage from './RetroSettingsPage';
 

@@ -47,12 +47,12 @@ function getEnv<T>(name: string, def: T): T {
   throw new Error(`Unknown data type for ${name}`);
 }
 
-function makeSnake(name: string): string {
+function makeSnake(name: string) {
   return name.replace(/([a-z])([A-Z])/g, '$1_$2');
 }
 
-function makeCamel(name: string): string {
-  return name.replace(/_(.)/g, (m, c): string => c.toUpperCase());
+function makeCamel(name: string) {
+  return name.replace(/_(.)/g, (_, c): string => c.toUpperCase());
 }
 
 function populateConfig<T>(base: T, env = ''): T {
@@ -74,7 +74,6 @@ function populateConfig<T>(base: T, env = ''): T {
   return result;
 }
 
-const resolvedConfig = populateConfig(baseConfig);
+export const config = populateConfig(baseConfig);
 
-export type ConfigT = typeof resolvedConfig;
-export default resolvedConfig;
+export type ConfigT = typeof config;

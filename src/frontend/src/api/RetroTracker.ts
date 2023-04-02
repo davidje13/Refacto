@@ -1,6 +1,6 @@
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, Spec } from 'json-immutability-helper';
-import type { Retro } from 'refacto-entities';
+import type { Retro } from '../shared/api-entities';
 import SharedReducer, { Dispatch, DispatchSpec } from 'shared-reducer-frontend';
 import SubscriptionTracker from './SubscriptionTracker';
 

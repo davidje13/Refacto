@@ -33,6 +33,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   echo 'Using randomised secrets';
   export $("$BASEDIR/scripts/random-secrets.js" | tee /dev/stderr | xargs);
 
+  # TODO replace express with something else to be able to add --disallow-code-generation-from-strings
   PORT="$PORT" \
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
   SERVER_BIND_ADDRESS="localhost" \
@@ -41,7 +42,6 @@ if [[ -z "$TARGET_HOST" ]]; then
     --disable-proto throw \
     "$BUILDDIR/index.js" \
     > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
-  # TODO: --disallow-code-generation-from-strings (https://github.com/dougwilson/nodejs-depd/issues/41)
 
   trap "kill '$APP_PID'; false" EXIT;
 

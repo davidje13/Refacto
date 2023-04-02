@@ -26,7 +26,7 @@ export interface RetroItem extends UserProvidedRetroItemDetails {
   created: number;
   votes: number;
   doneTime: number;
-  group?: string;
+  group?: string | undefined;
 }
 
 export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {

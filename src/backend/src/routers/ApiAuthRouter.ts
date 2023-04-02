@@ -1,15 +1,11 @@
-import WebSocketExpress, {
-  requireBearerAuth,
-  JWTPayload,
-  getAuthData,
-} from 'websocket-express';
-import type RetroAuthService from '../services/RetroAuthService';
-import type UserAuthService from '../services/UserAuthService';
-import type RetroService from '../services/RetroService';
+import WebSocketExpress from 'websocket-express';
+import type { RetroAuthService } from '../services/RetroAuthService';
+import type { UserAuthService } from '../services/UserAuthService';
+import type { RetroService } from '../services/RetroService';
 
-const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
+const JSON_BODY = WebSocketExpress.default.json({ limit: 4 * 1024 });
 
-export default class ApiAuthRouter extends WebSocketExpress.Router {
+export class ApiAuthRouter extends WebSocketExpress.Router {
   public constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -17,16 +13,16 @@ export default class ApiAuthRouter extends WebSocketExpress.Router {
   ) {
     super();
 
-    const userAuthMiddleware = requireBearerAuth(
+    const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
       'user',
-      (token): (JWTPayload | null) => userAuthService.readAndVerifyToken(token),
+      (token): (WebSocketExpress.JWTPayload | null) => userAuthService.readAndVerifyToken(token),
     );
 
     this.get('/tokens/:retroId/user', userAuthMiddleware, async (req, res) => {
-      const userId = getAuthData(res).sub!;
+      const userId = WebSocketExpress.getAuthData(res).sub!;
       const { retroId } = req.params;
 
-      if (!await retroService.isRetroOwnedByUser(retroId, userId)) {
+      if (!retroId || !await retroService.isRetroOwnedByUser(retroId, userId)) {
         res.status(403).json({ error: 'not retro owner' });
         return;
       }

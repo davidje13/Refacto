@@ -5,7 +5,7 @@ import type {
   RetroArchive,
   RetroSummary,
   ClientConfig,
-} from 'refacto-entities';
+} from '../../shared/api-entities';
 import type { RetroState } from '../RetroTracker';
 import ObservableTracker from '../../rxjs/ObservableTracker';
 import SingleObservableTracker from '../../rxjs/SingleObservableTracker';

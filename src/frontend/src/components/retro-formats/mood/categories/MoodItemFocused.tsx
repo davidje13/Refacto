@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, memo } from 'react';
-import type { RetroItem } from 'refacto-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import VoteCount from './VoteCount';
 import Timer from './timer/Timer';
 import WrappedButton from '../../../common/WrappedButton';

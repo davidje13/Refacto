@@ -1,5 +1,5 @@
 import type { Spec } from 'json-immutability-helper';
-import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from '../shared/api-entities';
 import type { RetroDispatchSpec } from '../api/RetroTracker';
 import uuidv4 from '../helpers/uuidv4';
 

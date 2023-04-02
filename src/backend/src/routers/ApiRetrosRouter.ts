@@ -1,16 +1,10 @@
-import WebSocketExpress, {
-  requireBearerAuth,
-  requireAuthScope,
-  getAuthData,
-  hasAuthScope,
-  JWTPayload,
-} from 'websocket-express';
-import { websocketHandler } from 'shared-reducer-backend';
-import ApiRetroArchivesRouter from './ApiRetroArchivesRouter';
-import type UserAuthService from '../services/UserAuthService';
-import type RetroAuthService from '../services/RetroAuthService';
-import type RetroService from '../services/RetroService';
-import type RetroArchiveService from '../services/RetroArchiveService';
+import WebSocketExpress from 'websocket-express';
+import sharedReducerBackend from 'shared-reducer-backend';
+import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
+import type { UserAuthService } from '../services/UserAuthService';
+import type { RetroAuthService } from '../services/RetroAuthService';
+import type { RetroService } from '../services/RetroService';
+import type { RetroArchiveService } from '../services/RetroArchiveService';
 import { exportRetro, importRetroData, importTimestamp } from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import json from '../helpers/json';
@@ -18,9 +12,9 @@ import json from '../helpers/json';
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
 
-const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
+const JSON_BODY = WebSocketExpress.default.json({ limit: 512 * 1024 });
 
-export default class ApiRetrosRouter extends WebSocketExpress.Router {
+export class ApiRetrosRouter extends WebSocketExpress.Router {
   public constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -29,15 +23,15 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
   ) {
     super();
 
-    const userAuthMiddleware = requireBearerAuth(
+    const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
       'user',
-      (token): (JWTPayload | null) => userAuthService.readAndVerifyToken(token),
+      (token): (WebSocketExpress.JWTPayload | null) => userAuthService.readAndVerifyToken(token),
     );
 
-    const wsHandler = websocketHandler(retroService.retroBroadcaster);
+    const wsHandler = sharedReducerBackend.websocketHandler(retroService.retroBroadcaster);
 
     this.get('/', userAuthMiddleware, async (req, res) => {
-      const userId = getAuthData(res).sub!;
+      const userId = WebSocketExpress.getAuthData(res).sub!;
 
       res.json({
         retros: await retroService.getRetroListForUser(userId),
@@ -46,7 +40,7 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
 
     this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
       try {
-        const userId = getAuthData(res).sub!;
+        const userId = WebSocketExpress.getAuthData(res).sub!;
         const {
           slug,
           name,
@@ -104,20 +98,20 @@ export default class ApiRetrosRouter extends WebSocketExpress.Router {
       }
     });
 
-    this.use('/:retroId', requireBearerAuth(
-      (req) => req.params.retroId,
+    this.use('/:retroId', WebSocketExpress.requireBearerAuth(
+      (req) => req.params['retroId'] ?? '',
       (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
     ));
 
-    this.ws('/:retroId', requireAuthScope('read'), wsHandler(
+    this.ws('/:retroId', WebSocketExpress.requireAuthScope('read'), wsHandler(
       (req) => req.params.retroId,
-      (req, res) => retroService.getPermissions(hasAuthScope(res, 'write')),
+      (_, res) => retroService.getPermissions(WebSocketExpress.hasAuthScope(res, 'write')),
     ));
 
     this.get(
       '/:retroId/export/json',
-      requireAuthScope('read'),
-      requireAuthScope('readArchives'),
+      WebSocketExpress.requireAuthScope('read'),
+      WebSocketExpress.requireAuthScope('readArchives'),
       async (req, res) => {
         const { retroId } = req.params;
 

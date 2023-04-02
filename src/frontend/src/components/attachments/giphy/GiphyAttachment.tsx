@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { RetroItemAttachment } from 'refacto-entities';
+import type { RetroItemAttachment } from '../../../shared/api-entities';
 
 interface PropsT {
   attachment: RetroItemAttachment;

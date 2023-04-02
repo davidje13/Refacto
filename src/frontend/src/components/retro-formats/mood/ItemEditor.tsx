@@ -1,5 +1,5 @@
 import React, { useCallback, memo } from 'react';
-import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from '../../../shared/api-entities';
 import ExpandingTextEntry from '../../common/ExpandingTextEntry';
 import WrappedButton from '../../common/WrappedButton';
 import Attachment from '../../attachments/Attachment';

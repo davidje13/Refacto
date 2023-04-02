@@ -1,21 +1,21 @@
-import WebSocketExpress, { requireAuthScope } from 'websocket-express';
-import type RetroArchiveService from '../services/RetroArchiveService';
+import WebSocketExpress from 'websocket-express';
+import type { RetroArchiveService } from '../services/RetroArchiveService';
 import { extractRetroData } from '../helpers/jsonParsers';
 
-const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
+const JSON_BODY = WebSocketExpress.default.json({ limit: 512 * 1024 });
 
-export default class ApiRetroArchivesRouter extends WebSocketExpress.Router {
+export class ApiRetroArchivesRouter extends WebSocketExpress.Router {
   public constructor(retroArchiveService: RetroArchiveService) {
     super({ mergeParams: true });
 
-    this.get('/', requireAuthScope('readArchives'), async (req, res) => {
+    this.get('/', WebSocketExpress.requireAuthScope('readArchives'), async (req, res) => {
       const { retroId } = req.params;
 
       const archives = await retroArchiveService.getRetroArchiveSummaries(retroId);
       res.json({ archives });
     });
 
-    this.post('/', requireAuthScope('write'), JSON_BODY, async (req, res) => {
+    this.post('/', WebSocketExpress.requireAuthScope('write'), JSON_BODY, async (req, res) => {
       try {
         const { retroId } = req.params;
         const data = extractRetroData(req.body);
@@ -38,7 +38,7 @@ export default class ApiRetroArchivesRouter extends WebSocketExpress.Router {
       }
     });
 
-    this.get('/:archiveId', requireAuthScope('readArchives'), async (req, res) => {
+    this.get('/:archiveId', WebSocketExpress.requireAuthScope('readArchives'), async (req, res) => {
       const { retroId, archiveId } = req.params;
 
       const archive = await retroArchiveService

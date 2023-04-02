@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, text } from 'flexible-testing-library-react';
-import { makeRetroItem } from 'refacto-entities';
+import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
 import ActionItem from './ActionItem';

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
-import type { JsonData } from 'refacto-entities';
+import type { JsonData } from '../../shared/api-entities';
 import Input from '../common/Input';
 import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
 import Alert from '../common/Alert';

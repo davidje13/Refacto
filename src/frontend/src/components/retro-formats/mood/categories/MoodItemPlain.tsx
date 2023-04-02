@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import classNames from 'classnames';
-import type { RetroItem } from 'refacto-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import VoteCount from './VoteCount';
 import WrappedButton from '../../../common/WrappedButton';
 import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';

@@ -8,7 +8,7 @@ import {
   RenderResult,
   getBy,
 } from 'flexible-testing-library-react';
-import { makeRetro } from 'refacto-entities';
+import { makeRetro } from './shared/api-entities';
 import staticTitleHook, { StaticTitleHook } from './test-helpers/staticTitleHook';
 import { css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';

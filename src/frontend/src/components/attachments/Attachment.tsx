@@ -1,5 +1,5 @@
 import React from 'react';
-import type { RetroItemAttachment } from 'refacto-entities';
+import type { RetroItemAttachment } from '../../shared/api-entities';
 import GiphyAttachment from './giphy/GiphyAttachment';
 
 interface ChildPropsT {

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { RetroArchiveSummary } from 'refacto-entities';
+import type { RetroArchiveSummary } from '../../shared/api-entities';
 import ArchiveLink from './ArchiveLink';
 
 function archiveCreatedComparator(

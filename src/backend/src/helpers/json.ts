@@ -39,10 +39,10 @@ export default {
 
   oneOf: <Ts extends unknown[]>(...options: ObjectMapper<Ts>) => (source: unknown): Ts[number] => {
     let err: unknown = new Error('No matching type');
-    for (let i = 0; i < options.length; i += 1) {
+    for (const option of options) {
       try {
-        return options[i](source);
-      } catch (e: unknown) {
+        return option(source);
+      } catch (e) {
         err = e;
       }
     }

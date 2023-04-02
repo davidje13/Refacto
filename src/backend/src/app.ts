@@ -1,21 +1,21 @@
 import WebSocketExpress from 'websocket-express';
-import CollectionStorage from 'collection-storage';
+import cs from 'collection-storage';
 import Hasher from 'pwd-hasher';
-import { buildAuthenticationBackend } from 'authentication-backend';
-import ApiConfigRouter from './routers/ApiConfigRouter';
-import ApiAuthRouter from './routers/ApiAuthRouter';
-import ApiSlugsRouter from './routers/ApiSlugsRouter';
-import ApiRetrosRouter from './routers/ApiRetrosRouter';
-import ApiPasswordCheckRouter from './routers/ApiPasswordCheckRouter';
-import ApiGiphyRouter from './routers/ApiGiphyRouter';
-import StaticRouter from './routers/StaticRouter';
+import ab from 'authentication-backend';
+import { ApiConfigRouter } from './routers/ApiConfigRouter';
+import { ApiAuthRouter } from './routers/ApiAuthRouter';
+import { ApiSlugsRouter } from './routers/ApiSlugsRouter';
+import { ApiRetrosRouter } from './routers/ApiRetrosRouter';
+import { ApiPasswordCheckRouter } from './routers/ApiPasswordCheckRouter';
+import { ApiGiphyRouter } from './routers/ApiGiphyRouter';
+import { StaticRouter } from './routers/StaticRouter';
 import { TokenManager } from './tokens/TokenManager';
-import PasswordCheckService from './services/PasswordCheckService';
-import GiphyService from './services/GiphyService';
-import RetroService from './services/RetroService';
-import RetroArchiveService from './services/RetroArchiveService';
-import RetroAuthService from './services/RetroAuthService';
-import UserAuthService from './services/UserAuthService';
+import { PasswordCheckService } from './services/PasswordCheckService';
+import { GiphyService } from './services/GiphyService';
+import { RetroService } from './services/RetroService';
+import { RetroArchiveService } from './services/RetroArchiveService';
+import { RetroAuthService } from './services/RetroAuthService';
+import { UserAuthService } from './services/UserAuthService';
 import type { ConfigT } from './config';
 
 export interface TestHooks {
@@ -26,26 +26,22 @@ export interface TestHooks {
 }
 
 export class App {
-  /* eslint-disable @typescript-eslint/no-parameter-properties */ // struct-type object
   constructor(
     public readonly express: WebSocketExpress,
     public readonly testHooks: TestHooks,
     public readonly close: () => void | Promise<void>,
   ) {}
-  /* eslint-enable @typescript-eslint/no-parameter-properties */
 }
 
-const devMode = process.env.NODE_ENV === 'development';
+const devMode = process.env['NODE_ENV'] === 'development';
 
-const CSP_DOMAIN_PLACEHOLDER = /\(domain\)/g;
 const CSP = [
   "base-uri 'self'",
   "default-src 'self'",
   "object-src 'none'",
   `script-src 'self'${devMode ? " 'unsafe-eval'" : ''}`,
   `style-src 'self'${devMode ? " 'unsafe-inline'" : " 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='"}`,
-  // https://github.com/w3c/webappsec-csp/issues/7
-  `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
+  `connect-src 'self'`,
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",
   "frame-ancestors 'none'",
@@ -65,17 +61,6 @@ const PERMISSIONS_POLICY = [
   'usb=()',
 ].join(', ');
 
-function getHost(req: { hostname: string }): string {
-  const raw: string = req.hostname;
-  if (raw.includes(':')) {
-    return raw;
-  }
-  // Bug in express 4.x: hostname does not include port
-  // fixed in 5, but not released yet
-  // https://expressjs.com/en/guide/migrating-5.html#req.host
-  return `${raw}:*`;
-}
-
 function readKey(value: string, length: number): Buffer {
   if (!value) {
     return Buffer.alloc(length);
@@ -87,10 +72,10 @@ function readKey(value: string, length: number): Buffer {
   return buffer;
 }
 
-export default async (config: ConfigT): Promise<App> => {
-  const db = await CollectionStorage.connect(config.db.url);
+export const appFactory = async (config: ConfigT): Promise<App> => {
+  const db = await cs.default.connect(config.db.url);
 
-  const hasher = new Hasher(config.password);
+  const hasher = new Hasher.default(config.password);
   const tokenManager = new TokenManager(config.token);
 
   const encryptionKey = readKey(config.encryption.secretKey, 32);
@@ -103,12 +88,12 @@ export default async (config: ConfigT): Promise<App> => {
   const userAuthService = new UserAuthService(tokenManager);
   await userAuthService.initialise(db);
 
-  const sso = buildAuthenticationBackend(
+  const sso = ab.buildAuthenticationBackend(
     config.sso,
     userAuthService.grantLoginToken,
   );
 
-  const app = new WebSocketExpress();
+  const app = new WebSocketExpress.default();
 
   app.disable('x-powered-by');
   app.enable('case sensitive routing');
@@ -117,12 +102,11 @@ export default async (config: ConfigT): Promise<App> => {
   }
   app.set('shutdown timeout', 5000);
 
-  app.useHTTP((req, res, next) => {
+  app.useHTTP((_, res, next) => {
     res.header('x-frame-options', 'DENY');
     res.header('x-xss-protection', '1; mode=block');
     res.header('x-content-type-options', 'nosniff');
-    res.header('content-security-policy', CSP
-      .replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)));
+    res.header('content-security-policy', CSP);
     res.header('permissions-policy', PERMISSIONS_POLICY);
     res.header('referrer-policy', 'no-referrer');
     res.header('cross-origin-opener-policy', 'same-origin');
@@ -131,7 +115,7 @@ export default async (config: ConfigT): Promise<App> => {
     next();
   });
 
-  app.useHTTP('/api', (req, res, next) => {
+  app.useHTTP('/api', (_, res, next) => {
     res.header('cache-control', 'no-cache, no-store');
     res.header('expires', '0');
     res.header('pragma', 'no-cache');
@@ -159,7 +143,7 @@ export default async (config: ConfigT): Promise<App> => {
   ));
   app.use('/api/password-check', new ApiPasswordCheckRouter(passwordCheckService));
   app.use('/api/giphy', new ApiGiphyRouter(giphyService));
-  app.useHTTP('/api', (req, res) => {
+  app.useHTTP('/api', (_, res) => {
     res.status(404).send();
   });
   app.use(new StaticRouter(config.forwardHost));

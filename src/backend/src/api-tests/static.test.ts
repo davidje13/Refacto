@@ -1,14 +1,18 @@
 import WebSocketExpress from 'websocket-express';
 import request from 'superwstest';
-import testConfig from './testConfig';
-import testServerRunner, { addressToString } from './testServerRunner';
-import appFactory from '../app';
+import { testConfig } from './testConfig';
+import { testServerRunner, addressToString } from './testServerRunner';
+import { appFactory } from '../app';
 
 describe('API static content', () => {
   describe('Embedded', () => {
-    const server = testServerRunner(() => appFactory(testConfig()));
+    const PROPS = testServerRunner(async () => ({
+      run: await appFactory(testConfig()),
+    }));
 
-    it('responds with index.html for root requests', async () => {
+    it('responds with index.html for root requests', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/')
         .expect(200)
@@ -18,7 +22,9 @@ describe('API static content', () => {
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
 
-    it('responds with requested file for known requests', async () => {
+    it('responds with requested file for known requests', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/example.abc123.js')
         .expect(200)
@@ -27,7 +33,9 @@ describe('API static content', () => {
       expect(response.text).toContain('// Example Versioned Resource');
     });
 
-    it('responds with gzipped files if available', async () => {
+    it('responds with gzipped files if available', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/index-compressed.html')
         .set('Accept-Encoding', 'gzip')
@@ -39,7 +47,9 @@ describe('API static content', () => {
       expect(response.text).toContain('<title>Example Compressed Static Resource</title>');
     });
 
-    it('responds with index.html for all unknown requests', async () => {
+    it('responds with index.html for all unknown requests', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/foobar')
         .expect(200)
@@ -49,7 +59,9 @@ describe('API static content', () => {
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
 
-    it('responds with index.html.gz for unknown requests if available', async () => {
+    it('responds with index.html.gz for unknown requests if available', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/foobar')
         .set('Accept-Encoding', 'gzip')
@@ -61,16 +73,20 @@ describe('API static content', () => {
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
 
-    it('omits Vary: Content-Type for files with no compressed version', async () => {
+    it('omits Vary: Content-Type for files with no compressed version', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/example.abc123.js')
         .expect(200);
 
       const vary = response.header.vary || '';
-      expect(vary).not.toContain('Content-Type');
+      expect(vary).not(toContain('Content-Type'));
     });
 
-    it('adds common headers', async () => {
+    it('adds common headers', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/')
         .expect('X-Frame-Options', 'DENY');
@@ -84,7 +100,9 @@ describe('API static content', () => {
         .expect('X-Frame-Options', 'DENY');
     });
 
-    it('manages cache control', async () => {
+    it('manages cache control', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/')
         .expect('Cache-Control', 'public, max-age=600, stale-if-error=86400')
@@ -101,7 +119,9 @@ describe('API static content', () => {
         .expect('ETag', /.+/);
     });
 
-    it('does not apply within /api', async () => {
+    it('does not apply within /api', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/api/foo')
         .expect(404);
@@ -109,19 +129,23 @@ describe('API static content', () => {
   });
 
   describe('Proxy', () => {
-    const proxyServer = testServerRunner(() => {
-      const proxyApp = new WebSocketExpress();
-      proxyApp.get('/', (req, res) => {
+    const PROXY = testServerRunner(() => {
+      const proxyApp = new WebSocketExpress.default();
+      proxyApp.get('/', (_, res) => {
         res.send('proxied content here');
       });
-      return proxyApp.createServer();
+      return { run: proxyApp.createServer() };
     });
 
-    const server = testServerRunner(() => appFactory(testConfig({
-      forwardHost: addressToString(proxyServer.address()!),
-    })));
+    const PROPS = testServerRunner(async (getTyped) => ({
+      run: await appFactory(testConfig({
+        forwardHost: addressToString(getTyped(PROXY).server.address()!),
+      })),
+    }));
 
-    it('proxies unknown requests to the configured address', async () => {
+    it('proxies unknown requests to the configured address', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       const response = await request(server)
         .get('/')
         .expect(200);
@@ -129,13 +153,17 @@ describe('API static content', () => {
       expect(response.text).toContain('proxied content here');
     });
 
-    it('adds common headers', async () => {
+    it('adds common headers', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/')
         .expect('X-Frame-Options', 'DENY');
     });
 
-    it('does not apply within /api', async () => {
+    it('does not apply within /api', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/api/foo')
         .expect(404);

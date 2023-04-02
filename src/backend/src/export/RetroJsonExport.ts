@@ -5,7 +5,7 @@ import type {
   RetroItem,
   RetroItemAttachment,
   RetroArchive,
-} from 'refacto-entities';
+} from '../shared/api-entities';
 
 export interface RetroItemAttachmentJsonExport {
   type: string;
@@ -15,7 +15,7 @@ export interface RetroItemAttachmentJsonExport {
 export interface RetroItemJsonExport {
   created: string;
   category: string;
-  group?: string;
+  group?: string | undefined;
   message: string;
   votes: number;
   completed?: string;

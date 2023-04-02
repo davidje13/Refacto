@@ -1,4 +1,5 @@
-import { TokenManager, KeyPair } from './TokenManager';
+import { TokenManager, type KeyPair } from './TokenManager';
+import 'lean-test';
 
 const JWT_PATTERN = /^([a-zA-Z0-9_-]+(\.|$)){3}$/;
 
@@ -13,15 +14,15 @@ describe('TokenManager', () => {
 
   describe('generateKeys', () => {
     it('returns keys in ASCII-safe format', () => {
-      expect(keys.privateKey).toEqual(expect.stringMatching(/^[ -~\n]+$/));
-      expect(keys.publicKey).toEqual(expect.stringMatching(/^[ -~\n]+$/));
+      expect(keys.privateKey).toMatch(/^[ -~\n]+$/);
+      expect(keys.publicKey).toMatch(/^[ -~\n]+$/);
     });
 
     it('returns different keys each time', async () => {
       const keys2 = await manager.generateKeys();
 
-      expect(keys.privateKey).not.toEqual(keys2.privateKey);
-      expect(keys.publicKey).not.toEqual(keys2.publicKey);
+      expect(keys.privateKey).not(toEqual(keys2.privateKey));
+      expect(keys.publicKey).not(toEqual(keys2.publicKey));
     });
   });
 
@@ -29,7 +30,7 @@ describe('TokenManager', () => {
     it('generates tokens in JWT format', async () => {
       const token = manager.signData(data, keys.privateKey);
 
-      expect(token).toEqual(expect.stringMatching(JWT_PATTERN));
+      expect(token).toMatch(JWT_PATTERN);
     });
 
     it('produces the same signature for the same input', async () => {
@@ -43,7 +44,7 @@ describe('TokenManager', () => {
       const token1 = manager.signData(data, keys.privateKey);
       const token2 = manager.signData({ foo: 'other' }, keys.privateKey);
 
-      expect(token1).not.toEqual(token2);
+      expect(token1).not(toEqual(token2));
     });
 
     it('produces different signatures for different keys', async () => {
@@ -52,7 +53,7 @@ describe('TokenManager', () => {
       const token1 = manager.signData(data, keys.privateKey);
       const token2 = manager.signData(data, keys2.privateKey);
 
-      expect(token1).not.toEqual(token2);
+      expect(token1).not(toEqual(token2));
     });
 
     it('uses the passphrase to encrypt private keys at rest', async () => {
@@ -83,19 +84,19 @@ describe('TokenManager', () => {
       const token = manager.signData(data, keys.privateKey);
       const extracted = manager.readAndVerifySigned(token, keys2.publicKey);
 
-      expect(extracted).toEqual(null);
+      expect(extracted).toBeNull();
     });
 
     it('returns null if the token is empty', async () => {
       const extracted = manager.readAndVerifySigned('', keys.publicKey);
 
-      expect(extracted).toEqual(null);
+      expect(extracted).toBeNull();
     });
 
     it('returns null if the token is malformed', async () => {
       const extracted = manager.readAndVerifySigned('nope', keys.publicKey);
 
-      expect(extracted).toEqual(null);
+      expect(extracted).toBeNull();
     });
   });
 });

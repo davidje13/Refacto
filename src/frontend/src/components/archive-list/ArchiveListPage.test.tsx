@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { makeRetro } from 'refacto-entities';
+import { makeRetro } from '../../shared/api-entities';
 import { archiveTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
 import { css } from '../../test-helpers/queries';

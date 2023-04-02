@@ -1,4 +1,4 @@
-import type { RetroSummary } from 'refacto-entities';
+import type { RetroSummary } from '../../shared/api-entities';
 import useObservable, { ObservableState } from '../useObservable';
 import { retroListTracker } from '../../api/api';
 

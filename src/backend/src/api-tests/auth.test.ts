@@ -1,8 +1,8 @@
 import request from 'superwstest';
 import jwt from 'jwt-simple';
-import testConfig from './testConfig';
-import testServerRunner from './testServerRunner';
-import appFactory, { TestHooks } from '../app';
+import { testConfig } from './testConfig';
+import { testServerRunner } from './testServerRunner';
+import { appFactory, type TestHooks } from '../app';
 
 function getUserToken(
   { userAuthService }: TestHooks,
@@ -16,11 +16,7 @@ function getUserToken(
 }
 
 describe('API auth', () => {
-  const ownerId = 'my-id';
-  let hooks: TestHooks;
-  let retroId: string;
-
-  const server = testServerRunner(async () => {
+  const PROPS = testServerRunner(async () => {
     const app = await appFactory(testConfig({
       password: {
         workFactor: 3,
@@ -28,16 +24,19 @@ describe('API auth', () => {
       },
     }));
 
-    hooks = app.testHooks;
+    const hooks = app.testHooks;
 
-    retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
+    const ownerId = 'my-id';
+    const retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    return app;
+    return { run: app, hooks, ownerId, retroId };
   });
 
   describe('/api/auth/tokens/retro-id/user', () => {
-    it('responds with a token for the owner user', async () => {
+    it('responds with a token for the owner user', async (props) => {
+      const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
+
       const userToken = getUserToken(hooks, ownerId);
 
       const response = await request(server)
@@ -47,10 +46,12 @@ describe('API auth', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body.retroToken).toBeTruthy();
-      expect(response.body.error).not.toBeTruthy();
+      expect(response.body.error).toBeFalsy();
     });
 
-    it('rejects other users', async () => {
+    it('rejects other users', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+
       const userToken = getUserToken(hooks, 'not-my-id');
 
       const response = await request(server)
@@ -59,17 +60,21 @@ describe('API auth', () => {
         .expect(403)
         .expect('Content-Type', /application\/json/);
 
-      expect(response.body.retroToken).not.toBeTruthy();
+      expect(response.body.retroToken).toBeFalsy();
       expect(response.body.error).toEqual('not retro owner');
     });
 
-    it('responds HTTP Unauthorized if no credentials are given', async () => {
+    it('responds HTTP Unauthorized if no credentials are given', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
       await request(server)
         .get(`/api/auth/tokens/${retroId}/user`)
         .expect(401);
     });
 
-    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
+    it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
       await request(server)
         .get(`/api/auth/tokens/${retroId}/user`)
         .set('Authorization', 'Bearer Foo')
@@ -78,7 +83,9 @@ describe('API auth', () => {
   });
 
   describe('/api/auth/tokens/retro-id', () => {
-    it('responds with a token for the correct password', async () => {
+    it('responds with a token for the correct password', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
       const response = await request(server)
         .post(`/api/auth/tokens/${retroId}`)
         .send({ password: 'password' })
@@ -86,28 +93,34 @@ describe('API auth', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body.retroToken).toBeTruthy();
-      expect(response.body.error).not.toBeTruthy();
+      expect(response.body.error).toBeFalsy();
     });
 
-    it('responds HTTP Bad Request for incorrect password', async () => {
+    it('responds HTTP Bad Request for incorrect password', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
       const response = await request(server)
         .post(`/api/auth/tokens/${retroId}`)
         .send({ password: 'nope' })
         .expect(400)
         .expect('Content-Type', /application\/json/);
 
-      expect(response.body.retroToken).not.toBeTruthy();
+      expect(response.body.retroToken).toBeFalsy();
       expect(response.body.error).toEqual('incorrect password');
     });
 
-    it('responds HTTP Bad Request for unknown retro IDs', async () => {
+    it('responds HTTP Bad Request for unknown retro IDs', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .post('/api/auth/tokens/nope')
         .send({ password: 'anything' })
         .expect(400);
     });
 
-    it('returns a signed JWT token with read/write scope', async () => {
+    it('returns a signed JWT token with read/write scope', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
       const response = await request(server)
         .post(`/api/auth/tokens/${retroId}`)
         .send({ password: 'password' })

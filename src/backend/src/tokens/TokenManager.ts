@@ -1,7 +1,7 @@
-import crypto, { KeyLike } from 'crypto';
-import util from 'util';
+import crypto, { type KeyLike } from 'node:crypto';
+import { promisify } from 'node:util';
 import jwt from 'jwt-simple';
-import type { JsonData } from 'refacto-entities';
+import type { JsonData } from '../shared/api-entities';
 
 export interface KeyPair {
   publicKey: string;
@@ -10,7 +10,7 @@ export interface KeyPair {
 
 type GenerateKeyPairCallback = (err: Error | null, keyPair: KeyPair) => void;
 
-const generateKeyPair = util.promisify(
+const generateKeyPair = promisify(
   (
     type: string,
     options: Record<string, unknown>,

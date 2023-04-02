@@ -1,13 +1,13 @@
 import type { DB } from 'collection-storage';
 import type { JWTPayload } from 'websocket-express';
-import type { JsonData } from 'refacto-entities';
+import type { JsonData } from '../shared/api-entities';
 import type { TokenManager, KeyPair } from '../tokens/TokenManager';
 
 interface StoredKeyPair extends KeyPair {
   id: string;
 }
 
-export default class UserAuthService {
+export class UserAuthService {
   private privateKey?: string;
 
   private publicKey?: string;

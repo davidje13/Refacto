@@ -1,7 +1,7 @@
 import request from 'superwstest';
-import testConfig from './testConfig';
-import testServerRunner from './testServerRunner';
-import appFactory, { TestHooks } from '../app';
+import { testConfig } from './testConfig';
+import { testServerRunner } from './testServerRunner';
+import { appFactory, type TestHooks } from '../app';
 
 function getRetroToken(
   { retroAuthService }: TestHooks,
@@ -17,15 +17,12 @@ function getRetroToken(
 }
 
 describe('API retro websocket', () => {
-  let hooks: TestHooks;
-  let retroId: string;
-
-  const server = testServerRunner(async () => {
+  const PROPS = testServerRunner(async () => {
     const app = await appFactory(testConfig());
 
-    hooks = app.testHooks;
+    const hooks = app.testHooks;
 
-    retroId = await hooks.retroService.createRetro(
+    const retroId = await hooks.retroService.createRetro(
       'nobody',
       'my-retro',
       'My Retro',
@@ -34,11 +31,13 @@ describe('API retro websocket', () => {
 
     await hooks.retroAuthService.setPassword(retroId, 'password');
 
-    return app;
+    return { run: app, hooks, retroId };
   });
 
   describe('ws://api/retros/retro-id', () => {
-    it('sends initial retro data for known retro IDs', async () => {
+    it('sends initial retro data for known retro IDs', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
@@ -48,7 +47,9 @@ describe('API retro websocket', () => {
         .expectClosed();
     });
 
-    it('reflects update requests and persists changes', async () => {
+    it('reflects update requests and persists changes', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
@@ -67,7 +68,9 @@ describe('API retro websocket', () => {
         .expectClosed();
     });
 
-    it('rejects invalid changes', async () => {
+    it('rejects invalid changes', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
@@ -86,14 +89,18 @@ describe('API retro websocket', () => {
         .expectClosed();
     });
 
-    it('closes the connection for incorrect tokens', async () => {
+    it('closes the connection for incorrect tokens', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send('nope')
         .expectClosed();
     });
 
-    it('closes the connection for unknown IDs', async () => {
+    it('closes the connection for unknown IDs', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .ws('/api/retros/nope')
         .send('any-token')

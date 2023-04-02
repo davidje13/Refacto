@@ -17,6 +17,6 @@
     "lean-test": "2.x",
     "prettier": "2.8.7",
     "selenium-webdriver": "4.x",
-    "typescript": "5.x"
+    "typescript": "5.0.x"
   }
 }

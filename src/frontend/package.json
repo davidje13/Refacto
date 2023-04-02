@@ -21,7 +21,6 @@
     "react-hook-awaited": "1.x",
     "react-hook-final-countdown": "1.x",
     "react-modal": "3.x",
-    "refacto-entities": "file:../entities",
     "rxjs": "7.x",
     "shared-reducer-frontend": "3.x",
     "wouter": "2.x"

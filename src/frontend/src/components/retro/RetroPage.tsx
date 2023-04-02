@@ -4,7 +4,7 @@ import React, {
   useRef,
   memo,
 } from 'react';
-import type { Retro } from 'refacto-entities';
+import type { Retro } from '../../shared/api-entities';
 import type { RetroPagePropsT } from '../RetroRouter';
 import ArchivePopup from './ArchivePopup';
 import Header from '../common/Header';

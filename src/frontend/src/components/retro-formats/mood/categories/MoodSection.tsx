@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { RetroItem, UserProvidedRetroItemDetails } from 'refacto-entities';
+import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared/api-entities';
 import FaceIcon from './FaceIcon';
 import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';

@@ -7,6 +7,13 @@ BUILDDIR="$BASEDIR/build";
 
 BUILD_PIDS="";
 
+if ! diff \
+  "$BASEDIR/src/frontend/shared/api-entities.ts" \
+  "$BASEDIR/src/backend/shared/api-entities.ts"; then
+  echo 'Shared entities do not match.';
+  false;
+fi;
+
 function launch_build() {
   NAME="$1";
   echo "Building $NAME...";

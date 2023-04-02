@@ -11,7 +11,7 @@ import {
   useLocation,
   LocationHook,
 } from 'wouter';
-import type { Retro } from 'refacto-entities';
+import type { Retro } from '../shared/api-entities';
 import type { RetroState, RetroDispatch, RetroError } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
 import useNonce from '../hooks/useNonce';

@@ -1,20 +1,9 @@
 import listCommands from 'json-immutability-helper/commands/list';
-import { context, Spec } from 'json-immutability-helper';
+import { context, type Spec } from 'json-immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  DB,
-  Collection,
-  encryptByRecordWithMasterKey,
-  migrate,
-} from 'collection-storage';
-import {
-  Broadcaster,
-  CollectionStorageModel,
-  Permission,
-  ReadOnly,
-  ReadWriteStruct,
-} from 'shared-reducer-backend';
-import type { Retro, RetroSummary } from 'refacto-entities';
+import cs from 'collection-storage';
+import srb, { type Permission } from 'shared-reducer-backend';
+import type { Retro, RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
@@ -36,22 +25,22 @@ function dbErrorMessage(e: any): string {
   return e.message;
 }
 
-export default class RetroService {
-  public readonly retroBroadcaster: Broadcaster<Retro, Spec<Retro>>;
+export class RetroService {
+  public readonly retroBroadcaster: srb.Broadcaster<Retro, Spec<Retro>>;
 
-  private readonly retroCollection: Collection<Retro>;
+  private readonly retroCollection: cs.Collection<Retro>;
 
   public constructor(
-    db: DB,
+    db: cs.DB,
     encryptionKey: Buffer,
   ) {
-    const enc = encryptByRecordWithMasterKey(
+    const enc = cs.encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('retro_key'),
       { keyCache: { capacity: 128 } },
     );
 
-    this.retroCollection = migrate({
+    this.retroCollection = cs.migrate({
       groupStates: (v) => (v || {}),
     }, enc<Retro>()(
       ['items'],
@@ -61,7 +50,7 @@ export default class RetroService {
       }),
     ));
 
-    const model = new CollectionStorageModel(
+    const model = new srb.CollectionStorageModel(
       this.retroCollection,
       'id',
       (x) => {
@@ -73,17 +62,16 @@ export default class RetroService {
       (e) => new Error(dbErrorMessage(e)),
     );
 
-    this.retroBroadcaster = Broadcaster.for<Retro>(model)
+    this.retroBroadcaster = srb.Broadcaster.for<Retro>(model)
       .withReducer<Spec<Retro>>(context.with(listCommands))
       .build();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   public getPermissions(allowWrite: boolean): Permission<Retro, Spec<Retro>> {
     if (allowWrite) {
-      return new ReadWriteStruct(['id', 'ownerId']);
+      return new srb.ReadWriteStruct(['id', 'ownerId']);
     }
-    return ReadOnly;
+    return srb.ReadOnly;
   }
 
   public async getRetroIdForSlug(slug: string): Promise<string | null> {

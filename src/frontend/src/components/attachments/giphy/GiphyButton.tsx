@@ -4,7 +4,7 @@ import React, {
   useCallback,
   memo,
 } from 'react';
-import type { RetroItemAttachment } from 'refacto-entities';
+import type { RetroItemAttachment } from '../../../shared/api-entities';
 import Popup from '../../common/Popup';
 import WrappedButton from '../../common/WrappedButton';
 import useBoundCallback from '../../../hooks/useBoundCallback';

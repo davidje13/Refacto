@@ -1,4 +1,4 @@
-import type { ClientConfig } from 'refacto-entities';
+import type { ClientConfig } from '../../shared/api-entities';
 import useObservable from '../useObservable';
 import { configService } from '../../api/api';
 

@@ -1,13 +1,13 @@
 import WebSocketExpress from 'websocket-express';
 import expressStaticGzip from 'express-static-gzip';
-import path from 'path';
-import basedir from '../basedir';
+import { join } from 'node:path';
+import { basedir } from '../basedir';
 
 const VERSIONED_FILE = /\..{4,}\.(css|js|woff2?)(\.(br|gz))?$/;
 const VERSIONED_CACHE_CONTROL = `public, max-age=${365 * 24 * 60 * 60}, stale-if-error=${365 * 24 * 60 * 60}, immutable`;
 const UNVERSIONED_CACHE_CONTROL = `public, max-age=${10 * 60}, stale-if-error=${24 * 60 * 60}`;
 
-export default class StaticRouter extends WebSocketExpress.Router {
+export class StaticRouter extends WebSocketExpress.Router {
   public constructor(forwardHost: string | null = null) {
     super();
 
@@ -25,7 +25,7 @@ export default class StaticRouter extends WebSocketExpress.Router {
           process.stderr.write(`${e.message}\n`);
         });
     } else {
-      const staticDir = path.join(basedir, 'static');
+      const staticDir = join(basedir, 'static');
 
       // Production mode: all resources are copied into /static
       const staticRouter = expressStaticGzip(staticDir, {

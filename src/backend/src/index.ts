@@ -1,8 +1,8 @@
-import http from 'http';
-import util from 'util';
+import http from 'node:http';
+import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
-import appFactory, { App } from './app';
-import config from './config';
+import { appFactory, App } from './app';
+import { config } from './config';
 
 // This file exists mainly to enable hot module replacement.
 // app.js is the main entry point for the application.
@@ -49,10 +49,10 @@ async function refreshApp(): Promise<void> {
   }
 }
 
-if (module.hot) {
-  // Enable webpack-managed hot reloading of backend sources during development
-  module.hot.accept(['./app', './config'], refreshApp);
-}
+//if (module.hot) { // TODO
+//  // Enable webpack-managed hot reloading of backend sources during development
+//  module.hot.accept(['./app', './config'], refreshApp);
+//}
 
 let mockSsoServer: http.Server | undefined;
 
@@ -69,7 +69,7 @@ if (config.mockSsoPort) {
 }
 
 function getConnectionCount(s: http.Server): Promise<number> {
-  return util.promisify(s.getConnections.bind(s))();
+  return promisify(s.getConnections.bind(s))();
 }
 
 async function shutdown(): Promise<void> {
@@ -82,8 +82,8 @@ async function shutdown(): Promise<void> {
   }
 
   await Promise.all([
-    util.promisify(server.close.bind(server))(),
-    mockSsoServer ? util.promisify(mockSsoServer.close.bind(mockSsoServer))() : undefined,
+    promisify(server.close.bind(server))(),
+    mockSsoServer ? promisify(mockSsoServer.close.bind(mockSsoServer))() : undefined,
   ]);
   await activeApp?.close();
 

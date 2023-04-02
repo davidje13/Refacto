@@ -51,6 +51,6 @@ function deepMerge<T, U>(a: T, b?: U): T & U {
   return r;
 }
 
-export default (
+export const testConfig = (
   overrides: RecursivePartial<ConfigT> = {},
 ): ConfigT => deepMerge(baseTestConfig, overrides);

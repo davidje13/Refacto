@@ -1,13 +1,13 @@
 import crypto from 'crypto';
-import { MemoryDb } from 'collection-storage';
-import RetroArchiveService from './RetroArchiveService';
+import cs from 'collection-storage';
+import { RetroArchiveService } from './RetroArchiveService';
 
 describe('RetroArchiveService', () => {
   let service: RetroArchiveService;
   let a1: string;
 
   beforeEach(async () => {
-    const db = new MemoryDb();
+    const db = new cs.MemoryDb();
     service = new RetroArchiveService(db, crypto.randomBytes(32));
     a1 = await service.createArchive('my-retro-id', { format: 'foo', options: { a: 'x' }, items: [] });
     await service.createArchive('my-retro-id', { format: 'bar', options: {}, items: [] });
@@ -17,9 +17,9 @@ describe('RetroArchiveService', () => {
     it('returns the requested retro archive by ID', async () => {
       const archive = await service.getRetroArchive('my-retro-id', a1);
 
-      expect(archive).not.toBeNull();
+      expect(archive).not(toBeNull());
       expect(archive!.format).toEqual('foo');
-      expect(archive!.options.a).toEqual('x');
+      expect(archive!.options['a']).toEqual('x');
     });
 
     it('returns null if the archive is not in the retro', async () => {

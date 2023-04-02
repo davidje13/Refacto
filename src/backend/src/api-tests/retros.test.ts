@@ -1,7 +1,7 @@
 import request from 'superwstest';
-import testConfig from './testConfig';
-import testServerRunner from './testServerRunner';
-import appFactory, { TestHooks } from '../app';
+import { testConfig } from './testConfig';
+import { testServerRunner } from './testServerRunner';
+import { appFactory, type TestHooks } from '../app';
 
 function getUserToken(
   { userAuthService }: TestHooks,
@@ -15,12 +15,10 @@ function getUserToken(
 }
 
 describe('API retros', () => {
-  let hooks: TestHooks;
-
-  const server = testServerRunner(async () => {
+  const PROPS = testServerRunner(async () => {
     const app = await appFactory(testConfig());
 
-    hooks = app.testHooks;
+    const hooks = app.testHooks;
 
     await hooks.retroService.createRetro(
       'nobody',
@@ -43,11 +41,13 @@ describe('API retros', () => {
       'nope',
     );
 
-    return app;
+    return { run: app, hooks };
   });
 
   describe('/api/retros', () => {
-    it('responds with retros for the user in JSON format', async () => {
+    it('responds with retros for the user in JSON format', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
       const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
@@ -60,13 +60,17 @@ describe('API retros', () => {
       expect(response.body.retros[0].slug).toEqual('my-second-retro');
     });
 
-    it('responds HTTP Unauthorized if no credentials are given', async () => {
+    it('responds HTTP Unauthorized if no credentials are given', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/api/retros')
         .expect(401);
     });
 
-    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
+    it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .get('/api/retros')
         .set('Authorization', 'Bearer Foo')
@@ -75,7 +79,9 @@ describe('API retros', () => {
   });
 
   describe('POST /api/retros', () => {
-    it('creates a new retro', async () => {
+    it('creates a new retro', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
       const slug = 'new-retro';
       const userToken = getUserToken(hooks, 'me');
 
@@ -92,7 +98,9 @@ describe('API retros', () => {
       expect(response.body.token).toBeTruthy();
     });
 
-    it('responds HTTP Bad Request if data is missing', async () => {
+    it('responds HTTP Bad Request if data is missing', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
       const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
@@ -104,7 +112,9 @@ describe('API retros', () => {
       expect(response.body.error).toEqual('Expected string');
     });
 
-    it('responds HTTP Bad Request if data is blank', async () => {
+    it('responds HTTP Bad Request if data is blank', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
       const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
@@ -116,7 +126,9 @@ describe('API retros', () => {
       expect(response.body.error).toEqual('No name given');
     });
 
-    it('responds HTTP Conflict if slug is unavailable', async () => {
+    it('responds HTTP Conflict if slug is unavailable', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
       const userToken = getUserToken(hooks, 'me');
 
       const response = await request(server)
@@ -128,13 +140,17 @@ describe('API retros', () => {
       expect(response.body.error).toEqual('URL is already taken');
     });
 
-    it('responds HTTP Unauthorized if no credentials are given', async () => {
+    it('responds HTTP Unauthorized if no credentials are given', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .post('/api/retros')
         .expect(401);
     });
 
-    it('responds HTTP Unauthorized if credentials are incorrect', async () => {
+    it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
       await request(server)
         .post('/api/retros')
         .set('Authorization', 'Bearer Foo')

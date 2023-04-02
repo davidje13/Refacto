@@ -1,4 +1,6 @@
-import fetch from 'node-fetch';
+// temp workaround to get types for node's native fetch()
+// See https://stackoverflow.com/q/71294230/1180785
+/// <reference lib="dom" />
 
 interface Config {
   baseUrl: string;
@@ -6,7 +8,7 @@ interface Config {
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
 
-export default class PasswordCheckService {
+export class PasswordCheckService {
   private readonly baseUrl: string;
 
   public constructor(config: Config) {

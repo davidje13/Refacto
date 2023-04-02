@@ -1,8 +1,10 @@
-import type { Server } from 'http';
-import type { AddressInfo } from 'net';
+import type { Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import type { TypedParameter } from 'lean-test';
 import { App } from '../app';
 
 type Runnable = Server | App;
+type MaybePromise<T> = T | Promise<T>;
 
 export function addressToString(addr: AddressInfo | string): string {
   if (typeof addr === 'string') {
@@ -13,38 +15,23 @@ export function addressToString(addr: AddressInfo | string): string {
   return `http://${host}:${port}`;
 }
 
-export default (
-  serverFn: () => (Runnable | Promise<Runnable>),
-): Server => {
-  let server: Server | null;
-  let close: (() => void | Promise<void>) | null;
+export const testServerRunner = <T extends { run: Runnable }>(
+  serverFn: (getTyped: <T>(key: TypedParameter<T>) => T) => MaybePromise<T>,
+) => beforeEach<{ server: Server } & Omit<T, 'run'>>(async ({ setParameter, getTyped }) => {
+  let server: Server;
+  const { run, ...extras } = await serverFn(getTyped);
+  if (run instanceof App) {
+    server = run.express.createServer();
+  } else {
+    server = run;
+  }
+  setParameter({ ...extras, server });
+  await new Promise<void>((resolve) => server.listen(0, 'localhost', resolve));
 
-  beforeEach((done) => {
-    server = null;
-    Promise.resolve(serverFn())
-      .then((rawServer) => {
-        if (rawServer instanceof App) {
-          close = rawServer.close;
-          server = rawServer.express.createServer();
-        } else {
-          server = rawServer;
-        }
-        server.listen(0, 'localhost', done);
-      })
-      .catch((e) => done.fail(e));
-  });
-
-  afterEach((done) => {
-    if (server) {
-      const tempServer = server;
-      server = null;
-      tempServer.close(() => (close?.() ?? Promise.resolve()).then(done));
-    } else {
-      done();
+  return async () => {
+    await new Promise((resolve) => server.close(resolve));
+    if (run instanceof App) {
+      await run.close();
     }
-  });
-
-  return new Proxy({}, {
-    get: (o, prop: keyof Server): unknown => server![prop],
-  }) as Readonly<Server>;
-};
+  };
+});
