@@ -33,11 +33,9 @@ const extractJwtPayload = json.object<JWTPayload>({
   sub: json.optional(json.string),
   aud: json.optional(json.string),
   jti: json.optional(json.string),
-  scopes: json.optional(json.oneOf(
-    json.array(json.string),
-    json.record(json.boolean),
-    json.string,
-  )),
+  scopes: json.optional(
+    json.oneOf(json.array(json.string), json.record(json.boolean), json.string),
+  ),
 });
 
 export class RetroAuthService {
@@ -59,11 +57,16 @@ export class RetroAuthService {
     const passwordHash = await this.hasher.hash(password);
     if (cycleKeys) {
       const keys = await this.tokenManager.generateKeys();
-      await this.retroAuthCollection.update('id', retroId, {
-        passwordHash,
-        privateKey: keys.privateKey,
-        publicKey: keys.publicKey,
-      }, { upsert: true });
+      await this.retroAuthCollection.update(
+        'id',
+        retroId,
+        {
+          passwordHash,
+          privateKey: keys.privateKey,
+          publicKey: keys.publicKey,
+        },
+        { upsert: true },
+      );
     } else {
       await this.retroAuthCollection.update('id', retroId, { passwordHash });
     }
@@ -73,8 +76,9 @@ export class RetroAuthService {
     retroId: string,
     password: string,
   ): Promise<string | null> {
-    const retroData = await this.retroAuthCollection
-      .get('id', retroId, ['passwordHash']);
+    const retroData = await this.retroAuthCollection.get('id', retroId, [
+      'passwordHash',
+    ]);
     if (!retroData) {
       return null;
     }
@@ -98,8 +102,9 @@ export class RetroAuthService {
     retroId: string,
     scopes: Readonly<Record<string, boolean>>,
   ): Promise<string | null> {
-    const retroData = await this.retroAuthCollection
-      .get('id', retroId, ['privateKey']);
+    const retroData = await this.retroAuthCollection.get('id', retroId, [
+      'privateKey',
+    ]);
     if (!retroData) {
       return null;
     }
@@ -115,14 +120,21 @@ export class RetroAuthService {
     return this.tokenManager.signData(tokenData, retroData.privateKey);
   }
 
-  public async readAndVerifyToken(retroId: string, retroToken: string): Promise<JWTPayload | null> {
-    const retroData = await this.retroAuthCollection
-      .get('id', retroId, ['publicKey']);
+  public async readAndVerifyToken(
+    retroId: string,
+    retroToken: string,
+  ): Promise<JWTPayload | null> {
+    const retroData = await this.retroAuthCollection.get('id', retroId, [
+      'publicKey',
+    ]);
     if (!retroData) {
       return null;
     }
 
-    const raw = this.tokenManager.readAndVerifySigned(retroToken, retroData.publicKey);
+    const raw = this.tokenManager.readAndVerifySigned(
+      retroToken,
+      retroData.publicKey,
+    );
     if (!raw) {
       return null;
     }

@@ -18,7 +18,7 @@ export class ApiConfigRouter extends WebSocketExpress.Router {
 
     const clientConfig = {
       sso: ssoClientConfig,
-      giphy: (serverConfig.giphy.apiKey !== ''),
+      giphy: serverConfig.giphy.apiKey !== '',
     };
 
     this.get('/', (_, res) => res.json(clientConfig));

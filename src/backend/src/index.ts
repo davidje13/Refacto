@@ -1,8 +1,8 @@
 import http from 'node:http';
 import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
-import { appFactory, App } from './app';
-import { config } from './config';
+import { appFactory, type App } from './app';
+import { type ConfigT, config } from './config';
 
 // This file exists mainly to enable hot module replacement.
 // app.js is the main entry point for the application.
@@ -19,11 +19,14 @@ function startServer(): void {
 }
 
 let latestNonce = {};
-async function refreshApp(): Promise<void> {
+async function refreshApp(
+  af: (config: ConfigT) => Promise<App>,
+  conf: ConfigT,
+) {
   const currentNonce = {};
   latestNonce = currentNonce;
   try {
-    const newApp = await appFactory(config); // app import updated by HMR magic
+    const newApp = await af(conf);
 
     if (latestNonce === currentNonce) {
       const oldApp = activeApp;
@@ -38,7 +41,7 @@ async function refreshApp(): Promise<void> {
         await oldApp.close();
       }
     }
-  } catch (e: unknown) {
+  } catch (e) {
     process.stderr.write('Failed to start server\n');
     if (e instanceof Error) {
       process.stderr.write(`${e.message}\n`);
@@ -49,9 +52,9 @@ async function refreshApp(): Promise<void> {
   }
 }
 
-//if (module.hot) { // TODO
-//  // Enable webpack-managed hot reloading of backend sources during development
-//  module.hot.accept(['./app', './config'], refreshApp);
+//if (import.meta.hot) { // TODO
+//  // Enable hot reloading of backend sources during development
+//  import.meta.hot.accept(['./app', './config'], ([newApp, newConfig]) => refreshApp(newApp.appFactory, newConfig.config));
 //}
 
 let mockSsoServer: http.Server | undefined;
@@ -78,12 +81,16 @@ async function shutdown(): Promise<void> {
 
   if (mockSsoServer) {
     const mscCount = await getConnectionCount(mockSsoServer);
-    process.stdout.write(`Shutting down mock SSO server (open connections: ${mscCount})\n`);
+    process.stdout.write(
+      `Shutting down mock SSO server (open connections: ${mscCount})\n`,
+    );
   }
 
   await Promise.all([
     promisify(server.close.bind(server))(),
-    mockSsoServer ? promisify(mockSsoServer.close.bind(mockSsoServer))() : undefined,
+    mockSsoServer
+      ? promisify(mockSsoServer.close.bind(mockSsoServer))()
+      : undefined,
   ]);
   await activeApp?.close();
 
@@ -102,4 +109,4 @@ process.on('SIGINT', () => {
   }
 });
 
-void refreshApp();
+void refreshApp(appFactory, config);

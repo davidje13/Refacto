@@ -52,38 +52,42 @@ export class GiphyService {
       return [];
     }
 
-    const cached = await this.searchCache.cachedAsync(`${lang}:${query}`, async (): Promise<GifInfo[]> => {
-      const params = new URLSearchParams();
-      params.append('api_key', this.apiKey);
-      params.append('q', query);
-      params.append('limit', String(limit));
-      params.append('rating', 'g');
-      params.append('lang', lang);
-      const result = await fetch(
-        `${this.baseUrl}/gifs/search?${params.toString()}`,
-      );
-      const resultJson = await result.json() as GiphyResponse;
-
-      if (resultJson.status === 400) {
-        throw new Error();
-      } else if (resultJson.status === 403) {
-        process.stderr.write('Warning: Giphy API key rejected\n');
-        throw new Error();
-      } else if (resultJson.status === 429) {
-        process.stderr.write('Warning: Giphy API rate limit reached\n');
-        throw new Error();
-      } else if (resultJson.status >= 400) {
-        process.stderr.write(
-          `Warning: Unknown Giphy API response: ${resultJson.status}\n`,
+    const cached = await this.searchCache.cachedAsync(
+      `${lang}:${query}`,
+      async (): Promise<GifInfo[]> => {
+        const params = new URLSearchParams();
+        params.append('api_key', this.apiKey);
+        params.append('q', query);
+        params.append('limit', String(limit));
+        params.append('rating', 'g');
+        params.append('lang', lang);
+        const result = await fetch(
+          `${this.baseUrl}/gifs/search?${params.toString()}`,
         );
-        throw new Error();
-      }
+        const resultJson = (await result.json()) as GiphyResponse;
 
-      return resultJson.data.map((gif) => ({
-        small: gif.images.fixed_height_small.url.split('?')[0] ?? '',
-        medium: gif.images.fixed_height.url.split('?')[0] ?? '',
-      }));
-    }, (c) => (c.length >= limit));
+        if (resultJson.status === 400) {
+          throw new Error();
+        } else if (resultJson.status === 403) {
+          process.stderr.write('Warning: Giphy API key rejected\n');
+          throw new Error();
+        } else if (resultJson.status === 429) {
+          process.stderr.write('Warning: Giphy API rate limit reached\n');
+          throw new Error();
+        } else if (resultJson.status >= 400) {
+          process.stderr.write(
+            `Warning: Unknown Giphy API response: ${resultJson.status}\n`,
+          );
+          throw new Error();
+        }
+
+        return resultJson.data.map((gif) => ({
+          small: gif.images.fixed_height_small.url.split('?')[0] ?? '',
+          medium: gif.images.fixed_height.url.split('?')[0] ?? '',
+        }));
+      },
+      (c) => c.length >= limit,
+    );
     return cached.slice(0, limit);
   }
 }

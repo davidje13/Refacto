@@ -7,16 +7,19 @@ import { RetroService } from './RetroService';
 
 interface CapturedChange {
   message: ChangeInfo<Spec<Retro>>;
-  meta: any;
+  meta: unknown;
 }
 
 class ChangeListener {
   public readonly messages: CapturedChange[] = [];
 
-  public readonly onChange: (message: ChangeInfo<Spec<Retro>>, meta: any) => void;
+  public readonly onChange: (
+    message: ChangeInfo<Spec<Retro>>,
+    meta: unknown,
+  ) => void;
 
   public constructor() {
-    this.onChange = (message: ChangeInfo<Spec<Retro>>, meta: any): void => {
+    this.onChange = (message: ChangeInfo<Spec<Retro>>, meta: unknown): void => {
       this.messages.push({ message, meta });
     };
   }
@@ -33,7 +36,7 @@ class ChangeListener {
     return this.latestMessage()?.message?.error;
   }
 
-  public latestMeta(): any {
+  public latestMeta(): unknown {
     return this.latestMessage()?.meta;
   }
 
@@ -50,12 +53,7 @@ describe('RetroService', () => {
   beforeEach(async () => {
     const db = new cs.MemoryDb();
     service = new RetroService(db, crypto.randomBytes(32));
-    r1 = await service.createRetro(
-      'me',
-      'my-retro',
-      'My Retro',
-      'something',
-    );
+    r1 = await service.createRetro('me', 'my-retro', 'My Retro', 'something');
     r2 = await service.createRetro(
       'nobody',
       'my-second-retro',

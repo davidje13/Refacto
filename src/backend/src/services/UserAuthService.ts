@@ -21,8 +21,10 @@ export class UserAuthService {
 
   public async initialise(db: DB): Promise<void> {
     const configCollection = db.getCollection<StoredKeyPair>('config');
-    let keys = await configCollection
-      .get('id', 'user-auth', ['privateKey', 'publicKey']);
+    let keys = await configCollection.get('id', 'user-auth', [
+      'privateKey',
+      'publicKey',
+    ]);
     if (!keys) {
       keys = await this.tokenManager.generateKeys();
       await configCollection.add({ id: 'user-auth', ...keys });
@@ -54,6 +56,9 @@ export class UserAuthService {
     if (!this.publicKey) {
       throw new Error('Not initialised');
     }
-    return this.tokenManager.readAndVerifySigned(userToken, this.publicKey) as JWTPayload;
+    return this.tokenManager.readAndVerifySigned(
+      userToken,
+      this.publicKey,
+    ) as JWTPayload;
   }
 }

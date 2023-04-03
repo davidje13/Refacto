@@ -18,7 +18,7 @@ function getEnv<T>(name: string, def: T): T {
       lower === 'on' ||
       lower === '1'
     ) {
-      return true as (T & boolean);
+      return true as T & boolean;
     }
     if (
       lower === 'false' ||
@@ -27,7 +27,7 @@ function getEnv<T>(name: string, def: T): T {
       lower === '0' ||
       lower === ''
     ) {
-      return false as (T & boolean);
+      return false as T & boolean;
     }
     throw new Error(`Invalid value for ${name} (expected a boolean)`);
   }
@@ -39,10 +39,10 @@ function getEnv<T>(name: string, def: T): T {
     if (Number.isNaN(numValue)) {
       throw new Error(`Invalid value for ${name} (expected a number)`);
     }
-    return numValue as (T & number);
+    return numValue as T & number;
   }
   if (typeof def === 'string') {
-    return value as (T & string);
+    return value as T & string;
   }
   throw new Error(`Unknown data type for ${name}`);
 }

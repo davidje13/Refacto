@@ -9,23 +9,27 @@ describe('/api/sso/service', () => {
   const MOCK_SSO = testServerRunner(() => {
     const ssoApp = new WebSocketExpress.default();
     ssoApp.use(WebSocketExpress.default.urlencoded({ extended: false }));
-    ssoApp.get('/', (_, res) => res.json({
-      aud: 'my-client-id',
-      sub: 'my-external-id',
-    }));
+    ssoApp.get('/', (_, res) =>
+      res.json({
+        aud: 'my-client-id',
+        sub: 'my-external-id',
+      }),
+    );
     return { run: ssoApp.createServer() };
   });
 
   const APP = testServerRunner(async (getTyped) => ({
-    run: await appFactory(testConfig({
-      sso: {
-        google: {
-          clientId: 'my-client-id',
-          authUrl: 'foo',
-          tokenInfoUrl: addressToString(getTyped(MOCK_SSO).server.address()!),
+    run: await appFactory(
+      testConfig({
+        sso: {
+          google: {
+            clientId: 'my-client-id',
+            authUrl: 'foo',
+            tokenInfoUrl: addressToString(getTyped(MOCK_SSO).server.address()!),
+          },
         },
-      },
-    })),
+      }),
+    ),
   }));
 
   it('returns a signed JWT token with the user ID', async (props) => {

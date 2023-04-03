@@ -2,8 +2,11 @@ import type { ConfigT } from '../config';
 
 // Thanks, https://stackoverflow.com/a/51365037/1180785
 type RecursivePartial<T> = {
-  [P in keyof T]?: T[P] extends (infer U)[] ? RecursivePartial<U>[] :
-    T[P] extends Record<string, unknown> ? RecursivePartial<T[P]> : T[P];
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? RecursivePartial<U>[]
+    : T[P] extends Record<string, unknown>
+    ? RecursivePartial<T[P]>
+    : T[P];
 };
 
 const baseTestConfig: ConfigT = {
@@ -37,15 +40,15 @@ function isObj(x: unknown): x is Record<string, unknown> {
 
 function deepMerge<T, U>(a: T, b?: U): T & U {
   if (!isObj(a) || !isObj(b)) {
-    return b as (T & U);
+    return b as T & U;
   }
-  const r = { ...a } as (T & U);
+  const r = { ...a } as T & U;
   Object.keys(b).forEach((k) => {
-    const key = k as keyof U;
-    if (Object.prototype.hasOwnProperty.call(a, key)) {
-      r[key] = deepMerge((a as any)[key], b[key]);
+    const key = k as keyof U & keyof T;
+    if (key in a) {
+      r[key] = deepMerge(a[key], b[key]);
     } else {
-      r[key] = b[key] as any;
+      r[key] = b[key] as T[typeof key] & U[typeof key];
     }
   });
   return r;

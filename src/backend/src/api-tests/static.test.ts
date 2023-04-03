@@ -44,7 +44,9 @@ describe('API static content', () => {
         .expect('Content-Encoding', 'gzip')
         .expect('Vary', 'Accept-Encoding');
 
-      expect(response.text).toContain('<title>Example Compressed Static Resource</title>');
+      expect(response.text).toContain(
+        '<title>Example Compressed Static Resource</title>',
+      );
     });
 
     it('responds with index.html for all unknown requests', async (props) => {
@@ -87,17 +89,13 @@ describe('API static content', () => {
     it('adds common headers', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .get('/')
-        .expect('X-Frame-Options', 'DENY');
+      await request(server).get('/').expect('X-Frame-Options', 'DENY');
 
       await request(server)
         .get('/example.abc123.js')
         .expect('X-Frame-Options', 'DENY');
 
-      await request(server)
-        .get('/foobar')
-        .expect('X-Frame-Options', 'DENY');
+      await request(server).get('/foobar').expect('X-Frame-Options', 'DENY');
     });
 
     it('manages cache control', async (props) => {
@@ -110,7 +108,10 @@ describe('API static content', () => {
 
       await request(server)
         .get('/example.abc123.js')
-        .expect('Cache-Control', 'public, max-age=31536000, stale-if-error=31536000, immutable')
+        .expect(
+          'Cache-Control',
+          'public, max-age=31536000, stale-if-error=31536000, immutable',
+        )
         .expect('ETag', /.+/);
 
       await request(server)
@@ -122,9 +123,7 @@ describe('API static content', () => {
     it('does not apply within /api', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .get('/api/foo')
-        .expect(404);
+      await request(server).get('/api/foo').expect(404);
     });
   });
 
@@ -138,17 +137,17 @@ describe('API static content', () => {
     });
 
     const PROPS = testServerRunner(async (getTyped) => ({
-      run: await appFactory(testConfig({
-        forwardHost: addressToString(getTyped(PROXY).server.address()!),
-      })),
+      run: await appFactory(
+        testConfig({
+          forwardHost: addressToString(getTyped(PROXY).server.address()!),
+        }),
+      ),
     }));
 
     it('proxies unknown requests to the configured address', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      const response = await request(server)
-        .get('/')
-        .expect(200);
+      const response = await request(server).get('/').expect(200);
 
       expect(response.text).toContain('proxied content here');
     });
@@ -156,17 +155,13 @@ describe('API static content', () => {
     it('adds common headers', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .get('/')
-        .expect('X-Frame-Options', 'DENY');
+      await request(server).get('/').expect('X-Frame-Options', 'DENY');
     });
 
     it('does not apply within /api', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .get('/api/foo')
-        .expect(404);
+      await request(server).get('/api/foo').expect(404);
     });
   });
 });

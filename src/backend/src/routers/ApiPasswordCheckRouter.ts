@@ -3,7 +3,12 @@ import type { PasswordCheckService } from '../services/PasswordCheckService';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
 
-const CACHE_CONTROL = `public, max-age=${30 * 24 * 60 * 60}, stale-if-error=${60 * 24 * 60 * 60}, immutable`;
+const CACHE_CONTROL = [
+  'public',
+  `max-age=${30 * 24 * 60 * 60}`,
+  `stale-if-error=${60 * 24 * 60 * 60}`,
+  'immutable',
+].join(', ');
 
 export class ApiPasswordCheckRouter extends WebSocketExpress.Router {
   public constructor(service: PasswordCheckService) {

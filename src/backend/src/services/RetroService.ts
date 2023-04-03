@@ -30,25 +30,25 @@ export class RetroService {
 
   private readonly retroCollection: cs.Collection<Retro>;
 
-  public constructor(
-    db: cs.DB,
-    encryptionKey: Buffer,
-  ) {
+  public constructor(db: cs.DB, encryptionKey: Buffer) {
     const enc = cs.encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('retro_key'),
       { keyCache: { capacity: 128 } },
     );
 
-    this.retroCollection = cs.migrate({
-      groupStates: (v) => (v || {}),
-    }, enc<Retro>()(
-      ['items'],
-      db.getCollection('retro', {
-        slug: { unique: true },
-        ownerId: {},
-      }),
-    ));
+    this.retroCollection = cs.migrate(
+      {
+        groupStates: (v) => v || {},
+      },
+      enc<Retro>()(
+        ['items'],
+        db.getCollection('retro', {
+          slug: { unique: true },
+          ownerId: {},
+        }),
+      ),
+    );
 
     const model = new srb.CollectionStorageModel(
       this.retroCollection,
@@ -111,11 +111,17 @@ export class RetroService {
   }
 
   public getRetroListForUser(ownerId: string): Promise<RetroSummary[]> {
-    return this.retroCollection
-      .getAll('ownerId', ownerId, ['id', 'slug', 'name']);
+    return this.retroCollection.getAll('ownerId', ownerId, [
+      'id',
+      'slug',
+      'name',
+    ]);
   }
 
-  public async isRetroOwnedByUser(retroId: string, ownerId: string): Promise<boolean> {
+  public async isRetroOwnedByUser(
+    retroId: string,
+    ownerId: string,
+  ): Promise<boolean> {
     const retro = await this.retroCollection.get('id', retroId, ['ownerId']);
     if (!retro) {
       return false;

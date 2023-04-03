@@ -4,10 +4,7 @@ import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory, type TestHooks } from '../app';
 
-function getUserToken(
-  { userAuthService }: TestHooks,
-  userId: string,
-): string {
+function getUserToken({ userAuthService }: TestHooks, userId: string): string {
   return userAuthService.grantToken({
     aud: 'user',
     iss: 'test',
@@ -17,12 +14,14 @@ function getUserToken(
 
 describe('API auth', () => {
   const PROPS = testServerRunner(async () => {
-    const app = await appFactory(testConfig({
-      password: {
-        workFactor: 3,
-        secretPepper: 'abc',
-      },
-    }));
+    const app = await appFactory(
+      testConfig({
+        password: {
+          workFactor: 3,
+          secretPepper: 'abc',
+        },
+      }),
+    );
 
     const hooks = app.testHooks;
 
@@ -67,9 +66,7 @@ describe('API auth', () => {
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
-      await request(server)
-        .get(`/api/auth/tokens/${retroId}/user`)
-        .expect(401);
+      await request(server).get(`/api/auth/tokens/${retroId}/user`).expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {

@@ -24,10 +24,12 @@ export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
   message: json.string,
   votes: json.number,
   completed: json.optional(jsonIsoDate),
-  attachment: json.optional(json.object<RetroItemAttachmentJsonExport>({
-    type: json.string,
-    url: json.string,
-  })),
+  attachment: json.optional(
+    json.object<RetroItemAttachmentJsonExport>({
+      type: json.string,
+      url: json.string,
+    }),
+  ),
 });
 
 export const extractExportedRetroData = json.object<RetroDataJsonExport>({
@@ -40,8 +42,12 @@ export const extractExportedRetro = json.object<RetroJsonExport>({
   url: json.string,
   name: json.string,
   current: extractExportedRetroData,
-  archives: json.optional(json.array(json.object<RetroArchiveJsonExport>({
-    created: jsonIsoDate,
-    snapshot: extractExportedRetroData,
-  }))),
+  archives: json.optional(
+    json.array(
+      json.object<RetroArchiveJsonExport>({
+        created: jsonIsoDate,
+        snapshot: extractExportedRetroData,
+      }),
+    ),
+  ),
 });

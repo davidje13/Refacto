@@ -59,9 +59,7 @@ describe('API retro archives', () => {
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
-      await request(server)
-        .get(`/api/retros/${retroId}/archives`)
-        .expect(401);
+      await request(server).get(`/api/retros/${retroId}/archives`).expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
@@ -94,14 +92,20 @@ describe('API retro archives', () => {
       const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .post(`/api/retros/${retroId}/archives`)
-        .send({ format: 'foo', options: { opt: 'yes' }, items: [makeRetroItem({ id: 'foo' })] })
+        .send({
+          format: 'foo',
+          options: { opt: 'yes' },
+          items: [makeRetroItem({ id: 'foo' })],
+        })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
       const returnedId = response.body.id;
-      const storedArchive = await hooks.retroArchiveService
-        .getRetroArchive(retroId, returnedId);
+      const storedArchive = await hooks.retroArchiveService.getRetroArchive(
+        retroId,
+        returnedId,
+      );
 
       expect(storedArchive!.format).toEqual('foo');
       expect(storedArchive!.options['opt']).toEqual('yes');
@@ -121,9 +125,7 @@ describe('API retro archives', () => {
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
-      await request(server)
-        .post(`/api/retros/${retroId}/archives`)
-        .expect(401);
+      await request(server).post(`/api/retros/${retroId}/archives`).expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
@@ -193,10 +195,17 @@ describe('API retro archives', () => {
     it('responds HTTP Not Found for mismatched retro/archive IDs', async (props) => {
       const { server, hooks, retroId } = props.getTyped(PROPS);
 
-      const otherRetroId = await hooks.retroService.createRetro('', 's', '', '');
+      const otherRetroId = await hooks.retroService.createRetro(
+        '',
+        's',
+        '',
+        '',
+      );
 
-      const otherArchiveId = await hooks.retroArchiveService
-        .createArchive(otherRetroId, { format: 'mood', options: {}, items: [] });
+      const otherArchiveId = await hooks.retroArchiveService.createArchive(
+        otherRetroId,
+        { format: 'mood', options: {}, items: [] },
+      );
 
       const retroToken = await getRetroToken(hooks, retroId);
       await request(server)

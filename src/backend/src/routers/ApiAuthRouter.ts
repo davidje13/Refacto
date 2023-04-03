@@ -15,14 +15,18 @@ export class ApiAuthRouter extends WebSocketExpress.Router {
 
     const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
       'user',
-      (token): (WebSocketExpress.JWTPayload | null) => userAuthService.readAndVerifyToken(token),
+      (token): WebSocketExpress.JWTPayload | null =>
+        userAuthService.readAndVerifyToken(token),
     );
 
     this.get('/tokens/:retroId/user', userAuthMiddleware, async (req, res) => {
       const userId = WebSocketExpress.getAuthData(res).sub!;
       const { retroId } = req.params;
 
-      if (!retroId || !await retroService.isRetroOwnedByUser(retroId, userId)) {
+      if (
+        !retroId ||
+        !(await retroService.isRetroOwnedByUser(retroId, userId))
+      ) {
         res.status(403).json({ error: 'not retro owner' });
         return;
       }

@@ -56,7 +56,9 @@ describe('API retros', () => {
 
       expect(response.body.url).toEqual('my-retro');
       expect(response.body.name).toEqual('My Retro');
-      expect(response.body.archives[0].snapshot.items[0].created).toEqual('2019-09-13T18:40:00.000Z');
+      expect(response.body.archives[0].snapshot.items[0].created).toEqual(
+        '2019-09-13T18:40:00.000Z',
+      );
     });
 
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
@@ -86,7 +88,9 @@ describe('API retros', () => {
         .set('Authorization', `Bearer ${retroToken1}`)
         .expect(403);
 
-      const retroToken2 = await getRetroToken(hooks, retroId, { readArchives: false });
+      const retroToken2 = await getRetroToken(hooks, retroId, {
+        readArchives: false,
+      });
 
       await request(server)
         .get(`/api/retros/${retroId}/export/json`)

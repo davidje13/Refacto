@@ -11,10 +11,12 @@ export const extractRetroItem = json.exactObject<RetroItem>({
   category: json.string,
   created: json.number,
   message: json.string,
-  attachment: json.nullable(json.exactObject<RetroItemAttachment>({
-    type: json.string,
-    url: json.string,
-  })),
+  attachment: json.nullable(
+    json.exactObject<RetroItemAttachment>({
+      type: json.string,
+      url: json.string,
+    }),
+  ),
   votes: json.number,
   doneTime: json.number,
   group: json.optional(json.string),

@@ -9,8 +9,16 @@ describe('RetroArchiveService', () => {
   beforeEach(async () => {
     const db = new cs.MemoryDb();
     service = new RetroArchiveService(db, crypto.randomBytes(32));
-    a1 = await service.createArchive('my-retro-id', { format: 'foo', options: { a: 'x' }, items: [] });
-    await service.createArchive('my-retro-id', { format: 'bar', options: {}, items: [] });
+    a1 = await service.createArchive('my-retro-id', {
+      format: 'foo',
+      options: { a: 'x' },
+      items: [],
+    });
+    await service.createArchive('my-retro-id', {
+      format: 'bar',
+      options: {},
+      items: [],
+    });
   });
 
   describe('getRetroArchive', () => {

@@ -5,15 +5,17 @@ import { appFactory } from '../app';
 
 describe('API client config', () => {
   const PROPS = testServerRunner(async () => ({
-    run: await appFactory(testConfig({
-      sso: {
-        google: {
-          clientId: 'abc',
-          authUrl: 'foobar',
-          tokenInfoUrl: 'woo',
+    run: await appFactory(
+      testConfig({
+        sso: {
+          google: {
+            clientId: 'abc',
+            authUrl: 'foobar',
+            tokenInfoUrl: 'woo',
+          },
         },
-      },
-    })),
+      }),
+    ),
   }));
 
   describe('/api/config', () => {
@@ -31,9 +33,7 @@ describe('API client config', () => {
     it('excludes private data', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      const response = await request(server)
-        .get('/api/config')
-        .expect(200);
+      const response = await request(server).get('/api/config').expect(200);
 
       expect(response.body.sso.google.tokenInfoUrl).toEqual(undefined);
     });
@@ -41,9 +41,7 @@ describe('API client config', () => {
     it('skips SSO data for unconfigured services', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      const response = await request(server)
-        .get('/api/config')
-        .expect(200);
+      const response = await request(server).get('/api/config').expect(200);
 
       expect(response.body.sso.github).toEqual(undefined);
     });

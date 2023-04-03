@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import cs from 'collection-storage';
-import type { RetroArchive, RetroData, RetroArchiveSummary } from '../shared/api-entities';
+import type {
+  RetroArchive,
+  RetroData,
+  RetroArchiveSummary,
+} from '../shared/api-entities';
 
 export class RetroArchiveService {
   private readonly archiveCollection: cs.Collection<RetroArchive>;
@@ -42,8 +46,7 @@ export class RetroArchiveService {
   public getRetroArchiveSummaries(
     retroId: string,
   ): Promise<Readonly<RetroArchiveSummary>[]> {
-    return this.archiveCollection
-      .getAll('retroId', retroId, ['id', 'created']);
+    return this.archiveCollection.getAll('retroId', retroId, ['id', 'created']);
   }
 
   public async getRetroArchive(

@@ -5,7 +5,11 @@ import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { RetroService } from '../services/RetroService';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
-import { exportRetro, importRetroData, importTimestamp } from '../export/RetroJsonExport';
+import {
+  exportRetro,
+  importRetroData,
+  importTimestamp,
+} from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import json from '../helpers/json';
 
@@ -25,10 +29,13 @@ export class ApiRetrosRouter extends WebSocketExpress.Router {
 
     const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
       'user',
-      (token): (WebSocketExpress.JWTPayload | null) => userAuthService.readAndVerifyToken(token),
+      (token): WebSocketExpress.JWTPayload | null =>
+        userAuthService.readAndVerifyToken(token),
     );
 
-    const wsHandler = sharedReducerBackend.websocketHandler(retroService.retroBroadcaster);
+    const wsHandler = sharedReducerBackend.websocketHandler(
+      retroService.retroBroadcaster,
+    );
 
     this.get('/', userAuthMiddleware, async (req, res) => {
       const userId = WebSocketExpress.getAuthData(res).sub!;
@@ -41,17 +48,15 @@ export class ApiRetrosRouter extends WebSocketExpress.Router {
     this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
       try {
         const userId = WebSocketExpress.getAuthData(res).sub!;
-        const {
-          slug,
-          name,
-          password,
-          importJson,
-        } = json.extractObject(req.body, {
-          slug: json.string,
-          name: json.string,
-          password: json.string,
-          importJson: json.optional(extractExportedRetro),
-        });
+        const { slug, name, password, importJson } = json.extractObject(
+          req.body,
+          {
+            slug: json.string,
+            name: json.string,
+            password: json.string,
+            importJson: json.optional(extractExportedRetro),
+          },
+        );
 
         if (!name) {
           throw new Error('No name given');
@@ -74,19 +79,21 @@ export class ApiRetrosRouter extends WebSocketExpress.Router {
 
           const archives = importJson.archives || [];
 
-          await Promise.all(archives.map(
-            (exportedArchive) => retroArchiveService.createArchive(
-              id,
-              importRetroData(exportedArchive.snapshot),
-              importTimestamp(exportedArchive.created),
+          await Promise.all(
+            archives.map((exportedArchive) =>
+              retroArchiveService.createArchive(
+                id,
+                importRetroData(exportedArchive.snapshot),
+                importTimestamp(exportedArchive.created),
+              ),
             ),
-          ));
+          );
         }
 
         const token = await retroAuthService.grantOwnerToken(id);
 
         res.status(200).json({ id, token });
-      } catch (e: unknown) {
+      } catch (e) {
         if (!(e instanceof Error)) {
           process.stderr.write(`Unexpected error: ${e}\n`);
           res.status(400).json({ error: 'Internal error' });
@@ -98,15 +105,25 @@ export class ApiRetrosRouter extends WebSocketExpress.Router {
       }
     });
 
-    this.use('/:retroId', WebSocketExpress.requireBearerAuth(
-      (req) => req.params['retroId'] ?? '',
-      (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
-    ));
+    this.use(
+      '/:retroId',
+      WebSocketExpress.requireBearerAuth(
+        (req) => req.params['retroId'] ?? '',
+        (token, realm) => retroAuthService.readAndVerifyToken(realm, token),
+      ),
+    );
 
-    this.ws('/:retroId', WebSocketExpress.requireAuthScope('read'), wsHandler(
-      (req) => req.params.retroId,
-      (_, res) => retroService.getPermissions(WebSocketExpress.hasAuthScope(res, 'write')),
-    ));
+    this.ws(
+      '/:retroId',
+      WebSocketExpress.requireAuthScope('read'),
+      wsHandler(
+        (req) => req.params.retroId,
+        (_, res) =>
+          retroService.getPermissions(
+            WebSocketExpress.hasAuthScope(res, 'write'),
+          ),
+      ),
+    );
 
     this.get(
       '/:retroId/export/json',
@@ -125,14 +142,18 @@ export class ApiRetrosRouter extends WebSocketExpress.Router {
         const fileName = `${retro.slug}-export.json`;
 
         const data = exportRetro(retro, archives);
-        res.header('content-disposition', `attachment; filename="${encodeURIComponent(fileName)}"`);
+        res.header(
+          'content-disposition',
+          `attachment; filename="${encodeURIComponent(fileName)}"`,
+        );
         res.header('content-type', 'application/json; charset=utf-8');
         res.send(JSON.stringify(data, null, 2)).end();
       },
     );
 
-    this.use('/:retroId/archives', new ApiRetroArchivesRouter(
-      retroArchiveService,
-    ));
+    this.use(
+      '/:retroId/archives',
+      new ApiRetroArchivesRouter(retroArchiveService),
+    );
   }
 }

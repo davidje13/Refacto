@@ -4,8 +4,17 @@ import { join } from 'node:path';
 import { basedir } from '../basedir';
 
 const VERSIONED_FILE = /\..{4,}\.(css|js|woff2?)(\.(br|gz))?$/;
-const VERSIONED_CACHE_CONTROL = `public, max-age=${365 * 24 * 60 * 60}, stale-if-error=${365 * 24 * 60 * 60}, immutable`;
-const UNVERSIONED_CACHE_CONTROL = `public, max-age=${10 * 60}, stale-if-error=${24 * 60 * 60}`;
+const VERSIONED_CACHE_CONTROL = [
+  'public',
+  `max-age=${365 * 24 * 60 * 60}`,
+  `stale-if-error=${365 * 24 * 60 * 60}`,
+  'immutable',
+].join(', ');
+const UNVERSIONED_CACHE_CONTROL = [
+  'public',
+  `max-age=${10 * 60}`,
+  `stale-if-error=${24 * 60 * 60}`,
+].join(', ');
 
 export class StaticRouter extends WebSocketExpress.Router {
   public constructor(forwardHost: string | null = null) {
@@ -15,13 +24,15 @@ export class StaticRouter extends WebSocketExpress.Router {
       // Dev mode: forward unknown requests to another service
       import('http-proxy-middleware')
         .then(({ createProxyMiddleware }) => {
-          this.useHTTP(createProxyMiddleware({ target: forwardHost, logLevel: 'warn' }));
+          this.useHTTP(
+            createProxyMiddleware({ target: forwardHost, logLevel: 'warn' }),
+          );
         })
         .catch((e) => {
-          process.stderr.write((
+          process.stderr.write(
             `Failed to apply frontend forwarding to ${forwardHost} ` +
-            '(only API will be available)\n'
-          ));
+              '(only API will be available)\n',
+          );
           process.stderr.write(`${e.message}\n`);
         });
     } else {

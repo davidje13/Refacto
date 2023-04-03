@@ -15,13 +15,14 @@ const generateKeyPair = promisify(
     type: string,
     options: Record<string, unknown>,
     callback: GenerateKeyPairCallback,
-  ): void => crypto.generateKeyPair(
-    type as any,
-    options as any,
-    (err: Error | null, publicKey: string, privateKey: string) => {
-      callback(err, { publicKey, privateKey });
-    },
-  ),
+  ): void =>
+    crypto.generateKeyPair(
+      type as any,
+      options as any,
+      (err: Error | null, publicKey: string, privateKey: string) => {
+        callback(err, { publicKey, privateKey });
+      },
+    ),
 );
 
 export class TokenManager {
@@ -53,7 +54,10 @@ export class TokenManager {
     });
   }
 
-  public signData(data: Readonly<JsonData>, privateKey: string | Buffer): string {
+  public signData(
+    data: Readonly<JsonData>,
+    privateKey: string | Buffer,
+  ): string {
     const key = crypto.createPrivateKey({
       key: privateKey,
       format: 'pem',

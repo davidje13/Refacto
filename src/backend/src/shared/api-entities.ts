@@ -1,4 +1,10 @@
-export type JsonData = { [P: string]: JsonData } | JsonData[] | string | number | boolean | null;
+export type JsonData =
+  | { [P: string]: JsonData }
+  | JsonData[]
+  | string
+  | number
+  | boolean
+  | null;
 
 export interface ClientConfig {
   sso: {
@@ -17,7 +23,7 @@ export interface RetroItemAttachment {
 
 export interface UserProvidedRetroItemDetails {
   message: string;
-  attachment: RetroItemAttachment | null,
+  attachment: RetroItemAttachment | null;
 }
 
 export interface RetroItem extends UserProvidedRetroItemDetails {
@@ -30,7 +36,7 @@ export interface RetroItem extends UserProvidedRetroItemDetails {
 }
 
 export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
-  return Object.assign({
+  return {
     id: '',
     category: '',
     created: 0,
@@ -39,7 +45,8 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
     votes: 0,
     doneTime: 0,
     group: undefined,
-  }, details);
+    ...details,
+  };
 }
 
 export interface RetroSummary {
@@ -54,14 +61,16 @@ export interface RetroData {
   items: RetroItem[];
 }
 
-export interface Retro<StateT = Record<string, unknown>> extends RetroSummary, RetroData {
+export interface Retro<StateT = Record<string, unknown>>
+  extends RetroSummary,
+    RetroData {
   ownerId: string;
   state: StateT;
   groupStates: Record<string, StateT>;
 }
 
 export function makeRetro(details: Partial<Retro> = {}): Retro {
-  return Object.assign({
+  return {
     id: '',
     slug: '',
     name: '',
@@ -71,7 +80,8 @@ export function makeRetro(details: Partial<Retro> = {}): Retro {
     format: '',
     options: {},
     items: [],
-  }, details);
+    ...details,
+  };
 }
 
 export interface RetroArchiveSummary {
@@ -84,8 +94,10 @@ export interface RetroArchive extends RetroArchiveSummary, RetroData {
   retroId: string;
 }
 
-export function makeRetroArchive(details: Partial<RetroArchive> = {}): RetroArchive {
-  return Object.assign({
+export function makeRetroArchive(
+  details: Partial<RetroArchive> = {},
+): RetroArchive {
+  return {
     id: '',
     retroId: '',
     created: 0,
@@ -93,5 +105,6 @@ export function makeRetroArchive(details: Partial<RetroArchive> = {}): RetroArch
     format: '',
     options: {},
     items: [],
-  }, details);
+    ...details,
+  };
 }

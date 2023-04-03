@@ -3,10 +3,7 @@ import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory, type TestHooks } from '../app';
 
-function getUserToken(
-  { userAuthService }: TestHooks,
-  userId: string,
-): string {
+function getUserToken({ userAuthService }: TestHooks, userId: string): string {
   return userAuthService.grantToken({
     aud: 'user',
     iss: 'test',
@@ -63,9 +60,7 @@ describe('API retros', () => {
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .get('/api/retros')
-        .expect(401);
+      await request(server).get('/api/retros').expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
@@ -143,9 +138,7 @@ describe('API retros', () => {
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .post('/api/retros')
-        .expect(401);
+      await request(server).post('/api/retros').expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {

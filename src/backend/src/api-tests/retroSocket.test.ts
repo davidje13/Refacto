@@ -42,7 +42,7 @@ describe('API retro websocket', () => {
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
-        .expectJson(({ init }) => (init.name === 'My Retro'))
+        .expectJson(({ init }) => init.name === 'My Retro')
         .close()
         .expectClosed();
     });
@@ -56,14 +56,14 @@ describe('API retro websocket', () => {
         .send(retroToken)
         .expectJson()
         .sendJson({ change: { name: ['=', 'bar'] }, id: 7 })
-        .expectJson(({ change }) => (change.name[1] === 'bar'))
+        .expectJson(({ change }) => change.name[1] === 'bar')
         .close()
         .expectClosed();
 
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
-        .expectJson(({ init }) => (init.name === 'bar'))
+        .expectJson(({ init }) => init.name === 'bar')
         .close()
         .expectClosed();
     });
@@ -77,14 +77,14 @@ describe('API retro websocket', () => {
         .send(retroToken)
         .expectJson()
         .sendJson({ change: { name: ['invalid'] }, id: 7 })
-        .expectJson((json) => (json.error && json.id === 7))
+        .expectJson((json) => json.error && json.id === 7)
         .close()
         .expectClosed();
 
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
-        .expectJson(({ init }) => (init.name === 'My Retro'))
+        .expectJson(({ init }) => init.name === 'My Retro')
         .close()
         .expectClosed();
     });

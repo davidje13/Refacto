@@ -67,9 +67,7 @@ export function importRetroItemAttachment(
   };
 }
 
-export function exportRetroItem(
-  item: RetroItem,
-): RetroItemJsonExport {
+export function exportRetroItem(item: RetroItem): RetroItemJsonExport {
   const result: RetroItemJsonExport = {
     created: exportTimestamp(item.created),
     category: item.category,
@@ -86,9 +84,7 @@ export function exportRetroItem(
   return result;
 }
 
-export function importRetroItem(
-  item: RetroItemJsonExport,
-): RetroItem {
+export function importRetroItem(item: RetroItemJsonExport): RetroItem {
   return {
     id: uuidv4(),
     created: importTimestamp(item.created),
@@ -97,13 +93,13 @@ export function importRetroItem(
     message: item.message,
     votes: item.votes,
     doneTime: item.completed ? importTimestamp(item.completed) : 0,
-    attachment: item.attachment ? importRetroItemAttachment(item.attachment) : null,
+    attachment: item.attachment
+      ? importRetroItemAttachment(item.attachment)
+      : null,
   };
 }
 
-export function exportRetroData(
-  archive: RetroData,
-): RetroDataJsonExport {
+export function exportRetroData(archive: RetroData): RetroDataJsonExport {
   return {
     format: archive.format,
     options: archive.options,
@@ -111,9 +107,7 @@ export function exportRetroData(
   };
 }
 
-export function importRetroData(
-  archive: RetroDataJsonExport,
-): RetroData {
+export function importRetroData(archive: RetroDataJsonExport): RetroData {
   return {
     format: archive.format,
     options: archive.options,

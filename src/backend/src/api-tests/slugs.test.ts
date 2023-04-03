@@ -32,9 +32,7 @@ describe('API slugs', () => {
     it('responds HTTP Not Found for unknown slugs', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server)
-        .get('/api/slugs/nope')
-        .expect(404);
+      await request(server).get('/api/slugs/nope').expect(404);
     });
 
     it('adds common headers', async (props) => {

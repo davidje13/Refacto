@@ -40,7 +40,11 @@ const CSP = [
   "default-src 'self'",
   "object-src 'none'",
   `script-src 'self'${devMode ? " 'unsafe-eval'" : ''}`,
-  `style-src 'self'${devMode ? " 'unsafe-inline'" : " 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='"}`,
+  `style-src 'self'${
+    devMode
+      ? " 'unsafe-inline'"
+      : " 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='"
+  }`,
   `connect-src 'self'`,
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",
@@ -127,21 +131,26 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     next();
   });
 
-  app.use('/api/auth', new ApiAuthRouter(
-    userAuthService,
-    retroAuthService,
-    retroService,
-  ));
+  app.use(
+    '/api/auth',
+    new ApiAuthRouter(userAuthService, retroAuthService, retroService),
+  );
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
   app.use('/api/config', new ApiConfigRouter(config, sso.service.clientConfig));
   app.useHTTP('/api/sso', sso.router);
-  app.use('/api/retros', new ApiRetrosRouter(
-    userAuthService,
-    retroAuthService,
-    retroService,
-    retroArchiveService,
-  ));
-  app.use('/api/password-check', new ApiPasswordCheckRouter(passwordCheckService));
+  app.use(
+    '/api/retros',
+    new ApiRetrosRouter(
+      userAuthService,
+      retroAuthService,
+      retroService,
+      retroArchiveService,
+    ),
+  );
+  app.use(
+    '/api/password-check',
+    new ApiPasswordCheckRouter(passwordCheckService),
+  );
   app.use('/api/giphy', new ApiGiphyRouter(giphyService));
   app.useHTTP('/api', (_, res) => {
     res.status(404).send();
