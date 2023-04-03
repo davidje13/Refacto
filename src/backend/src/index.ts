@@ -1,4 +1,4 @@
-import http from 'node:http';
+import { createServer, type Server } from 'node:http';
 import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
 import { appFactory, type App } from './app';
@@ -9,7 +9,7 @@ import { type ConfigT, config } from './config';
 // (changes to index.js will not trigger HMR)
 
 let activeApp: App | null = null;
-const server = http.createServer();
+const server = createServer();
 
 function startServer(): void {
   server.listen(config.port, config.serverBindAddress, () => {
@@ -57,7 +57,7 @@ async function refreshApp(
 //  import.meta.hot.accept(['./app', './config'], ([newApp, newConfig]) => refreshApp(newApp.appFactory, newConfig.config));
 //}
 
-let mockSsoServer: http.Server | undefined;
+let mockSsoServer: Server | undefined;
 
 if (config.mockSsoPort) {
   // Dev mode: run an additional mock SSO server
@@ -71,7 +71,7 @@ if (config.mockSsoPort) {
   }
 }
 
-function getConnectionCount(s: http.Server): Promise<number> {
+function getConnectionCount(s: Server): Promise<number> {
   return promisify(s.getConnections.bind(s))();
 }
 

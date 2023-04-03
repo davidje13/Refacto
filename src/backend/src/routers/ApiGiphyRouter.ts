@@ -6,14 +6,14 @@ export class ApiGiphyRouter extends Router {
     super();
 
     this.get('/search', async (req, res) => {
-      const { q, lang } = req.query;
+      const { q, lang = 'en' } = req.query;
 
       if (typeof q !== 'string' || !q) {
         res.status(400).end();
         return;
       }
 
-      if (lang && typeof lang !== 'string') {
+      if (typeof lang !== 'string') {
         res.status(400).end();
         return;
       }
