@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { randomBytes } from 'node:crypto';
 import cs from 'collection-storage';
 import type { Spec } from 'json-immutability-helper';
 import type { ChangeInfo, Subscription } from 'shared-reducer-backend';
@@ -52,7 +52,7 @@ describe('RetroService', () => {
 
   beforeEach(async () => {
     const db = new cs.MemoryDb();
-    service = new RetroService(db, crypto.randomBytes(32));
+    service = new RetroService(db, randomBytes(32));
     r1 = await service.createRetro('me', 'my-retro', 'My Retro', 'something');
     r2 = await service.createRetro(
       'nobody',

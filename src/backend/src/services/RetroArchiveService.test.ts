@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { randomBytes } from 'node:crypto';
 import cs from 'collection-storage';
 import { RetroArchiveService } from './RetroArchiveService';
 
@@ -8,7 +8,7 @@ describe('RetroArchiveService', () => {
 
   beforeEach(async () => {
     const db = new cs.MemoryDb();
-    service = new RetroArchiveService(db, crypto.randomBytes(32));
+    service = new RetroArchiveService(db, randomBytes(32));
     a1 = await service.createArchive('my-retro-id', {
       format: 'foo',
       options: { a: 'x' },

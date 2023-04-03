@@ -1,4 +1,4 @@
-import crypto, { type KeyLike } from 'node:crypto';
+import { generateKeyPair, createPrivateKey, type KeyLike } from 'node:crypto';
 import { promisify } from 'node:util';
 import jwt from 'jwt-simple';
 import type { JsonData } from '../shared/api-entities';
@@ -10,13 +10,13 @@ export interface KeyPair {
 
 type GenerateKeyPairCallback = (err: Error | null, keyPair: KeyPair) => void;
 
-const generateKeyPair = promisify(
+const asyncGenerateKeyPair = promisify(
   (
     type: string,
     options: Record<string, unknown>,
     callback: GenerateKeyPairCallback,
   ): void =>
-    crypto.generateKeyPair(
+    generateKeyPair(
       type as any,
       options as any,
       (err: Error | null, publicKey: string, privateKey: string) => {
@@ -39,7 +39,7 @@ export class TokenManager {
   public generateKeys(): Promise<KeyPair> {
     const secret = this.secretPassphrase;
 
-    return generateKeyPair('rsa', {
+    return asyncGenerateKeyPair('rsa', {
       modulusLength: this.modulusLength,
       privateKeyEncoding: {
         type: 'pkcs8',
@@ -58,7 +58,7 @@ export class TokenManager {
     data: Readonly<JsonData>,
     privateKey: string | Buffer,
   ): string {
-    const key = crypto.createPrivateKey({
+    const key = createPrivateKey({
       key: privateKey,
       format: 'pem',
       passphrase: this.secretPassphrase,
