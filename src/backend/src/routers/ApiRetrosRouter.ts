@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
 import sharedReducerBackend from 'shared-reducer-backend';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import type { UserAuthService } from '../services/UserAuthService';
@@ -16,9 +16,9 @@ import json from '../helpers/json';
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
 
-const JSON_BODY = WebSocketExpress.default.json({ limit: 512 * 1024 });
+const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
-export class ApiRetrosRouter extends WebSocketExpress.Router {
+export class ApiRetrosRouter extends Router {
   public constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -29,8 +29,7 @@ export class ApiRetrosRouter extends WebSocketExpress.Router {
 
     const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
       'user',
-      (token): WebSocketExpress.JWTPayload | null =>
-        userAuthService.readAndVerifyToken(token),
+      (token): JWTPayload | null => userAuthService.readAndVerifyToken(token),
     );
 
     const wsHandler = sharedReducerBackend.websocketHandler(

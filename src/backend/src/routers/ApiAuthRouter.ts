@@ -1,11 +1,11 @@
-import WebSocketExpress from 'websocket-express';
+import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroService } from '../services/RetroService';
 
-const JSON_BODY = WebSocketExpress.default.json({ limit: 4 * 1024 });
+const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
 
-export class ApiAuthRouter extends WebSocketExpress.Router {
+export class ApiAuthRouter extends Router {
   public constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -15,8 +15,7 @@ export class ApiAuthRouter extends WebSocketExpress.Router {
 
     const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
       'user',
-      (token): WebSocketExpress.JWTPayload | null =>
-        userAuthService.readAndVerifyToken(token),
+      (token): JWTPayload | null => userAuthService.readAndVerifyToken(token),
     );
 
     this.get('/tokens/:retroId/user', userAuthMiddleware, async (req, res) => {

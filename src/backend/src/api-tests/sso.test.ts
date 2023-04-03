@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { WebSocketExpress } from 'websocket-express';
 import request from 'superwstest';
 import jwt from 'jwt-simple';
 import { testConfig } from './testConfig';
@@ -7,8 +7,8 @@ import { appFactory } from '../app';
 
 describe('/api/sso/service', () => {
   const MOCK_SSO = testServerRunner(() => {
-    const ssoApp = new WebSocketExpress.default();
-    ssoApp.use(WebSocketExpress.default.urlencoded({ extended: false }));
+    const ssoApp = new WebSocketExpress();
+    ssoApp.use(WebSocketExpress.urlencoded({ extended: false }));
     ssoApp.get('/', (_, res) =>
       res.json({
         aud: 'my-client-id',

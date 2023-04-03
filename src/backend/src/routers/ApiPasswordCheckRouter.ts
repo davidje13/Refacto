@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { Router } from 'websocket-express';
 import type { PasswordCheckService } from '../services/PasswordCheckService';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
@@ -10,7 +10,7 @@ const CACHE_CONTROL = [
   'immutable',
 ].join(', ');
 
-export class ApiPasswordCheckRouter extends WebSocketExpress.Router {
+export class ApiPasswordCheckRouter extends Router {
   public constructor(service: PasswordCheckService) {
     super();
 

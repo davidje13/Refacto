@@ -1,7 +1,7 @@
-import WebSocketExpress from 'websocket-express';
+import { Router } from 'websocket-express';
 import type { GiphyService } from '../services/GiphyService';
 
-export class ApiGiphyRouter extends WebSocketExpress.Router {
+export class ApiGiphyRouter extends Router {
   public constructor(service: GiphyService) {
     super();
 

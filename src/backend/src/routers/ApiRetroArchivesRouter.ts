@@ -1,10 +1,10 @@
-import WebSocketExpress from 'websocket-express';
+import { WebSocketExpress, Router } from 'websocket-express';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
 import { extractRetroData } from '../helpers/jsonParsers';
 
-const JSON_BODY = WebSocketExpress.default.json({ limit: 512 * 1024 });
+const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
-export class ApiRetroArchivesRouter extends WebSocketExpress.Router {
+export class ApiRetroArchivesRouter extends Router {
   public constructor(retroArchiveService: RetroArchiveService) {
     super({ mergeParams: true });
 

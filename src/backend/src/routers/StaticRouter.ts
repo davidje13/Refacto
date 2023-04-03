@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { Router } from 'websocket-express';
 import expressStaticGzip from 'express-static-gzip';
 import { join } from 'node:path';
 import { basedir } from '../basedir';
@@ -16,7 +16,7 @@ const UNVERSIONED_CACHE_CONTROL = [
   `stale-if-error=${24 * 60 * 60}`,
 ].join(', ');
 
-export class StaticRouter extends WebSocketExpress.Router {
+export class StaticRouter extends Router {
   public constructor(forwardHost: string | null = null) {
     super();
 

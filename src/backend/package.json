@@ -24,7 +24,7 @@
     "shared-reducer-backend": "3.x",
     "tslib": "2.5.x",
     "uuid": "9.x",
-    "websocket-express": "2.x",
+    "websocket-express": "3.x",
     "ws": "8.x"
   },
   "optionalDependencies": {

@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { WebSocketExpress } from 'websocket-express';
 import request from 'superwstest';
 import { testConfig } from './testConfig';
 import { testServerRunner, addressToString } from './testServerRunner';
@@ -129,7 +129,7 @@ describe('API static content', () => {
 
   describe('Proxy', () => {
     const PROXY = testServerRunner(() => {
-      const proxyApp = new WebSocketExpress.default();
+      const proxyApp = new WebSocketExpress();
       proxyApp.get('/', (_, res) => {
         res.send('proxied content here');
       });

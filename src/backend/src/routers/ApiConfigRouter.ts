@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { Router } from 'websocket-express';
 import type { ClientConfig } from '../shared/api-entities';
 import type { AuthenticationClientConfiguration } from 'authentication-backend';
 
@@ -9,7 +9,7 @@ interface ServerConfig {
   };
 }
 
-export class ApiConfigRouter extends WebSocketExpress.Router {
+export class ApiConfigRouter extends Router {
   public constructor(
     serverConfig: ServerConfig,
     ssoClientConfig: AuthenticationClientConfiguration,

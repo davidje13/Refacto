@@ -1,4 +1,4 @@
-import WebSocketExpress from 'websocket-express';
+import { WebSocketExpress } from 'websocket-express';
 import cs from 'collection-storage';
 import Hasher from 'pwd-hasher';
 import ab from 'authentication-backend';
@@ -97,7 +97,7 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     userAuthService.grantLoginToken,
   );
 
-  const app = new WebSocketExpress.default();
+  const app = new WebSocketExpress();
 
   app.disable('x-powered-by');
   app.enable('case sensitive routing');
