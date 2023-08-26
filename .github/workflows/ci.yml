@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: npm
@@ -29,7 +29,7 @@ jobs:
           rm -r node_modules
           tar -czf ../build.tar.gz .
       - name: Upload Bundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: refacto
           retention-days: 1
@@ -48,11 +48,11 @@ jobs:
           - { node: '20' }
     steps:
       - name: Install Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - name: Download Bundle
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: refacto
       - name: Unpack
@@ -95,7 +95,7 @@ jobs:
       contents: write
     steps:
       - name: Download Bundle
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: refacto
       - name: Create Release
