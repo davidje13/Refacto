@@ -36,7 +36,7 @@ export class ApiRetrosRouter extends Router {
       retroService.retroBroadcaster,
     );
 
-    this.get('/', userAuthMiddleware, async (req, res) => {
+    this.get('/', userAuthMiddleware, async (_, res) => {
       const userId = WebSocketExpress.getAuthData(res).sub!;
 
       res.json({

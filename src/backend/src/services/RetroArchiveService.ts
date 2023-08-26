@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import cs from 'collection-storage';
+import type { Collection, DB } from 'collection-storage';
+import { encryptByRecordWithMasterKey } from '../import-wrappers/collection-storage-wrap';
 import type {
   RetroArchive,
   RetroData,
@@ -7,10 +8,10 @@ import type {
 } from '../shared/api-entities';
 
 export class RetroArchiveService {
-  private readonly archiveCollection: cs.Collection<RetroArchive>;
+  private readonly archiveCollection: Collection<RetroArchive>;
 
-  public constructor(db: cs.DB, encryptionKey: Buffer) {
-    const enc = cs.encryptByRecordWithMasterKey<string>(
+  public constructor(db: DB, encryptionKey: Buffer) {
+    const enc = encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('archive_key'),
       { keyCache: { capacity: 128 } },

@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import cs from 'collection-storage';
+import { MemoryDb } from '../import-wrappers/collection-storage-wrap';
 import type { Spec } from 'json-immutability-helper';
 import type { ChangeInfo, Subscription } from 'shared-reducer-backend';
 import { makeRetroItem, type Retro } from '../shared/api-entities';
@@ -51,7 +51,7 @@ describe('RetroService', () => {
   let r2: string;
 
   beforeEach(async () => {
-    const db = new cs.MemoryDb();
+    const db = new MemoryDb();
     service = new RetroService(db, randomBytes(32));
     r1 = await service.createRetro('me', 'my-retro', 'My Retro', 'something');
     r2 = await service.createRetro(

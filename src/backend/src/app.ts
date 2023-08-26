@@ -1,6 +1,6 @@
 import { WebSocketExpress } from 'websocket-express';
-import cs from 'collection-storage';
-import Hasher from 'pwd-hasher';
+import { connectDB } from './import-wrappers/collection-storage-wrap';
+import { Hasher } from './import-wrappers/pwd-hashers-wrap';
 import ab from 'authentication-backend';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
 import { ApiAuthRouter } from './routers/ApiAuthRouter';
@@ -77,9 +77,9 @@ function readKey(value: string, length: number): Buffer {
 }
 
 export const appFactory = async (config: ConfigT): Promise<App> => {
-  const db = await cs.default.connect(config.db.url);
+  const db = await connectDB(config.db.url);
 
-  const hasher = new Hasher.default(config.password);
+  const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
   const encryptionKey = readKey(config.encryption.secretKey, 32);

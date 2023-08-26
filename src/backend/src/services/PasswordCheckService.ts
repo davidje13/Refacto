@@ -1,3 +1,6 @@
+// https://github.com/DefinitelyTyped/DefinitelyTyped/issues/60924
+/// <reference lib="dom" />
+
 interface Config {
   baseUrl: string;
 }

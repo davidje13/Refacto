@@ -1,7 +1,11 @@
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Spec } from 'json-immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
-import cs from 'collection-storage';
+import type { Collection, DB } from 'collection-storage';
+import {
+  encryptByRecordWithMasterKey,
+  migrate,
+} from '../import-wrappers/collection-storage-wrap';
 import srb, { type Permission } from 'shared-reducer-backend';
 import type { Retro, RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
@@ -28,16 +32,16 @@ function dbErrorMessage(e: any): string {
 export class RetroService {
   public readonly retroBroadcaster: srb.Broadcaster<Retro, Spec<Retro>>;
 
-  private readonly retroCollection: cs.Collection<Retro>;
+  private readonly retroCollection: Collection<Retro>;
 
-  public constructor(db: cs.DB, encryptionKey: Buffer) {
-    const enc = cs.encryptByRecordWithMasterKey<string>(
+  public constructor(db: DB, encryptionKey: Buffer) {
+    const enc = encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('retro_key'),
       { keyCache: { capacity: 128 } },
     );
 
-    this.retroCollection = cs.migrate(
+    this.retroCollection = migrate(
       {
         groupStates: (v) => v || {},
       },
