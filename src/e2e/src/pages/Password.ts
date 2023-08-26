@@ -3,7 +3,10 @@ import { Page } from './common/Page';
 import { Retro } from './Retro';
 
 export class Password extends Page {
-  public constructor(driver: WebDriver, private readonly slug: string) {
+  public constructor(
+    driver: WebDriver,
+    private readonly slug: string,
+  ) {
     super(driver, `/retros/${slug}`, '.page-password');
   }
 
