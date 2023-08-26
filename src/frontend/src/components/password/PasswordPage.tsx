@@ -66,12 +66,18 @@ export default ({
         title={`Password for ${slug}`}
       />
       <form onSubmit={handleSubmit}>
+        {/* 'username' is included for password managers to distinguish between retros */}
+        <input type="hidden" name="username" value={retroId} autoComplete="username" />
+        {/* 'name' is a friendly name for password managers (but can be changed) */}
+        <input type="hidden" name="name" value={slug} autoComplete="name" />
         <Input
           type="password"
           placeholder="password"
           value={password}
           onChange={setPassword}
           disabled={sending}
+          autoComplete="current-password"
+          required
         />
         { sending ? (<div className="checking">&hellip;</div>) : (
           <button type="submit" title="Go" disabled={password === ''}>

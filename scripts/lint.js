@@ -12,6 +12,9 @@ const baseDir = path.join(__dirname, '..');
 (async () => {
   process.stdout.write('Linting...\n');
 
+  const prettierCommand = 'npm';
+  const prettierArgs = ['run', 'lint:prettier', '--quiet', '--'];
+
   const eslintCommand = 'npm';
   const eslintArgs = ['run', 'lint:eslint', '--quiet', '--'];
 
@@ -30,6 +33,10 @@ const baseDir = path.join(__dirname, '..');
         stdio: ['ignore', 'pipe', 'inherit'],
       });
       await execFile(tscCommand, tscArgs, {
+        cwd: path.join(baseDir, 'src', package),
+        stdio: ['ignore', 'pipe', 'inherit'],
+      });
+      await execFile(prettierCommand, prettierArgs, {
         cwd: path.join(baseDir, 'src', package),
         stdio: ['ignore', 'pipe', 'inherit'],
       });

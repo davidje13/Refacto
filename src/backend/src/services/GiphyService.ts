@@ -1,8 +1,4 @@
-// temp workaround to get types for node's native fetch()
-// See https://stackoverflow.com/q/71294230/1180785
-/// <reference lib="dom" />
-
-import cs from 'collection-storage';
+import { LruCache } from 'collection-storage';
 
 interface Config {
   baseUrl: string;
@@ -36,7 +32,7 @@ export class GiphyService {
   private readonly apiKey: string;
 
   // memory used = ~120 bytes per gif entry * max limit * max cache size
-  private readonly searchCache = new cs.LruCache<string, GifInfo[]>(1024);
+  private readonly searchCache = new LruCache<string, GifInfo[]>(1024);
 
   public constructor(config: Config) {
     this.baseUrl = config.baseUrl;

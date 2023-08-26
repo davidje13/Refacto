@@ -21,7 +21,10 @@ class ItemEntry extends PageFragment {
 }
 
 export class Retro extends Page {
-  public constructor(driver: WebDriver, private readonly slug: string) {
+  public constructor(
+    driver: WebDriver,
+    private readonly slug: string,
+  ) {
     super(driver, `/retros/${slug}`, '.page-retro');
   }
 

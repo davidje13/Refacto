@@ -1,7 +1,3 @@
-// temp workaround to get types for node's native fetch()
-// See https://stackoverflow.com/q/71294230/1180785
-/// <reference lib="dom" />
-
 interface Config {
   baseUrl: string;
 }

@@ -4,7 +4,10 @@ import { byButtonText } from '../helpers/customBy';
 import { Retro } from './Retro';
 
 export class RetroSettings extends Page {
-  public constructor(driver: WebDriver, private slug: string) {
+  public constructor(
+    driver: WebDriver,
+    private slug: string,
+  ) {
     super(driver, `/retros/${slug}/settings`, '.page-retro-settings');
   }
 

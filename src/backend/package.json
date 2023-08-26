@@ -5,6 +5,7 @@
     "format": "prettier --write .",
     "lint:tsc": "tsc",
     "lint:eslint": "true",
+    "lint:prettier": "prettier --check .",
     "lint": "tsc && prettier --check .",
     "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build/static && chmod +x build/index.js",
     "start": "npm run build && NODE_ENV=development build/index.js",
@@ -22,7 +23,7 @@
     "pg": "8.x",
     "pwd-hasher": "1.x",
     "shared-reducer-backend": "3.x",
-    "tslib": "2.5.x",
+    "tslib": "2.6.x",
     "uuid": "9.x",
     "websocket-express": "3.x",
     "ws": "8.x"
@@ -39,10 +40,10 @@
     "@types/uuid": "9.x",
     "http-proxy-middleware": "2.x",
     "lean-test": "2.x",
-    "prettier": "2.8.7",
+    "prettier": "3.0.2",
     "rollup": "3.x",
     "supertest": "6.x",
     "superwstest": "2.x",
-    "typescript": "5.0.x"
+    "typescript": "5.2.x"
   }
 }

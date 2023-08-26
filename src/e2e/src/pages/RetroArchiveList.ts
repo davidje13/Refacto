@@ -5,7 +5,10 @@ import { Retro } from './Retro';
 import { waitForFile } from '../helpers/downloads';
 
 export class RetroArchiveList extends Page {
-  public constructor(driver: WebDriver, private readonly slug: string) {
+  public constructor(
+    driver: WebDriver,
+    private readonly slug: string,
+  ) {
     super(driver, `/retros/${slug}/archives`, '.page-archive-list');
   }
 
