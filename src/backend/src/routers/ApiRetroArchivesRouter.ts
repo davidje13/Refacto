@@ -14,9 +14,8 @@ export class ApiRetroArchivesRouter extends Router {
       async (req, res) => {
         const { retroId } = req.params;
 
-        const archives = await retroArchiveService.getRetroArchiveSummaries(
-          retroId,
-        );
+        const archives =
+          await retroArchiveService.getRetroArchiveSummaries(retroId);
         res.json({ archives });
       },
     );

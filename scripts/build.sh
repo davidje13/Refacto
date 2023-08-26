@@ -8,8 +8,8 @@ BUILDDIR="$BASEDIR/build";
 BUILD_PIDS="";
 
 if ! diff \
-  "$BASEDIR/src/frontend/shared/api-entities.ts" \
-  "$BASEDIR/src/backend/shared/api-entities.ts"; then
+  "$BASEDIR/src/frontend/src/shared/api-entities.ts" \
+  "$BASEDIR/src/backend/src/shared/api-entities.ts"; then
   echo 'Shared entities do not match.';
   false;
 fi;
