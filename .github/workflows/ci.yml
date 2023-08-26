@@ -62,17 +62,17 @@ jobs:
       - name: Smoke Test
         run: |
           npm install --production
-          ./index.js > stdout.log & PID=$!
+          ./index.js >output.log 2>&1 & PID=$!
           sleep 5
-          if ! grep 'Available at' <stdout.log >/dev/null; then
-            cat stdout.log
+          if ! grep 'Available at' <output.log >/dev/null; then
+            cat output.log
             echo "Application failed to launch" >&2
             exit 1
           fi
 
           wget localhost:5000 -O test-index.html
           if ! grep 'src="/assets/' <test-index.html >/dev/null; then
-            cat stdout.log
+            cat output.log
             echo "Unexpected main page response" >&2
             cat test-index.html
             exit 1
@@ -80,8 +80,8 @@ jobs:
 
           kill -2 "$PID"
           sleep 5
-          if ! grep 'Shutdown complete' <stdout.log >/dev/null; then
-            cat stdout.log
+          if ! grep 'Shutdown complete' <output.log >/dev/null; then
+            cat output.log
             echo "Application failed to shut down" >&2
             exit 1
           fi
