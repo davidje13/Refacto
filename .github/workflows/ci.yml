@@ -1,9 +1,7 @@
 name: Build and Test
 
 on:
-  push:
-    branches:
-      - master
+  push
   pull_request:
     branches:
       - master

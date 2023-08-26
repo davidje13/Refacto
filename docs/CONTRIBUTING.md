@@ -7,7 +7,8 @@ npm start
 ```
 
 The site (both frontend resources and backend API) will be available at
-<http://localhost:5000/>. Both will automatically rebuild if changed.
+<http://localhost:5000/>. The frontend will automatically rebuild if
+changed, but the backend will not (looking for a good Rollup HMR plugin!)
 
 By default, this will run a mock Google authentication provider and an
 in-memory database. To enable real authentication providers (e.g.
@@ -141,8 +142,7 @@ npm install --save-dev selenium-webdriver
 ## Browser Support
 
 The latest versions of Google Chrome and Mozilla Firefox are supported,
-and the end-to-end tests will run in both if the necessary drivers are
-installed (see [Running tests](#running-tests)).
+and the end-to-end tests will run in both (see [Running tests](#running-tests)).
 
 ## Library documentation
 

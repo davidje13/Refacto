@@ -52,8 +52,8 @@ async function refreshApp(
   }
 }
 
-//if (import.meta.hot) { // TODO
-//  // Enable hot reloading of backend sources during development
+// TODO: find a HMR plugin for rollup (see https://github.com/rollup/rollup/issues/50)
+//if (import.meta.hot) {
 //  import.meta.hot.accept(['./app', './config'], ([newApp, newConfig]) => refreshApp(newApp.appFactory, newConfig.config));
 //}
 
