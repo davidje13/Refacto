@@ -13,7 +13,7 @@
     "@types/node": "18.x",
     "@types/selenium-webdriver": "4.x",
     "chromedriver": "116.x",
-    "geckodriver": "4.2.x",
+    "geckodriver": "3.2.0",
     "lean-test": "2.x",
     "prettier": "3.0.2",
     "selenium-webdriver": "4.x",

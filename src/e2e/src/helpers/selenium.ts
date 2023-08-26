@@ -1,6 +1,6 @@
-import webdriver from 'selenium-webdriver';
-import chrome from 'selenium-webdriver/chrome.js';
-import firefox from 'selenium-webdriver/firefox.js';
+import { Builder as WebDriverBuilder } from 'selenium-webdriver';
+import { Options as ChromeOptions } from 'selenium-webdriver/chrome.js';
+import { Options as FirefoxOptions } from 'selenium-webdriver/firefox.js';
 import { downloadDir } from './downloads';
 import 'chromedriver';
 import 'geckodriver';
@@ -12,7 +12,7 @@ const headless = process.env['HEADLESS'] !== 'false';
 const width = 900; // ensure non-mobile display
 const height = 500;
 
-const chromeOptions = new chrome.Options()
+const chromeOptions = new ChromeOptions()
   .windowSize({ width, height })
   .setUserPreferences({
     'profile.default_content_settings.popups': 0,
@@ -20,7 +20,7 @@ const chromeOptions = new chrome.Options()
     'download.default_directory': downloadDir,
   });
 
-const firefoxOptions = new firefox.Options()
+const firefoxOptions = new FirefoxOptions()
   .windowSize({ width, height })
   .setPreference('browser.download.dir', downloadDir)
   .setPreference('browser.download.folderList', 2)
@@ -39,7 +39,7 @@ if (headless) {
 }
 
 export const buildDriver = () =>
-  new webdriver.Builder()
+  new WebDriverBuilder()
     .forBrowser('chrome')
     .setChromeOptions(chromeOptions)
     .setFirefoxOptions(firefoxOptions)
