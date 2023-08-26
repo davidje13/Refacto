@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { LruCache } from 'collection-storage';
 
 interface Config {
