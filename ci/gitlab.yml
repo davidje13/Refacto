@@ -2,7 +2,7 @@ before_script:
 - apt-get update
 - wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 - apt-get install -y ./google-chrome-stable_current_amd64.deb
-- apt-get install -y firefox
+- apt-get install -y firefox-esr
 
 node:18:
   image: node:18
