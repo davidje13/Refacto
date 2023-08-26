@@ -44,9 +44,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { node: '16' }
           - { node: '18' }
-          - { node: '19' }
+          - { node: '20' }
     steps:
       - name: Install Node
         uses: actions/setup-node@v2

@@ -4,13 +4,13 @@ before_script:
 - apt-get install -y ./google-chrome-stable_current_amd64.deb
 - apt-get install -y firefox
 
-node:16:
-  image: node:16
+node:18:
+  image: node:18
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
-node:18:
-  image: node:18
+node:20:
+  image: node:20
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
