@@ -34,6 +34,7 @@ export default memo(({
   type,
   value,
   selected,
+  autoComplete = 'off',
   checked,
   onChange,
   ...rest
@@ -60,7 +61,7 @@ export default memo(({
       value={value}
       checked={type === 'radio' ? (selected === value) : checked}
       onChange={changeHandler}
-      autoComplete="off"
+      autoComplete={autoComplete}
       {...rest}
     />
   );
