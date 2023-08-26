@@ -14,8 +14,14 @@ describe('API giphy', () => {
         data: [
           {
             images: {
-              fixed_height: { url: 'normal.gif?extra' },
+              original: { url: 'original.gif?extra' },
+              fixed_height: { url: 'medium.gif?extra' },
               fixed_height_small: { url: 'small.gif?extra' },
+            },
+          },
+          {
+            images: {
+              original: { url: 'original2.gif' },
             },
           },
         ],
@@ -48,7 +54,10 @@ describe('API giphy', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body).toEqual({
-        gifs: [{ small: 'small.gif', medium: 'normal.gif' }],
+        gifs: [
+          { small: 'small.gif', medium: 'medium.gif' },
+          { small: 'original2.gif', medium: 'original2.gif' },
+        ],
       });
     });
 

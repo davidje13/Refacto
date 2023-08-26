@@ -14,13 +14,14 @@ interface GifInfo {
 }
 
 interface GiphyResponseResource {
-  url: string;
+  url?: string;
 }
 
 interface GiphyResponseGif {
   images: {
-    fixed_height: GiphyResponseResource;
-    fixed_height_small: GiphyResponseResource;
+    original?: GiphyResponseResource;
+    fixed_height?: GiphyResponseResource;
+    fixed_height_small?: GiphyResponseResource;
   };
 }
 
@@ -75,10 +76,15 @@ export class GiphyService {
           throw new Error(`Unknown Giphy API response: ${resultJson.status}`);
         }
 
-        return resultJson.data.map((gif) => ({
-          small: gif.images.fixed_height_small.url.split('?')[0] ?? '',
-          medium: gif.images.fixed_height.url.split('?')[0] ?? '',
-        }));
+        return resultJson.data.map((gif) => {
+          const original = gif.images.original?.url ?? '';
+          const fixed = gif.images.fixed_height?.url ?? original;
+          const small = gif.images.fixed_height_small?.url ?? fixed;
+          return {
+            small: small.split('?')[0] ?? '',
+            medium: fixed.split('?')[0] ?? '',
+          };
+        });
       },
       (c) => c.length >= limit,
     );
