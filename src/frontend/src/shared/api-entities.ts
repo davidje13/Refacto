@@ -61,9 +61,9 @@ export interface RetroData {
   items: RetroItem[];
 }
 
-export interface Retro<StateT = Record<string, unknown>>
-  extends RetroSummary,
-    RetroData {
+type AnyState = Record<string, unknown>;
+
+export interface Retro<StateT = AnyState> extends RetroSummary, RetroData {
   ownerId: string;
   state: StateT;
   groupStates: Record<string, StateT>;

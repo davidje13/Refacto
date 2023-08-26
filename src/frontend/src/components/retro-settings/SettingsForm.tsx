@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
-import type { Retro } from '../../shared/api-entities';
 import { actionsSyncedCallback } from 'shared-reducer-frontend';
+import type { Retro } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import Input from '../common/Input';
 import PickerInput from '../common/PickerInput';

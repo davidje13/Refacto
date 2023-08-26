@@ -1,7 +1,7 @@
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, Spec } from 'json-immutability-helper';
-import type { Retro } from '../shared/api-entities';
 import SharedReducer, { Dispatch, DispatchSpec } from 'shared-reducer-frontend';
+import type { Retro } from '../shared/api-entities';
 import SubscriptionTracker from './SubscriptionTracker';
 
 export type RetroError = any;
