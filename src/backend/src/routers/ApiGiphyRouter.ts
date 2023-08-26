@@ -1,5 +1,6 @@
 import { Router } from 'websocket-express';
 import type { GiphyService } from '../services/GiphyService';
+import { logError } from '../log';
 
 export class ApiGiphyRouter extends Router {
   public constructor(service: GiphyService) {
@@ -9,12 +10,12 @@ export class ApiGiphyRouter extends Router {
       const { q, lang = 'en' } = req.query;
 
       if (typeof q !== 'string' || !q) {
-        res.status(400).end();
+        res.status(400).json({ error: 'Bad request' });
         return;
       }
 
       if (typeof lang !== 'string') {
-        res.status(400).end();
+        res.status(400).json({ error: 'Bad request' });
         return;
       }
 
@@ -23,7 +24,8 @@ export class ApiGiphyRouter extends Router {
 
         res.json({ gifs });
       } catch (err) {
-        res.status(500).end();
+        logError('Giphy proxy error', err);
+        res.status(500).json({ error: 'Proxy error' });
       }
     });
   }

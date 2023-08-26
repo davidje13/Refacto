@@ -66,18 +66,13 @@ export class GiphyService {
         const resultJson = (await result.json()) as GiphyResponse;
 
         if (resultJson.status === 400) {
-          throw new Error();
+          throw new Error('Giphy API returned Bad Request');
         } else if (resultJson.status === 403) {
-          process.stderr.write('Warning: Giphy API key rejected\n');
-          throw new Error();
+          throw new Error('Giphy API key rejected');
         } else if (resultJson.status === 429) {
-          process.stderr.write('Warning: Giphy API rate limit reached\n');
-          throw new Error();
+          throw new Error('Giphy API rate limit reached');
         } else if (resultJson.status >= 400) {
-          process.stderr.write(
-            `Warning: Unknown Giphy API response: ${resultJson.status}\n`,
-          );
-          throw new Error();
+          throw new Error(`Unknown Giphy API response: ${resultJson.status}`);
         }
 
         return resultJson.data.map((gif) => ({

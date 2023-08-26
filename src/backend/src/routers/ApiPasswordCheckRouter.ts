@@ -1,5 +1,6 @@
 import { Router } from 'websocket-express';
 import type { PasswordCheckService } from '../services/PasswordCheckService';
+import { logError } from '../log';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
 
@@ -28,7 +29,17 @@ export class ApiPasswordCheckRouter extends Router {
         res.removeHeader('pragma');
         res.end(data);
       } catch (err) {
-        res.status(500).end();
+        if (err instanceof Error && err.message === 'Invalid range prefix') {
+          res.status(400).end();
+        } else if (
+          err instanceof Error &&
+          err.message === 'Service unavailable'
+        ) {
+          res.status(503).end();
+        } else {
+          logError('Password breaches lookup error', err);
+          res.status(500).end();
+        }
       }
     });
   }

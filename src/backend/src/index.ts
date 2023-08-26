@@ -3,6 +3,7 @@ import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
 import { appFactory, type App } from './app';
 import { type ConfigT, config } from './config';
+import { logError, logInfo } from './log';
 
 // This file exists mainly to enable hot module replacement.
 // app.js is the main entry point for the application.
@@ -13,8 +14,8 @@ const server = createServer();
 
 function startServer(): void {
   server.listen(config.port, config.serverBindAddress, () => {
-    process.stdout.write(`Available at http://localhost:${config.port}/\n`);
-    process.stdout.write('Press Ctrl+C to stop\n');
+    logInfo(`Available at http://localhost:${config.port}/`);
+    logInfo('Press Ctrl+C to stop');
   });
 }
 
@@ -42,12 +43,7 @@ async function refreshApp(
       }
     }
   } catch (e) {
-    process.stderr.write('Failed to start server\n');
-    if (e instanceof Error) {
-      process.stderr.write(`${e.message}\n`);
-    } else {
-      process.stderr.write(`${e}\n`);
-    }
+    logError('Failed to start server', e);
     process.exit(1);
   }
 }
@@ -67,7 +63,7 @@ if (config.mockSsoPort) {
       config.serverBindAddress,
     );
   } catch (e) {
-    process.stderr.write('Failed to start mock SSO server\n');
+    logError('Failed to start mock SSO server', e);
   }
 }
 
@@ -77,13 +73,11 @@ function getConnectionCount(s: Server): Promise<number> {
 
 async function shutdown(): Promise<void> {
   const scCount = await getConnectionCount(server);
-  process.stdout.write(`Shutting down (open connections: ${scCount})\n`);
+  logInfo(`Shutting down (open connections: ${scCount})`);
 
   if (mockSsoServer) {
     const mscCount = await getConnectionCount(mockSsoServer);
-    process.stdout.write(
-      `Shutting down mock SSO server (open connections: ${mscCount})\n`,
-    );
+    logInfo(`Shutting down mock SSO server (open connections: ${mscCount})`);
   }
 
   await Promise.all([
@@ -94,7 +88,7 @@ async function shutdown(): Promise<void> {
   ]);
   await activeApp?.close();
 
-  process.stdout.write('Shutdown complete\n');
+  logInfo('Shutdown complete');
 }
 
 let interrupted = false;
@@ -102,9 +96,9 @@ process.on('SIGINT', () => {
   // SIGINT is sent twice in quick succession, so ignore the second
   if (!interrupted) {
     interrupted = true;
-    process.stdout.write('\n');
+    logInfo('');
     shutdown().catch((e) => {
-      process.stderr.write(`Failed to shutdown server: ${e}\n`);
+      logError('Failed to shutdown server', e);
     });
   }
 });

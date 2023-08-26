@@ -2,6 +2,7 @@ import { Router } from 'websocket-express';
 import expressStaticGzip from 'express-static-gzip';
 import { join } from 'node:path';
 import { basedir } from '../basedir';
+import { logError } from '../log';
 
 const VERSIONED_FILE = /\..{4,}\.(css|js|woff2?)(\.(br|gz))?$/;
 const VERSIONED_CACHE_CONTROL = [
@@ -29,11 +30,10 @@ export class StaticRouter extends Router {
           );
         })
         .catch((e) => {
-          process.stderr.write(
-            `Failed to apply frontend forwarding to ${forwardHost} ` +
-              '(only API will be available)\n',
+          logError(
+            `Failed to apply frontend forwarding to ${forwardHost} (only API will be available)`,
+            e,
           );
-          process.stderr.write(`${e.message}\n`);
         });
     } else {
       const staticDir = join(basedir, 'static');

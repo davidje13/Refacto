@@ -12,6 +12,7 @@ import {
 } from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import json from '../helpers/json';
+import { logError } from '../log';
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
@@ -94,8 +95,8 @@ export class ApiRetrosRouter extends Router {
         res.status(200).json({ id, token });
       } catch (e) {
         if (!(e instanceof Error)) {
-          process.stderr.write(`Unexpected error: ${e}\n`);
-          res.status(400).json({ error: 'Internal error' });
+          logError('Unexpected error creating retro', e);
+          res.status(500).json({ error: 'Internal error' });
         } else if (e.message === 'URL is already taken') {
           res.status(409).json({ error: e.message });
         } else {

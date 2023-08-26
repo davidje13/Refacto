@@ -1,6 +1,7 @@
 import { WebSocketExpress, Router } from 'websocket-express';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
 import { extractRetroData } from '../helpers/jsonParsers';
+import { logError } from '../log';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
@@ -39,8 +40,8 @@ export class ApiRetroArchivesRouter extends Router {
           res.status(200).json({ id });
         } catch (e) {
           if (!(e instanceof Error)) {
-            process.stderr.write(`Unexpected error: ${e}\n`);
-            res.status(400).json({ error: 'Internal error' });
+            logError('Error creating retro archive', e);
+            res.status(500).json({ error: 'Internal error' });
           } else {
             res.status(400).json({ error: e.message });
           }
