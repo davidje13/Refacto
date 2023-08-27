@@ -55,7 +55,7 @@ store this value is in a deployment pipeline configuration, or a
 configuration server.
 
 ```bash
-PASSWORD_SECRET_PEPPER=asecretwhichmustnotbeknown ./index.js
+PASSWORD_SECRET_PEPPER="asecretwhichmustnotbeknown" ./index.js
 ```
 
 Currently it is not possible to cycle this secret value, as passwords
@@ -89,7 +89,7 @@ is used, providing no real protection. To get the benefits of data
 encryption, supply a secret key on startup.
 
 ```bash
-ENCRYPTION_SECRET_KEY=0000000000000000000000000000000000000000000000000000000000000000 ./index.js
+ENCRYPTION_SECRET_KEY="0000000000000000000000000000000000000000000000000000000000000000" ./index.js
 ```
 
 The secret key should be 32 random bytes (256 bits) encoded in
@@ -127,7 +127,7 @@ value is in a deployment pipeline configuration, or a configuration
 server.
 
 ```bash
-TOKEN_SECRET_PASSPHRASE=asecretwhichmustnotbeknown ./index.js
+TOKEN_SECRET_PASSPHRASE="asecretwhichmustnotbeknown" ./index.js
 ```
 
 **If this value ever changes, you will need to regenerate all key
@@ -183,7 +183,7 @@ mongo --authenticationDatabase admin -u admin -p
 And configure Refacto to connect as the `refacto` user:
 
 ```bash
-DB_URL=mongodb://refacto:<pass>@localhost:27017/refacto ./index.js
+DB_URL="mongodb://refacto:<pass>@localhost:27017/refacto" ./index.js
 ```
 
 <https://docs.mongodb.com/manual/tutorial/enable-authentication/>
@@ -233,7 +233,7 @@ sudo service mongod restart
 After enabling security, change the database URL when starting Refacto:
 
 ```bash
-DB_URL=mongodb://localhost:27017/refacto?ssl=true ./index.js
+DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
 ```
 
 Note that after enabling this, unless you also configure identity

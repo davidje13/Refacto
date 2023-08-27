@@ -10,7 +10,6 @@
     "start": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/start.sh",
     "test": "scripts/install.sh && scripts/lint.js && scripts/test.sh",
     "test:backend": "npm --prefix=src/backend test --quiet --",
-    "test:backend:watch": "npm --prefix=src/backend test --quiet -- --watch",
     "test:frontend": "npm --prefix=src/frontend test --quiet --",
     "test:frontend:watch": "npm --prefix=src/frontend test --quiet -- --watch",
     "test:e2e": "scripts/install.sh && scripts/e2e.sh"

@@ -41,12 +41,6 @@ npm run test:frontend:watch
 npm run test:backend
 ```
 
-Watch mode:
-
-```bash
-npm run test:backend:watch
-```
-
 ### End-to-end tests only
 
 To automatically build and run the server, and run tests against it:
@@ -154,22 +148,3 @@ and the end-to-end tests will run in both (see [Running tests](#running-tests)).
 - Jest DOM Matchers <https://github.com/testing-library/jest-dom>
 - Supertest: <https://github.com/visionmedia/supertest> and <https://visionmedia.github.io/superagent/>
 - Selenium: <https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/>
-
-## Troubleshooting
-
-### `error:0308010C:digital envelope routines::unsupported`
-
-This project uses an old version of WebPack which is incompatible with Node 17+.
-If you see this error, set the following environment variable for the command you are running:
-
-```bash
-NODE_OPTIONS=--openssl-legacy-provider
-```
-
-Specifically, WebPack uses an old OpenSSL algorithm for generating file hashes. This is not a
-security risk, and the resulting executable can (and should) be executed without using the
-legacy provider.
-
-Fixing this properly requires updating to the next major version of WebPack, which is unfortunately
-not compatible with the NeutrinoJS build system used here. It will be necessary to replace neutrino
-with per-tool configuration to do the update.

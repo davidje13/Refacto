@@ -80,6 +80,5 @@ echo 'Generating package.json...';
   'devDependencies=' \
   > "$BUILDDIR/package.json";
 cp "$BASEDIR/src/backend/package-lock.json" "$BUILDDIR";
-cp "$BASEDIR/deployment/.dockerignore" "$BUILDDIR";
 
 echo 'Build complete.';

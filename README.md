@@ -8,7 +8,7 @@ simplified code, development, and deployment.
 
 ## Running locally
 
-Requires [Node.js](https://nodejs.org/en/).
+Requires [Node.js 18 or above](https://nodejs.org/en/).
 
 ```bash
 npm start
@@ -22,25 +22,20 @@ development.
 
 ## Building and deploying
 
+The basic steps for building and deploying are:
+
 ```bash
 npm run build
-```
-
-The output will be placed in `build`. Specify the `PORT` environment
-variable when running (defaults to 5000):
-
-```bash
 cd build
 npm install --production
 PORT=8080 ./index.js
 ```
 
+*Note: by default, Refacto will use an in-memory database and will not
+offer any login capabilities.*
+
 See the [deployment documentation](docs/DEPLOYING.md) for more
 details and out-of-the-box examples.
-
-*Note: by default, Refacto will use an in-memory database and will not
-offer any login capabilities. See the sections below for details on
-integrations and security considerations.*
 
 ## Services
 
