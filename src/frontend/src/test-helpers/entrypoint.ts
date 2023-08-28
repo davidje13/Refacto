@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import 'flexible-testing-library-react/extend-expect';
 import './fetch';
 import './ws';

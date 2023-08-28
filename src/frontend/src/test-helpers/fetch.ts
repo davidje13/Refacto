@@ -204,7 +204,6 @@ class MockFetch {
 
 const mockFetch = new MockFetch();
 
-// eslint-disable-next-line import/prefer-default-export
 export function mockFetchExpect(
   url: string,
   options?: RequestInit,

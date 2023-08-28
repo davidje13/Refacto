@@ -35,7 +35,7 @@ class RetroWrapper {
   private latestState?: RetroState;
 
   public constructor(
-    apiBase: string,
+    _apiBase: string,
     wsBase: string,
     retroId: string,
     retroToken: string,
@@ -91,8 +91,7 @@ export default class RetroTracker {
     retroToken: string,
     dispatchCallback: (dispatch: RetroDispatch) => void,
     retroStateCallback: RetroStateCallback,
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */ // TODO
-    errorCallback: (err: RetroError) => void,
+    _errorCallback: (err: RetroError) => void, // TODO
   ): RetroSubscription {
     const sub = this.subscriptionTracker.subscribe({ retroId, retroToken });
     dispatchCallback(sub.service.reducer.dispatch);
@@ -102,7 +101,6 @@ export default class RetroTracker {
       unsubscribe: (): void => {
         sub.service.removeStateCallback(retroStateCallback);
         sub.unsubscribe().catch((e) => {
-          /* eslint-disable-next-line no-console */ // record non-critical error
           console.warn(`Failed to unsubscribe from retro ${retroId}`, e);
         });
       },

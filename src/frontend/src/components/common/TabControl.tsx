@@ -24,8 +24,8 @@ export default memo(({
   const [activeKey, setActiveKey] = useState('');
   const active = getActive(tabs, activeKey);
 
-  const handleTabClick = useCallback((e) => {
-    setActiveKey(e.target.dataset.key);
+  const handleTabClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    setActiveKey(e.currentTarget.dataset['key'] ?? '');
   }, [setActiveKey]);
 
   const tabHeaders = tabs.map(({ key, title, className }) => (

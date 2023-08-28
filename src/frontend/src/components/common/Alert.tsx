@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { ReactComponent as Warning } from '../../../resources/warning.svg';
+import Warning from '../../../resources/warning.svg';
 import './Alert.less';
 
 interface PropsT {

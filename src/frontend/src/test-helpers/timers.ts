@@ -1,4 +1,4 @@
-jest.useFakeTimers('modern');
+jest.useFakeTimers();
 
 afterEach(() => {
   jest.clearAllTimers();

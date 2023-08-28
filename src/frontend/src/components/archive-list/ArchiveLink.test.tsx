@@ -28,6 +28,8 @@ describe('ArchiveLink', () => {
       </Router>
     ));
 
-    expect(dom).toContainElementWith(text(formatDateTime(0)));
+    // the formatted time can include special unicode spaces,
+    // so we disable testing-library's default normaliser
+    expect(dom).toContainElementWith(text(formatDateTime(0), { normalizer: (x) => x }));
   });
 });

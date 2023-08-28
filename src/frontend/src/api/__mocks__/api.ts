@@ -176,7 +176,7 @@ class FakeRetroTokenService {
   }
 
   public async getRetroTokenForUser(
-    retroId: string,
+    _retroId: string,
     userToken: string,
   ): Promise<string | null> {
     this.capturedUserToken = userToken;

@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 import useAwaited from 'react-hook-awaited';
 import Input from '../common/Input';
 import { slugTracker } from '../../api/api';
-import { ReactComponent as TickBold } from '../../../resources/tick-bold.svg';
-import { ReactComponent as Cross } from '../../../resources/cross.svg';
+import TickBold from '../../../resources/tick-bold.svg';
+import Cross from '../../../resources/cross.svg';
 
 export const MAX_SLUG_LENGTH = 64;
 const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';

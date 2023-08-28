@@ -15,23 +15,15 @@ const baseDir = path.join(__dirname, '..');
   const prettierCommand = 'npm';
   const prettierArgs = ['run', 'lint:prettier', '--quiet', '--'];
 
-  const eslintCommand = 'npm';
-  const eslintArgs = ['run', 'lint:eslint', '--quiet', '--'];
-
   const tscCommand = 'npm';
   const tscArgs = ['run', 'lint:tsc', '--quiet', '--'];
 
   if (process.stdout.isTTY) {
-    eslintArgs.push('--color');
     tscArgs.push('--pretty');
   }
 
   const failures = await Promise.all(packages.map(async (package) => {
     try {
-      await execFile(eslintCommand, eslintArgs, {
-        cwd: path.join(baseDir, 'src', package),
-        stdio: ['ignore', 'pipe', 'inherit'],
-      });
       await execFile(tscCommand, tscArgs, {
         cwd: path.join(baseDir, 'src', package),
         stdio: ['ignore', 'pipe', 'inherit'],

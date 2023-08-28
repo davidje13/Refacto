@@ -20,7 +20,7 @@ if [[ -z "$TARGET_HOST" ]]; then
 
   if [[ ! -d "$BUILDDIR/node_modules" ]]; then
     echo "Installing production dependencies...";
-    npm --prefix="$BUILDDIR" install --production --quiet;
+    npm --prefix="$BUILDDIR" install --omit=dev --quiet;
   fi;
 
   echo 'Using mock authentication provider';

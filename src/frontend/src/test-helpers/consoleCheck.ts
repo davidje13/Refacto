@@ -51,10 +51,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  /* eslint-disable jest/no-standalone-expect */
   expect(spyConsole).toHaveReportedNoErrors();
   expect(spyConsole).toHaveReportedNoWarnings();
-  /* eslint-enable jest/no-standalone-expect */
   spyConsole.error.mockRestore();
   spyConsole.warn.mockRestore();
 });

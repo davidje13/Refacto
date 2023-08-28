@@ -27,7 +27,7 @@ export default class RetroService {
   }: RetroOptions): Promise<RetroCreationInfo> {
     const requestBody: JsonData = { name, slug, password };
     if (importJson) {
-      requestBody.importJson = importJson;
+      requestBody['importJson'] = importJson;
     }
     const response = await fetch(
       `${this.apiBase}/retros`,

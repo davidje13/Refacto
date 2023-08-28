@@ -97,7 +97,7 @@ describe('MoodSection', () => {
 
     const textEntry = dom.getBy(css('mock-expanding-text-entry'));
     act(() => {
-      textEntry.mockProps.onSubmit('my message');
+      textEntry.mockProps['onSubmit']('my message');
     });
 
     expect(onAddItem).toHaveBeenCalledWith(
@@ -121,7 +121,7 @@ describe('MoodSection', () => {
 
     const textEntry = dom.getBy(css('mock-expanding-text-entry'));
     act(() => {
-      textEntry.mockProps.onSubmit('my message');
+      textEntry.mockProps['onSubmit']('my message');
     });
 
     expect(onAddItem).toHaveBeenCalledWith(

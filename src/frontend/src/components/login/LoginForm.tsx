@@ -7,7 +7,6 @@ import './LoginForm.less';
 function makeState(redirect: string): string {
   const nonce = toHex(randomBytes(10));
   if (!storage.setItem('login-nonce', nonce)) {
-    /* eslint-disable-next-line no-alert */ // rare, not important enough for custom async popup
     window.alert('You must enable session cookies or storage in your browser settings to log in');
     throw new Error('insufficient browser permissions to log in');
   }
@@ -25,9 +24,9 @@ export default memo(({
 }: PropsT) => {
   const config = useConfig();
   const sso = config?.sso ?? {};
-  const googleConfig = sso.google;
-  const githubConfig = sso.github;
-  const gitlabConfig = sso.gitlab;
+  const googleConfig = sso['google'];
+  const githubConfig = sso['github'];
+  const gitlabConfig = sso['gitlab'];
 
   const resolvedRedirect = redirect || document.location.pathname;
   const domain = document.location.origin;

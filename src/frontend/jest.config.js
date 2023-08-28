@@ -1,11 +1,11 @@
-const neutrino = require('neutrino');
-
-//module.exports = neutrino().jest();
-
-// TODO: waiting for https://github.com/neutrinojs/neutrino/pull/1651
-const config = neutrino().jest();
-config.moduleNameMapper = {
-  '\\.svg$': config.moduleNameMapper['\\.svg$'],
-  ...config.moduleNameMapper,
+module.exports = {
+  moduleNameMapper: {
+    '\\.svg$': '<rootDir>/src/test-helpers/svgr.ts',
+    '\\.(less|png|woff2?)$': '<rootDir>/src/test-helpers/resource.ts',
+  },
+  transform: {
+    '\\.[jt]sx?$': 'babel-jest',
+  },
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: [ '<rootDir>/src/test-helpers/entrypoint.ts' ],
 };
-module.exports = config;

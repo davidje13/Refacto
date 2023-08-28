@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= htmlWebpackPlugin.options.lang %>">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -7,13 +7,13 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#4EC7B6">
 <title><%= htmlWebpackPlugin.options.title %></title>
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"/>
-<link rel="manifest" href="/assets/manifest.json"/>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<link rel="manifest" href="/manifest.json"/>
 <!-- stylesheet CSP hash: 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU=' -->
 <style>@keyframes fade-in{from{opacity:0}to{opacity:1}}.pre-load{animation:fade-in .2s .5s both}</style>
 </head>
 <body>
-<div id="<%= htmlWebpackPlugin.options.appMountId %>">
+<div id="root">
   <div class="pre-load">
     <p class="load">Loading&hellip;</p>
     <p class="info">Page not loading? Make sure you are using a modern browser such as the latest version of Chrome, Firefox, Edge or Safari.</p>

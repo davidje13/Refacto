@@ -74,7 +74,7 @@ THEMES.set('weather', {
   icons: {
     happy: '\u2600\uFE0F',
     meh: '\u26C5\uFE0F',
-    sad: '\u26C8',
+    sad: '\u26C8\uFE0F',
   },
 });
 

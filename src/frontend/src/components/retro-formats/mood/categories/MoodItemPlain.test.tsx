@@ -21,7 +21,7 @@ describe('MoodItemPlain', () => {
     const dom = render(<MoodItemPlain item={item} />);
 
     const voteCount = dom.getBy(css('mock-vote-count'));
-    expect(voteCount.mockProps.votes).toEqual(3);
+    expect(voteCount.mockProps['votes']).toEqual(3);
   });
 
   it('does not mark items as done by default', () => {

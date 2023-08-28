@@ -1,2 +1,1 @@
-export const ReactComponent = (): null => null;
-export default '';
+export default (): null => null;

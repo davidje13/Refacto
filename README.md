@@ -39,7 +39,7 @@ environment.
 
 ```bash
 cd build
-npm install --production
+npm install --omit=dev
 ./index.js
 ```
 

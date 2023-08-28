@@ -105,7 +105,7 @@ export default ({
   useLayoutEffect(updateSize, [updateSize, value]);
   useListener(window, 'resize', updateSize);
 
-  const style: Record<string, string> = {};
+  const style: React.CSSProperties = {};
   if (sizeToFit) {
     // +1 as Chrome seems to add an extra pixel now from somewhere when rendering,
     // so we must avoid the scrollbar appearing (presumably due to some rounding)

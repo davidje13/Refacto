@@ -17,7 +17,6 @@ export default memo(({ content }: PropsT) => {
       } catch (e) {
         canvasRef.current.width = 1;
         canvasRef.current.height = 1;
-        /* eslint-disable-next-line no-console */ // record non-critical error
         console.warn('Failed to render QR code', content);
       }
     }

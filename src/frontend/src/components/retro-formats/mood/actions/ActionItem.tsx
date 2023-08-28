@@ -4,8 +4,8 @@ import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared
 import ItemEditor from '../ItemEditor';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import { ReactComponent as Tick } from '../../../../../resources/tick.svg';
-import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';
+import Tick from '../../../../../resources/tick.svg';
+import TickBold from '../../../../../resources/tick-bold.svg';
 import './ActionItem.less';
 
 interface PropsT {
@@ -37,7 +37,6 @@ export default memo(({
   }, [setEditing, onEdit, item.id]);
 
   if (editing) {
-    /* eslint-disable jsx-a11y/no-autofocus */ // user triggered this
     return (
       <div className="action-item editing">
         <ItemEditor
@@ -51,7 +50,6 @@ export default memo(({
         />
       </div>
     );
-    /* eslint-enable jsx-a11y/no-autofocus */
   }
 
   return (

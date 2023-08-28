@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act } from 'flexible-testing-library-react';
+import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import type { RetroItem } from '../../shared/api-entities';
 import { css } from '../../test-helpers/queries';
@@ -23,11 +23,7 @@ describe('Retro', () => {
       />
     ));
 
-    await import('./mood/MoodRetro'); // wait for dynamic import
-    act(() => undefined);
-
-    expect(dom).toContainElementWith(css('mock-mood-retro'));
-    expect(dom.getBy(css('mock-mood-retro')).mockProps).toMatchObject({
+    expect((await dom.findBy(css('mock-mood-retro'))).mockProps).toMatchObject({
       retroItems,
       retroState,
     });

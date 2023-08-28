@@ -163,13 +163,13 @@ export default ({
         </Route>
         <Route path="/retros/:slug/archives"><ArchiveListPage {...retroParams} /></Route>
         <Route path="/retros/:slug/archives/:archiveId">
-          { ({ archiveId }): ReactNode => <ArchivePage {...retroParams} archiveId={archiveId} /> }
+          { ({ archiveId }): ReactNode => <ArchivePage {...retroParams} archiveId={archiveId ?? ''} /> }
         </Route>
         <Route path="/retros/:slug/archives/:archiveId/groups/:group">
           { ({ archiveId, group }): ReactNode => (
             <ArchivePage
               {...retroParams}
-              archiveId={archiveId}
+              archiveId={archiveId ?? ''}
               group={group}
             />
           ) }

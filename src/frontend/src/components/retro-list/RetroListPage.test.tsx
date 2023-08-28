@@ -25,6 +25,6 @@ describe('RetroListPage', () => {
     const dom = render(<RetroListPage />);
 
     const retroList = dom.getBy(css('mock-retro-list'));
-    expect(retroList.mockProps.retros.length).toEqual(1);
+    expect(retroList.mockProps['retros'].length).toEqual(1);
   });
 });

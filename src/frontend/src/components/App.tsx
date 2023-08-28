@@ -16,7 +16,7 @@ export default (): React.ReactElement => (
   <Fragment>
     <Switch>
       <Route path="/sso/:service">
-        { ({ service }): ReactNode => <LoginCallback service={service} /> }
+        { ({ service }): ReactNode => <LoginCallback service={service ?? ''} /> }
       </Route>
       <Route path="/"><WelcomePage /></Route>
       <Route path="/security"><SecurityPage /></Route>
@@ -24,7 +24,7 @@ export default (): React.ReactElement => (
       <Route path="/create/import"><RetroImportPage /></Route>
       <Route path="/retros"><RetroListPage /></Route>
       <Route path="/retros/:slug/:rest*">
-        { ({ slug }): ReactNode => <RetroRouter slug={slug} /> }
+        { ({ slug }): ReactNode => <RetroRouter slug={slug ?? ''} /> }
       </Route>
 
       <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />

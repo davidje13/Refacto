@@ -25,8 +25,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-/* eslint-disable no-return-assign, no-bitwise */
-
 const bth: string[] = [];
 for (let i = 0; i < 256; i += 1) {
   bth[i] = (i + 0x100).toString(16).substr(1);
@@ -56,5 +54,3 @@ export default function v4(): string {
 
   return bytesToUuid(rnds);
 }
-
-/* eslint-enable no-return-assign, no-bitwise */

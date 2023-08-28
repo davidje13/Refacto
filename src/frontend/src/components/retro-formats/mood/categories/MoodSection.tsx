@@ -5,7 +5,7 @@ import MoodItem from './MoodItem';
 import ItemColumn from '../ItemColumn';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';
+import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
   category: string;

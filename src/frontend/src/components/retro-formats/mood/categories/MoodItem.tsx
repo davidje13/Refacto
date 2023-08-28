@@ -4,7 +4,7 @@ import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditor from '../ItemEditor';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
-import { ReactComponent as TickBold } from '../../../../../resources/tick-bold.svg';
+import TickBold from '../../../../../resources/tick-bold.svg';
 import './MoodItem.less';
 
 interface PropsT {
@@ -51,7 +51,6 @@ export default memo(({
   }, [setEditing, onEdit, item.id]);
 
   if (editing) {
-    /* eslint-disable jsx-a11y/no-autofocus */ // user triggered this
     return (
       <div className="mood-item editing">
         <ItemEditor
@@ -66,7 +65,6 @@ export default memo(({
         />
       </div>
     );
-    /* eslint-enable jsx-a11y/no-autofocus */
   }
 
   if (focused) {

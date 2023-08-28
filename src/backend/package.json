@@ -4,7 +4,6 @@
   "scripts": {
     "format": "prettier --write .",
     "lint:tsc": "tsc",
-    "lint:eslint": "true",
     "lint:prettier": "prettier --check .",
     "lint": "tsc && prettier --check .",
     "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build/static && chmod +x build/index.js",

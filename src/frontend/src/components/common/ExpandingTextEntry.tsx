@@ -103,8 +103,6 @@ export default ({
 
   const alwaysMultiline = forceMultiline || hasContent(extraInputs);
 
-  /* eslint-disable jsx-a11y/no-autofocus */ // passthrough
-  /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */ // form click is assistive
   return (
     <form
       ref={setForm}
@@ -142,6 +140,4 @@ export default ({
       </div>
     </form>
   );
-  /* eslint-enable jsx-a11y/no-autofocus */
-  /* eslint-enable jsx-a11y/no-noninteractive-element-interactions */
 };

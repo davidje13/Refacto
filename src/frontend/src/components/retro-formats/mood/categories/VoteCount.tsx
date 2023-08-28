@@ -2,7 +2,7 @@ import React, { memo, useCallback } from 'react';
 import classNames from 'classnames';
 import WrappedButton from '../../../common/WrappedButton';
 import useTemporary from '../../../../hooks/useTemporary';
-import { ReactComponent as Heart } from '../../../../../resources/heart.svg';
+import Heart from '../../../../../resources/heart.svg';
 import './VoteCount.less';
 
 interface PropsT {

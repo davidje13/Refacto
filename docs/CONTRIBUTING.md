@@ -83,7 +83,7 @@ variable when running (defaults to 5000):
 
 ```bash
 cd build
-npm install --production
+npm install --omit=dev
 PORT=8080 ./index.js
 ```
 
