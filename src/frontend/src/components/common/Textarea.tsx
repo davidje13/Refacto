@@ -100,7 +100,9 @@ export default ({
   );
 
   useLayoutEffect(() => {
-    baseHeightRef.current = getEmptyHeight(textareaRef.current!);
+    if (textareaRef.current) {
+      baseHeightRef.current = getEmptyHeight(textareaRef.current);
+    }
   }, [textareaRef, baseHeightRef]);
   useLayoutEffect(updateSize, [updateSize, value]);
   useListener(window, 'resize', updateSize);

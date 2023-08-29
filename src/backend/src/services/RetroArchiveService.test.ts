@@ -26,8 +26,8 @@ describe('RetroArchiveService', () => {
       const archive = await service.getRetroArchive('my-retro-id', a1);
 
       expect(archive).not(toBeNull());
-      expect(archive!.format).toEqual('foo');
-      expect(archive!.options['a']).toEqual('x');
+      expect(archive?.format).toEqual('foo');
+      expect(archive?.options['a']).toEqual('x');
     });
 
     it('returns null if the archive is not in the retro', async () => {

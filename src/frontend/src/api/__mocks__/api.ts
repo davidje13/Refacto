@@ -79,7 +79,7 @@ class FakeArchiveTracker {
     if (!this.data.has(retroId)) {
       this.data.set(retroId, new Map());
     }
-    this.data.get(retroId)!.set(archiveId, archive);
+    this.data.get(retroId)?.set(archiveId, archive);
   }
 
   public get(

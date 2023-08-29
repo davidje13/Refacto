@@ -38,8 +38,8 @@ describe('ActionsPane', () => {
   it('creates a section for today', () => {
     const today = sections[0];
 
-    expect(today.mockProps['title']).toContain('Today');
-    expect(today.mockProps).toMatchObject({
+    expect(today?.mockProps['title']).toContain('Today');
+    expect(today?.mockProps).toMatchObject({
       items,
       rangeFrom: 0,
     });
@@ -48,8 +48,8 @@ describe('ActionsPane', () => {
   it('creates a section for the past week', () => {
     const week = sections[1];
 
-    expect(week.mockProps['title']).toContain('Past Week');
-    expect(week.mockProps).toMatchObject({
+    expect(week?.mockProps['title']).toContain('Past Week');
+    expect(week?.mockProps).toMatchObject({
       items,
       rangeFrom: -70,
       rangeTo: 0,
@@ -59,8 +59,8 @@ describe('ActionsPane', () => {
   it('creates a section for older items', () => {
     const older = sections[2];
 
-    expect(older.mockProps['title']).toContain('Older');
-    expect(older.mockProps).toMatchObject({
+    expect(older?.mockProps['title']).toContain('Older');
+    expect(older?.mockProps).toMatchObject({
       items,
       rangeTo: -70,
     });

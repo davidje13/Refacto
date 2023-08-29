@@ -7,7 +7,11 @@ function checkConsoleOutput(
   methodName: string,
   friendlyName: string,
 ): jest.CustomMatcherResult {
-  const lines = console[methodName].mock.calls;
+  const lines = console[methodName]?.mock?.calls;
+  if (!lines) {
+    throw new Error(`console.${methodName} is not mocked`);
+  }
+
   if (lines.length) {
     return {
       pass: false,

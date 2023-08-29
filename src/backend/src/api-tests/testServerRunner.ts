@@ -6,7 +6,10 @@ import { App } from '../app';
 type Runnable = Server | App;
 type MaybePromise<T> = T | Promise<T>;
 
-export function addressToString(addr: AddressInfo | string): string {
+export function addressToString(addr: AddressInfo | string | null): string {
+  if (!addr) {
+    throw new Error('Test server is not running');
+  }
   if (typeof addr === 'string') {
     return addr;
   }

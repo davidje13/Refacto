@@ -37,12 +37,8 @@ function replaceSlug(
   newSlug: string,
   retroId: string,
 ): void {
-  const match = RETRO_SLUG_PATH.exec(oldPath);
-  if (!match) {
-    return;
-  }
-  const oldSlug = match[1];
-  if (oldSlug === newSlug) {
+  const oldSlug = RETRO_SLUG_PATH.exec(oldPath)?.[1];
+  if (!oldSlug || oldSlug === newSlug) {
     return;
   }
   slugTracker.remove(oldSlug);

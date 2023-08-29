@@ -37,7 +37,7 @@ describe('RetroList', () => {
 
     const links = dom.getAllBy(css('mock-retro-link'));
 
-    expect(links[0].mockProps).toEqual({ slug: 'a', name: 'R1' });
-    expect(links[1].mockProps).toEqual({ slug: 'b', name: 'R2' });
+    expect(links[0]?.mockProps).toEqual({ slug: 'a', name: 'R1' });
+    expect(links[1]?.mockProps).toEqual({ slug: 'b', name: 'R2' });
   });
 });

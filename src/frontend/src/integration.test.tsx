@@ -29,7 +29,7 @@ async function renderApp(location: string): Promise<RenderedApp> {
   const locationHook = staticLocationHook(location, { record: true });
   const titleHook = staticTitleHook();
 
-  let dom: RenderResult;
+  let dom: RenderResult = null as any;
   await act(async () => {
     dom = render(
       <TitleContext value={titleHook}>
@@ -40,7 +40,7 @@ async function renderApp(location: string): Promise<RenderedApp> {
     );
   });
 
-  return { locationHook, titleHook, dom: dom! };
+  return { locationHook, titleHook, dom };
 }
 
 describe('Application', () => {

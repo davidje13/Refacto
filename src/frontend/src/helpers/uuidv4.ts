@@ -33,26 +33,26 @@ for (let i = 0; i < 256; i += 1) {
 function bytesToUuid(buf: Uint8Array): string {
   let i = 0;
   return [
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
     '-',
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
     '-',
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
     '-',
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
     '-',
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
-    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
+    bth[buf[(i += 1)]!],
   ].join('');
 }
 
@@ -61,8 +61,8 @@ const rnds = new Uint8Array(16);
 export default function v4(): string {
   window.crypto.getRandomValues(rnds);
 
-  rnds[6] = (rnds[6] & 0x0f) | 0x40;
-  rnds[8] = (rnds[8] & 0x3f) | 0x80;
+  rnds[6] = (rnds[6]! & 0x0f) | 0x40;
+  rnds[8] = (rnds[8]! & 0x3f) | 0x80;
 
   return bytesToUuid(rnds);
 }

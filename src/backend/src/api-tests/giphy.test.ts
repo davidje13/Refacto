@@ -35,7 +35,7 @@ describe('API giphy', () => {
     const app = await appFactory(
       testConfig({
         giphy: {
-          baseUrl: addressToString(getTyped(MOCK_GIPHY).server.address()!),
+          baseUrl: addressToString(getTyped(MOCK_GIPHY).server.address()),
           apiKey: 'my-giphy-key',
         },
       }),

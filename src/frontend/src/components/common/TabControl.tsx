@@ -9,9 +9,9 @@ interface TabT {
   content: React.ReactNode;
 }
 
-function getActive(tabs: TabT[], activeKey: string): TabT {
+function getActive(tabs: TabT[], activeKey: string): TabT | undefined {
   const selected = tabs.filter(({ key }) => key === activeKey)[0];
-  return selected || tabs[0];
+  return selected ?? tabs[0];
 }
 
 interface PropsT {
@@ -36,7 +36,7 @@ export default memo(({ tabs }: PropsT) => {
         onClick={handleTabClick}
         data-key={key}
         className={classNames('tab-item', className, {
-          active: key === active.key,
+          active: key === active?.key,
         })}
       >
         {title}
@@ -49,7 +49,7 @@ export default memo(({ tabs }: PropsT) => {
       <nav className="tab-bar">
         <ul>{tabHeaders}</ul>
       </nav>
-      {active.content}
+      {active?.content}
     </section>
   );
 });

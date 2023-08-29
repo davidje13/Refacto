@@ -50,8 +50,8 @@ export default function autoFacilitate(
 
   if (remainingItems.length > 1) {
     // reserve a preferred item for last
-    for (let i = 0; i < categoryPreferences.length; i += 1) {
-      const cat = categories.get(categoryPreferences[i]);
+    for (const categoryPreference of categoryPreferences) {
+      const cat = categories.get(categoryPreference);
       if (cat && cat.remaining > 0) {
         cat.total -= 1;
         cat.remaining -= 1;

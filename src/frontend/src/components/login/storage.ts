@@ -34,7 +34,9 @@ function getCookie(key: string): string | null {
     }
     const prefixLength = encodedKey.length + 1;
     const nonempty = cookies.find((c) => c.length > prefixLength);
-    return decodeURIComponent((nonempty || cookies[0]).substr(prefixLength));
+    return decodeURIComponent(
+      (nonempty ?? cookies[0] ?? '').substr(prefixLength),
+    );
   } catch (e) {
     return null;
   }

@@ -107,7 +107,7 @@ describe('Header', () => {
 
     const links = dom.getAllBy(css('.menu > *'));
 
-    fireEvent.click(links[0]);
+    fireEvent.click(links[0]!);
     expect(locationHook.history).toEqual(['/', 'url-1']);
   });
 
@@ -128,7 +128,7 @@ describe('Header', () => {
 
     const links = dom.getAllBy(css('.menu > *'));
 
-    fireEvent.click(links[0]);
+    fireEvent.click(links[0]!);
     expect(clickCallback).toHaveBeenCalled();
   });
 });

@@ -107,8 +107,8 @@ describe('API retro archives', () => {
         returnedId,
       );
 
-      expect(storedArchive!.format).toEqual('foo');
-      expect(storedArchive!.options['opt']).toEqual('yes');
+      expect(storedArchive?.format).toEqual('foo');
+      expect(storedArchive?.options['opt']).toEqual('yes');
     });
 
     it('rejects empty archives', async (props) => {

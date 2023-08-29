@@ -27,8 +27,8 @@ describe('ItemColumn', () => {
     );
 
     const displayedItems = dom.getAllBy(css('my-item'));
-    expect(displayedItems[0].mockProps['item']).toEqual(item2);
-    expect(displayedItems[1].mockProps['item']).toEqual(item1);
+    expect(displayedItems[0]?.mockProps['item']).toEqual(item2);
+    expect(displayedItems[1]?.mockProps['item']).toEqual(item1);
   });
 
   it('passes item props to the items unchanged', () => {
@@ -38,7 +38,7 @@ describe('ItemColumn', () => {
     );
 
     const displayedItems = dom.getAllBy(css('my-item'));
-    expect(displayedItems[0].mockProps['foo']).toEqual('bar');
+    expect(displayedItems[0]?.mockProps['foo']).toEqual('bar');
   });
 
   it('focuses nothing by default', () => {
@@ -48,7 +48,7 @@ describe('ItemColumn', () => {
     );
 
     const displayedItems = dom.getAllBy(css('my-item'));
-    expect(displayedItems[0].mockProps['focused']).toEqual(false);
+    expect(displayedItems[0]?.mockProps['focused']).toEqual(false);
   });
 
   it('focuses the requested item', () => {
@@ -63,6 +63,6 @@ describe('ItemColumn', () => {
     );
 
     const displayedItems = dom.getAllBy(css('my-item'));
-    expect(displayedItems[0].mockProps['focused']).toEqual(true);
+    expect(displayedItems[0]?.mockProps['focused']).toEqual(true);
   });
 });

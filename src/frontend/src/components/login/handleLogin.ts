@@ -10,8 +10,8 @@ export default async function handleLogin(
   localNonce: string | null,
   { search, hash }: LocationT,
 ): Promise<string> {
-  let externalToken = null;
-  let state = null;
+  let externalToken: string | null = null;
+  let state: string | null = null;
 
   const hashParams = new URLSearchParams(hash.substr(1));
   const searchParams = new URLSearchParams(search.substr(1));
@@ -27,11 +27,11 @@ export default async function handleLogin(
     state = hashParams.get('state');
   }
 
-  if (!externalToken) {
+  if (!externalToken || state === null) {
     throw new Error('unrecognised login details');
   }
 
-  const { redirect, nonce } = JSON.parse(state!);
+  const { redirect, nonce } = JSON.parse(state);
   if (!localNonce) {
     // nonce checking ensures the token we receive is actually the result of our initial request
     // (i.e. an attacker has not invoked the redirect URI with their own token so that the user

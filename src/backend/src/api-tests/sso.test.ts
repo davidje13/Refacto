@@ -25,7 +25,7 @@ describe('/api/sso/service', () => {
           google: {
             clientId: 'my-client-id',
             authUrl: 'foo',
-            tokenInfoUrl: addressToString(getTyped(MOCK_SSO).server.address()!),
+            tokenInfoUrl: addressToString(getTyped(MOCK_SSO).server.address()),
           },
         },
       }),

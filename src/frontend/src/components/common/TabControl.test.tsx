@@ -51,7 +51,7 @@ describe('TabControl', () => {
   });
 
   it('switches tab when a header is clicked', () => {
-    fireEvent.click(headers[1]);
+    fireEvent.click(headers[1]!);
 
     expect(dom).not.toContainElementWith(css('strong'));
     expect(dom).toContainElementWith(css('em'));

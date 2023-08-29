@@ -139,7 +139,7 @@ describe('API static content', () => {
     const PROPS = testServerRunner(async (getTyped) => ({
       run: await appFactory(
         testConfig({
-          forwardHost: addressToString(getTyped(PROXY).server.address()!),
+          forwardHost: addressToString(getTyped(PROXY).server.address()),
         }),
       ),
     }));

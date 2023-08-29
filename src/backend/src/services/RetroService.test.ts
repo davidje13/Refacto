@@ -209,10 +209,10 @@ describe('RetroService', () => {
         service.getPermissions(false),
       );
 
-      await readSubscription!.send({ slug: ['=', 'wooo'] });
+      await readSubscription?.send({ slug: ['=', 'wooo'] });
       expect(listener.latestError()).toEqual('Cannot modify data');
 
-      await readSubscription!.close();
+      await readSubscription?.close();
     });
   });
 });

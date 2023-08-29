@@ -107,17 +107,17 @@ class MockRequest {
     return this.url === url;
   }
 
-  public respond(body: string | null = null, init: InitWithStatus = {}): void {
+  public respond(body: string = '', init: InitWithStatus = {}): void {
     // const response = new Response(body, init)
     const response = {
       status: init.status || 200,
-      json: (): Promise<JsonData> => Promise.resolve(JSON.parse(body!)),
+      json: (): Promise<JsonData> => Promise.resolve(JSON.parse(body)),
     };
     this.internalResolve!(response);
     this.close();
   }
 
-  public respondOk(body: string | null = null, init: RequestInit = {}): void {
+  public respondOk(body: string = '', init: RequestInit = {}): void {
     this.respond(body, { status: 200, ...init });
   }
 

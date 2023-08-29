@@ -26,7 +26,9 @@ export default function localDateTracker(
     const provider = new LocalDateProvider(now);
     const nextMidnight = provider.getMidnightTimestamp(1);
 
-    clearTimeout(timer!);
+    if (timer) {
+      clearTimeout(timer);
+    }
     const maxDelay = document.hidden ? MAX_DELAY_HIDDEN : MAX_DELAY;
     const delay = Math.max(Math.min(nextMidnight - now, maxDelay), MIN_DELAY);
     timer = setTimeout(update, delay);
@@ -42,7 +44,9 @@ export default function localDateTracker(
 
   return {
     stop: (): void => {
-      clearTimeout(timer!);
+      if (timer) {
+        clearTimeout(timer);
+      }
       window.removeEventListener('focus', update);
     },
   };

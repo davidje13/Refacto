@@ -34,13 +34,13 @@ describe('ArchiveList', () => {
 
     const links = dom.getAllBy(css('mock-archive-link'));
 
-    expect(links[0].mockProps).toEqual({
+    expect(links[0]?.mockProps).toEqual({
       retroSlug: 'foo',
       archiveId: 'a1',
       created: 10,
     });
 
-    expect(links[1].mockProps).toEqual({
+    expect(links[1]?.mockProps).toEqual({
       retroSlug: 'foo',
       archiveId: 'a2',
       created: 0,
@@ -58,8 +58,8 @@ describe('ArchiveList', () => {
 
     const links = dom.getAllBy(css('mock-archive-link'));
 
-    expect(links[0].mockProps['archiveId']).toEqual('a1');
-    expect(links[1].mockProps['archiveId']).toEqual('a3');
-    expect(links[2].mockProps['archiveId']).toEqual('a2');
+    expect(links[0]?.mockProps['archiveId']).toEqual('a1');
+    expect(links[1]?.mockProps['archiveId']).toEqual('a3');
+    expect(links[2]?.mockProps['archiveId']).toEqual('a2');
   });
 });

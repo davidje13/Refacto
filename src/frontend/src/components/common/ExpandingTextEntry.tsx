@@ -103,7 +103,7 @@ export default ({
     const formElement = e.currentTarget;
     e.stopPropagation();
     e.preventDefault();
-    formElement.querySelector('textarea')!.focus();
+    formElement.querySelector('textarea')?.focus();
   }, []);
 
   const handleKey = useKeyHandler({

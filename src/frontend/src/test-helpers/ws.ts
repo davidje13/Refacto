@@ -6,21 +6,19 @@ export interface MockWebSocketConnection {
 }
 
 type ScriptFn = (socket: MockWebSocketConnection) => void;
-type ListenerFn = (e: Event) => void;
 
 interface Expectation {
   url: string;
   scriptFn: ScriptFn;
 }
 
-class MockWebSocketClient {
+class MockWebSocketClient extends EventTarget {
   private static expectations: Expectation[] = [];
 
   private readonly messages: BlockingQueue<string>;
 
-  private readonly listeners: Record<string, ListenerFn[]>;
-
   public constructor(url: string) {
+    super();
     const expected = MockWebSocketClient.expectations.find((expectation) =>
       url.endsWith(expectation.url),
     );
@@ -29,41 +27,21 @@ class MockWebSocketClient {
     }
 
     this.messages = new BlockingQueue();
-    this.listeners = {
-      message: [],
-      open: [],
-      close: [],
-      error: [],
-    };
 
     void Promise.resolve().then(() => {
-      this.dispatchEvent('open', new CustomEvent('open'));
+      this.dispatchEvent(new CustomEvent('open'));
       expected.scriptFn({
         send: (data: string) => {
-          this.dispatchEvent('message', new MessageEvent('message', { data }));
+          this.dispatchEvent(new MessageEvent('message', { data }));
         },
         receive: () => this.messages.pop(),
       });
-      this.dispatchEvent('close', new CloseEvent('close'));
+      this.dispatchEvent(new CloseEvent('close'));
     });
   }
 
   public static expect(url: string, scriptFn: ScriptFn): void {
     MockWebSocketClient.expectations.push({ url, scriptFn });
-  }
-
-  public addEventListener(type: string, fn: ListenerFn): void {
-    if (!this.listeners[type]) {
-      throw new Error(`Unknown event ${type}`);
-    }
-    this.listeners[type].push(fn);
-  }
-
-  public removeEventListener(type: string, fn: ListenerFn): void {
-    const i = this.listeners[type].indexOf(fn);
-    if (i !== -1) {
-      this.listeners[type].splice(i, 1);
-    }
   }
 
   public send(msg: string): void {
@@ -72,10 +50,6 @@ class MockWebSocketClient {
 
   public close(): void {
     this.messages.push('<CLOSED BY CLIENT>');
-  }
-
-  private dispatchEvent(type: string, event: Event): void {
-    this.listeners[type].forEach((listener) => listener(event));
   }
 }
 

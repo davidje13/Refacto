@@ -55,9 +55,8 @@ describe('localDateTracker', () => {
 
     expect(callback).toHaveBeenCalled();
 
-    const provider = callback.mock.calls[0][0];
-    expect(provider).not.toEqual(null);
-    expect(provider.getMidnightTimestamp()).toEqual(day1);
+    const provider = callback.mock.calls[0]?.[0];
+    expect(provider?.getMidnightTimestamp()).toEqual(day1);
   });
 
   it('schedules an update at the next midnight', () => {
@@ -65,8 +64,8 @@ describe('localDateTracker', () => {
     localDateTracker(callback, mockClock);
 
     expect(callback).toHaveBeenCalled();
-    const provider1 = callback.mock.calls[0][0];
-    expect(provider1.getMidnightTimestamp()).toEqual(day1);
+    const provider1 = callback.mock.calls[0]?.[0];
+    expect(provider1?.getMidnightTimestamp()).toEqual(day1);
 
     callback.mockClear();
 
@@ -76,8 +75,8 @@ describe('localDateTracker', () => {
     mockClock.advanceByTime(1);
     expect(callback).toHaveBeenCalled();
 
-    const provider2 = callback.mock.calls[0][0];
-    expect(provider2.getMidnightTimestamp()).toEqual(day2);
+    const provider2 = callback.mock.calls[0]?.[0];
+    expect(provider2?.getMidnightTimestamp()).toEqual(day2);
   });
 
   it('adjusts if a timer fires early', () => {

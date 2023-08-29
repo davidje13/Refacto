@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import React, { memo } from 'react';
 import useConfig from '../../hooks/data/useConfig';
 import { toHex, randomBytes } from '../../helpers/crypto';
 import storage from './storage';
@@ -30,40 +30,6 @@ export default memo(({ message, redirect }: PropsT) => {
   const resolvedRedirect = redirect || document.location.pathname;
   const domain = document.location.origin;
 
-  const handleGoogleClick = useCallback(() => {
-    const targetUrl = new URL('/sso/google', domain);
-    const url = new URL(googleConfig.authUrl);
-    url.searchParams.set('redirect_uri', targetUrl.toString());
-    url.searchParams.set('state', makeState(resolvedRedirect));
-    url.searchParams.set('response_type', 'id_token');
-    url.searchParams.set('scope', 'openid');
-    url.searchParams.set('client_id', googleConfig.clientId);
-    url.searchParams.set('ss_domain', domain);
-    url.searchParams.set('fetch_basic_profile', 'false');
-    document.location.href = url.toString();
-  }, [resolvedRedirect, domain, googleConfig]);
-
-  const handleGitHubClick = useCallback(() => {
-    const targetUrl = new URL('/sso/github', domain);
-    const url = new URL(githubConfig.authUrl);
-    url.searchParams.set('redirect_uri', targetUrl.toString());
-    url.searchParams.set('state', makeState(resolvedRedirect));
-    url.searchParams.set('scope', '');
-    url.searchParams.set('client_id', githubConfig.clientId);
-    document.location.href = url.toString();
-  }, [resolvedRedirect, domain, githubConfig]);
-
-  const handleGitLabClick = useCallback(() => {
-    const targetUrl = new URL('/sso/gitlab', domain);
-    const url = new URL(gitlabConfig.authUrl);
-    url.searchParams.set('redirect_uri', targetUrl.toString());
-    url.searchParams.set('state', makeState(resolvedRedirect));
-    url.searchParams.set('response_type', 'token');
-    url.searchParams.set('scope', 'openid');
-    url.searchParams.set('client_id', gitlabConfig.clientId);
-    document.location.href = url.toString();
-  }, [resolvedRedirect, domain, gitlabConfig]);
-
   return (
     <div className="login-form">
       {message ? <p>{message}</p> : null}
@@ -72,7 +38,18 @@ export default memo(({ message, redirect }: PropsT) => {
           <button
             type="button"
             className="sso-google"
-            onClick={handleGoogleClick}
+            onClick={() => {
+              const targetUrl = new URL('/sso/google', domain);
+              const url = new URL(googleConfig.authUrl);
+              url.searchParams.set('redirect_uri', targetUrl.toString());
+              url.searchParams.set('state', makeState(resolvedRedirect));
+              url.searchParams.set('response_type', 'id_token');
+              url.searchParams.set('scope', 'openid');
+              url.searchParams.set('client_id', googleConfig.clientId);
+              url.searchParams.set('ss_domain', domain);
+              url.searchParams.set('fetch_basic_profile', 'false');
+              document.location.href = url.toString();
+            }}
           >
             Continue with Google
           </button>
@@ -81,7 +58,15 @@ export default memo(({ message, redirect }: PropsT) => {
           <button
             type="button"
             className="sso-github"
-            onClick={handleGitHubClick}
+            onClick={() => {
+              const targetUrl = new URL('/sso/github', domain);
+              const url = new URL(githubConfig.authUrl);
+              url.searchParams.set('redirect_uri', targetUrl.toString());
+              url.searchParams.set('state', makeState(resolvedRedirect));
+              url.searchParams.set('scope', '');
+              url.searchParams.set('client_id', githubConfig.clientId);
+              document.location.href = url.toString();
+            }}
           >
             Continue with GitHub
           </button>
@@ -90,7 +75,16 @@ export default memo(({ message, redirect }: PropsT) => {
           <button
             type="button"
             className="sso-gitlab"
-            onClick={handleGitLabClick}
+            onClick={() => {
+              const targetUrl = new URL('/sso/gitlab', domain);
+              const url = new URL(gitlabConfig.authUrl);
+              url.searchParams.set('redirect_uri', targetUrl.toString());
+              url.searchParams.set('state', makeState(resolvedRedirect));
+              url.searchParams.set('response_type', 'token');
+              url.searchParams.set('scope', 'openid');
+              url.searchParams.set('client_id', gitlabConfig.clientId);
+              document.location.href = url.toString();
+            }}
           >
             Continue with GitLab
           </button>
