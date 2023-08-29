@@ -15,13 +15,15 @@ interface PropsT {
   focused?: boolean;
   focusedItemTimeout?: number;
   autoScroll?: boolean;
-  onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
-  onAddExtraTime?: (time: number) => void;
-  onVote?: (id: string) => void;
-  onDelete?: (id: string) => void;
-  onSelect?: (id: string) => void;
-  onCancel?: (id: string) => void;
-  onContinue?: (id: string) => void;
+  onEdit?:
+    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
+    | undefined;
+  onAddExtraTime?: ((time: number) => void) | undefined;
+  onVote?: ((id: string) => void) | undefined;
+  onDelete?: ((id: string) => void) | undefined;
+  onSelect?: ((id: string) => void) | undefined;
+  onCancel?: ((id: string) => void) | undefined;
+  onContinue?: ((id: string) => void) | undefined;
 }
 
 export default memo(

@@ -9,7 +9,7 @@ import './ArchivePage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
   archiveId: string;
-  group?: string;
+  group?: string | undefined;
 };
 
 export default memo(({ retroToken, retro, archiveId, group }: PropsT) => {

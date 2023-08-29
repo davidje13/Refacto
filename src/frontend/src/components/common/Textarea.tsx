@@ -25,7 +25,7 @@ interface PropsT
   onChangeMultiline?: (v: boolean) => void;
   value?: string;
   sizeToFit?: boolean;
-  multilineClass?: string;
+  multilineClass?: string | null;
   multilineClassElement?: HTMLElement | null;
   className?: string;
 }

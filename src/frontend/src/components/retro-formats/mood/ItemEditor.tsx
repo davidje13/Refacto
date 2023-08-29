@@ -14,10 +14,10 @@ import Delete from '../../../../resources/delete.svg';
 
 interface PropsT {
   defaultItem?: RetroItem;
-  identifier?: string;
+  identifier?: string | undefined;
   onSubmit: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
-  onCancel?: () => void;
-  onDelete?: () => void;
+  onCancel?: (() => void) | undefined;
+  onDelete?: (() => void) | undefined;
   placeholder?: string;
   autoFocus?: boolean;
   submitButtonLabel?: React.ReactNode;

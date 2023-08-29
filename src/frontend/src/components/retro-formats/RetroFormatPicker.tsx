@@ -7,9 +7,9 @@ interface ChildPropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: Record<string, unknown>;
-  group?: string;
-  dispatch?: RetroDispatch;
-  onComplete?: () => void;
+  group?: string | undefined;
+  dispatch?: RetroDispatch | undefined;
+  onComplete?: (() => void) | undefined;
   archive: boolean;
   archiveTime?: number;
 }

@@ -21,12 +21,14 @@ function actionItemWithinRange(
 interface PropsT {
   title: string;
   items: RetroItem[];
-  group?: string;
+  group?: string | undefined;
   rangeFrom?: number;
   rangeTo?: number;
-  onSetDone?: (id: string, done: boolean) => void;
-  onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
-  onDelete?: (id: string) => void;
+  onSetDone?: ((id: string, done: boolean) => void) | undefined;
+  onEdit?:
+    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
+    | undefined;
+  onDelete?: ((id: string) => void) | undefined;
 }
 
 export default memo(

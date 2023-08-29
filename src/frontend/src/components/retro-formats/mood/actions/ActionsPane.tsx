@@ -15,14 +15,18 @@ interface PropsT {
   items: RetroItem[];
   localDateProvider: LocalDateProvider;
   alwaysShowEntry?: boolean;
-  group?: string;
-  onAddItem?: (
-    group: string | undefined,
-    itemParts: Partial<UserProvidedRetroItemDetails>,
-  ) => void;
-  onSetDone?: (id: string, done: boolean) => void;
-  onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
-  onDelete?: (id: string) => void;
+  group?: string | undefined;
+  onAddItem?:
+    | ((
+        group: string | undefined,
+        itemParts: Partial<UserProvidedRetroItemDetails>,
+      ) => void)
+    | undefined;
+  onSetDone?: ((id: string, done: boolean) => void) | undefined;
+  onEdit?:
+    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
+    | undefined;
+  onDelete?: ((id: string) => void) | undefined;
 }
 
 export default memo(

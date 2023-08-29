@@ -16,10 +16,10 @@ function hasContent(o: React.ReactNode): boolean {
 
 interface PropsT {
   onSubmit: (value: string) => void;
-  onCancel?: () => void;
+  onCancel?: (() => void) | undefined;
   placeholder?: string;
   defaultValue?: string;
-  identifier?: string;
+  identifier?: string | undefined;
   autoFocus?: boolean;
   forceMultiline?: boolean;
   preSubmitOptions?: React.ReactNode;
@@ -131,7 +131,7 @@ export default ({
         sizeToFit
         onChange={setValue}
         onChangeMultiline={setTextMultiline}
-        multilineClass={alwaysMultiline ? undefined : 'multiline'}
+        multilineClass={alwaysMultiline ? null : 'multiline'}
         multilineClassElement={form}
         onKeyDown={handleKey}
       />

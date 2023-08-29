@@ -80,7 +80,7 @@ class MockWebSocketClient {
 }
 
 class MockWebSocket {
-  private originalWebSocket?: typeof WebSocket;
+  private originalWebSocket: typeof WebSocket | undefined;
 
   public register(): void {
     if (this.originalWebSocket) {

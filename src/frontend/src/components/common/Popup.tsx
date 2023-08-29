@@ -13,7 +13,7 @@ export interface PopupData {
 
 interface PropsT {
   data: PopupData | null;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 function stopProp(e: Event): void {

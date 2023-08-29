@@ -7,7 +7,7 @@ import './VoteCount.less';
 
 interface PropsT {
   votes: number;
-  onVote?: () => void;
+  onVote?: (() => void) | undefined;
 }
 
 const MAX_VOTE_COUNT = 15;

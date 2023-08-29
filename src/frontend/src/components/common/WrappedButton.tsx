@@ -2,11 +2,11 @@ import React, { memo } from 'react';
 import useParameterlessCallback from '../../hooks/useParameterlessCallback';
 
 interface PropsT extends React.HTMLAttributes<HTMLElement> {
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
   disabled?: boolean;
   hideIfDisabled?: boolean;
-  title?: string;
-  disabledTitle?: string;
+  title?: string | undefined;
+  disabledTitle?: string | undefined;
   children?: React.ReactNode;
 }
 
@@ -27,7 +27,7 @@ export default memo(
       return null;
     }
 
-    const resolvedTitle = (resolvedDisabled ? disabledTitle : null) ?? title;
+    const resolvedTitle = resolvedDisabled ? disabledTitle ?? title : title;
 
     return (
       <button

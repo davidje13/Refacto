@@ -1,20 +1,15 @@
 import { Subject as MockSubject } from 'rxjs';
 import type { JsonData } from '../shared/api-entities';
 
-interface AjaxConfig {
+type AjaxConfig = Pick<RequestInit, 'body' | 'method' | 'headers'> & {
   url: string;
-  body?: any;
-  method?: string;
-  headers?: Readonly<Record<string, any>>;
-}
-
-type FetchFn = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+};
 
 jest.mock('rxjs/ajax', () => ({
-  ajax: (config: AjaxConfig): MockSubject<unknown> => {
+  ajax: ({ url, ...init }: AjaxConfig): MockSubject<unknown> => {
     const subject = new MockSubject();
-    const init = { method: config.method, headers: config.headers };
-    ((global as any).fetch as FetchFn)(config.url, init)
+    global
+      .fetch(url, init)
       .then(async (response) => {
         if (response.status >= 300) {
           subject.error({ status: response.status });
@@ -33,15 +28,15 @@ jest.mock('rxjs/ajax', () => ({
 
 interface MockExpectationT {
   readonly url: string;
-  readonly options?: RequestInit;
+  readonly options: RequestInit | undefined;
 }
 
 class MockExpectation implements MockExpectationT {
   public readonly url: string;
 
-  public readonly options?: RequestInit;
+  public readonly options: RequestInit | undefined;
 
-  private fn?: (request: MockRequest) => void;
+  private fn: ((request: MockRequest) => void) | undefined;
 
   public constructor(url: string, options?: RequestInit) {
     this.url = url;
@@ -84,9 +79,9 @@ class MockRequest {
 
   public readonly options: RequestInit;
 
-  private internalResolve?: (res: ResponseWrapper) => void;
+  private internalResolve: ((res: ResponseWrapper) => void) | undefined;
 
-  private internalReject?: (error: Error) => void;
+  private internalReject: ((error: Error) => void) | undefined;
 
   public constructor(
     url: string,
@@ -150,7 +145,7 @@ class MockFetch {
 
   private expectations: MockExpectation[] = [];
 
-  private originalFetch?: FetchFn;
+  private originalFetch: typeof global.fetch | undefined;
 
   public register(): void {
     if (this.originalFetch) {

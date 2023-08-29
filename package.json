@@ -9,6 +9,7 @@
     "lint": "scripts/install.sh && scripts/lint.js",
     "start": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/start.sh",
     "test": "scripts/install.sh && scripts/lint.js && scripts/test.sh",
+    "format": "npm --prefix=src/backend run format --quiet && npm --prefix=src/frontend run format --quiet && npm --prefix=src/e2e run format --quiet",
     "test:backend": "npm --prefix=src/backend test --quiet --",
     "test:frontend": "npm --prefix=src/frontend test --quiet --",
     "test:frontend:watch": "npm --prefix=src/frontend test --quiet -- --watch",

@@ -3,7 +3,7 @@ import WrappedButton from '../../../../common/WrappedButton';
 import useBoundCallback from '../../../../../hooks/useBoundCallback';
 
 interface PropsT {
-  onAddExtraTime?: (time: number) => void;
+  onAddExtraTime?: ((time: number) => void) | undefined;
 }
 
 export default memo(({ onAddExtraTime }: PropsT) => {

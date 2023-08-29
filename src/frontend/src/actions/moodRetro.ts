@@ -36,7 +36,7 @@ function pickPreviousItem(
   return history[0];
 }
 
-function getState<T>(retro: Retro<T>, group?: string): T {
+function getState<T>(retro: Retro<T>, group: string | undefined): T {
   if (!group) {
     return retro.state;
   }

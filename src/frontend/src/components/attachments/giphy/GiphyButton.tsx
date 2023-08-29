@@ -10,7 +10,7 @@ interface PropsT {
   onChange: (attachment: RetroItemAttachment | null) => void;
 }
 
-export default memo(({ defaultAttachment, onChange }: PropsT) => {
+export default memo(({ defaultAttachment = null, onChange }: PropsT) => {
   const [visible, setVisible] = useState(false);
   const show = useBoundCallback(setVisible, true);
   const hide = useBoundCallback(setVisible, false);

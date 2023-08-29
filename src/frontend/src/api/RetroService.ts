@@ -5,7 +5,7 @@ interface RetroOptions {
   slug: string;
   password: string;
   userToken: string;
-  importJson?: JsonData;
+  importJson?: JsonData | undefined;
 }
 
 export interface RetroCreationInfo {

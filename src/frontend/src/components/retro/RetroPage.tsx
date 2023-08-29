@@ -15,7 +15,7 @@ import InvitePopup from './InvitePopup';
 
 const BLANK_STATE = {};
 
-function getState<T>(retro: Retro<T>, group?: string): T {
+function getState<T>(retro: Retro<T>, group: string | undefined): T {
   if (!group) {
     return retro.state;
   }
@@ -26,7 +26,7 @@ type PropsT = Pick<
   RetroPagePropsT,
   'retroToken' | 'retro' | 'retroDispatch'
 > & {
-  group?: string;
+  group?: string | undefined;
 };
 
 export default memo(({ retroToken, retro, retroDispatch, group }: PropsT) => {
@@ -139,7 +139,7 @@ export default memo(({ retroToken, retro, retroDispatch, group }: PropsT) => {
         retroItems={retro.items}
         retroState={getState(retro, group)}
         group={group}
-        dispatch={retroDispatch || undefined}
+        dispatch={retroDispatch ?? undefined}
         onComplete={canArchive ? showArchivePopup : undefined}
         archive={false}
       />

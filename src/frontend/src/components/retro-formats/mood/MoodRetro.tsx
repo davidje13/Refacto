@@ -49,9 +49,9 @@ interface PropsT {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: MoodRetroStateT;
-  group?: string;
-  dispatch?: RetroDispatch;
-  onComplete?: () => void;
+  group?: string | undefined;
+  dispatch?: RetroDispatch | undefined;
+  onComplete?: (() => void) | undefined;
   archive: boolean;
   archiveTime?: number;
 }

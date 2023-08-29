@@ -9,9 +9,9 @@ interface PropsT {
   item: RetroItem;
   focusedItemTimeout?: number;
   autoScroll?: boolean;
-  onAddExtraTime?: (time: number) => void;
-  onCancel?: () => void;
-  onContinue?: () => void;
+  onAddExtraTime?: ((time: number) => void) | undefined;
+  onCancel?: (() => void) | undefined;
+  onContinue?: (() => void) | undefined;
 }
 
 export default memo(

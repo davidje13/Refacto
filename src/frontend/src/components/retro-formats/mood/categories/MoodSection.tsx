@@ -13,22 +13,26 @@ import TickBold from '../../../../../resources/tick-bold.svg';
 interface PropsT {
   category: string;
   categoryLabel: string;
-  group?: string;
+  group?: string | undefined;
   items: RetroItem[];
   theme?: string;
   addItemPlaceholder?: string;
-  onAddItem?: (
-    category: string,
-    group: string | undefined,
-    itemParts: Partial<UserProvidedRetroItemDetails>,
-  ) => void;
-  onVote?: (id: string) => void;
-  onEdit?: (id: string, diff: Partial<UserProvidedRetroItemDetails>) => void;
-  onDelete?: (id: string) => void;
-  onSelect?: (id: string) => void;
-  onCancel?: (id: string) => void;
-  onContinue?: (id: string) => void;
-  onAddExtraTime?: (time: number) => void;
+  onAddItem?:
+    | ((
+        category: string,
+        group: string | undefined,
+        itemParts: Partial<UserProvidedRetroItemDetails>,
+      ) => void)
+    | undefined;
+  onVote?: ((id: string) => void) | undefined;
+  onEdit?:
+    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
+    | undefined;
+  onDelete?: ((id: string) => void) | undefined;
+  onSelect?: ((id: string) => void) | undefined;
+  onCancel?: ((id: string) => void) | undefined;
+  onContinue?: ((id: string) => void) | undefined;
+  onAddExtraTime?: ((time: number) => void) | undefined;
   focusedItemId?: string | null;
   focusedItemTimeout?: number;
   autoScroll?: boolean;
@@ -56,7 +60,7 @@ export default memo(
     onCancel,
     onContinue,
     onAddExtraTime,
-    focusedItemId,
+    focusedItemId = null,
     focusedItemTimeout = 0,
     autoScroll = false,
   }: PropsT) => {

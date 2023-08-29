@@ -9,7 +9,6 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "exactOptionalPropertyTypes": false, // TODO
     "noUncheckedIndexedAccess": false, // TODO
     "jsx": "preserve",
     "noEmit": true,

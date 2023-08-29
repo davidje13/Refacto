@@ -21,7 +21,7 @@ export interface CreationT {
 }
 
 interface PropsT {
-  defaultSlug?: string;
+  defaultSlug?: string | undefined;
   userToken: string;
   onCreate: (data: CreationT) => void;
   showImport?: boolean;
@@ -61,18 +61,16 @@ export default memo(
       const [slug, setSlug] = useState(defaultSlug || '');
       const [password, setPassword] = useState('');
       const [passwordConf, setPasswordConfRaw] = useState('');
-      const [passwordWarning, setPasswordWarning] = useState<string | null>(
-        null,
-      );
-      const [importJson, setImportJson] = useState<JsonData>(null);
-      const [importError, setImportError] = useState<string | null>(null);
+      const [passwordWarning, setPasswordWarning] = useState<string>();
+      const [importJson, setImportJson] = useState<JsonData>();
+      const [importError, setImportError] = useState<string>();
 
       const importNonce = useNonce();
       const handleImportChange = useCallback(
         async (e: React.ChangeEvent<HTMLInputElement>) => {
           const file = (e.target.files || [])[0];
-          setImportJson(null);
-          setImportError(null);
+          setImportJson(undefined);
+          setImportError(undefined);
           if (!file) {
             return;
           }
@@ -103,7 +101,7 @@ export default memo(
         async (current: string) => {
           const nonce = passwordCheckNonce.next();
           setPasswordConfRaw(current);
-          setPasswordWarning(null);
+          setPasswordWarning(undefined);
 
           if (password !== current) {
             return;

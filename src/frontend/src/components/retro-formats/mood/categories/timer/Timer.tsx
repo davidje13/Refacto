@@ -5,7 +5,7 @@ import TimeUp from './TimeUp';
 
 interface PropsT {
   targetTime: number;
-  onAddExtraTime?: (time: number) => void;
+  onAddExtraTime?: ((time: number) => void) | undefined;
 }
 
 export default memo(({ targetTime, onAddExtraTime }: PropsT) => {

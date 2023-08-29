@@ -7,9 +7,9 @@ import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
   item: RetroItem;
-  onSelect?: () => void;
-  onVote?: () => void;
-  onEdit?: () => void;
+  onSelect?: (() => void) | undefined;
+  onVote?: (() => void) | undefined;
+  onEdit?: (() => void) | undefined;
 }
 
 export default memo(({ item, onSelect, onVote, onEdit }: PropsT) => {
