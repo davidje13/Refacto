@@ -1,7 +1,10 @@
 import type { Spec } from 'json-immutability-helper';
 
 class OptionType<T> {
-  public constructor(private readonly key: string, private readonly def: T) {}
+  public constructor(
+    private readonly key: string,
+    private readonly def: T,
+  ) {}
 
   public read(options?: Record<string, unknown>): T {
     if (options?.[this.key] === undefined) {
@@ -26,7 +29,10 @@ class OptionType<T> {
 
 const OPTIONS = {
   alwaysShowAddAction: new OptionType<boolean>('always-show-add-action', true),
-  enableMobileFacilitation: new OptionType<boolean>('enable-mobile-facilitation', false),
+  enableMobileFacilitation: new OptionType<boolean>(
+    'enable-mobile-facilitation',
+    false,
+  ),
   theme: new OptionType<string>('theme', 'faces'),
 };
 

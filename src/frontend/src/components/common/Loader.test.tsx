@@ -9,36 +9,28 @@ const Component = mockElement('my-component');
 
 describe('Loader', () => {
   it('displays a loading message and no content while loading', () => {
-    const dom = render((
-      <Loader
-        Component={Component}
-        componentProps={null}
-      />
-    ));
+    const dom = render(<Loader Component={Component} componentProps={null} />);
 
     expect(dom).toContainElementWith(textFragment('Loading'));
     expect(dom).not.toContainElementWith(css('my-component'));
   });
 
   it('displays custom loading messages', () => {
-    const dom = render((
+    const dom = render(
       <Loader
         Component={Component}
         componentProps={null}
         loadingMessage="foobar"
-      />
-    ));
+      />,
+    );
 
     expect(dom).toContainElementWith(textFragment('foobar'));
   });
 
   it('displays content and no loading message when loaded', () => {
-    const dom = render((
-      <Loader
-        Component={Component}
-        componentProps={{ custom: 'foo' }}
-      />
-    ));
+    const dom = render(
+      <Loader Component={Component} componentProps={{ custom: 'foo' }} />,
+    );
 
     expect(dom).not.toContainElementWith(textFragment('Loading'));
 

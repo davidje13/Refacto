@@ -1,10 +1,12 @@
 {
   "short_name": "Refacto",
   "name": "Refacto",
-  "icons": [{
-    "src": "/favicon.png",
-    "type": "image/png"
-  }],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "type": "image/png"
+    }
+  ],
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#4EC7B6",

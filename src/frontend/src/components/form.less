@@ -10,7 +10,9 @@
     display: block;
   }
 
-  input, .prefixed-input, .picker-input {
+  input,
+  .prefixed-input,
+  .picker-input {
     display: block;
     margin: 4px 0 16px;
     padding: 8px;
@@ -28,7 +30,8 @@
     }
   }
 
-  input[type='checkbox'], input[type='radio'] {
+  input[type='checkbox'],
+  input[type='radio'] {
     display: inline-block;
     margin: 4px 12px 16px 8px;
     vertical-align: top;
@@ -38,7 +41,7 @@
   }
 
   input[type='file'] {
-    background: #FFFFFF;
+    background: #ffffff;
     font-size: 1.2em;
 
     /* these styles are all the same but for whatever reason
@@ -75,7 +78,7 @@
     position: relative;
     display: flex;
     flex-direction: row;
-    background: #FFFFFF;
+    background: #ffffff;
     padding: 0;
     cursor: text;
 
@@ -129,12 +132,13 @@
 
       @keyframes spin {
         100% {
-          transform: rotate(360deg)
+          transform: rotate(360deg);
         }
       }
     }
 
-    &.taken, &.invalid {
+    &.taken,
+    &.invalid {
       color: @red-text-on-white;
       font-weight: bolder;
     }
@@ -152,7 +156,8 @@
     top: 2px;
   }
 
-  button, .sending {
+  button,
+  .sending {
     display: block;
     margin: 32px 0 0;
     padding: 8px;
@@ -168,7 +173,7 @@
     }
   }
 
-  button[type=button] {
+  button[type='button'] {
     background: white;
   }
 

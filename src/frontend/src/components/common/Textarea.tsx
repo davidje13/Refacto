@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-} from 'react';
+import React, { useState, useRef, useCallback, useLayoutEffect } from 'react';
 import classNames from 'classnames';
 import useListener from '../../hooks/useListener';
 import useDebounced from '../../hooks/useDebounced';
@@ -21,13 +16,11 @@ function sanitiseInput(value: string): string {
   return value.replace(NEWLINE, '\n');
 }
 
-interface PropsT extends Omit<
-React.TextareaHTMLAttributes<HTMLTextAreaElement>, (
-  'onChange' |
-  'value' |
-  'defaultValue' |
-  'defaultChecked'
-)> {
+interface PropsT
+  extends Omit<
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    'onChange' | 'value' | 'defaultValue' | 'defaultChecked'
+  > {
   onChange?: (v: string) => void;
   onChangeMultiline?: (v: boolean) => void;
   value?: string;
@@ -52,17 +45,20 @@ export default ({
   const baseHeightRef = useRef(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const setContentHeight = useCallback((single: number, multi: number) => {
-    const baseHeight = baseHeightRef.current;
-    const multiline = single > baseHeight;
+  const setContentHeight = useCallback(
+    (single: number, multi: number) => {
+      const baseHeight = baseHeightRef.current;
+      const multiline = single > baseHeight;
 
-    setHeight({
-      multiline,
-      pixels: (multiline ? multi : single) || baseHeight,
-    });
+      setHeight({
+        multiline,
+        pixels: (multiline ? multi : single) || baseHeight,
+      });
 
-    updateMultiline?.(multiline);
-  }, [setHeight, baseHeightRef, updateMultiline]);
+      updateMultiline?.(multiline);
+    },
+    [setHeight, baseHeightRef, updateMultiline],
+  );
 
   const updateSize = useCallback(() => {
     const textarea = textareaRef.current;
@@ -95,9 +91,13 @@ export default ({
     sizeToFit,
   ]);
 
-  const changeHandler = useMutatedCallback(onChange, (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ): [string] => [sanitiseInput(e.target.value)], []);
+  const changeHandler = useMutatedCallback(
+    onChange,
+    (e: React.ChangeEvent<HTMLTextAreaElement>): [string] => [
+      sanitiseInput(e.target.value),
+    ],
+    [],
+  );
 
   useLayoutEffect(() => {
     baseHeightRef.current = getEmptyHeight(textareaRef.current!);

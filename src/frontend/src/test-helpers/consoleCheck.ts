@@ -11,13 +11,15 @@ function checkConsoleOutput(
   if (lines.length) {
     return {
       pass: false,
-      message: (): string => `Expected no console ${friendlyName}s, got:\n\n${lines.join('\n\n')}`,
+      message: (): string =>
+        `Expected no console ${friendlyName}s, got:\n\n${lines.join('\n\n')}`,
     };
   }
 
   return {
     pass: true,
-    message: (): string => `Expected a console ${friendlyName}, but got nothing`,
+    message: (): string =>
+      `Expected a console ${friendlyName}, but got nothing`,
   };
 }
 

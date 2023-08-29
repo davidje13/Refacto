@@ -12,18 +12,13 @@ interface PropsT {
   onEdit?: () => void;
 }
 
-export default memo(({
-  item,
-  onSelect,
-  onVote,
-  onEdit,
-}: PropsT) => {
+export default memo(({ item, onSelect, onVote, onEdit }: PropsT) => {
   const done = item.doneTime > 0;
 
   return (
     <div className={classNames('mood-item', { done })}>
       <WrappedButton className="message" onClick={onSelect}>
-        { item.message }
+        {item.message}
       </WrappedButton>
       <VoteCount votes={item.votes} onVote={onVote} />
       <WrappedButton
@@ -32,7 +27,7 @@ export default memo(({
         onClick={onEdit}
         hideIfDisabled
       />
-      { done && <TickBold className="tick" /> }
+      {done && <TickBold className="tick" />}
     </div>
   );
 });

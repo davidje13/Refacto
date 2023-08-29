@@ -13,10 +13,7 @@
     "noUncheckedIndexedAccess": false, // TODO
     "jsx": "preserve",
     "noEmit": true,
-    "typeRoots": [
-      "src/types",
-      "node_modules/@types"
-    ],
+    "typeRoots": ["src/types", "node_modules/@types"]
   },
   "typeAcquisition": {
     "enable": false

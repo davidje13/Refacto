@@ -17,10 +17,7 @@ function passthrough(x: Size): Size {
   return x;
 }
 
-function useWindowSize(
-  conversion?: undefined,
-  deps?: undefined,
-): Size;
+function useWindowSize(conversion?: undefined, deps?: undefined): Size;
 
 function useWindowSize<T>(
   conversion: (size: Size) => T,

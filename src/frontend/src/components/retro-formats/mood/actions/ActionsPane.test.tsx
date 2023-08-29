@@ -7,7 +7,9 @@ import { css } from '../../../../test-helpers/queries';
 import ActionsPane from './ActionsPane';
 import LocalDateProvider from '../../../../time/LocalDateProvider';
 
-jest.mock('../../../common/ExpandingTextEntry', () => mockElement('mock-expanding-text-entry'));
+jest.mock('../../../common/ExpandingTextEntry', () =>
+  mockElement('mock-expanding-text-entry'),
+);
 jest.mock('./ActionSection', () => mockElement('mock-action-section'));
 
 describe('ActionsPane', () => {
@@ -23,15 +25,13 @@ describe('ActionsPane', () => {
 
   beforeEach(() => {
     localDateProvider = new LocalDateProvider(0);
-    jest.spyOn(localDateProvider, 'getMidnightTimestamp')
+    jest
+      .spyOn(localDateProvider, 'getMidnightTimestamp')
       .mockImplementation((days = 0) => days * 10);
 
-    dom = render((
-      <ActionsPane
-        items={items}
-        localDateProvider={localDateProvider}
-      />
-    ));
+    dom = render(
+      <ActionsPane items={items} localDateProvider={localDateProvider} />,
+    );
     sections = dom.getAllBy(css('mock-action-section'));
   });
 
@@ -71,13 +71,13 @@ describe('ActionsPane', () => {
   });
 
   it('renders an input field if a callback is provided', () => {
-    dom = render((
+    dom = render(
       <ActionsPane
         items={items}
         localDateProvider={localDateProvider}
         onAddItem={(): void => undefined}
-      />
-    ));
+      />,
+    );
 
     expect(dom).toContainElementWith(css('mock-expanding-text-entry'));
   });

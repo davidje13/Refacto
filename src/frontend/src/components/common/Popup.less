@@ -7,7 +7,9 @@
   background: rgba(128, 128, 128, 0.5);
   z-index: 10;
 
-  animation: 0.2s ease popup-fade-in, 0.05s 0.2s step-end forwards popup-blur-background;
+  animation:
+    0.2s ease popup-fade-in,
+    0.05s 0.2s step-end forwards popup-blur-background;
 
   .popup-content {
     position: absolute;
@@ -19,7 +21,7 @@
     max-width: calc(100% - 32px);
     max-height: calc(100% - 32px);
     box-sizing: border-box;
-    background: #FFFFFF;
+    background: #ffffff;
     padding: 16px 32px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     outline: none;

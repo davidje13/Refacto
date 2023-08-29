@@ -1,5 +1,9 @@
 import React from 'react';
-import { render, fireEvent, RenderResult } from 'flexible-testing-library-react';
+import {
+  render,
+  fireEvent,
+  RenderResult,
+} from 'flexible-testing-library-react';
 import { css } from '../../test-helpers/queries';
 
 import TabControl from './TabControl';
@@ -9,13 +13,13 @@ describe('TabControl', () => {
     {
       key: 'a',
       title: 'A',
-      content: (<strong>A</strong>),
+      content: <strong>A</strong>,
       className: 'cls',
     },
     {
       key: 'b',
       title: 'B',
-      content: (<em>B</em>),
+      content: <em>B</em>,
     },
   ];
 

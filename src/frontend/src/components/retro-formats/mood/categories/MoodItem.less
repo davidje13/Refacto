@@ -1,7 +1,7 @@
 @import (reference) '../../../colours.less';
 
 .mood-item {
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 0;
   border-radius: 4px;
   position: relative;
@@ -118,7 +118,8 @@
       }
     }
 
-    .cancel, .continue {
+    .cancel,
+    .continue {
       border-radius: 4px;
       font-size: 0.9em;
       white-space: nowrap;
@@ -140,7 +141,7 @@
     }
 
     &::after {
-      content: "";
+      content: '';
       display: block;
       clear: both;
     }
@@ -171,14 +172,17 @@
 
 .has-focused .mood-item:not(.focused):not(.editing):not(.done) {
   opacity: 0.7;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
 
-  .message:not(:disabled)  {
+  .message:not(:disabled) {
     cursor: pointer;
   }
 }
 
-.multi-column.has-focused .mood-item:not(.focused):not(.editing):not(.done):hover {
+.multi-column.has-focused
+  .mood-item:not(.focused):not(.editing):not(.done):hover {
   transform: translate(0, -1px);
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }

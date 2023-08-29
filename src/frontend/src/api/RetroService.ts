@@ -14,9 +14,7 @@ export interface RetroCreationInfo {
 }
 
 export default class RetroService {
-  public constructor(
-    private readonly apiBase: string,
-  ) {}
+  public constructor(private readonly apiBase: string) {}
 
   public async create({
     name,
@@ -29,18 +27,15 @@ export default class RetroService {
     if (importJson) {
       requestBody['importJson'] = importJson;
     }
-    const response = await fetch(
-      `${this.apiBase}/retros`,
-      {
-        method: 'POST',
-        cache: 'no-cache',
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
+    const response = await fetch(`${this.apiBase}/retros`, {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify(requestBody),
+    });
     const body = await response.json();
     if (response.status >= 300 || body.error) {
       throw new Error(body.error || 'Connection failed');

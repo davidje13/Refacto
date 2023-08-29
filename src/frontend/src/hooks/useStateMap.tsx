@@ -13,14 +13,22 @@ interface StateMapProviderProps {
   scope?: string;
 }
 
-export function StateMapProvider({ children, scope }: StateMapProviderProps): React.ReactElement {
-  const [[map, latestScope], set] = useState(() => [new Map<string, unknown>(), scope]);
+export function StateMapProvider({
+  children,
+  scope,
+}: StateMapProviderProps): React.ReactElement {
+  const [[map, latestScope], set] = useState(() => [
+    new Map<string, unknown>(),
+    scope,
+  ]);
   useLayoutEffect(() => {
     if (scope !== latestScope) {
       set([new Map<string, unknown>(), scope]);
     }
   }, [scope, latestScope]);
-  return (<StateMapContext.Provider value={map}>{ children }</StateMapContext.Provider>);
+  return (
+    <StateMapContext.Provider value={map}>{children}</StateMapContext.Provider>
+  );
 }
 
 export default function useStateMap<T>(
@@ -36,11 +44,14 @@ export default function useStateMap<T>(
     }
     return (map.get(id) || defaultValue) as T;
   });
-  const setter = useCallback((v: T) => {
-    if (id) {
-      map.set(id, v);
-    }
-    setValue(v);
-  }, [map, id]);
+  const setter = useCallback(
+    (v: T) => {
+      if (id) {
+        map.set(id, v);
+      }
+      setValue(v);
+    },
+    [map, id],
+  );
   return [value, setter];
 }

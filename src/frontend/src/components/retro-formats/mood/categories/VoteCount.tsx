@@ -19,10 +19,7 @@ function scale(n: number): number {
   return Math.min(fraction, 1) * MAX_VOTE_SCALE + 1;
 }
 
-export default memo(({
-  votes,
-  onVote,
-}: PropsT) => {
+export default memo(({ votes, onVote }: PropsT) => {
   const [click, clicking] = useTemporary(MIN_CLICK_DELAY);
 
   const clickFn = useCallback(() => {

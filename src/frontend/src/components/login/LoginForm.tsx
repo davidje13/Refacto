@@ -7,7 +7,9 @@ import './LoginForm.less';
 function makeState(redirect: string): string {
   const nonce = toHex(randomBytes(10));
   if (!storage.setItem('login-nonce', nonce)) {
-    window.alert('You must enable session cookies or storage in your browser settings to log in');
+    window.alert(
+      'You must enable session cookies or storage in your browser settings to log in',
+    );
     throw new Error('insufficient browser permissions to log in');
   }
   return JSON.stringify({ nonce, redirect });
@@ -18,10 +20,7 @@ interface PropsT {
   redirect?: string | null;
 }
 
-export default memo(({
-  message,
-  redirect,
-}: PropsT) => {
+export default memo(({ message, redirect }: PropsT) => {
   const config = useConfig();
   const sso = config?.sso ?? {};
   const googleConfig = sso['google'];
@@ -67,9 +66,9 @@ export default memo(({
 
   return (
     <div className="login-form">
-      { message ? (<p>{ message }</p>) : null }
+      {message ? <p>{message}</p> : null}
       <p>
-        { googleConfig ? (
+        {googleConfig ? (
           <button
             type="button"
             className="sso-google"
@@ -77,8 +76,8 @@ export default memo(({
           >
             Continue with Google
           </button>
-        ) : null }
-        { githubConfig ? (
+        ) : null}
+        {githubConfig ? (
           <button
             type="button"
             className="sso-github"
@@ -86,8 +85,8 @@ export default memo(({
           >
             Continue with GitHub
           </button>
-        ) : null }
-        { gitlabConfig ? (
+        ) : null}
+        {gitlabConfig ? (
           <button
             type="button"
             className="sso-gitlab"
@@ -95,7 +94,7 @@ export default memo(({
           >
             Continue with GitLab
           </button>
-        ) : null }
+        ) : null}
       </p>
     </div>
   );

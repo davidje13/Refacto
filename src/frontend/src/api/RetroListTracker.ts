@@ -7,9 +7,7 @@ interface RetroList {
 }
 
 export default class RetroListTracker {
-  public constructor(
-    private readonly apiBase: string,
-  ) {}
+  public constructor(private readonly apiBase: string) {}
 
   public get(userToken: string): Observable<RetroList> {
     return loadHttp<RetroList>({

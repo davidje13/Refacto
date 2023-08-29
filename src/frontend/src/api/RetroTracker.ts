@@ -11,13 +11,15 @@ interface RetroKey {
   retroToken: string;
 }
 
-export type RetroState = {
-  retro: Retro;
-  error: null;
-} | {
-  retro: null;
-  error: RetroError;
-};
+export type RetroState =
+  | {
+      retro: Retro;
+      error: null;
+    }
+  | {
+      retro: null;
+      error: RetroError;
+    };
 
 export type RetroDispatchSpec = DispatchSpec<Retro, Spec<Retro>>;
 export type RetroDispatch = Dispatch<Retro, Spec<Retro>>;
@@ -47,8 +49,10 @@ class RetroWrapper {
       this.retroStateCallbacks.forEach((fn) => fn(state));
     };
 
-    this.reducer = SharedReducer
-      .for<Retro>(`${wsBase}/retros/${retroId}`, (data): void => setState({ retro: data, error: null }))
+    this.reducer = SharedReducer.for<Retro>(
+      `${wsBase}/retros/${retroId}`,
+      (data): void => setState({ retro: data, error: null }),
+    )
       .withReducer(context.with(listCommands))
       .withToken(retroToken)
       .withErrorHandler((err): void => setState({ retro: null, error: err }))
@@ -72,16 +76,15 @@ class RetroWrapper {
 }
 
 export default class RetroTracker {
-  private readonly subscriptionTracker: SubscriptionTracker<RetroKey, RetroWrapper>;
+  private readonly subscriptionTracker: SubscriptionTracker<
+    RetroKey,
+    RetroWrapper
+  >;
 
   public constructor(apiBase: string, wsBase: string) {
     this.subscriptionTracker = new SubscriptionTracker(
-      ({ retroId, retroToken }): RetroWrapper => new RetroWrapper(
-        apiBase,
-        wsBase,
-        retroId,
-        retroToken,
-      ),
+      ({ retroId, retroToken }): RetroWrapper =>
+        new RetroWrapper(apiBase, wsBase, retroId, retroToken),
       (service): void => service.close(),
     );
   }

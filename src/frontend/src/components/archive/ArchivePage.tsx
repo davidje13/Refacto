@@ -12,12 +12,7 @@ type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
   group?: string;
 };
 
-export default memo(({
-  retroToken,
-  retro,
-  archiveId,
-  group,
-}: PropsT) => {
+export default memo(({ retroToken, retro, archiveId, group }: PropsT) => {
   const [archive, archiveError] = useArchive(retro.id, archiveId, retroToken);
 
   let archiveName = 'Archive';
@@ -30,21 +25,28 @@ export default memo(({
       <Header
         documentTitle={`${archiveName} - ${retro.name} - Refacto`}
         title={`${retro.name} (${archiveName})`}
-        backLink={{ label: 'Archives', action: `/retros/${retro.slug}/archives` }}
+        backLink={{
+          label: 'Archives',
+          action: `/retros/${retro.slug}/archives`,
+        }}
       />
       <Loader
         error={archiveError}
         Component={RetroFormatPicker}
-        componentProps={archive ? {
-          retroFormat: archive.format,
-          retroOptions: archive.options,
-          retroItems: archive.items,
-          retroState: {},
-          group,
-          archive: true,
-          archiveTime: archive.created,
-          onComplete: (): void => undefined,
-        } : null}
+        componentProps={
+          archive
+            ? {
+                retroFormat: archive.format,
+                retroOptions: archive.options,
+                retroItems: archive.items,
+                retroState: {},
+                group,
+                archive: true,
+                archiveTime: archive.created,
+                onComplete: (): void => undefined,
+              }
+            : null
+        }
       />
     </article>
   );

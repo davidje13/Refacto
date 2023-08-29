@@ -12,9 +12,9 @@ describe('ItemColumn', () => {
   it('displays all items', () => {
     const item1 = makeRetroItem({ id: 'a' });
     const item2 = makeRetroItem({ id: 'b' });
-    const dom = render((
-      <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
-    ));
+    const dom = render(
+      <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />,
+    );
 
     expect(dom.getAllBy(css('my-item')).length).toEqual(2);
   });
@@ -22,9 +22,9 @@ describe('ItemColumn', () => {
   it('orders items newest-first', () => {
     const item1 = makeRetroItem({ id: 'a', created: 100 });
     const item2 = makeRetroItem({ id: 'b', created: 200 });
-    const dom = render((
-      <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />
-    ));
+    const dom = render(
+      <ItemColumn items={[item1, item2]} ItemType={Item} itemProps={{}} />,
+    );
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps['item']).toEqual(item2);
@@ -33,9 +33,9 @@ describe('ItemColumn', () => {
 
   it('passes item props to the items unchanged', () => {
     const item = makeRetroItem();
-    const dom = render((
-      <ItemColumn items={[item]} ItemType={Item} itemProps={{ foo: 'bar' }} />
-    ));
+    const dom = render(
+      <ItemColumn items={[item]} ItemType={Item} itemProps={{ foo: 'bar' }} />,
+    );
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps['foo']).toEqual('bar');
@@ -43,9 +43,9 @@ describe('ItemColumn', () => {
 
   it('focuses nothing by default', () => {
     const item = makeRetroItem();
-    const dom = render((
-      <ItemColumn items={[item]} ItemType={Item} itemProps={{}} />
-    ));
+    const dom = render(
+      <ItemColumn items={[item]} ItemType={Item} itemProps={{}} />,
+    );
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps['focused']).toEqual(false);
@@ -53,14 +53,14 @@ describe('ItemColumn', () => {
 
   it('focuses the requested item', () => {
     const item = makeRetroItem();
-    const dom = render((
+    const dom = render(
       <ItemColumn
         items={[item]}
         ItemType={Item}
         focusedItemId={item.id}
         itemProps={{}}
-      />
-    ));
+      />,
+    );
 
     const displayedItems = dom.getAllBy(css('my-item'));
     expect(displayedItems[0].mockProps['focused']).toEqual(true);

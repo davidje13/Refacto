@@ -5,14 +5,13 @@ import React, {
   useRef,
   ReactNode,
 } from 'react';
-import {
-  Route,
-  Switch,
-  useLocation,
-  LocationHook,
-} from 'wouter';
+import { Route, Switch, useLocation, LocationHook } from 'wouter';
 import type { Retro } from '../shared/api-entities';
-import type { RetroState, RetroDispatch, RetroError } from '../api/RetroTracker';
+import type {
+  RetroState,
+  RetroDispatch,
+  RetroError,
+} from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
 import useNonce from '../hooks/useNonce';
 import RetroCreatePage from './retro-create/RetroCreatePage';
@@ -26,11 +25,7 @@ import useRetroToken from '../hooks/data/useRetroToken';
 import { StateMapProvider } from '../hooks/useStateMap';
 import RedirectRoute from './RedirectRoute';
 
-type RetroReducerState = [
-  Retro | null,
-  RetroDispatch | null,
-  RetroError,
-];
+type RetroReducerState = [Retro | null, RetroDispatch | null, RetroError];
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/)/;
 
@@ -65,7 +60,9 @@ function useRetroReducer(
   const [location, setLocation] = useLocation();
   const slugChangeDetectionRef = useRef<string>();
   const [retroState, setRetroState] = useState<RetroState | null>(null);
-  const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(null);
+  const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
+    null,
+  );
   const [error, setError] = useState<RetroError>(null);
   const nonce = useNonce();
 
@@ -84,12 +81,20 @@ function useRetroReducer(
     const subscription = retroTracker.subscribe(
       retroId,
       retroToken,
-      (dispatch: RetroDispatch) => nonce.check(myNonce) && setRetroDispatch(() => dispatch),
+      (dispatch: RetroDispatch) =>
+        nonce.check(myNonce) && setRetroDispatch(() => dispatch),
       (data: RetroState) => nonce.check(myNonce) && setRetroState(data),
       (err: RetroError) => nonce.check(myNonce) && setError(err),
     );
     return (): void => subscription.unsubscribe();
-  }, [retroTracker, setRetroState, setRetroDispatch, setError, retroId, retroToken]);
+  }, [
+    retroTracker,
+    setRetroState,
+    setRetroDispatch,
+    setError,
+    retroId,
+    retroToken,
+  ]);
 
   useEffect(() => {
     if (!retroId || !retroState || !retroState.retro) {
@@ -102,11 +107,7 @@ function useRetroReducer(
     }
   }, [retroState, slugChangeDetectionRef, location, setLocation, replaceSlug]);
 
-  return [
-    retroState?.retro ?? null,
-    retroDispatch,
-    error,
-  ];
+  return [retroState?.retro ?? null, retroDispatch, error];
 }
 
 interface PropsT {
@@ -119,33 +120,30 @@ export interface RetroPagePropsT {
   retroDispatch: RetroDispatch | null;
 }
 
-export default ({
-  slug,
-}: PropsT): React.ReactElement => {
+export default ({ slug }: PropsT): React.ReactElement => {
   const [retroId, slugError] = useSlug(slug);
   const [retroToken, retroTokenError] = useRetroToken(retroId);
-  const [
-    retro,
-    retroDispatch,
-    retroError,
-  ] = useRetroReducer(retroId, retroToken);
+  const [retro, retroDispatch, retroError] = useRetroReducer(
+    retroId,
+    retroToken,
+  );
 
   if (slugError === 'not found') {
-    return (<RetroCreatePage defaultSlug={slug} />);
+    return <RetroCreatePage defaultSlug={slug} />;
   }
 
   const error = slugError || retroTokenError || retroError;
 
   if (error) {
-    return (<div className="loader error">{ error }</div>);
+    return <div className="loader error">{error}</div>;
   }
 
   if (retroId && !retroToken) {
-    return (<PasswordPage slug={slug} retroId={retroId} />);
+    return <PasswordPage slug={slug} retroId={retroId} />;
   }
 
   if (!retro || !retroToken) {
-    return (<div className="loader">Loading&hellip;</div>);
+    return <div className="loader">Loading&hellip;</div>;
   }
 
   const retroParams = {
@@ -157,24 +155,34 @@ export default ({
   return (
     <StateMapProvider scope={slug}>
       <Switch>
-        <Route path="/retros/:slug"><RetroPage {...retroParams} /></Route>
-        <Route path="/retros/:slug/groups/:group">
-          { ({ group }): ReactNode => <RetroPage {...retroParams} group={group} /> }
+        <Route path="/retros/:slug">
+          <RetroPage {...retroParams} />
         </Route>
-        <Route path="/retros/:slug/archives"><ArchiveListPage {...retroParams} /></Route>
+        <Route path="/retros/:slug/groups/:group">
+          {({ group }): ReactNode => (
+            <RetroPage {...retroParams} group={group} />
+          )}
+        </Route>
+        <Route path="/retros/:slug/archives">
+          <ArchiveListPage {...retroParams} />
+        </Route>
         <Route path="/retros/:slug/archives/:archiveId">
-          { ({ archiveId }): ReactNode => <ArchivePage {...retroParams} archiveId={archiveId ?? ''} /> }
+          {({ archiveId }): ReactNode => (
+            <ArchivePage {...retroParams} archiveId={archiveId ?? ''} />
+          )}
         </Route>
         <Route path="/retros/:slug/archives/:archiveId/groups/:group">
-          { ({ archiveId, group }): ReactNode => (
+          {({ archiveId, group }): ReactNode => (
             <ArchivePage
               {...retroParams}
               archiveId={archiveId ?? ''}
               group={group}
             />
-          ) }
+          )}
         </Route>
-        <Route path="/retros/:slug/settings"><RetroSettingsPage {...retroParams} /></Route>
+        <Route path="/retros/:slug/settings">
+          <RetroSettingsPage {...retroParams} />
+        </Route>
 
         <RedirectRoute path="/retros/:slug/:rest*" to="/retros/:slug" replace />
       </Switch>

@@ -13,11 +13,14 @@ describe('RetroSettingsPage', () => {
   it('renders basic settings', async () => {
     let dom;
     await act(async () => {
-      dom = render((
+      dom = render(
         <Router hook={staticLocationHook('/', { record: true })}>
-          <RetroSettingsPage retro={makeRetro()} retroDispatch={(): null => null} />
-        </Router>
-      ));
+          <RetroSettingsPage
+            retro={makeRetro()}
+            retroDispatch={(): null => null}
+          />
+        </Router>,
+      );
     });
 
     expect(dom).toContainElementWith(placeholderText('retro name'));

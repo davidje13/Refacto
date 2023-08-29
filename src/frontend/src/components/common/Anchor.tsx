@@ -4,9 +4,7 @@ interface PropsT {
   tag: string;
 }
 
-export default memo(({
-  tag,
-}: PropsT) => {
+export default memo(({ tag }: PropsT) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -16,5 +14,5 @@ export default memo(({
     }
   }, [ref, tag]);
 
-  return (<span ref={ref} id={tag} />);
+  return <span ref={ref} id={tag} />;
 });

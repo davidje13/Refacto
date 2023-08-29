@@ -44,7 +44,9 @@
     }
   }
 
-  .columns > section, .tab-control > section, section.actions {
+  .columns > section,
+  .tab-control > section,
+  section.actions {
     box-sizing: border-box;
     padding: @base-padding @base-padding (@base-padding + 4px);
 
@@ -100,10 +102,12 @@
     font-size: 0.9em;
     padding: 0.8em 4px;
     font-weight: bolder;
-    color: #FFFFFF;
+    color: #ffffff;
     outline: none;
 
-    transition: margin-top 0.1s ease-out, padding-bottom 0.1s ease-out;
+    transition:
+      margin-top 0.1s ease-out,
+      padding-bottom 0.1s ease-out;
   }
 
   .tab-item:not(.active) {
@@ -148,14 +152,15 @@
       }
     }
 
-    .submit, .delete {
+    .submit,
+    .delete {
       border-radius: 4px;
       font-size: 0.9em;
       white-space: nowrap;
 
       &:disabled {
-        background: #EEEEEE;
-        color: #AAAAAA;
+        background: #eeeeee;
+        color: #aaaaaa;
       }
     }
 
@@ -194,13 +199,13 @@
       padding: 0 4px;
 
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         top: 12px;
         left: 0;
         right: 0;
         bottom: 0;
-        background: #FFFFFF;
+        background: #ffffff;
         border-bottom-right-radius: 4px;
         border-bottom-left-radius: 4px;
       }
@@ -222,7 +227,8 @@
       .open-giphy {
         width: 1.5em;
         height: 1.5em;
-        background: center center / 1.2em 1.2em no-repeat url(../../../../resources/giphy-icon.png);
+        background: center center / 1.2em 1.2em no-repeat
+          url(../../../../resources/giphy-icon.png);
       }
     }
 
@@ -271,19 +277,23 @@
   header .text-entry {
     border-radius: 4px;
     box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.08);
-    transition: background 0.1s ease-out, box-shadow 0.1s ease-out;
+    transition:
+      background 0.1s ease-out,
+      box-shadow 0.1s ease-out;
 
     .attachments::before {
-      transition: background 0.1s ease-out, box-shadow 0.1s ease-out;
+      transition:
+        background 0.1s ease-out,
+        box-shadow 0.1s ease-out;
     }
 
     textarea::placeholder {
-      color: #FFFFFF;
+      color: #ffffff;
       transition: color 0.1s ease-out;
     }
 
     .submit {
-      color: #FFFFFF;
+      color: #ffffff;
 
       &:disabled {
         display: none;
@@ -304,7 +314,7 @@
     }
 
     &:focus-within {
-      background: #FFFFFF;
+      background: #ffffff;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       textarea::placeholder {
@@ -312,7 +322,7 @@
       }
 
       .attachments::before {
-        background: #FFFFFF;
+        background: #ffffff;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
       }
     }
@@ -356,7 +366,7 @@
         z-index: 2; /* above face icons */
 
         &::before {
-          content: "";
+          content: '';
           display: block;
           height: @add-action-max-scroll;
         }

@@ -24,10 +24,10 @@ interface StoredT<T> {
 function ajaxSubject<R>(url: string, mapping: (o: any) => R): StoredT<R> {
   const subject = new BehaviorSubject<R | undefined>(undefined);
   const observable = subject.pipe(
-    switchMap((v) => (
-      v ? of(v) : loadHttp({ url }).pipe(map(mapping))
-    ).pipe(materialize())),
-    filter(({ kind }) => (kind !== 'C')),
+    switchMap((v) =>
+      (v ? of(v) : loadHttp({ url }).pipe(map(mapping))).pipe(materialize()),
+    ),
+    filter(({ kind }) => kind !== 'C'),
     shareReplay(1),
   );
   return { subject, observable };
@@ -37,10 +37,10 @@ export default class SlugTracker {
   private readonly storage: CacheMap<string, StoredT<string>>;
 
   public constructor(apiBase: string) {
-    this.storage = new CacheMap((slug: string): StoredT<string> => ajaxSubject(
-      `${apiBase}/slugs/${slug}`,
-      ({ id }): string => id,
-    ));
+    this.storage = new CacheMap(
+      (slug: string): StoredT<string> =>
+        ajaxSubject(`${apiBase}/slugs/${slug}`, ({ id }): string => id),
+    );
   }
 
   public get(slug: string): Observable<Notification<string>> {

@@ -61,23 +61,33 @@ export default ({
     }
   }, []);
 
-  const handleSubmit = useCallback((e?: React.SyntheticEvent) => {
-    e?.preventDefault();
+  const handleSubmit = useCallback(
+    (e?: React.SyntheticEvent) => {
+      e?.preventDefault();
 
-    const curValue = boxedValue.current;
-    if (curValue === '') {
-      return;
-    }
+      const curValue = boxedValue.current;
+      if (curValue === '') {
+        return;
+      }
 
-    if (blurOnSubmit) {
-      blurElement();
-    }
-    if (clearAfterSubmit) {
-      setValue('');
-    }
+      if (blurOnSubmit) {
+        blurElement();
+      }
+      if (clearAfterSubmit) {
+        setValue('');
+      }
 
-    onSubmit(curValue);
-  }, [boxedValue, onSubmit, blurOnSubmit, blurElement, clearAfterSubmit, setValue]);
+      onSubmit(curValue);
+    },
+    [
+      boxedValue,
+      onSubmit,
+      blurOnSubmit,
+      blurElement,
+      clearAfterSubmit,
+      setValue,
+    ],
+  );
 
   const handleCancel = useCallback(() => {
     if (blurOnCancel) {
@@ -110,7 +120,7 @@ export default ({
       onMouseDown={handleFormMouseDown}
       className={classNames('text-entry', {
         multiline: alwaysMultiline || textMultiline,
-        'has-value': (value !== ''),
+        'has-value': value !== '',
       })}
     >
       <Textarea
@@ -125,18 +135,18 @@ export default ({
         multilineClassElement={form}
         onKeyDown={handleKey}
       />
-      { extraInputs }
+      {extraInputs}
       <div className="buttons">
-        { preSubmitOptions }
+        {preSubmitOptions}
         <button
           type="submit"
           className="submit"
           title={submitButtonTitle}
           disabled={value === ''}
         >
-          { submitButtonLabel }
+          {submitButtonLabel}
         </button>
-        { postSubmitOptions }
+        {postSubmitOptions}
       </div>
     </form>
   );

@@ -1,14 +1,19 @@
 @import (reference) './colours.less';
 @import './opensans.less';
 
-body, input, textarea, button {
-  font: 300 1em 'Open Sans', sans-serif;
+body,
+input,
+textarea,
+button {
+  font:
+    300 1em 'Open Sans',
+    sans-serif;
   line-height: 1.4;
 }
 
 article {
   background: @beige-back;
-  border-bottom: 1px solid #FFFFFF; /* prevent background clipping */
+  border-bottom: 1px solid #ffffff; /* prevent background clipping */
 
   > p {
     margin: 64px 32px;
@@ -16,12 +21,15 @@ article {
   }
 }
 
-a:link, a:visited {
+a:link,
+a:visited {
   text-decoration: none;
   color: @link-text;
 }
 
-a:active, a:hover, a:focus {
+a:active,
+a:hover,
+a:focus {
   text-decoration: underline;
   color: @link-text-hover;
 }

@@ -11,9 +11,7 @@ jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
 
 describe('ActionSection', () => {
   it('displays a given title', () => {
-    const dom = render((
-      <ActionSection title="my title" items={[]} />
-    ));
+    const dom = render(<ActionSection title="my title" items={[]} />);
 
     expect(dom.getBy(css('h3'))).toHaveTextContent('my title');
   });
@@ -23,9 +21,7 @@ describe('ActionSection', () => {
       makeRetroItem({ category: 'action', message: 'foo' }),
       makeRetroItem({ category: 'action', message: 'bar' }),
     ];
-    const dom = render((
-      <ActionSection title="" items={items} />
-    ));
+    const dom = render(<ActionSection title="" items={items} />);
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -39,9 +35,7 @@ describe('ActionSection', () => {
       makeRetroItem({ category: 'nope', message: 'foo' }),
       makeRetroItem({ category: 'action', message: 'bar' }),
     ];
-    const dom = render((
-      <ActionSection title="" items={items} />
-    ));
+    const dom = render(<ActionSection title="" items={items} />);
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({
@@ -56,14 +50,9 @@ describe('ActionSection', () => {
       makeRetroItem({ category: 'action', created: 25 }),
     ];
 
-    const dom = render((
-      <ActionSection
-        title=""
-        items={items}
-        rangeFrom={10}
-        rangeTo={20}
-      />
-    ));
+    const dom = render(
+      <ActionSection title="" items={items} rangeFrom={10} rangeTo={20} />,
+    );
 
     const column = dom.getBy(css('mock-item-column'));
     expect(column.mockProps).toMatchObject({

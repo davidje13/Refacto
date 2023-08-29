@@ -21,8 +21,8 @@ class MockWebSocketClient {
   private readonly listeners: Record<string, ListenerFn[]>;
 
   public constructor(url: string) {
-    const expected = MockWebSocketClient.expectations.find(
-      (expectation) => url.endsWith(expectation.url),
+    const expected = MockWebSocketClient.expectations.find((expectation) =>
+      url.endsWith(expectation.url),
     );
     if (!expected) {
       throw new Error('Unexpected WebSocket connection');

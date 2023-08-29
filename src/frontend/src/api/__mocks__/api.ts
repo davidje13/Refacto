@@ -26,10 +26,7 @@ class FakeRetroTracker {
     this.expectedRetroToken = retroToken;
   }
 
-  public setServerData(
-    retroId: string,
-    serverData: Partial<RetroState>,
-  ): void {
+  public setServerData(retroId: string, serverData: Partial<RetroState>): void {
     this.data.set(retroId, {
       retro: null,
       error: null,
@@ -138,10 +135,7 @@ class FakeUserTokenService {
     this.userToken = userToken;
   }
 
-  public async login(
-    service: string,
-    externalToken: string,
-  ): Promise<string> {
+  public async login(service: string, externalToken: string): Promise<string> {
     this.capturedService = service;
     this.capturedExternalToken = externalToken;
 

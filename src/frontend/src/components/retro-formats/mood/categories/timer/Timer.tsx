@@ -8,18 +8,15 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
 }
 
-export default memo(({
-  targetTime,
-  onAddExtraTime,
-}: PropsT) => {
+export default memo(({ targetTime, onAddExtraTime }: PropsT) => {
   const remaining = useCountdown(targetTime, 1000);
 
   let component;
   if (remaining >= 0) {
-    component = (<TimeRemaining remaining={remaining} />);
+    component = <TimeRemaining remaining={remaining} />;
   } else {
-    component = (<TimeUp onAddExtraTime={onAddExtraTime} />);
+    component = <TimeUp onAddExtraTime={onAddExtraTime} />;
   }
 
-  return (<div className="timer">{ component }</div>);
+  return <div className="timer">{component}</div>;
 });

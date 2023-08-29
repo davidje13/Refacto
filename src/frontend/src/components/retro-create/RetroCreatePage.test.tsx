@@ -10,10 +10,10 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('RetroCreatePage', () => {
   it('renders without error', () => {
-    render((
+    render(
       <Router hook={staticLocationHook('/', { record: true })}>
         <RetroCreatePage />
-      </Router>
-    ));
+      </Router>,
+    );
   });
 });

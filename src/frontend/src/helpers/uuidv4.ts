@@ -32,16 +32,28 @@ for (let i = 0; i < 256; i += 1) {
 
 function bytesToUuid(buf: Uint8Array): string {
   let i = 0;
-  return ([
-    bth[buf[i += 1]], bth[buf[i += 1]],
-    bth[buf[i += 1]], bth[buf[i += 1]], '-',
-    bth[buf[i += 1]], bth[buf[i += 1]], '-',
-    bth[buf[i += 1]], bth[buf[i += 1]], '-',
-    bth[buf[i += 1]], bth[buf[i += 1]], '-',
-    bth[buf[i += 1]], bth[buf[i += 1]],
-    bth[buf[i += 1]], bth[buf[i += 1]],
-    bth[buf[i += 1]], bth[buf[i += 1]],
-  ]).join('');
+  return [
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    '-',
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    '-',
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    '-',
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    '-',
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+    bth[buf[(i += 1)]],
+  ].join('');
 }
 
 const rnds = new Uint8Array(16);

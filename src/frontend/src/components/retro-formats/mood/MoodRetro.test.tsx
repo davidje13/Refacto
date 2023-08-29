@@ -7,7 +7,7 @@ const nop = (): void => undefined;
 
 describe('MoodRetro', () => {
   it('renders without error', () => {
-    render((
+    render(
       <MoodRetro
         retroOptions={{}}
         retroItems={[]}
@@ -15,7 +15,7 @@ describe('MoodRetro', () => {
         archive={false}
         onComplete={nop}
         dispatch={nop}
-      />
-    ));
+      />,
+    );
   });
 });

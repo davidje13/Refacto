@@ -18,13 +18,19 @@ export default memo(() => {
       <Loader
         error={error}
         Component={RetroList}
-        componentProps={retroList ? {
-          retros: retroList,
-        } : null}
+        componentProps={
+          retroList
+            ? {
+                retros: retroList,
+              }
+            : null
+        }
       />
     );
   } else {
-    content = (<LoginForm message="Sign in to see your existing retros or create a new one" />);
+    content = (
+      <LoginForm message="Sign in to see your existing retros or create a new one" />
+    );
   }
 
   return (
@@ -38,7 +44,7 @@ export default memo(() => {
           { label: 'Create Retro', action: '/create' },
         ]}
       />
-      { content }
+      {content}
     </article>
   );
 });

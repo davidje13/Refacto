@@ -1,9 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-} from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 interface StateT {
   sending: boolean;
@@ -31,38 +26,37 @@ export default function useSubmissionCallback(
     };
   }, []);
 
-  const handleSubmit = useCallback(async (e: React.SyntheticEvent): Promise<void> => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.SyntheticEvent): Promise<void> => {
+      e.preventDefault();
 
-    if (sendingRef.current) {
-      return;
-    }
-
-    try {
-      sendingRef.current = true;
-      setState({ sending: true });
-
-      await fn();
-
-      sendingRef.current = false;
-      if (isMounted.current) {
-        setState({ sending: false });
+      if (sendingRef.current) {
+        return;
       }
-    } catch (err) {
-      sendingRef.current = false;
-      if (isMounted.current) {
-        if (err instanceof Error) {
-          setState({ sending: false, error: err.message });
-        } else {
-          setState({ sending: false, error: String(err) });
+
+      try {
+        sendingRef.current = true;
+        setState({ sending: true });
+
+        await fn();
+
+        sendingRef.current = false;
+        if (isMounted.current) {
+          setState({ sending: false });
+        }
+      } catch (err) {
+        sendingRef.current = false;
+        if (isMounted.current) {
+          if (err instanceof Error) {
+            setState({ sending: false, error: err.message });
+          } else {
+            setState({ sending: false, error: String(err) });
+          }
         }
       }
-    }
-  }, [sendingRef, setState, isMounted, fn, ...deps]);
+    },
+    [sendingRef, setState, isMounted, fn, ...deps],
+  );
 
-  return [
-    handleSubmit,
-    state.sending,
-    state.error,
-  ];
+  return [handleSubmit, state.sending, state.error];
 }

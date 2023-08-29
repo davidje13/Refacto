@@ -12,10 +12,7 @@ interface PropsT {
   retroId: string;
 }
 
-export default ({
-  slug,
-  retroId,
-}: PropsT): React.ReactElement => {
+export default ({ slug, retroId }: PropsT): React.ReactElement => {
   const [password, setPassword] = useState('');
   const [userToken] = useUserToken();
   const [checkingUser, setCheckingUser] = useState(false);
@@ -48,7 +45,13 @@ export default ({
       .catch(() => {
         setCheckingUser(false);
       });
-  }, [userToken, setCheckingUser, retroId, retroTokenService, retroTokenTracker]);
+  }, [
+    userToken,
+    setCheckingUser,
+    retroId,
+    retroTokenService,
+    retroTokenTracker,
+  ]);
 
   if (checkingUser) {
     return (
@@ -67,7 +70,12 @@ export default ({
       />
       <form onSubmit={handleSubmit}>
         {/* 'username' is included for password managers to distinguish between retros */}
-        <input type="hidden" name="username" value={retroId} autoComplete="username" />
+        <input
+          type="hidden"
+          name="username"
+          value={retroId}
+          autoComplete="username"
+        />
         {/* 'name' is a friendly name for password managers (but can be changed) */}
         <input type="hidden" name="name" value={slug} autoComplete="name" />
         <Input
@@ -79,11 +87,13 @@ export default ({
           autoComplete="current-password"
           required
         />
-        { sending ? (<div className="checking">&hellip;</div>) : (
+        {sending ? (
+          <div className="checking">&hellip;</div>
+        ) : (
           <button type="submit" title="Go" disabled={password === ''}>
             Go
           </button>
-        ) }
+        )}
         <Alert message={error} />
       </form>
     </article>

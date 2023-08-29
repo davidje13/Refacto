@@ -17,19 +17,13 @@ interface PropsT {
   onSave?: (savedRetro: Retro) => void;
 }
 
-export default memo(({
-  retro,
-  dispatch,
-  onSave,
-}: PropsT) => {
+export default memo(({ retro, dispatch, onSave }: PropsT) => {
   const [name, setName] = useState(retro.name);
   const [slug, setSlug] = useState(retro.slug);
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
     OPTIONS.alwaysShowAddAction.read(retro.options),
   );
-  const [theme, setTheme] = useState(
-    OPTIONS.theme.read(retro.options),
-  );
+  const [theme, setTheme] = useState(OPTIONS.theme.read(retro.options));
 
   const [handleSubmit, sending, error] = useSubmissionCallback(() => {
     if (!name || !slug) {
@@ -54,10 +48,10 @@ export default memo(({
     value,
     label: (
       <span className="theme-row">
-        <span className="name">{ detail.name }</span>
-        <span className="preview">{ detail.icons.happy }</span>
-        <span className="preview">{ detail.icons.meh }</span>
-        <span className="preview">{ detail.icons.sad }</span>
+        <span className="name">{detail.name}</span>
+        <span className="preview">{detail.icons.happy}</span>
+        <span className="preview">{detail.icons.meh}</span>
+        <span className="preview">{detail.icons.sad}</span>
       </span>
     ),
   }));
@@ -80,11 +74,7 @@ export default memo(({
         <div className="info">
           (may contain lowercase letters, numbers, dashes and underscores)
         </div>
-        <SlugEntry
-          value={slug}
-          onChange={setSlug}
-          oldValue={retro.slug}
-        />
+        <SlugEntry value={slug} onChange={setSlug} oldValue={retro.slug} />
       </label>
       <label>
         <Input
@@ -105,11 +95,13 @@ export default memo(({
           options={themeChoices}
         />
       </fieldset>
-      { sending ? (<div className="sending">&hellip;</div>) : (
+      {sending ? (
+        <div className="sending">&hellip;</div>
+      ) : (
         <button type="submit" title="Save Changes">
           Save
         </button>
-      ) }
+      )}
       <Alert message={error} />
     </form>
   );

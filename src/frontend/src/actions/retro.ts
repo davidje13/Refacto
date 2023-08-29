@@ -1,5 +1,8 @@
 import type { Spec } from 'json-immutability-helper';
-import type { RetroItem, UserProvidedRetroItemDetails } from '../shared/api-entities';
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
+} from '../shared/api-entities';
 import type { RetroDispatchSpec } from '../api/RetroTracker';
 import uuidv4 from '../helpers/uuidv4';
 
@@ -7,9 +10,7 @@ const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
 
 function sanitiseInput(value: string): string {
-  return value
-    .replace(IRRELEVANT_WHITESPACE, ' ')
-    .replace(PADDING, '');
+  return value.replace(IRRELEVANT_WHITESPACE, ' ').replace(PADDING, '');
 }
 
 export const setRetroState = (
@@ -75,28 +76,28 @@ export const editRetroItem = (
 export const setRetroItemDone = (
   itemId: string | null,
   done: boolean,
-): RetroDispatchSpec => updateItem(itemId, {
-  doneTime: ['=', done ? Date.now() : 0],
-});
+): RetroDispatchSpec =>
+  updateItem(itemId, {
+    doneTime: ['=', done ? Date.now() : 0],
+  });
 
-export const upvoteRetroItem = (
-  itemId: string,
-): RetroDispatchSpec => updateItem(itemId, {
-  votes: ['+', 1],
-});
+export const upvoteRetroItem = (itemId: string): RetroDispatchSpec =>
+  updateItem(itemId, {
+    votes: ['+', 1],
+  });
 
-export const deleteRetroItem = (
-  itemId: string,
-): RetroDispatchSpec => [
+export const deleteRetroItem = (itemId: string): RetroDispatchSpec => [
   { items: ['deleteWhere', ['id', itemId]] },
 ];
 
-export const clearCovered = (): RetroDispatchSpec => [{
-  state: ['=', {}],
-  groupStates: ['=', {}],
-  items: [
-    'seq',
-    ['deleteWhere', { key: 'category', not: 'action' }],
-    ['deleteWhere', { key: 'doneTime', greaterThan: 0 }],
-  ],
-}];
+export const clearCovered = (): RetroDispatchSpec => [
+  {
+    state: ['=', {}],
+    groupStates: ['=', {}],
+    items: [
+      'seq',
+      ['deleteWhere', { key: 'category', not: 'action' }],
+      ['deleteWhere', { key: 'doneTime', greaterThan: 0 }],
+    ],
+  },
+];

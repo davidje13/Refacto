@@ -11,23 +11,18 @@ async function handleResponse(response: Response): Promise<any> {
 }
 
 export default class RetroTokenService {
-  public constructor(
-    private readonly apiBase: string,
-  ) {}
+  public constructor(private readonly apiBase: string) {}
 
   public async getRetroTokenForPassword(
     retroId: string,
     password: string,
   ): Promise<string> {
-    const response = await fetch(
-      `${this.apiBase}/auth/tokens/${retroId}`,
-      {
-        method: 'POST',
-        cache: 'no-cache',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      },
-    );
+    const response = await fetch(`${this.apiBase}/auth/tokens/${retroId}`, {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
     if (response.status === 400) {
       throw new Error('Incorrect password');
     }

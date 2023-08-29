@@ -4,14 +4,18 @@ import { useMemo } from 'react';
 type Action<A extends readonly unknown[]> = (...args: A) => void;
 
 export default <T, SpecT>(
-  dispatch: ((spec: DispatchSpec<T, SpecT>) => void) | undefined,
-  condition = true,
-) => <A extends readonly unknown[]>(
-  action: ((...args: A) => DispatchSpec<T, SpecT>) | undefined,
-  ...followupActions: DispatchSpec<T, SpecT>
-): Action<A> | undefined => useMemo(
-  () => ((dispatch && action && condition) ? (
-    (...args: A): void => dispatch([...action(...args), ...followupActions])
-  ) : undefined),
-  [dispatch, action, condition, ...followupActions],
-);
+    dispatch: ((spec: DispatchSpec<T, SpecT>) => void) | undefined,
+    condition = true,
+  ) =>
+  <A extends readonly unknown[]>(
+    action: ((...args: A) => DispatchSpec<T, SpecT>) | undefined,
+    ...followupActions: DispatchSpec<T, SpecT>
+  ): Action<A> | undefined =>
+    useMemo(
+      () =>
+        dispatch && action && condition
+          ? (...args: A): void =>
+              dispatch([...action(...args), ...followupActions])
+          : undefined,
+      [dispatch, action, condition, ...followupActions],
+    );

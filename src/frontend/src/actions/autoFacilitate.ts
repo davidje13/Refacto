@@ -23,7 +23,7 @@ function getCategories(items: RetroItem[]): Map<string, CategoryStats> {
 
 function seq<T>(list: T[], item: T): number {
   const p = list.indexOf(item);
-  return (p === -1) ? list.length : p;
+  return p === -1 ? list.length : p;
 }
 
 function itemPriority(a: RetroItem, b: RetroItem): number {

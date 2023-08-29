@@ -7,16 +7,11 @@ interface PropsT {
   onCancel: () => void;
 }
 
-export default memo(({
-  onConfirm,
-  onCancel,
-}: PropsT) => (
+export default memo(({ onConfirm, onCancel }: PropsT) => (
   <div className="popup-archive">
     <p>Archive and clear this retro?</p>
     <p className="dialog-options">
-      <WrappedButton onClick={onCancel}>
-        Cancel
-      </WrappedButton>
+      <WrappedButton onClick={onCancel}>Cancel</WrappedButton>
       <WrappedButton onClick={onConfirm} className="primary">
         Archive
       </WrappedButton>

@@ -9,9 +9,7 @@ jest.mock('./ArchiveLink', () => mockElement('mock-archive-link'));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {
-    const dom = render((
-      <ArchiveList slug="foo" archives={[]} />
-    ));
+    const dom = render(<ArchiveList slug="foo" archives={[]} />);
 
     expect(dom).toContainElementWith(textFragment('has no archives'));
   });
@@ -21,9 +19,7 @@ describe('ArchiveList', () => {
       { id: 'a1', created: 10 },
       { id: 'a2', created: 0 },
     ];
-    const dom = render((
-      <ArchiveList slug="foo" archives={archives} />
-    ));
+    const dom = render(<ArchiveList slug="foo" archives={archives} />);
 
     expect(dom).not.toContainElementWith(textFragment('has no archives'));
   });
@@ -34,9 +30,7 @@ describe('ArchiveList', () => {
       { id: 'a2', created: 0 },
     ];
 
-    const dom = render((
-      <ArchiveList slug="foo" archives={archives} />
-    ));
+    const dom = render(<ArchiveList slug="foo" archives={archives} />);
 
     const links = dom.getAllBy(css('mock-archive-link'));
 
@@ -60,9 +54,7 @@ describe('ArchiveList', () => {
       { id: 'a3', created: 10 },
     ];
 
-    const dom = render((
-      <ArchiveList slug="foo" archives={archives} />
-    ));
+    const dom = render(<ArchiveList slug="foo" archives={archives} />);
 
     const links = dom.getAllBy(css('mock-archive-link'));
 

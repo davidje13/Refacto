@@ -7,13 +7,10 @@ export default function useArchive(
   archiveId: string | null,
   retroToken: string | null,
 ): ObservableState<RetroArchive> {
-  return useObservable<RetroArchive>(
-    () => {
-      if (!retroId || !archiveId || !retroToken) {
-        return undefined;
-      }
-      return archiveTracker.get(retroId, archiveId, retroToken);
-    },
-    [archiveTracker, retroId, archiveId, retroToken],
-  );
+  return useObservable<RetroArchive>(() => {
+    if (!retroId || !archiveId || !retroToken) {
+      return undefined;
+    }
+    return archiveTracker.get(retroId, archiveId, retroToken);
+  }, [archiveTracker, retroId, archiveId, retroToken]);
 }

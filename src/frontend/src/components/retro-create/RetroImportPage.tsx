@@ -7,10 +7,13 @@ import './RetroImportPage.less';
 
 export default memo(() => {
   const [, setLocation] = useLocation();
-  const handleCreate = useCallback(({ id, slug }: CreationT) => {
-    slugTracker.set(slug, id);
-    setLocation(`/retros/${slug}`);
-  }, [setLocation]);
+  const handleCreate = useCallback(
+    ({ id, slug }: CreationT) => {
+      slugTracker.set(slug, id);
+      setLocation(`/retros/${slug}`);
+    },
+    [setLocation],
+  );
 
   return (
     <article className="page-retro-import">
@@ -18,9 +21,7 @@ export default memo(() => {
         documentTitle="Import Retro - Refacto"
         title="Import Retro"
         backLink={{ label: 'Create', action: '/create' }}
-        links={[
-          { label: 'My Retros', action: '/retros' },
-        ]}
+        links={[{ label: 'My Retros', action: '/retros' }]}
       />
       <RetroForm onCreate={handleCreate} showImport />
     </article>

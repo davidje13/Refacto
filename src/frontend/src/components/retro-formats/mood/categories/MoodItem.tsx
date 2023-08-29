@@ -1,5 +1,8 @@
 import React, { useState, useCallback, memo } from 'react';
-import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared/api-entities';
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
+} from '../../../../shared/api-entities';
 import MoodItemPlain from './MoodItemPlain';
 import MoodItemFocused from './MoodItemFocused';
 import ItemEditor from '../ItemEditor';
@@ -21,71 +24,78 @@ interface PropsT {
   onContinue?: (id: string) => void;
 }
 
-export default memo(({
-  item,
-  focused = false,
-  focusedItemTimeout = 0,
-  autoScroll = false,
-  onEdit,
-  onAddExtraTime,
-  onVote,
-  onDelete,
-  onSelect,
-  onCancel,
-  onContinue,
-}: PropsT) => {
-  const handleVote = useBoundCallback(onVote, item.id);
-  const handleDelete = useBoundCallback(onDelete, item.id);
-  const handleSelect = useBoundCallback(onSelect, item.id);
-  const handleCancel = useBoundCallback(onCancel, item.id);
-  const handleContinue = useBoundCallback(onContinue, item.id);
+export default memo(
+  ({
+    item,
+    focused = false,
+    focusedItemTimeout = 0,
+    autoScroll = false,
+    onEdit,
+    onAddExtraTime,
+    onVote,
+    onDelete,
+    onSelect,
+    onCancel,
+    onContinue,
+  }: PropsT) => {
+    const handleVote = useBoundCallback(onVote, item.id);
+    const handleDelete = useBoundCallback(onDelete, item.id);
+    const handleSelect = useBoundCallback(onSelect, item.id);
+    const handleCancel = useBoundCallback(onCancel, item.id);
+    const handleContinue = useBoundCallback(onContinue, item.id);
 
-  const [editing, setEditing] = useState(false);
-  const handleBeginEdit = useBoundCallback(setEditing, true);
-  const handleCancelEdit = useBoundCallback(setEditing, false);
-  const handleSaveEdit = useCallback((
-    diff: Partial<UserProvidedRetroItemDetails>,
-  ) => {
-    setEditing(false);
-    onEdit!(item.id, diff);
-  }, [setEditing, onEdit, item.id]);
-
-  if (editing) {
-    return (
-      <div className="mood-item editing">
-        <ItemEditor
-          defaultItem={item}
-          submitButtonLabel={<React.Fragment><TickBold /> Save</React.Fragment>}
-          submitButtonTitle="Save changes"
-          onSubmit={handleSaveEdit}
-          onDelete={handleDelete}
-          onCancel={handleCancelEdit}
-          allowAttachments
-          autoFocus
-        />
-      </div>
+    const [editing, setEditing] = useState(false);
+    const handleBeginEdit = useBoundCallback(setEditing, true);
+    const handleCancelEdit = useBoundCallback(setEditing, false);
+    const handleSaveEdit = useCallback(
+      (diff: Partial<UserProvidedRetroItemDetails>) => {
+        setEditing(false);
+        onEdit!(item.id, diff);
+      },
+      [setEditing, onEdit, item.id],
     );
-  }
 
-  if (focused) {
+    if (editing) {
+      return (
+        <div className="mood-item editing">
+          <ItemEditor
+            defaultItem={item}
+            submitButtonLabel={
+              <React.Fragment>
+                <TickBold /> Save
+              </React.Fragment>
+            }
+            submitButtonTitle="Save changes"
+            onSubmit={handleSaveEdit}
+            onDelete={handleDelete}
+            onCancel={handleCancelEdit}
+            allowAttachments
+            autoFocus
+          />
+        </div>
+      );
+    }
+
+    if (focused) {
+      return (
+        <MoodItemFocused
+          item={item}
+          focusedItemTimeout={focusedItemTimeout}
+          onAddExtraTime={onAddExtraTime}
+          autoScroll={autoScroll}
+          onCancel={handleCancel}
+          onContinue={handleContinue}
+        />
+      );
+    }
+
     return (
-      <MoodItemFocused
+      <MoodItemPlain
         item={item}
-        focusedItemTimeout={focusedItemTimeout}
-        onAddExtraTime={onAddExtraTime}
-        autoScroll={autoScroll}
-        onCancel={handleCancel}
-        onContinue={handleContinue}
+        onVote={handleVote}
+        onEdit={onEdit ? handleBeginEdit : undefined}
+        onSelect={handleSelect}
       />
     );
-  }
-
-  return (
-    <MoodItemPlain
-      item={item}
-      onVote={handleVote}
-      onEdit={onEdit ? handleBeginEdit : undefined}
-      onSelect={handleSelect}
-    />
-  );
-});
+  },
+);

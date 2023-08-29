@@ -8,15 +8,15 @@ import './RetroSettingsPage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retro' | 'retroDispatch'>;
 
-export default memo(({
-  retro,
-  retroDispatch,
-}: PropsT) => {
+export default memo(({ retro, retroDispatch }: PropsT) => {
   const [, setLocation] = useLocation();
 
-  const handleSave = useCallback((savedRetro: Retro) => {
-    setLocation(`/retros/${savedRetro.slug}`);
-  }, [setLocation]);
+  const handleSave = useCallback(
+    (savedRetro: Retro) => {
+      setLocation(`/retros/${savedRetro.slug}`);
+    },
+    [setLocation],
+  );
 
   return (
     <article className="page-retro-settings">
@@ -25,11 +25,15 @@ export default memo(({
         title={`${retro.name} Settings`}
         backLink={{ label: 'Back to Retro', action: `/retros/${retro.slug}` }}
       />
-      { retroDispatch ? (
-        <SettingsForm retro={retro} dispatch={retroDispatch} onSave={handleSave} />
+      {retroDispatch ? (
+        <SettingsForm
+          retro={retro}
+          dispatch={retroDispatch}
+          onSave={handleSave}
+        />
       ) : (
         <div>You cannot edit the settings for this retro.</div>
-      ) }
+      )}
     </article>
   );
 });

@@ -6,9 +6,7 @@ interface PropsT {
   onAddExtraTime?: (time: number) => void;
 }
 
-export default memo(({
-  onAddExtraTime,
-}: PropsT) => {
+export default memo(({ onAddExtraTime }: PropsT) => {
   const extraMinutes = 2;
 
   const extraTime = extraMinutes * 60 * 1000 + 999;
@@ -19,7 +17,7 @@ export default memo(({
     <Fragment>
       <p className="timeup">Time&rsquo;s up!</p>
       <WrappedButton onClick={handleAddExtraTime} hideIfDisabled>
-        { extraTimeLabel }
+        {extraTimeLabel}
       </WrappedButton>
     </Fragment>
   );

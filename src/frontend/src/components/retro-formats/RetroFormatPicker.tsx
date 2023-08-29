@@ -20,17 +20,14 @@ interface PropsT extends Omit<ChildPropsT, 'archive'> {
 }
 
 const formats = new Map<string, React.ComponentType<ChildPropsT>>();
-formats.set('mood', lazy(() => import('./mood/MoodRetro')));
-
-const LOADER = (
-  <div className="loader">Loading&hellip;</div>
+formats.set(
+  'mood',
+  lazy(() => import('./mood/MoodRetro')),
 );
 
-export default memo(({
-  retroFormat,
-  archive = false,
-  ...props
-}: PropsT) => {
+const LOADER = <div className="loader">Loading&hellip;</div>;
+
+export default memo(({ retroFormat, archive = false, ...props }: PropsT) => {
   const RetroType = formats.get(retroFormat) || UnknownRetro;
 
   return (

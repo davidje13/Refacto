@@ -14,28 +14,27 @@ export default memo(() => {
   if (userToken) {
     createLink = (
       <p className="create">
-        <Link className="link-create" to="/create">Create a new retro</Link>
+        <Link className="link-create" to="/create">
+          Create a new retro
+        </Link>
       </p>
     );
     links = [{ label: 'My Retros', action: '/retros' }];
   } else {
     createLink = (
-      <LoginForm message="Register an account to create a new retro" redirect="/create" />
+      <LoginForm
+        message="Register an account to create a new retro"
+        redirect="/create"
+      />
     );
     links = [];
   }
 
   return (
     <article className="page-welcome">
-      <Header
-        documentTitle="Refacto"
-        title="Refacto"
-        links={links}
-      />
-      <p>
-        Refacto makes it easy to run team retros with remote team members.
-      </p>
-      { createLink }
+      <Header documentTitle="Refacto" title="Refacto" links={links} />
+      <p>Refacto makes it easy to run team retros with remote team members.</p>
+      {createLink}
       <p>
         <a
           className="link-security"

@@ -9,15 +9,24 @@ import App from './components/App';
 
 // https://github.com/facebook/react/issues/16061
 if (process.env['NODE_ENV'] === 'development') {
-  console.info('React.StrictMode is enabled; some lifecycle methods including constructors and render will be double-invoked to check for side-effects');
+  console.info(
+    'React.StrictMode is enabled; some lifecycle methods including constructors and render will be double-invoked to check for side-effects',
+  );
 }
 
 const root = document.getElementById('root')!;
 Modal.setAppElement(root);
 
-configService.load().then(() => {
-  createRoot(root).render(<StrictMode><App /></StrictMode>);
-}).catch((e) => {
-  root.innerText = 'Failed to load. Please try again later.';
-  console.error('Failed to load config', e);
-});
+configService
+  .load()
+  .then(() => {
+    createRoot(root).render(
+      <StrictMode>
+        <App />
+      </StrictMode>,
+    );
+  })
+  .catch((e) => {
+    root.innerText = 'Failed to load. Please try again later.';
+    console.error('Failed to load config', e);
+  });

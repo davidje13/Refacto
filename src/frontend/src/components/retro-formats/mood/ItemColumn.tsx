@@ -31,10 +31,14 @@ export default <C extends React.ElementType<ItemPropsP>>({
   itemProps,
 }: PropsT<C>): React.ReactElement => (
   <ul className="item-column">
-    { sortItems(items).map((item) => (
+    {sortItems(items).map((item) => (
       <li key={item.id}>
-        <ItemType item={item} focused={item.id === focusedItemId} {...itemProps as any} />
+        <ItemType
+          item={item}
+          focused={item.id === focusedItemId}
+          {...(itemProps as any)}
+        />
       </li>
-    )) }
+    ))}
   </ul>
 );

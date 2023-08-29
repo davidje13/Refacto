@@ -12,8 +12,10 @@ import WelcomePage from './WelcomePage';
 jest.mock('../../api/api');
 jest.mock('../common/Header', () => mockElement('mock-header'));
 
-const mockUserTokenTracker = userTokenTracker as unknown as typeof mockApiTypes.userTokenTracker;
-const mockConfigService = configService as unknown as typeof mockApiTypes.configService;
+const mockUserTokenTracker =
+  userTokenTracker as unknown as typeof mockApiTypes.userTokenTracker;
+const mockConfigService =
+  configService as unknown as typeof mockApiTypes.configService;
 
 describe('WelcomePage', () => {
   describe('signed out', () => {
@@ -29,11 +31,11 @@ describe('WelcomePage', () => {
         giphy: false,
       });
 
-      const dom = render((
+      const dom = render(
         <Router hook={staticLocationHook('/', { record: true })}>
           <WelcomePage />
-        </Router>
-      ));
+        </Router>,
+      );
 
       expect(dom).toContainElementWith(css('.sso-google'));
     });
@@ -44,11 +46,11 @@ describe('WelcomePage', () => {
         giphy: false,
       });
 
-      const dom = render((
+      const dom = render(
         <Router hook={staticLocationHook('/', { record: true })}>
           <WelcomePage />
-        </Router>
-      ));
+        </Router>,
+      );
 
       expect(dom).not.toContainElementWith(css('.sso-google'));
     });
@@ -61,11 +63,11 @@ describe('WelcomePage', () => {
 
     it('displays a link to create a new retro', () => {
       const locationHook = staticLocationHook('/', { record: true });
-      const dom = render((
+      const dom = render(
         <Router hook={locationHook}>
           <WelcomePage />
-        </Router>
-      ));
+        </Router>,
+      );
 
       const link = dom.getBy(css('a.link-create'));
       fireEvent.click(link);

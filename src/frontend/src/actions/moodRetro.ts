@@ -1,10 +1,6 @@
 import type { Retro, RetroItem } from '../shared/api-entities';
 import type { RetroDispatchSpec } from '../api/RetroTracker';
-import {
-  setRetroItemDone,
-  setRetroState,
-  addRetroItem,
-} from './retro';
+import { setRetroItemDone, setRetroState, addRetroItem } from './retro';
 import autoFacilitate from './autoFacilitate';
 
 export interface MoodRetroStateT {
@@ -12,14 +8,15 @@ export interface MoodRetroStateT {
   focusedItemTimeout?: number;
 }
 
-const INITIAL_TIMEOUT = (5 * 60 * 1000 + 999);
+const INITIAL_TIMEOUT = 5 * 60 * 1000 + 999;
 
 export const addRetroActionItem = addRetroItem.bind(null, 'action');
 
-const moodItem = (group: string | undefined) => (item: RetroItem): boolean => (
-  (!group || !item.group || item.group === group) &&
-  item.category !== 'action'
-);
+const moodItem =
+  (group: string | undefined) =>
+  (item: RetroItem): boolean =>
+    (!group || !item.group || item.group === group) &&
+    item.category !== 'action';
 
 function pickNextItem(
   group: string | undefined,
@@ -60,9 +57,10 @@ export const allItemsDoneCallback = (
 export const setItemTimeout = (
   group: string | undefined,
   duration: number,
-): RetroDispatchSpec => setRetroState(group, {
-  focusedItemTimeout: Date.now() + duration,
-});
+): RetroDispatchSpec =>
+  setRetroState(group, {
+    focusedItemTimeout: Date.now() + duration,
+  });
 
 export const focusItem = (
   group: string | undefined,
@@ -81,26 +79,28 @@ export const switchFocus = (
     const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
 
     return [
-      ...((markPreviousDone && focusedItemId) ? setRetroItemDone(focusedItemId, true) : []),
+      ...(markPreviousDone && focusedItemId
+        ? setRetroItemDone(focusedItemId, true)
+        : []),
       ...focusItem(group, id),
       ...setItemTimeout(group, INITIAL_TIMEOUT),
     ];
   },
 ];
 
-const focusNextItem = (group: string | undefined) => (
-  { items }: Retro<MoodRetroStateT>,
-): RetroDispatchSpec => {
-  const next = pickNextItem(group, items);
-  return focusItem(group, next?.id ?? null);
-};
+const focusNextItem =
+  (group: string | undefined) =>
+  ({ items }: Retro<MoodRetroStateT>): RetroDispatchSpec => {
+    const next = pickNextItem(group, items);
+    return focusItem(group, next?.id ?? null);
+  };
 
-const focusPreviousItem = (group: string | undefined) => (
-  { items }: Retro<MoodRetroStateT>,
-): RetroDispatchSpec => {
-  const next = pickPreviousItem(group, items);
-  return focusItem(group, next?.id ?? null);
-};
+const focusPreviousItem =
+  (group: string | undefined) =>
+  ({ items }: Retro<MoodRetroStateT>): RetroDispatchSpec => {
+    const next = pickPreviousItem(group, items);
+    return focusItem(group, next?.id ?? null);
+  };
 
 export const goNext = (
   group: string | undefined,

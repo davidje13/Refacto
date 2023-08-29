@@ -58,14 +58,11 @@ export function getMultilClassHeights(
   classElement: HTMLElement,
   className: string,
 ): WithWithout<number> {
-  return takeHeightMeasurements(
-    element,
-    (measure) => measureMultiClassHeights(classElement, className, measure),
+  return takeHeightMeasurements(element, (measure) =>
+    measureMultiClassHeights(classElement, className, measure),
   );
 }
 
-export function getHeight(
-  element: HTMLElement,
-): number {
+export function getHeight(element: HTMLElement): number {
   return takeHeightMeasurements(element, (measure) => measure());
 }

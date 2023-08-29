@@ -7,10 +7,10 @@ import App from './App';
 
 describe('App', () => {
   it('renders without error', () => {
-    render((
+    render(
       <Router hook={staticLocationHook('/', { record: true })}>
         <App />
-      </Router>
-    ));
+      </Router>,
+    );
   });
 });

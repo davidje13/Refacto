@@ -12,7 +12,8 @@ jest.mock('../../api/api');
 jest.mock('../common/Header', () => mockElement('mock-header'));
 jest.mock('./ArchiveList', () => mockElement('mock-archive-list'));
 
-const mockArchiveTracker = archiveTracker as unknown as typeof mockApiTypes.archiveTracker;
+const mockArchiveTracker =
+  archiveTracker as unknown as typeof mockApiTypes.archiveTracker;
 
 describe('ArchiveListPage', () => {
   beforeEach(() => {
@@ -20,12 +21,9 @@ describe('ArchiveListPage', () => {
   });
 
   it('renders an archive list page', () => {
-    const dom = render((
-      <ArchiveListPage
-        retro={makeRetro({ id: 'r1' })}
-        retroToken="token-1"
-      />
-    ));
+    const dom = render(
+      <ArchiveListPage retro={makeRetro({ id: 'r1' })} retroToken="token-1" />,
+    );
     expect(dom).toContainElementWith(css('mock-archive-list'));
   });
 });

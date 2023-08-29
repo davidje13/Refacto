@@ -16,20 +16,17 @@ function nonNull<T>(o: T | null): o is T {
   return Boolean(o);
 }
 
-export default memo(({
-  documentTitle,
-  title,
-  backLink,
-  links = [],
-}: PropsT) => (
-  <header className="top-header">
-    <Title title={documentTitle} />
-    <h1>{ title }</h1>
-    { backLink && (<HeaderLinkItem className="back" {...backLink} />) }
-    <div className="menu">
-      { links.filter(nonNull).map((link) => (
-        <HeaderLinkItem key={link.label} {...link} />
-      )) }
-    </div>
-  </header>
-));
+export default memo(
+  ({ documentTitle, title, backLink, links = [] }: PropsT) => (
+    <header className="top-header">
+      <Title title={documentTitle} />
+      <h1>{title}</h1>
+      {backLink && <HeaderLinkItem className="back" {...backLink} />}
+      <div className="menu">
+        {links.filter(nonNull).map((link) => (
+          <HeaderLinkItem key={link.label} {...link} />
+        ))}
+      </div>
+    </header>
+  ),
+);

@@ -22,5 +22,5 @@ export default memo(({ content }: PropsT) => {
     }
   }, [canvasRef]);
 
-  return (<canvas className="qr-code" ref={canvasRef} />);
+  return <canvas className="qr-code" ref={canvasRef} />;
 });

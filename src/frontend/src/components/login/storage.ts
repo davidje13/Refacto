@@ -9,7 +9,7 @@ function getStorage(storage: Storage, key: string): string | null {
 function setStorage(storage: Storage, key: string, value: string): boolean {
   try {
     storage.setItem(key, value);
-    return (storage.getItem(key) === value);
+    return storage.getItem(key) === value;
   } catch (e) {
     return false;
   }
@@ -26,7 +26,9 @@ function deleteStorage(storage: Storage, key: string): void {
 function getCookie(key: string): string | null {
   const encodedKey = encodeURIComponent(key);
   try {
-    const cookies = document.cookie.split(/; */g).filter((c) => c.startsWith(`${encodedKey}=`));
+    const cookies = document.cookie
+      .split(/; */g)
+      .filter((c) => c.startsWith(`${encodedKey}=`));
     if (!cookies.length) {
       return null;
     }
@@ -41,7 +43,9 @@ function getCookie(key: string): string | null {
 function setSessionCookie(key: string, value: string, extra = ''): boolean {
   const encodedKey = encodeURIComponent(key);
   try {
-    document.cookie = `${encodedKey}=${encodeURIComponent(value)}${extra}; path=/; secure; samesite=strict`;
+    document.cookie = `${encodedKey}=${encodeURIComponent(
+      value,
+    )}${extra}; path=/; secure; samesite=strict`;
     return getCookie(key) === value;
   } catch (e) {
     return false;
@@ -49,7 +53,11 @@ function setSessionCookie(key: string, value: string, extra = ''): boolean {
 }
 
 function deleteCookie(key: string): void {
-  setSessionCookie(key, '', '; max-age=0; expires=Thu, 01 Jan 1970 00:00:01 GMT');
+  setSessionCookie(
+    key,
+    '',
+    '; max-age=0; expires=Thu, 01 Jan 1970 00:00:01 GMT',
+  );
 }
 
 export default {

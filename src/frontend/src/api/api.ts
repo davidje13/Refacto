@@ -13,7 +13,7 @@ import ObservableTracker from '../rxjs/ObservableTracker';
 import SingleObservableTracker from '../rxjs/SingleObservableTracker';
 
 const { protocol, host } = document.location;
-const secure = (protocol !== 'http:');
+const secure = protocol !== 'http:';
 
 export const API_BASE = '/api';
 export const WS_BASE = `${secure ? 'wss' : 'ws'}://${host}${API_BASE}`;

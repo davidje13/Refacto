@@ -3,14 +3,15 @@ import './Footer.less';
 
 export default memo(() => (
   <footer className="page-footer">
-    Refacto (source on{ ' ' }
+    Refacto (source on{' '}
     <a
       href="https://github.com/davidje13/Refacto"
       target="_blank"
       rel="noopener noreferrer"
     >
       GitHub
-    </a>,{ ' ' }
+    </a>
+    ,{' '}
     <a
       href="https://gitlab.com/davidje13/refacto"
       target="_blank"

@@ -10,9 +10,7 @@ const babelLoader = {
   options: {
     configFile: false,
     presets: ['@babel/preset-typescript'],
-    plugins: [
-      ['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }],
-    ],
+    plugins: [['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }]],
   },
 };
 

@@ -9,7 +9,9 @@ import {
   getBy,
 } from 'flexible-testing-library-react';
 import { makeRetro } from './shared/api-entities';
-import staticTitleHook, { StaticTitleHook } from './test-helpers/staticTitleHook';
+import staticTitleHook, {
+  StaticTitleHook,
+} from './test-helpers/staticTitleHook';
 import { css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
@@ -29,13 +31,13 @@ async function renderApp(location: string): Promise<RenderedApp> {
 
   let dom: RenderResult;
   await act(async () => {
-    dom = render((
+    dom = render(
       <TitleContext value={titleHook}>
         <Router hook={locationHook}>
           <App />
         </Router>
-      </TitleContext>
-    ));
+      </TitleContext>,
+    );
   });
 
   return { locationHook, titleHook, dom: dom! };
@@ -52,8 +54,7 @@ describe('Application', () => {
   });
 
   it('renders retro list page at /retros', async () => {
-    mockFetchExpect('/api/retros')
-      .andRespondJsonOk({ retros: [] });
+    mockFetchExpect('/api/retros').andRespondJsonOk({ retros: [] });
 
     const { dom } = await renderApp('/retros');
 
@@ -61,13 +62,19 @@ describe('Application', () => {
   });
 
   it('renders retro page at /retros/id after password provided', async () => {
-    const retro = makeRetro({ id: 'id-foobar', slug: 'slug-foobar', name: 'Retro Name' });
+    const retro = makeRetro({
+      id: 'id-foobar',
+      slug: 'slug-foobar',
+      name: 'Retro Name',
+    });
 
-    mockFetchExpect('/api/slugs/slug-foobar')
-      .andRespondJsonOk({ id: 'id-foobar' });
+    mockFetchExpect('/api/slugs/slug-foobar').andRespondJsonOk({
+      id: 'id-foobar',
+    });
 
-    mockFetchExpect('/api/auth/tokens/id-foobar')
-      .andRespondJsonOk({ retroToken: 'my-token' });
+    mockFetchExpect('/api/auth/tokens/id-foobar').andRespondJsonOk({
+      retroToken: 'my-token',
+    });
 
     mockWsExpect('/api/retros/id-foobar', (ws) => {
       ws.send(JSON.stringify({ init: retro }));

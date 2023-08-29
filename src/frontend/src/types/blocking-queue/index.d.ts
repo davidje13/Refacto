@@ -12,7 +12,7 @@ declare module 'blocking-queue' {
       public constructor(queue: BlockingQueue<T>);
 
       public start(
-        consumer: (value: T) => (Promise<void> | void),
+        consumer: (value: T) => Promise<void> | void,
         concurrency?: number,
       ): void;
 

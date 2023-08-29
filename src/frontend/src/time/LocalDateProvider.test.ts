@@ -47,7 +47,7 @@ describe('LocalDateProvider', () => {
           tsMidnight - DAY_MS,
           tsMidnight,
           tsMidnight + DAY_MS,
-          tsMidnight + (DAY_MS * 2),
+          tsMidnight + DAY_MS * 2,
         ]);
       });
 
@@ -56,7 +56,7 @@ describe('LocalDateProvider', () => {
 
         const days = 400;
         const futureMidnight = provider.getMidnightTimestamp(days);
-        expect(futureMidnight).toEqual(tsMidnight + (DAY_MS * days));
+        expect(futureMidnight).toEqual(tsMidnight + DAY_MS * days);
       });
     });
   });
@@ -91,21 +91,21 @@ describe('LocalDateProvider', () => {
     }
 
     const midnightsAround1 = [
-      tsSwitch1Winter - (DAY_MS * 2),
+      tsSwitch1Winter - DAY_MS * 2,
       tsSwitch1Winter - DAY_MS,
       tsSwitch1Winter,
       tsSwitch1Summer,
       tsSwitch1Summer + DAY_MS,
-      tsSwitch1Summer + (DAY_MS * 2),
+      tsSwitch1Summer + DAY_MS * 2,
     ];
 
     const midnightsAround2 = [
-      tsSwitch2Summer - (DAY_MS * 2),
+      tsSwitch2Summer - DAY_MS * 2,
       tsSwitch2Summer - DAY_MS,
       tsSwitch2Summer,
       tsSwitch2Winter,
       tsSwitch2Winter + DAY_MS,
-      tsSwitch2Winter + (DAY_MS * 2),
+      tsSwitch2Winter + DAY_MS * 2,
     ];
 
     const timeOfDay = 12345678;
@@ -117,12 +117,11 @@ describe('LocalDateProvider', () => {
     it('exists in a coherent world', () => {
       // This test checks that the given testing environment is consistent;
       // the winter times should have the same offset, as should the summer times
-
     });
 
     describe('getMidnightTimestamp', () => {
       it('returns local midnight timestamps in winter time', () => {
-        const tsMidnight = tsSwitch1Winter - (DAY_MS * 30);
+        const tsMidnight = tsSwitch1Winter - DAY_MS * 30;
 
         const provider = new LocalDateProvider(tsMidnight + timeOfDay);
         expect(getMidnightsRange(provider, -1, 1)).toEqual([
@@ -133,7 +132,7 @@ describe('LocalDateProvider', () => {
       });
 
       it('returns local midnight timestamps in summer time', () => {
-        const tsMidnight = tsSwitch1Summer + (DAY_MS * 30);
+        const tsMidnight = tsSwitch1Summer + DAY_MS * 30;
 
         const provider = new LocalDateProvider(tsMidnight + timeOfDay);
         expect(getMidnightsRange(provider, -1, 1)).toEqual([
@@ -216,32 +215,32 @@ describe('LocalDateProvider', () => {
       timezoneName: 'US/Pacific',
       tsSwitch1,
       tsSwitch2,
-      tsSwitch1Winter: tsSwitch1 - (HOUR_MS * 2),
-      tsSwitch1Summer: tsSwitch1 + (HOUR_MS * 21),
-      tsSwitch2Summer: tsSwitch2 - (HOUR_MS * 2),
-      tsSwitch2Winter: tsSwitch2 + (HOUR_MS * 23),
+      tsSwitch1Winter: tsSwitch1 - HOUR_MS * 2,
+      tsSwitch1Summer: tsSwitch1 + HOUR_MS * 21,
+      tsSwitch2Summer: tsSwitch2 - HOUR_MS * 2,
+      tsSwitch2Winter: tsSwitch2 + HOUR_MS * 23,
     });
   });
 
   // There are problems with this timezone but it is difficult to tell if they
   // are real or caused by the mocking library itself.
-//  describe('with daylight savings time switching at midnight (Brazil/East)', () => {
-//    // 2006-11-05 [03:00 UTC 1162695600]: summer time (-2:00) begins
-//    // 00:00 winter time -> 01:00 winter time (lose 1 hour)
-//    const tsSwitch1 = 1162695600000;
-//
-//    // 2006-02-19 [02:00 UTC 1140314400]: winter time (-3:00) begins
-//    // 00:00 summer time -> 23:00 winter time (gain 1 hour)
-//    const tsSwitch2 = 1140314400000;
-//
-//    commonTimezoneChecks({
-//      timezoneName: 'Brazil/East',
-//      tsSwitch1,
-//      tsSwitch2,
-//      tsSwitch1Winter: tsSwitch1,
-//      tsSwitch1Summer: tsSwitch1 + (HOUR_MS * 23),
-//      tsSwitch2Summer: tsSwitch2,
-//      tsSwitch2Winter: tsSwitch2 + (HOUR_MS * 25),
-//    });
-//  });
+  //  describe('with daylight savings time switching at midnight (Brazil/East)', () => {
+  //    // 2006-11-05 [03:00 UTC 1162695600]: summer time (-2:00) begins
+  //    // 00:00 winter time -> 01:00 winter time (lose 1 hour)
+  //    const tsSwitch1 = 1162695600000;
+  //
+  //    // 2006-02-19 [02:00 UTC 1140314400]: winter time (-3:00) begins
+  //    // 00:00 summer time -> 23:00 winter time (gain 1 hour)
+  //    const tsSwitch2 = 1140314400000;
+  //
+  //    commonTimezoneChecks({
+  //      timezoneName: 'Brazil/East',
+  //      tsSwitch1,
+  //      tsSwitch2,
+  //      tsSwitch1Winter: tsSwitch1,
+  //      tsSwitch1Summer: tsSwitch1 + (HOUR_MS * 23),
+  //      tsSwitch2Summer: tsSwitch2,
+  //      tsSwitch2Winter: tsSwitch2 + (HOUR_MS * 25),
+  //    });
+  //  });
 });

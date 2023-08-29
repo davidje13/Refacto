@@ -1,9 +1,7 @@
 import { sha1 } from '../helpers/crypto';
 
 export default class PasswordService {
-  public constructor(
-    private readonly apiBase: string,
-  ) {}
+  public constructor(private readonly apiBase: string) {}
 
   public async countPasswordBreaches(password: string): Promise<number> {
     const passwordHash = (await sha1(password)).toUpperCase();
@@ -14,7 +12,7 @@ export default class PasswordService {
     const lines = (await response.text()).split('\n');
     return lines.reduce((sum, ln) => {
       const [lnRest, count] = ln.split(':');
-      return sum + ((lnRest === rest) ? Number(count) : 0);
+      return sum + (lnRest === rest ? Number(count) : 0);
     }, 0);
   }
 }

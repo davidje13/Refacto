@@ -11,11 +11,11 @@ jest.mock('../common/Header', () => mockElement('mock-header'));
 
 describe('SecurityPage', () => {
   it('displays static content with anchors', () => {
-    const dom = render((
+    const dom = render(
       <Router hook={staticLocationHook('/', { record: true })}>
         <SecurityPage />
-      </Router>
-    ));
+      </Router>,
+    );
 
     expect(dom).toContainElementWith(css('#passwords'));
   });

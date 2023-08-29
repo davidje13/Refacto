@@ -19,7 +19,11 @@ type RedirectRouteProps = HookNavigationOptions<LocationHook> & {
   children?: never;
 };
 
-export default ({ to, ...props }: RedirectRouteProps): React.ReactElement | null => Route({
-  children: (params) => (<Redirect to={makePath(to, params)} {...props} />),
-  ...props,
-});
+export default ({
+  to,
+  ...props
+}: RedirectRouteProps): React.ReactElement | null =>
+  Route({
+    children: (params) => <Redirect to={makePath(to, params)} {...props} />,
+    ...props,
+  });

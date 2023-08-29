@@ -9,14 +9,15 @@ interface PropsT {
   defaultSlug?: string;
 }
 
-export default memo(({
-  defaultSlug,
-}: PropsT) => {
+export default memo(({ defaultSlug }: PropsT) => {
   const [, setLocation] = useLocation();
-  const handleCreate = useCallback(({ id, slug }: CreationT) => {
-    slugTracker.set(slug, id);
-    setLocation(`/retros/${slug}`);
-  }, [setLocation]);
+  const handleCreate = useCallback(
+    ({ id, slug }: CreationT) => {
+      slugTracker.set(slug, id);
+      setLocation(`/retros/${slug}`);
+    },
+    [setLocation],
+  );
 
   return (
     <article className="page-retro-create">

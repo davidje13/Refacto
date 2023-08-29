@@ -9,8 +9,11 @@ interface NonceRef {
 
 export default function useNonce(): NonceRef {
   const ref = useRef<NonceT>();
-  return useMemo(() => ({
-    next: (): NonceT => (ref.current = {}),
-    check: (v: NonceT): boolean => (ref.current === v),
-  }), [ref]);
+  return useMemo(
+    () => ({
+      next: (): NonceT => (ref.current = {}),
+      check: (v: NonceT): boolean => ref.current === v,
+    }),
+    [ref],
+  );
 }

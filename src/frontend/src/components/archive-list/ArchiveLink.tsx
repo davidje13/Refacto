@@ -8,12 +8,11 @@ interface PropsT {
   created: number;
 }
 
-export default memo(({
-  retroSlug,
-  archiveId,
-  created,
-}: PropsT) => (
-  <Link className="archive-link" to={`/retros/${retroSlug}/archives/${archiveId}`}>
-    { formatDateTime(created) }
+export default memo(({ retroSlug, archiveId, created }: PropsT) => (
+  <Link
+    className="archive-link"
+    to={`/retros/${retroSlug}/archives/${archiveId}`}
+  >
+    {formatDateTime(created)}
   </Link>
 ));

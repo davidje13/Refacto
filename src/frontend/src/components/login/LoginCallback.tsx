@@ -9,9 +9,7 @@ interface PropsT {
   service: string;
 }
 
-export default memo(({
-  service,
-}: PropsT) => {
+export default memo(({ service }: PropsT) => {
   const [, setLocation] = useLocation();
   const [error, setError] = useState<string | null>(null);
 
@@ -41,7 +39,7 @@ export default memo(({
         title="Refacto"
         backLink={{ label: 'Home', action: '/' }}
       />
-      <p>{ error ? `Login failed: ${error}` : 'Logging in\u2026' }</p>
+      <p>{error ? `Login failed: ${error}` : 'Logging in\u2026'}</p>
     </article>
   );
 });

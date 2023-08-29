@@ -6,22 +6,18 @@ interface PropsT {
   retros: RetroSummary[];
 }
 
-export default memo(({
-  retros,
-}: PropsT) => {
+export default memo(({ retros }: PropsT) => {
   if (!retros.length) {
-    return (
-      <p>You do not have any retros yet!</p>
-    );
+    return <p>You do not have any retros yet!</p>;
   }
 
   return (
     <ul className="retros">
-      { retros.map(({ id, slug, name }) => (
+      {retros.map(({ id, slug, name }) => (
         <li key={id}>
           <RetroLink name={name} slug={slug} />
         </li>
-      )) }
+      ))}
     </ul>
   );
 });

@@ -6,18 +6,12 @@ export default function useArchiveList(
   retroId: string | null,
   retroToken: string | null,
 ): ObservableState<RetroArchive[]> {
-  const [archiveListState, error] = useObservable(
-    () => {
-      if (!retroId || !retroToken) {
-        return undefined;
-      }
-      return archiveTracker.getList(retroId, retroToken);
-    },
-    [archiveTracker, retroId, retroToken],
-  );
+  const [archiveListState, error] = useObservable(() => {
+    if (!retroId || !retroToken) {
+      return undefined;
+    }
+    return archiveTracker.getList(retroId, retroToken);
+  }, [archiveTracker, retroId, retroToken]);
 
-  return [
-    archiveListState?.archives ?? null,
-    error,
-  ];
+  return [archiveListState?.archives ?? null, error];
 }

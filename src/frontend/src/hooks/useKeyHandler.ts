@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
 
-type KeyboardEventLike = Pick<KeyboardEvent,
-'preventDefault' |
-'stopPropagation' |
-'ctrlKey' |
-'metaKey' |
-'altKey' |
-'shiftKey' |
-'repeat' |
-'key'
+type KeyboardEventLike = Pick<
+  KeyboardEvent,
+  | 'preventDefault'
+  | 'stopPropagation'
+  | 'ctrlKey'
+  | 'metaKey'
+  | 'altKey'
+  | 'shiftKey'
+  | 'repeat'
+  | 'key'
 >;
 
 interface OptionsT {
@@ -36,14 +37,17 @@ export default function useKeyHandler(
   keyMaps: Record<string, (() => void) | undefined>,
   { allowRepeat = true }: OptionsT = {},
 ): (e: KeyboardEventLike) => void {
-  return useCallback((e: KeyboardEventLike) => {
-    const fn = keyMaps[fullKeyName(e)];
-    if (fn) {
-      e.preventDefault();
-      e.stopPropagation();
-      if (allowRepeat || !e.repeat) {
-        fn();
+  return useCallback(
+    (e: KeyboardEventLike) => {
+      const fn = keyMaps[fullKeyName(e)];
+      if (fn) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (allowRepeat || !e.repeat) {
+          fn();
+        }
       }
-    }
-  }, Object.entries(keyMaps).flatMap((o) => o));
+    },
+    Object.entries(keyMaps).flatMap((o) => o),
+  );
 }

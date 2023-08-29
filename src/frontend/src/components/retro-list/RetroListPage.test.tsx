@@ -11,7 +11,8 @@ jest.mock('../../api/api');
 jest.mock('../common/Header', () => mockElement('mock-header'));
 jest.mock('./RetroList', () => mockElement('mock-retro-list'));
 
-const mockRetroListTracker = retroListTracker as unknown as typeof mockApiTypes.retroListTracker;
+const mockRetroListTracker =
+  retroListTracker as unknown as typeof mockApiTypes.retroListTracker;
 
 describe('RetroListPage', () => {
   beforeEach(() => {

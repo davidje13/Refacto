@@ -2,10 +2,7 @@ import { useRef, useMemo } from 'react';
 
 type Consumer<T> = (value: T) => void;
 
-function useDebounced<T>(
-  fn: Consumer<T>,
-  initial?: T,
-): Consumer<T>;
+function useDebounced<T>(fn: Consumer<T>, initial?: T): Consumer<T>;
 
 function useDebounced<T>(
   fn: Consumer<T> | undefined,

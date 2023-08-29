@@ -6,9 +6,8 @@ interface PropsT {
   slug: string;
 }
 
-export default memo(({
-  name,
-  slug,
-}: PropsT) => (
-  <Link className="retro-link" to={`/retros/${slug}`}>{ name }</Link>
+export default memo(({ name, slug }: PropsT) => (
+  <Link className="retro-link" to={`/retros/${slug}`}>
+    {name}
+  </Link>
 ));

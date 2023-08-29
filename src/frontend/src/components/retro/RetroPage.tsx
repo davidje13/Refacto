@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useCallback,
-  useRef,
-  memo,
-} from 'react';
+import React, { useState, useCallback, useRef, memo } from 'react';
 import type { Retro } from '../../shared/api-entities';
 import type { RetroPagePropsT } from '../RetroRouter';
 import ArchivePopup from './ArchivePopup';
@@ -27,17 +22,15 @@ function getState<T>(retro: Retro<T>, group?: string): T {
   return retro.groupStates[group] || (BLANK_STATE as T);
 }
 
-type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro' | 'retroDispatch'> & {
+type PropsT = Pick<
+  RetroPagePropsT,
+  'retroToken' | 'retro' | 'retroDispatch'
+> & {
   group?: string;
 };
 
-export default memo(({
-  retroToken,
-  retro,
-  retroDispatch,
-  group,
-}: PropsT) => {
-  const smallScreen = useWindowSize(({ width }) => (width <= 800), []);
+export default memo(({ retroToken, retro, retroDispatch, group }: PropsT) => {
+  const smallScreen = useWindowSize(({ width }) => width <= 800, []);
   const [archivePopupVisible, setArchivePopupVisible] = useState(false);
   const showArchivePopup = useBoundCallback(setArchivePopupVisible, true);
   const hideArchivePopup = useBoundCallback(setArchivePopupVisible, false);
@@ -52,14 +45,17 @@ export default memo(({
     }
     isArchiving.current = true;
 
-    archiveService.create({ retro, retroToken }).then(() => {
-      isArchiving.current = false;
-      retroDispatch!(clearCovered());
-      hideArchivePopup();
-    }).catch((e) => {
-      // TODO: report failure to user
-      console.error('Failed to create archive', e);
-    });
+    archiveService
+      .create({ retro, retroToken })
+      .then(() => {
+        isArchiving.current = false;
+        retroDispatch!(clearCovered());
+        hideArchivePopup();
+      })
+      .catch((e) => {
+        // TODO: report failure to user
+        console.error('Failed to create archive', e);
+      });
   }, [
     isArchiving,
     hideArchivePopup,
@@ -71,20 +67,15 @@ export default memo(({
     group,
   ]);
 
-  const canFacilitate = (
-    !smallScreen ||
-    (OPTIONS.enableMobileFacilitation.read(retro.options))
-  );
+  const canFacilitate =
+    !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
 
   let archivePopup: PopupData | null = null;
   if (retroDispatch && archivePopupVisible) {
     archivePopup = {
       title: 'Create Archive',
       content: (
-        <ArchivePopup
-          onConfirm={performArchive}
-          onCancel={hideArchivePopup}
-        />
+        <ArchivePopup onConfirm={performArchive} onCancel={hideArchivePopup} />
       ),
       keys: {
         Enter: performArchive,
@@ -98,7 +89,7 @@ export default memo(({
     invitePopup = {
       title: 'Invite',
       hideTitle: true,
-      content: (<InvitePopup onClose={hideInvitePopup} />),
+      content: <InvitePopup onClose={hideInvitePopup} />,
       keys: {
         Enter: hideInvitePopup,
         Escape: hideInvitePopup,
@@ -106,24 +97,24 @@ export default memo(({
     };
   }
 
-  const canArchive = Boolean((
-    retroDispatch &&
-    retro &&
-    retro.items.length > 0 &&
-    canFacilitate &&
-    !group
-  ));
+  const canArchive = Boolean(
+    retroDispatch && retro && retro.items.length > 0 && canFacilitate && !group,
+  );
 
   const links = [
     { label: 'Invite', action: showInvitePopup },
-    retroDispatch ? {
-      label: 'Settings',
-      action: `/retros/${retro.slug}/settings`,
-    } : null,
-    canArchive ? {
-      label: 'Create Archive',
-      action: showArchivePopup,
-    } : null,
+    retroDispatch
+      ? {
+          label: 'Settings',
+          action: `/retros/${retro.slug}/settings`,
+        }
+      : null,
+    canArchive
+      ? {
+          label: 'Create Archive',
+          action: showArchivePopup,
+        }
+      : null,
     { label: 'Archives', action: `/retros/${retro.slug}/archives` },
   ];
 
@@ -132,10 +123,14 @@ export default memo(({
       <Header
         documentTitle={`${retro.name} - Refacto`}
         title={retro.name}
-        backLink={group ? {
-          label: 'Main Retro',
-          action: `/retros/${retro.slug}`,
-        } : null}
+        backLink={
+          group
+            ? {
+                label: 'Main Retro',
+                action: `/retros/${retro.slug}`,
+              }
+            : null
+        }
         links={retro ? links : []}
       />
       <RetroFormatPicker

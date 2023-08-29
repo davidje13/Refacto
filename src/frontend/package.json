@@ -2,11 +2,12 @@
   "name": "refacto-frontend",
   "private": true,
   "scripts": {
+    "format": "prettier --write .",
     "build": "webpack --mode production",
     "start": "webpack serve --mode development",
     "lint:tsc": "tsc",
-    "lint:prettier": "true",
-    "lint": "tsc",
+    "lint:prettier": "prettier --check .",
+    "lint": "tsc && prettier --check .",
     "test": "jest",
     "analyze-bundle": "BUNDLE_ANALYSIS=true webpack --mode production --profile --json | npx webpack-bundle-analyzer /dev/stdin build"
   },
@@ -51,6 +52,7 @@
     "less": "4.x",
     "less-loader": "11.x",
     "mini-css-extract-plugin": "2.x",
+    "prettier": "3.0.2",
     "react-mock-element": "1.x",
     "react-test-renderer": "18.x",
     "terser-webpack-plugin": "5.x",

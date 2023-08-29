@@ -4,9 +4,7 @@ import type { ClientConfig } from '../shared/api-entities';
 export default class ConfigService {
   private readonly config = new ReplaySubject<ClientConfig>(1);
 
-  public constructor(
-    private readonly apiBase: string,
-  ) {}
+  public constructor(private readonly apiBase: string) {}
 
   public async load(): Promise<void> {
     const response = await fetch(`${this.apiBase}/config`);

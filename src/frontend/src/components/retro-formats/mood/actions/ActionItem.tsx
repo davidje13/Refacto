@@ -1,6 +1,9 @@
 import React, { useState, useCallback, memo } from 'react';
 import classNames from 'classnames';
-import type { RetroItem, UserProvidedRetroItemDetails } from '../../../../shared/api-entities';
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
+} from '../../../../shared/api-entities';
 import ItemEditor from '../ItemEditor';
 import WrappedButton from '../../../common/WrappedButton';
 import useBoundCallback from '../../../../hooks/useBoundCallback';
@@ -15,12 +18,7 @@ interface PropsT {
   onDelete?: (id: string) => void;
 }
 
-export default memo(({
-  item,
-  onSetDone,
-  onEdit,
-  onDelete,
-}: PropsT) => {
+export default memo(({ item, onSetDone, onEdit, onDelete }: PropsT) => {
   const done = item.doneTime > 0;
 
   const handleToggleDone = useBoundCallback(onSetDone, item.id, !done);
@@ -29,19 +27,24 @@ export default memo(({
   const [editing, setEditing] = useState(false);
   const handleBeginEdit = useBoundCallback(setEditing, true);
   const handleCancelEdit = useBoundCallback(setEditing, false);
-  const handleSaveEdit = useCallback((
-    diff: Partial<UserProvidedRetroItemDetails>,
-  ) => {
-    setEditing(false);
-    onEdit!(item.id, diff);
-  }, [setEditing, onEdit, item.id]);
+  const handleSaveEdit = useCallback(
+    (diff: Partial<UserProvidedRetroItemDetails>) => {
+      setEditing(false);
+      onEdit!(item.id, diff);
+    },
+    [setEditing, onEdit, item.id],
+  );
 
   if (editing) {
     return (
       <div className="action-item editing">
         <ItemEditor
           defaultItem={item}
-          submitButtonLabel={<React.Fragment><TickBold /> Save</React.Fragment>}
+          submitButtonLabel={
+            <React.Fragment>
+              <TickBold /> Save
+            </React.Fragment>
+          }
           submitButtonTitle="Save changes"
           onSubmit={handleSaveEdit}
           onDelete={handleDelete}
@@ -54,7 +57,7 @@ export default memo(({
 
   return (
     <div className={classNames('action-item', { done })}>
-      <div className="message">{ item.message }</div>
+      <div className="message">{item.message}</div>
       <WrappedButton
         role="checkbox"
         aria-checked={done}

@@ -5,9 +5,7 @@ export function randomBytes(length: number): Uint8Array {
 }
 
 export function toHex(array: Uint8Array): string {
-  return [...array]
-    .map((v) => v.toString(16).padStart(2, '0'))
-    .join('');
+  return [...array].map((v) => v.toString(16).padStart(2, '0')).join('');
 }
 
 export async function sha1(data: string): Promise<string> {

@@ -8,11 +8,11 @@ import RetroLink from './RetroLink';
 describe('RetroLink', () => {
   it('links to the retro slug', () => {
     const locationHook = staticLocationHook('/', { record: true });
-    const dom = render((
+    const dom = render(
       <Router hook={locationHook}>
         <RetroLink name="Foo" slug="bar" />
-      </Router>
-    ));
+      </Router>,
+    );
 
     const button = dom.getBy(text('Foo'));
     fireEvent.click(button);

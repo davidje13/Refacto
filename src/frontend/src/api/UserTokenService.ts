@@ -1,12 +1,7 @@
 export default class UserTokenService {
-  public constructor(
-    private readonly apiBase: string,
-  ) {}
+  public constructor(private readonly apiBase: string) {}
 
-  public async login(
-    service: string,
-    externalToken: string,
-  ): Promise<string> {
+  public async login(service: string, externalToken: string): Promise<string> {
     const response = await fetch(`${this.apiBase}/sso/${service}`, {
       method: 'POST',
       cache: 'no-cache',

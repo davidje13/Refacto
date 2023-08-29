@@ -14,14 +14,14 @@ describe('Retro', () => {
     const retroItems: RetroItem[] = [];
     const retroState = { foo: 'bar' };
 
-    const dom = render((
+    const dom = render(
       <RetroFormatPicker
         retroFormat="mood"
         retroOptions={{}}
         retroItems={retroItems}
         retroState={retroState}
-      />
-    ));
+      />,
+    );
 
     expect((await dom.findBy(css('mock-mood-retro'))).mockProps).toMatchObject({
       retroItems,
@@ -30,14 +30,14 @@ describe('Retro', () => {
   });
 
   it('displays UnknownRetro for unknown formats', async () => {
-    const dom = render((
+    const dom = render(
       <RetroFormatPicker
         retroFormat="nope"
         retroOptions={{}}
         retroItems={[]}
         retroState={{}}
-      />
-    ));
+      />,
+    );
 
     expect(dom).toContainElementWith(css('mock-unknown-retro'));
     expect(dom).not.toContainElementWith(css('mock-mood-retro'));

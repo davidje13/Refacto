@@ -9,10 +9,13 @@ import { css } from '../../test-helpers/queries';
 import ArchivePage from './ArchivePage';
 
 jest.mock('../../api/api');
-jest.mock('../retro-formats/RetroFormatPicker', () => mockElement('mock-retro-format-picker'));
+jest.mock('../retro-formats/RetroFormatPicker', () =>
+  mockElement('mock-retro-format-picker'),
+);
 jest.mock('../common/Header', () => mockElement('mock-header'));
 
-const mockArchiveTracker = archiveTracker as unknown as typeof mockApiTypes.archiveTracker;
+const mockArchiveTracker =
+  archiveTracker as unknown as typeof mockApiTypes.archiveTracker;
 
 describe('ArchivePage', () => {
   beforeEach(() => {
@@ -21,13 +24,13 @@ describe('ArchivePage', () => {
   });
 
   it('renders a retro page', () => {
-    const dom = render((
+    const dom = render(
       <ArchivePage
         retroToken="token-1"
         retro={makeRetro({ id: 'r1' })}
         archiveId="myArchiveId"
-      />
-    ));
+      />,
+    );
     expect(dom).toContainElementWith(css('mock-retro-format-picker'));
   });
 });

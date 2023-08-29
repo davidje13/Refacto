@@ -15,12 +15,12 @@ export default <C extends React.ElementType>({
   error,
 }: PropsT<C>): React.ReactElement => {
   if (error) {
-    return (<div className="loader error">{ error }</div>);
+    return <div className="loader error">{error}</div>;
   }
 
   if (!componentProps) {
-    return (<div className="loader">{ loadingMessage }</div>);
+    return <div className="loader">{loadingMessage}</div>;
   }
 
-  return (<Component {...componentProps} />);
+  return <Component {...componentProps} />;
 };

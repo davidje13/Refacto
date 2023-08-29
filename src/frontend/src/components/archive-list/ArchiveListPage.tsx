@@ -9,10 +9,7 @@ import './ArchiveListPage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'>;
 
-export default memo(({
-  retroToken,
-  retro,
-}: PropsT) => {
+export default memo(({ retroToken, retro }: PropsT) => {
   const [archives, archivesError] = useArchiveList(retro.id, retroToken);
 
   return (
@@ -25,10 +22,14 @@ export default memo(({
       <Loader
         error={archivesError}
         Component={ArchiveList}
-        componentProps={archives ? {
-          slug: retro.slug,
-          archives,
-        } : null}
+        componentProps={
+          archives
+            ? {
+                slug: retro.slug,
+                archives,
+              }
+            : null
+        }
       />
       <div className="extra-links">
         <ApiDownload

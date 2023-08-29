@@ -126,7 +126,10 @@ class MockRequest {
     this.respond(body, { status: 200, ...init });
   }
 
-  public respondJsonOk(body: Readonly<JsonData> = {}, init: RequestInit = {}): void {
+  public respondJsonOk(
+    body: Readonly<JsonData> = {},
+    init: RequestInit = {},
+  ): void {
     this.respond(JSON.stringify(body), {
       status: 200,
       headers: {
@@ -154,7 +157,9 @@ class MockFetch {
       throw new Error('mock fetch is already registered!');
     }
     this.originalFetch = (global as any).fetch;
-    (global as any).fetch = jest.fn().mockName('fetch')
+    (global as any).fetch = jest
+      .fn()
+      .mockName('fetch')
       .mockImplementation(this.invoke);
     this.unexpectedRequests = [];
     this.expectations = [];
@@ -178,28 +183,31 @@ class MockFetch {
 
     if (remaining.length > 0) {
       const expected = this.expectations.map((exp) => exp.url);
-      throw new Error([
-        'Unexpected fetch request to:',
-        ...remaining,
-        '',
-        'Expected requests to:',
-        ...expected,
-      ].join('\n'));
+      throw new Error(
+        [
+          'Unexpected fetch request to:',
+          ...remaining,
+          '',
+          'Expected requests to:',
+          ...expected,
+        ].join('\n'),
+      );
     }
   }
 
   private invoke = (
     url: string,
     options: RequestInit = {},
-  ): Promise<ResponseWrapper> => new Promise((resolve, reject): void => {
-    const request = new MockRequest(url, options, resolve, reject);
-    const expectation = this.expectations.find((exp) => request.matches(exp));
-    if (expectation) {
-      expectation.handle(request);
-    } else {
-      this.unexpectedRequests.push(request);
-    }
-  });
+  ): Promise<ResponseWrapper> =>
+    new Promise((resolve, reject): void => {
+      const request = new MockRequest(url, options, resolve, reject);
+      const expectation = this.expectations.find((exp) => request.matches(exp));
+      if (expectation) {
+        expectation.handle(request);
+      } else {
+        this.unexpectedRequests.push(request);
+      }
+    });
 }
 
 const mockFetch = new MockFetch();

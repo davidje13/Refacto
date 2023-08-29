@@ -38,7 +38,11 @@ interface Category {
 const CATEGORIES: Category[] = [
   { id: 'happy', title: 'Happy', placeholder: 'I\u2019m glad that\u2026' },
   { id: 'meh', title: 'Meh', placeholder: 'I\u2019m wondering about\u2026' },
-  { id: 'sad', title: 'Sad', placeholder: 'It wasn\u2019t so great that\u2026' },
+  {
+    id: 'sad',
+    title: 'Sad',
+    placeholder: 'It wasn\u2019t so great that\u2026',
+  },
 ];
 
 interface PropsT {
@@ -54,10 +58,7 @@ interface PropsT {
 
 export default ({
   retroOptions,
-  retroState: {
-    focusedItemId = null,
-    focusedItemTimeout = 0,
-  },
+  retroState: { focusedItemId = null, focusedItemTimeout = 0 },
   retroItems,
   group,
   dispatch,
@@ -65,13 +66,11 @@ export default ({
   archive,
   archiveTime,
 }: PropsT): React.ReactElement => {
-  const singleColumn = useWindowSize(({ width }) => (width <= 800), []);
+  const singleColumn = useWindowSize(({ width }) => width <= 800, []);
   const localDateProvider = useLocalDateProvider(archiveTime);
 
-  const canFacilitate = (
-    !singleColumn ||
-    OPTIONS.enableMobileFacilitation.read(retroOptions)
-  );
+  const canFacilitate =
+    !singleColumn || OPTIONS.enableMobileFacilitation.read(retroOptions);
 
   const useAction = useActionFactory(dispatch);
   const useFacilitatorAction = useActionFactory(dispatch, canFacilitate);
@@ -83,17 +82,31 @@ export default ({
   const handleUpvoteItem = useAction(upvoteRetroItem);
   const handleEditItem = useAction(editRetroItem);
   const handleDeleteItem = useAction(deleteRetroItem);
-  const handleAddExtraTime = useFacilitatorAction(useBoundCallback(setItemTimeout, group));
-  const handleSelectItem = useFacilitatorAction(useBoundCallback(switchFocus, group, true));
+  const handleAddExtraTime = useFacilitatorAction(
+    useBoundCallback(setItemTimeout, group),
+  );
+  const handleSelectItem = useFacilitatorAction(
+    useBoundCallback(switchFocus, group, true),
+  );
   const handleSetActionItemDone = useAction(setRetroItemDone);
-  const handleGoNext = useFacilitatorAction(useBoundCallback(goNext, group), checkAutoArchive);
-  const handleGoPrevious = useFacilitatorAction(useBoundCallback(goPrevious, group));
+  const handleGoNext = useFacilitatorAction(
+    useBoundCallback(goNext, group),
+    checkAutoArchive,
+  );
+  const handleGoPrevious = useFacilitatorAction(
+    useBoundCallback(goPrevious, group),
+  );
 
   useGlobalKeyListener({
     ArrowRight: handleGoNext,
     ArrowLeft: handleGoPrevious,
-    Enter: useFacilitatorAction(useBoundCallback(switchFocus, group, true, null), checkAutoArchive),
-    Escape: useFacilitatorAction(useBoundCallback(switchFocus, group, false, null)),
+    Enter: useFacilitatorAction(
+      useBoundCallback(switchFocus, group, true, null),
+      checkAutoArchive,
+    ),
+    Escape: useFacilitatorAction(
+      useBoundCallback(switchFocus, group, false, null),
+    ),
   });
 
   const createMoodSection = (category: Category): React.ReactElement => (
@@ -132,7 +145,7 @@ export default ({
     />
   );
 
-  const hasFocused = (focusedItemId !== null);
+  const hasFocused = focusedItemId !== null;
 
   const baseClassName = classNames(
     'retro-format-mood',
@@ -166,9 +179,9 @@ export default ({
   return (
     <div className={baseClassName}>
       <section className="columns">
-        { CATEGORIES.map((category) => createMoodSection(category)) }
+        {CATEGORIES.map((category) => createMoodSection(category))}
       </section>
-      { actionSection }
+      {actionSection}
     </div>
   );
 };

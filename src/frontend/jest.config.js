@@ -7,5 +7,5 @@ module.exports = {
     '\\.[jt]sx?$': 'babel-jest',
   },
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: [ '<rootDir>/src/test-helpers/entrypoint.ts' ],
+  setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
 };

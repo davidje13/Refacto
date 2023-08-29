@@ -15,11 +15,11 @@ function isMaterialized(
   if (typeof materialized === 'boolean') {
     return materialized;
   }
-  return (data instanceof Notification);
+  return data instanceof Notification;
 }
 
 export default function useObservable<T>(
-  observableGenerator: () => (Observable<T | Notification<T>> | undefined),
+  observableGenerator: () => Observable<T | Notification<T>> | undefined,
   deps: React.DependencyList = [],
   { materialized = 'detect' }: ObservableOptions = {},
 ): ObservableState<T> {

@@ -2,10 +2,7 @@ import { useCallback, useState } from 'react';
 import { useIsBefore } from 'react-hook-final-countdown';
 import useBoxed from './useBoxed';
 
-type TemporaryT = [
-  () => boolean,
-  boolean,
-];
+type TemporaryT = [() => boolean, boolean];
 
 export default function useTemporary(delay: number): TemporaryT {
   const [activatedTime, setActivatedTime] = useState(Number.NEGATIVE_INFINITY);

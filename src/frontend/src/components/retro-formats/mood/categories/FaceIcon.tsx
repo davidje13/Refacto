@@ -157,14 +157,11 @@ interface PropsT {
   theme: string;
 }
 
-export default memo(({
-  theme,
-  type,
-}: PropsT) => {
+export default memo(({ theme, type }: PropsT) => {
   const { icons, extraClassName } = getTheme(theme);
   return (
     <div className={classNames('face-icon', extraClassName)}>
-      { icons[type as Type] }
+      {icons[type as Type]}
     </div>
   );
 });

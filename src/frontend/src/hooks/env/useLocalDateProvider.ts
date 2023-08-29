@@ -9,28 +9,29 @@ function readTime(clock: NowGetter | number): number {
   return clock.now();
 }
 
-export default function useLocalDateProvider(clock: NowGetter | number = Date): LocalDateProvider {
-  const [state, setState] = useState(() => new LocalDateProvider(readTime(clock)));
+export default function useLocalDateProvider(
+  clock: NowGetter | number = Date,
+): LocalDateProvider {
+  const [state, setState] = useState(
+    () => new LocalDateProvider(readTime(clock)),
+  );
   const stateRef = useRef(state);
 
   useLayoutEffect(() => {
     if (typeof clock === 'number') {
       return undefined;
     }
-    const tracker = localDateTracker(
-      (provider) => {
-        if (
-          provider.getMidnightTimestamp(0) ===
-          stateRef.current.getMidnightTimestamp(0)
-        ) {
-          // prevent initial double-render
-          return;
-        }
-        stateRef.current = provider;
-        setState(provider);
-      },
-      clock,
-    );
+    const tracker = localDateTracker((provider) => {
+      if (
+        provider.getMidnightTimestamp(0) ===
+        stateRef.current.getMidnightTimestamp(0)
+      ) {
+        // prevent initial double-render
+        return;
+      }
+      stateRef.current = provider;
+      setState(provider);
+    }, clock);
     return (): void => tracker.stop();
   }, [setState, stateRef, clock]);
 

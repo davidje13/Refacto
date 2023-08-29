@@ -20,7 +20,7 @@
     button {
       margin: 0 0 0 8px;
       padding: 8px 16px;
-      background: #EEEEEE;
+      background: #eeeeee;
       color: @green-text-on-white;
       transition: box-shadow 0.2s ease;
 
@@ -50,7 +50,9 @@
       vertical-align: top;
       background: #808080;
       border: 1px solid #000000;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 
       img {
         height: 100px;
@@ -62,7 +64,9 @@
       &:hover {
         z-index: 1;
         transform: scale(1.1);
-        box-shadow: 0 0 0 2px @green-shadow, 0 3px 4px rgba(0, 0, 0, 0.2);
+        box-shadow:
+          0 0 0 2px @green-shadow,
+          0 3px 4px rgba(0, 0, 0, 0.2);
       }
 
       &:active {
@@ -74,7 +78,7 @@
   .dialog-options button {
     margin: 0 16px;
     padding: 8px 16px;
-    background: #EEEEEE;
+    background: #eeeeee;
     color: @green-text-on-white;
     transition: box-shadow 0.2s ease;
 

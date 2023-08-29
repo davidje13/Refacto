@@ -15,22 +15,19 @@ interface PropsT {
   options: OptionT[];
 }
 
-export default memo(({
-  className,
-  name,
-  value,
-  onChange,
-  options,
-}: PropsT) => {
-  const changeHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      onChange?.(e.target.value);
-    }
-  }, [onChange]);
+export default memo(({ className, name, value, onChange, options }: PropsT) => {
+  const changeHandler = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked) {
+        onChange?.(e.target.value);
+      }
+    },
+    [onChange],
+  );
 
   return (
     <div className={classNames('picker-input', className)}>
-      { options.map((o) => (
+      {options.map((o) => (
         <label key={o.value}>
           <input
             className="picker-hidden"
@@ -41,11 +38,9 @@ export default memo(({
             onChange={changeHandler}
             autoComplete="off"
           />
-          <span>
-            { o.label }
-          </span>
+          <span>{o.label}</span>
         </label>
-      )) }
+      ))}
     </div>
   );
 });

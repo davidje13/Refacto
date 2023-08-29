@@ -1,7 +1,7 @@
 @import (reference) '../../../colours.less';
 
 .action-item {
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 16px 24px;
   border-radius: 4px;
   position: relative;
@@ -32,7 +32,7 @@
     outline: none; /* custom focus ring */
 
     &:focus::after {
-      content: "";
+      content: '';
       position: absolute;
       width: 24px;
       height: 24px;
@@ -41,11 +41,13 @@
       top: 50%;
       left: 50%;
       /* fake focus ring to replace outline */
-      box-shadow: 0 0 1px 5px #FFFFFF, 0 0 1px 6px #CC6600;
+      box-shadow:
+        0 0 1px 5px #ffffff,
+        0 0 1px 6px #cc6600;
     }
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       width: 30px;
       height: 30px;
@@ -54,7 +56,7 @@
       left: 50%;
       border: 2px solid @beige-icon;
       box-sizing: border-box;
-      background: #FFFFFF;
+      background: #ffffff;
       border-radius: 4px;
       z-index: 1;
       box-shadow: 0 0 0 -2px @green-button-back;
@@ -76,7 +78,9 @@
       opacity: 0;
       transform: scale(0);
       transform-origin: 30% 70%;
-      transition: transform 0.1s step-end, opacity 0.1s ease-out;
+      transition:
+        transform 0.1s step-end,
+        opacity 0.1s ease-out;
     }
 
     &:active::before {

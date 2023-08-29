@@ -6,7 +6,11 @@ import { css } from '../../../../test-helpers/queries';
 import MoodItem from './MoodItem';
 
 describe('MoodItem integration', () => {
-  const item = makeRetroItem({ message: 'a message here', id: 'my-id', votes: 3 });
+  const item = makeRetroItem({
+    message: 'a message here',
+    id: 'my-id',
+    votes: 3,
+  });
 
   it('displays the item message', () => {
     const dom = render(<MoodItem item={item} />);
@@ -48,9 +52,7 @@ describe('MoodItem integration', () => {
   });
 
   it('marks the item as done if specified', () => {
-    const dom = render((
-      <MoodItem item={makeRetroItem({ doneTime: 1 })} />
-    ));
+    const dom = render(<MoodItem item={makeRetroItem({ doneTime: 1 })} />);
 
     expect(dom).toContainElementWith(css('.mood-item.done'));
   });
