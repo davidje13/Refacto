@@ -14,7 +14,7 @@ export default memo(({ onClose }: PropsT) => {
     <div className="popup-invite">
       <p>Attendees can join on their computer or phone:</p>
       <p className="link">{url}</p>
-      <QR content={url} />
+      <QR className="qr-code" content={url} />
       <p className="dialog-options">
         <WrappedButton onClick={onClose} className="primary">
           Close
