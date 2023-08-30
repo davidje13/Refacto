@@ -71,7 +71,7 @@ jobs:
           fi
 
           wget localhost:5000 -O test-index.html
-          if ! grep 'src="/assets/' <test-index.html >/dev/null; then
+          if ! grep '<title>Refacto</title>' <test-index.html >/dev/null; then
             cat output.log
             echo "Unexpected main page response" >&2
             cat test-index.html
