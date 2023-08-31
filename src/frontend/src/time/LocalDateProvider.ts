@@ -1,4 +1,4 @@
-export default class LocalDateProvider {
+export class LocalDateProvider {
   private readonly now: number;
 
   public constructor(timestampNow: number) {

@@ -1,12 +1,11 @@
-import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import { render, fireEvent } from 'flexible-testing-library-react';
-import staticTitleHook from '../../test-helpers/staticTitleHook';
+import { staticTitleHook } from '../../test-helpers/staticTitleHook';
 import { css } from '../../test-helpers/queries';
 import { TitleContext } from '../../hooks/env/useTitle';
 
-import Header from './Header';
+import { Header } from './Header';
 
 describe('Header', () => {
   it('sets the document and page title', () => {

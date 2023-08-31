@@ -1,6 +1,6 @@
 import { ReplaySubject } from 'rxjs';
 
-export default class SingleObservableTracker<V> {
+export class SingleObservableTracker<V> {
   private readonly data = new ReplaySubject<V>(1);
 
   public get(): ReplaySubject<V> {

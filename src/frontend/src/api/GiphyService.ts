@@ -3,7 +3,7 @@ export interface GifInfo {
   medium: string;
 }
 
-export default class GiphyService {
+export class GiphyService {
   public constructor(private readonly apiBase: string) {}
 
   public async search(query: string): Promise<GifInfo[]> {

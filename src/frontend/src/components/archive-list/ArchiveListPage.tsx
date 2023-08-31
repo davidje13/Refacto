@@ -1,15 +1,15 @@
-import React, { memo } from 'react';
-import type { RetroPagePropsT } from '../RetroRouter';
-import Header from '../common/Header';
-import Loader from '../common/Loader';
-import ApiDownload from '../common/ApiDownload';
-import useArchiveList from '../../hooks/data/useArchiveList';
-import ArchiveList from './ArchiveList';
+import { memo } from 'react';
+import { type RetroPagePropsT } from '../RetroRouter';
+import { Header } from '../common/Header';
+import { Loader } from '../common/Loader';
+import { ApiDownload } from '../common/ApiDownload';
+import { useArchiveList } from '../../hooks/data/useArchiveList';
+import { ArchiveList } from './ArchiveList';
 import './ArchiveListPage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'>;
 
-export default memo(({ retroToken, retro }: PropsT) => {
+export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
   const [archives, archivesError] = useArchiveList(retro.id, retroToken);
 
   return (

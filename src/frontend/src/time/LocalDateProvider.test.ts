@@ -1,6 +1,6 @@
 import timezoneMock, { TimeZone } from 'timezone-mock';
 
-import LocalDateProvider from './LocalDateProvider';
+import { LocalDateProvider } from './LocalDateProvider';
 
 const HOUR_MS = 1000 * 60 * 60;
 const DAY_MS = HOUR_MS * 24;

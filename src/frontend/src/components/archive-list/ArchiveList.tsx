@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
-import type { RetroArchiveSummary } from '../../shared/api-entities';
-import ArchiveLink from './ArchiveLink';
+import { memo } from 'react';
+import { type RetroArchiveSummary } from '../../shared/api-entities';
+import { ArchiveLink } from './ArchiveLink';
 
 function archiveCreatedComparator(
   a: RetroArchiveSummary,
@@ -21,7 +21,7 @@ interface PropsT {
   archives: RetroArchiveSummary[];
 }
 
-export default memo(({ slug, archives }: PropsT) => {
+export const ArchiveList = memo(({ slug, archives }: PropsT) => {
   if (!archives.length) {
     return <p>This retro has no archives.</p>;
   }

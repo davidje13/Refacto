@@ -1,4 +1,4 @@
-import type { WebDriver, By } from 'selenium-webdriver';
+import { type WebDriver, type By } from 'selenium-webdriver';
 
 export const untilNoElementLocated = (by: By) => async (driver: WebDriver) => {
   const elements = await driver.findElements(by);

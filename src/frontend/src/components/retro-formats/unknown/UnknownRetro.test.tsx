@@ -1,7 +1,6 @@
-import React from 'react';
 import { render, textFragment } from 'flexible-testing-library-react';
 
-import UnknownRetro from './UnknownRetro';
+import { UnknownRetro } from './UnknownRetro';
 
 describe('UnknownRetro', () => {
   it('displays a message', () => {

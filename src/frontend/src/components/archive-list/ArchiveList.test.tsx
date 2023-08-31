@@ -1,11 +1,12 @@
-import React from 'react';
 import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { css } from '../../test-helpers/queries';
 
-import ArchiveList from './ArchiveList';
+import { ArchiveList } from './ArchiveList';
 
-jest.mock('./ArchiveLink', () => mockElement('mock-archive-link'));
+jest.mock('./ArchiveLink', () => ({
+  ArchiveLink: mockElement('mock-archive-link'),
+}));
 
 describe('ArchiveList', () => {
   it('displays a message if there are no archives', () => {

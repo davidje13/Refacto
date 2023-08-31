@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 
-function useMutatedCallback(
+export function useMutatedCallback(
   fn: undefined,
   conversion: () => unknown,
   deps: React.DependencyList,
 ): undefined;
 
-function useMutatedCallback<
+export function useMutatedCallback<
   R,
   A extends readonly unknown[],
   B extends readonly unknown[],
@@ -16,7 +16,7 @@ function useMutatedCallback<
   deps: React.DependencyList,
 ): (...args: B) => R;
 
-function useMutatedCallback<
+export function useMutatedCallback<
   R,
   A extends readonly unknown[],
   B extends readonly unknown[],
@@ -26,7 +26,7 @@ function useMutatedCallback<
   deps: React.DependencyList,
 ): ((...args: B) => R) | undefined;
 
-function useMutatedCallback<
+export function useMutatedCallback<
   R,
   A extends readonly unknown[],
   B extends readonly unknown[],
@@ -40,5 +40,3 @@ function useMutatedCallback<
     [fn, ...deps],
   );
 }
-
-export default useMutatedCallback;

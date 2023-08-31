@@ -1,8 +1,8 @@
-import type { RetroSummary } from '../../shared/api-entities';
-import useObservable, { ObservableState } from '../useObservable';
+import { type RetroSummary } from '../../shared/api-entities';
+import { useObservable, ObservableState } from '../useObservable';
 import { retroListTracker } from '../../api/api';
 
-export default function useRetroList(
+export function useRetroList(
   userToken: string | null,
 ): ObservableState<RetroSummary[]> {
   const [retroListState, error] = useObservable(() => {

@@ -1,7 +1,7 @@
 import { ReplaySubject, Subject } from 'rxjs';
-import type { ClientConfig } from '../shared/api-entities';
+import { type ClientConfig } from '../shared/api-entities';
 
-export default class ConfigService {
+export class ConfigService {
   private readonly config = new ReplaySubject<ClientConfig>(1);
 
   public constructor(private readonly apiBase: string) {}

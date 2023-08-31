@@ -1,7 +1,7 @@
-import useObservable, { ObservableState } from '../useObservable';
+import { useObservable, ObservableState } from '../useObservable';
 import { slugTracker } from '../../api/api';
 
-export default function useSlug(slug: string | null): ObservableState<string> {
+export function useSlug(slug: string | null): ObservableState<string> {
   return useObservable(() => {
     if (!slug) {
       return undefined;

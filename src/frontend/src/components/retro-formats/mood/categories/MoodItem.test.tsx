@@ -1,9 +1,8 @@
-import React from 'react';
 import { render, fireEvent } from 'flexible-testing-library-react';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
-import MoodItem from './MoodItem';
+import { MoodItem } from './MoodItem';
 
 describe('MoodItem integration', () => {
   const item = makeRetroItem({

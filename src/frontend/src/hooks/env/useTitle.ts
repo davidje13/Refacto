@@ -8,7 +8,7 @@ const browserTitleSetter: TitleHook = (title: string): void => {
 
 const Context = createContext(browserTitleSetter);
 
-function useTitle(title: string): void {
+export function useTitle(title: string): void {
   const hook = useContext(Context);
   useLayoutEffect(() => {
     hook(title);
@@ -25,5 +25,3 @@ export const Title = ({ title }: TitleProps): null => {
   useTitle(title);
   return null;
 };
-
-export default useTitle;

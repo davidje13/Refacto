@@ -1,6 +1,6 @@
-import React from 'react';
-import type { RetroItemAttachment } from '../../shared/api-entities';
-import GiphyAttachment from './giphy/GiphyAttachment';
+import { type FC, type ComponentType } from 'react';
+import { type RetroItemAttachment } from '../../shared/api-entities';
+import { GiphyAttachment } from './giphy/GiphyAttachment';
 
 interface ChildPropsT {
   attachment: RetroItemAttachment;
@@ -10,10 +10,10 @@ interface PropsT {
   attachment: RetroItemAttachment | null;
 }
 
-const TYPES = new Map<string, React.ComponentType<ChildPropsT>>();
+const TYPES = new Map<string, ComponentType<ChildPropsT>>();
 TYPES.set('giphy', GiphyAttachment);
 
-export default ({ attachment }: PropsT): React.ReactElement | null => {
+export const Attachment: FC<PropsT> = ({ attachment }) => {
   if (attachment) {
     const Type = TYPES.get(attachment.type);
     if (Type) {

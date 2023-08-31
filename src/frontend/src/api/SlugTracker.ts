@@ -13,8 +13,8 @@ import {
   filter,
   shareReplay,
 } from 'rxjs/operators';
-import loadHttp from '../rxjs/loadHttp';
-import CacheMap from '../helpers/CacheMap';
+import { loadHttp } from '../rxjs/loadHttp';
+import { CacheMap } from '../helpers/CacheMap';
 
 interface StoredT<T> {
   subject: Subject<T | undefined>;
@@ -33,7 +33,7 @@ function ajaxSubject<R>(url: string, mapping: (o: any) => R): StoredT<R> {
   return { subject, observable };
 }
 
-export default class SlugTracker {
+export class SlugTracker {
   private readonly storage: CacheMap<string, StoredT<string>>;
 
   public constructor(apiBase: string) {

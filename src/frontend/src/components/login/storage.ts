@@ -62,7 +62,7 @@ function deleteCookie(key: string): void {
   );
 }
 
-export default {
+export const storage = {
   setItem(key: string, value: string): boolean {
     let any = false;
     // sessionStorage is best option for security and privacy

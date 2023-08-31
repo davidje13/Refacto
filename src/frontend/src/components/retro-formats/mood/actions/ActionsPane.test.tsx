@@ -1,16 +1,17 @@
-import React from 'react';
 import { render, RenderResult } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
-import ActionsPane from './ActionsPane';
-import LocalDateProvider from '../../../../time/LocalDateProvider';
+import { ActionsPane } from './ActionsPane';
+import { LocalDateProvider } from '../../../../time/LocalDateProvider';
 
-jest.mock('../../../common/ExpandingTextEntry', () =>
-  mockElement('mock-expanding-text-entry'),
-);
-jest.mock('./ActionSection', () => mockElement('mock-action-section'));
+jest.mock('../../../common/ExpandingTextEntry', () => ({
+  ExpandingTextEntry: mockElement('mock-expanding-text-entry'),
+}));
+jest.mock('./ActionSection', () => ({
+  ActionSection: mockElement('mock-action-section'),
+}));
 
 describe('ActionsPane', () => {
   const items = [

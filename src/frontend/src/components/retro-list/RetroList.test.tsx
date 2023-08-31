@@ -1,11 +1,10 @@
-import React from 'react';
 import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { css } from '../../test-helpers/queries';
 
-import RetroList from './RetroList';
+import { RetroList } from './RetroList';
 
-jest.mock('./RetroLink', () => mockElement('mock-retro-link'));
+jest.mock('./RetroLink', () => ({ RetroLink: mockElement('mock-retro-link') }));
 
 describe('RetroList', () => {
   const emptyLabel = 'do not have any retros';

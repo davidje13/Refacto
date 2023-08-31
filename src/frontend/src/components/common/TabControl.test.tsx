@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   render,
   fireEvent,
@@ -6,7 +5,7 @@ import {
 } from 'flexible-testing-library-react';
 import { css } from '../../test-helpers/queries';
 
-import TabControl from './TabControl';
+import { TabControl } from './TabControl';
 
 describe('TabControl', () => {
   const tabs = [

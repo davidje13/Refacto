@@ -1,7 +1,7 @@
-import type { Retro, RetroItem } from '../shared/api-entities';
-import type { RetroDispatchSpec } from '../api/RetroTracker';
+import { type Retro, type RetroItem } from '../shared/api-entities';
+import { type RetroDispatchSpec } from '../api/RetroTracker';
 import { setRetroItemDone, setRetroState, addRetroItem } from './retro';
-import autoFacilitate from './autoFacilitate';
+import { autoFacilitate } from './autoFacilitate';
 
 export interface MoodRetroStateT {
   focusedItemId?: string | null;

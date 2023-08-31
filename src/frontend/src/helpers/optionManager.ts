@@ -1,4 +1,4 @@
-import type { Spec } from 'json-immutability-helper';
+import { type Spec } from 'json-immutability-helper';
 
 class OptionType<T> {
   public constructor(
@@ -27,7 +27,7 @@ class OptionType<T> {
   }
 }
 
-const OPTIONS = {
+export const OPTIONS = {
   alwaysShowAddAction: new OptionType<boolean>('always-show-add-action', true),
   enableMobileFacilitation: new OptionType<boolean>(
     'enable-mobile-facilitation',
@@ -35,5 +35,3 @@ const OPTIONS = {
   ),
   theme: new OptionType<string>('theme', 'faces'),
 };
-
-export default OPTIONS;

@@ -1,13 +1,20 @@
-import React, { useState, useCallback } from 'react';
+import {
+  useState,
+  useCallback,
+  ReactNode,
+  ReactElement,
+  SyntheticEvent,
+  MouseEvent,
+} from 'react';
 import classNames from 'classnames';
-import isFocusable from '../../helpers/isFocusable';
-import useKeyHandler from '../../hooks/useKeyHandler';
-import useStateMap from '../../hooks/useStateMap';
-import useBoxed from '../../hooks/useBoxed';
-import Textarea from './Textarea';
+import { isFocusable } from '../../helpers/isFocusable';
+import { useKeyHandler } from '../../hooks/useKeyHandler';
+import { useStateMap } from '../../hooks/useStateMap';
+import { useBoxed } from '../../hooks/useBoxed';
+import { Textarea } from './Textarea';
 import './ExpandingTextEntry.less';
 
-function hasContent(o: React.ReactNode): boolean {
+function hasContent(o: ReactNode): boolean {
   if (Array.isArray(o)) {
     return o.filter((e) => e).length > 0;
   }
@@ -22,17 +29,17 @@ interface PropsT {
   identifier?: string | undefined;
   autoFocus?: boolean;
   forceMultiline?: boolean;
-  preSubmitOptions?: React.ReactNode;
-  postSubmitOptions?: React.ReactNode;
-  extraInputs?: React.ReactNode;
-  submitButtonLabel?: React.ReactNode;
+  preSubmitOptions?: ReactNode;
+  postSubmitOptions?: ReactNode;
+  extraInputs?: ReactNode;
+  submitButtonLabel?: ReactNode;
   submitButtonTitle?: string;
   clearAfterSubmit?: boolean;
   blurOnSubmit?: boolean;
   blurOnCancel?: boolean;
 }
 
-export default ({
+export const ExpandingTextEntry = ({
   onSubmit,
   onCancel,
   placeholder = '',
@@ -48,7 +55,7 @@ export default ({
   clearAfterSubmit = false,
   blurOnSubmit = false,
   blurOnCancel = false,
-}: PropsT): React.ReactElement => {
+}: PropsT): ReactElement => {
   const [value, setValue] = useStateMap(identifier, 'value', defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
   const boxedValue = useBoxed(value);
@@ -62,7 +69,7 @@ export default ({
   }, []);
 
   const handleSubmit = useCallback(
-    (e?: React.SyntheticEvent) => {
+    (e?: SyntheticEvent) => {
       e?.preventDefault();
 
       const curValue = boxedValue.current;
@@ -96,7 +103,7 @@ export default ({
     onCancel?.();
   }, [blurOnCancel, blurElement, onCancel]);
 
-  const handleFormMouseDown = useCallback((e: React.MouseEvent) => {
+  const handleFormMouseDown = useCallback((e: MouseEvent) => {
     if (isFocusable(e.target)) {
       return;
     }

@@ -1,4 +1,4 @@
-import LocalDateProvider from './LocalDateProvider';
+import { LocalDateProvider } from './LocalDateProvider';
 
 // If machine sleeps or thread otherwise hangs, the timer will pause.
 // Set a maximum polling interval to ensure it recovers quickly.
@@ -14,7 +14,7 @@ export interface LocalDateTrackerRef {
   stop(): void;
 }
 
-export default function localDateTracker(
+export function localDateTracker(
   callback: (provider: LocalDateProvider) => void,
   clock: NowGetter = Date,
 ): LocalDateTrackerRef {

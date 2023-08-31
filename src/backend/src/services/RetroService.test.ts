@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { MemoryDb } from '../import-wrappers/collection-storage-wrap';
-import type { Spec } from 'json-immutability-helper';
-import type { ChangeInfo, Subscription } from 'shared-reducer-backend';
+import { type Spec } from 'json-immutability-helper';
+import { type ChangeInfo, type Subscription } from 'shared-reducer-backend';
 import { makeRetroItem, type Retro } from '../shared/api-entities';
 import { RetroService } from './RetroService';
 

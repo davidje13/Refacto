@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Collection, DB } from 'collection-storage';
+import { type Collection, type DB } from 'collection-storage';
 import { encryptByRecordWithMasterKey } from '../import-wrappers/collection-storage-wrap';
-import type {
-  RetroArchive,
-  RetroData,
-  RetroArchiveSummary,
+import {
+  type RetroArchive,
+  type RetroData,
+  type RetroArchiveSummary,
 } from '../shared/api-entities';
 
 export class RetroArchiveService {

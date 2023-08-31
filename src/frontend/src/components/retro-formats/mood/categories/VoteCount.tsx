@@ -1,7 +1,7 @@
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import classNames from 'classnames';
-import WrappedButton from '../../../common/WrappedButton';
-import useTemporary from '../../../../hooks/useTemporary';
+import { WrappedButton } from '../../../common/WrappedButton';
+import { useTemporary } from '../../../../hooks/useTemporary';
 import Heart from '../../../../../resources/heart.svg';
 import './VoteCount.less';
 
@@ -19,7 +19,7 @@ function scale(n: number): number {
   return Math.min(fraction, 1) * MAX_VOTE_SCALE + 1;
 }
 
-export default memo(({ votes, onVote }: PropsT) => {
+export const VoteCount = memo(({ votes, onVote }: PropsT) => {
   const [click, clicking] = useTemporary(MIN_CLICK_DELAY);
 
   const clickFn = useCallback(() => {

@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
-import type {
-  Retro,
-  RetroData,
-  RetroItem,
-  RetroItemAttachment,
-  RetroArchive,
+import {
+  type Retro,
+  type RetroData,
+  type RetroItem,
+  type RetroItemAttachment,
+  type RetroArchive,
 } from '../shared/api-entities';
 
 export interface RetroItemAttachmentJsonExport {

@@ -1,10 +1,10 @@
-import React, { memo } from 'react';
-import type { RetroPagePropsT } from '../RetroRouter';
-import Header from '../common/Header';
-import Loader from '../common/Loader';
-import useArchive from '../../hooks/data/useArchive';
+import { memo } from 'react';
+import { type RetroPagePropsT } from '../RetroRouter';
+import { Header } from '../common/Header';
+import { Loader } from '../common/Loader';
+import { useArchive } from '../../hooks/data/useArchive';
 import { formatDate } from '../../time/formatters';
-import RetroFormatPicker from '../retro-formats/RetroFormatPicker';
+import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
 import './ArchivePage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
@@ -12,42 +12,44 @@ type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
   group?: string | undefined;
 };
 
-export default memo(({ retroToken, retro, archiveId, group }: PropsT) => {
-  const [archive, archiveError] = useArchive(retro.id, archiveId, retroToken);
+export const ArchivePage = memo(
+  ({ retroToken, retro, archiveId, group }: PropsT) => {
+    const [archive, archiveError] = useArchive(retro.id, archiveId, retroToken);
 
-  let archiveName = 'Archive';
-  if (archive) {
-    archiveName = `${formatDate(archive.created)} Archive`;
-  }
+    let archiveName = 'Archive';
+    if (archive) {
+      archiveName = `${formatDate(archive.created)} Archive`;
+    }
 
-  return (
-    <article className="page-archive">
-      <Header
-        documentTitle={`${archiveName} - ${retro.name} - Refacto`}
-        title={`${retro.name} (${archiveName})`}
-        backLink={{
-          label: 'Archives',
-          action: `/retros/${retro.slug}/archives`,
-        }}
-      />
-      <Loader
-        error={archiveError}
-        Component={RetroFormatPicker}
-        componentProps={
-          archive
-            ? {
-                retroFormat: archive.format,
-                retroOptions: archive.options,
-                retroItems: archive.items,
-                retroState: {},
-                group,
-                archive: true,
-                archiveTime: archive.created,
-                onComplete: (): void => undefined,
-              }
-            : null
-        }
-      />
-    </article>
-  );
-});
+    return (
+      <article className="page-archive">
+        <Header
+          documentTitle={`${archiveName} - ${retro.name} - Refacto`}
+          title={`${retro.name} (${archiveName})`}
+          backLink={{
+            label: 'Archives',
+            action: `/retros/${retro.slug}/archives`,
+          }}
+        />
+        <Loader
+          error={archiveError}
+          Component={RetroFormatPicker}
+          componentProps={
+            archive
+              ? {
+                  retroFormat: archive.format,
+                  retroOptions: archive.options,
+                  retroItems: archive.items,
+                  retroState: {},
+                  group,
+                  archive: true,
+                  archiveTime: archive.created,
+                  onComplete: (): void => undefined,
+                }
+              : null
+          }
+        />
+      </article>
+    );
+  },
+);

@@ -1,10 +1,9 @@
-import React from 'react';
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../shared/api-entities';
 import { css } from '../../../test-helpers/queries';
 
-import ItemColumn from './ItemColumn';
+import { ItemColumn } from './ItemColumn';
 
 const Item = mockElement('my-item');
 

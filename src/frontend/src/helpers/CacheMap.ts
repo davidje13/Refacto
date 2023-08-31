@@ -1,4 +1,4 @@
-export default class CacheMap<K, V> {
+export class CacheMap<K, V> {
   private readonly data = new Map<K, V>();
 
   public constructor(private readonly builder: (key: K) => V) {}

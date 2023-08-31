@@ -1,10 +1,10 @@
-import type { TitleHook } from '../hooks/env/useTitle';
+import { type TitleHook } from '../hooks/env/useTitle';
 
 export interface StaticTitleHook extends TitleHook {
   currentTitle: string;
 }
 
-export default function staticTitleHook(initialTitle = ''): StaticTitleHook {
+export function staticTitleHook(initialTitle = ''): StaticTitleHook {
   const hook: StaticTitleHook = (newTitle: string): void => {
     hook.currentTitle = newTitle;
   };

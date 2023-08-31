@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import './Footer.less';
 
-export default memo(() => (
+export const Footer = memo(() => (
   <footer className="page-footer">
-    Refacto (source on{' '}
+    {'Refacto (source on '}
     <a
       href="https://github.com/davidje13/Refacto"
       target="_blank"
@@ -11,7 +11,7 @@ export default memo(() => (
     >
       GitHub
     </a>
-    ,{' '}
+    {', '}
     <a
       href="https://gitlab.com/davidje13/refacto"
       target="_blank"

@@ -1,4 +1,4 @@
-export default class UserTokenService {
+export class UserTokenService {
   public constructor(private readonly apiBase: string) {}
 
   public async login(service: string, externalToken: string): Promise<string> {

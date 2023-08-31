@@ -1,8 +1,8 @@
-import type { RetroArchive } from '../../shared/api-entities';
-import useObservable, { ObservableState } from '../useObservable';
+import { type RetroArchive } from '../../shared/api-entities';
+import { useObservable, ObservableState } from '../useObservable';
 import { archiveTracker } from '../../api/api';
 
-export default function useArchive(
+export function useArchive(
   retroId: string | null,
   archiveId: string | null,
   retroToken: string | null,

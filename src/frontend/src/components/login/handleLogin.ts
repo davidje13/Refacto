@@ -5,7 +5,7 @@ interface LocationT {
   hash: string;
 }
 
-export default async function handleLogin(
+export async function handleLogin(
   service: string,
   localNonce: string | null,
   { search, hash }: LocationT,

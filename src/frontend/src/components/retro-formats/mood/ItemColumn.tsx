@@ -1,5 +1,5 @@
-import React from 'react';
-import type { RetroItem } from '../../../shared/api-entities';
+import { ElementType, ComponentPropsWithRef, ReactElement } from 'react';
+import { type RetroItem } from '../../../shared/api-entities';
 
 function itemCreatedComparator(a: RetroItem, b: RetroItem): number {
   // sort newer-to-older
@@ -17,19 +17,19 @@ interface ItemPropsP {
   focused: boolean;
 }
 
-interface PropsT<C extends React.ElementType> {
+interface PropsT<C extends ElementType> {
   items: RetroItem[];
   ItemType: C;
   focusedItemId?: string | null;
-  itemProps: Omit<React.ComponentPropsWithRef<C>, 'item' | 'focused'>;
+  itemProps: Omit<ComponentPropsWithRef<C>, 'item' | 'focused'>;
 }
 
-export default <C extends React.ElementType<ItemPropsP>>({
+export const ItemColumn = <C extends ElementType<ItemPropsP>>({
   items,
   ItemType,
   focusedItemId,
   itemProps,
-}: PropsT<C>): React.ReactElement => (
+}: PropsT<C>): ReactElement => (
   <ul className="item-column">
     {sortItems(items).map((item) => (
       <li key={item.id}>

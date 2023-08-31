@@ -1,9 +1,9 @@
-import React, { useCallback, memo } from 'react';
+import { useCallback, memo, ChangeEvent, InputHTMLAttributes } from 'react';
 
 type Callback<T> = (value: T) => void;
 
 type InheritT = Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
+  InputHTMLAttributes<HTMLInputElement>,
   'onChange' | 'value' | 'defaultValue' | 'checked' | 'defaultChecked'
 >;
 
@@ -32,7 +32,7 @@ type PropsT = InheritT &
       }
   );
 
-export default memo(
+export const Input = memo(
   ({
     type,
     value,
@@ -43,7 +43,7 @@ export default memo(
     ...rest
   }: PropsT) => {
     const changeHandler = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+      (e: ChangeEvent<HTMLInputElement>) => {
         if (!onChange) {
           return;
         }

@@ -1,13 +1,13 @@
-import React, { useState, memo } from 'react';
+import { useState, memo } from 'react';
 import { actionsSyncedCallback } from 'shared-reducer-frontend';
-import type { Retro } from '../../shared/api-entities';
-import type { RetroDispatch } from '../../api/RetroTracker';
-import Input from '../common/Input';
-import PickerInput from '../common/PickerInput';
-import SlugEntry from '../retro-create/SlugEntry';
-import Alert from '../common/Alert';
-import useSubmissionCallback from '../../hooks/useSubmissionCallback';
-import OPTIONS from '../../helpers/optionManager';
+import { type Retro } from '../../shared/api-entities';
+import { type RetroDispatch } from '../../api/RetroTracker';
+import { Input } from '../common/Input';
+import { PickerInput } from '../common/PickerInput';
+import { SlugEntry } from '../retro-create/SlugEntry';
+import { Alert } from '../common/Alert';
+import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
+import { OPTIONS } from '../../helpers/optionManager';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
 import './SettingsForm.less';
 
@@ -17,7 +17,7 @@ interface PropsT {
   onSave?: (savedRetro: Retro) => void;
 }
 
-export default memo(({ retro, dispatch, onSave }: PropsT) => {
+export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
   const [name, setName] = useState(retro.name);
   const [slug, setSlug] = useState(retro.slug);
   const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(

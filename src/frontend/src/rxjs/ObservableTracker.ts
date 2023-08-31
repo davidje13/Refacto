@@ -1,10 +1,7 @@
 import { ReplaySubject } from 'rxjs';
-import CacheMap from '../helpers/CacheMap';
+import { CacheMap } from '../helpers/CacheMap';
 
-export default class ObservableTracker<K, V> extends CacheMap<
-  K,
-  ReplaySubject<V>
-> {
+export class ObservableTracker<K, V> extends CacheMap<K, ReplaySubject<V>> {
   public constructor() {
     super(() => new ReplaySubject<V>(1));
   }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo } from 'react';
+import { useState, useCallback, memo, ReactNode, MouseEvent } from 'react';
 import classNames from 'classnames';
 import './TabControl.less';
 
@@ -6,7 +6,7 @@ interface TabT {
   key: string;
   title: string;
   className?: string;
-  content: React.ReactNode;
+  content: ReactNode;
 }
 
 function getActive(tabs: TabT[], activeKey: string): TabT | undefined {
@@ -18,12 +18,12 @@ interface PropsT {
   tabs: TabT[];
 }
 
-export default memo(({ tabs }: PropsT) => {
+export const TabControl = memo(({ tabs }: PropsT) => {
   const [activeKey, setActiveKey] = useState('');
   const active = getActive(tabs, activeKey);
 
   const handleTabClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       setActiveKey(e.currentTarget.dataset['key'] ?? '');
     },
     [setActiveKey],

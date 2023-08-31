@@ -1,7 +1,7 @@
-import React, { Suspense, memo, lazy } from 'react';
-import type { RetroItem } from '../../shared/api-entities';
-import type { RetroDispatch } from '../../api/RetroTracker';
-import UnknownRetro from './unknown/UnknownRetro';
+import { Suspense, memo, lazy, ComponentType } from 'react';
+import { type RetroItem } from '../../shared/api-entities';
+import { type RetroDispatch } from '../../api/RetroTracker';
+import { UnknownRetro } from './unknown/UnknownRetro';
 
 interface ChildPropsT {
   retroOptions: Record<string, unknown>;
@@ -19,20 +19,24 @@ interface PropsT extends Omit<ChildPropsT, 'archive'> {
   archive?: boolean;
 }
 
-const formats = new Map<string, React.ComponentType<ChildPropsT>>();
+const formats = new Map<string, ComponentType<ChildPropsT>>();
 formats.set(
   'mood',
-  lazy(() => import('./mood/MoodRetro')),
+  lazy(() =>
+    import('./mood/MoodRetro').then((m) => ({ default: m.MoodRetro })),
+  ),
 );
 
 const LOADER = <div className="loader">Loading&hellip;</div>;
 
-export default memo(({ retroFormat, archive = false, ...props }: PropsT) => {
-  const RetroType = formats.get(retroFormat) || UnknownRetro;
+export const RetroFormatPicker = memo(
+  ({ retroFormat, archive = false, ...props }: PropsT) => {
+    const RetroType = formats.get(retroFormat) || UnknownRetro;
 
-  return (
-    <Suspense fallback={LOADER}>
-      <RetroType archive={archive} {...props} />
-    </Suspense>
-  );
-});
+    return (
+      <Suspense fallback={LOADER}>
+        <RetroType archive={archive} {...props} />
+      </Suspense>
+    );
+  },
+);

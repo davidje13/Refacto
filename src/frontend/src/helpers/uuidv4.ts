@@ -58,7 +58,7 @@ function bytesToUuid(buf: Uint8Array): string {
 
 const rnds = new Uint8Array(16);
 
-export default function v4(): string {
+export function uuidv4(): string {
   window.crypto.getRandomValues(rnds);
 
   rnds[6] = (rnds[6]! & 0x0f) | 0x40;

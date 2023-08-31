@@ -1,7 +1,7 @@
-import useListener from './useListener';
-import useKeyHandler from './useKeyHandler';
+import { useListener } from './useListener';
+import { useKeyHandler } from './useKeyHandler';
 
-export default function useGlobalKeyListener(
+export function useGlobalKeyListener(
   keyMaps: Record<string, (() => void) | undefined>,
 ): void {
   const handler = useKeyHandler(keyMaps, { allowRepeat: false });

@@ -1,13 +1,13 @@
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Spec } from 'json-immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
-import type { Collection, DB } from 'collection-storage';
+import { type Collection, type DB } from 'collection-storage';
 import {
   encryptByRecordWithMasterKey,
   migrate,
 } from '../import-wrappers/collection-storage-wrap';
 import srb, { type Permission } from 'shared-reducer-backend';
-import type { Retro, RetroSummary } from '../shared/api-entities';
+import { type Retro, type RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;

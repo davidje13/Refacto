@@ -1,14 +1,14 @@
-import React, { useCallback, memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
+import { useCallback, memo, type ReactNode } from 'react';
+import {
+  type RetroItem,
+  type UserProvidedRetroItemDetails,
 } from '../../../shared/api-entities';
-import ExpandingTextEntry from '../../common/ExpandingTextEntry';
-import WrappedButton from '../../common/WrappedButton';
-import Attachment from '../../attachments/Attachment';
-import GiphyButton from '../../attachments/giphy/GiphyButton';
-import useConfig from '../../../hooks/data/useConfig';
-import useStateMap from '../../../hooks/useStateMap';
+import { ExpandingTextEntry } from '../../common/ExpandingTextEntry';
+import { WrappedButton } from '../../common/WrappedButton';
+import { Attachment } from '../../attachments/Attachment';
+import { GiphyButton } from '../../attachments/giphy/GiphyButton';
+import { useConfig } from '../../../hooks/data/useConfig';
+import { useStateMap } from '../../../hooks/useStateMap';
 import Cross from '../../../../resources/cross.svg';
 import Delete from '../../../../resources/delete.svg';
 
@@ -20,7 +20,7 @@ interface PropsT {
   onDelete?: (() => void) | undefined;
   placeholder?: string;
   autoFocus?: boolean;
-  submitButtonLabel?: React.ReactNode;
+  submitButtonLabel?: ReactNode;
   submitButtonTitle?: string;
   allowAttachments?: boolean;
   clearAfterSubmit?: boolean;
@@ -28,7 +28,7 @@ interface PropsT {
   blurOnCancel?: boolean;
 }
 
-export default memo(
+export const ItemEditor = memo(
   ({
     defaultItem,
     identifier,

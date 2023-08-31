@@ -1,7 +1,6 @@
-import React from 'react';
 import { render } from 'flexible-testing-library-react';
 
-import MoodRetro from './MoodRetro';
+import { MoodRetro } from './MoodRetro';
 
 const nop = (): void => undefined;
 

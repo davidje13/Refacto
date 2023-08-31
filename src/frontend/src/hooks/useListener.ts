@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function useListener<E extends Event>(
+export function useListener<E extends Event>(
   target: EventTarget | undefined,
   type: string,
   fn: (e: E) => void,

@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import WrappedButton from '../common/WrappedButton';
+import { memo } from 'react';
+import { WrappedButton } from '../common/WrappedButton';
 import './ArchivePopup.less';
 
 interface PropsT {
@@ -7,7 +7,7 @@ interface PropsT {
   onCancel: () => void;
 }
 
-export default memo(({ onConfirm, onCancel }: PropsT) => (
+export const ArchivePopup = memo(({ onConfirm, onCancel }: PropsT) => (
   <div className="popup-archive">
     <p>Archive and clear this retro?</p>
     <p className="dialog-options">

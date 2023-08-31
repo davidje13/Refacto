@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, memo } from 'react';
+import { useRef, useEffect, memo } from 'react';
 
 interface PropsT {
   tag: string;
 }
 
-export default memo(({ tag }: PropsT) => {
+export const Anchor = memo(({ tag }: PropsT) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {

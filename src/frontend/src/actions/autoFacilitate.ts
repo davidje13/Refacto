@@ -1,22 +1,22 @@
-import type { RetroItem } from '../shared/api-entities';
+import { type RetroItem } from '../shared/api-entities';
 
 interface CategoryStats {
   total: number;
   remaining: number;
 }
 
-function getCategories(items: RetroItem[]): Map<string, CategoryStats> {
+function getCategories(items: RetroItem[]) {
   const categories = new Set(items.map((item) => item.category));
 
   const result = new Map<string, CategoryStats>();
-  categories.forEach((category) => {
+  for (const category of categories) {
     const all = items.filter((item) => item.category === category);
 
     result.set(category, {
       total: all.length,
       remaining: all.filter((item) => item.doneTime === 0).length,
     });
-  });
+  }
 
   return result;
 }
@@ -36,7 +36,7 @@ function itemPriority(a: RetroItem, b: RetroItem): number {
   return (b.created % 1000) - (a.created % 1000);
 }
 
-export default function autoFacilitate(
+export function autoFacilitate(
   items: RetroItem[],
   categoryPreferences: string[],
 ): RetroItem | undefined {

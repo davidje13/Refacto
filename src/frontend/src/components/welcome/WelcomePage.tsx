@@ -1,14 +1,14 @@
-import React, { memo } from 'react';
+import { memo, ReactNode } from 'react';
 import { Link } from 'wouter';
-import Header, { HeaderLinks } from '../common/Header';
-import LoginForm from '../login/LoginForm';
-import useUserToken from '../../hooks/data/useUserToken';
+import { Header, HeaderLinks } from '../common/Header';
+import { LoginForm } from '../login/LoginForm';
+import { useUserToken } from '../../hooks/data/useUserToken';
 import './WelcomePage.less';
 
-export default memo(() => {
+export const WelcomePage = memo(() => {
   const [userToken] = useUserToken();
 
-  let createLink: React.ReactNode;
+  let createLink: ReactNode;
   let links: HeaderLinks;
 
   if (userToken) {

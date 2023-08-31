@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import HeaderLinkItem, { LinkPropsT } from './HeaderLinkItem';
+import { memo } from 'react';
+import { HeaderLinkItem, LinkPropsT } from './HeaderLinkItem';
 import { Title } from '../../hooks/env/useTitle';
 import './Header.less';
 
@@ -16,7 +16,7 @@ function nonNull<T>(o: T | null): o is T {
   return Boolean(o);
 }
 
-export default memo(
+export const Header = memo(
   ({ documentTitle, title, backLink, links = [] }: PropsT) => (
     <header className="top-header">
       <Title title={documentTitle} />

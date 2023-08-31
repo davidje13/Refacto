@@ -1,5 +1,5 @@
 import { Subject as MockSubject } from 'rxjs';
-import type { JsonData } from '../shared/api-entities';
+import { type JsonData } from '../shared/api-entities';
 
 type AjaxConfig = Pick<RequestInit, 'body' | 'method' | 'headers'> & {
   url: string;

@@ -1,15 +1,15 @@
-import React, { useState, useEffect, memo } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useLocation } from 'wouter';
-import handleLogin from './handleLogin';
-import Header from '../common/Header';
-import storage from './storage';
+import { handleLogin } from './handleLogin';
+import { Header } from '../common/Header';
+import { storage } from './storage';
 import './LoginCallback.less';
 
 interface PropsT {
   service: string;
 }
 
-export default memo(({ service }: PropsT) => {
+export const LoginCallback = memo(({ service }: PropsT) => {
   const [, setLocation] = useLocation();
   const [error, setError] = useState<string | null>(null);
 

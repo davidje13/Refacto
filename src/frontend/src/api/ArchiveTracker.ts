@@ -1,12 +1,12 @@
-import type { Observable } from 'rxjs';
-import type { RetroArchive } from '../shared/api-entities';
-import loadHttp from '../rxjs/loadHttp';
+import { type Observable } from 'rxjs';
+import { type RetroArchive } from '../shared/api-entities';
+import { loadHttp } from '../rxjs/loadHttp';
 
 interface RetroArchiveList {
   archives: RetroArchive[];
 }
 
-export default class ArchiveTracker {
+export class ArchiveTracker {
   public constructor(private readonly apiBase: string) {}
 
   public getList(

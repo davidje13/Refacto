@@ -1,10 +1,10 @@
-import type {
-  RetroItem,
-  RetroItemAttachment,
-  RetroData,
-  Retro,
+import {
+  type RetroItem,
+  type RetroItemAttachment,
+  type RetroData,
+  type Retro,
 } from '../shared/api-entities';
-import json from './json';
+import { json } from './json';
 
 export const extractRetroItem = json.exactObject<RetroItem>({
   id: json.string,

@@ -33,7 +33,7 @@ function fullKeyName(e: KeyboardEventLike): string {
   return result;
 }
 
-export default function useKeyHandler(
+export function useKeyHandler(
   keyMaps: Record<string, (() => void) | undefined>,
   { allowRepeat = true }: OptionsT = {},
 ): (e: KeyboardEventLike) => void {

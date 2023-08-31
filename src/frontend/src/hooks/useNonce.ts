@@ -7,7 +7,7 @@ interface NonceRef {
   check(nonce: NonceT): boolean;
 }
 
-export default function useNonce(): NonceRef {
+export function useNonce(): NonceRef {
   const ref = useRef<NonceT>();
   return useMemo(
     () => ({

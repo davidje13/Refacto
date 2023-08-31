@@ -1,12 +1,11 @@
-import React from 'react';
 import { render, text } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
-import MoodItemPlain from './MoodItemPlain';
+import { MoodItemPlain } from './MoodItemPlain';
 
-jest.mock('./VoteCount', () => mockElement('mock-vote-count'));
+jest.mock('./VoteCount', () => ({ VoteCount: mockElement('mock-vote-count') }));
 
 describe('MoodItemPlain', () => {
   it('displays the item message', () => {

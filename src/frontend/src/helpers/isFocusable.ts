@@ -3,7 +3,7 @@ const INPUT_ELEMENTS = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
 // This is an approximation for detecting whether an element can be focused.
 // It does not check every eventuality, but covers the most common cases.
 
-export default function isFocusable(e: unknown): boolean {
+export function isFocusable(e: unknown): boolean {
   if (!(e instanceof HTMLElement)) {
     return false;
   }

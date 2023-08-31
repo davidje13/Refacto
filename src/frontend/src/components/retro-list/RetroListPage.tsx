@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
-import Header from '../common/Header';
-import Loader from '../common/Loader';
-import LoginForm from '../login/LoginForm';
-import useUserToken from '../../hooks/data/useUserToken';
-import useRetroList from '../../hooks/data/useRetroList';
-import RetroList from './RetroList';
+import { memo } from 'react';
+import { Header } from '../common/Header';
+import { Loader } from '../common/Loader';
+import { LoginForm } from '../login/LoginForm';
+import { useUserToken } from '../../hooks/data/useUserToken';
+import { useRetroList } from '../../hooks/data/useRetroList';
+import { RetroList } from './RetroList';
 import './RetroListPage.less';
 
-export default memo(() => {
+export const RetroListPage = memo(() => {
   const [userToken] = useUserToken();
   const [retroList, error] = useRetroList(userToken);
 

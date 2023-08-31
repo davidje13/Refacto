@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   render,
   fireEvent,
@@ -6,7 +5,7 @@ import {
 } from 'flexible-testing-library-react';
 import { css } from '../../test-helpers/queries';
 
-import ExpandingTextEntry from './ExpandingTextEntry';
+import { ExpandingTextEntry } from './ExpandingTextEntry';
 
 function setValue(input: HTMLElement, value: string): void {
   fireEvent.change(input, { target: { value } });

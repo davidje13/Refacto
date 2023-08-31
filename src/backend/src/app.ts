@@ -16,7 +16,7 @@ import { RetroService } from './services/RetroService';
 import { RetroArchiveService } from './services/RetroArchiveService';
 import { RetroAuthService } from './services/RetroAuthService';
 import { UserAuthService } from './services/UserAuthService';
-import type { ConfigT } from './config';
+import { type ConfigT } from './config';
 
 export interface TestHooks {
   retroService: RetroService;

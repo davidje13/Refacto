@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
-import QR from '../common/QR';
-import WrappedButton from '../common/WrappedButton';
+import { memo } from 'react';
+import { QR } from '../common/QR';
+import { WrappedButton } from '../common/WrappedButton';
 import './InvitePopup.less';
 
 interface PropsT {
   onClose: () => void;
 }
 
-export default memo(({ onClose }: PropsT) => {
+export const InvitePopup = memo(({ onClose }: PropsT) => {
   const { protocol, host, pathname } = document.location;
   const url = `${protocol}//${host}${pathname}`;
   return (

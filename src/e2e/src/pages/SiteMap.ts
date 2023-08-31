@@ -1,4 +1,4 @@
-import type { WebDriver } from 'selenium-webdriver';
+import { type WebDriver } from 'selenium-webdriver';
 import { Welcome } from './Welcome';
 import { Password } from './Password';
 import { RetroList } from './RetroList';

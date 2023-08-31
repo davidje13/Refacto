@@ -1,11 +1,11 @@
-import React, { StrictMode } from 'react';
+import { StrictMode } from 'react';
 import Modal from 'react-modal';
 import { createRoot } from 'react-dom/client';
 import { configService } from './api/api';
+import { App } from './components/App';
 
 import './index.less';
 import './preload.less';
-import App from './components/App';
 
 // https://github.com/facebook/react/issues/16061
 if (process.env['NODE_ENV'] === 'development') {

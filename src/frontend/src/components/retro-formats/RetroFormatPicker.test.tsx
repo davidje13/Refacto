@@ -1,13 +1,16 @@
-import React from 'react';
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import type { RetroItem } from '../../shared/api-entities';
+import { type RetroItem } from '../../shared/api-entities';
 import { css } from '../../test-helpers/queries';
 
-import RetroFormatPicker from './RetroFormatPicker';
+import { RetroFormatPicker } from './RetroFormatPicker';
 
-jest.mock('./mood/MoodRetro', () => mockElement('mock-mood-retro'));
-jest.mock('./unknown/UnknownRetro', () => mockElement('mock-unknown-retro'));
+jest.mock('./mood/MoodRetro', () => ({
+  MoodRetro: mockElement('mock-mood-retro'),
+}));
+jest.mock('./unknown/UnknownRetro', () => ({
+  UnknownRetro: mockElement('mock-unknown-retro'),
+}));
 
 describe('Retro', () => {
   it('forwards properties to the specified retro format', async () => {

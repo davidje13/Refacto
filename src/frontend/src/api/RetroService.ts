@@ -1,4 +1,4 @@
-import type { JsonData } from '../shared/api-entities';
+import { type JsonData } from '../shared/api-entities';
 
 interface RetroOptions {
   name: string;
@@ -13,7 +13,7 @@ export interface RetroCreationInfo {
   token: string;
 }
 
-export default class RetroService {
+export class RetroService {
   public constructor(private readonly apiBase: string) {}
 
   public async create({

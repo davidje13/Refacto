@@ -1,11 +1,11 @@
-import type { Retro, RetroData } from '../shared/api-entities';
+import { type Retro, type RetroData } from '../shared/api-entities';
 
 interface ArchiveOptions {
   retro: Retro;
   retroToken: string;
 }
 
-export default class ArchiveService {
+export class ArchiveService {
   public constructor(private readonly apiBase: string) {}
 
   public async create({ retro, retroToken }: ArchiveOptions): Promise<string> {

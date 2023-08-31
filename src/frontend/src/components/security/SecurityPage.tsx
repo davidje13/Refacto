@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
-import Header from '../common/Header';
-import Anchor from '../common/Anchor';
+import { memo } from 'react';
+import { Header } from '../common/Header';
+import { Anchor } from '../common/Anchor';
 import './SecurityPage.less';
 
-export default memo(() => (
+export const SecurityPage = memo(() => (
   <article className="page-security">
     <Header
       documentTitle="Privacy &amp; Security - Refacto"

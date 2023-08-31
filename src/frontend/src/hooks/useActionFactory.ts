@@ -1,9 +1,10 @@
-import type { DispatchSpec } from 'shared-reducer-frontend';
+import { type DispatchSpec } from 'shared-reducer-frontend';
 import { useMemo } from 'react';
 
 type Action<A extends readonly unknown[]> = (...args: A) => void;
 
-export default <T, SpecT>(
+export const useActionFactory =
+  <T, SpecT>(
     dispatch: ((spec: DispatchSpec<T, SpecT>) => void) | undefined,
     condition = true,
   ) =>

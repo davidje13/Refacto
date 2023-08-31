@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, memo } from 'react';
-import type { RetroItem } from '../../../../shared/api-entities';
-import VoteCount from './VoteCount';
-import Timer from './timer/Timer';
-import WrappedButton from '../../../common/WrappedButton';
-import Attachment from '../../../attachments/Attachment';
+import { useRef, useEffect, memo } from 'react';
+import { type RetroItem } from '../../../../shared/api-entities';
+import { VoteCount } from './VoteCount';
+import { Timer } from './timer/Timer';
+import { WrappedButton } from '../../../common/WrappedButton';
+import { Attachment } from '../../../attachments/Attachment';
 
 interface PropsT {
   item: RetroItem;
@@ -14,7 +14,7 @@ interface PropsT {
   onContinue?: (() => void) | undefined;
 }
 
-export default memo(
+export const MoodItemFocused = memo(
   ({
     item,
     focusedItemTimeout = 0,

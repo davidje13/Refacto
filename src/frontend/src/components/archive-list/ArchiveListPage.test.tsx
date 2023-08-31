@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../shared/api-entities';
@@ -6,11 +5,13 @@ import { archiveTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
 import { css } from '../../test-helpers/queries';
 
-import ArchiveListPage from './ArchiveListPage';
+import { ArchiveListPage } from './ArchiveListPage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => mockElement('mock-header'));
-jest.mock('./ArchiveList', () => mockElement('mock-archive-list'));
+jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
+jest.mock('./ArchiveList', () => ({
+  ArchiveList: mockElement('mock-archive-list'),
+}));
 
 const mockArchiveTracker =
   archiveTracker as unknown as typeof mockApiTypes.archiveTracker;

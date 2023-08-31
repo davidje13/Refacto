@@ -1,12 +1,12 @@
-import React, { memo } from 'react';
-import type { RetroSummary } from '../../shared/api-entities';
-import RetroLink from './RetroLink';
+import { memo } from 'react';
+import { type RetroSummary } from '../../shared/api-entities';
+import { RetroLink } from './RetroLink';
 
 interface PropsT {
   retros: RetroSummary[];
 }
 
-export default memo(({ retros }: PropsT) => {
+export const RetroList = memo(({ retros }: PropsT) => {
   if (!retros.length) {
     return <p>You do not have any retros yet!</p>;
   }

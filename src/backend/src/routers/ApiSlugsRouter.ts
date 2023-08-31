@@ -1,5 +1,5 @@
 import { Router } from 'websocket-express';
-import type { RetroService } from '../services/RetroService';
+import { type RetroService } from '../services/RetroService';
 
 export class ApiSlugsRouter extends Router {
   public constructor(retroService: RetroService) {

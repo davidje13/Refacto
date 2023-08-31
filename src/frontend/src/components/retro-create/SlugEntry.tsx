@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
+import { memo, ReactNode } from 'react';
 import useAwaited from 'react-hook-awaited';
-import Input from '../common/Input';
+import { Input } from '../common/Input';
 import { slugTracker } from '../../api/api';
 import TickBold from '../../../resources/tick-bold.svg';
 import Cross from '../../../resources/cross.svg';
@@ -23,7 +23,7 @@ interface PropsT {
   oldValue?: string;
 }
 
-const availabilityJsx: Record<SlugAvailability, React.ReactNode> = {
+const availabilityJsx: Record<SlugAvailability, ReactNode> = {
   [SlugAvailability.BLANK]: null,
   [SlugAvailability.INVALID]: (
     <div className="slug-checker invalid">
@@ -42,7 +42,7 @@ const availabilityJsx: Record<SlugAvailability, React.ReactNode> = {
   ),
 };
 
-export default memo(
+export const SlugEntry = memo(
   ({ placeholder = '', value, onChange, oldValue }: PropsT) => {
     const active = value || placeholder;
     const slugAvailability = useAwaited<SlugAvailability>(async () => {
@@ -63,7 +63,7 @@ export default memo(
 
     const retrosBaseUrl = `${document.location.host}/retros/`;
 
-    let slugChecker: React.ReactNode;
+    let slugChecker: ReactNode;
     switch (slugAvailability.state) {
       case 'pending':
         slugChecker = <div className="slug-checker checking" />;

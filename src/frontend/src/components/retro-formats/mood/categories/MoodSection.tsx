@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
+import { memo } from 'react';
+import {
+  type RetroItem,
+  type UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
-import FaceIcon from './FaceIcon';
-import MoodItem from './MoodItem';
-import ItemColumn from '../ItemColumn';
-import ItemEditor from '../ItemEditor';
-import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { FaceIcon } from './FaceIcon';
+import { MoodItem } from './MoodItem';
+import { ItemColumn } from '../ItemColumn';
+import { ItemEditor } from '../ItemEditor';
+import { useBoundCallback } from '../../../../hooks/useBoundCallback';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
@@ -44,7 +44,7 @@ function itemFilter(group: string | undefined, category: string) {
     (!item.group || !group || item.group === group);
 }
 
-export default memo(
+export const MoodSection = memo(
   ({
     category,
     categoryLabel,

@@ -1,11 +1,11 @@
-import React, { memo } from 'react';
-import type { RetroItemAttachment } from '../../../shared/api-entities';
+import { memo } from 'react';
+import { type RetroItemAttachment } from '../../../shared/api-entities';
 
 interface PropsT {
   attachment: RetroItemAttachment;
 }
 
-export default memo(({ attachment: { url } }: PropsT) => (
+export const GiphyAttachment = memo(({ attachment: { url } }: PropsT) => (
   <figure>
     <img
       src={url}

@@ -1,8 +1,7 @@
-import React from 'react';
 import { act, render, fireEvent } from 'flexible-testing-library-react';
 import { css } from '../../../../test-helpers/queries';
 
-import VoteCount from './VoteCount';
+import { VoteCount } from './VoteCount';
 
 describe('VoteCount', () => {
   it('displays the vote count', () => {

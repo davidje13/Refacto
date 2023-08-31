@@ -1,7 +1,7 @@
 import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
-import type { RetroAuthService } from '../services/RetroAuthService';
-import type { UserAuthService } from '../services/UserAuthService';
-import type { RetroService } from '../services/RetroService';
+import { type RetroAuthService } from '../services/RetroAuthService';
+import { type UserAuthService } from '../services/UserAuthService';
+import { type RetroService } from '../services/RetroService';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
 

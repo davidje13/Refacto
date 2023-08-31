@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import { Route, Redirect, HookNavigationOptions, LocationHook } from 'wouter';
 
 const groupRx = /:([A-Za-z0-9_]+)([?+*]?)/g;
@@ -13,10 +13,7 @@ type RedirectRouteProps = HookNavigationOptions<LocationHook> & {
   children?: never;
 };
 
-export default ({
-  to,
-  ...props
-}: RedirectRouteProps): React.ReactElement | null =>
+export const RedirectRoute: FC<RedirectRouteProps> = ({ to, ...props }) =>
   Route({
     children: (params) => <Redirect to={makePath(to, params)} {...props} />,
     ...props,

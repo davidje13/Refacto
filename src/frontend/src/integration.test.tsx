@@ -1,4 +1,3 @@
-import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import {
@@ -9,7 +8,8 @@ import {
   getBy,
 } from 'flexible-testing-library-react';
 import { makeRetro } from './shared/api-entities';
-import staticTitleHook, {
+import {
+  staticTitleHook,
   StaticTitleHook,
 } from './test-helpers/staticTitleHook';
 import { css } from './test-helpers/queries';
@@ -17,7 +17,7 @@ import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
 import { TitleContext } from './hooks/env/useTitle';
 
-import App from './components/App';
+import { App } from './components/App';
 
 interface RenderedApp {
   locationHook: ReturnType<typeof staticLocationHook>;

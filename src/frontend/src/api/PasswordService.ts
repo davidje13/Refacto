@@ -1,6 +1,6 @@
 import { sha1 } from '../helpers/crypto';
 
-export default class PasswordService {
+export class PasswordService {
   public constructor(private readonly apiBase: string) {}
 
   public async countPasswordBreaches(password: string): Promise<number> {

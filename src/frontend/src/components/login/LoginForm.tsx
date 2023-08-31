@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
-import useConfig from '../../hooks/data/useConfig';
+import { memo } from 'react';
+import { useConfig } from '../../hooks/data/useConfig';
 import { toHex, randomBytes } from '../../helpers/crypto';
-import storage from './storage';
+import { storage } from './storage';
 import './LoginForm.less';
 
 function makeState(redirect: string): string {
@@ -20,7 +20,7 @@ interface PropsT {
   redirect?: string | null;
 }
 
-export default memo(({ message, redirect }: PropsT) => {
+export const LoginForm = memo(({ message, redirect }: PropsT) => {
   const config = useConfig();
   const sso = config?.sso ?? {};
   const googleConfig = sso['google'];

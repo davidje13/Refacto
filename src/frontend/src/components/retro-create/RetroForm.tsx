@@ -1,11 +1,11 @@
-import React, { useState, useCallback, memo } from 'react';
-import type { JsonData } from '../../shared/api-entities';
-import Input from '../common/Input';
-import SlugEntry, { MAX_SLUG_LENGTH } from './SlugEntry';
-import Alert from '../common/Alert';
-import withUserToken from '../hocs/withUserToken';
-import useSubmissionCallback from '../../hooks/useSubmissionCallback';
-import useNonce from '../../hooks/useNonce';
+import { useState, useCallback, memo, ChangeEvent, ReactNode } from 'react';
+import { type JsonData } from '../../shared/api-entities';
+import { Input } from '../common/Input';
+import { SlugEntry, MAX_SLUG_LENGTH } from './SlugEntry';
+import { Alert } from '../common/Alert';
+import { withUserToken } from '../hocs/withUserToken';
+import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
+import { useNonce } from '../../hooks/useNonce';
 import {
   retroService,
   retroTokenTracker,
@@ -53,7 +53,7 @@ function readFileText(file: File): Promise<string> {
   });
 }
 
-export default memo(
+export const RetroForm = memo(
   withUserToken(
     'Register an account to create a retro',
     ({ defaultSlug, userToken, onCreate, showImport = false }: PropsT) => {
@@ -67,7 +67,7 @@ export default memo(
 
       const importNonce = useNonce();
       const handleImportChange = useCallback(
-        async (e: React.ChangeEvent<HTMLInputElement>) => {
+        async (e: ChangeEvent<HTMLInputElement>) => {
           const file = (e.target.files || [])[0];
           setImportJson(undefined);
           setImportError(undefined);
@@ -183,7 +183,7 @@ export default memo(
         onCreate,
       ]);
 
-      let importComponent: React.ReactNode = null;
+      let importComponent: ReactNode = null;
       if (showImport) {
         importComponent = (
           <label>

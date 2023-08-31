@@ -1,12 +1,12 @@
-import React, { useState, useCallback, memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
+import { useState, useCallback, memo } from 'react';
+import {
+  type RetroItem,
+  type UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
-import MoodItemPlain from './MoodItemPlain';
-import MoodItemFocused from './MoodItemFocused';
-import ItemEditor from '../ItemEditor';
-import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { MoodItemPlain } from './MoodItemPlain';
+import { MoodItemFocused } from './MoodItemFocused';
+import { ItemEditor } from '../ItemEditor';
+import { useBoundCallback } from '../../../../hooks/useBoundCallback';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './MoodItem.less';
 
@@ -26,7 +26,7 @@ interface PropsT {
   onContinue?: ((id: string) => void) | undefined;
 }
 
-export default memo(
+export const MoodItem = memo(
   ({
     item,
     focused = false,
@@ -63,9 +63,9 @@ export default memo(
           <ItemEditor
             defaultItem={item}
             submitButtonLabel={
-              <React.Fragment>
+              <>
                 <TickBold /> Save
-              </React.Fragment>
+              </>
             }
             submitButtonTitle="Save changes"
             onSubmit={handleSaveEdit}

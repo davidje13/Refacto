@@ -1,10 +1,9 @@
-import React from 'react';
 import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 
-import NotFoundPage from './NotFoundPage';
+import { NotFoundPage } from './NotFoundPage';
 
-jest.mock('../common/Header', () => mockElement('mock-header'));
+jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 
 describe('NotFoundPage', () => {
   it('displays a message', () => {

@@ -1,13 +1,14 @@
-import React from 'react';
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
-import ActionSection from './ActionSection';
-import ActionItem from './ActionItem';
+import { ActionSection } from './ActionSection';
+import { ActionItem } from './ActionItem';
 
-jest.mock('../ItemColumn', () => mockElement('mock-item-column'));
+jest.mock('../ItemColumn', () => ({
+  ItemColumn: mockElement('mock-item-column'),
+}));
 
 describe('ActionSection', () => {
   it('displays a given title', () => {

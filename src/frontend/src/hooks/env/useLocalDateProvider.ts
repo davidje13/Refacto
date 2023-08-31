@@ -1,6 +1,6 @@
 import { useState, useRef, useLayoutEffect } from 'react';
-import LocalDateProvider from '../../time/LocalDateProvider';
-import localDateTracker, { NowGetter } from '../../time/localDateTracker';
+import { LocalDateProvider } from '../../time/LocalDateProvider';
+import { localDateTracker, NowGetter } from '../../time/localDateTracker';
 
 function readTime(clock: NowGetter | number): number {
   if (typeof clock === 'number') {
@@ -9,7 +9,7 @@ function readTime(clock: NowGetter | number): number {
   return clock.now();
 }
 
-export default function useLocalDateProvider(
+export function useLocalDateProvider(
   clock: NowGetter | number = Date,
 ): LocalDateProvider {
   const [state, setState] = useState(

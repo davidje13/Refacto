@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect, useCallback } from 'react';
-import useDebounced from '../useDebounced';
+import { useDebounced } from '../useDebounced';
 
 interface Size {
   width: number;
@@ -17,14 +17,14 @@ function passthrough(x: Size): Size {
   return x;
 }
 
-function useWindowSize(conversion?: undefined, deps?: undefined): Size;
+export function useWindowSize(conversion?: undefined, deps?: undefined): Size;
 
-function useWindowSize<T>(
+export function useWindowSize<T>(
   conversion: (size: Size) => T,
   deps?: React.DependencyList,
 ): T;
 
-function useWindowSize<T>(
+export function useWindowSize<T>(
   conversion?: (size: Size) => T,
   deps?: React.DependencyList,
 ): T {
@@ -42,5 +42,3 @@ function useWindowSize<T>(
 
   return state;
 }
-
-export default useWindowSize;

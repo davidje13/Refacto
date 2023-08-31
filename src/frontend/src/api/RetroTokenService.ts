@@ -10,7 +10,7 @@ async function handleResponse(response: Response): Promise<any> {
   }
 }
 
-export default class RetroTokenService {
+export class RetroTokenService {
   public constructor(private readonly apiBase: string) {}
 
   public async getRetroTokenForPassword(

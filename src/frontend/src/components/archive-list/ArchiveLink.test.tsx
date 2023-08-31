@@ -1,11 +1,10 @@
-import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import { render, fireEvent, text } from 'flexible-testing-library-react';
 import { formatDateTime } from '../../time/formatters';
 import { css } from '../../test-helpers/queries';
 
-import ArchiveLink from './ArchiveLink';
+import { ArchiveLink } from './ArchiveLink';
 
 describe('ArchiveLink', () => {
   it('links to the archive', () => {

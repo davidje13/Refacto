@@ -1,9 +1,8 @@
-import React from 'react';
 import { render, textFragment } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { css } from '../../test-helpers/queries';
 
-import Loader from './Loader';
+import { Loader } from './Loader';
 
 const Component = mockElement('my-component');
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import { render, fireEvent } from 'flexible-testing-library-react';
@@ -7,10 +6,10 @@ import { configService, userTokenTracker } from '../../api/api';
 import type * as mockApiTypes from '../../api/__mocks__/api';
 import { css } from '../../test-helpers/queries';
 
-import WelcomePage from './WelcomePage';
+import { WelcomePage } from './WelcomePage';
 
 jest.mock('../../api/api');
-jest.mock('../common/Header', () => mockElement('mock-header'));
+jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 
 const mockUserTokenTracker =
   userTokenTracker as unknown as typeof mockApiTypes.userTokenTracker;

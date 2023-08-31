@@ -1,10 +1,10 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import classNames from 'classnames';
-import type { RetroItem } from '../../../shared/api-entities';
-import MoodSection from './categories/MoodSection';
-import ActionsPane from './actions/ActionsPane';
-import TabControl from '../../common/TabControl';
-import type { RetroDispatch } from '../../../api/RetroTracker';
+import { type RetroItem } from '../../../shared/api-entities';
+import { MoodSection } from './categories/MoodSection';
+import { ActionsPane } from './actions/ActionsPane';
+import { TabControl } from '../../common/TabControl';
+import { type RetroDispatch } from '../../../api/RetroTracker';
 import {
   addRetroItem,
   editRetroItem,
@@ -21,12 +21,12 @@ import {
   setItemTimeout,
   addRetroActionItem,
 } from '../../../actions/moodRetro';
-import useWindowSize from '../../../hooks/env/useWindowSize';
-import useLocalDateProvider from '../../../hooks/env/useLocalDateProvider';
-import useBoundCallback from '../../../hooks/useBoundCallback';
-import useActionFactory from '../../../hooks/useActionFactory';
-import useGlobalKeyListener from '../../../hooks/useGlobalKeyListener';
-import OPTIONS from '../../../helpers/optionManager';
+import { useWindowSize } from '../../../hooks/env/useWindowSize';
+import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
+import { useBoundCallback } from '../../../hooks/useBoundCallback';
+import { useActionFactory } from '../../../hooks/useActionFactory';
+import { useGlobalKeyListener } from '../../../hooks/useGlobalKeyListener';
+import { OPTIONS } from '../../../helpers/optionManager';
 import './MoodRetro.less';
 
 interface Category {
@@ -56,7 +56,7 @@ interface PropsT {
   archiveTime?: number;
 }
 
-export default ({
+export const MoodRetro = ({
   retroOptions,
   retroState: { focusedItemId = null, focusedItemTimeout = 0 },
   retroItems,
@@ -65,7 +65,7 @@ export default ({
   onComplete,
   archive,
   archiveTime,
-}: PropsT): React.ReactElement => {
+}: PropsT): ReactElement => {
   const singleColumn = useWindowSize(({ width }) => width <= 800, []);
   const localDateProvider = useLocalDateProvider(archiveTime);
 
@@ -109,7 +109,7 @@ export default ({
     ),
   });
 
-  const createMoodSection = (category: Category): React.ReactElement => (
+  const createMoodSection = (category: Category): ReactElement => (
     <MoodSection
       key={category.id}
       items={retroItems}

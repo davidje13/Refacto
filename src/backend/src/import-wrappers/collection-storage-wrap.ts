@@ -1,10 +1,10 @@
-import cs from 'collection-storage';
-import type {
-  default as cst,
-  LruCache as LruCacheT,
-  MemoryDb as MemoryDbT,
-  migrate as migrateT,
-  encryptByRecordWithMasterKey as encryptByRecordWithMasterKeyT,
+import {
+  default as cs,
+  type default as cst,
+  type LruCache as LruCacheT,
+  type MemoryDb as MemoryDbT,
+  type migrate as migrateT,
+  type encryptByRecordWithMasterKey as encryptByRecordWithMasterKeyT,
 } from 'collection-storage';
 
 // exports from collection-storage are not properly compatible with ES6 imports,

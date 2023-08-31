@@ -1,9 +1,8 @@
-import React from 'react';
 import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import { render, fireEvent, text } from 'flexible-testing-library-react';
 
-import RetroLink from './RetroLink';
+import { RetroLink } from './RetroLink';
 
 describe('RetroLink', () => {
   it('links to the retro slug', () => {

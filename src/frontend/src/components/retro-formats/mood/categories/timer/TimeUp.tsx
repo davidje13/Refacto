@@ -1,12 +1,12 @@
-import React, { Fragment, memo } from 'react';
-import WrappedButton from '../../../../common/WrappedButton';
-import useBoundCallback from '../../../../../hooks/useBoundCallback';
+import { memo } from 'react';
+import { WrappedButton } from '../../../../common/WrappedButton';
+import { useBoundCallback } from '../../../../../hooks/useBoundCallback';
 
 interface PropsT {
   onAddExtraTime?: ((time: number) => void) | undefined;
 }
 
-export default memo(({ onAddExtraTime }: PropsT) => {
+export const TimeUp = memo(({ onAddExtraTime }: PropsT) => {
   const extraMinutes = 2;
 
   const extraTime = extraMinutes * 60 * 1000 + 999;
@@ -14,11 +14,11 @@ export default memo(({ onAddExtraTime }: PropsT) => {
   const extraTimeLabel = `+${extraMinutes} more minutes`;
 
   return (
-    <Fragment>
+    <>
       <p className="timeup">Time&rsquo;s up!</p>
       <WrappedButton onClick={handleAddExtraTime} hideIfDisabled>
         {extraTimeLabel}
       </WrappedButton>
-    </Fragment>
+    </>
   );
 });

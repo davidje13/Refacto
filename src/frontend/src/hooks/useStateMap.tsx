@@ -1,12 +1,14 @@
-import React, {
+import {
+  createContext,
   ReactNode,
+  ReactElement,
   useCallback,
   useContext,
   useLayoutEffect,
   useState,
 } from 'react';
 
-const StateMapContext = React.createContext(new Map<string, unknown>());
+const StateMapContext = createContext(new Map<string, unknown>());
 
 interface StateMapProviderProps {
   children: ReactNode;
@@ -16,7 +18,7 @@ interface StateMapProviderProps {
 export function StateMapProvider({
   children,
   scope,
-}: StateMapProviderProps): React.ReactElement {
+}: StateMapProviderProps): ReactElement {
   const [[map, latestScope], set] = useState(() => [
     new Map<string, unknown>(),
     scope,
@@ -31,7 +33,7 @@ export function StateMapProvider({
   );
 }
 
-export default function useStateMap<T>(
+export function useStateMap<T>(
   identifier: string | undefined,
   subIdentifier: string,
   defaultValue: T,

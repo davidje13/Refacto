@@ -23,7 +23,7 @@ interface Subscription<T> {
   unsubscribe(): Promise<void>;
 }
 
-export default class SubscriptionTracker<K, S> {
+export class SubscriptionTracker<K, S> {
   private readonly services = new Map<string, ServiceInfo<S>>();
 
   public constructor(

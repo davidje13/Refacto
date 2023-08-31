@@ -11,7 +11,7 @@ type SubmissionT = [
   string | undefined,
 ];
 
-export default function useSubmissionCallback(
+export function useSubmissionCallback(
   fn: () => Promise<void> | void,
   deps: React.DependencyList,
 ): SubmissionT {

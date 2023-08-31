@@ -1,4 +1,4 @@
-import type { Query } from 'flexible-testing-library-react';
+import { type Query } from 'flexible-testing-library-react';
 
 export const css = (selector: string): Query => ({
   description: `matching CSS selector ${selector}`,

@@ -1,11 +1,11 @@
-import useMutatedCallback from './useMutatedCallback';
+import { useMutatedCallback } from './useMutatedCallback';
 
-function useBoundCallback(
+export function useBoundCallback(
   fn: undefined,
   ...bound: readonly unknown[]
 ): undefined;
 
-function useBoundCallback<
+export function useBoundCallback<
   R,
   Bound extends readonly unknown[],
   Rest extends readonly unknown[],
@@ -14,7 +14,7 @@ function useBoundCallback<
   ...bound: Bound
 ): (...args: Rest) => R;
 
-function useBoundCallback<
+export function useBoundCallback<
   R,
   Bound extends readonly unknown[],
   Rest extends readonly unknown[],
@@ -23,7 +23,7 @@ function useBoundCallback<
   ...bound: Bound
 ): ((...args: Rest) => R) | undefined;
 
-function useBoundCallback<
+export function useBoundCallback<
   R,
   Bound extends readonly unknown[],
   Rest extends readonly unknown[],
@@ -37,5 +37,3 @@ function useBoundCallback<
     bound,
   );
 }
-
-export default useBoundCallback;

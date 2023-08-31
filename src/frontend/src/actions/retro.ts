@@ -1,10 +1,10 @@
-import type { Spec } from 'json-immutability-helper';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
+import { type Spec } from 'json-immutability-helper';
+import {
+  type RetroItem,
+  type UserProvidedRetroItemDetails,
 } from '../shared/api-entities';
-import type { RetroDispatchSpec } from '../api/RetroTracker';
-import uuidv4 from '../helpers/uuidv4';
+import { type RetroDispatchSpec } from '../api/RetroTracker';
+import { uuidv4 } from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;

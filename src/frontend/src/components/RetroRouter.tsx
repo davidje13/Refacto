@@ -1,29 +1,30 @@
-import React, {
+import {
+  type FC,
   useState,
   useLayoutEffect,
   useEffect,
   useRef,
-  ReactNode,
+  type ReactNode,
 } from 'react';
 import { Route, Switch, useLocation, LocationHook } from 'wouter';
-import type { Retro } from '../shared/api-entities';
-import type {
-  RetroState,
-  RetroDispatch,
-  RetroError,
+import { type Retro } from '../shared/api-entities';
+import {
+  type RetroState,
+  type RetroDispatch,
+  type RetroError,
 } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
-import useNonce from '../hooks/useNonce';
-import RetroCreatePage from './retro-create/RetroCreatePage';
-import PasswordPage from './password/PasswordPage';
-import RetroPage from './retro/RetroPage';
-import ArchiveListPage from './archive-list/ArchiveListPage';
-import ArchivePage from './archive/ArchivePage';
-import RetroSettingsPage from './retro-settings/RetroSettingsPage';
-import useSlug from '../hooks/data/useSlug';
-import useRetroToken from '../hooks/data/useRetroToken';
+import { useNonce } from '../hooks/useNonce';
+import { RetroCreatePage } from './retro-create/RetroCreatePage';
+import { PasswordPage } from './password/PasswordPage';
+import { RetroPage } from './retro/RetroPage';
+import { ArchiveListPage } from './archive-list/ArchiveListPage';
+import { ArchivePage } from './archive/ArchivePage';
+import { RetroSettingsPage } from './retro-settings/RetroSettingsPage';
+import { useSlug } from '../hooks/data/useSlug';
+import { useRetroToken } from '../hooks/data/useRetroToken';
 import { StateMapProvider } from '../hooks/useStateMap';
-import RedirectRoute from './RedirectRoute';
+import { RedirectRoute } from './RedirectRoute';
 
 type RetroReducerState = [Retro | null, RetroDispatch | null, RetroError];
 
@@ -116,7 +117,7 @@ export interface RetroPagePropsT {
   retroDispatch: RetroDispatch | null;
 }
 
-export default ({ slug }: PropsT): React.ReactElement => {
+export const RetroRouter: FC<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
   const [retroToken, retroTokenError] = useRetroToken(retroId);
   const [retro, retroDispatch, retroError] = useRetroReducer(

@@ -1,14 +1,14 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import classNames from 'classnames';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
+import {
+  type RetroItem,
+  type UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
-import ActionSection from './ActionSection';
-import ItemEditor from '../ItemEditor';
-import type LocalDateProvider from '../../../../time/LocalDateProvider';
+import { ActionSection } from './ActionSection';
+import { ItemEditor } from '../ItemEditor';
+import { type LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
-import useBoundCallback from '../../../../hooks/useBoundCallback';
+import { useBoundCallback } from '../../../../hooks/useBoundCallback';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
@@ -29,7 +29,7 @@ interface PropsT {
   onDelete?: ((id: string) => void) | undefined;
 }
 
-export default memo(
+export const ActionsPane = memo(
   ({
     items,
     localDateProvider,

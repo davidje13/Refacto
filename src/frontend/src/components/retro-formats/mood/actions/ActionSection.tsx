@@ -1,10 +1,10 @@
-import React, { memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
+import { memo } from 'react';
+import {
+  type RetroItem,
+  type UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
-import ActionItem from './ActionItem';
-import ItemColumn from '../ItemColumn';
+import { ActionItem } from './ActionItem';
+import { ItemColumn } from '../ItemColumn';
 
 function actionItemWithinRange(
   group: string | undefined,
@@ -31,7 +31,7 @@ interface PropsT {
   onDelete?: ((id: string) => void) | undefined;
 }
 
-export default memo(
+export const ActionSection = memo(
   ({
     title,
     items,

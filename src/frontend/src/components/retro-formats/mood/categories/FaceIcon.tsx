@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import classNames from 'classnames';
 import './FaceIcon.less';
 
@@ -157,7 +157,7 @@ interface PropsT {
   theme: string;
 }
 
-export default memo(({ theme, type }: PropsT) => {
+export const FaceIcon = memo(({ theme, type }: PropsT) => {
   const { icons, extraClassName } = getTheme(theme);
   return (
     <div className={classNames('face-icon', extraClassName)}>

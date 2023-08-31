@@ -1,4 +1,4 @@
-import type { By, WebDriver } from 'selenium-webdriver';
+import { type By, type WebDriver } from 'selenium-webdriver';
 
 export abstract class PageFragment {
   protected explicitWaitTimeout = Number(

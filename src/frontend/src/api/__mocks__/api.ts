@@ -1,14 +1,14 @@
 import { of as rxjsOf, throwError, Observable } from 'rxjs';
-import type { Spec } from 'json-immutability-helper';
-import type {
-  Retro,
-  RetroArchive,
-  RetroSummary,
-  ClientConfig,
+import { type Spec } from 'json-immutability-helper';
+import {
+  type Retro,
+  type RetroArchive,
+  type RetroSummary,
+  type ClientConfig,
 } from '../../shared/api-entities';
-import type { RetroState } from '../RetroTracker';
-import ObservableTracker from '../../rxjs/ObservableTracker';
-import SingleObservableTracker from '../../rxjs/SingleObservableTracker';
+import { type RetroState } from '../RetroTracker';
+import { ObservableTracker } from '../../rxjs/ObservableTracker';
+import { SingleObservableTracker } from '../../rxjs/SingleObservableTracker';
 
 type RetroDispatch = (spec: Spec<Retro>) => void;
 type RetroStateCallback = (state: RetroState) => void;

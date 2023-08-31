@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import { type FC, useState, type ReactNode } from 'react';
 import Modal from 'react-modal';
-import useParameterlessCallback from '../../hooks/useParameterlessCallback';
-import useListener from '../../hooks/useListener';
+import { useParameterlessCallback } from '../../hooks/useParameterlessCallback';
+import { useListener } from '../../hooks/useListener';
 import './Popup.less';
 
 export interface PopupData {
   title: string;
   hideTitle?: boolean;
-  content: React.ReactNode;
+  content: ReactNode;
   keys?: Record<string, () => void>;
 }
 
@@ -20,7 +20,7 @@ function stopProp(e: Event): void {
   e.stopPropagation();
 }
 
-export default ({ data, onClose }: PropsT): React.ReactElement | null => {
+export const Popup: FC<PropsT> = ({ data, onClose }) => {
   const keys = data?.keys ?? {};
 
   const closeHandler = useParameterlessCallback(onClose);

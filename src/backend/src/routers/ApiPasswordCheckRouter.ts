@@ -1,5 +1,5 @@
 import { Router } from 'websocket-express';
-import type { PasswordCheckService } from '../services/PasswordCheckService';
+import { type PasswordCheckService } from '../services/PasswordCheckService';
 import { logError } from '../log';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;

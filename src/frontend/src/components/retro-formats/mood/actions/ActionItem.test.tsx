@@ -1,9 +1,8 @@
-import React from 'react';
 import { render, text } from 'flexible-testing-library-react';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
-import ActionItem from './ActionItem';
+import { ActionItem } from './ActionItem';
 
 describe('ActionItem', () => {
   it('displays the item message', () => {

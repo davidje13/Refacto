@@ -1,16 +1,16 @@
-import React, { memo } from 'react';
-import useParameterlessCallback from '../../hooks/useParameterlessCallback';
+import { memo, ReactNode, HTMLAttributes } from 'react';
+import { useParameterlessCallback } from '../../hooks/useParameterlessCallback';
 
-interface PropsT extends React.HTMLAttributes<HTMLElement> {
+interface PropsT extends HTMLAttributes<HTMLElement> {
   onClick?: (() => void) | undefined;
   disabled?: boolean;
   hideIfDisabled?: boolean;
   title?: string | undefined;
   disabledTitle?: string | undefined;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-export default memo(
+export const WrappedButton = memo(
   ({
     onClick,
     disabled = false,

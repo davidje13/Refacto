@@ -24,7 +24,7 @@ const jsonObject =
 
 const jsonAny = (source: unknown): unknown => source;
 
-export default {
+export const json = {
   nullable:
     <T>(submap: Mapper<T>) =>
     (source: unknown): T | null => {

@@ -1,19 +1,19 @@
-import React, { Fragment, ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 import { Route, Switch } from 'wouter';
-import RedirectRoute from './RedirectRoute';
-import Footer from './Footer';
-import LoginCallback from './login/LoginCallback';
-import RetroRouter from './RetroRouter';
-import WelcomePage from './welcome/WelcomePage';
-import SecurityPage from './security/SecurityPage';
-import RetroCreatePage from './retro-create/RetroCreatePage';
-import RetroImportPage from './retro-create/RetroImportPage';
-import RetroListPage from './retro-list/RetroListPage';
-import NotFoundPage from './not-found/NotFoundPage';
+import { RedirectRoute } from './RedirectRoute';
+import { Footer } from './Footer';
+import { LoginCallback } from './login/LoginCallback';
+import { RetroRouter } from './RetroRouter';
+import { WelcomePage } from './welcome/WelcomePage';
+import { SecurityPage } from './security/SecurityPage';
+import { RetroCreatePage } from './retro-create/RetroCreatePage';
+import { RetroImportPage } from './retro-create/RetroImportPage';
+import { RetroListPage } from './retro-list/RetroListPage';
+import { NotFoundPage } from './not-found/NotFoundPage';
 import './App.less';
 
-export default (): React.ReactElement => (
-  <Fragment>
+export const App: FC = () => (
+  <>
     <Switch>
       <Route path="/sso/:service">
         {({ service }): ReactNode => <LoginCallback service={service ?? ''} />}
@@ -45,5 +45,5 @@ export default (): React.ReactElement => (
       </Route>
     </Switch>
     <Footer />
-  </Fragment>
+  </>
 );

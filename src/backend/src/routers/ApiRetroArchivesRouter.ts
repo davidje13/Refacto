@@ -1,5 +1,5 @@
 import { WebSocketExpress, Router } from 'websocket-express';
-import type { RetroArchiveService } from '../services/RetroArchiveService';
+import { type RetroArchiveService } from '../services/RetroArchiveService';
 import { extractRetroData } from '../helpers/jsonParsers';
 import { logError } from '../log';
 

@@ -1,10 +1,10 @@
-import React, { useState, useLayoutEffect } from 'react';
-import Header from '../common/Header';
-import Input from '../common/Input';
-import useSubmissionCallback from '../../hooks/useSubmissionCallback';
-import useUserToken from '../../hooks/data/useUserToken';
+import { useState, useLayoutEffect, ReactElement } from 'react';
+import { Header } from '../common/Header';
+import { Input } from '../common/Input';
+import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
+import { useUserToken } from '../../hooks/data/useUserToken';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
-import Alert from '../common/Alert';
+import { Alert } from '../common/Alert';
 import './PasswordPage.less';
 
 interface PropsT {
@@ -12,7 +12,7 @@ interface PropsT {
   retroId: string;
 }
 
-export default ({ slug, retroId }: PropsT): React.ReactElement => {
+export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
   const [password, setPassword] = useState('');
   const [userToken] = useUserToken();
   const [checkingUser, setCheckingUser] = useState(false);

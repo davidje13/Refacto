@@ -1,8 +1,17 @@
-import React, { useState, useRef, useCallback, useLayoutEffect } from 'react';
+import {
+  type FC,
+  useState,
+  useRef,
+  useCallback,
+  useLayoutEffect,
+  TextareaHTMLAttributes,
+  ChangeEvent,
+  CSSProperties,
+} from 'react';
 import classNames from 'classnames';
-import useListener from '../../hooks/useListener';
-import useDebounced from '../../hooks/useDebounced';
-import useMutatedCallback from '../../hooks/useMutatedCallback';
+import { useListener } from '../../hooks/useListener';
+import { useDebounced } from '../../hooks/useDebounced';
+import { useMutatedCallback } from '../../hooks/useMutatedCallback';
 import {
   getEmptyHeight,
   getMultilClassHeights,
@@ -18,7 +27,7 @@ function sanitiseInput(value: string): string {
 
 interface PropsT
   extends Omit<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    TextareaHTMLAttributes<HTMLTextAreaElement>,
     'onChange' | 'value' | 'defaultValue' | 'defaultChecked'
   > {
   onChange?: (v: string) => void;
@@ -30,7 +39,7 @@ interface PropsT
   className?: string;
 }
 
-export default ({
+export const Textarea: FC<PropsT> = ({
   onChange,
   onChangeMultiline,
   value = '',
@@ -39,7 +48,7 @@ export default ({
   multilineClassElement,
   className,
   ...rest
-}: PropsT): React.ReactElement => {
+}) => {
   const [height, setHeight] = useState({ multiline: false, pixels: 0 });
   const updateMultiline = useDebounced(onChangeMultiline);
   const baseHeightRef = useRef(0);
@@ -93,7 +102,7 @@ export default ({
 
   const changeHandler = useMutatedCallback(
     onChange,
-    (e: React.ChangeEvent<HTMLTextAreaElement>): [string] => [
+    (e: ChangeEvent<HTMLTextAreaElement>): [string] => [
       sanitiseInput(e.target.value),
     ],
     [],
@@ -107,7 +116,7 @@ export default ({
   useLayoutEffect(updateSize, [updateSize, value]);
   useListener(window, 'resize', updateSize);
 
-  const style: React.CSSProperties = {};
+  const style: CSSProperties = {};
   if (sizeToFit) {
     // +1 as Chrome seems to add an extra pixel now from somewhere when rendering,
     // so we must avoid the scrollbar appearing (presumably due to some rounding)
