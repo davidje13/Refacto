@@ -45,7 +45,8 @@ const CSP = [
       ? " 'unsafe-inline'"
       : " 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU='"
   }`,
-  `connect-src 'self'`,
+  // https://github.com/w3c/webappsec-csp/issues/7 (2023: still required for Mobile Safari)
+  `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",
   "frame-ancestors 'none'",
