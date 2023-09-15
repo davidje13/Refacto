@@ -35,6 +35,7 @@ export class App {
 
 const devMode = process.env['NODE_ENV'] === 'development';
 
+const CSP_DOMAIN_PLACEHOLDER = /\(domain\)/g;
 const CSP = [
   "base-uri 'self'",
   "default-src 'self'",
@@ -65,6 +66,17 @@ const PERMISSIONS_POLICY = [
   'sync-xhr=()',
   'usb=()',
 ].join(', ');
+
+function getHost(req: { hostname: string }): string {
+  const raw: string = req.hostname;
+  if (raw.includes(':')) {
+    return raw;
+  }
+  // Bug in express 4.x: hostname does not include port
+  // fixed in 5, but not released yet
+  // https://expressjs.com/en/guide/migrating-5.html#req.host
+  return `${raw}:*`;
+}
 
 function readKey(value: string, length: number): Buffer {
   if (!value) {
@@ -107,11 +119,14 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
   }
   app.set('shutdown timeout', 5000);
 
-  app.useHTTP((_, res, next) => {
+  app.useHTTP((req, res, next) => {
     res.header('x-frame-options', 'DENY');
     res.header('x-xss-protection', '1; mode=block');
     res.header('x-content-type-options', 'nosniff');
-    res.header('content-security-policy', CSP);
+    res.header(
+      'content-security-policy',
+      CSP.replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)),
+    );
     res.header('permissions-policy', PERMISSIONS_POLICY);
     res.header('referrer-policy', 'no-referrer');
     res.header('cross-origin-opener-policy', 'same-origin');
