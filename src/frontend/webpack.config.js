@@ -80,7 +80,6 @@ module.exports = (env, argv) => ({
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Refacto',
-      favicon: 'resources/favicon.png',
       template: 'resources/html-template.ejs',
     }),
     new CopyWebpackPlugin({
