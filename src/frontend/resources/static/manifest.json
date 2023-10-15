@@ -1,14 +1,34 @@
 {
+  "dir": "ltr",
+  "lang": "en-GB",
   "short_name": "Refacto",
   "name": "Refacto",
+  "description": "Run team retros with remote team members.",
+  "start_url": "/",
+  "scope": "/",
+  "id": "/",
   "icons": [
     {
-      "src": "/favicon.png",
-      "type": "image/png"
+      "src": "favicon512.png",
+      "type": "image/png",
+      "purpose": "any",
+      "sizes": "512x512"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "type": "image/png",
+      "purpose": "maskable",
+      "sizes": "512x512"
+    },
+    {
+      "src": "favicon-mono.png",
+      "type": "image/png",
+      "purpose": "monochrome",
+      "sizes": "512x512"
     }
   ],
-  "start_url": "/",
   "display": "standalone",
   "theme_color": "#4EC7B6",
-  "background_color": "#FFFFFF"
+  "background_color": "#FFFFFF",
+  "categories": ["business", "productivity", "utilities"]
 }

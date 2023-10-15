@@ -130,6 +130,9 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     res.header('permissions-policy', PERMISSIONS_POLICY);
     res.header('referrer-policy', 'no-referrer');
     res.header('cross-origin-opener-policy', 'same-origin');
+    // Note: CORP causes manifest icons to fail to load in Chrome Devtools,
+    // but does not break actual functionality
+    // See: https://bugs.chromium.org/p/chromium/issues/detail?id=949481
     res.header('cross-origin-resource-policy', 'same-origin');
     res.header('cross-origin-embedder-policy', 'require-corp');
     next();
