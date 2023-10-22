@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import { WebSocketExpress } from 'websocket-express';
 import { connectDB } from './import-wrappers/collection-storage-wrap';
 import { Hasher } from './import-wrappers/pwd-hashers-wrap';
@@ -8,6 +9,7 @@ import { ApiSlugsRouter } from './routers/ApiSlugsRouter';
 import { ApiRetrosRouter } from './routers/ApiRetrosRouter';
 import { ApiPasswordCheckRouter } from './routers/ApiPasswordCheckRouter';
 import { ApiGiphyRouter } from './routers/ApiGiphyRouter';
+import { ForwardingRouter } from './routers/ForwardingRouter';
 import { StaticRouter } from './routers/StaticRouter';
 import { TokenManager } from './tokens/TokenManager';
 import { PasswordCheckService } from './services/PasswordCheckService';
@@ -17,6 +19,7 @@ import { RetroArchiveService } from './services/RetroArchiveService';
 import { RetroAuthService } from './services/RetroAuthService';
 import { UserAuthService } from './services/UserAuthService';
 import { type ConfigT } from './config';
+import { basedir } from './basedir';
 
 export interface TestHooks {
   retroService: RetroService;
@@ -174,7 +177,13 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
   app.useHTTP('/api', (_, res) => {
     res.status(404).send();
   });
-  app.use(new StaticRouter(config.forwardHost));
+  if (config.forwardHost) {
+    // Dev mode: forward unknown requests to another service
+    app.use(await ForwardingRouter.to(config.forwardHost));
+  } else {
+    // Production mode: all resources are copied into /static
+    app.use(new StaticRouter(join(basedir, 'static')));
+  }
 
   return new App(
     app,
