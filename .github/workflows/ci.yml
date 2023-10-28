@@ -62,7 +62,7 @@ jobs:
         run: |
           set -e;
           npm install --omit=dev;
-          NODE_OPTIONS='--experimental-policy=./policy.json' \
+          # TODO once https://github.com/nodejs/node/issues/50452 is resolved, add NODE_OPTIONS='--experimental-policy=./policy.json'
           ./index.js > output.log 2>&1 & APP_PID="$!";
 
           while ! grep 'Available at' < output.log > /dev/null 2>&1; do
