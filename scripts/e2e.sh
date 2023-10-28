@@ -38,6 +38,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
   SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
+  NODE_OPTIONS='--experimental-policy="'"$BUILDDIR/policy.json"'"' \
   node \
     --disable-proto throw \
     "$BUILDDIR/index.js" \

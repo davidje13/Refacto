@@ -1,0 +1,9 @@
+{
+  "onerror": "throw",
+  "scopes": {
+    "./": {
+      "integrity": true,
+      "dependencies": true
+    }
+  }
+}

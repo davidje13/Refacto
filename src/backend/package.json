@@ -6,7 +6,7 @@
     "lint:tsc": "tsc",
     "lint:prettier": "prettier --check .",
     "lint": "tsc && prettier --check .",
-    "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build/static && chmod +x build/index.js",
+    "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build/static && cp policy.json build && chmod +x build/index.js",
     "start": "npm run build && NODE_ENV=development build/index.js",
     "test": "lean-test --preprocess tsc --parallel"
   },
