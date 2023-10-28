@@ -65,7 +65,7 @@ jobs:
           # TODO once https://github.com/nodejs/node/issues/50452 is resolved, add NODE_OPTIONS='--experimental-policy=./policy.json'
           ./index.js > output.log 2>&1 & APP_PID="$!";
 
-          while ! grep 'Available at' < output.log > /dev/null 2>&1; do
+          while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do
             if ! ps -p "$APP_PID" > /dev/null; then
               APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
               cat output.log;

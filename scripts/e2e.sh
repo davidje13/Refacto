@@ -47,7 +47,7 @@ if [[ -z "$TARGET_HOST" ]]; then
   trap "kill '$APP_PID'; wait '$APP_PID' > /dev/null && false" EXIT;
 
   # Wait for startup
-  while ! grep 'Available at' < "$E2E_WORKDIR/app.log" > /dev/null 2>&1; do
+  while [[ ! -f "$E2E_WORKDIR/app.log" ]] || ! grep 'Available at' < "$E2E_WORKDIR/app.log" > /dev/null 2>&1; do
     if ! ps -p "$APP_PID" > /dev/null; then
       trap - EXIT;
       APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
