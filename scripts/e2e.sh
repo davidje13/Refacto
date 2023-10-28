@@ -79,8 +79,8 @@ launch_e2e() {
   fi;
   echo "E2E testing in $NAME...";
   if [ "$PARALLEL_E2E" == 'true' ]; then
-    SELENIUM_BROWSER="$NAME" \
     # pipefail required here
+    SELENIUM_BROWSER="$NAME" \
     npm --prefix="$BASEDIR/e2e" test --quiet 2>&1 | sed "s/^/$NAME: /" &
     E2E_PIDS="$E2E_PIDS $!";
   else
