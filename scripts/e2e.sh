@@ -34,11 +34,11 @@ if [[ -z "$TARGET_HOST" ]]; then
   export $("$BASEDIR/scripts/random-secrets.js" | tee /dev/stderr | xargs);
 
   # TODO replace express with something else to be able to add --disallow-code-generation-from-strings
+  # TODO once https://github.com/nodejs/node/issues/50452 is resolved, add NODE_OPTIONS='--experimental-policy="'"$BUILDDIR/policy.json"'"'
   PORT="$PORT" \
   MOCK_SSO_PORT="$MOCK_SSO_PORT" \
   SERVER_BIND_ADDRESS="localhost" \
   DB_URL="memory://refacto?simulatedLatency=50" \
-  NODE_OPTIONS='--experimental-policy="'"$BUILDDIR/policy.json"'"' \
   node \
     --disable-proto throw \
     "$BUILDDIR/index.js" \
