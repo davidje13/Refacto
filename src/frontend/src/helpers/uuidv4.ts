@@ -1,6 +1,6 @@
 /*
 Adapted from:
-https://github.com/kelektiv/node-uuid/blob/master/lib/bytesToUuid.js
+https://github.com/uuidjs/uuid/blob/bc46e198ab06311a9d82d3c9c6222062dd27f760/src/stringify.js
 
 The MIT License (MIT)
 
