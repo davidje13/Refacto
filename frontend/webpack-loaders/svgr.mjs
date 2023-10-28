@@ -1,13 +1,13 @@
-const { normalize } = require('node:path');
-const { callbackify } = require('node:util');
-const { transform } = require('@svgr/core');
-const jsx = require('@svgr/plugin-jsx');
+import { normalize } from 'node:path';
+import { callbackify } from 'node:util';
+import { transform } from '@svgr/core';
+import jsx from '@svgr/plugin-jsx';
 
 // Adapted from https://github.com/gregberge/svgr/blob/main/packages/webpack/src/index.ts#L49
 // (avoids heavy @webpack/env dependency)
 // https://github.com/gregberge/svgr/issues/900
 
-module.exports = function svgrLoader(contents) {
+export default function svgrLoader(contents) {
   this.cacheable?.();
   const callback = this.async();
   const options = this.getOptions();
@@ -39,4 +39,4 @@ module.exports = function svgrLoader(contents) {
       tranformSvg(String(result), options, state, callback);
     });
   }
-};
+}

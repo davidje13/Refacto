@@ -1,10 +1,13 @@
-import { dirname, resolve, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { join, dirname } from 'node:path';
 import { readFile, mkdir, rm } from 'node:fs/promises';
 
-export const selfdir = dirname(new URL(import.meta.url).pathname);
-
-export const downloadDir = resolve(
-  join(selfdir, '..', '..', 'build', 'downloads'),
+export const downloadDir = join(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+  'build',
+  'downloads',
 );
 await rm(downloadDir, { recursive: true, force: true });
 await mkdir(downloadDir, { recursive: true });

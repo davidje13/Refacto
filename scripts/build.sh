@@ -63,7 +63,7 @@ cp -R "$BASEDIR/frontend/build" "$BUILDDIR/static";
 chmod +x "$BUILDDIR/index.js";
 
 echo 'Compressing static resources...';
-"$BASEDIR/scripts/compress.js" "$BUILDDIR/static";
+"$BASEDIR/scripts/compress.mjs" "$BUILDDIR/static";
 
 if [ "$PRESERVE_NODE_MODULES" == 'true' ]; then
   echo 'Restoring node_modules...';
@@ -73,7 +73,7 @@ fi;
 echo 'Generating package.json...';
 < "$BASEDIR/backend/package.json" \
   grep -v '"file:' \
-  | "$BASEDIR/scripts/mutate-json.js" \
+  | "$BASEDIR/scripts/mutate-json.mjs" \
   'name="refacto-app"' \
   'scripts={"start": "./index.js"}' \
   'optionalDependencies=' \

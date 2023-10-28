@@ -6,8 +6,8 @@ import { type ConfigT, config } from './config';
 import { logError, logInfo } from './log';
 
 // This file exists mainly to enable hot module replacement.
-// app.js is the main entry point for the application.
-// (changes to index.js will not trigger HMR)
+// app.ts is the main entry point for the application.
+// (changes to index.ts will not trigger HMR)
 
 let activeApp: App | null = null;
 const server = createServer();

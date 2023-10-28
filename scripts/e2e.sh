@@ -31,7 +31,7 @@ if [ -z "$TARGET_HOST" ]; then
   export SSO_GOOGLE_TOKEN_INFO_URL="$MOCK_SSO_HOST/tokeninfo";
 
   echo 'Using randomised secrets';
-  export $("$BASEDIR/scripts/random-secrets.js" | tee /dev/stderr | xargs);
+  export $("$BASEDIR/scripts/random-secrets.mjs" | tee /dev/stderr | xargs);
 
   # TODO replace express with something else to be able to add --disallow-code-generation-from-strings
   # TODO once https://github.com/nodejs/node/issues/50452 is resolved, add NODE_OPTIONS='--experimental-policy="'"$BUILDDIR/policy.json"'"'

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const crypto = require('crypto');
+import { randomBytes } from 'node:crypto';
 
 const ASCII62 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -9,7 +9,7 @@ function makeRandomAscii(length) {
   const limit = Math.floor(256 / alphabet.length) * alphabet.length;
   return new Array(length).fill(0).map(() => {
     while (true) {
-      const v = crypto.randomBytes(1)[0];
+      const v = randomBytes(1)[0];
       if (v < limit) {
         return alphabet[v % alphabet.length];
       }
@@ -18,7 +18,7 @@ function makeRandomAscii(length) {
 }
 
 function makeRandomKey(bytes) {
-  return crypto.randomBytes(bytes).toString('hex');
+  return randomBytes(bytes).toString('hex');
 }
 
 process.stdout.write('PASSWORD_SECRET_PEPPER=' + makeRandomAscii(48) + '\n');

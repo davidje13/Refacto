@@ -108,7 +108,7 @@ The secret key should be 32 random bytes (256 bits) encoded in
 base16 (hex). You can generate a random key with:
 
 ```sh
-./scripts/random-secrets.js
+./scripts/random-secrets.mjs
 ```
 
 Non-item data (such as the retro name, settings, and current state)

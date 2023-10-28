@@ -1,9 +1,12 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
-const TerserWebpackPlugin = require('terser-webpack-plugin');
-const { join } = require('node:path');
+import { fileURLToPath } from 'node:url';
+import { join, dirname } from 'node:path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CssMinimizerWebpackPlugin from 'css-minimizer-webpack-plugin';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
+
+const basedir = dirname(fileURLToPath(import.meta.url));
 
 const babelLoader = {
   loader: 'babel-loader',
@@ -20,19 +23,19 @@ const lessLoader = {
 };
 
 const svgrLoader = {
-  loader: join(__dirname, 'webpack-loaders', 'svgr.js'),
+  loader: join(basedir, 'webpack-loaders', 'svgr.mjs'),
   options: { titleProp: true },
 };
 
-module.exports = (env, argv) => ({
+export default (env, argv) => ({
   target: 'web',
-  context: __dirname,
+  context: basedir,
   devtool: argv.mode === 'production' ? undefined : 'source-map',
   entry: {
     index: './src/index.tsx',
   },
   output: {
-    path: join(__dirname, 'build'),
+    path: join(basedir, 'build'),
     publicPath: '/',
     filename: '[name].[contenthash:8].js',
     assetModuleFilename: '[name].[contenthash:8][ext][query]',
@@ -115,7 +118,7 @@ module.exports = (env, argv) => ({
   devServer: {
     port: process.env.PORT || 5000,
     host: 'localhost',
-    static: join(__dirname, 'resources', 'static'),
+    static: join(basedir, 'resources', 'static'),
     historyApiFallback: true,
     hot: false,
     liveReload: false,

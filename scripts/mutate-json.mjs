@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
+import { readFileSync } from 'node:fs';
 
 function mutate(input = {}, path, value) {
   if (!path.length) {
@@ -35,7 +35,7 @@ function mutateAll(input, commands) {
   return current;
 }
 
-const sourceJson = JSON.parse(fs.readFileSync(0, 'utf-8'));
+const sourceJson = JSON.parse(readFileSync(0, 'utf-8'));
 
 const resultJson = mutateAll(sourceJson, process.argv.slice(2));
 

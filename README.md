@@ -50,7 +50,7 @@ By default:
 - an in-memory database is used
   (all data will be lost when the process ends);
 - blank secrets are used for encryption and password hashing
-  (you can use `./scripts/random-secrets.js` to generate a set of
+  (you can use `./scripts/random-secrets.mjs` to generate a set of
   secure random secrets for a deployment);
 - Giphy integration is not enabled;
 - haveibeenpwned integration _is_ enabled;
@@ -76,9 +76,9 @@ DB_URL="mongodb://localhost:27017/refacto" \
 GIPHY_API_KEY="<your-giphy-api-key>" \
 TRUST_PROXY="false" \
 PASSWORD_WORK_FACTOR=10 \
-PASSWORD_SECRET_PEPPER="<value-from-random-secrets.js>" \
-ENCRYPTION_SECRET_KEY="<value-from-random-secrets.js>" \
-TOKEN_SECRET_PASSPHRASE="<value-from-random-secrets.js>" \
+PASSWORD_SECRET_PEPPER="<value-from-random-secrets.mjs>" \
+ENCRYPTION_SECRET_KEY="<value-from-random-secrets.mjs>" \
+TOKEN_SECRET_PASSPHRASE="<value-from-random-secrets.mjs>" \
 ./index.js
 ```
 
