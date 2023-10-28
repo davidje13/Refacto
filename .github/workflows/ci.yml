@@ -6,7 +6,7 @@ on:
       - '**'
   pull_request:
     branches:
-      - master
+      - main
   workflow_dispatch: {}
 
 jobs:
@@ -95,7 +95,7 @@ jobs:
     needs:
       - smoke_test
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/master' && github.head_ref == null }}
+    if: ${{ github.ref == 'refs/heads/main' && github.head_ref == null }}
     permissions:
       contents: write
     steps:

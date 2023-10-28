@@ -79,7 +79,7 @@ export const SecurityPage = memo(() => (
         Further technical details on the privacy and security choices are
         available in the{' '}
         <a
-          href="https://github.com/davidje13/Refacto/blob/master/docs/SECURITY.md"
+          href="https://github.com/davidje13/Refacto/blob/main/docs/SECURITY.md"
           target="_blank"
           rel="noopener noreferrer"
         >
