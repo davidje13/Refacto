@@ -20,7 +20,10 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: 'src/*/package-lock.json'
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+            e2e/package-lock.json
       - name: Build and Test
         run: PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 npm test
       - name: Bundle

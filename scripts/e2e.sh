@@ -5,7 +5,7 @@ set -o pipefail;
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
 
-E2E_WORKDIR="$BASEDIR/src/e2e/build";
+E2E_WORKDIR="$BASEDIR/e2e/build";
 DOWNLOADS="$E2E_WORKDIR/downloads";
 
 rm -rf "$E2E_WORKDIR" || true;
@@ -81,10 +81,10 @@ launch_e2e() {
   if [ "$PARALLEL_E2E" == 'true' ]; then
     SELENIUM_BROWSER="$NAME" \
     # pipefail required here
-    npm --prefix="$BASEDIR/src/e2e" test --quiet 2>&1 | sed "s/^/$NAME: /" &
+    npm --prefix="$BASEDIR/e2e" test --quiet 2>&1 | sed "s/^/$NAME: /" &
     E2E_PIDS="$E2E_PIDS $!";
   else
-    if ! SELENIUM_BROWSER="$NAME" npm --prefix="$BASEDIR/src/e2e" test --quiet; then
+    if ! SELENIUM_BROWSER="$NAME" npm --prefix="$BASEDIR/e2e" test --quiet; then
       FAILED='true';
     fi;
     E2E_PIDS="-";

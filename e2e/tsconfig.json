@@ -11,5 +11,5 @@
   "typeAcquisition": {
     "enable": false
   },
-  "include": ["src"]
+  "include": ["helpers", "pages", "tests"]
 }

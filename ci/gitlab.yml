@@ -20,9 +20,9 @@ node:21:
   - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
 cache:
-  - key: { files: [src/backend/package-lock.json] }
-    paths: [src/backend/node_modules]
-  - key: { files: [src/frontend/package-lock.json] }
-    paths: [src/frontend/node_modules]
-  - key: { files: [src/e2e/package-lock.json] }
-    paths: [src/e2e/node_modules]
+  - key: { files: [backend/package-lock.json] }
+    paths: [backend/node_modules]
+  - key: { files: [frontend/package-lock.json] }
+    paths: [frontend/node_modules]
+  - key: { files: [e2e/package-lock.json] }
+    paths: [e2e/node_modules]

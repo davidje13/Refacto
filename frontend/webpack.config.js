@@ -20,7 +20,7 @@ const lessLoader = {
 };
 
 const svgrLoader = {
-  loader: join(__dirname, 'loaders', 'svgr.js'),
+  loader: join(__dirname, 'webpack-loaders', 'svgr.js'),
   options: { titleProp: true },
 };
 

@@ -70,7 +70,7 @@ HEADLESS=false npm run test:e2e
 ```
 
 The server logs generated during the end-to-end test run are written
-to `src/e2e/build/app.log`.
+to `e2e/build/app.log`.
 
 ## Building
 
@@ -117,19 +117,19 @@ and build / test dependencies should be installed with `--save-dev`.
 ### Examples
 
 ```sh
-cd src/frontend
+cd frontend
 npm install --save react
 npm install --save-dev jest
 ```
 
 ```sh
-cd src/backend
+cd backend
 npm install --save express
 npm install --save-dev supertest
 ```
 
 ```sh
-cd src/e2e
+cd e2e
 npm install --save-dev selenium-webdriver
 ```
 

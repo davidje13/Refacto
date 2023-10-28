@@ -61,7 +61,7 @@ See [SERVICES.md](./SERVICES.md) and
 
 The full list of recognised configuration options (and their default
 values) can be found in
-[config/default.json](../src/backend/src/config/default.json)
+[config/default.json](./backend/src/config/default.json)
 (nested properties are joined and written in `UPPER_SNAKE_CASE`).
 
 Typical values to configure are:
