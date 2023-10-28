@@ -1,3 +1,8 @@
+variables:
+  # Setting a depth of 1 can result in jobs failing if they are not the latest commit when they begin executing.
+  # See https://docs.gitlab.com/ee/ci/runners/configure_runners.html#shallow-cloning
+  GIT_DEPTH: '3'
+
 before_script:
 - apt-get update
 - wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -6,16 +11,19 @@ before_script:
 
 node:18:
   image: node:18
+  timeout: 20 minutes
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
 node:20:
   image: node:20
+  timeout: 20 minutes
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
 node:21:
   image: node:21
+  timeout: 20 minutes
   script:
   - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
 
