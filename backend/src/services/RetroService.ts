@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto';
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Spec } from 'json-immutability-helper';
-import { v4 as uuidv4 } from 'uuid';
 import { type Collection, type DB } from 'collection-storage';
 import {
   encryptByRecordWithMasterKey,
@@ -93,7 +93,7 @@ export class RetroService {
     format: string,
   ): Promise<string> {
     validateSlug(slug);
-    const id = uuidv4();
+    const id = randomUUID();
 
     try {
       await this.retroCollection.add({

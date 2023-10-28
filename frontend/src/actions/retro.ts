@@ -4,7 +4,6 @@ import {
   type UserProvidedRetroItemDetails,
 } from '../shared/api-entities';
 import { type RetroDispatchSpec } from '../api/RetroTracker';
-import { uuidv4 } from '../helpers/uuidv4';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
@@ -34,7 +33,7 @@ export const addRetroItem = (
   }
 
   const item: RetroItem = {
-    id: uuidv4(),
+    id: crypto.randomUUID(),
     category,
     group,
     created: Date.now(),

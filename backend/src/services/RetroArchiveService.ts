@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { type Collection, type DB } from 'collection-storage';
 import { encryptByRecordWithMasterKey } from '../import-wrappers/collection-storage-wrap';
 import {
@@ -28,7 +28,7 @@ export class RetroArchiveService {
     data: RetroData,
     created?: number,
   ): Promise<string> {
-    const id = uuidv4();
+    const id = randomUUID();
     const now = Date.now();
 
     await this.archiveCollection.add({

@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import {
   type Retro,
   type RetroData,
@@ -86,7 +86,7 @@ export function exportRetroItem(item: RetroItem): RetroItemJsonExport {
 
 export function importRetroItem(item: RetroItemJsonExport): RetroItem {
   return {
-    id: uuidv4(),
+    id: randomUUID(),
     created: importTimestamp(item.created),
     category: item.category,
     group: item.group,

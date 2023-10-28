@@ -23,7 +23,6 @@
     "pwd-hasher": "1.x",
     "shared-reducer-backend": "3.x",
     "tslib": "2.6.x",
-    "uuid": "9.x",
     "websocket-express": "3.x",
     "ws": "8.x"
   },
@@ -36,7 +35,6 @@
     "@rollup/plugin-typescript": "11.x",
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
-    "@types/uuid": "9.x",
     "http-proxy-middleware": "2.x",
     "lean-test": "2.x",
     "prettier": "3.0.3",
