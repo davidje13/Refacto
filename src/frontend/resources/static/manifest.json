@@ -28,7 +28,7 @@
     }
   ],
   "display": "standalone",
-  "theme_color": "#4EC7B6",
+  "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "categories": ["business", "productivity", "utilities"]
 }
