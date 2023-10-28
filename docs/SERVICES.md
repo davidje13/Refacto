@@ -11,13 +11,13 @@ load-balancing, configure a real database:
 
 You can specify the database connection string as:
 
-```bash
+```sh
 DB_URL="mongodb://localhost:27017/refacto" ./index.js
 ```
 
 The URL can also contain options, such as:
 
-```bash
+```sh
 DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
 ```
 
@@ -25,14 +25,14 @@ DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
 
 On macOS, MongoDB can be installed with:
 
-```bash
+```sh
 brew install mongodb
 brew services start mongodb
 ```
 
 On Ubuntu, it can be installed with:
 
-```bash
+```sh
 apt install mongodb
 ```
 
@@ -48,7 +48,7 @@ the [security documentation](./SECURITY.md) for details.*
 Redis is also supported for persisting data, but is experimental and
 not recommended for production deployments.
 
-```bash
+```sh
 DB_URL="redis://localhost:6379/0" ./index.js
 ```
 
@@ -61,7 +61,7 @@ securely configure PostgreSQL than MongoDB.
 You must create a database for Refacto to use. The schema will be
 auto-generated when the app starts.
 
-```bash
+```sh
 DB_URL="postgresql://localhost:5432/refacto" ./index.js
 ```
 
@@ -89,7 +89,7 @@ You can now invoke the application with the `SSO_GOOGLE_CLIENT_ID`
 environment variable set. This applies to both local testing and
 deployments. For example:
 
-```bash
+```sh
 SSO_GOOGLE_CLIENT_ID="something.apps.googleusercontent.com" ./index.js
 ```
 
@@ -108,7 +108,7 @@ You can now invoke the application with the `SSO_GITHUB_CLIENT_ID` and
 `SSO_GITHUB_CLIENT_SECRET` environment variables set. This applies to
 both local testing and deployments. For example:
 
-```bash
+```sh
 SSO_GITHUB_CLIENT_ID="idhere" SSO_GITHUB_CLIENT_SECRET="secrethere" ./index.js
 ```
 
@@ -128,14 +128,14 @@ You can now invoke the application with the `SSO_GITLAB_CLIENT_ID`
 environment variable set. This applies to both local testing and
 deployments. For example:
 
-```bash
+```sh
 SSO_GITLAB_CLIENT_ID="idhere" ./index.js
 ```
 
 To use a self-hosted GitLab deployment, you will also need to set
 the auth and token info URLs:
 
-```bash
+```sh
 SSO_GITLAB_AUTH_URL="https://gitlab.example.com/oauth/authorize" \
 SSO_GITLAB_TOKEN_INFO_URL="https://gitlab.example.com/oauth/token/info" \
 SSO_GITLAB_CLIENT_ID="idhere" \
@@ -155,7 +155,7 @@ You will need a Giphy API key:
 You can now invoke the application with the `GIPHY_API_KEY` environment
 variable set. This applies to both local testing and deployments. For example:
 
-```bash
+```sh
 GIPHY_API_KEY="keyhere" ./index.js
 ```
 
@@ -169,6 +169,6 @@ No configuration is required.
 
 If you wish to _disable_ this integration, you can specify a blank URL:
 
-```bash
+```sh
 PASSWORD_CHECK_BASE_URL="" ./index.js
 ```

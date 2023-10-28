@@ -10,7 +10,7 @@ Deploying to a platform-as-a-service will handle this automatically.
 
 When deploying behind a proxy, you should set `TRUST_PROXY=true`:
 
-```bash
+```sh
 TRUST_PROXY=true ./index.js
 ```
 
@@ -27,7 +27,7 @@ work factor, individual salts, and a "brute-force salt".
 If you have a powerful webserver, you can increase the hash work
 factor:
 
-```bash
+```sh
 PASSWORD_WORK_FACTOR=12 ./index.js
 ```
 
@@ -54,7 +54,7 @@ constant with deployments of new versions of the app. The best place to
 store this value is in a deployment pipeline configuration, or a
 configuration server.
 
-```bash
+```sh
 PASSWORD_SECRET_PEPPER="asecretwhichmustnotbeknown" ./index.js
 ```
 
@@ -100,14 +100,14 @@ regardless of database choice. By default, a secret key of all zeros
 is used, providing no real protection. To get the benefits of data
 encryption, supply a secret key on startup.
 
-```bash
+```sh
 ENCRYPTION_SECRET_KEY="0000000000000000000000000000000000000000000000000000000000000000" ./index.js
 ```
 
 The secret key should be 32 random bytes (256 bits) encoded in
 base16 (hex). You can generate a random key with:
 
-```bash
+```sh
 ./scripts/random-secrets.js
 ```
 
@@ -138,7 +138,7 @@ deployments of new versions of the app. The best place to store this
 value is in a deployment pipeline configuration, or a configuration
 server.
 
-```bash
+```sh
 TOKEN_SECRET_PASSPHRASE="asecretwhichmustnotbeknown" ./index.js
 ```
 
@@ -181,20 +181,20 @@ will be complete.
 
 2. Enforce authorization:
 
-   ```bash
+   ```sh
    echo 'security.authorization: enabled' >> /usr/local/etc/mongod.conf
    brew services restart mongodb
    ```
 
 You can now connect as the `admin` user:
 
-```bash
+```sh
 mongo --authenticationDatabase admin -u admin -p
 ```
 
 And configure Refacto to connect as the `refacto` user:
 
-```bash
+```sh
 DB_URL="mongodb://refacto:<pass>@localhost:27017/refacto" ./index.js
 ```
 
@@ -205,7 +205,7 @@ DB_URL="mongodb://refacto:<pass>@localhost:27017/refacto" ./index.js
 To enable SSL (encrypted) communications, but without server or client
 identity checks:
 
-```bash
+```sh
 # macOS
 MONGO_VAR="/usr/local/var/mongodb"
 MONGO_CONF="/usr/local/etc/mongod.conf"
@@ -244,7 +244,7 @@ sudo service mongod restart
 
 After enabling security, change the database URL when starting Refacto:
 
-```bash
+```sh
 DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
 ```
 
@@ -252,7 +252,7 @@ Note that after enabling this, unless you also configure identity
 checks, you will need to skip certificate validation when connecting
 via the commandline:
 
-```bash
+```sh
 mongo --ssl --sslAllowInvalidCertificates
 ```
 

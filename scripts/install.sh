@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 set -e;
 
 BASEDIR="$(dirname "$0")/..";
-if [[ " $* " == *' --force '* ]]; then
+if echo " $* " | grep ' --force ' > /dev/null; then
   FORCE='true';
 fi;
 
@@ -21,7 +21,7 @@ fi
 
 install_subproject() {
   local PROJECT="$1";
-  if [[ ! -d "$BASEDIR/src/$PROJECT/node_modules" || "$FORCE" == 'true' ]]; then
+  if [ ! -d "$BASEDIR/src/$PROJECT/node_modules" ] || [ "$FORCE" == 'true' ]; then
     echo;
     echo "Installing $PROJECT dependencies...";
     DISABLE_OPENCOLLECTIVE=1 \
@@ -31,6 +31,6 @@ install_subproject() {
 
 install_subproject 'frontend';
 install_subproject 'backend';
-if [[ "${SKIP_E2E_DEPS:-false}" != 'true' ]]; then
+if [ "${SKIP_E2E_DEPS:-false}" != 'true' ]; then
   install_subproject 'e2e';
 fi;

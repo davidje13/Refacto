@@ -5,7 +5,7 @@ set -o pipefail;
 BASEDIR="$(dirname "$0")/..";
 BUILDDIR="$BASEDIR/build";
 
-BUILD_PIDS="";
+BUILD_PIDS='';
 
 if ! diff \
   "$BASEDIR/src/frontend/src/shared/api-entities.ts" \
@@ -14,10 +14,11 @@ if ! diff \
   false;
 fi;
 
-function launch_build() {
-  NAME="$1";
+launch_build() {
+  local NAME="$1";
   echo "Building $NAME...";
-  if [[ "${PARALLEL_BUILD:-true}" == 'true' ]]; then
+  if [ "${PARALLEL_BUILD:-true}" == 'true' ]; then
+    # pipefail required here
     npm --prefix="$BASEDIR/src/$NAME" run build --quiet 2>&1 | sed "s/^/$NAME: /" &
     BUILD_PIDS="$BUILD_PIDS $!";
   else
@@ -29,7 +30,7 @@ launch_build 'frontend';
 launch_build 'backend';
 
 FAILED='';
-if [[ "$BUILD_PIDS" != '' ]]; then
+if [ "$BUILD_PIDS" != '' ]; then
   for PID in $BUILD_PIDS; do
     if ! wait "$PID"; then
       FAILED='true';
@@ -37,21 +38,20 @@ if [[ "$BUILD_PIDS" != '' ]]; then
   done;
 fi;
 
-if [[ "$FAILED" == 'true' ]]; then
+if [ "$FAILED" == 'true' ]; then
   echo 'Build failed.';
   false;
 fi;
 
 PRESERVE_NODE_MODULES='false';
-if [[
-  -d "$BUILDDIR/node_modules" &&
-  " $* " == *' --keep-deps '* &&
-  "$BUILDDIR/node_modules" -nt "$BASEDIR/src/backend/package.json"
-]]; then
+if [ -d "$BUILDDIR/node_modules" ] \
+  && [ "$BUILDDIR/node_modules" -nt "$BASEDIR/src/backend/package.json" ] \
+  && echo " $* " | grep ' --keep-deps ' > /dev/null;
+then
   PRESERVE_NODE_MODULES='true';
 fi;
 
-if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
+if [ "$PRESERVE_NODE_MODULES" == 'true' ]; then
   mv "$BUILDDIR/node_modules" "$BASEDIR/build_node_modules";
 fi;
 
@@ -65,7 +65,7 @@ chmod +x "$BUILDDIR/index.js";
 echo 'Compressing static resources...';
 "$BASEDIR/scripts/compress.js" "$BUILDDIR/static";
 
-if [[ "$PRESERVE_NODE_MODULES" == 'true' ]]; then
+if [ "$PRESERVE_NODE_MODULES" == 'true' ]; then
   echo 'Restoring node_modules...';
   mv "$BASEDIR/build_node_modules" "$BUILDDIR/node_modules";
 fi;

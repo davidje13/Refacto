@@ -10,7 +10,7 @@ simplified code, development, and deployment.
 
 Requires [Node.js 18 or above](https://nodejs.org/en/).
 
-```bash
+```sh
 npm start
 ```
 
@@ -26,7 +26,7 @@ You can find pre-built releases at
 [Refacto/releases](https://github.com/davidje13/Refacto/releases),
 or you can build your own:
 
-```bash
+```sh
 npm run build
 ```
 
@@ -37,7 +37,7 @@ The output is placed in `build`.
 You will need to have NodeJS 18 or newer installed in the deployment
 environment.
 
-```bash
+```sh
 cd build
 npm install --omit=dev
 ./index.js
@@ -66,7 +66,7 @@ values) can be found in
 
 Typical values to configure are:
 
-```bash
+```sh
 PORT=5000 \
 SSO_GOOGLE_CLIENT_ID="<your-google-client-id>" \
 SSO_GITHUB_CLIENT_ID="<your-github-client-id>" \

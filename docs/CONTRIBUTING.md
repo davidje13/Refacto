@@ -2,7 +2,7 @@
 
 ## Running locally
 
-```bash
+```sh
 npm start
 ```
 
@@ -19,25 +19,25 @@ Google sign in) and data persistence, see the
 
 Run all tests:
 
-```bash
+```sh
 npm test
 ```
 
 ### Testing frontend only
 
-```bash
+```sh
 npm run test:frontend
 ```
 
 Watch mode:
 
-```bash
+```sh
 npm run test:frontend:watch
 ```
 
 ### Testing backend only
 
-```bash
+```sh
 npm run test:backend
 ```
 
@@ -45,7 +45,7 @@ npm run test:backend
 
 To automatically build and run the server, and run tests against it:
 
-```bash
+```sh
 npm run test:e2e
 ```
 
@@ -56,7 +56,7 @@ uses a mock Google single-sign-on endpoint even if you have configured
 a real client ID), then run the end-to-end tests against that
 deployment:
 
-```bash
+```sh
 TARGET_HOST=http://localhost:5000/ MODE=dev npm run test:e2e
 ```
 
@@ -65,7 +65,7 @@ larger when built in dev mode via `npm start`)
 
 Run end-to-end tests with non-headless browsers:
 
-```bash
+```sh
 HEADLESS=false npm run test:e2e
 ```
 
@@ -74,14 +74,14 @@ to `src/e2e/build/app.log`.
 
 ## Building
 
-```bash
+```sh
 npm run build
 ```
 
 The output will be placed in `build`. Specify the `PORT` environment
 variable when running (defaults to 5000):
 
-```bash
+```sh
 cd build
 npm install --omit=dev
 PORT=8080 ./index.js
@@ -116,19 +116,19 @@ and build / test dependencies should be installed with `--save-dev`.
 
 ### Examples
 
-```bash
+```sh
 cd src/frontend
 npm install --save react
 npm install --save-dev jest
 ```
 
-```bash
+```sh
 cd src/backend
 npm install --save express
 npm install --save-dev supertest
 ```
 
-```bash
+```sh
 cd src/e2e
 npm install --save-dev selenium-webdriver
 ```
