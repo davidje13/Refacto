@@ -22,7 +22,7 @@ jobs:
           cache: npm
           cache-dependency-path: 'src/*/package-lock.json'
       - name: Build and Test
-        run: PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 npm test
+        run: PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 npm test
       - name: Bundle
         run: |
           cd build
@@ -57,35 +57,38 @@ jobs:
         with:
           name: refacto
       - name: Unpack
-        run: |
-          tar -xf build.tar.gz
-          rm build.tar.gz
+        run: tar -xf build.tar.gz && rm build.tar.gz
       - name: Smoke Test
         run: |
-          npm install --omit=dev
-          ./index.js >output.log 2>&1 & PID=$!
-          sleep 5
-          if ! grep 'Available at' <output.log >/dev/null; then
-            cat output.log
-            echo "Application failed to launch" >&2
-            exit 1
-          fi
+          set -e;
+          npm install --omit=dev;
+          ./index.js > output.log 2>&1 & APP_PID="$!";
 
-          wget localhost:5000 -O test-index.html
-          if ! grep '<title>Refacto</title>' <test-index.html >/dev/null; then
-            cat output.log
-            echo "Unexpected main page response" >&2
-            cat test-index.html
-            exit 1
+          while ! grep 'Available at' < output.log > /dev/null 2>&1; do
+            if ! ps -p "$APP_PID" > /dev/null; then
+              APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
+              cat output.log;
+              echo "Application failed to launch (exit code: $APP_EXIT_CODE).";
+              false;
+            fi;
+            sleep 0.1;
+          done;
+
+          wget localhost:5000 -O test-index.html;
+          if ! grep '<title>Refacto</title>' < test-index.html > /dev/null; then
+            cat output.log;
+            echo "Unexpected main page response" >&2;
+            cat test-index.html;
+            false;
           fi;
 
-          kill -2 "$PID"
-          sleep 5
-          if ! grep 'Shutdown complete' <output.log >/dev/null; then
-            cat output.log
-            echo "Application failed to shut down" >&2
-            exit 1
-          fi
+          kill -2 "$APP_PID";
+          wait "$APP_PID";
+          if ! grep 'Shutdown complete' < output.log > /dev/null; then
+            cat output.log;
+            echo "Application failed to shut down" >&2;
+            false;
+          fi;
 
   create_release:
     needs:
@@ -105,21 +108,22 @@ jobs:
           COMMIT: ${{ github.sha }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          NAME=$(date -u '+%Y%m%d-%H%M%S')
-          echo "Creating release $NAME..."
+          set -e;
+          NAME="$(date -u '+%Y%m%d-%H%M%S')";
+          echo "Creating release $NAME...";
           wget -S \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
             --post-data="$(jq -n --arg n "$NAME" --arg c "$COMMIT" '{tag_name: $n, target_commitish: $c}')" \
-            "$API_BASE/releases" -O release.json
-          cat release.json
-          echo "Uploading bundle..."
-          UPLOAD_URL=$(jq -r '.upload_url' <release.json | sed 's/{[^}]*}//')
+            "$API_BASE/releases" -O release.json;
+          cat release.json;
+          echo "Uploading bundle...";
+          UPLOAD_URL="$(jq -r '.upload_url' < release.json | sed 's/{[^}]*}//')";
           wget -S \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
             --header='Content-Type: application/gzip' \
             --post-file='build.tar.gz' \
-            "$UPLOAD_URL?name=build.tar.gz" -O release-file.json
-          cat release-file.json
-          echo "Done."
+            "$UPLOAD_URL?name=build.tar.gz" -O release-file.json;
+          cat release-file.json;
+          echo "Done.";

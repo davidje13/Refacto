@@ -8,7 +8,7 @@ addons:
   chrome: stable
   firefox: latest
 env:
-- PARALLEL_BUILD=false PARALLEL_E2E=false E2E_LAUNCH_DELAY=5 EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000
+- PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000
 cache:
   directories:
   - src/backend/node_modules

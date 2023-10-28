@@ -31,7 +31,7 @@ set +e;
 PORT="$APP_PORT" \
 npm --prefix="$BASEDIR/src/frontend" start --quiet & APP_PID="$!";
 
-trap "kill '$APP_PID'" EXIT;
+trap "kill '$APP_PID'; wait '$APP_PID' > /dev/null" EXIT;
 
 echo 'Running backend...';
 

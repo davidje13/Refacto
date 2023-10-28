@@ -44,10 +44,22 @@ if [[ -z "$TARGET_HOST" ]]; then
     "$BUILDDIR/index.js" \
     > "$E2E_WORKDIR/app.log" 2>&1 & APP_PID="$!";
 
-  trap "kill '$APP_PID'; false" EXIT;
+  trap "kill '$APP_PID'; wait '$APP_PID' > /dev/null && false" EXIT;
 
   # Wait for startup
-  sleep "${E2E_LAUNCH_DELAY:-1}";
+  while ! grep 'Available at' < "$E2E_WORKDIR/app.log" > /dev/null 2>&1; do
+    if ! ps -p "$APP_PID" > /dev/null; then
+      trap - EXIT;
+      APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
+      echo;
+      echo 'Application logs:';
+      sed "s/^/> /" < "$E2E_WORKDIR/app.log";
+      echo;
+      echo "Failed to start server for E2E tests (exit code: $APP_EXIT_CODE).";
+      false;
+    fi;
+    sleep 0.1;
+  done;
 
   TARGET_HOST="http://localhost:$PORT/";
 fi;
@@ -91,7 +103,8 @@ fi;
 
 # Shutdown app server
 if [[ -n "$APP_PID" ]]; then
-  kill "$APP_PID";
+  kill -2 "$APP_PID";
+  wait "$APP_PID" || true;
   trap - EXIT;
 fi;
 
