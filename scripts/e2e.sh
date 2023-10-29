@@ -16,7 +16,7 @@ if [ -z "$TARGET_HOST" ]; then
   PORT="${PORT:-5010}";
 
   # Build and launch all-in-one server
-  "$BASEDIR/scripts/build.sh" --keep-deps;
+  "$BASEDIR/scripts/build.mjs" --keep-deps;
 
   if [ ! -d "$BUILDDIR/node_modules" ]; then
     echo "Installing production dependencies...";
@@ -125,6 +125,8 @@ if [ "$FAILED" != '' ]; then
   echo 'End-to-end tests failed.';
   false;
 fi;
+
+rm -rf "$DOWNLOADS" || true;
 
 echo;
 echo 'End-to-end tests complete.';

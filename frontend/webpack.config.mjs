@@ -116,7 +116,7 @@ export default (env, argv) => ({
     ],
   },
   devServer: {
-    port: process.env.PORT || 5000,
+    port: process.env['PORT'] || 5000,
     host: 'localhost',
     static: join(basedir, 'resources', 'static'),
     historyApiFallback: true,

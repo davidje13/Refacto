@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/build.sh",
-    "clean": "scripts/clean.sh",
+    "build": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/build.mjs",
+    "clean": "scripts/clean.mjs",
     "install": "scripts/install.sh --force",
     "lint": "scripts/install.sh && scripts/lint.mjs",
     "start": "SKIP_E2E_DEPS=true scripts/install.sh && scripts/start.sh",

@@ -3,8 +3,6 @@
   "private": true,
   "scripts": {
     "format": "prettier --write .",
-    "lint:tsc": "tsc",
-    "lint:prettier": "prettier --check .",
     "lint": "tsc && prettier --check .",
     "test": "lean-test --preprocess tsc"
   },
