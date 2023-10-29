@@ -87,10 +87,11 @@ export function printPrefixed(target, message, prefix, prefixFormat = '') {
   }
 }
 
-export function waitForOutput(stream, output, timeout = 60 * 60 * 1000) {
+export function waitForOutput(stream, search, timeout = 60 * 60 * 1000) {
   let all = [];
+  const byteSearch = Buffer.from(search, 'utf-8');
   const promise = new Promise((resolve, reject) => {
-    let found = !output;
+    let found = !byteSearch.length;
     let tm;
     if (!found) {
       tm = setTimeout(() => {
@@ -104,7 +105,7 @@ export function waitForOutput(stream, output, timeout = 60 * 60 * 1000) {
       if (found) {
         return;
       }
-      if (data.toString('utf-8').includes(output)) {
+      if (data.includes(byteSearch)) {
         found = true;
         clearTimeout(tm);
         resolve();
@@ -115,12 +116,12 @@ export function waitForOutput(stream, output, timeout = 60 * 60 * 1000) {
       const combined = Buffer.concat(all);
       all = [combined];
       // check the boundary between data frames
-      const boundary = all.length - data.length;
-      const boundaryRegion = all.subarray(
-        Math.max(boundary - output.length * 4, 0),
-        boundary + output.length * 4,
+      const boundary = combined.length - data.length;
+      const boundaryRegion = combined.subarray(
+        Math.max(boundary - byteSearch.length, 0),
+        boundary + byteSearch.length,
       );
-      if (boundaryRegion.toString('utf-8').includes(output)) {
+      if (boundaryRegion.includes(byteSearch)) {
         found = true;
         clearTimeout(tm);
         resolve();
