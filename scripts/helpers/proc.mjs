@@ -2,8 +2,15 @@ import { spawn, execFile } from 'node:child_process';
 
 const MAX_LINE_BUFFER = 10000;
 
-export function propagateStreamWithPrefix(stream, target, prefix) {
-  const pre = target.isTTY ? `\u001B[35m${prefix}:\u001B[0m ` : `${prefix}: `;
+export function propagateStreamWithPrefix(
+  stream,
+  target,
+  prefix,
+  prefixFormat,
+) {
+  const pre = target.isTTY
+    ? `\u001B[${prefixFormat}m${prefix}:\u001B[0m `
+    : `${prefix}: `;
   const suf = target.isTTY ? '\u001B[0m\n' : '\n';
   const curLine = Buffer.alloc(MAX_LINE_BUFFER);
   let curLineP = 0;
@@ -60,6 +67,7 @@ export function runTaskPrefixOutput({
   args,
   outputTarget = process.stderr,
   outputPrefix = command,
+  prefixFormat = '35',
   ...options
 } = {}) {
   return new Promise((resolve, reject) => {
@@ -67,8 +75,18 @@ export function runTaskPrefixOutput({
       ...options,
       stdio: ['ignore', 'pipe', 'pipe'],
     });
-    propagateStreamWithPrefix(proc.stdio[1], outputTarget, outputPrefix);
-    propagateStreamWithPrefix(proc.stdio[2], outputTarget, outputPrefix);
+    propagateStreamWithPrefix(
+      proc.stdio[1],
+      outputTarget,
+      outputPrefix,
+      prefixFormat,
+    );
+    propagateStreamWithPrefix(
+      proc.stdio[2],
+      outputTarget,
+      outputPrefix,
+      prefixFormat,
+    );
     proc.on('error', reject);
     proc.on('exit', handleExit(resolve, reject));
   });

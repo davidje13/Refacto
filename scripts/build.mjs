@@ -14,10 +14,13 @@ import {
 import { stat, rename, chmod } from 'node:fs/promises';
 import { runTask, runTaskPrefixOutput } from './helpers/proc.mjs';
 
-const PARALLEL_BUILD = process.env['PARALLEL_BUILD'] !== 'false';
+const PARALLEL_BUILD = (process.env['PARALLEL_BUILD'] ?? 'true') === 'true';
 const KEEP_DEPS = process.argv.slice(2).includes('--keep-deps');
 
-const packages = ['frontend', 'backend'];
+const packages = [
+  { dir: 'frontend', format: '35' },
+  { dir: 'backend', format: '36' },
+];
 const builddir = join(basedir, 'build');
 const staticdir = join(builddir, 'static');
 
@@ -31,12 +34,14 @@ try {
   process.exit(1);
 }
 
-async function buildPackage(pkg) {
-  log(`Building ${pkg}...`);
+async function buildPackage({ dir, format }) {
+  log(`Building ${dir}...`);
   await runTaskPrefixOutput({
     command: 'npm',
-    args: ['--prefix', join(basedir, pkg), 'run', 'build', '--quiet'],
-    outputPrefix: pkg,
+    args: ['run', 'build', '--quiet'],
+    cwd: join(basedir, dir),
+    outputPrefix: dir,
+    prefixFormat: format,
   });
 }
 
