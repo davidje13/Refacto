@@ -5,7 +5,6 @@ import { readFile, mkdir, rm } from 'node:fs/promises';
 export const downloadDir = join(
   dirname(fileURLToPath(import.meta.url)),
   '..',
-  '..',
   'build',
   'downloads',
 );

@@ -51,11 +51,10 @@ if (!filteredBrowsers.length) {
 }
 
 const builddir = join(basedir, 'build');
-const e2eworkdir = join(basedir, 'e2e', 'build');
-const downloads = join(e2eworkdir, 'downloads');
+const downloads = join(basedir, 'e2e', 'build', 'downloads');
 
-await deleteDirectory(e2eworkdir);
-await mkdir(e2eworkdir, { recursive: true });
+// clear downloads from previous run
+await deleteDirectory(downloads);
 await mkdir(downloads, { recursive: true });
 
 const testEnv = { ...process.env };
