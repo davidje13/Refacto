@@ -2,7 +2,7 @@
 
 import { join } from 'node:path';
 import { basedir, log } from './helpers/io.mjs';
-import { runTaskPrefixOutput } from './helpers/proc.mjs';
+import { runMultipleTasks } from './helpers/proc.mjs';
 
 const forceMockSSO = process.argv.slice(2).includes('--mock-sso');
 const apiPort = Number.parseInt(process.env['PORT'] ?? '5000');
@@ -36,21 +36,26 @@ if (
 }
 
 log('Starting application...');
-await Promise.all([
-  runTaskPrefixOutput({
-    command: 'npm',
-    args: ['start', '--quiet'],
-    cwd: join(basedir, 'frontend'),
-    env: frontendEnv,
-    outputPrefix: 'frontend',
-    prefixFormat: '35',
-  }),
-  runTaskPrefixOutput({
-    command: 'npm',
-    args: ['start', '--quiet'],
-    cwd: join(basedir, 'backend'),
-    env: backendEnv,
-    outputPrefix: 'backend',
-    prefixFormat: '36',
-  }),
-]);
+await runMultipleTasks(
+  [
+    {
+      command: 'npm',
+      args: ['start', '--quiet'],
+      cwd: join(basedir, 'frontend'),
+      env: frontendEnv,
+      failureMessage: 'Failed to run frontend',
+      outputPrefix: 'frontend',
+      prefixFormat: '35',
+    },
+    {
+      command: 'npm',
+      args: ['start', '--quiet'],
+      cwd: join(basedir, 'backend'),
+      env: backendEnv,
+      failureMessage: 'Failed to run backend',
+      outputPrefix: 'backend',
+      prefixFormat: '36',
+    },
+  ],
+  { parallel: true },
+);

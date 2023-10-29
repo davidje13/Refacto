@@ -12,7 +12,7 @@ import {
   copy,
 } from './helpers/io.mjs';
 import { stat, rename, chmod } from 'node:fs/promises';
-import { runTask, runTaskPrefixOutput } from './helpers/proc.mjs';
+import { runMultipleTasks, runTask } from './helpers/proc.mjs';
 
 const PARALLEL_BUILD = (process.env['PARALLEL_BUILD'] ?? 'true') === 'true';
 const KEEP_DEPS = process.argv.slice(2).includes('--keep-deps');
@@ -24,39 +24,28 @@ const packages = [
 const builddir = join(basedir, 'build');
 const staticdir = join(builddir, 'static');
 
-try {
-  await runTask('diff', [
+await runTask({
+  command: 'diff',
+  args: [
     join(basedir, 'frontend', 'src', 'shared', 'api-entities.ts'),
     join(basedir, 'backend', 'src', 'shared', 'api-entities.ts'),
-  ]);
-} catch {
-  log('Shared api-entities.ts files do not match.');
-  process.exit(1);
-}
+  ],
+  outputMode: 'fail_atomic',
+  failureMessage: 'Shared api-entities.ts files do not match.',
+});
 
-async function buildPackage({ dir, format }) {
-  log(`Building ${dir}...`);
-  await runTaskPrefixOutput({
+await runMultipleTasks(
+  packages.map(({ dir, format }) => ({
     command: 'npm',
     args: ['run', 'build', '--quiet'],
     cwd: join(basedir, dir),
+    beginMessage: `Building ${dir}...`,
+    failureMessage: `Failed to build ${dir}.`,
     outputPrefix: dir,
     prefixFormat: format,
-  });
-}
-
-try {
-  if (PARALLEL_BUILD) {
-    await Promise.all(packages.map(buildPackage));
-  } else {
-    for (const pkg of packages) {
-      await buildPackage(pkg);
-    }
-  }
-} catch {
-  log('Build failed.');
-  process.exit(1);
-}
+  })),
+  { parallel: PARALLEL_BUILD },
+);
 
 let preserveBuildModules = false;
 const buildModules = join(builddir, 'node_modules');

@@ -8,11 +8,11 @@
     "install": "scripts/install.mjs --force",
     "lint": "scripts/install.mjs && scripts/lint.mjs",
     "start": "SKIP_E2E_DEPS=true scripts/install.mjs && scripts/start.mjs",
-    "test": "scripts/install.mjs && scripts/lint.mjs && scripts/test.sh",
+    "test": "scripts/install.mjs && scripts/lint.mjs && scripts/test.mjs",
     "format": "npm --prefix=backend run format --quiet && npm --prefix=frontend run format --quiet && npm --prefix=e2e run format --quiet",
     "test:backend": "npm --prefix=backend test --quiet --",
     "test:frontend": "npm --prefix=frontend test --quiet --",
     "test:frontend:watch": "npm --prefix=frontend test --quiet -- --watch",
-    "test:e2e": "scripts/install.mjs && scripts/e2e.sh"
+    "test:e2e": "scripts/install.mjs && scripts/test.mjs --only-e2e"
   }
 }
