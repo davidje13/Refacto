@@ -6,9 +6,7 @@ variables:
 before_script:
 - apt-get update
 - wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-# apt-get output piped through cat to avoid excessive "Selecting/Preparing/Unpacking" output (makes stdout not a TTY)
-- apt-get install -y ./google-chrome-stable_current_amd64.deb | cat
-- apt-get install -y firefox-esr | cat
+- apt-get install -q=2 -y ./google-chrome-stable_current_amd64.deb firefox-esr | grep -v '^Selecting previously unselected package \|^Preparing to unpack \|^Unpacking \|^Setting up '
 
 node:18:
   image: node:18
