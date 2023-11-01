@@ -3,33 +3,81 @@ variables:
   # See https://docs.gitlab.com/ee/ci/runners/configure_runners.html#shallow-cloning
   GIT_DEPTH: '3'
 
-before_script:
-- apt-get update
-- wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-- apt-get install -q=2 -y ./google-chrome-stable_current_amd64.deb firefox-esr | grep -v '^Selecting previously unselected package \|^Preparing to unpack \|^Unpacking \|^Setting up '
-
-node:18:
-  image: node:18
-  timeout: 20 minutes
-  script:
-  - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
-
-node:20:
+build:
+  stage: build
+  dependencies: []
   image: node:20
   timeout: 20 minutes
+  before_script:
+    - apt-get update
+    - wget --no-verbose https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - apt-get install -q=2 -y ./google-chrome-stable_current_amd64.deb firefox-esr | grep -v '^Selecting previously unselected package \|^Preparing to unpack \|^Unpacking \|^Setting up '
+    - npm config set cache .npm --global
   script:
-  - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
+    - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
+    - cd build && rm -r node_modules && tar -czf ../build.tar.gz .
+  artifacts:
+    - name: refacto
+      paths: build.tar.gz
+      public: true
+      expire_in: 6 hours # latest is always kept indefinitely
+  cache:
+    - key:
+        files:
+          - backend/package-lock.json
+          - frontend/package-lock.json
+          - e2e/package-lock.json
+      paths: [.npm/]
+
+.smoke-test: &smoke-test
+  stage: test
+  variables: { GIT_STRATEGY: none }
+  needs: [build]
+  dependencies: [build]
+  timeout: 10 minutes
+  before_script:
+    - tar -xf build.tar.gz && rm build.tar.gz
+  script:
+    - |
+      set -e;
+      npm install --omit=dev;
+      # TODO once https://github.com/nodejs/node/issues/50452 is resolved, add NODE_OPTIONS='--experimental-policy=./policy.json'
+      ./index.js > output.log 2>&1 & APP_PID="$!";
+
+      while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do
+        if ! ps -p "$APP_PID" > /dev/null; then
+          APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
+          cat output.log;
+          echo "Application failed to launch (exit code: $APP_EXIT_CODE).";
+          false;
+        fi;
+        sleep 0.1;
+      done;
+
+      wget localhost:5000 -O test-index.html;
+      if ! grep '<title>Refacto</title>' < test-index.html > /dev/null; then
+        cat output.log;
+        echo "Unexpected main page response" >&2;
+        cat test-index.html;
+        false;
+      fi;
+
+      kill -2 "$APP_PID";
+      wait "$APP_PID";
+      if ! grep 'Shutdown complete' < output.log > /dev/null; then
+        cat output.log;
+        echo "Application failed to shut down" >&2;
+        false;
+      fi;
+
+node:18:
+  <<: *smoke-test
+  image: node:18
+
+node:20:
+  <<: *smoke-test
+  image: node:20
 
 node:21:
+  <<: *smoke-test
   image: node:21
-  timeout: 20 minutes
-  script:
-  - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
-
-cache:
-  - key: { files: [backend/package-lock.json] }
-    paths: [backend/node_modules]
-  - key: { files: [frontend/package-lock.json] }
-    paths: [frontend/node_modules]
-  - key: { files: [e2e/package-lock.json] }
-    paths: [e2e/node_modules]
