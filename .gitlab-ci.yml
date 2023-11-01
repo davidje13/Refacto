@@ -22,12 +22,8 @@ build:
       public: true
       expire_in: 6 hours # latest is always kept indefinitely
   cache:
-    - key:
-        files:
-          - backend/package-lock.json
-          - frontend/package-lock.json
-          - e2e/package-lock.json
-      paths: [.npm/]
+    - key: { files: ['*/package-lock.json'] }
+      paths: ['.npm']
 
 .smoke-test: &smoke-test
   stage: test
