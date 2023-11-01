@@ -17,10 +17,10 @@ build:
     - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 DOCKER=true npm test
     - cd build && rm -r node_modules && tar -czf ../build.tar.gz .
   artifacts:
-    - name: refacto
-      paths: build.tar.gz
-      public: true
-      expire_in: 6 hours # latest is always kept indefinitely
+    name: refacto
+    paths: build.tar.gz
+    public: true
+    expire_in: 6 hours # latest is always kept indefinitely
   cache:
     - key: { files: ['*/package-lock.json'] }
       paths: ['.npm']
