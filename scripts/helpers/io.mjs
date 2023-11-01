@@ -70,6 +70,11 @@ export async function writeNiceJSON(path, json) {
 }
 
 export async function compressFile(file) {
+  if (/\.(png|ico|woff2?)$/.test(file)) {
+    // savings for these filetypes are minimal,
+    // so save build time & artifact size by skipping them
+    return;
+  }
   const raw = await readFile(file);
 
   const brotli = await asyncBrotliCompress(raw, {
