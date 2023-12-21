@@ -39,6 +39,9 @@ export default (env, argv) => ({
     publicPath: '/',
     filename: '[name].[contenthash:8].js',
     assetModuleFilename: '[name].[contenthash:8][ext][query]',
+    trustedTypes: {
+      policyName: 'dynamic-import',
+    },
     clean: true,
   },
   resolve: {

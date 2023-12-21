@@ -90,9 +90,9 @@ PORT=8080 ./index.js
 By default, no sign on services will be available. To use the Refacto Local
 Testing accounts, specify:
 
-```
-SSO_GOOGLE_CLIENT_ID=199202234207-la0v05druske1f1qoimg3sgkpua2nvc7.apps.googleusercontent.com \
-SSO_GITLAB_CLIENT_ID=e4f936ea33a9b725e8c210fb72fd46ebd9688a46b975e5a8d40c79734e9fc00e \
+```sh
+SSO_GOOGLE_CLIENT_ID='199202234207-la0v05druske1f1qoimg3sgkpua2nvc7.apps.googleusercontent.com' \
+SSO_GITLAB_CLIENT_ID='e4f936ea33a9b725e8c210fb72fd46ebd9688a46b975e5a8d40c79734e9fc00e' \
 ./index.js
 ```
 
