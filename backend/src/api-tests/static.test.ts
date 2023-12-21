@@ -82,7 +82,7 @@ describe('API static content', () => {
         .get('/example.abc123.js')
         .expect(200);
 
-      const vary = response.header.vary || '';
+      const vary = response.header['vary'] || '';
       expect(vary).not(toContain('Content-Type'));
     });
 

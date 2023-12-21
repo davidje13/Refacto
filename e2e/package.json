@@ -11,10 +11,10 @@
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
     "chromedriver": "120.x",
-    "geckodriver": "4.2.x",
+    "geckodriver": "4.3.x",
     "lean-test": "2.x",
-    "prettier": "3.0.3",
-    "selenium-webdriver": "4.14.x",
-    "typescript": "5.2.x"
+    "prettier": "3.1.1",
+    "selenium-webdriver": "4.16.x",
+    "typescript": "5.3.x"
   }
 }
