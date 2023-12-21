@@ -10,7 +10,7 @@ build:
   timeout: 20 minutes
   before_script:
     - apt-get update
-    - wget --no-verbose -O chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_118.0.5993.117-1_amd64.deb
+    - wget --no-verbose -O chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     - apt-get install -q=2 -y ./chrome.deb firefox-esr | grep -v '^Selecting previously unselected package \|^Preparing to unpack \|^Unpacking \|^Setting up '
     - npm config set cache .npm --global
   script:
