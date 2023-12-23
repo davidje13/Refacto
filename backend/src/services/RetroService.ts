@@ -10,7 +10,7 @@ import srb, { type Permission } from 'shared-reducer-backend';
 import { type Retro, type RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
 
-const VALID_SLUG = /^[a-z0-9][a-z0-9_-]*$/;
+const VALID_SLUG = /^[a-z0-9][a-z0-9_\-]*$/;
 const MAX_SLUG_LENGTH = 64;
 
 function validateSlug(slug: string): void {

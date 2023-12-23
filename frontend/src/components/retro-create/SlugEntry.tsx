@@ -6,7 +6,7 @@ import TickBold from '../../../resources/tick-bold.svg';
 import Cross from '../../../resources/cross.svg';
 
 export const MAX_SLUG_LENGTH = 64;
-const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_-]*$';
+const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_\\-]*$';
 const VALID_SLUG = new RegExp(VALID_SLUG_PATTERN);
 
 enum SlugAvailability {

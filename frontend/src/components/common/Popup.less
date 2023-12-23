@@ -5,11 +5,11 @@
   right: 0;
   bottom: 0;
   background: rgba(128, 128, 128, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 10;
 
-  animation:
-    0.2s ease popup-fade-in,
-    0.05s 0.2s step-end forwards popup-blur-background;
+  animation: 0.2s ease popup-fade-in;
 
   .popup-content {
     position: absolute;
@@ -51,16 +51,6 @@
 
   to {
     opacity: 1;
-  }
-}
-
-@keyframes popup-blur-background {
-  from {
-    backdrop-filter: none;
-  }
-
-  to {
-    backdrop-filter: blur(2px);
   }
 }
 

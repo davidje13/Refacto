@@ -1,7 +1,7 @@
 import { TokenManager, type KeyPair } from './TokenManager';
 import 'lean-test';
 
-const JWT_PATTERN = /^([a-zA-Z0-9_-]+(\.|$)){3}$/;
+const JWT_PATTERN = /^([a-zA-Z0-9_\-]+(\.|$)){3}$/;
 
 describe('TokenManager', () => {
   const manager = new TokenManager();
