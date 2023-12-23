@@ -18,7 +18,7 @@
     "jwt-simple": "0.5.x",
     "mongodb": "6.x",
     "pg": "8.x",
-    "pwd-hasher": "1.x",
+    "pwd-hasher": "2.x",
     "shared-reducer-backend": "3.x",
     "tslib": "2.6.x",
     "websocket-express": "3.x",

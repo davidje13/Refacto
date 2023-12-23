@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { WebSocketExpress } from 'websocket-express';
 import { connectDB } from './import-wrappers/collection-storage-wrap';
-import { Hasher } from './import-wrappers/pwd-hashers-wrap';
+import { Hasher } from 'pwd-hasher';
 import ab from 'authentication-backend';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
 import { ApiAuthRouter } from './routers/ApiAuthRouter';
