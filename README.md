@@ -56,8 +56,8 @@ By default:
 - haveibeenpwned integration _is_ enabled;
 - the server listens on port `5000`.
 
-See [SERVICES.md](./SERVICES.md) and
-[SECURITY.md](./SECURITY.md) for details.
+See [SERVICES.md](docs/SERVICES.md) and
+[SECURITY.md](docs/SECURITY.md) for details.
 
 The full list of recognised configuration options (and their default
 values) can be found in
