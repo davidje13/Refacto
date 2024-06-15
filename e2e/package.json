@@ -13,8 +13,8 @@
     "chromedriver": "126.x",
     "geckodriver": "4.4.x",
     "lean-test": "2.x",
-    "prettier": "3.1.1",
-    "selenium-webdriver": "4.16.x",
-    "typescript": "5.3.x"
+    "prettier": "3.3.2",
+    "selenium-webdriver": "4.21.x",
+    "typescript": "5.4.x"
   }
 }

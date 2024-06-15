@@ -16,7 +16,7 @@
     "ioredis": "5.x",
     "json-immutability-helper": "3.x",
     "jwt-simple": "0.5.x",
-    "mongodb": "5.x",
+    "mongodb": "6.x",
     "pg": "8.x",
     "pwd-hasher": "1.x",
     "shared-reducer-backend": "3.x",
@@ -33,12 +33,12 @@
     "@rollup/plugin-typescript": "11.x",
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
-    "http-proxy-middleware": "2.x",
+    "http-proxy-middleware": "3.x",
     "lean-test": "2.x",
-    "prettier": "3.1.1",
+    "prettier": "3.3.2",
     "rollup": "4.x",
-    "supertest": "6.x",
+    "supertest": "7.x",
     "superwstest": "2.x",
-    "typescript": "5.3.x"
+    "typescript": "5.4.x"
   }
 }

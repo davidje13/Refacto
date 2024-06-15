@@ -12,13 +12,13 @@ const headless = process.env['HEADLESS'] !== 'false';
 const width = 900; // ensure non-mobile display
 const height = 500;
 
-const chromeOptions = new ChromeOptions()
-  .windowSize({ width, height })
-  .setUserPreferences({
-    'profile.default_content_settings.popups': 0,
-    'download.prompt_for_download': false,
-    'download.default_directory': downloadDir,
-  });
+const chromeOptions = new ChromeOptions();
+chromeOptions.windowSize({ width, height });
+chromeOptions.setUserPreferences({
+  'profile.default_content_settings.popups': 0,
+  'download.prompt_for_download': false,
+  'download.default_directory': downloadDir,
+});
 
 const firefoxOptions = new FirefoxOptions()
   .windowSize({ width, height })
@@ -35,7 +35,7 @@ if (process.env['DOCKER'] === 'true') {
 
 if (headless) {
   chromeOptions.addArguments('--headless=new');
-  firefoxOptions.headless();
+  firefoxOptions.addArguments('--headless');
 }
 
 export const buildDriver = () =>

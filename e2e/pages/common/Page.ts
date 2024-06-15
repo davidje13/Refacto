@@ -76,7 +76,7 @@ export abstract class Page extends PageFragment {
 
   protected async sendKeys(...keys: Array<string | Promise<string>>) {
     await this.driver
-      .actions()
+      .actions({ async: false, bridge: false })
       .sendKeys(...keys)
       .perform();
   }

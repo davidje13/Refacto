@@ -125,7 +125,7 @@ export default (env, argv) => ({
     historyApiFallback: true,
     hot: false,
     liveReload: false,
-    magicHtml: false,
+    webSocketServer: false,
     open: false,
     client: {
       overlay: false,

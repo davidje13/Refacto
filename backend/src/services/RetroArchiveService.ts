@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { type Collection, type DB } from 'collection-storage';
+import { type Collection, type DB, type Wrapped } from 'collection-storage';
 import { encryptByRecordWithMasterKey } from '../import-wrappers/collection-storage-wrap';
 import {
   type RetroArchive,
@@ -19,7 +19,9 @@ export class RetroArchiveService {
 
     this.archiveCollection = enc<RetroArchive>()(
       ['items'],
-      db.getCollection('archive', { retroId: {} }),
+      db.getCollection<Wrapped<RetroArchive, 'items', Buffer>>('archive', {
+        retroId: {},
+      }),
     );
   }
 

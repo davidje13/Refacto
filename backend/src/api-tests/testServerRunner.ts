@@ -32,7 +32,7 @@ export const testServerRunner = <T extends { run: Runnable }>(
       }
       setParameter({ ...extras, server });
       await new Promise<void>((resolve) =>
-        server.listen(0, 'localhost', resolve),
+        server.listen(0, '127.0.0.1', resolve),
       );
 
       return async () => {

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Spec } from 'json-immutability-helper';
-import { type Collection, type DB } from 'collection-storage';
+import { type Collection, type DB, type Wrapped } from 'collection-storage';
 import {
   encryptByRecordWithMasterKey,
   migrate,
@@ -47,7 +47,7 @@ export class RetroService {
       },
       enc<Retro>()(
         ['items'],
-        db.getCollection('retro', {
+        db.getCollection<Wrapped<Retro, 'items', Buffer>>('retro', {
           slug: { unique: true },
           ownerId: {},
         }),
