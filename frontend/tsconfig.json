@@ -2,7 +2,6 @@
   "extends": "@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
     "lib": ["es2022", "dom"],
-    "types": ["node"],
     "target": "es2022",
     "module": "esnext",
     "moduleResolution": "node",
