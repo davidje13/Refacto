@@ -15,7 +15,6 @@ const timeout = Number(process.env['TEST_TIMEOUT'] || '30000');
 
 describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   let user1: SiteMap;
-  let user2: SiteMap;
 
   let userName: string;
   let retroSlug: string;
@@ -25,18 +24,15 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   let create: RetroCreate;
   let retro: Retro;
 
-  beforeAll(async () => {
+  beforeAll(() => {
     user1 = new SiteMap(buildDriver());
-    user2 = new SiteMap(buildDriver());
 
     userName = `e2e-test-user-${uniqueID}`;
     retroSlug = `e2e-test-retro-${uniqueID}`;
     retroPassword = 'my-password';
   });
 
-  afterAll(async () => {
-    await Promise.all([user1?.close(), user2?.close()]);
-  });
+  afterAll(() => user1?.close());
 
   // Tests run sequentially in a single (pair of) browser sessions
 
@@ -85,8 +81,13 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   });
 
   describe('second user journey', { stopAtFirstFailure: true }, () => {
+    let user2: SiteMap;
     let password2: Password;
     let retro2: Retro;
+
+    beforeAll(() => {
+      user2 = new SiteMap(buildDriver());
+    });
 
     it('prompts for a password for the retro', async () => {
       password2 = await user2.navigateToRetroPassword(retroSlug);
@@ -156,6 +157,8 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
       // ...but does not prompt other viewers
       expect(await retro.getArchivePopup().exists()).toBeFalsy();
     });
+
+    afterAll(() => user2?.close());
   });
 
   describe('archiving', { stopAtFirstFailure: true }, () => {
@@ -208,7 +211,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
 
     it('prompts to log in when loaded', async () => {
       retroList = await user1.navigateToRetroList();
-      retroList = await retroList.loginAs(userName);
+      retroList = await retroList.loginAs(userName); // TODO: in headless chrome, the login steps after clicking submit are very slow
     });
 
     it('displays retros created by the current user', async () => {

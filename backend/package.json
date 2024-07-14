@@ -14,7 +14,7 @@
     "express": "4.x",
     "express-static-gzip": "2.x",
     "ioredis": "5.x",
-    "json-immutability-helper": "3.x",
+    "json-immutability-helper": "3.1.x",
     "jwt-simple": "0.5.x",
     "mongodb": "6.x",
     "pg": "8.x",

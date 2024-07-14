@@ -1,4 +1,5 @@
 import { By, until, WebDriver, WebElementCondition } from 'selenium-webdriver';
+import { type Entry } from 'selenium-webdriver/lib/logging';
 import { untilNoElementLocated } from '../../helpers/customUntil';
 import { PageFragment } from './PageFragment';
 import { Popup } from './Popup';
@@ -17,6 +18,35 @@ async function getDocumentHtml(driver: WebDriver) {
     return 'Failed to get HTML of document';
   }
 }
+
+async function getLogs(driver: WebDriver) {
+  try {
+    const logs = driver.manage().logs();
+    const types = await logs.getAvailableLogTypes();
+    const allLogs: Entry[] = [];
+    for (const type of types) {
+      const entries = await logs.get(type);
+      for (const entry of entries) {
+        entry.type = type; // logs.get returns blank types
+        allLogs.push(entry);
+      }
+    }
+    return allLogs
+      .filter((l) => !isSpuriousLog(l))
+      .sort((a, b) => a.timestamp - b.timestamp)
+      .map(formatLog)
+      .join('\n');
+  } catch (e) {
+    return 'Failed to get browser logs';
+  }
+}
+
+const isSpuriousLog = (l: Entry) =>
+  l.type === 'browser' &&
+  l.message.includes('the server responded with a status of 404');
+
+const formatLog = (l: Entry) =>
+  `${new Date(l.timestamp).toISOString()} ${l.type} ${l.level} ${JSON.stringify(l.message)}`;
 
 export abstract class Page extends PageFragment {
   private readonly untilNavigated: WebElementCondition;
@@ -51,7 +81,8 @@ export abstract class Page extends PageFragment {
     } catch (e) {
       if (e instanceof Error) {
         const content = await getDocumentHtml(this.driver);
-        e.message = `${e.message}\n\nPage content:\n\n${content}`;
+        const logs = await getLogs(this.driver);
+        e.message = `${e.message}\n\nPage content:\n\n${content}\n\nLogs:\n\n${logs}`;
       }
       throw e;
     }

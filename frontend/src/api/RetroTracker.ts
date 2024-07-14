@@ -1,8 +1,8 @@
-import listCommands from 'json-immutability-helper/commands/list';
-import { context, Spec } from 'json-immutability-helper';
+import { type Spec } from 'json-immutability-helper';
 import SharedReducer, { Dispatch, DispatchSpec } from 'shared-reducer-frontend';
 import { type Retro } from '../shared/api-entities';
 import { SubscriptionTracker } from './SubscriptionTracker';
+import { context } from './reducer';
 
 export type RetroError = any;
 
@@ -53,7 +53,7 @@ class RetroWrapper {
       `${wsBase}/retros/${retroId}`,
       (data): void => setState({ retro: data, error: null }),
     )
-      .withReducer(context.with(listCommands))
+      .withReducer(context)
       .withToken(retroToken)
       .withErrorHandler((err): void => setState({ retro: null, error: err }))
       .build();

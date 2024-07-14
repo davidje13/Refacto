@@ -9,12 +9,13 @@ export async function handleLogin(
   service: string,
   localNonce: string | null,
   { search, hash }: LocationT,
+  signal: AbortSignal,
 ): Promise<string> {
   let externalToken: string | null = null;
   let state: string | null = null;
 
-  const hashParams = new URLSearchParams(hash.substr(1));
-  const searchParams = new URLSearchParams(search.substr(1));
+  const hashParams = new URLSearchParams(hash.substring(1));
+  const searchParams = new URLSearchParams(search.substring(1));
 
   if (service === 'google') {
     externalToken = hashParams.get('id_token');
@@ -44,7 +45,11 @@ export async function handleLogin(
     throw new Error('possible cross-site request forgery');
   }
 
-  const userToken = await userTokenService.login(service, externalToken);
+  const userToken = await userTokenService.login(
+    service,
+    externalToken,
+    signal,
+  );
   userTokenTracker.set(userToken);
   return redirect || '/';
 }

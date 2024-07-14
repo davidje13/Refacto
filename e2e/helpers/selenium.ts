@@ -1,4 +1,4 @@
-import { Builder as WebDriverBuilder } from 'selenium-webdriver';
+import { Builder as WebDriverBuilder, logging } from 'selenium-webdriver';
 import { Options as ChromeOptions } from 'selenium-webdriver/chrome.js';
 import { Options as FirefoxOptions } from 'selenium-webdriver/firefox.js';
 import { downloadDir } from './downloads';
@@ -38,9 +38,15 @@ if (headless) {
   firefoxOptions.addArguments('--headless');
 }
 
+const logPrefs = new logging.Preferences();
+logPrefs.setLevel('driver', logging.Level.WARNING);
+logPrefs.setLevel('browser', logging.Level.ALL);
+//logPrefs.setLevel('performance', logging.Level.INFO);
+
 export const buildDriver = () =>
   new WebDriverBuilder()
     .forBrowser('chrome')
+    .setLoggingPrefs(logPrefs)
     .setChromeOptions(chromeOptions)
     .setFirefoxOptions(firefoxOptions)
     .build();

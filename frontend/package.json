@@ -12,7 +12,7 @@
   "dependencies": {
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
-    "json-immutability-helper": "3.x",
+    "json-immutability-helper": "3.1.x",
     "lean-qr": "2.x",
     "react": "18.x",
     "react-dom": "18.x",

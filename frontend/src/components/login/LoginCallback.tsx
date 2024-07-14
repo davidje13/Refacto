@@ -2,6 +2,7 @@ import { useState, useEffect, memo } from 'react';
 import { useLocation } from 'wouter';
 import { handleLogin } from './handleLogin';
 import { Header } from '../common/Header';
+import { useEvent } from '../../api/reducer';
 import { storage } from './storage';
 import './LoginCallback.less';
 
@@ -13,24 +14,37 @@ export const LoginCallback = memo(({ service }: PropsT) => {
   const [, setLocation] = useLocation();
   const [error, setError] = useState<string | null>(null);
 
+  const stableSetLocation = useEvent(setLocation);
+
   useEffect(() => {
+    const ac = new AbortController();
     const { search, hash } = document.location;
     const nonce = storage.getItem('login-nonce');
-    handleLogin(service, nonce, { search, hash })
+    handleLogin(service, nonce, { search, hash }, ac.signal)
       .then((redirect) => {
+        if (ac.signal.aborted) {
+          return;
+        }
         storage.removeItem('login-nonce');
-        setLocation(redirect, { replace: true });
+        stableSetLocation(redirect, { replace: true });
       })
       .catch((err) => {
-        if (err.message === 'unrecognised login details') {
+        if (ac.signal.aborted) {
+          return;
+        }
+        if (!(err instanceof Error)) {
+          storage.removeItem('login-nonce');
+          setError(String(err));
+        } else if (err.message === 'unrecognised login details') {
           // GitLab shows a bare link to the /sso/login URL on the confirmation page
-          setLocation('/', { replace: true });
+          stableSetLocation('/', { replace: true });
         } else {
           storage.removeItem('login-nonce');
           setError(err.message);
         }
       });
-  }, [setError]);
+    return () => ac.abort();
+  }, [stableSetLocation]);
 
   return (
     <article className="page-login-callback">
