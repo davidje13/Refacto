@@ -12,10 +12,6 @@ interface PropsT {
   links?: HeaderLinks;
 }
 
-function nonNull<T>(o: T | null): o is T {
-  return Boolean(o);
-}
-
 export const Header = memo(
   ({ documentTitle, title, backLink, links = [] }: PropsT) => (
     <header className="top-header">
@@ -23,9 +19,11 @@ export const Header = memo(
       <h1>{title}</h1>
       {backLink && <HeaderLinkItem className="back" {...backLink} />}
       <div className="menu">
-        {links.filter(nonNull).map((link) => (
-          <HeaderLinkItem key={link.label} {...link} />
-        ))}
+        {links
+          .filter((o) => o !== null)
+          .map((link) => (
+            <HeaderLinkItem key={link.label} {...link} />
+          ))}
       </div>
     </header>
   ),

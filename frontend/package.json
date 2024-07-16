@@ -55,7 +55,7 @@
     "react-test-renderer": "18.x",
     "terser-webpack-plugin": "5.x",
     "timezone-mock": "1.x",
-    "typescript": "5.4.x",
+    "typescript": "5.5.x",
     "webpack": "5.x",
     "webpack-cli": "5.x",
     "webpack-dev-server": "5.x"
