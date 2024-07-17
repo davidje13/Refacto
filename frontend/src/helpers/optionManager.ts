@@ -1,4 +1,4 @@
-import { type Spec } from 'json-immutability-helper';
+import { type Spec } from '../api/reducer';
 
 class OptionType<T> {
   public constructor(

@@ -1,9 +1,9 @@
-import { type Spec } from 'json-immutability-helper';
 import {
   type RetroItem,
   type UserProvidedRetroItemDetails,
 } from '../shared/api-entities';
 import { type RetroDispatchSpec } from '../api/RetroTracker';
+import { type Spec } from '../api/reducer';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
