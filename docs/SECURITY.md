@@ -81,18 +81,6 @@ stick with using `./index.js` to launch the application instead of
 `node index.js`, as the former will automatically get new security
 flags as they are added.
 
-### Additional runtime flags
-
-To enable an (experimental) NodeJS feature for limiting the source
-files which can be loaded, you can set an environment variable:
-
-```
-NODE_OPTIONS='--experimental-policy=./policy.json'
-```
-
-(`policy.json` is provided in the same folder as `index.js` - if
-that is not the current directory, change the path to match)
-
 ## Data encryption
 
 All retro item data is encrypted in the database using aes-256-cbc,

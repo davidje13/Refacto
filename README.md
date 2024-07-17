@@ -1,7 +1,7 @@
 # Refacto
 
 A complete from-scratch re-write of
-[Postfacto](https://github.com/pivotal/postfacto), with a focus on
+[Postfacto](https://github.com/vmware-archive/postfacto), with a focus on
 simplified code, development, and deployment.
 
 ![Refacto](docs/screenshot.png)

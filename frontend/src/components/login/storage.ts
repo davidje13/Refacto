@@ -67,16 +67,9 @@ export const storage = {
     let any = false;
     // sessionStorage is best option for security and privacy
     if (setStorage(window.sessionStorage, key, value)) {
-      if (!window.navigator.userAgent.includes('Firefox')) {
-        return true;
-      }
       any = true;
     }
-    // FireFox has problems with sessionStorage/localStorage
-    // (e.g. https://bugzilla.mozilla.org/show_bug.cgi?id=1656768,
-    // but also seemingly much more general problems too)
-    // Also other browsers can impose restrictions in private browsing mode,
-    // so throw everything at the wall and see what sticks:
+    // if sessionStorage fails for any reason, throw everything at the wall and see what sticks:
     any = setStorage(window.localStorage, key, value) || any; // do not short-circuit
     any = setSessionCookie(key, value) || any;
     return any;

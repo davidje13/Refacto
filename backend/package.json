@@ -4,7 +4,7 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "tsc && prettier --check .",
-    "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static policy.json build && chmod +x build/index.js",
+    "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build && chmod +x build/index.js",
     "start": "npm run build && NODE_ENV=development build/index.js",
     "test": "lean-test --preprocess tsc --parallel"
   },

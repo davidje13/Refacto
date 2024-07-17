@@ -91,10 +91,6 @@ if (!testEnv['TARGET_HOST']) {
     SSO_GOOGLE_CLIENT_ID: 'mock-client-id',
     SSO_GOOGLE_AUTH_URL: `${mockSSOHost}/auth`,
     SSO_GOOGLE_TOKEN_INFO_URL: `${mockSSOHost}/tokeninfo`,
-    // TODO: uncomment once https://github.com/nodejs/node/issues/50452 is resolved
-    //NODE_OPTIONS: `--experimental-policy=${JSON.stringify(
-    //  join(builddir, 'policy.json'),
-    //)}`,
   };
 
   log('Using randomised secrets');

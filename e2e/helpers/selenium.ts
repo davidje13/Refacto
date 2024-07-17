@@ -29,7 +29,7 @@ const firefoxOptions = new FirefoxOptions()
 
 if (process.env['DOCKER'] === 'true') {
   // Prevent crashes in Docker
-  // (see https://developers.google.com/web/tools/puppeteer/troubleshooting#tips)
+  // (see https://developer.chrome.com/docs/puppeteer/troubleshooting/#best_practices_with_docker)
   chromeOptions.addArguments('disable-dev-shm-usage', 'no-sandbox');
 }
 
