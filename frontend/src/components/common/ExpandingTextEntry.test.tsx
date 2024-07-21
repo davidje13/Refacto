@@ -7,11 +7,11 @@ import { css } from '../../test-helpers/queries';
 
 import { ExpandingTextEntry } from './ExpandingTextEntry';
 
-function setValue(input: HTMLElement, value: string): void {
+function setValue(input: HTMLElement, value: string) {
   fireEvent.change(input, { target: { value } });
 }
 
-const nop = (): void => undefined;
+const nop = () => undefined;
 
 describe('ExpandingTextEntry', () => {
   describe('with no extra options', () => {

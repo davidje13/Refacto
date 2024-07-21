@@ -79,7 +79,7 @@ describe('LocalDateProvider', () => {
     tsSwitch1Summer,
     tsSwitch2Summer,
     tsSwitch2Winter,
-  }: TimezoneCheckOpts): void {
+  }: TimezoneCheckOpts) {
     const phaseWinter = posMod(tsSwitch2Winter - tsSwitch1Winter, DAY_MS);
     if (phaseWinter !== 0) {
       throw new Error(`Test winter times do not match (delta: ${phaseWinter})`);

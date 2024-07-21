@@ -42,7 +42,7 @@ export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
       },
       actionsSyncedCallback(onSave),
     ]);
-  }, [name, slug, alwaysShowAddAction, theme, dispatch, onSave]);
+  });
 
   const themeChoices = getThemes().map(([value, detail]) => ({
     value,

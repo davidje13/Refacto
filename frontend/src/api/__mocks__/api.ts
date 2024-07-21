@@ -20,13 +20,13 @@ class FakeRetroTracker {
 
   private expectedRetroToken: string | null = null;
 
-  public dispatch = (): void => undefined;
+  public dispatch = () => undefined;
 
-  public setExpectedToken(retroToken: string): void {
+  public setExpectedToken(retroToken: string) {
     this.expectedRetroToken = retroToken;
   }
 
-  public setServerData(retroId: string, serverData: Partial<RetroState>): void {
+  public setServerData(retroId: string, serverData: Partial<RetroState>) {
     this.data.set(retroId, {
       retro: null,
       error: null,
@@ -55,7 +55,7 @@ class FakeRetroTracker {
     retroStateCallback({ ...serverData });
 
     return {
-      unsubscribe: (): void => {
+      unsubscribe: () => {
         this.subscribed -= 1;
       },
     };
@@ -67,7 +67,7 @@ class FakeArchiveTracker {
 
   private expectedRetroToken: string | null = null;
 
-  public setExpectedToken(retroToken: string): void {
+  public setExpectedToken(retroToken: string) {
     this.expectedRetroToken = retroToken;
   }
 
@@ -75,7 +75,7 @@ class FakeArchiveTracker {
     retroId: string,
     archiveId: string,
     archive: RetroArchive,
-  ): void {
+  ) {
     if (!this.data.has(retroId)) {
       this.data.set(retroId, new Map());
     }
@@ -131,7 +131,7 @@ class FakeUserTokenService {
 
   private userToken: string | null = null;
 
-  public setServerData(userToken: string): void {
+  public setServerData(userToken: string) {
     this.userToken = userToken;
   }
 
@@ -153,7 +153,7 @@ class FakeRetroTokenService {
 
   private data = new Map<string, string>();
 
-  public setServerData(retroId: string, retroToken: string): void {
+  public setServerData(retroId: string, retroToken: string) {
     this.data.set(retroId, retroToken);
   }
 
@@ -196,7 +196,7 @@ class FakeRetroService {
 
   private id: string | null = null;
 
-  public setServerData(retroId: string): void {
+  public setServerData(retroId: string) {
     this.id = retroId;
   }
 

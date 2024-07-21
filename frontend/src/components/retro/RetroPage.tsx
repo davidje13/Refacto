@@ -1,11 +1,11 @@
-import { useState, useCallback, useRef, memo } from 'react';
+import { useState, useRef, memo } from 'react';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';
 import { Header } from '../common/Header';
 import { Popup, PopupData } from '../common/Popup';
-import { useBoundCallback } from '../../hooks/useBoundCallback';
-import { useWindowSize } from '../../hooks/env/useWindowSize';
+import { useEvent } from '../../hooks/useEvent';
+import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import { clearCovered } from '../../actions/retro';
 import { archiveService } from '../../api/api';
 import { OPTIONS } from '../../helpers/optionManager';
@@ -29,18 +29,20 @@ type PropsT = Pick<
   group?: string | undefined;
 };
 
+const isSmallScreen = ({ width }: Size) => width <= 800;
+
 export const RetroPage = memo(
   ({ retroToken, retro, retroDispatch, group }: PropsT) => {
-    const smallScreen = useWindowSize(({ width }) => width <= 800, []);
+    const smallScreen = useWindowSize(isSmallScreen);
     const [archivePopupVisible, setArchivePopupVisible] = useState(false);
-    const showArchivePopup = useBoundCallback(setArchivePopupVisible, true);
-    const hideArchivePopup = useBoundCallback(setArchivePopupVisible, false);
+    const showArchivePopup = useEvent(() => setArchivePopupVisible(true));
+    const hideArchivePopup = useEvent(() => setArchivePopupVisible(false));
     const [invitePopupVisible, setInvitePopupVisible] = useState(false);
-    const showInvitePopup = useBoundCallback(setInvitePopupVisible, true);
-    const hideInvitePopup = useBoundCallback(setInvitePopupVisible, false);
+    const showInvitePopup = useEvent(() => setInvitePopupVisible(true));
+    const hideInvitePopup = useEvent(() => setInvitePopupVisible(false));
 
     const isArchiving = useRef(false);
-    const performArchive = useCallback(() => {
+    const performArchive = useEvent(() => {
       if (isArchiving.current || group) {
         return;
       }
@@ -57,16 +59,7 @@ export const RetroPage = memo(
           // TODO: report failure to user
           console.error('Failed to create archive', e);
         });
-    }, [
-      isArchiving,
-      hideArchivePopup,
-      archiveService,
-      retroDispatch,
-      clearCovered,
-      retro,
-      retroToken,
-      group,
-    ]);
+    });
 
     const canFacilitate =
       !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
@@ -112,17 +105,9 @@ export const RetroPage = memo(
     const links = [
       { label: 'Invite', action: showInvitePopup },
       retroDispatch
-        ? {
-            label: 'Settings',
-            action: `/retros/${retro.slug}/settings`,
-          }
+        ? { label: 'Settings', action: `/retros/${retro.slug}/settings` }
         : null,
-      canArchive
-        ? {
-            label: 'Create Archive',
-            action: showArchivePopup,
-          }
-        : null,
+      canArchive ? { label: 'Create Archive', action: showArchivePopup } : null,
       { label: 'Archives', action: `/retros/${retro.slug}/archives` },
     ];
 
@@ -133,10 +118,7 @@ export const RetroPage = memo(
           title={retro.name}
           backLink={
             group
-              ? {
-                  label: 'Main Retro',
-                  action: `/retros/${retro.slug}`,
-                }
+              ? { label: 'Main Retro', action: `/retros/${retro.slug}` }
               : null
           }
           links={retro ? links : []}

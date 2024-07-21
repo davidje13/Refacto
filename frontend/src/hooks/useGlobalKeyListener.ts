@@ -1,28 +1,32 @@
-import { useListener } from './useListener';
-import { useKeyHandler } from './useKeyHandler';
+import { useEffect } from 'react';
+import { useEvent } from './useEvent';
+import { fullKeyName } from './useKeyHandler';
 
 export function useGlobalKeyListener(
   keyMaps: Record<string, (() => void) | undefined>,
-): void {
-  const handler = useKeyHandler(keyMaps, { allowRepeat: false });
+) {
+  const handler = useEvent((e: KeyboardEvent) => {
+    const t = e.target as Element;
+    if (
+      t.tagName === 'INPUT' ||
+      t.tagName === 'TEXTAREA' ||
+      t.tagName === 'SELECT' ||
+      document.body.classList.contains('ReactModal__Body--open')
+    ) {
+      return;
+    }
+    const fn = keyMaps[fullKeyName(e)];
+    if (fn) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!e.repeat) {
+        fn();
+      }
+    }
+  });
 
-  useListener(
-    window,
-    'keydown',
-    (e: KeyboardEvent) => {
-      const t = e.target as Element;
-      if (
-        t.tagName === 'INPUT' ||
-        t.tagName === 'TEXTAREA' ||
-        t.tagName === 'SELECT'
-      ) {
-        return;
-      }
-      if (document.body.classList.contains('ReactModal__Body--open')) {
-        return;
-      }
-      handler(e);
-    },
-    [handler],
-  );
+  useEffect(() => {
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [handler]);
 }

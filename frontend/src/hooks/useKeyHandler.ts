@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useEvent } from './useEvent';
 
 type KeyboardEventLike = Pick<
   KeyboardEvent,
@@ -16,7 +16,7 @@ interface OptionsT {
   allowRepeat?: boolean;
 }
 
-function fullKeyName(e: KeyboardEventLike): string {
+export function fullKeyName(e: KeyboardEventLike): string {
   let result = e.key;
   if (e.ctrlKey) {
     result = `Ctrl-${result}`;
@@ -33,21 +33,17 @@ function fullKeyName(e: KeyboardEventLike): string {
   return result;
 }
 
-export function useKeyHandler(
+export const useKeyHandler = (
   keyMaps: Record<string, (() => void) | undefined>,
   { allowRepeat = true }: OptionsT = {},
-): (e: KeyboardEventLike) => void {
-  return useCallback(
-    (e: KeyboardEventLike) => {
-      const fn = keyMaps[fullKeyName(e)];
-      if (fn) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (allowRepeat || !e.repeat) {
-          fn();
-        }
+) =>
+  useEvent((e: KeyboardEventLike) => {
+    const fn = keyMaps[fullKeyName(e)];
+    if (fn) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (allowRepeat || !e.repeat) {
+        fn();
       }
-    },
-    Object.entries(keyMaps).flatMap((o) => o),
-  );
-}
+    }
+  });

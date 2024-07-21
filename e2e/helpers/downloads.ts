@@ -22,9 +22,7 @@ export async function waitForFile(
     try {
       return await readFile(fileName, { encoding: 'utf-8' });
     } catch (e) {
-      await new Promise((res): void => {
-        setTimeout(res, 100);
-      });
+      await new Promise((res) => setTimeout(res, 100));
     }
   } while (Date.now() < exp);
 

@@ -22,14 +22,7 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
       <Loader
         error={archivesError}
         Component={ArchiveList}
-        componentProps={
-          archives
-            ? {
-                slug: retro.slug,
-                archives,
-              }
-            : null
-        }
+        componentProps={archives ? { slug: retro.slug, archives } : null}
       />
       <div className="extra-links">
         <ApiDownload

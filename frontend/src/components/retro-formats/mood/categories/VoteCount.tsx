@@ -1,7 +1,7 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import classNames from 'classnames';
 import { WrappedButton } from '../../../common/WrappedButton';
-import { useTemporary } from '../../../../hooks/useTemporary';
+import { useThrottled } from '../../../../hooks/useThrottled';
 import Heart from '../../../../../resources/heart.svg';
 import './VoteCount.less';
 
@@ -20,13 +20,7 @@ function scale(n: number): number {
 }
 
 export const VoteCount = memo(({ votes, onVote }: PropsT) => {
-  const [click, clicking] = useTemporary(MIN_CLICK_DELAY);
-
-  const clickFn = useCallback(() => {
-    if (onVote && click()) {
-      onVote();
-    }
-  }, [onVote, click]);
+  const [click, clicking] = useThrottled(onVote, MIN_CLICK_DELAY);
 
   return (
     <WrappedButton
@@ -38,7 +32,7 @@ export const VoteCount = memo(({ votes, onVote }: PropsT) => {
       })}
       title="Agree with this"
       disabledTitle={`${votes} agree with this`}
-      onClick={onVote && clickFn}
+      onClick={click}
     >
       <div className="inner">
         <div className="hearts" style={{ transform: `scale(${scale(votes)})` }}>

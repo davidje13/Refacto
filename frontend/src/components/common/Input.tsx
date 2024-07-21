@@ -1,4 +1,4 @@
-import { useCallback, memo, ChangeEvent, InputHTMLAttributes } from 'react';
+import { memo, InputHTMLAttributes } from 'react';
 
 type Callback<T> = (value: T) => void;
 
@@ -41,9 +41,12 @@ export const Input = memo(
     checked,
     onChange,
     ...rest
-  }: PropsT) => {
-    const changeHandler = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
+  }: PropsT) => (
+    <input
+      type={type}
+      value={value}
+      checked={type === 'radio' ? selected === value : checked}
+      onChange={(e) => {
         if (!onChange) {
           return;
         }
@@ -57,19 +60,9 @@ export const Input = memo(
         } else {
           (onChange as Callback<string>)(o.value);
         }
-      },
-      [type, onChange],
-    );
-
-    return (
-      <input
-        type={type}
-        value={value}
-        checked={type === 'radio' ? selected === value : checked}
-        onChange={changeHandler}
-        autoComplete={autoComplete}
-        {...rest}
-      />
-    );
-  },
+      }}
+      autoComplete={autoComplete}
+      {...rest}
+    />
+  ),
 );

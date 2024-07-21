@@ -8,7 +8,7 @@ import { ActionSection } from './ActionSection';
 import { ItemEditor } from '../ItemEditor';
 import { type LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
-import { useBoundCallback } from '../../../../hooks/useBoundCallback';
+import { useEvent } from '../../../../hooks/useEvent';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
@@ -40,7 +40,10 @@ export const ActionsPane = memo(
     onEdit,
     onDelete,
   }: PropsT) => {
-    const handleAddItem = useBoundCallback(onAddItem, group);
+    const handleAddItem = useEvent(
+      (itemParts: Partial<UserProvidedRetroItemDetails>) =>
+        onAddItem?.(group, itemParts),
+    );
     const today = localDateProvider.getMidnightTimestamp();
     const lastWeek = localDateProvider.getMidnightTimestamp(-7);
 
@@ -48,7 +51,7 @@ export const ActionsPane = memo(
       <section className="actions">
         <header>
           <h2>Action items</h2>
-          {handleAddItem && (
+          {onAddItem && (
             <div
               className={classNames('new-action-item-hold', {
                 'always-visible': alwaysShowEntry,

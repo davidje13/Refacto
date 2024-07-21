@@ -1,5 +1,6 @@
-import { useCallback, memo } from 'react';
+import { memo } from 'react';
 import { useLocation } from 'wouter';
+import { useEvent } from '../../hooks/useEvent';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
@@ -11,12 +12,9 @@ type PropsT = Pick<RetroPagePropsT, 'retro' | 'retroDispatch'>;
 export const RetroSettingsPage = memo(({ retro, retroDispatch }: PropsT) => {
   const [, setLocation] = useLocation();
 
-  const handleSave = useCallback(
-    (savedRetro: Retro) => {
-      setLocation(`/retros/${savedRetro.slug}`);
-    },
-    [setLocation],
-  );
+  const handleSave = useEvent((savedRetro: Retro) => {
+    setLocation(`/retros/${savedRetro.slug}`);
+  });
 
   return (
     <article className="page-retro-settings">

@@ -26,7 +26,7 @@ export class StaticRouter extends Router {
       serveStatic: {
         cacheControl: false,
         redirect: false,
-        setHeaders: (res, filePath): void => {
+        setHeaders: (res, filePath) => {
           if (VERSIONED_FILE.test(filePath)) {
             res.setHeader('cache-control', VERSIONED_CACHE_CONTROL);
           } else {

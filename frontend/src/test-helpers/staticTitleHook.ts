@@ -5,7 +5,7 @@ export interface StaticTitleHook extends TitleHook {
 }
 
 export function staticTitleHook(initialTitle = ''): StaticTitleHook {
-  const hook: StaticTitleHook = (newTitle: string): void => {
+  const hook: StaticTitleHook = (newTitle: string) => {
     hook.currentTitle = newTitle;
   };
   hook.currentTitle = initialTitle;

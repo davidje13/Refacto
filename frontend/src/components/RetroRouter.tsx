@@ -37,7 +37,7 @@ function replaceSlug(
   setLocation: SetLocation,
   newSlug: string,
   retroId: string,
-): void {
+) {
   const oldSlug = RETRO_SLUG_PATH.exec(oldPath)?.[1];
   if (!oldSlug || oldSlug === newSlug) {
     return;
@@ -46,7 +46,7 @@ function replaceSlug(
   slugTracker.set(newSlug, retroId);
   const oldPrefix = `/retros/${oldSlug}`;
   const newPrefix = `/retros/${newSlug}`;
-  const newPath = newPrefix + oldPath.substr(oldPrefix.length);
+  const newPath = newPrefix + oldPath.substring(oldPrefix.length);
   setLocation(newPath, { replace: true });
 }
 
@@ -83,7 +83,7 @@ function useRetroReducer(
       (data: RetroState) => nonce.check(myNonce) && setRetroState(data),
       (err: RetroError) => nonce.check(myNonce) && setError(err),
     );
-    return (): void => subscription.unsubscribe();
+    return () => subscription.unsubscribe();
   }, [
     retroTracker,
     setRetroState,

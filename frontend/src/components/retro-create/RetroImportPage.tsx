@@ -1,19 +1,17 @@
-import { useCallback, memo } from 'react';
+import { memo } from 'react';
 import { useLocation } from 'wouter';
 import { Header } from '../common/Header';
+import { useEvent } from '../../hooks/useEvent';
 import { slugTracker } from '../../api/api';
 import { RetroForm, CreationT } from './RetroForm';
 import './RetroImportPage.less';
 
 export const RetroImportPage = memo(() => {
   const [, setLocation] = useLocation();
-  const handleCreate = useCallback(
-    ({ id, slug }: CreationT) => {
-      slugTracker.set(slug, id);
-      setLocation(`/retros/${slug}`);
-    },
-    [setLocation],
-  );
+  const handleCreate = useEvent(({ id, slug }: CreationT) => {
+    slugTracker.set(slug, id);
+    setLocation(`/retros/${slug}`);
+  });
 
   return (
     <article className="page-retro-import">

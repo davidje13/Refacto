@@ -11,6 +11,7 @@ const headless = process.env['HEADLESS'] !== 'false';
 
 const width = 900; // ensure non-mobile display
 const height = 500;
+const headlessUserAgent = 'HeadlessEndToEndTest';
 
 const chromeOptions = new ChromeOptions();
 chromeOptions.windowSize({ width, height });
@@ -34,8 +35,13 @@ if (process.env['DOCKER'] === 'true') {
 }
 
 if (headless) {
-  chromeOptions.addArguments('--headless=new');
-  firefoxOptions.addArguments('--headless');
+  chromeOptions.addArguments(
+    '--headless=new',
+    '--user-agent=' + headlessUserAgent,
+  );
+  firefoxOptions
+    .addArguments('--headless')
+    .setPreference('general.useragent.override', headlessUserAgent);
 }
 
 const logPrefs = new logging.Preferences();

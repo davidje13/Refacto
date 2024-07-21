@@ -47,11 +47,11 @@ export class SlugTracker {
     return this.storage.get(slug).observable;
   }
 
-  public set(slug: string, id: string): void {
+  public set(slug: string, id: string) {
     this.storage.get(slug).subject.next(id);
   }
 
-  public remove(slug: string): void {
+  public remove(slug: string) {
     this.storage.remove(slug);
   }
 

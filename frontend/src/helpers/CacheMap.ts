@@ -12,7 +12,7 @@ export class CacheMap<K, V> {
     return value;
   }
 
-  public remove(key: K): void {
+  public remove(key: K) {
     this.data.delete(key);
   }
 }

@@ -1,4 +1,4 @@
-import { useState, useCallback, memo } from 'react';
+import { useState, memo } from 'react';
 import {
   type RetroItem,
   type UserProvidedRetroItemDetails,
@@ -6,7 +6,7 @@ import {
 import { MoodItemPlain } from './MoodItemPlain';
 import { MoodItemFocused } from './MoodItemFocused';
 import { ItemEditor } from '../ItemEditor';
-import { useBoundCallback } from '../../../../hooks/useBoundCallback';
+import { useEvent } from '../../../../hooks/useEvent';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './MoodItem.less';
 
@@ -40,21 +40,20 @@ export const MoodItem = memo(
     onCancel,
     onContinue,
   }: PropsT) => {
-    const handleVote = useBoundCallback(onVote, item.id);
-    const handleDelete = useBoundCallback(onDelete, item.id);
-    const handleSelect = useBoundCallback(onSelect, item.id);
-    const handleCancel = useBoundCallback(onCancel, item.id);
-    const handleContinue = useBoundCallback(onContinue, item.id);
+    const handleVote = useEvent(() => onVote?.(item.id));
+    const handleDelete = useEvent(() => onDelete?.(item.id));
+    const handleSelect = useEvent(() => onSelect?.(item.id));
+    const handleCancel = useEvent(() => onCancel?.(item.id));
+    const handleContinue = useEvent(() => onContinue?.(item.id));
 
     const [editing, setEditing] = useState(false);
-    const handleBeginEdit = useBoundCallback(setEditing, true);
-    const handleCancelEdit = useBoundCallback(setEditing, false);
-    const handleSaveEdit = useCallback(
+    const handleBeginEdit = useEvent(() => setEditing(true));
+    const handleCancelEdit = useEvent(() => setEditing(false));
+    const handleSaveEdit = useEvent(
       (diff: Partial<UserProvidedRetroItemDetails>) => {
         setEditing(false);
         onEdit!(item.id, diff);
       },
-      [setEditing, onEdit, item.id],
     );
 
     if (editing) {
@@ -69,7 +68,7 @@ export const MoodItem = memo(
             }
             submitButtonTitle="Save changes"
             onSubmit={handleSaveEdit}
-            onDelete={handleDelete}
+            onDelete={onDelete ? handleDelete : undefined}
             onCancel={handleCancelEdit}
             allowAttachments
             autoFocus
@@ -85,8 +84,8 @@ export const MoodItem = memo(
           focusedItemTimeout={focusedItemTimeout}
           onAddExtraTime={onAddExtraTime}
           autoScroll={autoScroll}
-          onCancel={handleCancel}
-          onContinue={handleContinue}
+          onCancel={onCancel ? handleCancel : undefined}
+          onContinue={onContinue ? handleContinue : undefined}
         />
       );
     }
@@ -94,9 +93,9 @@ export const MoodItem = memo(
     return (
       <MoodItemPlain
         item={item}
-        onVote={handleVote}
+        onVote={onVote ? handleVote : undefined}
         onEdit={onEdit ? handleBeginEdit : undefined}
-        onSelect={handleSelect}
+        onSelect={onSelect ? handleSelect : undefined}
       />
     );
   },

@@ -44,24 +44,24 @@ class MockExpectation implements MockExpectationT {
     this.fn = undefined;
   }
 
-  public handle(request: MockRequest): void {
+  public handle(request: MockRequest) {
     this.fn?.(request);
   }
 
-  public and(fn: (request: MockRequest) => void): void {
+  public and(fn: (request: MockRequest) => void) {
     this.fn = fn;
   }
 
-  public andRespond(body: string, init?: RequestInit): void {
-    this.fn = (request): void => request.respond(body, init);
+  public andRespond(body: string, init?: RequestInit) {
+    this.fn = (request) => request.respond(body, init);
   }
 
-  public andRespondOk(body: string, init?: RequestInit): void {
-    this.fn = (request): void => request.respondOk(body, init);
+  public andRespondOk(body: string, init?: RequestInit) {
+    this.fn = (request) => request.respondOk(body, init);
   }
 
-  public andRespondJsonOk(body: Readonly<JsonData>, init?: RequestInit): void {
-    this.fn = (request): void => request.respondJsonOk(body, init);
+  public andRespondJsonOk(body: Readonly<JsonData>, init?: RequestInit) {
+    this.fn = (request) => request.respondJsonOk(body, init);
   }
 }
 
@@ -95,7 +95,7 @@ class MockRequest {
     this.internalReject = reject;
   }
 
-  public close(): void {
+  public close() {
     this.internalResolve = undefined;
     this.internalReject = undefined;
   }
@@ -107,7 +107,7 @@ class MockRequest {
     return this.url === url;
   }
 
-  public respond(body: string = '', init: InitWithStatus = {}): void {
+  public respond(body: string = '', init: InitWithStatus = {}) {
     // const response = new Response(body, init)
     const response = {
       status: init.status || 200,
@@ -117,14 +117,11 @@ class MockRequest {
     this.close();
   }
 
-  public respondOk(body: string = '', init: RequestInit = {}): void {
+  public respondOk(body: string = '', init: RequestInit = {}) {
     this.respond(body, { status: 200, ...init });
   }
 
-  public respondJsonOk(
-    body: Readonly<JsonData> = {},
-    init: RequestInit = {},
-  ): void {
+  public respondJsonOk(body: Readonly<JsonData> = {}, init: RequestInit = {}) {
     this.respond(JSON.stringify(body), {
       status: 200,
       headers: {
@@ -134,7 +131,7 @@ class MockRequest {
     });
   }
 
-  public reject(error: Error): void {
+  public reject(error: Error) {
     this.internalReject!(error);
     this.close();
   }
@@ -147,7 +144,7 @@ class MockFetch {
 
   private originalFetch: typeof global.fetch | undefined;
 
-  public register(): void {
+  public register() {
     if (this.originalFetch) {
       throw new Error('mock fetch is already registered!');
     }
@@ -160,7 +157,7 @@ class MockFetch {
     this.expectations = [];
   }
 
-  public unregister(): void {
+  public unregister() {
     if (this.originalFetch) {
       (global as any).fetch = this.originalFetch;
       this.originalFetch = undefined;
@@ -173,7 +170,7 @@ class MockFetch {
     return expectation;
   }
 
-  public assertAllRequestsHandled(): void {
+  public assertAllRequestsHandled() {
     const remaining = this.unexpectedRequests.map((req) => req.url);
 
     if (remaining.length > 0) {
@@ -194,7 +191,7 @@ class MockFetch {
     url: string,
     options: RequestInit = {},
   ): Promise<ResponseWrapper> =>
-    new Promise((resolve, reject): void => {
+    new Promise((resolve, reject) => {
       const request = new MockRequest(url, options, resolve, reject);
       const expectation = this.expectations.find((exp) => request.matches(exp));
       if (expectation) {

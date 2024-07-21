@@ -1,8 +1,9 @@
-import { useCallback, memo, type ReactNode } from 'react';
+import { memo, type ReactNode } from 'react';
 import {
   type RetroItem,
   type UserProvidedRetroItemDetails,
 } from '../../../shared/api-entities';
+import { useEvent } from '../../../hooks/useEvent';
 import { ExpandingTextEntry } from '../../common/ExpandingTextEntry';
 import { WrappedButton } from '../../common/WrappedButton';
 import { Attachment } from '../../attachments/Attachment';
@@ -46,18 +47,12 @@ export const ItemEditor = memo(
       'attachment',
       defaultItem?.attachment ?? null,
     );
-    const handleSubmit = useCallback(
-      (message: string) => {
-        onSubmit({
-          message,
-          attachment,
-        });
-        if (clearAfterSubmit) {
-          setAttachment(null);
-        }
-      },
-      [onSubmit, attachment, clearAfterSubmit, setAttachment],
-    );
+    const handleSubmit = useEvent((message: string) => {
+      onSubmit({ message, attachment });
+      if (clearAfterSubmit) {
+        setAttachment(null);
+      }
+    });
 
     const attachmentElement = Attachment({ attachment });
 

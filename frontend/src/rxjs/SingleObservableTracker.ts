@@ -7,7 +7,7 @@ export class SingleObservableTracker<V> {
     return this.data;
   }
 
-  public set(value: V): void {
+  public set(value: V) {
     this.data.next(value);
   }
 }

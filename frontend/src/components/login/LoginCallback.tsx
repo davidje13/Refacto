@@ -1,8 +1,8 @@
 import { useState, useEffect, memo } from 'react';
 import { useLocation } from 'wouter';
 import { handleLogin } from './handleLogin';
+import { useEvent } from '../../hooks/useEvent';
 import { Header } from '../common/Header';
-import { useEvent } from '../../api/reducer';
 import { storage } from './storage';
 import './LoginCallback.less';
 

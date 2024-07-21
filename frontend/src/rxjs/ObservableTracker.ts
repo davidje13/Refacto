@@ -6,7 +6,7 @@ export class ObservableTracker<K, V> extends CacheMap<K, ReplaySubject<V>> {
     super(() => new ReplaySubject<V>(1));
   }
 
-  public set(key: K, value: V): void {
+  public set(key: K, value: V) {
     this.get(key).next(value);
   }
 }

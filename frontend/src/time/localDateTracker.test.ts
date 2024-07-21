@@ -10,7 +10,7 @@ class MockClock {
     this.time = time;
   }
 
-  public set(millis: number): void {
+  public set(millis: number) {
     this.time = millis;
   }
 
@@ -18,16 +18,16 @@ class MockClock {
     return this.time;
   }
 
-  public advanceByTime(millis: number): void {
+  public advanceByTime(millis: number) {
     this.advanceWallTimeOnly(millis);
     this.advanceTickTimeOnly(millis);
   }
 
-  public advanceWallTimeOnly(millis: number): void {
+  public advanceWallTimeOnly(millis: number) {
     this.time += millis;
   }
 
-  public advanceTickTimeOnly = (millis: number): void => {
+  public advanceTickTimeOnly = (millis: number) => {
     jest.advanceTimersByTime(millis);
   };
 }

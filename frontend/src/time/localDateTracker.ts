@@ -21,7 +21,7 @@ export function localDateTracker(
   let currentMidnight = 0;
   let timer: NodeJS.Timeout | undefined;
 
-  const update = (): void => {
+  const update = () => {
     const now = clock.now();
     const provider = new LocalDateProvider(now);
     const nextMidnight = provider.getMidnightTimestamp(1);
@@ -43,7 +43,7 @@ export function localDateTracker(
   window.addEventListener('focus', update);
 
   return {
-    stop: (): void => {
+    stop: () => {
       if (timer) {
         clearTimeout(timer);
       }

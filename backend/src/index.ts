@@ -12,7 +12,7 @@ import { logError, logInfo } from './log';
 let activeApp: App | null = null;
 const server = createServer();
 
-function startServer(): void {
+function startServer() {
   server.listen(config.port, config.serverBindAddress, () => {
     logInfo(`Available at http://localhost:${config.port}/`);
     logInfo('Press Ctrl+C to stop');

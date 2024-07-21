@@ -18,7 +18,7 @@ export function useDebounced<T>(
     if (!fn) {
       return undefined;
     }
-    return (v: T): void => {
+    return (v: T) => {
       if (ref.current !== v) {
         ref.current = v;
         fn?.(v);

@@ -27,7 +27,7 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
       password,
     );
     retroTokenTracker.set(retroId, retroToken);
-  }, [password, retroId, retroTokenService, retroTokenTracker]);
+  });
 
   useLayoutEffect(() => {
     if (!userToken) {

@@ -1,4 +1,5 @@
-import { useState, useCallback, memo, ReactNode, SyntheticEvent } from 'react';
+import { useState, memo, ReactNode, SyntheticEvent } from 'react';
+import { useEvent } from '../../hooks/useEvent';
 import { API_BASE } from '../../api/api';
 import './ApiDownload.less';
 
@@ -15,33 +16,30 @@ export const ApiDownload = memo(
 
     const [pending, setPending] = useState(false);
 
-    const handleDownload = useCallback(
-      async (e: SyntheticEvent) => {
-        e.preventDefault();
-        if (pending) {
-          return;
-        }
-        setPending(true);
+    const handleDownload = useEvent(async (e: SyntheticEvent) => {
+      e.preventDefault();
+      if (pending) {
+        return;
+      }
+      setPending(true);
+      try {
+        const result = await fetch(`${API_BASE}/${url}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const blob = await result.blob();
+        const blobUrl = URL.createObjectURL(blob);
         try {
-          const result = await fetch(`${API_BASE}/${url}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const blob = await result.blob();
-          const blobUrl = URL.createObjectURL(blob);
-          try {
-            const link = document.createElement('a');
-            link.setAttribute('href', blobUrl);
-            link.setAttribute('download', filename);
-            link.click();
-          } finally {
-            URL.revokeObjectURL(blobUrl);
-          }
+          const link = document.createElement('a');
+          link.setAttribute('href', blobUrl);
+          link.setAttribute('download', filename);
+          link.click();
         } finally {
-          setPending(false);
+          URL.revokeObjectURL(blobUrl);
         }
-      },
-      [url, token, filename, pending, setPending],
-    );
+      } finally {
+        setPending(false);
+      }
+    });
 
     if (pending || !token) {
       return <span className="api-download">{children}</span>;

@@ -1,4 +1,4 @@
-import { useState, useCallback, memo } from 'react';
+import { useState, memo } from 'react';
 import classNames from 'classnames';
 import {
   type RetroItem,
@@ -6,7 +6,7 @@ import {
 } from '../../../../shared/api-entities';
 import { ItemEditor } from '../ItemEditor';
 import { WrappedButton } from '../../../common/WrappedButton';
-import { useBoundCallback } from '../../../../hooks/useBoundCallback';
+import { useEvent } from '../../../../hooks/useEvent';
 import Tick from '../../../../../resources/tick.svg';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './ActionItem.less';
@@ -24,18 +24,17 @@ export const ActionItem = memo(
   ({ item, onSetDone, onEdit, onDelete }: PropsT) => {
     const done = item.doneTime > 0;
 
-    const handleToggleDone = useBoundCallback(onSetDone, item.id, !done);
-    const handleDelete = useBoundCallback(onDelete, item.id);
+    const handleToggleDone = useEvent(() => onSetDone?.(item.id, !done));
+    const handleDelete = useEvent(() => onDelete?.(item.id));
 
     const [editing, setEditing] = useState(false);
-    const handleBeginEdit = useBoundCallback(setEditing, true);
-    const handleCancelEdit = useBoundCallback(setEditing, false);
-    const handleSaveEdit = useCallback(
+    const handleBeginEdit = useEvent(() => setEditing(true));
+    const handleCancelEdit = useEvent(() => setEditing(false));
+    const handleSaveEdit = useEvent(
       (diff: Partial<UserProvidedRetroItemDetails>) => {
         setEditing(false);
         onEdit!(item.id, diff);
       },
-      [setEditing, onEdit, item.id],
     );
 
     if (editing) {
@@ -50,7 +49,7 @@ export const ActionItem = memo(
             }
             submitButtonTitle="Save changes"
             onSubmit={handleSaveEdit}
-            onDelete={handleDelete}
+            onDelete={onDelete ? handleDelete : undefined}
             onCancel={handleCancelEdit}
             autoFocus
           />
@@ -66,7 +65,7 @@ export const ActionItem = memo(
           aria-checked={done}
           title={done ? 'Mark as not done' : 'Mark as done'}
           className="toggle-done"
-          onClick={handleToggleDone}
+          onClick={onSetDone ? handleToggleDone : undefined}
         >
           <Tick />
         </WrappedButton>

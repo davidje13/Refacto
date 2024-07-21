@@ -8,7 +8,7 @@ export const Anchor = memo(({ tag }: PropsT) => {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const anchor = window.location.hash.substr(1);
+    const anchor = window.location.hash.substring(1);
     if (anchor === tag && ref.current && ref.current.scrollIntoView) {
       ref.current.scrollIntoView();
     }

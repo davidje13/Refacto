@@ -1,5 +1,5 @@
 import { Router } from 'websocket-express';
-import type { RequestHandler } from 'http-proxy-middleware';
+import { type RequestHandler } from 'http-proxy-middleware';
 
 const filteredLogger = {
   info: () => null,

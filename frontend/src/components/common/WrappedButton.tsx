@@ -1,5 +1,4 @@
-import { memo, ReactNode, HTMLAttributes } from 'react';
-import { useParameterlessCallback } from '../../hooks/useParameterlessCallback';
+import { ReactNode, HTMLAttributes } from 'react';
 
 interface PropsT extends HTMLAttributes<HTMLElement> {
   onClick?: (() => void) | undefined;
@@ -10,35 +9,32 @@ interface PropsT extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
 }
 
-export const WrappedButton = memo(
-  ({
-    onClick,
-    disabled = false,
-    hideIfDisabled = false,
-    title,
-    disabledTitle,
-    children,
-    ...props
-  }: PropsT) => {
-    const handleClick = useParameterlessCallback(onClick);
-    const resolvedDisabled = disabled || !onClick;
+export const WrappedButton = ({
+  onClick,
+  disabled = false,
+  hideIfDisabled = false,
+  title,
+  disabledTitle,
+  children,
+  ...props
+}: PropsT) => {
+  const resolvedDisabled = disabled || !onClick;
 
-    if (resolvedDisabled && hideIfDisabled) {
-      return null;
-    }
+  if (resolvedDisabled && hideIfDisabled) {
+    return null;
+  }
 
-    const resolvedTitle = resolvedDisabled ? disabledTitle ?? title : title;
+  const resolvedTitle = resolvedDisabled ? disabledTitle ?? title : title;
 
-    return (
-      <button
-        type="button"
-        disabled={resolvedDisabled}
-        title={resolvedTitle}
-        onClick={handleClick}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  },
-);
+  return (
+    <button
+      type="button"
+      disabled={resolvedDisabled}
+      title={resolvedTitle}
+      onClick={() => onClick?.()}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};

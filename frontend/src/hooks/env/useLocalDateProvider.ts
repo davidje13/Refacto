@@ -32,7 +32,7 @@ export function useLocalDateProvider(
       stateRef.current = provider;
       setState(provider);
     }, clock);
-    return (): void => tracker.stop();
+    return () => tracker.stop();
   }, [setState, stateRef, clock]);
 
   return state;

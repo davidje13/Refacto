@@ -43,33 +43,33 @@ class RetroWrapper {
   ) {
     this.retroStateCallbacks = new Set();
 
-    const setState = (state: RetroState): void => {
+    const setState = (state: RetroState) => {
       this.latestState = state;
       this.retroStateCallbacks.forEach((fn) => fn(state));
     };
 
     this.reducer = SharedReducer.for<Retro>(
       `${wsBase}/retros/${retroId}`,
-      (data): void => setState({ retro: data, error: null }),
+      (data) => setState({ retro: data, error: null }),
     )
       .withReducer(context)
       .withToken(retroToken)
-      .withErrorHandler((err): void => setState({ retro: null, error: err }))
+      .withErrorHandler((err) => setState({ retro: null, error: err }))
       .build();
   }
 
-  public addStateCallback(stateCallback: RetroStateCallback): void {
+  public addStateCallback(stateCallback: RetroStateCallback) {
     this.retroStateCallbacks.add(stateCallback);
     if (this.latestState) {
       stateCallback(this.latestState);
     }
   }
 
-  public removeStateCallback(stateCallback: RetroStateCallback): void {
+  public removeStateCallback(stateCallback: RetroStateCallback) {
     this.retroStateCallbacks.delete(stateCallback);
   }
 
-  public close(): void {
+  public close() {
     this.reducer.close();
   }
 }
@@ -84,7 +84,7 @@ export class RetroTracker {
     this.subscriptionTracker = new SubscriptionTracker(
       ({ retroId, retroToken }): RetroWrapper =>
         new RetroWrapper(apiBase, wsBase, retroId, retroToken),
-      (service): void => service.close(),
+      (service) => service.close(),
     );
   }
 
@@ -100,7 +100,7 @@ export class RetroTracker {
     sub.service.addStateCallback(retroStateCallback);
 
     return {
-      unsubscribe: (): void => {
+      unsubscribe: () => {
         sub.service.removeStateCallback(retroStateCallback);
         sub.unsubscribe().catch((e) => {
           console.warn(`Failed to unsubscribe from retro ${retroId}`, e);

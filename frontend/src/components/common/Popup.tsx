@@ -1,6 +1,6 @@
 import { type FC, useState, type ReactNode } from 'react';
 import Modal from 'react-modal';
-import { useParameterlessCallback } from '../../hooks/useParameterlessCallback';
+import { useEvent } from '../../hooks/useEvent';
 import { useListener } from '../../hooks/useListener';
 import './Popup.less';
 
@@ -16,45 +16,36 @@ interface PropsT {
   onClose: () => void;
 }
 
-function stopProp(e: Event): void {
+function stopProp(e: Event) {
   e.stopPropagation();
 }
 
 export const Popup: FC<PropsT> = ({ data, onClose }) => {
-  const keys = data?.keys ?? {};
+  const handleKeyDown = useEvent((e: KeyboardEvent) => {
+    e.stopPropagation();
+    const t = e.target as Element;
+    if (
+      t.tagName === 'INPUT' ||
+      t.tagName === 'TEXTAREA' ||
+      t.tagName === 'SELECT'
+    ) {
+      return;
+    }
+    const fn = data?.keys?.[e.key];
+    if (fn) {
+      e.preventDefault();
+      if (!e.repeat) {
+        fn();
+      }
+    }
+  });
 
-  const closeHandler = useParameterlessCallback(onClose);
   const [modal, setModal] = useState<HTMLDivElement>();
   useListener(modal, 'mousedown', stopProp);
   useListener(modal, 'mouseup', stopProp);
   useListener(modal, 'keyup', stopProp);
   useListener(modal, 'keypress', stopProp);
-
-  useListener(
-    modal,
-    'keydown',
-    (e: KeyboardEvent) => {
-      e.stopPropagation();
-      const t = e.target as Element;
-      if (
-        t.tagName === 'INPUT' ||
-        t.tagName === 'TEXTAREA' ||
-        t.tagName === 'SELECT'
-      ) {
-        return;
-      }
-      const fn = keys[e.key];
-      if (fn) {
-        e.preventDefault();
-        if (!e.repeat) {
-          fn();
-        }
-      }
-      // TODO: should use keys/values of keys, rather than
-      // object itself, to avoid unnecessary rebinding
-    },
-    [keys],
-  );
+  useListener(modal, 'keydown', handleKeyDown);
 
   if (!data) {
     return null;
@@ -67,7 +58,7 @@ export const Popup: FC<PropsT> = ({ data, onClose }) => {
       overlayClassName="popup-overlay"
       className="popup-content"
       bodyOpenClassName={undefined}
-      onRequestClose={closeHandler}
+      onRequestClose={onClose}
       contentRef={setModal}
       aria={{ labelledby: 'modal-heading' }}
     >

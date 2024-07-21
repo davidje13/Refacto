@@ -19,7 +19,7 @@ class ChangeListener {
   ) => void;
 
   public constructor() {
-    this.onChange = (message: ChangeInfo<Spec<Retro>>, meta: unknown): void => {
+    this.onChange = (message: ChangeInfo<Spec<Retro>>, meta: unknown) => {
       this.messages.push({ message, meta });
     };
   }

@@ -51,3 +51,14 @@ textarea::placeholder {
   opacity: 1;
   color: rgba(0, 0, 0, 0.5);
 }
+
+body.headless * {
+  /* headless browsers (E2E tests) may not be able to use the GPU, so disable expensive graphical operations */
+  animation: none !important;
+  transition: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}

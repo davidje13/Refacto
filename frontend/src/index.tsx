@@ -14,6 +14,10 @@ if (process.env['NODE_ENV'] === 'development') {
   );
 }
 
+if (navigator.userAgent === 'HeadlessEndToEndTest') {
+  document.body.classList.add('headless');
+}
+
 const root = document.getElementById('root')!;
 Modal.setAppElement(root);
 

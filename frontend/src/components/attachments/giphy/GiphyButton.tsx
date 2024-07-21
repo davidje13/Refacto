@@ -1,8 +1,8 @@
-import { useState, useCallback, memo } from 'react';
+import { useState, memo } from 'react';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
+import { useEvent } from '../../../hooks/useEvent';
 import { Popup } from '../../common/Popup';
 import { WrappedButton } from '../../common/WrappedButton';
-import { useBoundCallback } from '../../../hooks/useBoundCallback';
 import { GiphyPopup } from './GiphyPopup';
 
 interface PropsT {
@@ -13,15 +13,12 @@ interface PropsT {
 export const GiphyButton = memo(
   ({ defaultAttachment = null, onChange }: PropsT) => {
     const [visible, setVisible] = useState(false);
-    const show = useBoundCallback(setVisible, true);
-    const hide = useBoundCallback(setVisible, false);
-    const handleSave = useCallback(
-      (newAttachment: RetroItemAttachment | null) => {
-        hide();
-        onChange(newAttachment);
-      },
-      [hide, onChange],
-    );
+    const show = useEvent(() => setVisible(true));
+    const hide = useEvent(() => setVisible(false));
+    const handleSave = useEvent((newAttachment: RetroItemAttachment | null) => {
+      hide();
+      onChange(newAttachment);
+    });
 
     let popup = null;
     if (visible) {

@@ -1,8 +1,7 @@
-import { useState, useCallback, memo, SyntheticEvent } from 'react';
+import { useState, memo, SyntheticEvent } from 'react';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
 import { WrappedButton } from '../../common/WrappedButton';
 import { Input } from '../../common/Input';
-import { useBoundCallback } from '../../../hooks/useBoundCallback';
 import { useNonce } from '../../../hooks/useNonce';
 import { giphyService } from '../../../api/api';
 import { type GifInfo } from '../../../api/GiphyService';
@@ -19,33 +18,29 @@ export const GiphyPopup = memo(
     const [query, setQuery] = useState('');
     const [options, setOptions] = useState<GifInfo[]>([]);
 
-    const handleDelete = useBoundCallback(onConfirm, null);
     const deleteButton = defaultAttachment ? (
-      <WrappedButton onClick={handleDelete}>Remove</WrappedButton>
+      <WrappedButton onClick={() => onConfirm(null)}>Remove</WrappedButton>
     ) : null;
 
     const loadNonce = useNonce();
-    const loadOptions = useCallback(
-      async (e: SyntheticEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const nonce = loadNonce.next();
-        setOptions([]);
+    const loadOptions = async (e: SyntheticEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const nonce = loadNonce.next();
+      setOptions([]);
 
-        const gifs = await giphyService.search(query);
-        if (!loadNonce.check(nonce)) {
-          return;
-        }
+      const gifs = await giphyService.search(query);
+      if (!loadNonce.check(nonce)) {
+        return;
+      }
 
-        setOptions(gifs);
-      },
-      [loadNonce, query],
-    );
+      setOptions(gifs);
+    };
 
     const optionElements = options.map(({ small, medium }) => (
       <WrappedButton
         key={medium}
-        onClick={(): void => onConfirm({ type: 'giphy', url: medium })}
+        onClick={() => onConfirm({ type: 'giphy', url: medium })}
       >
         <img
           src={small}

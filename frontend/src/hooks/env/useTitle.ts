@@ -2,13 +2,13 @@ import { useLayoutEffect, useContext, createContext } from 'react';
 
 export type TitleHook = (title: string) => void;
 
-const browserTitleSetter: TitleHook = (title: string): void => {
+const browserTitleSetter: TitleHook = (title: string) => {
   document.title = title;
 };
 
 const Context = createContext(browserTitleSetter);
 
-export function useTitle(title: string): void {
+export function useTitle(title: string) {
   const hook = useContext(Context);
   useLayoutEffect(() => {
     hook(title);

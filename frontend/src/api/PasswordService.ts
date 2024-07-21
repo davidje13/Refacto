@@ -5,8 +5,8 @@ export class PasswordService {
 
   public async countPasswordBreaches(password: string): Promise<number> {
     const passwordHash = (await sha1(password)).toUpperCase();
-    const key = passwordHash.substr(0, 5);
-    const rest = passwordHash.substr(5);
+    const key = passwordHash.substring(0, 5);
+    const rest = passwordHash.substring(5);
 
     const response = await fetch(`${this.apiBase}/password-check/${key}`);
     const lines = (await response.text()).split('\n');

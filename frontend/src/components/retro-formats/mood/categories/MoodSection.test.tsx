@@ -13,7 +13,7 @@ jest.mock('../../../common/ExpandingTextEntry', () => ({
   ExpandingTextEntry: mockElement('mock-expanding-text-entry'),
 }));
 
-const nop = (): void => undefined;
+const nop = () => undefined;
 
 describe('MoodSection', () => {
   it('displays a given category title', () => {

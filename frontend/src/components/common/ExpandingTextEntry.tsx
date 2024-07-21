@@ -1,6 +1,5 @@
 import {
   useState,
-  useCallback,
   ReactNode,
   ReactElement,
   SyntheticEvent,
@@ -10,8 +9,8 @@ import classNames from 'classnames';
 import { isFocusable } from '../../helpers/isFocusable';
 import { useKeyHandler } from '../../hooks/useKeyHandler';
 import { useStateMap } from '../../hooks/useStateMap';
-import { useBoxed } from '../../hooks/useBoxed';
 import { Textarea } from './Textarea';
+import { useEvent } from '../../hooks/useEvent';
 import './ExpandingTextEntry.less';
 
 function hasContent(o: ReactNode): boolean {
@@ -58,60 +57,31 @@ export const ExpandingTextEntry = ({
 }: PropsT): ReactElement => {
   const [value, setValue] = useStateMap(identifier, 'value', defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
-  const boxedValue = useBoxed(value);
   const [form, setForm] = useState<HTMLFormElement | null>(null);
 
-  const blurElement = useCallback(() => {
-    const element = document.activeElement;
-    if (element instanceof HTMLElement) {
-      element.blur();
+  const handleSubmit = useEvent((e?: SyntheticEvent) => {
+    e?.preventDefault();
+
+    if (value === '') {
+      return;
     }
-  }, []);
 
-  const handleSubmit = useCallback(
-    (e?: SyntheticEvent) => {
-      e?.preventDefault();
+    if (blurOnSubmit) {
+      blurElement();
+    }
+    if (clearAfterSubmit) {
+      setValue('');
+    }
 
-      const curValue = boxedValue.current;
-      if (curValue === '') {
-        return;
-      }
+    onSubmit(value);
+  });
 
-      if (blurOnSubmit) {
-        blurElement();
-      }
-      if (clearAfterSubmit) {
-        setValue('');
-      }
-
-      onSubmit(curValue);
-    },
-    [
-      boxedValue,
-      onSubmit,
-      blurOnSubmit,
-      blurElement,
-      clearAfterSubmit,
-      setValue,
-    ],
-  );
-
-  const handleCancel = useCallback(() => {
+  const handleCancel = useEvent(() => {
     if (blurOnCancel) {
       blurElement();
     }
     onCancel?.();
-  }, [blurOnCancel, blurElement, onCancel]);
-
-  const handleFormMouseDown = useCallback((e: MouseEvent) => {
-    if (isFocusable(e.target)) {
-      return;
-    }
-    const formElement = e.currentTarget;
-    e.stopPropagation();
-    e.preventDefault();
-    formElement.querySelector('textarea')?.focus();
-  }, []);
+  });
 
   const handleKey = useKeyHandler({
     Enter: handleSubmit,
@@ -158,3 +128,20 @@ export const ExpandingTextEntry = ({
     </form>
   );
 };
+
+function blurElement() {
+  const element = document.activeElement;
+  if (element instanceof HTMLElement) {
+    element.blur();
+  }
+}
+
+function handleFormMouseDown(e: MouseEvent) {
+  if (isFocusable(e.target)) {
+    return;
+  }
+  const formElement = e.currentTarget;
+  e.stopPropagation();
+  e.preventDefault();
+  formElement.querySelector('textarea')?.focus();
+}

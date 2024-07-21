@@ -5,13 +5,11 @@ import {
   useCallback,
   useLayoutEffect,
   TextareaHTMLAttributes,
-  ChangeEvent,
   CSSProperties,
 } from 'react';
 import classNames from 'classnames';
 import { useListener } from '../../hooks/useListener';
 import { useDebounced } from '../../hooks/useDebounced';
-import { useMutatedCallback } from '../../hooks/useMutatedCallback';
 import {
   getEmptyHeight,
   getMultilClassHeights,
@@ -100,14 +98,6 @@ export const Textarea: FC<PropsT> = ({
     sizeToFit,
   ]);
 
-  const changeHandler = useMutatedCallback(
-    onChange,
-    (e: ChangeEvent<HTMLTextAreaElement>): [string] => [
-      sanitiseInput(e.target.value),
-    ],
-    [],
-  );
-
   useLayoutEffect(() => {
     if (textareaRef.current) {
       baseHeightRef.current = getEmptyHeight(textareaRef.current);
@@ -136,7 +126,7 @@ export const Textarea: FC<PropsT> = ({
       ref={textareaRef}
       className={classNames(className, extraClassNames)}
       value={value}
-      onChange={changeHandler}
+      onChange={(e) => onChange?.(sanitiseInput(e.target.value))}
       style={style}
       autoComplete="off"
       {...rest}

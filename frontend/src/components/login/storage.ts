@@ -15,7 +15,7 @@ function setStorage(storage: Storage, key: string, value: string): boolean {
   }
 }
 
-function deleteStorage(storage: Storage, key: string): void {
+function deleteStorage(storage: Storage, key: string) {
   try {
     storage.removeItem(key);
   } catch (e) {
@@ -35,7 +35,7 @@ function getCookie(key: string): string | null {
     const prefixLength = encodedKey.length + 1;
     const nonempty = cookies.find((c) => c.length > prefixLength);
     return decodeURIComponent(
-      (nonempty ?? cookies[0] ?? '').substr(prefixLength),
+      (nonempty ?? cookies[0] ?? '').substring(prefixLength),
     );
   } catch (e) {
     return null;
@@ -54,7 +54,7 @@ function setSessionCookie(key: string, value: string, extra = ''): boolean {
   }
 }
 
-function deleteCookie(key: string): void {
+function deleteCookie(key: string) {
   setSessionCookie(
     key,
     '',
@@ -83,7 +83,7 @@ export const storage = {
     );
   },
 
-  removeItem(key: string): void {
+  removeItem(key: string) {
     deleteStorage(window.sessionStorage, key);
     deleteStorage(window.localStorage, key);
     deleteCookie(key);

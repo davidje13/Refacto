@@ -15,7 +15,7 @@ const asyncGenerateKeyPair = promisify(
     type: string,
     options: Record<string, unknown>,
     callback: GenerateKeyPairCallback,
-  ): void =>
+  ) =>
     generateKeyPair(
       type as any,
       options as any,

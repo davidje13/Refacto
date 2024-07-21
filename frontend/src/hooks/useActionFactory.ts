@@ -1,22 +1,12 @@
-import { type DispatchSpec } from 'shared-reducer-frontend';
-import { useMemo } from 'react';
+import { useEvent } from './useEvent';
 
 type Action<A extends readonly unknown[]> = (...args: A) => void;
 
 export const useActionFactory =
-  <T, SpecT>(
-    dispatch: ((spec: DispatchSpec<T, SpecT>) => void) | undefined,
-    condition = true,
-  ) =>
+  <Spec>(dispatch: ((spec: Spec) => void) | undefined) =>
   <A extends readonly unknown[]>(
-    action: ((...args: A) => DispatchSpec<T, SpecT>) | undefined,
-    ...followupActions: DispatchSpec<T, SpecT>
-  ): Action<A> | undefined =>
-    useMemo(
-      () =>
-        dispatch && action && condition
-          ? (...args: A): void =>
-              dispatch([...action(...args), ...followupActions])
-          : undefined,
-      [dispatch, action, condition, ...followupActions],
-    );
+    action: (...args: A) => Spec,
+  ): Action<A> | undefined => {
+    const fn = useEvent((...args: A) => dispatch?.(action(...args)));
+    return dispatch ? fn : undefined;
+  };

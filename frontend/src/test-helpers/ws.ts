@@ -40,15 +40,15 @@ class MockWebSocketClient extends EventTarget {
     });
   }
 
-  public static expect(url: string, scriptFn: ScriptFn): void {
+  public static expect(url: string, scriptFn: ScriptFn) {
     MockWebSocketClient.expectations.push({ url, scriptFn });
   }
 
-  public send(msg: string): void {
+  public send(msg: string) {
     this.messages.push(msg);
   }
 
-  public close(): void {
+  public close() {
     this.messages.push('<CLOSED BY CLIENT>');
   }
 }
@@ -56,7 +56,7 @@ class MockWebSocketClient extends EventTarget {
 class MockWebSocket {
   private originalWebSocket: typeof WebSocket | undefined;
 
-  public register(): void {
+  public register() {
     if (this.originalWebSocket) {
       throw new Error('mock WebSocket is already registered!');
     }
@@ -64,7 +64,7 @@ class MockWebSocket {
     (global as any).WebSocket = MockWebSocketClient;
   }
 
-  public unregister(): void {
+  public unregister() {
     if (this.originalWebSocket) {
       (global as any).WebSocket = this.originalWebSocket;
       this.originalWebSocket = undefined;
@@ -74,7 +74,7 @@ class MockWebSocket {
 
 const mockWebSocket = new MockWebSocket();
 
-export function mockWsExpect(url: string, scriptFn: ScriptFn): void {
+export function mockWsExpect(url: string, scriptFn: ScriptFn) {
   MockWebSocketClient.expect(url, scriptFn);
 }
 

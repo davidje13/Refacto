@@ -13,7 +13,7 @@ import { extractRetro } from '../helpers/jsonParsers';
 const VALID_SLUG = /^[a-z0-9][a-z0-9_\-]*$/;
 const MAX_SLUG_LENGTH = 64;
 
-function validateSlug(slug: string): void {
+function validateSlug(slug: string) {
   if (slug.length > MAX_SLUG_LENGTH) {
     throw new Error('URL is too long');
   }

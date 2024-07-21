@@ -46,7 +46,7 @@ export function useObservable<T>(
       },
       (e) => setState([null, e]),
     );
-    return (): void => sub.unsubscribe();
+    return () => sub.unsubscribe();
   }, [setState, generator, materialized]);
 
   return state;

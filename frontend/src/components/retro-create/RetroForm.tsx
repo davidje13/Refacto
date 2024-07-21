@@ -1,5 +1,6 @@
-import { useState, useCallback, memo, ChangeEvent, ReactNode } from 'react';
+import { useState, memo, ChangeEvent, ReactNode } from 'react';
 import { type JsonData } from '../../shared/api-entities';
+import { useEvent } from '../../hooks/useEvent';
 import { Input } from '../common/Input';
 import { SlugEntry, MAX_SLUG_LENGTH } from './SlugEntry';
 import { Alert } from '../common/Alert';
@@ -37,11 +38,11 @@ function makeSlug(text: string): string {
     .replace(/[^a-z0-9_]+/g, '-')
     .replace(/[-_]{2,}/g, '_')
     .replace(/^[-_]+|[-_]+$/g, '')
-    .substr(0, MAX_SLUG_LENGTH);
+    .substring(0, MAX_SLUG_LENGTH);
 }
 
 function readFileText(file: File): Promise<string> {
-  return new Promise((resolve, reject): void => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
       resolve(reader.result as string);
@@ -66,7 +67,7 @@ export const RetroForm = memo(
       const [importError, setImportError] = useState<string>();
 
       const importNonce = useNonce();
-      const handleImportChange = useCallback(
+      const handleImportChange = useEvent(
         async (e: ChangeEvent<HTMLInputElement>) => {
           const file = (e.target.files || [])[0];
           setImportJson(undefined);
@@ -93,55 +94,43 @@ export const RetroForm = memo(
             }
           }
         },
-        [importNonce, setName, setSlug, setImportJson, setImportError],
       );
 
       const passwordCheckNonce = useNonce();
-      const setPasswordConf = useCallback(
-        async (current: string) => {
-          const nonce = passwordCheckNonce.next();
-          setPasswordConfRaw(current);
-          setPasswordWarning(undefined);
+      const setPasswordConf = useEvent(async (current: string) => {
+        const nonce = passwordCheckNonce.next();
+        setPasswordConfRaw(current);
+        setPasswordWarning(undefined);
 
-          if (password !== current) {
+        if (password !== current) {
+          return;
+        }
+
+        if (current.length < MIN_PASSWORD_LENGTH) {
+          setPasswordWarning('This password is too short');
+          return;
+        }
+        if (current.length > MAX_PASSWORD_LENGTH) {
+          setPasswordWarning('This password is too long');
+          return;
+        }
+
+        try {
+          const count = await passwordService.countPasswordBreaches(current);
+          if (!passwordCheckNonce.check(nonce)) {
             return;
           }
-
-          if (current.length < MIN_PASSWORD_LENGTH) {
-            setPasswordWarning('This password is too short');
-            return;
+          if (count > 100) {
+            setPasswordWarning('This password is very common and insecure');
+          } else if (count > 20) {
+            setPasswordWarning('This password is common and insecure');
+          } else if (count > 0) {
+            setPasswordWarning('This password may be insecure');
           }
-          if (current.length > MAX_PASSWORD_LENGTH) {
-            setPasswordWarning('This password is too long');
-            return;
-          }
-
-          try {
-            const count = await passwordService.countPasswordBreaches(current);
-            if (!passwordCheckNonce.check(nonce)) {
-              return;
-            }
-            if (count > 100) {
-              setPasswordWarning('This password is very common and insecure');
-            } else if (count > 20) {
-              setPasswordWarning('This password is common and insecure');
-            } else if (count > 0) {
-              setPasswordWarning('This password may be insecure');
-            }
-          } catch (err) {
-            // ignore
-          }
-        },
-        [
-          password,
-          setPasswordConfRaw,
-          passwordCheckNonce,
-          setPasswordWarning,
-          passwordService,
-          MIN_PASSWORD_LENGTH,
-          MAX_PASSWORD_LENGTH,
-        ],
-      );
+        } catch (err) {
+          // ignore
+        }
+      });
 
       const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
         if (showImport && !importJson) {
@@ -172,16 +161,7 @@ export const RetroForm = memo(
           name,
           password,
         });
-      }, [
-        showImport,
-        importJson,
-        name,
-        slug,
-        password,
-        passwordConf,
-        userToken,
-        onCreate,
-      ]);
+      });
 
       let importComponent: ReactNode = null;
       if (showImport) {

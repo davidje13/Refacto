@@ -1,4 +1,4 @@
-import { useState, useCallback, memo, ReactNode, MouseEvent } from 'react';
+import { useState, memo, ReactNode } from 'react';
 import classNames from 'classnames';
 import './TabControl.less';
 
@@ -22,19 +22,11 @@ export const TabControl = memo(({ tabs }: PropsT) => {
   const [activeKey, setActiveKey] = useState('');
   const active = getActive(tabs, activeKey);
 
-  const handleTabClick = useCallback(
-    (e: MouseEvent<HTMLButtonElement>) => {
-      setActiveKey(e.currentTarget.dataset['key'] ?? '');
-    },
-    [setActiveKey],
-  );
-
   const tabHeaders = tabs.map(({ key, title, className }) => (
     <li key={key}>
       <button
         type="button"
-        onClick={handleTabClick}
-        data-key={key}
+        onClick={() => setActiveKey(key)}
         className={classNames('tab-item', className, {
           active: key === active?.key,
         })}

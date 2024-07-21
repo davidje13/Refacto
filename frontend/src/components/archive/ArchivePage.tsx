@@ -44,7 +44,7 @@ export const ArchivePage = memo(
                   group,
                   archive: true,
                   archiveTime: archive.created,
-                  onComplete: (): void => undefined,
+                  onComplete: () => undefined,
                 }
               : null
           }
