@@ -141,6 +141,7 @@ try {
       cwd: join(basedir, 'e2e'),
       env: { ...testEnv, SELENIUM_BROWSER: browser },
       beginMessage: `E2E testing in ${browser}...`,
+      failureMessage: `E2E tests failed in ${browser}`,
       outputPrefix: browser,
       prefixFormat: format,
       exitOnFailure: false,

@@ -15,6 +15,11 @@ export async function exitWithCode(code, message) {
   if (message) {
     process.stderr.write(`\n${message}\n`);
   }
+	// process.exit may lose stream data which has been buffered in NodeJS - wait for it all to be flushed before exiting
+	await Promise.all([
+		new Promise((resolve) => process.stdout.write('', resolve)),
+		new Promise((resolve) => process.stderr.write('', resolve)),
+	]);
   process.exit(code);
 }
 
@@ -60,16 +65,19 @@ export function propagateStreamWithPrefix(
       target.write(data.subarray(begin));
       target.write(suf);
     } else {
-      data.copy(curLine, 0, begin);
-      curLineP = data.length - begin;
+      data.copy(curLine, curLineP, begin);
+      curLineP += data.length - begin;
     }
   });
-  stream.on('close', () => {
-    if (curLineP > 0) {
-      target.write(pre);
-      target.write(curLine.subarray(0, curLineP));
-      target.write(suf);
-    }
+  return new Promise((resolve) => {
+    stream.on('close', () => {
+      if (curLineP > 0) {
+        target.write(pre);
+        target.write(curLine.subarray(0, curLineP));
+        target.write(suf);
+      }
+      resolve();
+    });
   });
 }
 
@@ -128,6 +136,9 @@ export function waitForOutput(stream, search, timeout = 60 * 60 * 1000) {
       }
     });
     stream.on('close', () => {
+      if (!byteSearch.length) {
+        resolve();
+      }
       if (!found) {
         clearTimeout(tm);
         reject(new Error('closed'));
@@ -156,7 +167,7 @@ export function runTask({
   outputMode = 'live',
   beginMessage = '',
   successMessage = '',
-  failureMessage = '',
+  failureMessage = `failure in ${outputPrefix || command}`,
   exitOnFailure = true,
   ...options
 }) {
@@ -175,24 +186,28 @@ export function runTask({
     const proc = spawn(command, args, { ...options, stdio });
     activeChildren.add(proc);
     let printInfo = () => undefined;
+    let streamsClosed = Promise.resolve();
     if (outputMode === 'live') {
       if (outputPrefix) {
-        propagateStreamWithPrefix(
-          output,
-          proc.stdio[1],
-          outputPrefix,
-          prefixFormat,
-        );
-        propagateStreamWithPrefix(
-          output,
-          proc.stdio[2],
-          outputPrefix,
-          prefixFormat,
-        );
+        streamsClosed = Promise.all([
+          propagateStreamWithPrefix(
+            output,
+            proc.stdio[1],
+            outputPrefix,
+            prefixFormat,
+          ),
+          propagateStreamWithPrefix(
+            output,
+            proc.stdio[2],
+            outputPrefix,
+            prefixFormat,
+          ),
+        ]);
       }
     } else {
       const s1 = waitForOutput(proc.stdio[1], '');
       const s2 = waitForOutput(proc.stdio[2], '');
+      streamsClosed = Promise.all([s1.promise, s2.promise]);
       printInfo = () => {
         output.write(`\nexit code: ${proc.exitCode}\n`);
         const v1 = s1.getOutput();
@@ -207,12 +222,13 @@ export function runTask({
         }
       };
     }
-    const wrappedResolve = (v) => {
+    const wrappedResolve = async (v) => {
       activeChildren.delete(proc);
       if (shuttingDown || handled) {
         return;
       }
       handled = true;
+      await streamsClosed;
       if (successMessage) {
         output.write(`${successMessage}\n`);
       }
@@ -221,15 +237,14 @@ export function runTask({
       }
       resolve(v);
     };
-    const wrappedReject = (e) => {
+    const wrappedReject = async (e) => {
       activeChildren.delete(proc);
       if (shuttingDown || handled) {
         return;
       }
       handled = true;
-      if (failureMessage) {
-        output.write(`${failureMessage}\n`);
-      }
+      await streamsClosed;
+      output.write(`${failureMessage} - ${e instanceof Error ? e.message : e}\n`);
       if (outputMode === 'atomic' || outputMode === 'fail_atomic') {
         printInfo();
       }
@@ -239,7 +254,10 @@ export function runTask({
         reject(e);
       }
     };
-    proc.on('error', wrappedReject);
+    proc.on('error', (e) => {
+      streamsClosed = Promise.resolve(); // process did not start, so do not wait for streams to close
+      wrappedReject(e);
+    });
     proc.on('exit', handleExit(wrappedResolve, wrappedReject));
   });
 }
