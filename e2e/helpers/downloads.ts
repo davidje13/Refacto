@@ -24,7 +24,8 @@ export async function waitForFile(
   do {
     try {
       const { size } = await stat(fileName);
-      if (size >= minimumSize) { // wait until file has some content
+      if (size >= minimumSize) {
+        // wait until file has some content
         await sleep(10); // wait a little longer to avoid partial file reads if we get unlucky with the timing
         return await readFile(fileName, { encoding: 'utf-8' });
       }

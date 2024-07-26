@@ -20,7 +20,11 @@ export class RetroArchiveList extends Page {
 
   public async clickExportJson(): Promise<string> {
     await this.click(By.linkText('Export as JSON'));
-    return waitForFile(`${this.slug}-export.json`, 10, this.explicitWaitTimeout);
+    return waitForFile(
+      `${this.slug}-export.json`,
+      10,
+      this.explicitWaitTimeout,
+    );
   }
 
   public async getArchiveLabels(): Promise<string[]> {
