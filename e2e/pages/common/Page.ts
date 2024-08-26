@@ -27,16 +27,16 @@ export abstract class Page extends PageFragment {
     this.untilNavigated = until.elementLocated(By.css(expectedCSS));
   }
 
-  public async load(loadTimeoutOverride?: number) {
+  public async load() {
     await this.navigate();
-    await this.wait(loadTimeoutOverride);
+    await this.wait();
     return this;
   }
 
-  public async wait(loadTimeoutOverride: number = 0) {
+  public async wait() {
     await this.driver.wait(
       this.untilNavigated,
-      Math.max(this.explicitWaitTimeout, loadTimeoutOverride),
+      this.explicitWaitTimeout,
       `Failed to load page '${this.constructor.name}'`,
     );
     await this.driver.wait(

@@ -12,9 +12,7 @@ export class SiteMap {
   }
 
   public navigateToRetroList() {
-    // An unknown bug in chromedriver causes communication with the browser to hang for
-    // exactly 5 seconds at this point, so use at least a 6 second timeout to avoid flakiness:
-    return new RetroList(this.driver).load(6000);
+    return new RetroList(this.driver).load();
   }
 
   public navigateToRetroPassword(slug: string) {

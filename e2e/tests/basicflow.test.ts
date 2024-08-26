@@ -209,7 +209,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     const retroName = 'My Retro Renamed';
     let retroList: RetroList;
 
-    it('prompts to log in when loaded', async () => {
+    it('prompts to log in when loaded', { timeout: 4000 }, async () => {
       retroList = await user1.navigateToRetroList();
       retroList = await retroList.loginAs(userName);
     });
@@ -223,7 +223,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
       expect(await retro.getActionItemLabels()).toEqual(['another action']);
     });
 
-    it('does not list retros from other users', async () => {
+    it('does not list retros from other users', { timeout: 4000 }, async () => {
       retroList = await user1.navigateToRetroList();
       retroList = await retroList.loginAs('nobody');
 
