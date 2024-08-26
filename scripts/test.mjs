@@ -91,6 +91,7 @@ if (!testEnv['TARGET_HOST']) {
     SSO_GOOGLE_CLIENT_ID: 'mock-client-id',
     SSO_GOOGLE_AUTH_URL: `${mockSSOHost}/auth`,
     SSO_GOOGLE_TOKEN_INFO_URL: `${mockSSOHost}/tokeninfo`,
+    PASSWORD_WORK_FACTOR: 4,
   };
 
   log('Using randomised secrets');

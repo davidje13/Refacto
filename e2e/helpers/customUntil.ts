@@ -1,6 +1,7 @@
-import { type WebDriver, type By } from 'selenium-webdriver';
+import { type WebDriver, type Locator } from 'selenium-webdriver';
 
-export const untilNoElementLocated = (by: By) => async (driver: WebDriver) => {
-  const elements = await driver.findElements(by);
-  return elements.length === 0;
-};
+export const untilNoElementLocated =
+  (locator: Locator) => async (driver: WebDriver) => {
+    const elements = await driver.findElements(locator);
+    return elements.length === 0;
+  };

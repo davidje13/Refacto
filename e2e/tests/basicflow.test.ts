@@ -11,7 +11,7 @@ import { SiteMap } from '../pages/SiteMap';
 import 'lean-test';
 
 const uniqueID = `${process.env['SELENIUM_BROWSER']}-${Date.now()}`;
-const timeout = Number(process.env['TEST_TIMEOUT'] || '30000');
+const timeout = Number(process.env['TEST_TIMEOUT'] || '40000');
 
 describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   let user1: SiteMap;
@@ -30,9 +30,9 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     userName = `e2e-test-user-${uniqueID}`;
     retroSlug = `e2e-test-retro-${uniqueID}`;
     retroPassword = 'my-password';
-  });
 
-  afterAll(() => user1?.close());
+    return () => user1.close();
+  });
 
   // Tests run sequentially in a single (pair of) browser sessions
 
@@ -87,6 +87,8 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
 
     beforeAll(() => {
       user2 = new SiteMap(buildDriver());
+
+      return () => user2.close();
     });
 
     it('prompts for a password for the retro', async () => {
@@ -157,8 +159,6 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
       // ...but does not prompt other viewers
       expect(await retro.getArchivePopup().exists()).toBeFalsy();
     });
-
-    afterAll(() => user2?.close());
   });
 
   describe('archiving', { stopAtFirstFailure: true }, () => {
@@ -211,7 +211,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
 
     it('prompts to log in when loaded', async () => {
       retroList = await user1.navigateToRetroList();
-      retroList = await retroList.loginAs(userName); // TODO: in headless chrome, the login steps after clicking submit are very slow
+      retroList = await retroList.loginAs(userName);
     });
 
     it('displays retros created by the current user', async () => {

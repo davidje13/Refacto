@@ -1,7 +1,7 @@
 import { type By, type WebDriver } from 'selenium-webdriver';
 
 export abstract class PageFragment {
-  protected explicitWaitTimeout = Number(
+  protected readonly explicitWaitTimeout = Number(
     process.env['EXPLICIT_WAIT_TIMEOUT'] || '5000',
   );
 
