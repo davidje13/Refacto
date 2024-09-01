@@ -74,7 +74,9 @@ export const MoodRetro = ({
     !singleColumn || OPTIONS.enableMobileFacilitation.read(retroOptions);
 
   const useAction = useActionFactory(dispatch);
-  const useFacilitatorAction = canFacilitate ? useAction : () => undefined;
+  const useFacilitatorAction = useActionFactory(
+    canFacilitate ? dispatch : undefined,
+  );
 
   const handleAddItem = useAction(addRetroItem);
   const handleAddActionItem = useAction(addRetroActionItem);
