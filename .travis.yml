@@ -2,7 +2,6 @@ language: node_js
 node_js:
 - '18'
 - '20'
-- '21'
 - '22'
 os: linux
 addons:

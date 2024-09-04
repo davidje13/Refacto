@@ -51,7 +51,6 @@ jobs:
         include:
           - { node: '18' }
           - { node: '20' }
-          - { node: '21' }
           - { node: '22' }
     steps:
       - name: Install Node
