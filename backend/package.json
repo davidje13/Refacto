@@ -20,7 +20,7 @@
     "pg": "8.x",
     "pwd-hasher": "2.x",
     "shared-reducer": "4.x",
-    "tslib": "2.6.x",
+    "tslib": "2.7.x",
     "websocket-express": "3.x",
     "ws": "8.x"
   },
@@ -35,7 +35,7 @@
     "@types/node": "20.x",
     "http-proxy-middleware": "3.x",
     "lean-test": "2.x",
-    "prettier": "3.3.2",
+    "prettier": "3.3.3",
     "rollup": "4.x",
     "supertest": "7.x",
     "superwstest": "2.x",

@@ -24,7 +24,7 @@ export const WrappedButton = ({
     return null;
   }
 
-  const resolvedTitle = resolvedDisabled ? disabledTitle ?? title : title;
+  const resolvedTitle = resolvedDisabled ? (disabledTitle ?? title) : title;
 
   return (
     <button
