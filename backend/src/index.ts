@@ -44,6 +44,11 @@ async function refreshApp(
     }
   } catch (e) {
     logError('Failed to start server', e);
+    // process.exit may lose stream data which has been buffered in NodeJS - wait for it all to be flushed before exiting
+    await Promise.all([
+      new Promise((resolve) => process.stdout.write('', resolve)),
+      new Promise((resolve) => process.stderr.write('', resolve)),
+    ]);
     process.exit(1);
   }
 }

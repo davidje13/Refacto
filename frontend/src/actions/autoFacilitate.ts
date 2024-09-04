@@ -5,7 +5,10 @@ interface CategoryStats {
   remaining: number;
 }
 
-function getCategories(items: RetroItem[]) {
+function getCategories(
+  items: RetroItem[],
+  isRemaining: (i: RetroItem) => boolean,
+) {
   const categories = new Set(items.map((item) => item.category));
 
   const result = new Map<string, CategoryStats>();
@@ -14,7 +17,7 @@ function getCategories(items: RetroItem[]) {
 
     result.set(category, {
       total: all.length,
-      remaining: all.filter((item) => item.doneTime === 0).length,
+      remaining: all.filter(isRemaining).length,
     });
   }
 
@@ -39,14 +42,18 @@ function itemPriority(a: RetroItem, b: RetroItem): number {
 export function autoFacilitate(
   items: RetroItem[],
   categoryPreferences: string[],
+  currentItemID: string | null,
 ): RetroItem | undefined {
-  const remainingItems = items.filter((item) => item.doneTime === 0);
+  const isRemaining = (item: RetroItem) =>
+    item.doneTime === 0 && item.id !== currentItemID;
+
+  const remainingItems = items.filter(isRemaining);
 
   if (remainingItems.length === 0) {
     return undefined;
   }
 
-  const categories = getCategories(items);
+  const categories = getCategories(items, isRemaining);
 
   if (remainingItems.length > 1) {
     // reserve a preferred item for last

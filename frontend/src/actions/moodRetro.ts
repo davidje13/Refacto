@@ -2,11 +2,19 @@ import { type Retro, type RetroItem } from '../shared/api-entities';
 import { type RetroDispatchSpec } from '../api/RetroTracker';
 import { setRetroItemDone, setRetroState, addRetroItem } from './retro';
 import { autoFacilitate } from './autoFacilitate';
+import { type Spec } from '../api/reducer';
+import { type Condition } from 'json-immutability-helper';
 
 export interface MoodRetroStateT {
   focusedItemId?: string | null;
   focusedItemTimeout?: number;
 }
+
+type NextIDPicker = (
+  group: string | undefined,
+  state: Retro<MoodRetroStateT>,
+  focusedItemId: string | null,
+) => string | null;
 
 const INITIAL_TIMEOUT = 5 * 60 * 1000 + 999;
 
@@ -18,36 +26,33 @@ const moodItem =
     (!group || !item.group || item.group === group) &&
     item.category !== 'action';
 
-function pickNextItem(
-  group: string | undefined,
-  items: RetroItem[],
-): RetroItem | undefined {
-  return autoFacilitate(items.filter(moodItem(group)), ['happy', 'meh']);
-}
+const pickNextItem: NextIDPicker = (group, { items }, currentItemID) =>
+  autoFacilitate(items.filter(moodItem(group)), ['happy', 'meh'], currentItemID)
+    ?.id ?? null;
 
-function pickPreviousItem(
-  group: string | undefined,
-  items: RetroItem[],
-): RetroItem | undefined {
+const pickPreviousItem: NextIDPicker = (group, { items }, currentItemID) => {
   const history = items
     .filter(moodItem(group))
-    .filter((item) => item.doneTime > 0)
+    .filter((item) => item.doneTime > 0 && item.id !== currentItemID)
     .sort((a, b) => b.doneTime - a.doneTime);
-  return history[0];
-}
+  return history[0]?.id ?? null;
+};
 
-function getState<T>(retro: Retro<T>, group: string | undefined): T {
+function getState<T>(
+  group: string | undefined,
+  retro: Retro<T>,
+): T | Record<string, never> {
   if (!group) {
     return retro.state;
   }
-  return retro.groupStates[group] || ({} as T);
+  return retro.groupStates[group] || {};
 }
 
 export const allItemsDoneCallback = (
   callback?: () => void,
 ): RetroDispatchSpec => [
-  ({ items }: Retro<MoodRetroStateT>): null => {
-    if (callback && !pickNextItem(undefined, items)) {
+  (state: Retro<MoodRetroStateT>): null => {
+    if (callback && !pickNextItem(undefined, state, null)) {
       callback();
     }
     return null;
@@ -57,85 +62,49 @@ export const allItemsDoneCallback = (
 export const setItemTimeout = (
   group: string | undefined,
   duration: number,
-): RetroDispatchSpec =>
-  setRetroState(group, {
-    focusedItemTimeout: Date.now() + duration,
-  });
-
-export const focusItem = (
-  group: string | undefined,
-  id: string | null,
-): RetroDispatchSpec => [
-  ...setRetroItemDone(id, false),
-  ...setRetroState(group, { focusedItemId: id }),
-];
+): Spec<Retro>[] =>
+  setRetroState(group, { focusedItemTimeout: Date.now() + duration });
 
 export const switchFocus = (
   group: string | undefined,
-  markPreviousDone: boolean,
-  id: string | null,
+  nextIDPicker: NextIDPicker,
+  {
+    expectCurrentId,
+    setCurrentDone = false,
+    timeout = INITIAL_TIMEOUT,
+  }: {
+    expectCurrentId?: string | undefined;
+    setCurrentDone?: boolean | undefined;
+    timeout?: number | undefined;
+  } = {},
 ): RetroDispatchSpec => [
-  (retro): RetroDispatchSpec => {
-    const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
-
-    return [
-      ...(markPreviousDone && focusedItemId
-        ? setRetroItemDone(focusedItemId, true)
-        : []),
-      ...focusItem(group, id),
-      ...setItemTimeout(group, INITIAL_TIMEOUT),
-    ];
-  },
-];
-
-const focusNextItem =
-  (group: string | undefined) =>
-  ({ items }: Retro<MoodRetroStateT>): RetroDispatchSpec => {
-    const next = pickNextItem(group, items);
-    return focusItem(group, next?.id ?? null);
-  };
-
-const focusPreviousItem =
-  (group: string | undefined) =>
-  ({ items }: Retro<MoodRetroStateT>): RetroDispatchSpec => {
-    const next = pickPreviousItem(group, items);
-    return focusItem(group, next?.id ?? null);
-  };
-
-export const goNext = (
-  group: string | undefined,
-  expectedFocusedItemId?: string,
-): RetroDispatchSpec => [
-  (retro): RetroDispatchSpec => {
-    const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
-
-    if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
+  (retro): Spec<Retro>[] => {
+    const { focusedItemId = null } = getState<MoodRetroStateT>(group, retro);
+    if (expectCurrentId && focusedItemId !== expectCurrentId) {
       return [];
     }
 
-    return [
-      ...setRetroItemDone(focusedItemId, true),
-      focusNextItem(group),
-      ...setItemTimeout(group, INITIAL_TIMEOUT),
+    const id = nextIDPicker(group, retro, focusedItemId);
+    const actions: Spec<Retro> = [
+      'seq',
+      ...(focusedItemId ? setRetroItemDone(focusedItemId, setCurrentDone) : []),
+      ...(id ? setRetroItemDone(id, false) : []),
+      ...setRetroState(group, {
+        focusedItemId: id,
+        focusedItemTimeout: Date.now() + timeout,
+      }),
     ];
+    const condition: Condition<Retro> = group
+      ? { groupStates: { [group]: { focusedItemId: ['~=', focusedItemId] } } }
+      : { state: { focusedItemId: ['~=', focusedItemId] } };
+    return [['if', condition, actions]];
   },
 ];
+
+export const goNext = (group: string | undefined, expectCurrentId?: string) =>
+  switchFocus(group, pickNextItem, { expectCurrentId, setCurrentDone: true });
 
 export const goPrevious = (
   group: string | undefined,
-  expectedFocusedItemId?: string,
-): RetroDispatchSpec => [
-  (retro): RetroDispatchSpec => {
-    const { focusedItemId = null } = getState<MoodRetroStateT>(retro, group);
-
-    if (expectedFocusedItemId && focusedItemId !== expectedFocusedItemId) {
-      return [];
-    }
-
-    return [
-      ...setRetroItemDone(focusedItemId, false),
-      focusPreviousItem(group),
-      ...setItemTimeout(group, 0),
-    ];
-  },
-];
+  expectCurrentId?: string,
+) => switchFocus(group, pickPreviousItem, { expectCurrentId, timeout: 0 });

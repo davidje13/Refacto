@@ -6,7 +6,13 @@ import {
   encryptByRecordWithMasterKey,
   migrate,
 } from '../import-wrappers/collection-storage-wrap';
-import srb, { type Permission } from 'shared-reducer-backend';
+import {
+  Broadcaster,
+  CollectionStorageModel,
+  ReadOnly,
+  ReadWriteStruct,
+  type Permission,
+} from 'shared-reducer/backend';
 import { type Retro, type RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
 
@@ -30,7 +36,7 @@ function dbErrorMessage(e: any): string {
 }
 
 export class RetroService {
-  public readonly retroBroadcaster: srb.Broadcaster<Retro, Spec<Retro>>;
+  public readonly retroBroadcaster: Broadcaster<Retro, Spec<Retro>>;
 
   private readonly retroCollection: Collection<Retro>;
 
@@ -54,7 +60,7 @@ export class RetroService {
       ),
     );
 
-    const model = new srb.CollectionStorageModel(
+    const model = new CollectionStorageModel(
       this.retroCollection,
       'id',
       (x) => {
@@ -66,16 +72,16 @@ export class RetroService {
       (e) => new Error(dbErrorMessage(e)),
     );
 
-    this.retroBroadcaster = srb.Broadcaster.for<Retro>(model)
+    this.retroBroadcaster = Broadcaster.for<Retro>(model)
       .withReducer<Spec<Retro>>(context.with(listCommands))
       .build();
   }
 
   public getPermissions(allowWrite: boolean): Permission<Retro, Spec<Retro>> {
     if (allowWrite) {
-      return new srb.ReadWriteStruct(['id', 'ownerId']);
+      return new ReadWriteStruct(['id', 'ownerId']);
     }
-    return srb.ReadOnly;
+    return ReadOnly;
   }
 
   public async getRetroIdForSlug(slug: string): Promise<string | null> {

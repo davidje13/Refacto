@@ -12,7 +12,7 @@
   "dependencies": {
     "@openfonts/open-sans_all": "1.x",
     "classnames": "2.x",
-    "json-immutability-helper": "3.1.x",
+    "json-immutability-helper": "4.0.x",
     "lean-qr": "2.x",
     "react": "18.x",
     "react-dom": "18.x",
@@ -20,7 +20,7 @@
     "react-hook-final-countdown": "2.x",
     "react-modal": "3.x",
     "rxjs": "7.x",
-    "shared-reducer-frontend": "3.x",
+    "shared-reducer": "4.x",
     "wouter": "2.10.1"
   },
   "devDependencies": {

@@ -1,18 +1,14 @@
-import { type FC, useState, type ReactNode } from 'react';
+import { type FC, useState, type PropsWithChildren } from 'react';
 import Modal from 'react-modal';
 import { useEvent } from '../../hooks/useEvent';
 import { useListener } from '../../hooks/useListener';
 import './Popup.less';
 
-export interface PopupData {
+interface PropsT {
   title: string;
   hideTitle?: boolean;
-  content: ReactNode;
   keys?: Record<string, () => void>;
-}
-
-interface PropsT {
-  data: PopupData | null;
+  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -20,7 +16,14 @@ function stopProp(e: Event) {
   e.stopPropagation();
 }
 
-export const Popup: FC<PropsT> = ({ data, onClose }) => {
+export const Popup: FC<PropsWithChildren<PropsT>> = ({
+  title,
+  hideTitle = false,
+  keys,
+  isOpen,
+  onClose,
+  children,
+}) => {
   const handleKeyDown = useEvent((e: KeyboardEvent) => {
     e.stopPropagation();
     const t = e.target as Element;
@@ -31,7 +34,7 @@ export const Popup: FC<PropsT> = ({ data, onClose }) => {
     ) {
       return;
     }
-    const fn = data?.keys?.[e.key];
+    const fn = keys?.[e.key];
     if (fn) {
       e.preventDefault();
       if (!e.repeat) {
@@ -47,13 +50,9 @@ export const Popup: FC<PropsT> = ({ data, onClose }) => {
   useListener(modal, 'keypress', stopProp);
   useListener(modal, 'keydown', handleKeyDown);
 
-  if (!data) {
-    return null;
-  }
-
   return (
     <Modal
-      isOpen
+      isOpen={isOpen}
       portalClassName=""
       overlayClassName="popup-overlay"
       className="popup-content"
@@ -62,10 +61,10 @@ export const Popup: FC<PropsT> = ({ data, onClose }) => {
       contentRef={setModal}
       aria={{ labelledby: 'modal-heading' }}
     >
-      <h1 id="modal-heading" className={data.hideTitle ? 'hidden' : ''}>
-        {data.title}
+      <h1 id="modal-heading" className={hideTitle ? 'hidden' : ''}>
+        {title}
       </h1>
-      {data.content}
+      {children}
     </Modal>
   );
 };

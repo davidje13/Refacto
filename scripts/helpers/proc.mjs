@@ -40,6 +40,15 @@ export function propagateStreamWithPrefix(
   const suf = target.isTTY ? '\u001B[0m\n' : '\n';
   const curLine = Buffer.alloc(MAX_LINE_BUFFER);
   let curLineP = 0;
+  const printCurrentLine = (data) => {
+    target.write(pre);
+    if (curLineP > 0) {
+      target.write(curLine.subarray(0, curLineP));
+      curLineP = 0;
+    }
+    target.write(data);
+    target.write(suf);
+  };
   stream.on('data', (data) => {
     let begin = 0;
     while (true) {
@@ -47,34 +56,20 @@ export function propagateStreamWithPrefix(
       if (p === -1) {
         break;
       }
-      target.write(pre);
-      if (curLineP > 0) {
-        target.write(curLine.subarray(0, curLineP));
-        curLineP = 0;
-      }
-      target.write(data.subarray(begin, p));
-      target.write(suf);
+      printCurrentLine(data.subarray(begin, p));
       begin = p + 1;
     }
-    if (curLineP + data.length - begin > MAX_LINE_BUFFER) {
-      target.write(pre);
-      if (curLineP > 0) {
-        target.write(curLine.subarray(0, curLineP));
-        curLineP = 0;
-      }
-      target.write(data.subarray(begin));
-      target.write(suf);
-    } else {
-      data.copy(curLine, curLineP, begin);
-      curLineP += data.length - begin;
+    const remaining = data.length - begin;
+    if (curLineP + remaining > MAX_LINE_BUFFER) {
+      printCurrentLine(data.subarray(begin));
+    } else if (remaining > 0) {
+      curLineP += data.copy(curLine, curLineP, begin);
     }
   });
   return new Promise((resolve) => {
     stream.on('close', () => {
       if (curLineP > 0) {
-        target.write(pre);
-        target.write(curLine.subarray(0, curLineP));
-        target.write(suf);
+        printCurrentLine(Buffer.of());
       }
       resolve();
     });

@@ -1,4 +1,8 @@
-import SharedReducer, { Dispatch, DispatchSpec } from 'shared-reducer-frontend';
+import {
+  SharedReducer,
+  type Dispatch,
+  type DispatchSpec,
+} from 'shared-reducer/frontend';
 import { type Retro } from '../shared/api-entities';
 import { SubscriptionTracker } from './SubscriptionTracker';
 import { context, type Spec } from './reducer';

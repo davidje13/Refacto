@@ -87,7 +87,7 @@ export const MoodRetro = ({
     setItemTimeout(group, duration),
   );
   const handleSelectItem = useFacilitatorAction((id: string | null) =>
-    switchFocus(group, true, id),
+    switchFocus(group, () => id, { setCurrentDone: true }),
   );
   const handleSetActionItemDone = useAction(setRetroItemDone);
   const handleGoNext = useFacilitatorAction(() => [
@@ -100,10 +100,10 @@ export const MoodRetro = ({
     ArrowRight: handleGoNext,
     ArrowLeft: handleGoPrevious,
     Enter: useFacilitatorAction(() => [
-      ...switchFocus(group, true, null),
+      ...switchFocus(group, () => null, { setCurrentDone: true }),
       ...allItemsDoneCallback(onComplete),
     ]),
-    Escape: useFacilitatorAction(() => switchFocus(group, false, null)),
+    Escape: useFacilitatorAction(() => switchFocus(group, () => null)),
   });
 
   const createMoodSection = (category: Category): ReactElement => (

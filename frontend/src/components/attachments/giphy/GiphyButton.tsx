@@ -20,23 +20,6 @@ export const GiphyButton = memo(
       onChange(newAttachment);
     });
 
-    let popup = null;
-    if (visible) {
-      popup = {
-        title: 'Insert Giphy Image',
-        content: (
-          <GiphyPopup
-            defaultAttachment={defaultAttachment}
-            onConfirm={handleSave}
-            onCancel={hide}
-          />
-        ),
-        keys: {
-          Escape: hide,
-        },
-      };
-    }
-
     return (
       <>
         <WrappedButton
@@ -45,7 +28,18 @@ export const GiphyButton = memo(
           className="open-giphy"
           onClick={show}
         />
-        <Popup data={popup} onClose={hide} />
+        <Popup
+          title="Insert Giphy Image"
+          keys={{ Escape: hide }}
+          isOpen={visible}
+          onClose={hide}
+        >
+          <GiphyPopup
+            defaultAttachment={defaultAttachment}
+            onConfirm={handleSave}
+            onCancel={hide}
+          />
+        </Popup>
       </>
     );
   },

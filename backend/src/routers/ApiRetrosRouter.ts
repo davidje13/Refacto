@@ -1,5 +1,5 @@
 import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
-import sharedReducerBackend from 'shared-reducer-backend';
+import { websocketHandler } from 'shared-reducer/backend';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import { type UserAuthService } from '../services/UserAuthService';
 import { type RetroAuthService } from '../services/RetroAuthService';
@@ -33,9 +33,7 @@ export class ApiRetrosRouter extends Router {
       (token): JWTPayload | null => userAuthService.readAndVerifyToken(token),
     );
 
-    const wsHandler = sharedReducerBackend.websocketHandler(
-      retroService.retroBroadcaster,
-    );
+    const wsHandler = websocketHandler(retroService.retroBroadcaster);
 
     this.get('/', userAuthMiddleware, async (_, res) => {
       const userId = WebSocketExpress.getAuthData(res).sub!;

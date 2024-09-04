@@ -1,5 +1,5 @@
 import { useState, memo } from 'react';
-import { actionsSyncedCallback } from 'shared-reducer-frontend';
+import { actionsSyncedCallback } from 'shared-reducer/frontend';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroDispatch } from '../../api/RetroTracker';
 import { Input } from '../common/Input';
