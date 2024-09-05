@@ -5,6 +5,27 @@ import { appFactory, type App } from './app';
 import { type ConfigT, config } from './config';
 import { logError, logInfo } from './log';
 
+// Temporary polyfill for Node 18 support
+if (!(global as any).CustomEvent) {
+  logInfo('Polyfilling CustomEvent');
+  (global as any).CustomEvent = class CustomEvent extends Event {
+    public readonly detail: unknown;
+
+    constructor(
+      type: string,
+      options: {
+        bubbles?: boolean;
+        cancelable?: boolean;
+        composed?: boolean;
+        detail?: unknown;
+      },
+    ) {
+      super(type, options);
+      this.detail = options?.detail ?? null;
+    }
+  };
+}
+
 // This file exists mainly to enable hot module replacement.
 // app.ts is the main entry point for the application.
 // (changes to index.ts will not trigger HMR)
