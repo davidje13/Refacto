@@ -33,7 +33,6 @@ export class RetroTracker {
           url: `${wsBase}/retros/${retroId}`,
           token: retroToken,
         }));
-        // TODO: show reconnection UI
         s.addEventListener('connected', () => console.info('connected'));
         s.addEventListener('disconnected', (e) =>
           console.info('disconnected', e.detail.code, e.detail.reason),
@@ -51,14 +50,21 @@ export class RetroTracker {
     retroId: string,
     retroToken: string,
     retroStateCallback: (state: Retro) => void,
+    connectivityCallback: (connected: boolean) => void,
   ): RetroSubscription {
     const sub = this.subscriptionTracker.subscribe({ retroId, retroToken });
     sub.service.addStateListener(retroStateCallback);
+    const onConnect = () => connectivityCallback(true);
+    const onDisconnect = () => connectivityCallback(false);
+    sub.service.addEventListener('connected', onConnect);
+    sub.service.addEventListener('disconnected', onDisconnect);
 
     return {
       dispatch: sub.service.dispatch,
       unsubscribe: () => {
         sub.service.removeStateListener(retroStateCallback);
+        sub.service.removeEventListener('connected', onConnect);
+        sub.service.removeEventListener('disconnected', onDisconnect);
         sub.unsubscribe().catch((e) => {
           console.warn(`Failed to unsubscribe from retro ${retroId}`, e);
         });

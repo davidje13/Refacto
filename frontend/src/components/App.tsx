@@ -34,7 +34,7 @@ export const App: FC = () => (
         <RetroListPage />
       </Route>
       <Route path="/retros/:slug/:rest*">
-        {({ slug }): ReactNode => <RetroRouter slug={slug ?? ''} />}
+        {({ slug }) => <RetroRouter slug={slug ?? ''} />}
       </Route>
 
       <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />

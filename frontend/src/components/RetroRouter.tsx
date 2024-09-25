@@ -1,15 +1,8 @@
-import {
-  type FC,
-  useState,
-  useLayoutEffect,
-  useEffect,
-  type ReactNode,
-} from 'react';
+import { type FC, useState, useLayoutEffect, useEffect } from 'react';
 import { Route, Switch, useLocation } from 'wouter';
 import { type Retro } from '../shared/api-entities';
 import { type RetroDispatch } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
-import { useNonce } from '../hooks/useNonce';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
 import { PasswordPage } from './password/PasswordPage';
 import { RetroPage } from './retro/RetroPage';
@@ -21,8 +14,10 @@ import { useRetroToken } from '../hooks/data/useRetroToken';
 import { StateMapProvider } from '../hooks/useStateMap';
 import { RedirectRoute } from './RedirectRoute';
 import { useEvent } from '../hooks/useEvent';
+import TickBold from '../../resources/tick-bold.svg';
+import './RetroRouter.less';
 
-type RetroReducerState = [Retro | null, RetroDispatch | null];
+type RetroReducerState = [Retro | null, RetroDispatch | null, boolean];
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
 
@@ -32,16 +27,14 @@ function useRetroReducer(
 ): RetroReducerState {
   const [location, setLocation] = useLocation();
   const [retroState, setRetroState] = useState<Retro | null>(null);
+  const [connected, setConnected] = useState<boolean>(false);
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
     null,
   );
-  const nonce = useNonce();
 
   // This cannot be useEffect; the websocket would be closed & reopened
   // when switching between pages within the retro
   useLayoutEffect(() => {
-    const myNonce = nonce.next();
-
     setRetroState(null);
     setRetroDispatch(null);
     if (!retroId || !retroToken) {
@@ -51,7 +44,8 @@ function useRetroReducer(
     const subscription = retroTracker.subscribe(
       retroId,
       retroToken,
-      (data) => nonce.check(myNonce) && setRetroState(data),
+      (data) => setRetroState(data),
+      setConnected,
     );
     setRetroDispatch(() => subscription.dispatch);
     return () => subscription.unsubscribe();
@@ -77,7 +71,7 @@ function useRetroReducer(
     }
   }, [slug, updateSlug]);
 
-  return [retroState, retroDispatch];
+  return [retroState, retroDispatch, connected];
 }
 
 interface PropsT {
@@ -93,7 +87,10 @@ export interface RetroPagePropsT {
 export const RetroRouter: FC<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
   const [retroToken, retroTokenError] = useRetroToken(retroId);
-  const [retro, retroDispatch] = useRetroReducer(retroId, retroToken);
+  const [retro, retroDispatch, connected] = useRetroReducer(
+    retroId,
+    retroToken,
+  );
 
   if (slugError === 'not found') {
     return <RetroCreatePage defaultSlug={slug} />;
@@ -119,27 +116,25 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
     retroDispatch,
   };
 
-  return (
+  const routes = (
     <StateMapProvider scope={slug}>
       <Switch>
         <Route path="/retros/:slug">
           <RetroPage {...retroParams} />
         </Route>
         <Route path="/retros/:slug/groups/:group">
-          {({ group }): ReactNode => (
-            <RetroPage {...retroParams} group={group} />
-          )}
+          {({ group }) => <RetroPage {...retroParams} group={group} />}
         </Route>
         <Route path="/retros/:slug/archives">
           <ArchiveListPage {...retroParams} />
         </Route>
         <Route path="/retros/:slug/archives/:archiveId">
-          {({ archiveId }): ReactNode => (
+          {({ archiveId }) => (
             <ArchivePage {...retroParams} archiveId={archiveId ?? ''} />
           )}
         </Route>
         <Route path="/retros/:slug/archives/:archiveId/groups/:group">
-          {({ archiveId, group }): ReactNode => (
+          {({ archiveId, group }) => (
             <ArchivePage
               {...retroParams}
               archiveId={archiveId ?? ''}
@@ -154,5 +149,20 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
         <RedirectRoute path="/retros/:slug/:rest*" to="/retros/:slug" replace />
       </Switch>
     </StateMapProvider>
+  );
+
+  return (
+    <>
+      {routes}
+      {connected ? (
+        <div className="connectionMessage connected" aria-hidden>
+          <TickBold /> Connected
+        </div>
+      ) : (
+        <div className="connectionMessage disconnected" role="status">
+          Reconnecting&hellip;
+        </div>
+      )}
+    </>
   );
 };
