@@ -45,26 +45,23 @@ export class SubscriptionTracker<K, S> {
     serviceInfo.count += 1;
     return {
       service: serviceInfo.service,
-      unsubscribe: (): Promise<void> => this.unsubscribe(id),
+      unsubscribe: (): Promise<void> => this._unsubscribe(id, key),
     };
   }
 
-  public async unsubscribe(id: K): Promise<void> {
+  private async _unsubscribe(id: K, key: string): Promise<void> {
     await Promise.resolve(); // wait in case we immediately resubscribe
 
-    const key = makeKey(id);
     const serviceInfo = this.services.get(key);
     if (!serviceInfo || serviceInfo.count <= 0) {
       throw new Error(`Service ${id} is not active`);
     }
 
     serviceInfo.count -= 1;
-    if (serviceInfo.count > 0) {
-      return;
+    if (serviceInfo.count === 0) {
+      this.services.delete(key);
+      this.destructor(serviceInfo.service, id);
     }
-
-    this.services.delete(key);
-    this.destructor(serviceInfo.service, id);
   }
 
   public find(id: K): S | null {

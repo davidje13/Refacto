@@ -1,8 +1,7 @@
 import { act, render, role } from 'flexible-testing-library-react';
+import { nullDispatch } from '../../../test-helpers/nullDispatch';
 
 import { MoodRetro } from './MoodRetro';
-
-const nop = () => undefined;
 
 describe('MoodRetro', () => {
   it('can switch between wide and narrow view', () => {
@@ -12,8 +11,8 @@ describe('MoodRetro', () => {
         retroItems={[]}
         retroState={{}}
         archive={false}
-        onComplete={nop}
-        dispatch={nop}
+        onComplete={() => null}
+        dispatch={nullDispatch}
       />,
     );
 

@@ -3,6 +3,7 @@ import staticLocationHook from 'wouter/static-location';
 import { act, render, placeholderText } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../shared/api-entities';
+import { nullDispatch } from '../../test-helpers/nullDispatch';
 
 import { RetroSettingsPage } from './RetroSettingsPage';
 
@@ -14,10 +15,7 @@ describe('RetroSettingsPage', () => {
     await act(async () => {
       dom = render(
         <Router hook={staticLocationHook('/', { record: true })}>
-          <RetroSettingsPage
-            retro={makeRetro()}
-            retroDispatch={(): null => null}
-          />
+          <RetroSettingsPage retro={makeRetro()} retroDispatch={nullDispatch} />
         </Router>,
       );
     });

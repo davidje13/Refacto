@@ -2,6 +2,7 @@ import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../shared/api-entities';
 import { css } from '../../test-helpers/queries';
+import { nullDispatch } from '../../test-helpers/nullDispatch';
 
 import { RetroPage } from './RetroPage';
 
@@ -16,7 +17,7 @@ describe('RetroPage', () => {
       <RetroPage
         retroToken="token-1"
         retro={makeRetro()}
-        retroDispatch={(): null => null}
+        retroDispatch={nullDispatch}
       />,
     );
     expect(dom).toContainElementWith(css('mock-retro-format-picker'));

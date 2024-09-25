@@ -1,3 +1,4 @@
+import type { DispatchSpec } from 'shared-reducer/frontend';
 import { of as rxjsOf, throwError, Observable } from 'rxjs';
 import {
   type Retro,
@@ -5,41 +6,33 @@ import {
   type RetroSummary,
   type ClientConfig,
 } from '../../shared/api-entities';
-import { type RetroState } from '../RetroTracker';
+import { type RetroSubscription } from '../RetroTracker';
 import { type Spec } from '../reducer';
 import { ObservableTracker } from '../../rxjs/ObservableTracker';
 import { SingleObservableTracker } from '../../rxjs/SingleObservableTracker';
 
-type RetroDispatch = (spec: Spec<Retro>) => void;
-type RetroStateCallback = (state: RetroState) => void;
-
 class FakeRetroTracker {
   public subscribed = 0;
 
-  private data = new Map<string, RetroState>();
+  private data = new Map<string, Retro>();
 
   private expectedRetroToken: string | null = null;
 
-  public dispatch = () => undefined;
+  public dispatch = (_: DispatchSpec<Retro, Spec<Retro>>) => undefined;
 
   public setExpectedToken(retroToken: string) {
     this.expectedRetroToken = retroToken;
   }
 
-  public setServerData(retroId: string, serverData: Partial<RetroState>) {
-    this.data.set(retroId, {
-      retro: null,
-      error: null,
-      ...serverData,
-    });
+  public setServerData(retroId: string, serverData: Retro) {
+    this.data.set(retroId, serverData);
   }
 
   public subscribe(
     retroId: string,
     retroToken: string,
-    dispatchCallback: (dispatch: RetroDispatch) => void,
-    retroStateCallback: RetroStateCallback,
-  ): { unsubscribe: () => void } {
+    retroStateCallback: (state: Retro) => void,
+  ): RetroSubscription {
     if (this.expectedRetroToken && this.expectedRetroToken !== retroToken) {
       throw new Error(`Incorrect retro token: ${retroToken}`);
     }
@@ -51,10 +44,15 @@ class FakeRetroTracker {
       throw new Error('not found');
     }
 
-    dispatchCallback(this.dispatch);
     retroStateCallback({ ...serverData });
 
     return {
+      dispatch: Object.assign(this.dispatch, {
+        sync: (specs: DispatchSpec<Retro, Spec<Retro>>) => {
+          this.dispatch(specs);
+          return Promise.resolve(this.data.get(retroId)!);
+        },
+      }),
       unsubscribe: () => {
         this.subscribed -= 1;
       },

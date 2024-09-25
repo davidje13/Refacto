@@ -114,14 +114,11 @@ describe('RetroService', () => {
   });
 
   describe('retroBroadcaster', () => {
-    let listener: ChangeListener;
     let subscription: Subscription<Retro, Spec<Retro>, void>;
 
     beforeEach(async () => {
-      listener = new ChangeListener();
       const sub = await service.retroBroadcaster.subscribe(
         r2,
-        listener.onChange,
         service.getPermissions(true),
       );
       if (!sub) {
@@ -151,7 +148,6 @@ describe('RetroService', () => {
     it('returns null if the ID is not found', async () => {
       const failedSubscription = await service.retroBroadcaster.subscribe(
         'nope',
-        listener.onChange,
         service.getPermissions(true),
       );
 
@@ -159,6 +155,8 @@ describe('RetroService', () => {
     });
 
     it('rejects attempts to change sensitive data', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ ownerId: ['=', 'me'] });
       expect(listener.latestError()).toEqual('Cannot edit field ownerId');
 
@@ -168,35 +166,47 @@ describe('RetroService', () => {
     });
 
     it('allows changing slug to valid forms', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ slug: ['=', 'wooo'] });
       expect(listener.latestError()).toEqual(undefined);
     });
 
     it('does not allow conflicting slugs', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ slug: ['=', 'my-retro'] });
       expect(listener.latestError()).toEqual('URL is already taken');
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects changing slug to invalid values', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ slug: ['=', 'NOPE'] });
       expect(listener.latestError()).toEqual('Invalid URL');
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to add new top-level fields', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ newThing: ['=', 'woo'] } as any);
       expect(listener.latestError()).toEqual('Unexpected property newThing');
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to delete top-level fields', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ ownerId: ['unset'] as any });
       expect(listener.latestError()).toBeTruthy();
       expect(listener.messageCount()).toEqual(1);
     });
 
     it('rejects attempts to modify retros in invalid ways', async () => {
+      const listener = new ChangeListener();
+      subscription.listen(listener.onChange);
       await subscription.send({ items: ['push', { nope: 7 } as any] });
       expect(listener.latestError()).toBeTruthy();
       expect(listener.messageCount()).toEqual(1);
@@ -205,9 +215,10 @@ describe('RetroService', () => {
     it('rejects all writes in readonly mode', async () => {
       const readSubscription = await service.retroBroadcaster.subscribe(
         r2,
-        listener.onChange,
         service.getPermissions(false),
       );
+      const listener = new ChangeListener();
+      readSubscription?.listen(listener.onChange);
 
       await readSubscription?.send({ slug: ['=', 'wooo'] });
       expect(listener.latestError()).toEqual('Cannot modify data');

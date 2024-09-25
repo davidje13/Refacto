@@ -106,6 +106,7 @@ async function shutdown(): Promise<void> {
     logInfo(`Shutting down mock SSO server (open connections: ${mscCount})`);
   }
 
+  await activeApp?.softClose(1000);
   await Promise.all([
     promisify(server.close.bind(server))(),
     mockSsoServer

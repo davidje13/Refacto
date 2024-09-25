@@ -68,13 +68,13 @@ export class RetroService {
         validateSlug(d.slug);
         return d;
       },
-      (e) => e,
-      (e) => new Error(dbErrorMessage(e)),
+      { writeErrorIntercept: (e) => new Error(dbErrorMessage(e)) },
     );
 
-    this.retroBroadcaster = Broadcaster.for<Retro>(model)
-      .withReducer<Spec<Retro>>(context.with(listCommands))
-      .build();
+    this.retroBroadcaster = new Broadcaster<Retro, Spec<Retro>>(
+      model,
+      context.with(listCommands),
+    );
   }
 
   public getPermissions(allowWrite: boolean): Permission<Retro, Spec<Retro>> {

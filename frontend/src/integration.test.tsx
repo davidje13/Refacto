@@ -62,6 +62,7 @@ describe('Application', () => {
   });
 
   it('renders retro page at /retros/id after password provided', async () => {
+    jest.spyOn(console, 'info').mockReturnValue();
     const retro = makeRetro({
       id: 'id-foobar',
       slug: 'slug-foobar',
@@ -76,8 +77,10 @@ describe('Application', () => {
       retroToken: 'my-token',
     });
 
-    mockWsExpect('/api/retros/id-foobar', (ws) => {
+    mockWsExpect('/api/retros/id-foobar', async (ws) => {
+      await ws.expect('my-token');
       ws.send(JSON.stringify({ init: retro }));
+      await ws.waitForClose();
     });
 
     const { dom } = await renderApp('/retros/slug-foobar');
@@ -89,14 +92,13 @@ describe('Application', () => {
     const form = dom.getBy(css('form'));
     const fieldPassword = getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'anything' } });
-    await act(async () => {
-      fireEvent.submit(form);
-    });
-    await Promise.resolve(); // password -> checking, then checking -> retro
+    fireEvent.submit(form);
+    await act(() => Promise.resolve()); // password -> checking, then checking -> retro
 
     expect(dom).toContainElementWith(css('.page-retro'));
     const header2 = dom.getBy(css('.top-header h1'));
     expect(header2).toHaveTextContent('Retro Name');
+    expect(console.info).toHaveBeenCalledTimes(1); // connected message
   });
 
   it('redirects to retros url for short unknown urls', async () => {

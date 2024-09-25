@@ -32,6 +32,7 @@ export class App {
   constructor(
     public readonly express: WebSocketExpress,
     public readonly testHooks: TestHooks,
+    public readonly softClose: (timeout: number) => void | Promise<void>,
     public readonly close: () => void | Promise<void>,
   ) {}
 }
@@ -162,15 +163,13 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
   app.use('/api/config', new ApiConfigRouter(config, sso.service.clientConfig));
   app.useHTTP('/api/sso', sso.router);
-  app.use(
-    '/api/retros',
-    new ApiRetrosRouter(
-      userAuthService,
-      retroAuthService,
-      retroService,
-      retroArchiveService,
-    ),
+  const apiRetrosRouter = new ApiRetrosRouter(
+    userAuthService,
+    retroAuthService,
+    retroService,
+    retroArchiveService,
   );
+  app.use('/api/retros', apiRetrosRouter);
   app.use(
     '/api/password-check',
     new ApiPasswordCheckRouter(passwordCheckService),
@@ -195,6 +194,7 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
       retroAuthService,
       userAuthService,
     },
+    apiRetrosRouter.softClose,
     db.close.bind(db),
   );
 };

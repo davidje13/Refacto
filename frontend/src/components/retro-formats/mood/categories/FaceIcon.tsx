@@ -15,14 +15,16 @@ const THEMES = new Map<string, Theme>();
 const FEMALE = '\u200D\u2640';
 const MALE = '\u200D\u2642';
 
-THEMES.set('faces', {
+const DEFAULT_THEME: Theme = {
   name: 'Faces',
   icons: {
     happy: '\uD83D\uDE03',
     meh: '\uD83E\uDD28',
     sad: '\uD83D\uDE22',
   },
-});
+};
+
+THEMES.set('faces', DEFAULT_THEME);
 
 THEMES.set('intense', {
   name: 'Intense',
@@ -141,8 +143,6 @@ THEMES.set('boring-faces', {
   },
   extraClassName: 'boring',
 });
-
-const DEFAULT_THEME = THEMES.values().next().value;
 
 export function getTheme(name: string): Theme {
   return THEMES.get(name) || DEFAULT_THEME;

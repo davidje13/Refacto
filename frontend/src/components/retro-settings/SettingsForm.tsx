@@ -1,7 +1,7 @@
 import { useState, memo } from 'react';
-import { actionsSyncedCallback } from 'shared-reducer/frontend';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroDispatch } from '../../api/RetroTracker';
+import { context } from '../../api/reducer';
 import { Input } from '../common/Input';
 import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';
@@ -25,23 +25,22 @@ export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
   );
   const [theme, setTheme] = useState(OPTIONS.theme.read(retro.options));
 
-  const [handleSubmit, sending, error] = useSubmissionCallback(() => {
+  const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
     if (!name || !slug) {
       throw new Error('Cannot set blank name or slug');
     }
 
-    dispatch([
+    const saved = await dispatch.sync([
       {
         name: ['=', name],
         slug: ['=', slug],
-        options: [
-          'seq',
+        options: context.combine([
           OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
           OPTIONS.theme.specSet(theme),
-        ],
+        ]),
       },
-      actionsSyncedCallback(onSave),
     ]);
+    onSave?.(saved);
   });
 
   const themeChoices = getThemes().map(([value, detail]) => ({

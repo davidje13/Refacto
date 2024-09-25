@@ -51,11 +51,11 @@ function getState<T>(
 export const allItemsDoneCallback = (
   callback?: () => void,
 ): RetroDispatchSpec => [
-  (state: Retro<MoodRetroStateT>): null => {
+  (state: Retro<MoodRetroStateT>) => {
     if (callback && !pickNextItem(undefined, state, null)) {
       callback();
     }
-    return null;
+    return [];
   },
 ];
 

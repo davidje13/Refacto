@@ -3,16 +3,11 @@ import {
   useState,
   useLayoutEffect,
   useEffect,
-  useRef,
   type ReactNode,
 } from 'react';
-import { Route, Switch, useLocation, LocationHook } from 'wouter';
+import { Route, Switch, useLocation } from 'wouter';
 import { type Retro } from '../shared/api-entities';
-import {
-  type RetroState,
-  type RetroDispatch,
-  type RetroError,
-} from '../api/RetroTracker';
+import { type RetroDispatch } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
 import { useNonce } from '../hooks/useNonce';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
@@ -25,42 +20,21 @@ import { useSlug } from '../hooks/data/useSlug';
 import { useRetroToken } from '../hooks/data/useRetroToken';
 import { StateMapProvider } from '../hooks/useStateMap';
 import { RedirectRoute } from './RedirectRoute';
+import { useEvent } from '../hooks/useEvent';
 
-type RetroReducerState = [Retro | null, RetroDispatch | null, RetroError];
+type RetroReducerState = [Retro | null, RetroDispatch | null];
 
-const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/)/;
-
-type SetLocation = ReturnType<LocationHook>[1];
-
-function replaceSlug(
-  oldPath: string,
-  setLocation: SetLocation,
-  newSlug: string,
-  retroId: string,
-) {
-  const oldSlug = RETRO_SLUG_PATH.exec(oldPath)?.[1];
-  if (!oldSlug || oldSlug === newSlug) {
-    return;
-  }
-  slugTracker.remove(oldSlug);
-  slugTracker.set(newSlug, retroId);
-  const oldPrefix = `/retros/${oldSlug}`;
-  const newPrefix = `/retros/${newSlug}`;
-  const newPath = newPrefix + oldPath.substring(oldPrefix.length);
-  setLocation(newPath, { replace: true });
-}
+const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
 
 function useRetroReducer(
   retroId: string | null,
   retroToken: string | null,
 ): RetroReducerState {
   const [location, setLocation] = useLocation();
-  const slugChangeDetectionRef = useRef<string>();
-  const [retroState, setRetroState] = useState<RetroState | null>(null);
+  const [retroState, setRetroState] = useState<Retro | null>(null);
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
     null,
   );
-  const [error, setError] = useState<RetroError>(null);
   const nonce = useNonce();
 
   // This cannot be useEffect; the websocket would be closed & reopened
@@ -70,7 +44,6 @@ function useRetroReducer(
 
     setRetroState(null);
     setRetroDispatch(null);
-    setError(null);
     if (!retroId || !retroToken) {
       return undefined;
     }
@@ -78,33 +51,33 @@ function useRetroReducer(
     const subscription = retroTracker.subscribe(
       retroId,
       retroToken,
-      (dispatch: RetroDispatch) =>
-        nonce.check(myNonce) && setRetroDispatch(() => dispatch),
-      (data: RetroState) => nonce.check(myNonce) && setRetroState(data),
-      (err: RetroError) => nonce.check(myNonce) && setError(err),
+      (data) => nonce.check(myNonce) && setRetroState(data),
     );
+    setRetroDispatch(() => subscription.dispatch);
     return () => subscription.unsubscribe();
-  }, [
-    retroTracker,
-    setRetroState,
-    setRetroDispatch,
-    setError,
-    retroId,
-    retroToken,
-  ]);
+  }, [retroId, retroToken]);
 
-  useEffect(() => {
-    if (!retroId || !retroState || !retroState.retro) {
+  const updateSlug = useEvent((slug: string) => {
+    const old = RETRO_SLUG_PATH.exec(location);
+    const oldSlug = decodeURIComponent(old?.[1] ?? '');
+    if (!retroId || !oldSlug || oldSlug === slug) {
       return;
     }
-    const { slug } = retroState.retro;
-    if (slugChangeDetectionRef.current !== slug) {
-      slugChangeDetectionRef.current = slug;
-      replaceSlug(location, setLocation, slug, retroId);
-    }
-  }, [retroState, slugChangeDetectionRef, location, setLocation, replaceSlug]);
+    slugTracker.remove(oldSlug);
+    slugTracker.set(slug, retroId);
+    setLocation(`/retros/${encodeURIComponent(slug)}${old?.[2] ?? ''}`, {
+      replace: true,
+    });
+  });
 
-  return [retroState?.retro ?? null, retroDispatch, error];
+  const slug = retroState?.slug;
+  useEffect(() => {
+    if (slug) {
+      updateSlug(slug);
+    }
+  }, [slug, updateSlug]);
+
+  return [retroState, retroDispatch];
 }
 
 interface PropsT {
@@ -120,16 +93,13 @@ export interface RetroPagePropsT {
 export const RetroRouter: FC<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
   const [retroToken, retroTokenError] = useRetroToken(retroId);
-  const [retro, retroDispatch, retroError] = useRetroReducer(
-    retroId,
-    retroToken,
-  );
+  const [retro, retroDispatch] = useRetroReducer(retroId, retroToken);
 
   if (slugError === 'not found') {
     return <RetroCreatePage defaultSlug={slug} />;
   }
 
-  const error = slugError || retroTokenError || retroError;
+  const error = slugError || retroTokenError;
 
   if (error) {
     return <div className="loader error">{error}</div>;

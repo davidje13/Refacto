@@ -1,5 +1,5 @@
 import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
-import { websocketHandler } from 'shared-reducer/backend';
+import { WebsocketHandlerFactory } from 'shared-reducer/backend';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import { type UserAuthService } from '../services/UserAuthService';
 import { type RetroAuthService } from '../services/RetroAuthService';
@@ -20,6 +20,8 @@ const MAX_PASSWORD_LENGTH = 512;
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
 export class ApiRetrosRouter extends Router {
+  public readonly softClose: (timeout: number) => Promise<void>;
+
   public constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -33,7 +35,11 @@ export class ApiRetrosRouter extends Router {
       (token): JWTPayload | null => userAuthService.readAndVerifyToken(token),
     );
 
-    const wsHandler = websocketHandler(retroService.retroBroadcaster);
+    const wsHandlerFactory = new WebsocketHandlerFactory(
+      retroService.retroBroadcaster,
+      { pongTimeout: 60_000 },
+    );
+    this.softClose = (timeout) => wsHandlerFactory.softClose(timeout);
 
     this.get('/', userAuthMiddleware, async (_, res) => {
       const userId = WebSocketExpress.getAuthData(res).sub!;
@@ -114,7 +120,7 @@ export class ApiRetrosRouter extends Router {
     this.ws(
       '/:retroId',
       WebSocketExpress.requireAuthScope('read'),
-      wsHandler(
+      wsHandlerFactory.handler(
         (req) => req.params.retroId,
         (_, res) =>
           retroService.getPermissions(

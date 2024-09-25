@@ -14,7 +14,7 @@
     "geckodriver": "4.4.x",
     "lean-test": "2.x",
     "prettier": "3.3.3",
-    "selenium-webdriver": "4.24.x",
-    "typescript": "5.5.x"
+    "selenium-webdriver": "4.25.x",
+    "typescript": "5.6.x"
   }
 }
