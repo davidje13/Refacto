@@ -72,8 +72,7 @@ export class TokenManager {
     publicKey: KeyLike,
   ): JsonData | null {
     try {
-      // https://github.com/hokaccha/node-jwt-simple/pull/98
-      return jwt.decode(token, publicKey as any, false, this.algorithm);
+      return jwt.decode(token, publicKey, false, this.algorithm);
     } catch (e) {
       return null;
     }

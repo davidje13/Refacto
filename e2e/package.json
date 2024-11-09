@@ -10,11 +10,11 @@
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
-    "chromedriver": "128.x",
-    "geckodriver": "4.4.x",
+    "chromedriver": "130.x",
+    "geckodriver": "5.0.x",
     "lean-test": "2.x",
     "prettier": "3.3.3",
-    "selenium-webdriver": "4.25.x",
+    "selenium-webdriver": "4.26.x",
     "typescript": "5.6.x"
   }
 }

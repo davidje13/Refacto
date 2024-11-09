@@ -9,12 +9,12 @@ describe('/api/sso/service', () => {
   const MOCK_SSO = testServerRunner(() => {
     const ssoApp = new WebSocketExpress();
     ssoApp.use(WebSocketExpress.urlencoded({ extended: false }));
-    ssoApp.get('/', (_, res) =>
+    ssoApp.get('/', (_, res) => {
       res.json({
         aud: 'my-client-id',
         sub: 'my-external-id',
-      }),
-    );
+      });
+    });
     return { run: ssoApp.createServer() };
   });
 

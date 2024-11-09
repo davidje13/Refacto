@@ -21,6 +21,8 @@ export class ApiConfigRouter extends Router {
       giphy: serverConfig.giphy.apiKey !== '',
     };
 
-    this.get('/', (_, res) => res.json(clientConfig));
+    this.get('/', (_, res) => {
+      res.json(clientConfig);
+    });
   }
 }
