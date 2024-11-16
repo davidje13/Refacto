@@ -142,6 +142,45 @@ SSO_GITLAB_CLIENT_ID="idhere" \
 ./index.js
 ```
 
+### Public access
+
+If you are running Refacto in a private network where all users are
+trusted, you can set up Refacto to allow all users access to a single
+account. This is simpler than setting up an authentication provider,
+but will allow everybody access to the same account.
+
+```sh
+INSECURE_SHARED_ACCOUNT_ENABLED=true ./index.js
+```
+
+By default this will use `/api/open-login` as the login URL. If you
+want to use a different URL, you can configure it:
+
+```sh
+INSECURE_SHARED_ACCOUNT_ENABLED=true \
+INSECURE_SHARED_ACCOUNT_AUTH_URL="/custom-path" \
+./index.js
+```
+
+You may want to provide some additional security by protecting this
+URL in your proxy. For example, to enable Basic auth using NGINX:
+
+```
+location /api/open-login {
+    auth_basic           "Admin";
+    auth_basic_user_file /etc/apache2/.htpasswd;
+}
+```
+
+Or to enable access only from a specific IP:
+
+```
+location /api/open-login {
+    allow 1.2.3.4/32;
+    deny all;
+}
+```
+
 ## Other Integrations
 
 ### Giphy

@@ -17,7 +17,10 @@ export async function handleLogin(
   const hashParams = new URLSearchParams(hash.substring(1));
   const searchParams = new URLSearchParams(search.substring(1));
 
-  if (service === 'google') {
+  if (service === 'public') {
+    externalToken = hashParams.get('token');
+    state = hashParams.get('state');
+  } else if (service === 'google') {
     externalToken = hashParams.get('id_token');
     state = hashParams.get('state');
   } else if (service === 'github') {

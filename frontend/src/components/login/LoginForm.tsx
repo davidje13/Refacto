@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useLayoutEffect } from 'react';
 import { useConfig } from '../../hooks/data/useConfig';
 import { toHex, randomBytes } from '../../helpers/crypto';
 import { storage } from './storage';
@@ -23,12 +23,24 @@ interface PropsT {
 export const LoginForm = memo(({ message, redirect }: PropsT) => {
   const config = useConfig();
   const sso = config?.sso ?? {};
+
+  const publicConfig = sso['public'];
   const googleConfig = sso['google'];
   const githubConfig = sso['github'];
   const gitlabConfig = sso['gitlab'];
 
   const resolvedRedirect = redirect || document.location.pathname;
   const domain = document.location.origin;
+
+  useLayoutEffect(() => {
+    if (publicConfig) {
+      const targetUrl = new URL('/sso/public', domain);
+      const url = new URL(publicConfig.authUrl, document.location.href);
+      url.searchParams.set('redirect_uri', targetUrl.toString());
+      url.searchParams.set('state', makeState(resolvedRedirect));
+      document.location.href = url.toString();
+    }
+  }, [publicConfig]);
 
   return (
     <div className="login-form">

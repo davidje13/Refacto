@@ -20,6 +20,12 @@ const baseTestConfig: ConfigT = {
   token: { secretPassphrase: '' },
   encryption: { secretKey: '' },
   db: { url: 'memory://' },
+  insecure: {
+    sharedAccount: {
+      enabled: false,
+      authUrl: '/insecure-login',
+    },
+  },
   sso: {
     google: { clientId: '', authUrl: '', tokenInfoUrl: '' },
     github: {

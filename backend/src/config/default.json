@@ -20,6 +20,12 @@
   "db": {
     "url": "memory://refacto"
   },
+  "insecure": {
+    "sharedAccount": {
+      "enabled": false,
+      "authUrl": "/api/open-login"
+    }
+  },
   "sso": {
     "google": {
       "clientId": "",

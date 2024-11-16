@@ -1,22 +1,18 @@
 import { Router } from 'websocket-express';
-import { type ClientConfig } from '../shared/api-entities';
-import { type AuthenticationClientConfiguration } from 'authentication-backend';
+import type { ClientConfig } from '../shared/api-entities';
 
 interface ServerConfig {
-  sso: ClientConfig['sso'];
-  giphy: {
-    apiKey: string;
-  };
+  giphy: { apiKey: string };
 }
 
 export class ApiConfigRouter extends Router {
   public constructor(
     serverConfig: ServerConfig,
-    ssoClientConfig: AuthenticationClientConfiguration,
+    ssoClientConfig: ClientConfig['sso'],
   ) {
     super();
 
-    const clientConfig = {
+    const clientConfig: ClientConfig = {
       sso: ssoClientConfig,
       giphy: serverConfig.giphy.apiKey !== '',
     };
