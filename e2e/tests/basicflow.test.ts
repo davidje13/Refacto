@@ -210,8 +210,9 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     let retroList: RetroList;
 
     it('prompts to log in when loaded', async () => {
-      retroList = await user1.navigateToRetroList();
-      retroList = await retroList.loginAs(userName);
+      const welcome = await user1.navigateToWelcome();
+      const retroCreate = await welcome.loginAs(userName);
+      retroList = await retroCreate.clickListRetros();
     });
 
     it('displays retros created by the current user', async () => {
@@ -224,8 +225,9 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     });
 
     it('does not list retros from other users', async () => {
-      retroList = await user1.navigateToRetroList();
-      retroList = await retroList.loginAs('nobody');
+      const welcome = await user1.navigateToWelcome();
+      const retroCreate = await welcome.loginAs('nobody');
+      retroList = await retroCreate.clickListRetros();
 
       expect(await retroList.getRetroNames()).toEqual([]);
     });

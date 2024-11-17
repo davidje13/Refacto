@@ -32,6 +32,11 @@ export class Welcome extends Page {
     return new SsoLogin<RetroCreate>(this.driver, RetroCreate).wait();
   }
 
+  public async loginAs(userName: string) {
+    const ssoLogin = await this.clickLoginWithGoogle();
+    return await ssoLogin.loginAs(userName);
+  }
+
   public async clickSecurity() {
     const element = this.findElement(By.css('.link-security'));
     // avoid opening a new tab, as this is difficult to manage

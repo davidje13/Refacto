@@ -22,11 +22,8 @@ export const RetroCreatePage = memo(({ defaultSlug }: PropsT) => {
       <Header
         documentTitle="New Retro - Refacto"
         title="New Retro"
-        backLink={{ label: 'Home', action: '/' }}
-        links={[
-          { label: 'Import', action: '/create/import' },
-          { label: 'My Retros', action: '/retros' },
-        ]}
+        backLink={{ label: 'My Retros', action: '/' }}
+        links={[{ label: 'Import', action: '/create/import' }]}
       />
       <RetroForm onCreate={handleCreate} defaultSlug={defaultSlug} />
     </article>

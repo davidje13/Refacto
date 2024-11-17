@@ -1,35 +1,11 @@
 import { By, WebDriver } from 'selenium-webdriver';
 import { Page } from './common/Page';
 import { RetroCreate } from './RetroCreate';
-import { Welcome } from './Welcome';
-import { SsoLogin } from './SsoLogin';
 import { Retro } from './Retro';
 
 export class RetroList extends Page {
   public constructor(driver: WebDriver) {
-    super(driver, '/retros', '.page-retro-list');
-  }
-
-  public async clickLoginWithGoogle() {
-    await this.click(By.css('.sso-google'));
-
-    return new SsoLogin<RetroList>(this.driver, RetroList).wait();
-  }
-
-  public async loginAs(identifier: string) {
-    await this.click(By.css('.sso-google'));
-
-    const loginSso = await new SsoLogin<RetroList>(
-      this.driver,
-      RetroList,
-    ).wait();
-    return loginSso.loginAs(identifier);
-  }
-
-  public async clickHome() {
-    await this.click(By.linkText('Home'));
-
-    return new Welcome(this.driver).wait();
+    super(driver, '/', '.page-retro-list');
   }
 
   public async clickCreateRetro() {

@@ -18,8 +18,8 @@ export const RetroImportPage = memo(() => {
       <Header
         documentTitle="Import Retro - Refacto"
         title="Import Retro"
-        backLink={{ label: 'Create', action: '/create' }}
-        links={[{ label: 'My Retros', action: '/retros' }]}
+        backLink={{ label: 'My Retros', action: '/' }}
+        links={[{ label: 'Create', action: '/create' }]}
       />
       <RetroForm onCreate={handleCreate} showImport />
     </article>

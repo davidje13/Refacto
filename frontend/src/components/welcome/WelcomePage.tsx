@@ -19,7 +19,7 @@ export const WelcomePage = memo(() => {
         </Link>
       </p>
     );
-    links = [{ label: 'My Retros', action: '/retros' }];
+    links = [{ label: 'My Retros', action: '/' }];
   } else {
     createLink = (
       <LoginForm

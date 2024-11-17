@@ -16,6 +16,7 @@ import { css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
 import { TitleContext } from './hooks/env/useTitle';
+import { userTokenTracker } from './api/api';
 
 import { App } from './components/App';
 
@@ -44,6 +45,10 @@ async function renderApp(location: string): Promise<RenderedApp> {
 }
 
 describe('Application', () => {
+  beforeEach(() => {
+    userTokenTracker.set('');
+  });
+
   it('renders welcome page at root', async () => {
     const { dom, titleHook } = await renderApp('/');
 
@@ -53,10 +58,11 @@ describe('Application', () => {
     expect(titleHook.currentTitle).toEqual('Refacto');
   });
 
-  it('renders retro list page at /retros', async () => {
+  it('renders retro list page at root when logged in', async () => {
+    userTokenTracker.set('foobar');
     mockFetchExpect('/api/retros').andRespondJsonOk({ retros: [] });
 
-    const { dom } = await renderApp('/retros');
+    const { dom } = await renderApp('/');
 
     expect(dom).toContainElementWith(css('.page-retro-list'));
   });
