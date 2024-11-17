@@ -7,7 +7,7 @@ interface PropsT {
 }
 
 export const RetroLink = memo(({ name, slug }: PropsT) => (
-  <Link className="retro-link" to={`/retros/${slug}`}>
+  <Link className="retro-link" to={`/retros/${encodeURIComponent(slug)}`}>
     {name}
   </Link>
 ));

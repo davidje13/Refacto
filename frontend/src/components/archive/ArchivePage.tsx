@@ -28,7 +28,7 @@ export const ArchivePage = memo(
           title={`${retro.name} (${archiveName})`}
           backLink={{
             label: 'Archives',
-            action: `/retros/${retro.slug}/archives`,
+            action: `/retros/${encodeURIComponent(retro.slug)}/archives`,
           }}
         />
         <Loader

@@ -13,7 +13,7 @@ export const RetroSettingsPage = memo(({ retro, retroDispatch }: PropsT) => {
   const [, setLocation] = useLocation();
 
   const handleSave = useEvent((savedRetro: Retro) => {
-    setLocation(`/retros/${savedRetro.slug}`);
+    setLocation(`/retros/${encodeURIComponent(savedRetro.slug)}`);
   });
 
   return (
@@ -21,7 +21,10 @@ export const RetroSettingsPage = memo(({ retro, retroDispatch }: PropsT) => {
       <Header
         documentTitle={`Settings - ${retro.name} - Refacto`}
         title={`${retro.name} Settings`}
-        backLink={{ label: 'Back to Retro', action: `/retros/${retro.slug}` }}
+        backLink={{
+          label: 'Back to Retro',
+          action: `/retros/${encodeURIComponent(retro.slug)}`,
+        }}
       />
       {retroDispatch ? (
         <SettingsForm

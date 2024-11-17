@@ -16,7 +16,9 @@ export const App: FC = () => (
   <>
     <Switch>
       <Route path="/sso/:service">
-        {({ service }): ReactNode => <LoginCallback service={service ?? ''} />}
+        {({ service = '' }): ReactNode => (
+          <LoginCallback service={decodeURIComponent(service)} />
+        )}
       </Route>
       <Route path="/">
         <WelcomePage />
@@ -34,7 +36,7 @@ export const App: FC = () => (
         <RetroListPage />
       </Route>
       <Route path="/retros/:slug/:rest*">
-        {({ slug }) => <RetroRouter slug={slug ?? ''} />}
+        {({ slug = '' }) => <RetroRouter slug={decodeURIComponent(slug)} />}
       </Route>
 
       <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />

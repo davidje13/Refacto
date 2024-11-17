@@ -8,7 +8,9 @@ export class PasswordService {
     const key = passwordHash.substring(0, 5);
     const rest = passwordHash.substring(5);
 
-    const response = await fetch(`${this.apiBase}/password-check/${key}`);
+    const response = await fetch(
+      `${this.apiBase}/password-check/${encodeURIComponent(key)}`,
+    );
     const lines = (await response.text()).split('\n');
     return lines.reduce((sum, ln) => {
       const [lnRest, count] = ln.split(':');

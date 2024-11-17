@@ -6,7 +6,11 @@ export class RetroArchive extends Page {
   private readonly slug: string;
 
   public constructor(driver: WebDriver, slug: string, archiveId: string) {
-    super(driver, `/retros/${slug}/archives/${archiveId}`, '.page-archive');
+    super(
+      driver,
+      `/retros/${encodeURIComponent(slug)}/archives/${encodeURIComponent(archiveId)}`,
+      '.page-archive',
+    );
     this.slug = slug;
   }
 

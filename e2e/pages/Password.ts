@@ -7,7 +7,7 @@ export class Password extends Page {
     driver: WebDriver,
     private readonly slug: string,
   ) {
-    super(driver, `/retros/${slug}`, '.page-password');
+    super(driver, `/retros/${encodeURIComponent(slug)}`, '.page-password');
   }
 
   public setPassword(pass: string) {

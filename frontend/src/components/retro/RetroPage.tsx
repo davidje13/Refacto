@@ -78,10 +78,16 @@ export const RetroPage = memo(
     const links = [
       { label: 'Invite', action: showInvitePopup },
       retroDispatch
-        ? { label: 'Settings', action: `/retros/${retro.slug}/settings` }
+        ? {
+            label: 'Settings',
+            action: `/retros/${encodeURIComponent(retro.slug)}/settings`,
+          }
         : null,
       canArchive ? { label: 'Create Archive', action: showArchivePopup } : null,
-      { label: 'Archives', action: `/retros/${retro.slug}/archives` },
+      {
+        label: 'Archives',
+        action: `/retros/${encodeURIComponent(retro.slug)}/archives`,
+      },
     ];
 
     return (
@@ -91,7 +97,10 @@ export const RetroPage = memo(
           title={retro.name}
           backLink={
             group
-              ? { label: 'Main Retro', action: `/retros/${retro.slug}` }
+              ? {
+                  label: 'Main Retro',
+                  action: `/retros/${encodeURIComponent(retro.slug)}`,
+                }
               : null
           }
           links={retro ? links : []}

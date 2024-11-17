@@ -30,7 +30,7 @@ export class RetroTracker {
     this.subscriptionTracker = new SubscriptionTracker(
       ({ retroId, retroToken }) => {
         const s = new SharedReducer<Retro, Spec<Retro>>(context, () => ({
-          url: `${wsBase}/retros/${retroId}`,
+          url: `${wsBase}/retros/${encodeURIComponent(retroId)}`,
           token: retroToken,
         }));
         s.addEventListener('connected', () => console.info('connected'));

@@ -9,7 +9,11 @@ export class RetroArchiveList extends Page {
     driver: WebDriver,
     private readonly slug: string,
   ) {
-    super(driver, `/retros/${slug}/archives`, '.page-archive-list');
+    super(
+      driver,
+      `/retros/${encodeURIComponent(slug)}/archives`,
+      '.page-archive-list',
+    );
   }
 
   public async clickBack() {

@@ -8,7 +8,11 @@ export class RetroSettings extends Page {
     driver: WebDriver,
     private slug: string,
   ) {
-    super(driver, `/retros/${slug}/settings`, '.page-retro-settings');
+    super(
+      driver,
+      `/retros/${encodeURIComponent(slug)}/settings`,
+      '.page-retro-settings',
+    );
   }
 
   public setName(name: string) {

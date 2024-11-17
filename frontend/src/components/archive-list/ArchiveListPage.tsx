@@ -17,7 +17,10 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
       <Header
         documentTitle={`Archives - ${retro.name} - Refacto`}
         title={`${retro.name} Archives`}
-        backLink={{ label: 'Back to Retro', action: `/retros/${retro.slug}` }}
+        backLink={{
+          label: 'Back to Retro',
+          action: `/retros/${encodeURIComponent(retro.slug)}`,
+        }}
       />
       <Loader
         error={archivesError}
@@ -26,7 +29,7 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
       />
       <div className="extra-links">
         <ApiDownload
-          url={`retros/${retro.id}/export/json`}
+          url={`retros/${encodeURIComponent(retro.id)}/export/json`}
           token={retroToken}
           filename={`${retro.slug}-export.json`}
         >

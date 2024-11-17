@@ -25,7 +25,7 @@ export class Retro extends Page {
     driver: WebDriver,
     private readonly slug: string,
   ) {
-    super(driver, `/retros/${slug}`, '.page-retro');
+    super(driver, `/retros/${encodeURIComponent(slug)}`, '.page-retro');
   }
 
   public getNameText() {

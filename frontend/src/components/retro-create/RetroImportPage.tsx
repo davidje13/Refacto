@@ -10,7 +10,7 @@ export const RetroImportPage = memo(() => {
   const [, setLocation] = useLocation();
   const handleCreate = useEvent(({ id, slug }: CreationT) => {
     slugTracker.set(slug, id);
-    setLocation(`/retros/${slug}`);
+    setLocation(`/retros/${encodeURIComponent(slug)}`);
   });
 
   return (

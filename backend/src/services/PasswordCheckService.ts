@@ -19,7 +19,9 @@ export class PasswordCheckService {
       throw new Error('Service unavailable');
     }
 
-    const result = await fetch(`${this.baseUrl}/range/${prefix}`);
+    const result = await fetch(
+      `${this.baseUrl}/range/${encodeURIComponent(prefix)}`,
+    );
     if (result.status !== 200) {
       throw new Error(`Service error ${result.status}`);
     }

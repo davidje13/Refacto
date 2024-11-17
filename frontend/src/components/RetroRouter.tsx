@@ -123,22 +123,27 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
           <RetroPage {...retroParams} />
         </Route>
         <Route path="/retros/:slug/groups/:group">
-          {({ group }) => <RetroPage {...retroParams} group={group} />}
+          {({ group = '' }) => (
+            <RetroPage {...retroParams} group={decodeURIComponent(group)} />
+          )}
         </Route>
         <Route path="/retros/:slug/archives">
           <ArchiveListPage {...retroParams} />
         </Route>
         <Route path="/retros/:slug/archives/:archiveId">
-          {({ archiveId }) => (
-            <ArchivePage {...retroParams} archiveId={archiveId ?? ''} />
+          {({ archiveId = '' }) => (
+            <ArchivePage
+              {...retroParams}
+              archiveId={decodeURIComponent(archiveId)}
+            />
           )}
         </Route>
         <Route path="/retros/:slug/archives/:archiveId/groups/:group">
-          {({ archiveId, group }) => (
+          {({ archiveId = '', group = '' }) => (
             <ArchivePage
               {...retroParams}
-              archiveId={archiveId ?? ''}
-              group={group}
+              archiveId={decodeURIComponent(archiveId)}
+              group={decodeURIComponent(group)}
             />
           )}
         </Route>

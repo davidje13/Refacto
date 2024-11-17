@@ -17,12 +17,15 @@ export class RetroTokenService {
     retroId: string,
     password: string,
   ): Promise<string> {
-    const response = await fetch(`${this.apiBase}/auth/tokens/${retroId}`, {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    });
+    const response = await fetch(
+      `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}`,
+      {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      },
+    );
     if (response.status === 400) {
       throw new Error('Incorrect password');
     }
@@ -35,7 +38,7 @@ export class RetroTokenService {
     userToken: string,
   ): Promise<string> {
     const response = await fetch(
-      `${this.apiBase}/auth/tokens/${retroId}/user`,
+      `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}/user`,
       {
         method: 'GET',
         cache: 'no-cache',

@@ -14,7 +14,7 @@ export class ArchiveTracker {
     retroToken: string,
   ): Observable<RetroArchiveList> {
     return loadHttp<RetroArchiveList>({
-      url: `${this.apiBase}/retros/${retroId}/archives`,
+      url: `${this.apiBase}/retros/${encodeURIComponent(retroId)}/archives`,
       headers: { Authorization: `Bearer ${retroToken}` },
     });
   }
@@ -25,7 +25,7 @@ export class ArchiveTracker {
     retroToken: string,
   ): Observable<RetroArchive> {
     return loadHttp<RetroArchive>({
-      url: `${this.apiBase}/retros/${retroId}/archives/${archiveId}`,
+      url: `${this.apiBase}/retros/${encodeURIComponent(retroId)}/archives/${encodeURIComponent(archiveId)}`,
       headers: { Authorization: `Bearer ${retroToken}` },
     });
   }

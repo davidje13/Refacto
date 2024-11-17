@@ -15,7 +15,7 @@ export class ArchiveService {
       items: retro.items,
     };
     const response = await fetch(
-      `${this.apiBase}/retros/${retro.id}/archives`,
+      `${this.apiBase}/retros/${encodeURIComponent(retro.id)}/archives`,
       {
         method: 'POST',
         cache: 'no-cache',

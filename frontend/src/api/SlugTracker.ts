@@ -39,7 +39,10 @@ export class SlugTracker {
   public constructor(apiBase: string) {
     this.storage = new CacheMap(
       (slug: string): StoredT<string> =>
-        ajaxSubject(`${apiBase}/slugs/${slug}`, ({ id }): string => id),
+        ajaxSubject(
+          `${apiBase}/slugs/${encodeURIComponent(slug)}`,
+          ({ id }): string => id,
+        ),
     );
   }
 
