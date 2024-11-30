@@ -1,7 +1,13 @@
-import { type FC, useState, type PropsWithChildren } from 'react';
-import Modal from 'react-modal';
+import {
+  type FC,
+  type PropsWithChildren,
+  useRef,
+  useEffect,
+  type KeyboardEvent,
+  useId,
+  useState,
+} from 'react';
 import { useEvent } from '../../hooks/useEvent';
-import { useListener } from '../../hooks/useListener';
 import './Popup.less';
 
 interface PropsT {
@@ -12,10 +18,6 @@ interface PropsT {
   onClose: () => void;
 }
 
-function stopProp(e: Event) {
-  e.stopPropagation();
-}
-
 export const Popup: FC<PropsWithChildren<PropsT>> = ({
   title,
   hideTitle = false,
@@ -24,6 +26,8 @@ export const Popup: FC<PropsWithChildren<PropsT>> = ({
   onClose,
   children,
 }) => {
+  const [lagDisplay, setLagDisplay] = useState(false);
+
   const handleKeyDown = useEvent((e: KeyboardEvent) => {
     e.stopPropagation();
     const t = e.target as Element;
@@ -43,28 +47,34 @@ export const Popup: FC<PropsWithChildren<PropsT>> = ({
     }
   });
 
-  const [modal, setModal] = useState<HTMLDivElement>();
-  useListener(modal, 'mousedown', stopProp);
-  useListener(modal, 'mouseup', stopProp);
-  useListener(modal, 'keyup', stopProp);
-  useListener(modal, 'keypress', stopProp);
-  useListener(modal, 'keydown', handleKeyDown);
+  const id = useId();
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (isOpen) {
+      setLagDisplay(true);
+      dialog.current?.showModal();
+      return () => dialog.current?.close();
+    } else {
+      const tm = setTimeout(() => setLagDisplay(false), 500);
+      return () => clearTimeout(tm);
+    }
+  }, [isOpen]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      portalClassName=""
-      overlayClassName="popup-overlay"
+    <dialog
+      ref={dialog}
       className="popup-content"
-      bodyOpenClassName={undefined}
-      onRequestClose={onClose}
-      contentRef={setModal}
-      aria={{ labelledby: 'modal-heading' }}
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+      onKeyDown={handleKeyDown}
+      aria-labelledby={id}
     >
-      <h1 id="modal-heading" className={hideTitle ? 'hidden' : ''}>
+      <h1 id={id} className={hideTitle ? 'hidden' : ''}>
         {title}
       </h1>
-      {children}
-    </Modal>
+      {isOpen || lagDisplay ? children : null}
+    </dialog>
   );
 };

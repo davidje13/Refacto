@@ -1,5 +1,4 @@
 import { StrictMode } from 'react';
-import Modal from 'react-modal';
 import { createRoot } from 'react-dom/client';
 import { configService } from './api/api';
 import { App } from './components/App';
@@ -19,7 +18,6 @@ if (navigator.userAgent === 'HeadlessEndToEndTest') {
 }
 
 const root = document.getElementById('root')!;
-Modal.setAppElement(root);
 
 configService
   .load()

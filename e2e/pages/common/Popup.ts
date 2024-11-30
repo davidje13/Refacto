@@ -1,4 +1,4 @@
-import { By, WebDriver } from 'selenium-webdriver';
+import { By, Key, WebDriver } from 'selenium-webdriver';
 import { untilNoElementLocated } from '../../helpers/customUntil';
 import { byButtonText } from '../../helpers/customBy';
 import { PageFragment } from './PageFragment';
@@ -25,7 +25,10 @@ export class Popup extends PageFragment {
       return;
     }
 
-    await this.driver.findElement(By.css('.popup-overlay')).click();
+    await this.driver
+      .actions({ async: false, bridge: false })
+      .sendKeys(Key.ESCAPE)
+      .perform();
     await this.waitUntilDismissed();
   }
 }

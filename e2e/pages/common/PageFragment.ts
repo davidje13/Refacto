@@ -1,8 +1,10 @@
 import { type By, type WebDriver } from 'selenium-webdriver';
 
 export abstract class PageFragment {
+  // An unknown bug in chromedriver causes communication with the browser to hang for
+  // exactly 5 seconds at some points, so use at least a 6 second timeout to avoid flakiness:
   protected readonly explicitWaitTimeout = Number(
-    process.env['EXPLICIT_WAIT_TIMEOUT'] || '5000',
+    process.env['EXPLICIT_WAIT_TIMEOUT'] || '6000',
   );
 
   protected constructor(

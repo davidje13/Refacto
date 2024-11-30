@@ -6,9 +6,9 @@ import {
   useLayoutEffect,
   TextareaHTMLAttributes,
   CSSProperties,
+  useEffect,
 } from 'react';
 import classNames from 'classnames';
-import { useListener } from '../../hooks/useListener';
 import { useDebounced } from '../../hooks/useDebounced';
 import {
   getEmptyHeight,
@@ -104,7 +104,10 @@ export const Textarea: FC<PropsT> = ({
     }
   }, [textareaRef, baseHeightRef]);
   useLayoutEffect(updateSize, [updateSize, value]);
-  useListener(window, 'resize', updateSize);
+  useEffect(() => {
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [updateSize]);
 
   const style: CSSProperties = {};
   if (sizeToFit) {
