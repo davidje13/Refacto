@@ -1,12 +1,11 @@
 import {
   type FC,
   type PropsWithChildren,
-  useRef,
-  useEffect,
-  type KeyboardEvent,
   useId,
+  useLayoutEffect,
   useState,
 } from 'react';
+import { createPortal } from 'react-dom';
 import { useEvent } from '../../hooks/useEvent';
 import './Popup.less';
 
@@ -26,7 +25,15 @@ export const Popup: FC<PropsWithChildren<PropsT>> = ({
   onClose,
   children,
 }) => {
+  const titleID = useId();
+  const [dialog] = useState(() => document.createElement('dialog'));
   const [lagDisplay, setLagDisplay] = useState(false);
+  const showContent = isOpen || lagDisplay;
+
+  const handleCancel = useEvent((e: Event) => {
+    e.preventDefault();
+    onClose();
+  });
 
   const handleKeyDown = useEvent((e: KeyboardEvent) => {
     e.stopPropagation();
@@ -47,34 +54,47 @@ export const Popup: FC<PropsWithChildren<PropsT>> = ({
     }
   });
 
-  const id = useId();
-  const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
+    dialog.className = 'popup-content';
+    dialog.setAttribute('aria-labelledby', titleID);
+    dialog.addEventListener('cancel', handleCancel);
+    dialog.addEventListener('keydown', handleKeyDown);
+    return () => {
+      dialog.removeEventListener('cancel', handleCancel);
+      dialog.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dialog, titleID, handleCancel, handleKeyDown]);
+
+  useLayoutEffect(() => {
+    if (!showContent) {
+      return;
+    }
+    document.body.append(dialog);
+    return () => dialog.remove();
+  }, [dialog, showContent]);
+
+  useLayoutEffect(() => {
     if (isOpen) {
       setLagDisplay(true);
-      dialog.current?.showModal();
-      return () => dialog.current?.close();
+      dialog.showModal();
+      return () => dialog.close();
     } else {
       const tm = setTimeout(() => setLagDisplay(false), 500);
       return () => clearTimeout(tm);
     }
-  }, [isOpen]);
+  }, [dialog, isOpen]);
 
-  return (
-    <dialog
-      ref={dialog}
-      className="popup-content"
-      onCancel={(e) => {
-        e.preventDefault();
-        onClose();
-      }}
-      onKeyDown={handleKeyDown}
-      aria-labelledby={id}
-    >
-      <h1 id={id} className={hideTitle ? 'hidden' : ''}>
+  if (!showContent) {
+    return null;
+  }
+
+  return createPortal(
+    <>
+      <h1 id={titleID} className={hideTitle ? 'hidden' : ''}>
         {title}
       </h1>
-      {isOpen || lagDisplay ? children : null}
-    </dialog>
+      {children}
+    </>,
+    dialog,
   );
 };
