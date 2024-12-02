@@ -4,10 +4,32 @@
   display: block;
   margin: 64px auto 128px;
   width: 600px;
-  max-width: calc(100% - 32px);
+  max-width: calc(100vw - 32px);
 
   label {
     display: block;
+  }
+
+  .horizontal {
+    display: flex;
+    align-content: stretch;
+
+    > label,
+    > input,
+    > .prefixed-input {
+      flex: 1 1 auto;
+    }
+
+    input,
+    .prefixed-input {
+      margin: 0;
+    }
+
+    > button {
+      flex: 0 0 auto;
+      width: auto;
+      margin: 0;
+    }
   }
 
   input,
@@ -83,7 +105,7 @@
     cursor: text;
 
     .prefix {
-      flex: initial;
+      flex: 0 1 auto;
       padding: 8px;
       padding-right: 2px;
       color: @pale-text-on-white;
@@ -94,58 +116,11 @@
     }
 
     input {
-      flex: 1;
-      width: 200px;
-      max-width: calc(100% - 10px);
+      flex: 1 0 200px;
       margin: 0;
       border: none;
       font-size: 1em;
       padding-left: 4px;
-    }
-  }
-
-  .slug-checker {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin: 4px;
-    font-size: 0.7rem;
-    white-space: nowrap;
-
-    svg {
-      fill: currentColor;
-      width: 0.9em;
-      height: 0.9em;
-      vertical-align: -0.1em;
-    }
-
-    &.checking {
-      margin-top: 4px;
-      border: 2px solid rgba(0, 0, 0, 0.5);
-      border-top-color: transparent;
-      border-bottom-color: transparent;
-      border-radius: 100%;
-      box-sizing: border-box;
-      width: 12px;
-      height: 12px;
-      animation: spin 2s linear infinite;
-
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    }
-
-    &.taken,
-    &.invalid {
-      color: @red-text-on-white;
-      font-weight: bolder;
-    }
-
-    &.available {
-      color: @green-text-on-white;
-      font-weight: bolder;
     }
   }
 
@@ -160,21 +135,17 @@
   .sending {
     display: block;
     margin: 32px 0 0;
-    padding: 8px;
+    padding: 8px 16px;
     width: 100%;
     font-size: 1.2em;
     box-sizing: border-box;
-    background: @green-button-back;
-    color: #000000;
+    background: @green-button-dark;
+    color: #ffffff;
     text-align: center;
 
     &:disabled {
       background: @beige-shadow;
     }
-  }
-
-  button[type='button'] {
-    background: white;
   }
 
   .sending {

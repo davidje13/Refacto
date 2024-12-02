@@ -1,30 +1,30 @@
-import { memo, ReactNode } from 'react';
-import useAwaited from 'react-hook-awaited';
+import { ReactNode, type FC } from 'react';
 import { Input } from '../common/Input';
-import { slugTracker } from '../../api/api';
 import TickBold from '../../../resources/tick-bold.svg';
 import Cross from '../../../resources/cross.svg';
-
-export const MAX_SLUG_LENGTH = 64;
-const VALID_SLUG_PATTERN = '^[a-z0-9][a-z0-9_\\-]*$';
-const VALID_SLUG = new RegExp(VALID_SLUG_PATTERN);
-
-enum SlugAvailability {
-  BLANK,
-  INVALID,
-  TAKEN,
-  AVAILABLE,
-}
+import {
+  MAX_SLUG_LENGTH,
+  SlugAvailability,
+  useSlugAvailability,
+  VALID_SLUG_PATTERN,
+} from '../../hooks/data/useSlugAvailability';
+import './SlugEntry.less';
 
 interface PropsT {
   placeholder?: string;
+  ariaLabel?: string;
   value: string;
   onChange: (v: string) => void;
   oldValue?: string;
+  showAvailability?: boolean;
 }
 
 const availabilityJsx: Record<SlugAvailability, ReactNode> = {
   [SlugAvailability.BLANK]: null,
+  [SlugAvailability.PENDING]: <div className="slug-checker checking" />,
+  [SlugAvailability.FAILED]: (
+    <div className="slug-checker failed">Unable to check availability</div>
+  ),
   [SlugAvailability.INVALID]: (
     <div className="slug-checker invalid">
       Invalid <Cross />
@@ -42,60 +42,40 @@ const availabilityJsx: Record<SlugAvailability, ReactNode> = {
   ),
 };
 
-export const SlugEntry = memo(
-  ({ placeholder = '', value, onChange, oldValue }: PropsT) => {
-    const active = value || placeholder;
-    const slugAvailability = useAwaited<SlugAvailability>(async () => {
-      if (active === '') {
-        return SlugAvailability.BLANK;
-      }
-      if (active === oldValue) {
-        return SlugAvailability.AVAILABLE;
-      }
-      if (!VALID_SLUG.test(active) || active.length > MAX_SLUG_LENGTH) {
-        return SlugAvailability.INVALID;
-      }
-      if (!(await slugTracker.isAvailable(active))) {
-        return SlugAvailability.TAKEN;
-      }
-      return SlugAvailability.AVAILABLE;
-    }, [active, slugTracker, oldValue]);
+const SlugAvailabilityDisplay = ({
+  slug,
+  oldValue,
+}: {
+  slug: string;
+  oldValue: string | undefined;
+}) => availabilityJsx[useSlugAvailability(slug, oldValue)];
 
-    const retrosBaseUrl = `${document.location.host}/retros/`;
-
-    let slugChecker: ReactNode;
-    switch (slugAvailability.state) {
-      case 'pending':
-        slugChecker = <div className="slug-checker checking" />;
-        break;
-      case 'rejected':
-        slugChecker = (
-          <div className="slug-checker failed">
-            Unable to check availability
-          </div>
-        );
-        break;
-      case 'resolved':
-        slugChecker = availabilityJsx[slugAvailability.data];
-        break;
-      // no default
-    }
-
-    return (
-      <div className="prefixed-input">
-        <span className="prefix">{retrosBaseUrl}</span>
-        <Input
-          name="slug"
-          type="text"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-          pattern={VALID_SLUG_PATTERN}
-          maxLength={MAX_SLUG_LENGTH}
-          required={placeholder === ''}
-        />
-        {slugChecker}
-      </div>
-    );
-  },
+export const SlugEntry: FC<PropsT> = ({
+  placeholder = '',
+  ariaLabel,
+  value,
+  onChange,
+  oldValue,
+  showAvailability = false,
+}) => (
+  <div className="prefixed-input">
+    <span className="prefix">{`${document.location.host}/retros/`}</span>
+    <Input
+      name="slug"
+      type="text"
+      placeholder={placeholder}
+      aria-label={ariaLabel}
+      value={value}
+      onChange={onChange}
+      pattern={VALID_SLUG_PATTERN}
+      maxLength={MAX_SLUG_LENGTH}
+      required={placeholder === ''}
+    />
+    {showAvailability ? (
+      <SlugAvailabilityDisplay
+        slug={value || placeholder}
+        oldValue={oldValue}
+      />
+    ) : null}
+  </div>
 );

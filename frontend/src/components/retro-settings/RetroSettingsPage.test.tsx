@@ -11,14 +11,12 @@ jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 
 describe('RetroSettingsPage', () => {
   it('renders basic settings', async () => {
-    let dom;
-    await act(async () => {
-      dom = render(
-        <Router hook={staticLocationHook('/', { record: true })}>
-          <RetroSettingsPage retro={makeRetro()} retroDispatch={nullDispatch} />
-        </Router>,
-      );
-    });
+    const dom = render(
+      <Router hook={staticLocationHook('/', { record: true })}>
+        <RetroSettingsPage retro={makeRetro()} retroDispatch={nullDispatch} />
+      </Router>,
+    );
+    await act(() => Promise.resolve()); // slug availability update
 
     expect(dom).toContainElementWith(placeholderText('retro name'));
   });

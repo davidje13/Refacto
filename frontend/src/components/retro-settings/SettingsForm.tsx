@@ -73,7 +73,13 @@ export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
         <div className="info">
           (may contain lowercase letters, numbers, dashes and underscores)
         </div>
-        <SlugEntry value={slug} onChange={setSlug} oldValue={retro.slug} />
+        <SlugEntry
+          value={slug}
+          ariaLabel="Retro ID"
+          onChange={setSlug}
+          oldValue={retro.slug}
+          showAvailability
+        />
       </label>
       <label>
         <Input

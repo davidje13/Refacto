@@ -26,9 +26,8 @@ describe('PasswordPage', () => {
     const form = dom.getBy(css('form'));
     const fieldPassword = getBy(form, css('input[type=password]'));
     fireEvent.change(fieldPassword, { target: { value: 'my-password' } });
-    await act(async () => {
-      fireEvent.submit(form);
-    });
+    fireEvent.submit(form);
+    await act(() => Promise.resolve()); // fetch and store retro token
 
     const retroToken = await getToken('myRetroId');
     expect(mockRetroTokenService.capturedPassword).toEqual('my-password');

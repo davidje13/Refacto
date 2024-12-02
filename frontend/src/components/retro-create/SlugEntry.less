@@ -1,0 +1,46 @@
+@import (reference) '../colours.less';
+
+.slug-checker {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+
+  svg {
+    fill: currentColor;
+    width: 0.9em;
+    height: 0.9em;
+    vertical-align: -0.1em;
+  }
+
+  &.checking {
+    margin-top: 4px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 100%;
+    box-sizing: border-box;
+    width: 12px;
+    height: 12px;
+    animation: spin 2s linear infinite;
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  &.taken,
+  &.invalid {
+    color: @red-text-on-white;
+    font-weight: bolder;
+  }
+
+  &.available {
+    color: @green-text-on-white;
+    font-weight: bolder;
+  }
+}

@@ -1,7 +1,7 @@
 import { By, WebDriver } from 'selenium-webdriver';
 import { Page } from './common/Page';
 import { Retro } from './Retro';
-import { RetroList } from './RetroList';
+import { Welcome } from './Welcome';
 
 export class RetroCreate extends Page {
   private slug?: string;
@@ -10,10 +10,10 @@ export class RetroCreate extends Page {
     super(driver, '/create', '.page-retro-create');
   }
 
-  public async clickListRetros() {
-    await this.click(By.linkText('My Retros'));
+  public async clickAccount() {
+    await this.click(By.linkText('Account'));
 
-    return new RetroList(this.driver).wait();
+    return new Welcome(this.driver).wait();
   }
 
   public setName(name: string) {

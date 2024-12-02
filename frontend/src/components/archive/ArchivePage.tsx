@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
-import { Loader } from '../common/Loader';
+import { LoadingError, LoadingIndicator } from '../common/Loader';
 import { useArchive } from '../../hooks/data/useArchive';
 import { formatDate } from '../../time/formatters';
 import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
@@ -31,24 +31,22 @@ export const ArchivePage = memo(
             action: `/retros/${encodeURIComponent(retro.slug)}/archives`,
           }}
         />
-        <Loader
-          error={archiveError}
-          Component={RetroFormatPicker}
-          componentProps={
-            archive
-              ? {
-                  retroFormat: archive.format,
-                  retroOptions: archive.options,
-                  retroItems: archive.items,
-                  retroState: {},
-                  group,
-                  archive: true,
-                  archiveTime: archive.created,
-                  onComplete: () => undefined,
-                }
-              : null
-          }
-        />
+        {archiveError ? (
+          <LoadingError error={archiveError} />
+        ) : !archive ? (
+          <LoadingIndicator />
+        ) : (
+          <RetroFormatPicker
+            retroFormat={archive.format}
+            retroOptions={archive.options}
+            retroItems={archive.items}
+            retroState={{}}
+            group={group}
+            archive={true}
+            archiveTime={archive.created}
+            onComplete={() => undefined}
+          />
+        )}
       </article>
     );
   },

@@ -1,10 +1,61 @@
 @import (reference) '../colours.less';
+@import (reference) '../form.less';
 
 .page-welcome {
   text-align: center;
 
+  section {
+    width: 600px;
+    max-width: calc(100% - 32px);
+    margin: 32px auto 64px;
+  }
+
+  section:last-child {
+    margin-bottom: 128px;
+  }
+
+  form {
+    .mixin-form-styling;
+    margin: 0;
+  }
+
+  .logo {
+    display: block;
+    width: 192px;
+    height: 192px;
+    margin: 0 auto 16px;
+  }
+
+  p {
+    margin: 8px 0;
+  }
+
+  ul.retros {
+    list-style: none;
+
+    li {
+      margin-bottom: 16px;
+    }
+  }
+
+  .retro-link {
+    display: block;
+    padding: 16px;
+    background: #ffffff;
+    color: @green-text-on-white;
+
+    &:active,
+    &:hover,
+    &:focus {
+      color: #ffffff;
+      text-decoration: none;
+      background: @green-button-dark;
+    }
+  }
+
   .link-create {
-    margin: 8px;
+    display: inline-block;
+    margin-top: 32px;
     padding: 8px 16px;
     background: @green-button-dark;
     color: #ffffff;
@@ -22,12 +73,7 @@
     }
   }
 
-  .create,
   .login-form {
-    margin: calc(50vh - 250px) 16px;
-
-    @media (max-height: 500px) {
-      margin: 0 16px;
-    }
+    margin-top: 24px;
   }
 }

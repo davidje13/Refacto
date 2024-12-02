@@ -1,31 +1,10 @@
-import {
-  ReactNode,
-  ElementType,
-  ReactElement,
-  ComponentPropsWithRef,
-} from 'react';
+import type { FC } from 'react';
 import './Loader.less';
 
-interface PropsT<C extends ElementType> {
-  Component: C;
-  componentProps: ComponentPropsWithRef<C> | null;
-  loadingMessage?: ReactNode;
-  error?: string | null;
-}
+export const LoadingIndicator: FC = () => (
+  <div className="loader">Loading&hellip;</div>
+);
 
-export const Loader = <C extends ElementType>({
-  Component,
-  componentProps,
-  loadingMessage = 'Loading\u2026',
-  error,
-}: PropsT<C>): ReactElement => {
-  if (error) {
-    return <div className="loader error">{error}</div>;
-  }
-
-  if (!componentProps) {
-    return <div className="loader">{loadingMessage}</div>;
-  }
-
-  return <Component {...componentProps} />;
-};
+export const LoadingError: FC<{ error: string }> = ({ error }) => (
+  <div className="loader error">{error}</div>
+);

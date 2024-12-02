@@ -1,4 +1,4 @@
-import type { ComponentType, FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Route, Switch } from 'wouter';
 import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
@@ -7,10 +7,7 @@ import { RetroRouter } from './RetroRouter';
 import { WelcomePage } from './welcome/WelcomePage';
 import { SecurityPage } from './security/SecurityPage';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
-import { RetroImportPage } from './retro-create/RetroImportPage';
-import { RetroListPage } from './retro-list/RetroListPage';
 import { NotFoundPage } from './not-found/NotFoundPage';
-import { useUserToken } from '../hooks/data/useUserToken';
 import './App.less';
 
 export const App: FC = () => (
@@ -22,7 +19,7 @@ export const App: FC = () => (
         )}
       </Route>
       <Route path="/">
-        <SwitchLoggedIn yes={RetroListPage} no={WelcomePage} />
+        <WelcomePage />
       </Route>
       <Route path="/security">
         <SecurityPage />
@@ -31,7 +28,7 @@ export const App: FC = () => (
         <RetroCreatePage />
       </Route>
       <Route path="/create/import">
-        <RetroImportPage />
+        <RetroCreatePage showImport />
       </Route>
       <Route path="/retros/:slug/:rest*">
         {({ slug = '' }) => <RetroRouter slug={decodeURIComponent(slug)} />}
@@ -48,11 +45,3 @@ export const App: FC = () => (
     <Footer />
   </>
 );
-
-const SwitchLoggedIn: FC<{
-  yes: ComponentType<{ userToken: string }>;
-  no: ComponentType;
-}> = ({ yes: Yes, no: No }) => {
-  const [userToken] = useUserToken();
-  return userToken ? <Yes userToken={userToken} /> : <No />;
-};

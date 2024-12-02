@@ -19,6 +19,9 @@ export const Footer = memo(() => (
     >
       GitLab
     </a>
-    )
+    {') - '}
+    <a href="/security" target="_blank" rel="noopener noreferrer">
+      Privacy &amp; Security information
+    </a>
   </footer>
 ));

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
-import { Loader } from '../common/Loader';
+import { LoadingError, LoadingIndicator } from '../common/Loader';
 import { ApiDownload } from '../common/ApiDownload';
 import { useArchiveList } from '../../hooks/data/useArchiveList';
 import { ArchiveList } from './ArchiveList';
@@ -22,11 +22,13 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
           action: `/retros/${encodeURIComponent(retro.slug)}`,
         }}
       />
-      <Loader
-        error={archivesError}
-        Component={ArchiveList}
-        componentProps={archives ? { slug: retro.slug, archives } : null}
-      />
+      {archivesError ? (
+        <LoadingError error={archivesError} />
+      ) : !archives ? (
+        <LoadingIndicator />
+      ) : (
+        <ArchiveList slug={retro.slug} archives={archives} />
+      )}
       <div className="extra-links">
         <ApiDownload
           url={`retros/${encodeURIComponent(retro.id)}/export/json`}

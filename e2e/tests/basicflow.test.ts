@@ -3,7 +3,6 @@ import { getDownloadedBytes, Mbps } from '../helpers/downloadProfiler';
 import { type Welcome } from '../pages/Welcome';
 import { type Password } from '../pages/Password';
 import { type RetroCreate } from '../pages/RetroCreate';
-import { type RetroList } from '../pages/RetroList';
 import { type Retro } from '../pages/Retro';
 import { type RetroArchiveList } from '../pages/RetroArchiveList';
 import { type RetroArchive } from '../pages/RetroArchive';
@@ -53,7 +52,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
   });
 
   it('triggers a login flow when requested', async () => {
-    const ssoLogin = await welcome.clickLoginWithGoogle();
+    const ssoLogin = await welcome.clickLoginWithGoogle('noRetros');
     await ssoLogin.setIdentifier(userName);
     create = await ssoLogin.submit();
   });
@@ -207,29 +206,28 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
 
   describe('retro list', { stopAtFirstFailure: true }, () => {
     const retroName = 'My Retro Renamed';
-    let retroList: RetroList;
+    let welcome: Welcome;
 
     it('prompts to log in when loaded', async () => {
-      const welcome = await user1.navigateToWelcome();
-      const retroCreate = await welcome.loginAs(userName);
-      retroList = await retroCreate.clickListRetros();
+      welcome = await user1.navigateToWelcome();
+      welcome = await welcome.loginAs(userName, 'hasRetros');
     });
 
     it('displays retros created by the current user', async () => {
-      expect(await retroList.getRetroNames()).toEqual([retroName]);
+      expect(await welcome.getRetroNames()).toEqual([retroName]);
     });
 
     it('loads linked retros without needing a password', async () => {
-      retro = await retroList.clickRetroNamed(retroName);
+      retro = await welcome.clickRetroNamed(retroName);
       expect(await retro.getActionItemLabels()).toEqual(['another action']);
     });
 
-    it('does not list retros from other users', async () => {
-      const welcome = await user1.navigateToWelcome();
-      const retroCreate = await welcome.loginAs('nobody');
-      retroList = await retroCreate.clickListRetros();
+    it('navigates directly to retro creation if user has no retros', async () => {
+      welcome = await user1.navigateToWelcome();
+      const retroCreate = await welcome.loginAs('nobody', 'noRetros');
 
-      expect(await retroList.getRetroNames()).toEqual([]);
+      welcome = await retroCreate.clickAccount();
+      expect(await welcome.getRetroNames()).toEqual([]);
     });
   });
 

@@ -3,7 +3,7 @@ import { Route, Switch, useLocation } from 'wouter';
 import { type Retro } from '../shared/api-entities';
 import { type RetroDispatch } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
-import { RetroCreatePage } from './retro-create/RetroCreatePage';
+import { RetroNotFoundPage } from './retro-not-found/RetroNotFoundPage';
 import { PasswordPage } from './password/PasswordPage';
 import { RetroPage } from './retro/RetroPage';
 import { ArchiveListPage } from './archive-list/ArchiveListPage';
@@ -93,7 +93,7 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
   );
 
   if (slugError === 'not found') {
-    return <RetroCreatePage defaultSlug={slug} />;
+    return <RetroNotFoundPage slug={slug} />;
   }
 
   const error = slugError || retroTokenError;
