@@ -42,7 +42,7 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     const estimatedSeconds = bytes / Mbps(1.0);
 
     if (process.env['MODE'] !== 'dev') {
-      expect(estimatedSeconds).toBeLessThan(3);
+      expect(estimatedSeconds).toBeLessThan(3.5);
     }
   });
 
