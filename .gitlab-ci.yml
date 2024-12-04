@@ -76,3 +76,7 @@ node:20:
 node:22:
   <<: *smoke-test
   image: node:22
+
+node:23:
+  <<: *smoke-test
+  image: node:23

@@ -52,6 +52,7 @@ jobs:
           - { node: '18' }
           - { node: '20' }
           - { node: '22' }
+          - { node: '23' }
     steps:
       - name: Install Node
         uses: actions/setup-node@v4

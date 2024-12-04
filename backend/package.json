@@ -35,7 +35,7 @@
     "@types/node": "20.x",
     "http-proxy-middleware": "3.x",
     "lean-test": "2.x",
-    "prettier": "3.4.1",
+    "prettier": "3.4.2",
     "rollup": "4.x",
     "supertest": "7.x",
     "superwstest": "2.x",

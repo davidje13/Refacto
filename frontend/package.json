@@ -47,7 +47,7 @@
     "less": "4.x",
     "less-loader": "12.x",
     "mini-css-extract-plugin": "2.x",
-    "prettier": "3.4.1",
+    "prettier": "3.4.2",
     "react-mock-element": "1.x",
     "react-test-renderer": "18.x",
     "terser-webpack-plugin": "5.x",

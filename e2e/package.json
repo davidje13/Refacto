@@ -13,7 +13,7 @@
     "chromedriver": "131.x",
     "geckodriver": "5.0.x",
     "lean-test": "2.x",
-    "prettier": "3.4.1",
+    "prettier": "3.4.2",
     "selenium-webdriver": "4.27.x",
     "typescript": "5.7.x"
   }
