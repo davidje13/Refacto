@@ -34,7 +34,7 @@ The output is placed in `build`.
 
 ## Deploying
 
-You will need to have NodeJS 18 or newer installed in the deployment
+You will need to have Node.js 18 or newer installed in the deployment
 environment.
 
 ```sh

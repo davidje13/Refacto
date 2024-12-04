@@ -3,6 +3,7 @@ node_js:
 - '18'
 - '20'
 - '22'
+- '23'
 os: linux
 addons:
   chrome: stable
