@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../../../helpers/classNames';
 import { type RetroItem } from '../../../../shared/api-entities';
 import { VoteCount } from './VoteCount';
 import { WrappedButton } from '../../../common/WrappedButton';

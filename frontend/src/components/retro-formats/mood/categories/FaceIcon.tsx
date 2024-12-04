@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../../../helpers/classNames';
 import './FaceIcon.less';
 
 type Type = 'happy' | 'meh' | 'sad';

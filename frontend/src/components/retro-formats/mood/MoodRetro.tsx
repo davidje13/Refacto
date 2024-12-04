@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../../helpers/classNames';
 import { type RetroItem } from '../../../shared/api-entities';
 import { MoodSection } from './categories/MoodSection';
 import { ActionsPane } from './actions/ActionsPane';

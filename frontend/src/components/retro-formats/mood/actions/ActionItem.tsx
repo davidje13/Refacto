@@ -1,5 +1,5 @@
 import { useState, memo } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../../../helpers/classNames';
 import {
   type RetroItem,
   type UserProvidedRetroItemDetails,

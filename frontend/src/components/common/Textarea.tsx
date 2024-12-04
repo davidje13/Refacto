@@ -8,7 +8,7 @@ import {
   CSSProperties,
   useEffect,
 } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../helpers/classNames';
 import { useDebounced } from '../../hooks/useDebounced';
 import {
   getEmptyHeight,

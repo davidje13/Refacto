@@ -1,5 +1,5 @@
 import { useState, memo, ReactNode } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../helpers/classNames';
 import './TabControl.less';
 
 interface TabT {

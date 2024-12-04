@@ -5,7 +5,7 @@ import {
   SyntheticEvent,
   MouseEvent,
 } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../helpers/classNames';
 import { isFocusable } from '../../helpers/isFocusable';
 import { useKeyHandler } from '../../hooks/useKeyHandler';
 import { useStateMap } from '../../hooks/useStateMap';

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import classNames from 'classnames';
+import { classNames } from '../../../../helpers/classNames';
 import { WrappedButton } from '../../../common/WrappedButton';
 import { useThrottled } from '../../../../hooks/useThrottled';
 import Heart from '../../../../../resources/heart.svg';
