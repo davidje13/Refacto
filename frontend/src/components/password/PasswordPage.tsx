@@ -14,7 +14,7 @@ interface PropsT {
 
 export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
   const [password, setPassword] = useState('');
-  const [userToken] = useUserToken();
+  const userToken = useUserToken();
   const [checkingUser, setCheckingUser] = useState(false);
 
   const [handleSubmit, sending, error] = useSubmissionCallback(async () => {

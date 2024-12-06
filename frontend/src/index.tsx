@@ -1,7 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { configService } from './api/api';
+import { API_BASE } from './api/api';
 import { App } from './components/App';
+import { ConfigProvider } from './hooks/data/useConfig';
+import type { ClientConfig } from './shared/api-entities';
 
 import './index.less';
 import './preload.less';
@@ -19,12 +21,14 @@ if (navigator.userAgent === 'HeadlessEndToEndTest') {
 
 const root = document.getElementById('root')!;
 
-configService
-  .load()
-  .then(() => {
+fetch(`${API_BASE}/config`)
+  .then((response) => response.json())
+  .then((config: ClientConfig) => {
     createRoot(root).render(
       <StrictMode>
-        <App />
+        <ConfigProvider value={config}>
+          <App />
+        </ConfigProvider>
       </StrictMode>,
     );
   })

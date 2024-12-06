@@ -6,6 +6,6 @@ export default {
   transform: {
     '\\.[jt]sx?$': 'babel-jest',
   },
-  testEnvironment: 'jsdom',
+  testEnvironment: './src/test-helpers/patched-jsdom.ts',
   setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
 };

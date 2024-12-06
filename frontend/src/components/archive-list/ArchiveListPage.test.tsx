@@ -1,30 +1,30 @@
-import { render } from 'flexible-testing-library-react';
+import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../shared/api-entities';
-import { archiveTracker } from '../../api/api';
-import type * as mockApiTypes from '../../api/__mocks__/api';
+import { archiveService } from '../../api/api';
 import { css } from '../../test-helpers/queries';
 
 import { ArchiveListPage } from './ArchiveListPage';
 
-jest.mock('../../api/api');
 jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 jest.mock('./ArchiveList', () => ({
   ArchiveList: mockElement('mock-archive-list'),
 }));
 
-const mockArchiveTracker =
-  archiveTracker as unknown as typeof mockApiTypes.archiveTracker;
-
 describe('ArchiveListPage', () => {
-  beforeEach(() => {
-    mockArchiveTracker.setExpectedToken('token-1');
-  });
+  it('renders an archive list page', async () => {
+    jest.spyOn(archiveService, 'getList').mockResolvedValue({ archives: [] });
 
-  it('renders an archive list page', () => {
     const dom = render(
       <ArchiveListPage retro={makeRetro({ id: 'r1' })} retroToken="token-1" />,
     );
+    await act(() => Promise.resolve()); // data fetch
+
     expect(dom).toContainElementWith(css('mock-archive-list'));
+    expect(archiveService.getList).toHaveBeenCalledWith(
+      'r1',
+      'token-1',
+      expect.anything(),
+    );
   });
 });

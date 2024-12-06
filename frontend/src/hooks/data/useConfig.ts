@@ -1,8 +1,8 @@
-import { type ClientConfig } from '../../shared/api-entities';
-import { useObservable } from '../useObservable';
-import { configService } from '../../api/api';
+import type { ClientConfig } from '../../shared/api-entities';
+import { createContext, useContext } from 'react';
 
-export function useConfig(): ClientConfig | null {
-  const [config] = useObservable(() => configService.get(), [configService]);
-  return config;
-}
+const ConfigContext = createContext<ClientConfig | null>(null);
+
+export const ConfigProvider = ConfigContext.Provider;
+
+export const useConfig = () => useContext(ConfigContext);

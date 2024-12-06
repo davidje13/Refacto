@@ -1,11 +1,5 @@
-import { useObservable, ObservableState } from '../useObservable';
+import { useAsyncValue } from '../useAsyncValue';
 import { slugTracker } from '../../api/api';
 
-export function useSlug(slug: string | null): ObservableState<string> {
-  return useObservable(() => {
-    if (!slug) {
-      return undefined;
-    }
-    return slugTracker.get(slug);
-  }, [slugTracker, slug]);
-}
+export const useSlug = (slug: string | null) =>
+  useAsyncValue(slug ? slugTracker.get(slug) : undefined);

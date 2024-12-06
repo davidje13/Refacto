@@ -12,7 +12,7 @@ interface PropsT {
 }
 
 export const RetroCreatePage = memo(({ showImport = false }: PropsT) => {
-  const [userToken] = useUserToken();
+  const userToken = useUserToken();
   const [, setLocation] = useLocation();
   const handleCreate = useEvent(({ id, slug }: CreationT) => {
     slugTracker.set(slug, id);

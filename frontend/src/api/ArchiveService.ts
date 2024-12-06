@@ -1,4 +1,9 @@
-import { type Retro, type RetroData } from '../shared/api-entities';
+import type { Retro, RetroArchive, RetroData } from '../shared/api-entities';
+import { jsonFetch } from './jsonFetch';
+
+interface RetroArchiveList {
+  archives: RetroArchive[];
+}
 
 interface ArchiveOptions {
   retro: Retro;
@@ -14,7 +19,7 @@ export class ArchiveService {
       options: retro.options,
       items: retro.items,
     };
-    const response = await fetch(
+    const body = await jsonFetch<{ id: string }>(
       `${this.apiBase}/retros/${encodeURIComponent(retro.id)}/archives`,
       {
         method: 'POST',
@@ -26,10 +31,35 @@ export class ArchiveService {
         body: JSON.stringify(retroData),
       },
     );
-    const body = await response.json();
-    if (response.status >= 300 || body.error) {
-      throw new Error(body.error || 'Connection failed');
-    }
     return body.id;
+  }
+
+  public getList(
+    retroId: string,
+    retroToken: string,
+    signal: AbortSignal,
+  ): Promise<RetroArchiveList> {
+    return jsonFetch(
+      `${this.apiBase}/retros/${encodeURIComponent(retroId)}/archives`,
+      {
+        headers: { Authorization: `Bearer ${retroToken}` },
+        signal,
+      },
+    );
+  }
+
+  public get(
+    retroId: string,
+    archiveId: string,
+    retroToken: string,
+    signal: AbortSignal,
+  ): Promise<RetroArchive> {
+    return jsonFetch(
+      `${this.apiBase}/retros/${encodeURIComponent(retroId)}/archives/${encodeURIComponent(archiveId)}`,
+      {
+        headers: { Authorization: `Bearer ${retroToken}` },
+        signal,
+      },
+    );
   }
 }

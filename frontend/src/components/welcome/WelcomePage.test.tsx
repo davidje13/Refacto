@@ -2,25 +2,15 @@ import { Router } from 'wouter';
 import staticLocationHook from 'wouter/static-location';
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import {
-  configService,
-  userTokenTracker,
-  retroListTracker,
-} from '../../api/api';
-import type * as mockApiTypes from '../../api/__mocks__/api';
+import type { ClientConfig } from '../../shared/api-entities';
+import { userTokenTracker, retroListTracker } from '../../api/api';
+import { ConfigProvider } from '../../hooks/data/useConfig';
 import { css } from '../../test-helpers/queries';
 
 import { WelcomePage } from './WelcomePage';
 
-jest.mock('../../api/api');
 jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 jest.mock('./RetroList', () => ({ RetroList: mockElement('mock-retro-list') }));
-
-const mockConfigService =
-  configService as unknown as typeof mockApiTypes.configService;
-
-const mockRetroListTracker =
-  retroListTracker as unknown as typeof mockApiTypes.retroListTracker;
 
 describe('WelcomePage', () => {
   beforeEach(() => {
@@ -28,17 +18,18 @@ describe('WelcomePage', () => {
   });
 
   it('displays login buttons if configured', async () => {
-    mockConfigService.set({
+    const config: ClientConfig = {
       sso: {
         google: { clientId: 'wheee', authUrl: 'http://example.com/wherever' },
       },
       giphy: false,
-    });
-
+    };
     const dom = render(
-      <Router hook={staticLocationHook('/', { record: true })}>
-        <WelcomePage />
-      </Router>,
+      <ConfigProvider value={config}>
+        <Router hook={staticLocationHook('/', { record: true })}>
+          <WelcomePage />
+        </Router>
+      </ConfigProvider>,
     );
     await act(() => Promise.resolve()); // slug existence update
 
@@ -46,15 +37,17 @@ describe('WelcomePage', () => {
   });
 
   it('displays no login buttons if not configured', async () => {
-    mockConfigService.set({
+    const config: ClientConfig = {
       sso: {},
       giphy: false,
-    });
+    };
 
     const dom = render(
-      <Router hook={staticLocationHook('/', { record: true })}>
-        <WelcomePage />
-      </Router>,
+      <ConfigProvider value={config}>
+        <Router hook={staticLocationHook('/', { record: true })}>
+          <WelcomePage />
+        </Router>
+      </ConfigProvider>,
     );
     await act(() => Promise.resolve()); // slug existence update
 
@@ -63,9 +56,9 @@ describe('WelcomePage', () => {
 
   it('loads data if logged in', async () => {
     userTokenTracker.set('foobar');
-    mockRetroListTracker.set('foobar', {
-      retros: [{ id: 'u1', slug: 'a', name: 'R1' }],
-    });
+    jest
+      .spyOn(retroListTracker, 'get')
+      .mockResolvedValue({ retros: [{ id: 'u1', slug: 'a', name: 'R1' }] });
 
     const dom = render(
       <Router hook={staticLocationHook('/', { record: true })}>
@@ -76,5 +69,9 @@ describe('WelcomePage', () => {
 
     const retroList = dom.getBy(css('mock-retro-list'));
     expect(retroList.mockProps['retros'].length).toEqual(1);
+    expect(retroListTracker.get).toHaveBeenCalledWith(
+      'foobar',
+      expect.anything(),
+    );
   });
 });

@@ -1,6 +1,4 @@
-import { useObservable, ObservableState } from '../useObservable';
 import { userTokenTracker } from '../../api/api';
+import { useAsyncValue } from '../useAsyncValue';
 
-export function useUserToken(): ObservableState<string> {
-  return useObservable(() => userTokenTracker.get(), [userTokenTracker]);
-}
+export const useUserToken = () => useAsyncValue(userTokenTracker)[0];

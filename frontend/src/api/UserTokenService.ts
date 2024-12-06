@@ -1,3 +1,5 @@
+import { jsonFetch } from './jsonFetch';
+
 export class UserTokenService {
   public constructor(private readonly apiBase: string) {}
 
@@ -6,7 +8,7 @@ export class UserTokenService {
     externalToken: string,
     signal: AbortSignal,
   ): Promise<string> {
-    const response = await fetch(
+    const body = await jsonFetch<{ userToken: string }>(
       `${this.apiBase}/sso/${encodeURIComponent(service)}`,
       {
         method: 'POST',
@@ -16,10 +18,6 @@ export class UserTokenService {
         signal,
       },
     );
-    const body = await response.json();
-    if (response.status >= 300 || body.error) {
-      throw new Error(body.error || 'Connection failed');
-    }
     return body.userToken;
   }
 }

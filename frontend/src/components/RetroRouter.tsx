@@ -86,20 +86,18 @@ export interface RetroPagePropsT {
 
 export const RetroRouter: FC<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
-  const [retroToken, retroTokenError] = useRetroToken(retroId);
+  const retroToken = useRetroToken(retroId);
   const [retro, retroDispatch, connected] = useRetroReducer(
     retroId,
     retroToken,
   );
 
-  if (slugError === 'not found') {
+  if (slugError?.message === 'not found') {
     return <RetroNotFoundPage slug={slug} />;
   }
 
-  const error = slugError || retroTokenError;
-
-  if (error) {
-    return <div className="loader error">{error}</div>;
+  if (slugError) {
+    return <div className="loader error">{slugError.message}</div>;
   }
 
   if (retroId && !retroToken) {

@@ -1,3 +1,5 @@
+import { jsonFetch } from './jsonFetch';
+
 export interface GifInfo {
   small: string;
   medium: string;
@@ -12,17 +14,11 @@ export class GiphyService {
       return [];
     }
 
-    const params = new URLSearchParams();
-    params.append('q', normedQuery);
-    const response = await fetch(
+    const params = new URLSearchParams({ q: normedQuery });
+    const body = await jsonFetch<{ gifs: GifInfo[] }>(
       `${this.apiBase}/giphy/search?${params.toString()}`,
+      {},
     );
-    const body = await response.json();
-
-    if (response.status >= 300 || body.error) {
-      throw new Error(body.error || 'Connection failed');
-    }
-
     return body.gifs;
   }
 }

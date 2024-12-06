@@ -1,11 +1,5 @@
-import { useObservable, ObservableState } from '../useObservable';
 import { retroTokenTracker } from '../../api/api';
+import { useAsyncValue } from '../useAsyncValue';
 
-export function useRetroToken(retroId: string | null): ObservableState<string> {
-  return useObservable(() => {
-    if (!retroId) {
-      return undefined;
-    }
-    return retroTokenTracker.get(retroId);
-  }, [retroTokenTracker, retroId]);
-}
+export const useRetroToken = (retroId: string | null) =>
+  useAsyncValue(retroId ? retroTokenTracker.get(retroId) : undefined)[0];

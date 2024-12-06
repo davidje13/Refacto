@@ -13,7 +13,7 @@ import './WelcomePage.less';
 
 export const WelcomePage = memo(() => {
   const [, setLocation] = useLocation();
-  const [userToken] = useUserToken();
+  const userToken = useUserToken();
   const [retroList, error] = useRetroList(userToken);
   const loading = Boolean(userToken && !error && !retroList);
   const recent: RetroSummary[] = [];

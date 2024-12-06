@@ -1,30 +1,4 @@
-import { Subject as MockSubject } from 'rxjs';
-import { type JsonData } from '../shared/api-entities';
-
-type AjaxConfig = Pick<RequestInit, 'body' | 'method' | 'headers'> & {
-  url: string;
-};
-
-jest.mock('rxjs/ajax', () => ({
-  ajax: ({ url, ...init }: AjaxConfig): MockSubject<unknown> => {
-    const subject = new MockSubject();
-    global
-      .fetch(url, init)
-      .then(async (response) => {
-        if (response.status >= 300) {
-          subject.error({ status: response.status });
-          return;
-        }
-        const json = await response.json();
-        subject.next({ status: response.status, response: json });
-        subject.complete();
-      })
-      .catch((e) => {
-        subject.error(e);
-      });
-    return subject;
-  },
-}));
+import type { JsonData } from '../shared/api-entities';
 
 interface MockExpectationT {
   readonly url: string;
@@ -52,15 +26,15 @@ class MockExpectation implements MockExpectationT {
     this.fn = fn;
   }
 
-  public andRespond(body: string, init?: RequestInit) {
+  public andRespond(body: string, init?: ResponseInit) {
     this.fn = (request) => request.respond(body, init);
   }
 
-  public andRespondOk(body: string, init?: RequestInit) {
+  public andRespondOk(body: string, init?: ResponseInit) {
     this.fn = (request) => request.respondOk(body, init);
   }
 
-  public andRespondJsonOk(body: Readonly<JsonData>, init?: RequestInit) {
+  public andRespondJsonOk(body: Readonly<JsonData>, init?: ResponseInit) {
     this.fn = (request) => request.respondJsonOk(body, init);
   }
 }
@@ -68,10 +42,6 @@ class MockExpectation implements MockExpectationT {
 interface ResponseWrapper {
   status: number;
   json: () => Promise<JsonData>;
-}
-
-interface InitWithStatus extends RequestInit {
-  status?: number;
 }
 
 class MockRequest {
@@ -107,21 +77,16 @@ class MockRequest {
     return this.url === url;
   }
 
-  public respond(body: string = '', init: InitWithStatus = {}) {
-    // const response = new Response(body, init)
-    const response = {
-      status: init.status || 200,
-      json: (): Promise<JsonData> => Promise.resolve(JSON.parse(body)),
-    };
-    this.internalResolve!(response);
+  public respond(body: string = '', init: ResponseInit = {}) {
+    this.internalResolve!(new Response(body, init));
     this.close();
   }
 
-  public respondOk(body: string = '', init: RequestInit = {}) {
+  public respondOk(body: string = '', init: ResponseInit = {}) {
     this.respond(body, { status: 200, ...init });
   }
 
-  public respondJsonOk(body: Readonly<JsonData> = {}, init: RequestInit = {}) {
+  public respondJsonOk(body: Readonly<JsonData> = {}, init: ResponseInit = {}) {
     this.respond(JSON.stringify(body), {
       status: 200,
       headers: {

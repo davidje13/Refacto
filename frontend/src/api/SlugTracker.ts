@@ -1,57 +1,27 @@
-import {
-  BehaviorSubject,
-  of,
-  Observable,
-  Notification,
-  Subject,
-  firstValueFrom,
-} from 'rxjs';
-import {
-  map,
-  switchMap,
-  materialize,
-  filter,
-  shareReplay,
-} from 'rxjs/operators';
-import { loadHttp } from '../rxjs/loadHttp';
+import { AsyncValue } from '../helpers/AsyncValue';
 import { CacheMap } from '../helpers/CacheMap';
-
-interface StoredT<T> {
-  subject: Subject<T | undefined>;
-  observable: Observable<Notification<T>>;
-}
-
-function ajaxSubject<R>(url: string, mapping: (o: any) => R): StoredT<R> {
-  const subject = new BehaviorSubject<R | undefined>(undefined);
-  const observable = subject.pipe(
-    switchMap((v) =>
-      (v ? of(v) : loadHttp({ url }).pipe(map(mapping))).pipe(materialize()),
-    ),
-    filter(({ kind }) => kind !== 'C'),
-    shareReplay(1),
-  );
-  return { subject, observable };
-}
+import { jsonFetch } from './jsonFetch';
 
 export class SlugTracker {
-  private readonly storage: CacheMap<string, StoredT<string>>;
+  private readonly storage: CacheMap<string, AsyncValue<string, Error>>;
 
   public constructor(apiBase: string) {
-    this.storage = new CacheMap(
-      (slug: string): StoredT<string> =>
-        ajaxSubject(
+    this.storage = new CacheMap((slug: string) =>
+      AsyncValue.withProducer((signal) =>
+        jsonFetch<{ id: string }>(
           `${apiBase}/slugs/${encodeURIComponent(slug)}`,
-          ({ id }): string => id,
-        ),
+          { signal },
+        ).then(({ id }) => id),
+      ),
     );
   }
 
-  public get(slug: string): Observable<Notification<string>> {
-    return this.storage.get(slug).observable;
+  public get(slug: string) {
+    return this.storage.get(slug);
   }
 
   public set(slug: string, id: string) {
-    this.storage.get(slug).subject.next(id);
+    this.storage.get(slug).set(id);
   }
 
   public remove(slug: string) {
@@ -59,13 +29,13 @@ export class SlugTracker {
   }
 
   public async isAvailable(slug: string): Promise<boolean> {
-    const result = await firstValueFrom(this.get(slug));
-    if (result.kind === 'N') {
+    const [, err] = await this.get(slug).getOneState();
+    if (!err) {
       return false;
-    }
-    if (result.error === 'not found') {
+    } else if (err.message === 'not found') {
       return true;
+    } else {
+      throw err;
     }
-    throw new Error(result.error);
   }
 }

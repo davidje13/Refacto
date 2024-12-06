@@ -17,7 +17,6 @@
     "react-dom": "18.x",
     "react-hook-awaited": "1.x",
     "react-hook-final-countdown": "2.x",
-    "rxjs": "7.x",
     "shared-reducer": "5.x",
     "wouter": "2.10.1"
   },
