@@ -55,5 +55,11 @@
     "webpack": "5.x",
     "webpack-cli": "5.x",
     "webpack-dev-server": "5.x"
+  },
+  "overrides_comments": {
+    "jsdom": "See: https://github.com/jestjs/jest/issues/15325"
+  },
+  "overrides": {
+    "jsdom": "25.x"
   }
 }

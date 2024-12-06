@@ -1,4 +1,7 @@
-export default {
+// If this file is .mjs it triggers a warning in Node 23:
+// ExperimentalWarning: CommonJS module .../jest-util/build/requireOrImportModule.js is loading ES Module .../jest.config.mjs using require().
+
+module.exports = {
   moduleNameMapper: {
     '\\.svg$': '<rootDir>/src/test-helpers/svgr.ts',
     '\\.(less|png|woff2?)$': '<rootDir>/src/test-helpers/resource.ts',
