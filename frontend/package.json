@@ -35,7 +35,6 @@
     "@types/react-dom": "18.x",
     "babel-jest": "29.x",
     "babel-loader": "9.x",
-    "blocking-queue": "0.0.x",
     "copy-webpack-plugin": "12.x",
     "css-loader": "7.x",
     "css-minimizer-webpack-plugin": "7.x",

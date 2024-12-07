@@ -1,4 +1,4 @@
-import BlockingQueue from 'blocking-queue';
+import BlockingQueue from './BlockingQueue';
 
 export interface MockWebSocketConnection {
   send: (data: string) => void;
