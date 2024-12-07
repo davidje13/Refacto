@@ -70,12 +70,16 @@ export async function writeNiceJSON(path, json) {
 }
 
 export async function compressFile(file) {
+  const raw = await readFile(file);
+  const size = raw.length;
+  let brSize = size;
+  let gzSize = size;
+
   if (/\.(png|ico|woff2?)$/.test(file)) {
     // savings for these filetypes are minimal,
     // so save build time & artifact size by skipping them
-    return;
+    return { file, size, brSize, gzSize };
   }
-  const raw = await readFile(file);
 
   const brotli = await asyncBrotliCompress(raw, {
     params: {
@@ -85,6 +89,7 @@ export async function compressFile(file) {
   });
   if (brotli.length + COMPRESSION_OVERHEAD < raw.length) {
     await writeFile(`${file}.br`, brotli);
+    brSize = brotli.length;
   }
 
   const gzip = await asyncGzipCompress(raw, {
@@ -92,5 +97,28 @@ export async function compressFile(file) {
   });
   if (gzip.length + COMPRESSION_OVERHEAD < raw.length) {
     await writeFile(`${file}.gz`, gzip);
+    gzSize = gzip.length;
   }
+
+  return { file, size, brSize, gzSize };
+}
+
+export const hasExt = (...exts) => ({ file }) => exts.some((ext) => file.endsWith(ext));
+
+export const SIZE0 = { size: 0, brSize: 0, gzSize: 0 };
+
+export const sumSize = (a, b) => ({
+  size: a.size + b.size,
+  brSize: a.brSize + b.brSize,
+  gzSize: a.gzSize + b.gzSize,
+});
+
+export const printSize = ({ size, brSize, gzSize }) =>
+  `${prettyBytes(size)} / ${prettyBytes(gzSize)} gzip / ${prettyBytes(brSize)} brotli`;
+
+function prettyBytes(bytes) {
+  if (bytes < 2000) {
+    return `${bytes}B`.padStart(8, ' ');
+  }
+  return `${(bytes / 1024).toFixed(1)}kB`.padStart(8, ' ');
 }

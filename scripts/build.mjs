@@ -10,6 +10,10 @@ import {
   readJSON,
   writeNiceJSON,
   copy,
+  sumSize,
+  SIZE0,
+  hasExt,
+  printSize,
 } from './helpers/io.mjs';
 import { stat, rename, chmod } from 'node:fs/promises';
 import { runMultipleTasks, runTask } from './helpers/proc.mjs';
@@ -84,7 +88,20 @@ if (preserveBuildModules) {
 }
 
 log('Compressing static resources...');
-await Promise.all((await findFiles(staticdir)).map(compressFile));
+const staticFiles = await Promise.all((await findFiles(staticdir)).map(compressFile));
+
+const isCode = hasExt('.js', '.css', '.html');
+
+const codeTotals = staticFiles
+  .filter(isCode)
+  .reduce(sumSize, SIZE0);
+
+const resourceTotals = staticFiles
+  .filter((v) => !isCode(v))
+  .reduce(sumSize, SIZE0);
+
+log(`Frontend code size:     ${printSize(codeTotals)}`);
+log(`Frontend resource size: ${printSize(resourceTotals)}`);
 
 log('Generating package.json...');
 const packageJson = await readJSON(join(basedir, 'backend', 'package.json'));
