@@ -22,7 +22,11 @@ export const RetroNotFoundPage = memo(({ slug }: PropsT) => {
   if (!userToken) {
     return (
       <article className="page-retro-not-found">
-        <Header documentTitle="New Retro - Refacto" title="New Retro" />
+        <Header
+          documentTitle="New Retro - Refacto"
+          title="New Retro"
+          backLink={{ label: 'Home', action: '/' }}
+        />
         <LoginForm message="Register an account to create a retro" />
       </article>
     );

@@ -1,13 +1,14 @@
 import { Router } from 'wouter';
-import staticLocationHook from 'wouter/static-location';
+import { memoryLocation } from 'wouter/memory-location';
 import { act, render } from 'flexible-testing-library-react';
 
 import { App } from './App';
 
 describe('App', () => {
   it('renders without error', async () => {
+    const location = memoryLocation({ path: '/', record: true });
     render(
-      <Router hook={staticLocationHook('/', { record: true })}>
+      <Router hook={location.hook}>
         <App />
       </Router>,
     );

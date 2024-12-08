@@ -1,5 +1,5 @@
 import { Router } from 'wouter';
-import staticLocationHook from 'wouter/static-location';
+import { memoryLocation } from 'wouter/memory-location';
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import type { ClientConfig } from '../../shared/api-entities';
@@ -24,9 +24,10 @@ describe('WelcomePage', () => {
       },
       giphy: false,
     };
+    const location = memoryLocation({ path: '/', record: true });
     const dom = render(
       <ConfigProvider value={config}>
-        <Router hook={staticLocationHook('/', { record: true })}>
+        <Router hook={location.hook}>
           <WelcomePage />
         </Router>
       </ConfigProvider>,
@@ -37,6 +38,7 @@ describe('WelcomePage', () => {
   });
 
   it('displays no login buttons if not configured', async () => {
+    const location = memoryLocation({ path: '/', record: true });
     const config: ClientConfig = {
       sso: {},
       giphy: false,
@@ -44,7 +46,7 @@ describe('WelcomePage', () => {
 
     const dom = render(
       <ConfigProvider value={config}>
-        <Router hook={staticLocationHook('/', { record: true })}>
+        <Router hook={location.hook}>
           <WelcomePage />
         </Router>
       </ConfigProvider>,
@@ -55,13 +57,14 @@ describe('WelcomePage', () => {
   });
 
   it('loads data if logged in', async () => {
+    const location = memoryLocation({ path: '/', record: true });
     userTokenTracker.set('foobar');
     jest
       .spyOn(retroListTracker, 'get')
       .mockResolvedValue({ retros: [{ id: 'u1', slug: 'a', name: 'R1' }] });
 
     const dom = render(
-      <Router hook={staticLocationHook('/', { record: true })}>
+      <Router hook={location.hook}>
         <WelcomePage />
       </Router>,
     );

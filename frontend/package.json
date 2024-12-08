@@ -18,7 +18,7 @@
     "react-hook-awaited": "1.x",
     "react-hook-final-countdown": "2.x",
     "shared-reducer": "5.x",
-    "wouter": "2.10.1"
+    "wouter": "3.x"
   },
   "devDependencies": {
     "@babel/core": "7.x",

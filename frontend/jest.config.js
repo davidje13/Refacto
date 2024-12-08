@@ -9,6 +9,7 @@ module.exports = {
   transform: {
     '\\.[jt]sx?$': 'babel-jest',
   },
+  transformIgnorePatterns: ['/node_modules/(?!wouter)'], // https://github.com/molefrog/wouter/issues/415
   testEnvironment: './src/test-helpers/patched-jsdom.ts',
   setupFilesAfterEnv: ['<rootDir>/src/test-helpers/entrypoint.ts'],
 };

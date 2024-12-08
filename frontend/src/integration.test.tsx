@@ -1,5 +1,5 @@
 import { Router } from 'wouter';
-import staticLocationHook from 'wouter/static-location';
+import { memoryLocation } from 'wouter/memory-location';
 import {
   render,
   fireEvent,
@@ -20,25 +20,25 @@ import { TitleContext } from './hooks/env/useTitle';
 import { App } from './components/App';
 
 interface RenderedApp {
-  locationHook: ReturnType<typeof staticLocationHook>;
+  location: ReturnType<typeof memoryLocation>;
   titleHook: StaticTitleHook;
   dom: RenderResult;
 }
 
-async function renderApp(location: string): Promise<RenderedApp> {
-  const locationHook = staticLocationHook(location, { record: true });
+async function renderApp(path: string): Promise<RenderedApp> {
+  const location = memoryLocation({ path, record: true });
   const titleHook = staticTitleHook();
 
   const dom = render(
     <TitleContext value={titleHook}>
-      <Router hook={locationHook}>
+      <Router hook={location.hook}>
         <App />
       </Router>
     </TitleContext>,
   );
   await act(() => Promise.resolve()); // data fetch
 
-  return { locationHook, titleHook, dom };
+  return { location, titleHook, dom };
 }
 
 describe('Application', () => {
@@ -92,9 +92,11 @@ describe('Application', () => {
   });
 
   it('redirects to retros url for short unknown urls', async () => {
-    const { locationHook } = await renderApp('/nope');
+    mockFetchExpect('/api/slugs/nope').andRespondJsonOk({ id: 'id-nope' });
 
-    expect(locationHook.history).toEqual(['/retros/nope']);
+    const { location } = await renderApp('/nope');
+
+    expect(location.history).toEqual(['/retros/nope']);
   });
 
   it('renders not found page at unknown urls', async () => {

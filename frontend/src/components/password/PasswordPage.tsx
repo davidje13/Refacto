@@ -56,7 +56,11 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
   if (checkingUser) {
     return (
       <article className="page-password-user">
-        <Header documentTitle={`${slug} - Refacto`} title={slug} />
+        <Header
+          documentTitle={`${slug} - Refacto`}
+          title={slug}
+          backLink={{ label: 'Home', action: '/' }}
+        />
         <div className="loader">Loading&hellip;</div>
       </article>
     );
@@ -67,6 +71,7 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
       <Header
         documentTitle={`${slug} - Refacto`}
         title={`Password for ${slug}`}
+        backLink={{ label: 'Home', action: '/' }}
       />
       <form onSubmit={handleSubmit}>
         {/* 'username' is included for password managers to distinguish between retros */}

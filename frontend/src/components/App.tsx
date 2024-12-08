@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import { Route, Switch } from 'wouter';
 import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
@@ -14,9 +14,7 @@ export const App: FC = () => (
   <>
     <Switch>
       <Route path="/sso/:service">
-        {({ service = '' }): ReactNode => (
-          <LoginCallback service={decodeURIComponent(service)} />
-        )}
+        {({ service }) => <LoginCallback service={service} />}
       </Route>
       <Route path="/">
         <WelcomePage />
@@ -30,15 +28,15 @@ export const App: FC = () => (
       <Route path="/create/import">
         <RetroCreatePage showImport />
       </Route>
-      <Route path="/retros/:slug/:rest*">
-        {({ slug = '' }) => <RetroRouter slug={decodeURIComponent(slug)} />}
+      <Route path="/retros/:slug/*?">
+        {({ slug }) => <RetroRouter slug={slug} />}
       </Route>
 
       <RedirectRoute path="/retros" to="/" replace />
       <RedirectRoute path="/retro/:slug" to="/retros/:slug" replace />
       <RedirectRoute path="/:slug" to="/retros/:slug" replace />
 
-      <Route path="/:rest*">
+      <Route>
         <NotFoundPage />
       </Route>
     </Switch>

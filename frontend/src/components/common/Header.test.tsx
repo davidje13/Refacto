@@ -1,5 +1,5 @@
 import { Router } from 'wouter';
-import staticLocationHook from 'wouter/static-location';
+import { memoryLocation } from 'wouter/memory-location';
 import { render, fireEvent } from 'flexible-testing-library-react';
 import { staticTitleHook } from '../../test-helpers/staticTitleHook';
 import { css } from '../../test-helpers/queries';
@@ -10,10 +10,11 @@ import { Header } from './Header';
 describe('Header', () => {
   it('sets the document and page title', () => {
     const titleHook = staticTitleHook();
+    const location = memoryLocation({ path: '/', record: true });
 
     const dom = render(
       <TitleContext value={titleHook}>
-        <Router hook={staticLocationHook('/', { record: true })}>
+        <Router hook={location.hook}>
           <Header documentTitle="doc-title" title="page-title" />
         </Router>
       </TitleContext>,
@@ -24,11 +25,11 @@ describe('Header', () => {
   });
 
   it('displays a back link if specified', () => {
-    const locationHook = staticLocationHook('/', { record: true });
+    const location = memoryLocation({ path: '/', record: true });
 
     const dom = render(
       <TitleContext value={staticTitleHook()}>
-        <Router hook={locationHook}>
+        <Router hook={location.hook}>
           <Header
             documentTitle="doc-title"
             title="page-title"
@@ -42,13 +43,14 @@ describe('Header', () => {
     expect(backLink).toHaveTextContent('back-label');
 
     fireEvent.click(backLink);
-    expect(locationHook.history).toEqual(['/', 'back-url']);
+    expect(location.history).toEqual(['/', 'back-url']);
   });
 
   it('displays a menu of links if specified', () => {
+    const location = memoryLocation({ path: '/', record: true });
     const dom = render(
       <TitleContext value={staticTitleHook()}>
-        <Router hook={staticLocationHook('/', { record: true })}>
+        <Router hook={location.hook}>
           <Header
             documentTitle="doc-title"
             title="page-title"
@@ -68,9 +70,10 @@ describe('Header', () => {
   });
 
   it('skips null menu items', () => {
+    const location = memoryLocation({ path: '/', record: true });
     const dom = render(
       <TitleContext value={staticTitleHook()}>
-        <Router hook={staticLocationHook('/', { record: true })}>
+        <Router hook={location.hook}>
           <Header
             documentTitle="doc-title"
             title="page-title"
@@ -90,11 +93,11 @@ describe('Header', () => {
   });
 
   it('routes to the given URL when a menu item is clicked', () => {
-    const locationHook = staticLocationHook('/', { record: true });
+    const location = memoryLocation({ path: '/', record: true });
 
     const dom = render(
       <TitleContext value={staticTitleHook()}>
-        <Router hook={locationHook}>
+        <Router hook={location.hook}>
           <Header
             documentTitle="doc-title"
             title="page-title"
@@ -107,15 +110,16 @@ describe('Header', () => {
     const links = dom.getAllBy(css('.menu > *'));
 
     fireEvent.click(links[0]!);
-    expect(locationHook.history).toEqual(['/', 'url-1']);
+    expect(location.history).toEqual(['/', 'url-1']);
   });
 
   it('invokes the given callback when a menu item is clicked', () => {
     const clickCallback = jest.fn().mockName('clickCallback');
+    const location = memoryLocation({ path: '/', record: true });
 
     const dom = render(
       <TitleContext value={staticTitleHook()}>
-        <Router hook={staticLocationHook('/', { record: true })}>
+        <Router hook={location.hook}>
           <Header
             documentTitle="doc-title"
             title="page-title"

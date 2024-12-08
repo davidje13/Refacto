@@ -24,7 +24,11 @@ export const RetroCreatePage = memo(({ showImport = false }: PropsT) => {
   if (!userToken) {
     return (
       <article className="page-retro-create">
-        <Header documentTitle={`${title} - Refacto`} title={title} />
+        <Header
+          documentTitle={`${title} - Refacto`}
+          title={title}
+          backLink={{ label: 'Home', action: '/' }}
+        />
         <LoginForm message="Register an account to create a new retro" />
       </article>
     );
