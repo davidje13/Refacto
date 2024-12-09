@@ -1,3 +1,4 @@
+import { ConfigService } from './ConfigService';
 import { RetroListTracker } from './RetroListTracker';
 import { SlugTracker } from './SlugTracker';
 import { RetroTracker } from './RetroTracker';
@@ -16,6 +17,7 @@ const secure = protocol !== 'http:';
 export const API_BASE = '/api';
 export const WS_BASE = `${secure ? 'wss' : 'ws'}://${host}${API_BASE}`;
 
+export const configService = new ConfigService(API_BASE);
 export const retroListTracker = new RetroListTracker(API_BASE);
 export const slugTracker = new SlugTracker(API_BASE);
 export const retroTracker = new RetroTracker(WS_BASE);
