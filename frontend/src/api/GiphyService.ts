@@ -8,7 +8,7 @@ export interface GifInfo {
 export class GiphyService {
   public constructor(private readonly apiBase: string) {}
 
-  public async search(query: string): Promise<GifInfo[]> {
+  public async search(query: string, signal: AbortSignal): Promise<GifInfo[]> {
     const normedQuery = query.trim();
     if (!normedQuery) {
       return [];
@@ -17,7 +17,7 @@ export class GiphyService {
     const params = new URLSearchParams({ q: normedQuery });
     const body = await jsonFetch<{ gifs: GifInfo[] }>(
       `${this.apiBase}/giphy/search?${params.toString()}`,
-      {},
+      { signal },
     );
     return body.gifs;
   }

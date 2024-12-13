@@ -1,6 +1,7 @@
 import {
   type FC,
   type PropsWithChildren,
+  type SyntheticEvent,
   useId,
   useLayoutEffect,
   useState,
@@ -88,7 +89,9 @@ export const Popup: FC<PropsWithChildren<PropsT>> = ({
     return null;
   }
 
-  return createPortal(
+  // create the modal as a portal so that events will still work inside it
+  // (note: this is not required in preact, so could be simplified if we swap library)
+  const portal = createPortal(
     <>
       <h1 id={titleID} className={hideTitle ? 'hidden' : ''}>
         {title}
@@ -97,4 +100,21 @@ export const Popup: FC<PropsWithChildren<PropsT>> = ({
     </>,
     dialog,
   );
+  // React propagates events through portals, so we must block them from reaching parent components
+  // See https://github.com/facebook/react/issues/11387
+  return (
+    <div
+      onMouseDown={stopProp}
+      onMouseUp={stopProp}
+      onKeyDown={stopProp}
+      onKeyUp={stopProp}
+      onSubmit={stopProp}
+    >
+      {portal}
+    </div>
+  );
 };
+
+function stopProp(e: SyntheticEvent) {
+  e.stopPropagation();
+}

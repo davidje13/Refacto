@@ -1,10 +1,9 @@
-import { useState, memo, SyntheticEvent } from 'react';
+import { useState, memo } from 'react';
+import useAwaited from 'react-hook-awaited';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
 import { WrappedButton } from '../../common/WrappedButton';
 import { Input } from '../../common/Input';
-import { useNonce } from '../../../hooks/useNonce';
 import { giphyService } from '../../../api/api';
-import { type GifInfo } from '../../../api/GiphyService';
 import './GiphyPopup.less';
 
 interface PropsT {
@@ -16,28 +15,17 @@ interface PropsT {
 export const GiphyPopup = memo(
   ({ defaultAttachment, onConfirm, onCancel }: PropsT) => {
     const [query, setQuery] = useState('');
-    const [options, setOptions] = useState<GifInfo[]>([]);
+    const [appliedQuery, setAppliedQuery] = useState('');
+    const options = useAwaited(
+      (signal) => giphyService.search(appliedQuery, signal),
+      [giphyService, appliedQuery],
+    );
 
     const deleteButton = defaultAttachment ? (
       <WrappedButton onClick={() => onConfirm(null)}>Remove</WrappedButton>
     ) : null;
 
-    const loadNonce = useNonce();
-    const loadOptions = async (e: SyntheticEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const nonce = loadNonce.next();
-      setOptions([]);
-
-      const gifs = await giphyService.search(query);
-      if (!loadNonce.check(nonce)) {
-        return;
-      }
-
-      setOptions(gifs);
-    };
-
-    const optionElements = options.map(({ small, medium }) => (
+    const optionElements = options.latestData?.map(({ small, medium }) => (
       <WrappedButton
         key={medium}
         onClick={() => onConfirm({ type: 'giphy', url: medium })}
@@ -53,7 +41,12 @@ export const GiphyPopup = memo(
 
     return (
       <div className="popup-giphy">
-        <form onSubmit={loadOptions}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setAppliedQuery(query);
+          }}
+        >
           <Input
             type="text"
             value={query}
