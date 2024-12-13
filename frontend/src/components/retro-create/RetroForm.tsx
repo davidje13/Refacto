@@ -1,4 +1,5 @@
 import { useState, memo, ChangeEvent, ReactNode } from 'react';
+import useAwaited from 'react-hook-awaited';
 import { type JsonData } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { Input } from '../common/Input';
@@ -49,8 +50,7 @@ export const RetroForm = memo(
     const [name, setName] = useState(defaultSlug || '');
     const [slug, setSlug] = useState(defaultSlug || '');
     const [password, setPassword] = useState('');
-    const [passwordConf, setPasswordConfRaw] = useState('');
-    const [passwordWarning, setPasswordWarning] = useState<string>();
+    const [passwordConf, setPasswordConf] = useState('');
     const [importJson, setImportJson] = useState<JsonData>();
     const [importError, setImportError] = useState<string>();
 
@@ -84,41 +84,39 @@ export const RetroForm = memo(
       },
     );
 
-    const passwordCheckNonce = useNonce();
-    const setPasswordConf = useEvent(async (current: string) => {
-      const nonce = passwordCheckNonce.next();
-      setPasswordConfRaw(current);
-      setPasswordWarning(undefined);
-
-      if (password !== current) {
-        return;
-      }
-
-      if (current.length < MIN_PASSWORD_LENGTH) {
-        setPasswordWarning('This password is too short');
-        return;
-      }
-      if (current.length > MAX_PASSWORD_LENGTH) {
-        setPasswordWarning('This password is too long');
-        return;
-      }
-
-      try {
-        const count = await passwordService.countPasswordBreaches(current);
-        if (!passwordCheckNonce.check(nonce)) {
+    const passwordWarningRequest = useAwaited(
+      async (signal) => {
+        if (!password || password !== passwordConf) {
           return;
         }
-        if (count > 100) {
-          setPasswordWarning('This password is very common and insecure');
-        } else if (count > 20) {
-          setPasswordWarning('This password is common and insecure');
-        } else if (count > 0) {
-          setPasswordWarning('This password may be insecure');
+
+        if (password.length < MIN_PASSWORD_LENGTH) {
+          return 'This password is too short';
         }
-      } catch (err) {
-        // ignore
-      }
-    });
+        if (password.length > MAX_PASSWORD_LENGTH) {
+          return 'This password is too long';
+        }
+
+        const count = await passwordService.countPasswordBreaches(
+          password,
+          signal,
+        );
+        if (count > 100) {
+          return 'This password is very common and insecure';
+        } else if (count > 20) {
+          return 'This password is common and insecure';
+        } else if (count > 0) {
+          return 'This password may be insecure';
+        }
+        return '';
+      },
+      [password, passwordConf],
+    );
+
+    const passwordWarning =
+      passwordWarningRequest.state === 'resolved'
+        ? passwordWarningRequest.data
+        : '';
 
     const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
       if (showImport && !importJson) {
