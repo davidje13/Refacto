@@ -1,6 +1,7 @@
-import { useState, memo } from 'react';
+import { memo } from 'react';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
 import { useEvent } from '../../../hooks/useEvent';
+import { useBoolean } from '../../../hooks/useBoolean';
 import { Popup } from '../../common/Popup';
 import { WrappedButton } from '../../common/WrappedButton';
 import { GiphyPopup } from './GiphyPopup';
@@ -12,11 +13,9 @@ interface PropsT {
 
 export const GiphyButton = memo(
   ({ defaultAttachment = null, onChange }: PropsT) => {
-    const [visible, setVisible] = useState(false);
-    const show = useEvent(() => setVisible(true));
-    const hide = useEvent(() => setVisible(false));
+    const visible = useBoolean(false);
     const handleSave = useEvent((newAttachment: RetroItemAttachment | null) => {
-      hide();
+      visible.setFalse();
       onChange(newAttachment);
     });
 
@@ -26,18 +25,18 @@ export const GiphyButton = memo(
           key="giphy"
           title="Add GIPHY image"
           className="open-giphy"
-          onClick={show}
+          onClick={visible.setTrue}
         />
         <Popup
           title="Insert Giphy Image"
-          keys={{ Escape: hide }}
-          isOpen={visible}
-          onClose={hide}
+          keys={{ Escape: visible.setFalse }}
+          isOpen={visible.value}
+          onClose={visible.setFalse}
         >
           <GiphyPopup
             defaultAttachment={defaultAttachment}
             onConfirm={handleSave}
-            onCancel={hide}
+            onCancel={visible.setFalse}
           />
         </Popup>
       </>

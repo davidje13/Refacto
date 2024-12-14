@@ -1,4 +1,5 @@
-import { useState, useLayoutEffect, ReactElement } from 'react';
+import { useState, ReactElement } from 'react';
+import useAwaited from 'react-hook-awaited';
 import { Header } from '../common/Header';
 import { Input } from '../common/Input';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
@@ -15,7 +16,6 @@ interface PropsT {
 export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
   const [password, setPassword] = useState('');
   const userToken = useUserToken();
-  const [checkingUser, setCheckingUser] = useState(false);
 
   const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
     if (!password) {
@@ -29,31 +29,22 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
     retroTokenTracker.set(retroId, retroToken);
   });
 
-  useLayoutEffect(() => {
-    if (!userToken) {
-      setCheckingUser(false);
-      return;
-    }
+  const checkingUser = useAwaited(
+    async (signal) => {
+      if (!userToken) {
+        return;
+      }
+      const retroToken = await retroTokenService.getRetroTokenForUser(
+        retroId,
+        userToken,
+        signal,
+      );
+      retroTokenTracker.set(retroId, retroToken);
+    },
+    [userToken, retroId, retroTokenService, retroTokenTracker],
+  );
 
-    setCheckingUser(true);
-    retroTokenService
-      .getRetroTokenForUser(retroId, userToken)
-      .then((retroToken) => {
-        retroTokenTracker.set(retroId, retroToken);
-        setCheckingUser(false);
-      })
-      .catch(() => {
-        setCheckingUser(false);
-      });
-  }, [
-    userToken,
-    setCheckingUser,
-    retroId,
-    retroTokenService,
-    retroTokenTracker,
-  ]);
-
-  if (checkingUser) {
+  if (userToken && checkingUser.state === 'pending') {
     return (
       <article className="page-password-user">
         <Header

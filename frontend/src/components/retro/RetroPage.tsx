@@ -1,4 +1,4 @@
-import { useState, useRef, memo } from 'react';
+import { useRef, memo } from 'react';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';
@@ -6,6 +6,7 @@ import { Header } from '../common/Header';
 import { Popup } from '../common/Popup';
 import { useEvent } from '../../hooks/useEvent';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
+import { useBoolean } from '../../hooks/useBoolean';
 import { clearCovered } from '../../actions/retro';
 import { archiveService } from '../../api/api';
 import { OPTIONS } from '../../helpers/optionManager';
@@ -37,12 +38,8 @@ const isSmallScreen = ({ width }: Size) => width <= 800;
 export const RetroPage = memo(
   ({ retroToken, retro, retroDispatch, group }: PropsT) => {
     const smallScreen = useWindowSize(isSmallScreen);
-    const [archivePopupVisible, setArchivePopupVisible] = useState(false);
-    const showArchivePopup = useEvent(() => setArchivePopupVisible(true));
-    const hideArchivePopup = useEvent(() => setArchivePopupVisible(false));
-    const [invitePopupVisible, setInvitePopupVisible] = useState(false);
-    const showInvitePopup = useEvent(() => setInvitePopupVisible(true));
-    const hideInvitePopup = useEvent(() => setInvitePopupVisible(false));
+    const archivePopupVisible = useBoolean(false);
+    const invitePopupVisible = useBoolean(false);
 
     const isArchiving = useRef(false);
     const performArchive = useEvent(() => {
@@ -56,7 +53,7 @@ export const RetroPage = memo(
         .then(() => {
           isArchiving.current = false;
           retroDispatch!(clearCovered());
-          hideArchivePopup();
+          archivePopupVisible.setFalse();
         })
         .catch((e) => {
           // TODO: report failure to user
@@ -76,14 +73,16 @@ export const RetroPage = memo(
     );
 
     const links = [
-      { label: 'Invite', action: showInvitePopup },
+      { label: 'Invite', action: invitePopupVisible.setTrue },
       retroDispatch
         ? {
             label: 'Settings',
             action: `/retros/${encodeURIComponent(retro.slug)}/settings`,
           }
         : null,
-      canArchive ? { label: 'Create Archive', action: showArchivePopup } : null,
+      canArchive
+        ? { label: 'Create Archive', action: archivePopupVisible.setTrue }
+        : null,
       {
         label: 'Archives',
         action: `/retros/${encodeURIComponent(retro.slug)}/archives`,
@@ -112,28 +111,31 @@ export const RetroPage = memo(
           retroState={getState(group, retro)}
           group={group}
           dispatch={retroDispatch ?? undefined}
-          onComplete={canArchive ? showArchivePopup : undefined}
+          onComplete={canArchive ? archivePopupVisible.setTrue : undefined}
           archive={false}
         />
         <Popup
           title="Create Archive"
-          isOpen={Boolean(retroDispatch && archivePopupVisible)}
-          keys={{ Enter: performArchive, Escape: hideArchivePopup }}
-          onClose={hideArchivePopup}
+          isOpen={Boolean(retroDispatch) && archivePopupVisible.value}
+          keys={{ Enter: performArchive, Escape: archivePopupVisible.setFalse }}
+          onClose={archivePopupVisible.setFalse}
         >
           <ArchivePopup
             onConfirm={performArchive}
-            onCancel={hideArchivePopup}
+            onCancel={archivePopupVisible.setFalse}
           />
         </Popup>
         <Popup
           title="Invite"
           hideTitle
-          isOpen={invitePopupVisible}
-          keys={{ Enter: hideInvitePopup, Escape: hideInvitePopup }}
-          onClose={hideInvitePopup}
+          isOpen={invitePopupVisible.value}
+          keys={{
+            Enter: invitePopupVisible.setFalse,
+            Escape: invitePopupVisible.setFalse,
+          }}
+          onClose={invitePopupVisible.setFalse}
         >
-          <InvitePopup onClose={hideInvitePopup} />
+          <InvitePopup onClose={invitePopupVisible.setFalse} />
         </Popup>
       </article>
     );

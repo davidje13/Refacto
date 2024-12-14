@@ -27,7 +27,7 @@ function useRetroReducer(
 ): RetroReducerState {
   const [location, setLocation] = useLocation();
   const [retroState, setRetroState] = useState<Retro | null>(null);
-  const [connected, setConnected] = useState<boolean>(false);
+  const [connected, setConnected] = useState(false);
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
     null,
   );

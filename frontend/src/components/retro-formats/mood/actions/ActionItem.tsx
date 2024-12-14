@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
 import {
   type RetroItem,
@@ -7,6 +7,7 @@ import {
 import { ItemEditor } from '../ItemEditor';
 import { WrappedButton } from '../../../common/WrappedButton';
 import { useEvent } from '../../../../hooks/useEvent';
+import { useBoolean } from '../../../../hooks/useBoolean';
 import Tick from '../../../../../resources/tick.svg';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './ActionItem.less';
@@ -27,17 +28,15 @@ export const ActionItem = memo(
     const handleToggleDone = useEvent(() => onSetDone?.(item.id, !done));
     const handleDelete = useEvent(() => onDelete?.(item.id));
 
-    const [editing, setEditing] = useState(false);
-    const handleBeginEdit = useEvent(() => setEditing(true));
-    const handleCancelEdit = useEvent(() => setEditing(false));
+    const editing = useBoolean(false);
     const handleSaveEdit = useEvent(
       (diff: Partial<UserProvidedRetroItemDetails>) => {
-        setEditing(false);
+        editing.setFalse();
         onEdit!(item.id, diff);
       },
     );
 
-    if (editing) {
+    if (editing.value) {
       return (
         <div className="action-item editing">
           <ItemEditor
@@ -50,7 +49,7 @@ export const ActionItem = memo(
             submitButtonTitle="Save changes"
             onSubmit={handleSaveEdit}
             onDelete={onDelete ? handleDelete : undefined}
-            onCancel={handleCancelEdit}
+            onCancel={editing.setFalse}
             autoFocus
           />
         </div>
@@ -74,7 +73,7 @@ export const ActionItem = memo(
           className="edit"
           disabled={!onEdit}
           hideIfDisabled
-          onClick={handleBeginEdit}
+          onClick={editing.setTrue}
         />
       </div>
     );

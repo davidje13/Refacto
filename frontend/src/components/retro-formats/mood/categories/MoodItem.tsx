@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { memo } from 'react';
 import {
   type RetroItem,
   type UserProvidedRetroItemDetails,
@@ -7,6 +7,7 @@ import { MoodItemPlain } from './MoodItemPlain';
 import { MoodItemFocused } from './MoodItemFocused';
 import { ItemEditor } from '../ItemEditor';
 import { useEvent } from '../../../../hooks/useEvent';
+import { useBoolean } from '../../../../hooks/useBoolean';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './MoodItem.less';
 
@@ -46,17 +47,15 @@ export const MoodItem = memo(
     const handleCancel = useEvent(() => onCancel?.(item.id));
     const handleContinue = useEvent(() => onContinue?.(item.id));
 
-    const [editing, setEditing] = useState(false);
-    const handleBeginEdit = useEvent(() => setEditing(true));
-    const handleCancelEdit = useEvent(() => setEditing(false));
+    const editing = useBoolean(false);
     const handleSaveEdit = useEvent(
       (diff: Partial<UserProvidedRetroItemDetails>) => {
-        setEditing(false);
+        editing.setFalse();
         onEdit!(item.id, diff);
       },
     );
 
-    if (editing) {
+    if (editing.value) {
       return (
         <div className="mood-item editing">
           <ItemEditor
@@ -69,7 +68,7 @@ export const MoodItem = memo(
             submitButtonTitle="Save changes"
             onSubmit={handleSaveEdit}
             onDelete={onDelete ? handleDelete : undefined}
-            onCancel={handleCancelEdit}
+            onCancel={editing.setFalse}
             allowAttachments
             autoFocus
           />
@@ -94,7 +93,7 @@ export const MoodItem = memo(
       <MoodItemPlain
         item={item}
         onVote={onVote ? handleVote : undefined}
-        onEdit={onEdit ? handleBeginEdit : undefined}
+        onEdit={onEdit ? editing.setTrue : undefined}
         onSelect={onSelect ? handleSelect : undefined}
       />
     );

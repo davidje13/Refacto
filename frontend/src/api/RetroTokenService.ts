@@ -36,6 +36,7 @@ export class RetroTokenService {
   public async getRetroTokenForUser(
     retroId: string,
     userToken: string,
+    signal: AbortSignal,
   ): Promise<string> {
     const response = await fetch(
       `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}/user`,
@@ -43,6 +44,7 @@ export class RetroTokenService {
         method: 'GET',
         cache: 'no-cache',
         headers: { Authorization: `Bearer ${userToken}` },
+        signal,
       },
     );
     const body = await handleResponse(response);
