@@ -61,65 +61,70 @@ export class ApiRetrosRouter extends Router {
       }),
     );
 
-    this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
-      try {
-        const userId = WebSocketExpress.getAuthData(res).sub!;
-        const { slug, name, password, importJson } = json.extractObject(
-          req.body,
-          {
-            slug: json.string,
-            name: json.string,
-            password: json.string,
-            importJson: json.optional(extractExportedRetro),
-          },
-        );
-
-        if (!name) {
-          throw new Error('No name given');
-        }
-        if (password.length < MIN_PASSWORD_LENGTH) {
-          throw new Error('Password is too short');
-        }
-        if (password.length > MAX_PASSWORD_LENGTH) {
-          throw new Error('Password is too long');
-        }
-
-        const id = await retroService.createRetro(userId, slug, name, 'mood');
-        await retroAuthService.setPassword(id, password);
-
-        if (importJson) {
-          await retroService.retroBroadcaster.update(id, [
-            'merge',
-            importRetroDataJson(importJson.current),
-          ]);
-
-          const archives = importJson.archives || [];
-
-          await Promise.all(
-            archives.map((exportedArchive) =>
-              retroArchiveService.createArchive(
-                id,
-                importRetroDataJson(exportedArchive.snapshot),
-                importTimestamp(exportedArchive.created),
-              ),
-            ),
+    this.post(
+      '/',
+      userAuthMiddleware,
+      JSON_BODY,
+      safe(async (req, res) => {
+        try {
+          const userId = WebSocketExpress.getAuthData(res).sub!;
+          const { slug, name, password, importJson } = json.extractObject(
+            req.body,
+            {
+              slug: json.string,
+              name: json.string,
+              password: json.string,
+              importJson: json.optional(extractExportedRetro),
+            },
           );
-        }
 
-        const token = await retroAuthService.grantOwnerToken(id);
+          if (!name) {
+            throw new Error('No name given');
+          }
+          if (password.length < MIN_PASSWORD_LENGTH) {
+            throw new Error('Password is too short');
+          }
+          if (password.length > MAX_PASSWORD_LENGTH) {
+            throw new Error('Password is too long');
+          }
 
-        res.status(200).json({ id, token });
-      } catch (e) {
-        if (!(e instanceof Error)) {
-          logError('Unexpected error creating retro', e);
-          res.status(500).json({ error: 'Internal error' });
-        } else if (e.message === 'URL is already taken') {
-          res.status(409).json({ error: e.message });
-        } else {
-          res.status(400).json({ error: e.message });
+          const id = await retroService.createRetro(userId, slug, name, 'mood');
+          await retroAuthService.setPassword(id, password);
+
+          if (importJson) {
+            await retroService.retroBroadcaster.update(id, [
+              'merge',
+              importRetroDataJson(importJson.current),
+            ]);
+
+            const archives = importJson.archives || [];
+
+            await Promise.all(
+              archives.map((exportedArchive) =>
+                retroArchiveService.createArchive(
+                  id,
+                  importRetroDataJson(exportedArchive.snapshot),
+                  importTimestamp(exportedArchive.created),
+                ),
+              ),
+            );
+          }
+
+          const token = await retroAuthService.grantOwnerToken(id);
+
+          res.status(200).json({ id, token });
+        } catch (e) {
+          if (!(e instanceof Error)) {
+            logError('Unexpected error creating retro', e);
+            res.status(500).json({ error: 'Internal error' });
+          } else if (e.message === 'URL is already taken') {
+            res.status(409).json({ error: e.message });
+          } else {
+            res.status(400).json({ error: e.message });
+          }
         }
-      }
-    });
+      }),
+    );
 
     this.use(
       '/:retroId',

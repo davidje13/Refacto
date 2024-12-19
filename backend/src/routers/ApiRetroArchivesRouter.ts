@@ -2,6 +2,7 @@ import { WebSocketExpress, Router } from 'websocket-express';
 import { type RetroArchiveService } from '../services/RetroArchiveService';
 import { extractRetroData } from '../helpers/jsonParsers';
 import { logError } from '../log';
+import { safe } from '../helpers/routeHelpers';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
@@ -12,20 +13,20 @@ export class ApiRetroArchivesRouter extends Router {
     this.get(
       '/',
       WebSocketExpress.requireAuthScope('readArchives'),
-      async (req, res) => {
+      safe<{ retroId: string }>(async (req, res) => {
         const { retroId } = req.params;
 
         const archives =
           await retroArchiveService.getRetroArchiveSummaries(retroId);
         res.json({ archives });
-      },
+      }),
     );
 
     this.post(
       '/',
       WebSocketExpress.requireAuthScope('write'),
       JSON_BODY,
-      async (req, res) => {
+      safe<{ retroId: string }>(async (req, res) => {
         try {
           const { retroId } = req.params;
           const data = extractRetroData(req.body);
@@ -46,13 +47,13 @@ export class ApiRetroArchivesRouter extends Router {
             res.status(400).json({ error: e.message });
           }
         }
-      },
+      }),
     );
 
     this.get(
       '/:archiveId',
       WebSocketExpress.requireAuthScope('readArchives'),
-      async (req, res) => {
+      safe<{ retroId: string; archiveId: string }>(async (req, res) => {
         const { retroId, archiveId } = req.params;
 
         const archive = await retroArchiveService.getRetroArchive(
@@ -65,7 +66,7 @@ export class ApiRetroArchivesRouter extends Router {
         } else {
           res.status(404).end();
         }
-      },
+      }),
     );
   }
 }
