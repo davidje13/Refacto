@@ -6,18 +6,26 @@ import { type RetroAuthService } from '../services/RetroAuthService';
 import { type RetroService } from '../services/RetroService';
 import { type RetroArchiveService } from '../services/RetroArchiveService';
 import {
-  exportRetro,
-  importRetroData,
+  exportRetroJson,
+  importRetroDataJson,
   importTimestamp,
 } from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import { json } from '../helpers/json';
+import { safe } from '../helpers/routeHelpers';
 import { logError } from '../log';
+import { JSONFormatter } from '../export/JSONFormatter';
+import { CSVFormatter } from '../export/CSVFormatter';
+import { exportRetroTable } from '../export/RetroTableExport';
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 512;
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
+
+const formattedJSON = JSONFormatter.Builder().withIndent(2).build();
+
+const formattedCSV = new CSVFormatter();
 
 export class ApiRetrosRouter extends Router {
   public readonly softClose: (timeout: number) => Promise<void>;
@@ -41,13 +49,17 @@ export class ApiRetrosRouter extends Router {
     );
     this.softClose = (timeout) => wsHandlerFactory.softClose(timeout);
 
-    this.get('/', userAuthMiddleware, async (_, res) => {
-      const userId = WebSocketExpress.getAuthData(res).sub!;
+    this.get(
+      '/',
+      userAuthMiddleware,
+      safe(async (_, res) => {
+        const userId = WebSocketExpress.getAuthData(res).sub!;
 
-      res.json({
-        retros: await retroService.getRetroListForUser(userId),
-      });
-    });
+        res.json({
+          retros: await retroService.getRetroListForUser(userId),
+        });
+      }),
+    );
 
     this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
       try {
@@ -78,7 +90,7 @@ export class ApiRetrosRouter extends Router {
         if (importJson) {
           await retroService.retroBroadcaster.update(id, [
             'merge',
-            importRetroData(importJson.current),
+            importRetroDataJson(importJson.current),
           ]);
 
           const archives = importJson.archives || [];
@@ -87,7 +99,7 @@ export class ApiRetrosRouter extends Router {
             archives.map((exportedArchive) =>
               retroArchiveService.createArchive(
                 id,
-                importRetroData(exportedArchive.snapshot),
+                importRetroDataJson(exportedArchive.snapshot),
                 importTimestamp(exportedArchive.created),
               ),
             ),
@@ -130,11 +142,11 @@ export class ApiRetrosRouter extends Router {
     );
 
     this.get(
-      '/:retroId/export/json',
+      '/:retroId/export/:format',
       WebSocketExpress.requireAuthScope('read'),
       WebSocketExpress.requireAuthScope('readArchives'),
-      async (req, res) => {
-        const { retroId } = req.params;
+      safe(async (req, res) => {
+        const { retroId, format } = req.params;
 
         const retro = await retroService.getRetro(retroId);
         if (!retro) {
@@ -143,16 +155,36 @@ export class ApiRetrosRouter extends Router {
         }
 
         const archives = await retroArchiveService.getRetroArchiveList(retroId);
-        const fileName = `${retro.slug}-export.json`;
 
-        const data = exportRetro(retro, archives);
-        res.header(
-          'content-disposition',
-          `attachment; filename="${encodeURIComponent(fileName)}"`,
-        );
-        res.header('content-type', 'application/json; charset=utf-8');
-        res.send(JSON.stringify(data, null, 2)).end();
-      },
+        switch (format) {
+          case 'json': {
+            res.header(
+              'content-disposition',
+              `attachment; filename="${encodeURIComponent(`${retro.slug}-export.json`)}"`,
+            );
+            res.header('content-type', 'application/json; charset=utf-8');
+            await formattedJSON.stream(res, exportRetroJson(retro, archives));
+            res.end();
+            break;
+          }
+          case 'csv': {
+            res.header(
+              'content-disposition',
+              `attachment; filename="${encodeURIComponent(`${retro.slug}-export.csv`)}"`,
+            );
+            res.header(
+              'content-type',
+              'text/csv; charset=utf-8; header=present',
+            );
+            await formattedCSV.stream(res, exportRetroTable(retro, archives));
+            res.end();
+            break;
+          }
+          default:
+            res.status(404).end();
+            break;
+        }
+      }),
     );
 
     this.use(

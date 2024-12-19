@@ -7,6 +7,8 @@ import {
   type RetroArchive,
 } from '../shared/api-entities';
 
+type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
+
 export interface RetroItemAttachmentJsonExport {
   type: string;
   url: string;
@@ -37,10 +39,10 @@ export interface RetroJsonExport {
   url: string;
   name: string;
   current: RetroDataJsonExport;
-  archives?: RetroArchiveJsonExport[];
+  archives?: AsyncIterable<RetroArchiveJsonExport>;
 }
 
-export function exportTimestamp(timestamp: number): string {
+function exportTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
   return date.toISOString();
 }
@@ -49,7 +51,7 @@ export function importTimestamp(isoDate: string): number {
   return Date.parse(isoDate);
 }
 
-export function exportRetroItemAttachment(
+function exportRetroItemAttachment(
   attachment: RetroItemAttachment,
 ): RetroItemAttachmentJsonExport {
   return {
@@ -58,7 +60,7 @@ export function exportRetroItemAttachment(
   };
 }
 
-export function importRetroItemAttachment(
+function importRetroItemAttachment(
   attachment: RetroItemAttachmentJsonExport,
 ): RetroItemAttachment {
   return {
@@ -67,7 +69,7 @@ export function importRetroItemAttachment(
   };
 }
 
-export function exportRetroItem(item: RetroItem): RetroItemJsonExport {
+function exportRetroItem(item: RetroItem): RetroItemJsonExport {
   const result: RetroItemJsonExport = {
     created: exportTimestamp(item.created),
     category: item.category,
@@ -84,7 +86,7 @@ export function exportRetroItem(item: RetroItem): RetroItemJsonExport {
   return result;
 }
 
-export function importRetroItem(item: RetroItemJsonExport): RetroItem {
+function importRetroItem(item: RetroItemJsonExport): RetroItem {
   return {
     id: randomUUID(),
     created: importTimestamp(item.created),
@@ -99,7 +101,7 @@ export function importRetroItem(item: RetroItemJsonExport): RetroItem {
   };
 }
 
-export function exportRetroData(archive: RetroData): RetroDataJsonExport {
+function exportRetroData(archive: RetroData): RetroDataJsonExport {
   return {
     format: archive.format,
     options: archive.options,
@@ -107,7 +109,7 @@ export function exportRetroData(archive: RetroData): RetroDataJsonExport {
   };
 }
 
-export function importRetroData(archive: RetroDataJsonExport): RetroData {
+export function importRetroDataJson(archive: RetroDataJsonExport): RetroData {
   return {
     format: archive.format,
     options: archive.options,
@@ -115,26 +117,33 @@ export function importRetroData(archive: RetroDataJsonExport): RetroData {
   };
 }
 
-export function exportRetroArchive(
-  archive: RetroArchive,
-): RetroArchiveJsonExport {
+function exportRetroArchive(archive: RetroArchive): RetroArchiveJsonExport {
   return {
     created: exportTimestamp(archive.created),
     snapshot: exportRetroData(archive),
   };
 }
 
-export function exportRetro(
+export function exportRetroJson(
   retro: Retro,
-  archives?: Readonly<RetroArchive[]>,
+  archives?: MaybeAsyncIterable<RetroArchive>,
 ): RetroJsonExport {
   const result: RetroJsonExport = {
     url: retro.slug,
     name: retro.name,
     current: exportRetroData(retro),
   };
-  if (archives && archives.length > 0) {
-    result.archives = archives.map(exportRetroArchive);
+  if (archives) {
+    result.archives = map(archives, exportRetroArchive);
   }
   return result;
+}
+
+async function* map<I, O>(
+  input: MaybeAsyncIterable<I>,
+  fn: (i: I) => O,
+): AsyncGenerator<O> {
+  for await (const item of input) {
+    yield fn(item);
+  }
 }

@@ -37,6 +37,14 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
         >
           Export as JSON
         </ApiDownload>
+        {' / '}
+        <ApiDownload
+          url={`retros/${encodeURIComponent(retro.id)}/export/csv`}
+          token={retroToken}
+          filename={`${retro.slug}-export.csv`}
+        >
+          Export items as CSV
+        </ApiDownload>
       </div>
     </article>
   );
