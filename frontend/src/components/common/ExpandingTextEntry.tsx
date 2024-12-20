@@ -11,7 +11,7 @@ import { useKeyHandler } from '../../hooks/useKeyHandler';
 import { useStateMap } from '../../hooks/useStateMap';
 import { Textarea } from './Textarea';
 import { useEvent } from '../../hooks/useEvent';
-import './ExpandingTextEntry.less';
+import './ExpandingTextEntry.css';
 
 function hasContent(o: ReactNode): boolean {
   if (Array.isArray(o)) {

@@ -2,7 +2,7 @@ import { useState, memo } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
 import { giphyService } from '../../../api/api';
-import './GiphyPopup.less';
+import './GiphyPopup.css';
 
 interface PropsT {
   defaultAttachment?: RetroItemAttachment | null;

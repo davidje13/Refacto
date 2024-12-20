@@ -7,7 +7,7 @@ import {
   useSlugAvailability,
   VALID_SLUG_PATTERN,
 } from '../../hooks/data/useSlugAvailability';
-import './SlugEntry.less';
+import './SlugEntry.css';
 
 interface PropsT {
   placeholder?: string;

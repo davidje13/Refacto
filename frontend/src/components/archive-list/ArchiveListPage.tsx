@@ -5,7 +5,7 @@ import { LoadingError, LoadingIndicator } from '../common/Loader';
 import { ApiDownload } from '../common/ApiDownload';
 import { useArchiveList } from '../../hooks/data/useArchiveList';
 import { ArchiveList } from './ArchiveList';
-import './ArchiveListPage.less';
+import './ArchiveListPage.css';
 
 type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'>;
 

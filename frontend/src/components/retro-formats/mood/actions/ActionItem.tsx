@@ -9,7 +9,7 @@ import { useEvent } from '../../../../hooks/useEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import Tick from '../../../../../resources/tick.svg';
 import TickBold from '../../../../../resources/tick-bold.svg';
-import './ActionItem.less';
+import './ActionItem.css';
 
 interface PropsT {
   item: RetroItem;

@@ -5,7 +5,6 @@ import { type Retro } from '../../shared/api-entities';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
 import { SettingsForm } from './SettingsForm';
-import './RetroSettingsPage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retro' | 'retroDispatch'>;
 

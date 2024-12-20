@@ -1,5 +1,3 @@
-@import (reference) '../colours.less';
-
 .slug-checker {
   position: absolute;
   top: 100%;
@@ -8,7 +6,7 @@
   font-size: 0.7rem;
   white-space: nowrap;
 
-  svg {
+  & svg {
     fill: currentColor;
     width: 0.9em;
     height: 0.9em;
@@ -25,22 +23,22 @@
     width: 12px;
     height: 12px;
     animation: spin 2s linear infinite;
-
-    @keyframes spin {
-      100% {
-        transform: rotate(360deg);
-      }
-    }
   }
 
   &.taken,
   &.invalid {
-    color: @red-text-on-white;
+    color: var(--red-text-on-white);
     font-weight: bolder;
   }
 
   &.available {
-    color: @green-text-on-white;
+    color: var(--green-text-on-white);
     font-weight: bolder;
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }

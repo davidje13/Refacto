@@ -2,7 +2,7 @@ import { memo, useLayoutEffect } from 'react';
 import { useConfig } from '../../hooks/data/useConfig';
 import { toHex, randomBytes } from '../../helpers/crypto';
 import { storage } from './storage';
-import './LoginForm.less';
+import './LoginForm.css';
 
 function makeState(redirect: string): string {
   const nonce = toHex(randomBytes(10));

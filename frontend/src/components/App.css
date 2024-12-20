@@ -1,0 +1,66 @@
+@import url('./global-styles/opensans.css');
+@import url('./global-styles/form.css');
+@import url('./global-styles/button.css');
+
+html {
+  --header-back: #ffffff;
+
+  --green-back: hsl(172deg, 50%, 55%);
+  --green-shadow: hsl(172deg, 50%, 45%);
+
+  --yellow-back: hsl(45deg, 100%, 55%);
+  --yellow-shadow: hsl(45deg, 100%, 45%);
+
+  --red-back: hsl(5deg, 75%, 58%);
+  --red-shadow: hsl(5deg, 75%, 45%);
+
+  --beige-back: hsl(45deg, 20%, 92%);
+  --beige-shadow: hsl(45deg, 20%, 80%);
+
+  --green-button-back: hsl(172deg, 72%, 60%);
+  --green-button-dark: hsl(172deg, 55%, 50%);
+
+  --green-icon: var(--green-back);
+  --red-icon: #aa3300;
+  --bright-red-icon: #cc2200;
+  --beige-icon: hsl(45deg, 20%, 85%);
+
+  --pale-text-on-white: #808080;
+  --green-text-on-white: var(--green-shadow);
+  --yellow-text-on-white: hsl(45deg, 100%, 35%);
+  --red-text-on-white: #cc0000;
+
+  --link-text: #2b9e8e;
+  --link-text-hover: #268a7c;
+
+  --notification-back: #000000;
+  --notification-text: #eeeeee;
+}
+
+body,
+input,
+textarea,
+button,
+dialog {
+  font:
+    300 1em / 1.4 'Open Sans',
+    sans-serif;
+}
+
+article {
+  background: var(--beige-back);
+  border-bottom: 1px solid #ffffff; /* prevent background clipping */
+}
+
+a:link,
+a:visited {
+  text-decoration: none;
+  color: var(--link-text);
+}
+
+a:active,
+a:hover,
+a:focus {
+  text-decoration: underline;
+  color: var(--link-text-hover);
+}

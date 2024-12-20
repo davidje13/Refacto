@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';
-import './SecurityPage.less';
+import './SecurityPage.css';
 
 export const SecurityPage = memo(() => (
   <article className="page-security">

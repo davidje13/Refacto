@@ -9,7 +9,7 @@ import { ItemEditor } from '../ItemEditor';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import TickBold from '../../../../../resources/tick-bold.svg';
-import './MoodItem.less';
+import './MoodItem.css';
 
 interface PropsT {
   item: RetroItem;

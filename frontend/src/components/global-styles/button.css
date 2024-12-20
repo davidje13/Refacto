@@ -1,10 +1,8 @@
-@import (reference) '../colours.less';
-
 .global-button {
   display: inline-block;
   padding: 8px 16px;
   background: #eeeeee;
-  color: @green-text-on-white;
+  color: var(--green-text-on-white);
   transition: box-shadow 0.2s ease;
   text-align: center;
 
@@ -20,11 +18,11 @@
   }
 
   &.primary {
-    background: @green-button-dark;
+    background: var(--green-button-dark);
     color: #ffffff;
   }
 
   &:disabled {
-    background: @beige-shadow;
+    background: var(--beige-shadow);
   }
 }

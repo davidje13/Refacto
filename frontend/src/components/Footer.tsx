@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import './Footer.less';
+import './Footer.css';
 
 export const Footer = memo(() => (
   <footer className="page-footer">

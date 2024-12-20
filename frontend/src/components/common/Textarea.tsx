@@ -15,7 +15,7 @@ import {
   getMultilClassHeights,
   getHeight,
 } from '../../helpers/elementMeasurement';
-import './Textarea.less';
+import './Textarea.css';
 
 const NEWLINE = /(\r\n)|(\n\r?)/g;
 

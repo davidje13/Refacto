@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import './Loader.less';
+import './Loader.css';
 
 export const LoadingIndicator: FC = () => (
   <div className="loader">Loading&hellip;</div>

@@ -1,31 +1,29 @@
-@import (reference) '../colours.less';
-
 .page-archive-list {
   text-align: center;
 
-  p {
+  & p {
     margin: 64px 32px;
   }
 
-  ul.archives {
+  & ul.archives {
     margin: 64px 16px 128px;
     list-style: none;
 
-    li a {
+    & li a {
       display: inline-block;
       margin: 8px 0;
       padding: 16px;
       width: 20rem;
       max-width: calc(100% - 32px);
       background: #ffffff;
-      color: @green-text-on-white;
+      color: var(--green-text-on-white);
 
       &:active,
       &:hover,
       &:focus {
         color: #ffffff;
         text-decoration: none;
-        background: @green-button-dark;
+        background: var(--green-button-dark);
       }
     }
   }

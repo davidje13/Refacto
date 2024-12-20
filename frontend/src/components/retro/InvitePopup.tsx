@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { QR } from '../common/QR';
 import { Popup } from '../common/Popup';
-import './InvitePopup.less';
+import './InvitePopup.css';
 
 interface PropsT {
   isOpen: boolean;

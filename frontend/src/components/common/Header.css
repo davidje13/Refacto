@@ -1,10 +1,8 @@
-@import (reference) '../colours.less';
-
 .top-header {
   display: flex;
   position: relative;
   box-shadow: 0 4px 3px -5px rgba(0, 0, 0, 0.5);
-  background: @header-back;
+  background: var(--header-back);
   text-align: left;
 
   .back {
@@ -17,7 +15,7 @@
     }
   }
 
-  h1 {
+  & h1 {
     flex: 1;
     padding: 16px;
     font-size: 1.5em;
@@ -32,8 +30,8 @@
     margin-left: 16px;
   }
 
-  a,
-  button {
+  & a,
+  & button {
     display: inline-block;
     padding: 16px 12px;
     box-sizing: border-box;
@@ -55,24 +53,24 @@
       text-decoration: none;
     }
   }
+}
 
-  @media (min-width: 600px) {
-    .back {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+@media (min-width: 600px) {
+  .top-header .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 
-    h1 {
-      margin: 0 64px;
-      text-align: center;
-      text-overflow: clip;
-    }
+  .top-header h1 {
+    margin: 0 64px;
+    text-align: center;
+    text-overflow: clip;
+  }
 
-    .menu {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+  .top-header .menu {
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }

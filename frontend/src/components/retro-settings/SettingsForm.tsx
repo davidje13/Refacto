@@ -8,7 +8,7 @@ import { Alert } from '../common/Alert';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { OPTIONS } from '../../helpers/optionManager';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
-import './SettingsForm.less';
+import './SettingsForm.css';
 
 interface PropsT {
   retro: Retro;

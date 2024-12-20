@@ -1,5 +1,3 @@
-@import (reference) '../../../colours.less';
-
 .vote {
   font-size: 0.9em;
   font-weight: bolder;
@@ -44,7 +42,7 @@
   .heart {
     position: absolute;
     display: block;
-    fill: @red-icon;
+    fill: var(--red-icon);
     width: 12px;
     height: 12px;
     margin: -6px;
@@ -74,7 +72,7 @@
   &.none {
     .n1 {
       fill: transparent;
-      stroke: @red-icon;
+      stroke: var(--red-icon);
       stroke-width: 1px;
       transform: scale(1.2);
     }
@@ -97,7 +95,7 @@
 
   &.many {
     .heart {
-      fill: @bright-red-icon;
+      fill: var(--bright-red-icon);
     }
 
     .n1 {

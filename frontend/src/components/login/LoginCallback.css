@@ -1,7 +1,7 @@
-.page-not-found {
+.page-login-callback {
   text-align: center;
 
-  p {
+  & p {
     margin: 64px 32px;
   }
 }

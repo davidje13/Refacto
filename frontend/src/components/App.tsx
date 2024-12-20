@@ -8,7 +8,7 @@ import { WelcomePage } from './welcome/WelcomePage';
 import { SecurityPage } from './security/SecurityPage';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
 import { NotFoundPage } from './not-found/NotFoundPage';
-import './App.less';
+import './App.css';
 
 export const App: FC = () => (
   <>

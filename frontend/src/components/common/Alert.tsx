@@ -1,6 +1,6 @@
 import { memo, ReactNode } from 'react';
 import Warning from '../../../resources/warning.svg';
-import './Alert.less';
+import './Alert.css';
 
 interface PropsT {
   warning?: boolean;

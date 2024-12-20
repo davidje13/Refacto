@@ -1,11 +1,11 @@
 .tab-bar {
-  ul {
+  & ul {
     display: flex;
     flex-direction: row;
     list-style: none;
   }
 
-  li {
+  & li {
     flex: 1;
   }
 

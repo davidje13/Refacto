@@ -26,7 +26,7 @@ import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import { useActionFactory } from '../../../hooks/useActionFactory';
 import { useGlobalKeyListener } from '../../../hooks/useGlobalKeyListener';
 import { OPTIONS } from '../../../helpers/optionManager';
-import './MoodRetro.less';
+import './MoodRetro.css';
 
 interface Category {
   id: string;

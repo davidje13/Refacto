@@ -1,14 +1,12 @@
-@import (reference) '../colours.less';
-
 .login-form {
   margin: 64px 16px;
   text-align: center;
 
-  p {
+  & p {
     margin: 16px 0;
   }
 
-  button {
+  & button {
     margin: 8px;
   }
 }

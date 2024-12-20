@@ -1,6 +1,6 @@
 import { memo, ReactNode } from 'react';
 import { classNames } from '../../helpers/classNames';
-import './PickerInput.less';
+import './PickerInput.css';
 
 interface OptionT {
   value: string;

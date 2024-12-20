@@ -4,8 +4,8 @@ import { configService } from './api/api';
 import { App } from './components/App';
 import { ConfigProvider } from './hooks/data/useConfig';
 
-import './index.less';
-import './preload.less';
+import './index.css';
+import './preload.css';
 
 // https://github.com/facebook/react/issues/16061
 if (process.env['NODE_ENV'] === 'development') {

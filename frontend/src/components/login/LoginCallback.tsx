@@ -4,7 +4,7 @@ import { handleLogin } from './handleLogin';
 import { useEvent } from '../../hooks/useEvent';
 import { Header } from '../common/Header';
 import { storage } from './storage';
-import './LoginCallback.less';
+import './LoginCallback.css';
 
 interface PropsT {
   service: string;

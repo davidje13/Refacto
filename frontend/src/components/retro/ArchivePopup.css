@@ -1,14 +1,12 @@
-@import (reference) '../colours.less';
-
 .popup-archive {
-  p {
+  & p {
     margin: 16px 0;
   }
 
   .dialog-options {
     text-align: center;
 
-    button {
+    & button {
       margin: 0 16px;
     }
   }

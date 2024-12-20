@@ -1,9 +1,7 @@
-@import (reference) '../colours.less';
-
 .page-welcome {
   text-align: center;
 
-  section {
+  & section {
     width: 600px;
     max-width: calc(100% - 32px);
     margin: 32px auto 64px;
@@ -20,14 +18,14 @@
     margin: 0 auto 16px;
   }
 
-  p {
+  & p {
     margin: 8px 0;
   }
 
-  ul.retros {
+  & ul.retros {
     list-style: none;
 
-    li {
+    & li {
       margin-bottom: 16px;
     }
   }
@@ -36,14 +34,14 @@
     display: block;
     padding: 16px;
     background: #ffffff;
-    color: @green-text-on-white;
+    color: var(--green-text-on-white);
 
     &:active,
     &:hover,
     &:focus {
       color: #ffffff;
       text-decoration: none;
-      background: @green-button-dark;
+      background: var(--green-button-dark);
     }
   }
 

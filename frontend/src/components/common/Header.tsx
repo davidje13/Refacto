@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { HeaderLinkItem, LinkPropsT } from './HeaderLinkItem';
 import { Title } from '../../hooks/env/useTitle';
-import './Header.less';
+import './Header.css';
 
 export type HeaderLinks = (LinkPropsT | null)[];
 

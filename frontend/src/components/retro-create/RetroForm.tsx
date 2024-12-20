@@ -12,7 +12,7 @@ import {
   retroTokenTracker,
   passwordService,
 } from '../../api/api';
-import './RetroForm.less';
+import './RetroForm.css';
 
 export interface CreationT {
   id: string;

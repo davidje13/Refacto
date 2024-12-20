@@ -17,11 +17,6 @@ const babelLoader = {
   },
 };
 
-const lessLoader = {
-  loader: 'less-loader',
-  options: { lessOptions: { math: 'strict', strictUnits: true } },
-};
-
 const svgrLoader = {
   loader: join(basedir, 'webpack-loaders', 'svgr.mjs'),
   options: { titleProp: true },
@@ -55,9 +50,9 @@ export default (env, argv) => ({
         use: [babelLoader],
       },
       {
-        test: /\.less$/,
+        test: /\.css$/,
         exclude: /node_modules/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', lessLoader],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.svg$/,
@@ -78,7 +73,7 @@ export default (env, argv) => ({
       {
         test: /\.svg$/,
         exclude: /node_modules/,
-        issuer: /\.less$/,
+        issuer: /\.css$/,
         type: 'asset/inline',
       },
     ],

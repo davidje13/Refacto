@@ -1,7 +1,5 @@
-@import (reference) '../colours.less';
-
 .popup-invite {
-  p {
+  & p {
     margin: 16px 0 0;
   }
 
@@ -10,7 +8,7 @@
     font-size: 1.8em;
     display: block;
     padding: 10px 20px;
-    background: @beige-back;
+    background: var(--beige-back);
     border-radius: 5px;
     word-wrap: break-word;
     user-select: all;
@@ -18,9 +16,9 @@
 
   .qr-code {
     display: block;
-    width: ~'calc(80vh - 52px - 3.2em)';
+    width: calc(80vh - 52px - 3.2em);
     min-width: 350px;
-    max-width: ~'calc(100vw - 96px)';
+    max-width: calc(100vw - 96px);
     aspect-ratio: 1;
     margin: 0 auto;
   }
@@ -30,7 +28,7 @@
     text-align: center;
   }
 
-  button {
+  & button {
     margin: 0 16px;
   }
 }

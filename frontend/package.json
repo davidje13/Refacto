@@ -42,8 +42,6 @@
     "html-webpack-plugin": "5.x",
     "jest": "29.x",
     "jest-environment-jsdom": "29.x",
-    "less": "4.x",
-    "less-loader": "12.x",
     "mini-css-extract-plugin": "2.x",
     "prettier": "3.4.2",
     "react-mock-element": "1.x",

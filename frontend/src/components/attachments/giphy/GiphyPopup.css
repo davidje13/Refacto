@@ -1,17 +1,15 @@
-@import (reference) '../../colours.less';
-
 .popup-giphy {
   text-align: center;
 
-  p {
+  & p {
     margin: 16px 0 0;
   }
 
-  form {
+  & form {
     display: flex;
 
-    input {
-      border: 1px solid @beige-shadow;
+    & input {
+      border: 1px solid var(--beige-shadow);
       margin: 0;
       padding: 8px 16px;
       flex: 1;
@@ -29,7 +27,7 @@
     max-width: calc(100vw - 128px);
     margin-bottom: 32px;
 
-    button {
+    & button {
       margin: 2px;
       vertical-align: top;
       background: #808080;
@@ -38,7 +36,7 @@
         transform 0.2s ease,
         box-shadow 0.2s ease;
 
-      img {
+      & img {
         height: 100px;
         min-width: 40px;
         max-width: 200px;
@@ -49,7 +47,7 @@
         z-index: 1;
         transform: scale(1.1);
         box-shadow:
-          0 0 0 2px @green-shadow,
+          0 0 0 2px var(--green-shadow),
           0 3px 4px rgba(0, 0, 0, 0.2);
       }
 

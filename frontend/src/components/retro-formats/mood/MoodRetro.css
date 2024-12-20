@@ -1,42 +1,40 @@
-@import (reference) '../../colours.less';
-
-@base-padding: 16px;
-@action-header-padding: 24px;
-@add-action-max-scroll: 2000px;
-
 .retro-format-mood {
-  .happy {
-    background: @green-back;
-    --punchout: @green-back;
+  --base-padding: 16px;
+  --action-header-padding: 24px;
+  --add-action-max-scroll: 2000px;
 
-    header .text-entry {
-      background: @green-shadow;
+  .happy {
+    background: var(--green-back);
+    --punchout: var(--green-back);
+
+    & header .text-entry {
+      background: var(--green-shadow);
     }
   }
 
   .meh {
-    background: @yellow-back;
-    --punchout: @yellow-back;
+    background: var(--yellow-back);
+    --punchout: var(--yellow-back);
 
-    header .text-entry {
-      background: @yellow-shadow;
+    & header .text-entry {
+      background: var(--yellow-shadow);
     }
   }
 
   .sad {
-    background: @red-back;
-    --punchout: @red-back;
+    background: var(--red-back);
+    --punchout: var(--red-back);
 
-    header .text-entry {
-      background: @red-shadow;
+    & header .text-entry {
+      background: var(--red-shadow);
     }
   }
 
   .actions {
-    background: @beige-back;
+    background: var(--beige-back);
 
-    header .text-entry {
-      background: @beige-shadow;
+    & header .text-entry {
+      background: var(--beige-shadow);
     }
 
     &.tab-item {
@@ -46,17 +44,18 @@
 
   .columns > section,
   .tab-control > section,
-  section.actions {
+  & section.actions {
     box-sizing: border-box;
-    padding: @base-padding @base-padding (@base-padding + 4px);
+    padding: var(--base-padding) var(--base-padding)
+      calc(var(--base-padding) + 4px);
 
     > header {
-      margin: 0 0 (@base-padding * 2);
+      margin: 0 0 calc(var(--base-padding) * 2);
       text-align: center;
 
-      h2 {
+      & h2 {
         font-weight: bolder;
-        margin-bottom: @base-padding;
+        margin-bottom: var(--base-padding);
       }
 
       .face-icon {
@@ -74,21 +73,21 @@
     }
   }
 
-  section.actions {
+  & section.actions {
     > section {
       box-sizing: border-box;
     }
 
-    h3 {
-      margin: 0 0 @base-padding;
+    & h3 {
+      margin: 0 0 var(--base-padding);
     }
   }
 
-  ul.item-column {
+  & ul.item-column {
     list-style: none;
 
-    li {
-      margin: @base-padding 0;
+    & li {
+      margin: var(--base-padding) 0;
     }
   }
 
@@ -122,7 +121,7 @@
   .text-entry {
     position: relative;
 
-    textarea {
+    & textarea {
       padding: 20px 12px;
       font-size: 1.1em;
       outline: none;
@@ -132,7 +131,7 @@
     .buttons {
       margin-right: 8px;
 
-      button {
+      & button {
         margin-left: 8px;
       }
     }
@@ -144,11 +143,11 @@
       margin: 0;
       padding: 0.375rem;
 
-      svg {
+      & svg {
         display: block;
         width: 0.75rem;
         height: 0.75rem;
-        fill: @pale-text-on-white;
+        fill: var(--pale-text-on-white);
       }
     }
 
@@ -167,10 +166,10 @@
     .submit {
       padding: 12px 20px;
       font-weight: bolder;
-      background: @green-button-back;
+      background: var(--green-button-back);
       color: #000000;
 
-      svg {
+      & svg {
         fill: currentColor;
         width: 0.9em;
         height: 0.9em;
@@ -179,10 +178,10 @@
 
     .delete {
       padding: 4px 8px;
-      color: @red-text-on-white;
+      color: var(--red-text-on-white);
       margin-right: 8px;
 
-      svg {
+      & svg {
         fill: currentColor;
         width: 1.2em;
         height: 1.2em;
@@ -217,10 +216,10 @@
       .label {
         font-size: 0.75rem;
         padding: 0 4px;
-        color: @pale-text-on-white;
+        color: var(--pale-text-on-white);
       }
 
-      button {
+      & button {
         margin-left: 4px;
       }
 
@@ -232,19 +231,19 @@
       }
     }
 
-    figure {
+    & figure {
       display: none;
       width: 100%;
       margin: 4px 0;
 
-      img {
+      & img {
         display: block;
         margin: 0 auto 4px;
         max-width: 100%;
         height: 100px;
       }
 
-      figcaption {
+      & figcaption {
         display: block;
         font-size: 0.8em;
         font-style: italic;
@@ -253,7 +252,7 @@
     }
 
     &.multiline {
-      textarea {
+      & textarea {
         padding-bottom: 0;
         margin-bottom: 8px;
       }
@@ -268,13 +267,13 @@
         display: flex;
       }
 
-      figure {
+      & figure {
         display: block;
       }
     }
   }
 
-  header .text-entry {
+  & header .text-entry {
     border-radius: 4px;
     box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.08);
     transition:
@@ -305,7 +304,7 @@
       box-shadow: none;
 
       textarea::placeholder {
-        color: @pale-text-on-white;
+        color: var(--pale-text-on-white);
       }
 
       .attachments::before {
@@ -318,7 +317,7 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       textarea::placeholder {
-        color: @pale-text-on-white;
+        color: var(--pale-text-on-white);
       }
 
       .attachments::before {
@@ -335,18 +334,18 @@
       min-height: 50vh;
     }
 
-    section.actions {
+    & section.actions {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       padding: 0;
 
       > header {
         grid-column: 1 / 4;
-        margin-bottom: (@action-header-padding + 4px);
+        margin-bottom: calc(var(--action-header-padding) + 4px);
 
-        h2 {
+        & h2 {
           text-align: center;
-          margin: @action-header-padding 0;
+          margin: var(--action-header-padding) 0;
         }
       }
 
@@ -361,34 +360,39 @@
        * hierarchy is needed */
       .new-action-item-hold.always-visible {
         position: relative;
-        margin: -@add-action-max-scroll 0 -8px;
+        margin: calc(var(--add-action-max-scroll) * -1) 0 -8px;
         pointer-events: none;
         z-index: 2; /* above face icons */
 
         &::before {
           content: '';
           display: block;
-          height: @add-action-max-scroll;
+          height: var(--add-action-max-scroll);
         }
 
         .new-action-item {
           pointer-events: initial;
           padding: 16px 0;
           margin: -16px 0;
-          background: rgba(@beige-back, 0.9);
+          background: color-mix(
+            in srgb-linear,
+            var(--beige-back) 90%,
+            transparent
+          );
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
-          @media (prefers-reduced-transparency: reduce) {
-            background: @beige-back;
+          position: sticky;
+          bottom: 0;
+
+          @media (prefers-reduced-transparency) {
+            background: var(--beige-back);
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
           }
-          position: sticky;
-          bottom: 0;
         }
 
         .text-entry {
-          textarea {
+          & textarea {
             padding-top: 12px;
             padding-bottom: 12px;
           }
@@ -400,13 +404,13 @@
       }
 
       > section {
-        padding: 0 @base-padding 32px;
+        padding: 0 var(--base-padding) 32px;
       }
     }
   }
 
   &.single-column {
-    h2 {
+    & h2 {
       display: none;
     }
 

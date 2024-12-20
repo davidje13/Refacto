@@ -9,7 +9,7 @@ import { useEvent } from '../../hooks/useEvent';
 import { LoginForm } from '../login/LoginForm';
 import { RetroList } from './RetroList';
 import { RetroNavigationForm } from './RetroNavigationForm';
-import './WelcomePage.less';
+import './WelcomePage.css';
 
 export const WelcomePage = memo(() => {
   const [, setLocation] = useLocation();

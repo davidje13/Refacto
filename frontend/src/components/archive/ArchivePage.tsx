@@ -5,7 +5,6 @@ import { LoadingError, LoadingIndicator } from '../common/Loader';
 import { useArchive } from '../../hooks/data/useArchive';
 import { formatDate } from '../../time/formatters';
 import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
-import './ArchivePage.less';
 
 type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
   archiveId: string;

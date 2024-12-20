@@ -6,7 +6,7 @@ import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { archiveService } from '../../api/api';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import { clearCovered } from '../../actions/retro';
-import './ArchivePopup.less';
+import './ArchivePopup.css';
 
 interface PropsT {
   retroToken: string;

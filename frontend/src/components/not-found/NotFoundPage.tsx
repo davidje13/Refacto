@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Header } from '../common/Header';
-import './NotFoundPage.less';
+import './NotFoundPage.css';
 
 export const NotFoundPage = memo(() => (
   <article className="page-not-found">

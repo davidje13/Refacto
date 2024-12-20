@@ -1,5 +1,3 @@
-@import (reference) '../../../colours.less';
-
 .action-item {
   background: #ffffff;
   padding: 16px 24px;
@@ -54,15 +52,15 @@
       margin: -15px;
       top: 50%;
       left: 50%;
-      border: 2px solid @beige-icon;
+      border: 2px solid var(--beige-icon);
       box-sizing: border-box;
       background: #ffffff;
       border-radius: 4px;
       z-index: 1;
-      box-shadow: 0 0 0 -2px @green-button-back;
+      box-shadow: 0 0 0 -2px var(--green-button-back);
     }
 
-    svg {
+    & svg {
       pointer-events: none;
       position: absolute;
       width: 30px;
@@ -96,7 +94,7 @@
       box-shadow: 0 0 10px 30px transparent;
     }
 
-    svg {
+    & svg {
       transition: transform 0.3s cubic-bezier(0.5, 2.5, 0.6, 1);
       opacity: 1;
       transform: none;
@@ -110,11 +108,10 @@
     width: 1.5rem;
     height: 1.5rem;
     opacity: 0.3;
+    background: center no-repeat url(../../../../../resources/pencil.svg);
 
     &:hover {
       opacity: 0.9;
     }
-
-    background: center no-repeat url(../../../../../resources/pencil.svg);
   }
 }

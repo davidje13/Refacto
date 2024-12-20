@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
 import { useThrottled } from '../../../../hooks/useThrottled';
 import Heart from '../../../../../resources/heart.svg';
-import './VoteCount.less';
+import './VoteCount.css';
 
 interface PropsT {
   votes: number;

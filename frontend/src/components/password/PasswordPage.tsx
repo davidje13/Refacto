@@ -5,7 +5,7 @@ import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { useUserToken } from '../../hooks/data/useUserToken';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
 import { Alert } from '../common/Alert';
-import './PasswordPage.less';
+import './PasswordPage.css';
 
 interface PropsT {
   slug: string;

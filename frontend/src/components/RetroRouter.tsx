@@ -15,7 +15,7 @@ import { StateMapProvider } from '../hooks/useStateMap';
 import { RedirectRoute } from './RedirectRoute';
 import { useEvent } from '../hooks/useEvent';
 import TickBold from '../../resources/tick-bold.svg';
-import './RetroRouter.less';
+import './RetroRouter.css';
 
 type RetroReducerState = [Retro | null, RetroDispatch | null, boolean];
 

@@ -15,7 +15,7 @@ const CSP = [
   }`,
   'trusted-types dynamic-import',
   "require-trusted-types-for 'script'",
-  // https://github.com/w3c/webappsec-csp/issues/7 (2023: still required for Mobile Safari)
+  // https://github.com/w3c/webappsec-csp/issues/7 (2024: still required for Mobile Safari 16.x)
   `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",

@@ -1,7 +1,7 @@
 import { useState, memo, ReactNode, SyntheticEvent } from 'react';
 import { useEvent } from '../../hooks/useEvent';
 import { API_BASE } from '../../api/api';
-import './ApiDownload.less';
+import './ApiDownload.css';
 
 interface PropsT {
   url: string;

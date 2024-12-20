@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useEvent } from '../../hooks/useEvent';
-import './Popup.less';
+import './Popup.css';
 
 interface PropsT {
   title: string;

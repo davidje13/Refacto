@@ -1,5 +1,3 @@
-@import (reference) '../../../colours.less';
-
 .mood-item {
   background: #ffffff;
   padding: 0;
@@ -41,12 +39,11 @@
     width: 1.5rem;
     height: 1.5rem;
     opacity: 0.3;
+    background: center no-repeat url(../../../../../resources/pencil.svg);
 
     &:hover {
       opacity: 0.9;
     }
-
-    background: center no-repeat url(../../../../../resources/pencil.svg);
   }
 
   &.editing .text-entry {
@@ -101,20 +98,20 @@
       .countdown {
         line-height: 2.5rem;
         min-width: 2.5rem;
-        color: @pale-text-on-white;
+        color: var(--pale-text-on-white);
         margin: 0;
       }
 
       .timeup {
-        color: @green-text-on-white;
+        color: var(--green-text-on-white);
         font-weight: bolder;
         font-size: 0.9em;
         margin: 0;
       }
 
-      button {
+      & button {
         font-size: 0.8em;
-        color: @pale-text-on-white;
+        color: var(--pale-text-on-white);
       }
     }
 
@@ -135,7 +132,7 @@
     .continue {
       padding: 12px 20px;
       font-weight: bolder;
-      background: @green-button-back;
+      background: var(--green-button-back);
       color: #000000;
       float: right;
     }
@@ -147,21 +144,18 @@
     }
   }
 
-  figure {
+  & figure {
     margin-bottom: 4px;
 
-    img {
+    & img {
       display: block;
       margin: 0 auto 4px;
-      max-width: 100%;
-      height: 200px;
-
-      @media (max-height: 550px) {
-        height: 100px;
-      }
+      width: 100%;
+      max-height: clamp(100px, 30vh, 300px);
+      object-fit: contain;
     }
 
-    figcaption {
+    & figcaption {
       display: block;
       font-size: 0.8em;
       font-style: italic;

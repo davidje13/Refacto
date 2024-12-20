@@ -3,7 +3,7 @@
   flex-flow: row wrap;
   background: #ffffff;
 
-  textarea {
+  & textarea {
     flex: 1;
     background: none;
   }
@@ -19,7 +19,7 @@
     flex: 100%;
     align-items: flex-end;
 
-    :only-child {
+    & :only-child {
       /* align right */
       margin-left: auto;
     }
