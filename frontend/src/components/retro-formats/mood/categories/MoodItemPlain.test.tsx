@@ -1,11 +1,8 @@
 import { render, text } from 'flexible-testing-library-react';
-import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
 import { MoodItemPlain } from './MoodItemPlain';
-
-jest.mock('./VoteCount', () => ({ VoteCount: mockElement('mock-vote-count') }));
 
 describe('MoodItemPlain', () => {
   it('displays the item message', () => {
@@ -19,8 +16,8 @@ describe('MoodItemPlain', () => {
     const item = makeRetroItem({ votes: 3 });
     const dom = render(<MoodItemPlain item={item} />);
 
-    const voteCount = dom.getBy(css('mock-vote-count'));
-    expect(voteCount.mockProps['votes']).toEqual(3);
+    const voteCount = dom.getBy(css('.vote'));
+    expect(voteCount).toHaveTextContent('3');
   });
 
   it('does not mark items as done by default', () => {

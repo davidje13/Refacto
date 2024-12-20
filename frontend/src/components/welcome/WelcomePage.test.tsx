@@ -9,7 +9,6 @@ import { css } from '../../test-helpers/queries';
 
 import { WelcomePage } from './WelcomePage';
 
-jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 jest.mock('./RetroList', () => ({ RetroList: mockElement('mock-retro-list') }));
 
 describe('WelcomePage', () => {

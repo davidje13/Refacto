@@ -9,7 +9,6 @@ import { ArchivePage } from './ArchivePage';
 jest.mock('../retro-formats/RetroFormatPicker', () => ({
   RetroFormatPicker: mockElement('mock-retro-format-picker'),
 }));
-jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 
 describe('ArchivePage', () => {
   it('renders a retro page', async () => {

@@ -6,7 +6,6 @@ import { css } from '../../test-helpers/queries';
 
 import { ArchiveListPage } from './ArchiveListPage';
 
-jest.mock('../common/Header', () => ({ Header: mockElement('mock-header') }));
 jest.mock('./ArchiveList', () => ({
   ArchiveList: mockElement('mock-archive-list'),
 }));
