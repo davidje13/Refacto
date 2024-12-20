@@ -51,7 +51,7 @@
     "timezone-mock": "1.x",
     "typescript": "5.7.x",
     "webpack": "5.x",
-    "webpack-cli": "5.x",
+    "webpack-cli": "6.x",
     "webpack-dev-server": "5.x"
   },
   "overrides_comments": {

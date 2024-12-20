@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "6.x",
-    "@rollup/plugin-node-resolve": "15.x",
+    "@rollup/plugin-node-resolve": "16.x",
     "@rollup/plugin-typescript": "12.x",
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
