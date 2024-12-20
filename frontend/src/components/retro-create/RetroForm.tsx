@@ -2,7 +2,6 @@ import { useState, memo, ChangeEvent, ReactNode } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { type JsonData } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
-import { Input } from '../common/Input';
 import { SlugEntry } from './SlugEntry';
 import { Alert } from '../common/Alert';
 import { makeValidSlug } from '../../hooks/data/useSlugAvailability';
@@ -74,7 +73,7 @@ export const RetroForm = memo(
           setName(String(json.name || ''));
           setSlug(String(json.url || ''));
           setImportJson(json);
-        } catch (err: unknown) {
+        } catch (err) {
           if (err instanceof Error) {
             setImportError(err.message);
           } else {
@@ -166,17 +165,18 @@ export const RetroForm = memo(
     }
 
     return (
-      <form onSubmit={handleSubmit} className="create-retro">
+      <form onSubmit={handleSubmit} className="global-form create-retro">
         {importComponent}
         <Alert message={importError} />
         <label>
           Retro Name
-          <Input
+          <input
             name="name"
             type="text"
             placeholder="retro name"
             value={name}
-            onChange={setName}
+            onChange={(e) => setName(e.currentTarget.value)}
+            autoComplete="off"
             required
           />
         </label>
@@ -195,49 +195,54 @@ export const RetroForm = memo(
         </label>
         <label>
           Collaborator password
-          <Input
+          <input
             name="password"
             type="password"
             placeholder="password"
             value={password}
-            onChange={setPassword}
+            onChange={(e) => setPassword(e.currentTarget.value)}
             minLength={MIN_PASSWORD_LENGTH}
             maxLength={MAX_PASSWORD_LENGTH}
+            autoComplete="new-password"
             required
           />
         </label>
         <label>
           Confirm password
-          <Input
+          <input
             name="password-confirmation"
             type="password"
             placeholder="password"
             value={passwordConf}
-            onChange={setPasswordConf}
+            onChange={(e) => setPasswordConf(e.currentTarget.value)}
+            autoComplete="new-password"
             required
           />
         </label>
         <Alert
           warning
           message={passwordWarning}
-          show={Boolean(passwordWarning)}
+          suffix={
+            <>
+              {' \u2014 '}
+              <a
+                href="/security#passwords"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Learn more
+              </a>
+            </>
+          }
+        />
+        <button
+          type="submit"
+          className="wide-button"
+          title="Create Retro"
+          disabled={sending}
         >
-          {' \u2014 '}
-          <a
-            href="/security#passwords"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn more
-          </a>
-        </Alert>
-        {sending ? (
-          <div className="sending">&hellip;</div>
-        ) : (
-          <button type="submit" title="Create Retro">
-            Create
-          </button>
-        )}
+          {sending ? '\u2026' : 'Create'}
+        </button>
         <Alert message={error} />
       </form>
     );

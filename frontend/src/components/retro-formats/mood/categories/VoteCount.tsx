@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
-import { WrappedButton } from '../../../common/WrappedButton';
 import { useThrottled } from '../../../../hooks/useThrottled';
 import Heart from '../../../../../resources/heart.svg';
 import './VoteCount.less';
@@ -23,15 +22,16 @@ export const VoteCount = memo(({ votes, onVote }: PropsT) => {
   const [click, clicking] = useThrottled(onVote, MIN_CLICK_DELAY);
 
   return (
-    <WrappedButton
+    <button
+      type="button"
       className={classNames('vote', {
         none: votes === 0,
         few: votes >= 1 && votes < 5,
         many: votes >= 5,
         clicking,
       })}
-      title="Agree with this"
-      disabledTitle={`${votes} agree with this`}
+      title={click ? 'Agree with this' : `${votes} agree with this`}
+      disabled={!click}
       onClick={click}
     >
       <div className="inner">
@@ -42,6 +42,6 @@ export const VoteCount = memo(({ votes, onVote }: PropsT) => {
         </div>
       </div>
       <span className="count">{votes}</span>
-    </WrappedButton>
+    </button>
   );
 });

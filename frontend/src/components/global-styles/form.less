@@ -1,8 +1,7 @@
-@import (reference) './colours.less';
+@import (reference) '../colours.less';
 
-.mixin-form-styling {
+.global-form {
   display: block;
-  margin: 64px auto 128px;
   width: 600px;
   max-width: calc(100vw - 32px);
 
@@ -66,9 +65,7 @@
     background: #ffffff;
     font-size: 1.2em;
 
-    /* these styles are all the same but for whatever reason
-       cannot be combined with commas, so use a mixin instead: */
-    .file-button() {
+    &::file-selector-button {
       background: @green-button-dark;
       border: none;
       border-right: 1px solid @beige-shadow;
@@ -77,18 +74,6 @@
       font: inherit;
       color: #000000;
       cursor: pointer;
-    }
-
-    &::file-selector-button {
-      .file-button;
-    }
-
-    &::-webkit-file-upload-button {
-      .file-button;
-    }
-
-    &::-ms-browse {
-      .file-button;
     }
   }
 
@@ -131,8 +116,7 @@
     top: 2px;
   }
 
-  button,
-  .sending {
+  .wide-button {
     display: block;
     margin: 32px 0 0;
     padding: 8px 16px;
@@ -143,12 +127,9 @@
     color: #ffffff;
     text-align: center;
 
-    &:disabled {
+    &:disabled,
+    &.sending {
       background: @beige-shadow;
     }
-  }
-
-  .sending {
-    background: @beige-shadow;
   }
 }

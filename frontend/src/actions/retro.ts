@@ -82,15 +82,17 @@ export const deleteRetroItem = (itemId: string): Spec<Retro>[] => [
   { items: ['delete', ['all', { id: ['=', itemId] }]] },
 ];
 
-export const clearCovered = (): Spec<Retro>[] => [
+export const clearCovered = (preserveNotDone: boolean): Spec<Retro>[] => [
   {
     state: ['=', {}],
     groupStates: ['=', {}],
     items: [
-      'seq',
+      'delete',
       [
-        'delete',
-        ['all', ['or', { category: ['!=', 'action'] }, { doneTime: ['>', 0] }]],
+        'all',
+        preserveNotDone
+          ? { doneTime: ['>', 0] }
+          : ['or', { category: ['!=', 'action'] }, { doneTime: ['>', 0] }],
       ],
     ],
   },

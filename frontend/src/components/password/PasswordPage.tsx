@@ -1,7 +1,6 @@
 import { useState, ReactElement } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { Header } from '../common/Header';
-import { Input } from '../common/Input';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { useUserToken } from '../../hooks/data/useUserToken';
 import { retroTokenService, retroTokenTracker } from '../../api/api';
@@ -64,7 +63,7 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
         title={`Password for ${slug}`}
         backLink={{ label: 'Home', action: '/' }}
       />
-      <form onSubmit={handleSubmit}>
+      <form className="global-form" onSubmit={handleSubmit}>
         {/* 'username' is included for password managers to distinguish between retros */}
         <input
           type="hidden"
@@ -74,22 +73,22 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
         />
         {/* 'name' is a friendly name for password managers (but can be changed) */}
         <input type="hidden" name="name" value={slug} autoComplete="name" />
-        <Input
+        <input
           type="password"
           placeholder="password"
           value={password}
-          onChange={setPassword}
+          onChange={(e) => setPassword(e.currentTarget.value)}
           disabled={sending}
           autoComplete="current-password"
           required
         />
-        {sending ? (
-          <div className="checking">&hellip;</div>
-        ) : (
-          <button type="submit" title="Go" disabled={password === ''}>
-            Go
-          </button>
-        )}
+        <button
+          type="submit"
+          className="wide-button"
+          disabled={sending || password === ''}
+        >
+          {sending ? '\u2026' : 'Go'}
+        </button>
         <Alert message={error} />
       </form>
     </article>

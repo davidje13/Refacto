@@ -5,7 +5,6 @@ import {
   type UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
 import { ItemEditor } from '../ItemEditor';
-import { WrappedButton } from '../../../common/WrappedButton';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import Tick from '../../../../../resources/tick.svg';
@@ -25,7 +24,6 @@ export const ActionItem = memo(
   ({ item, onSetDone, onEdit, onDelete }: PropsT) => {
     const done = item.doneTime > 0;
 
-    const handleToggleDone = useEvent(() => onSetDone?.(item.id, !done));
     const handleDelete = useEvent(() => onDelete?.(item.id));
 
     const editing = useBoolean(false);
@@ -59,22 +57,25 @@ export const ActionItem = memo(
     return (
       <div className={classNames('action-item', { done })}>
         <div className="message">{item.message}</div>
-        <WrappedButton
+        <button
+          type="button"
           role="checkbox"
           aria-checked={done}
+          disabled={!onSetDone}
           title={done ? 'Mark as not done' : 'Mark as done'}
           className="toggle-done"
-          onClick={onSetDone ? handleToggleDone : undefined}
+          onClick={() => onSetDone?.(item.id, !done)}
         >
           <Tick />
-        </WrappedButton>
-        <WrappedButton
-          title="Edit"
-          className="edit"
-          disabled={!onEdit}
-          hideIfDisabled
-          onClick={editing.setTrue}
-        />
+        </button>
+        {onEdit && (
+          <button
+            type="button"
+            title="Edit"
+            className="edit"
+            onClick={editing.setTrue}
+          />
+        )}
       </div>
     );
   },

@@ -67,7 +67,7 @@ export const WelcomePage = memo(() => {
           <RetroList retros={combinedList} />
           <RetroNavigationForm />
           {userToken ? (
-            <Link className="link-create" to="/create">
+            <Link className="global-button primary link-create" to="/create">
               Create a new retro
             </Link>
           ) : (

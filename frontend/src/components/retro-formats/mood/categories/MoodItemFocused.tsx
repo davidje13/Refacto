@@ -2,7 +2,6 @@ import { useRef, useEffect, memo } from 'react';
 import { type RetroItem } from '../../../../shared/api-entities';
 import { VoteCount } from './VoteCount';
 import { Timer } from './timer/Timer';
-import { WrappedButton } from '../../../common/WrappedButton';
 import { Attachment } from '../../../attachments/Attachment';
 
 interface PropsT {
@@ -40,22 +39,26 @@ export const MoodItemFocused = memo(
         <div className="message">{item.message}</div>
         <VoteCount votes={item.votes} />
         <Attachment attachment={item.attachment} />
-        <WrappedButton
-          title="Back (left arrow)"
-          className="cancel"
-          onClick={onCancel}
-          hideIfDisabled
-        >
-          back
-        </WrappedButton>
-        <WrappedButton
-          title="Next (right arrow)"
-          className="continue"
-          onClick={onContinue}
-          hideIfDisabled
-        >
-          Next
-        </WrappedButton>
+        {onCancel && (
+          <button
+            type="button"
+            title="Back (left arrow)"
+            className="cancel"
+            onClick={onCancel}
+          >
+            back
+          </button>
+        )}
+        {onContinue && (
+          <button
+            type="button"
+            title="Next (right arrow)"
+            className="continue"
+            onClick={onContinue}
+          >
+            Next
+          </button>
+        )}
         <Timer
           targetTime={focusedItemTimeout}
           onAddExtraTime={onAddExtraTime}

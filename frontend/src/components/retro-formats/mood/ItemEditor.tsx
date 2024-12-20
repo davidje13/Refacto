@@ -5,7 +5,6 @@ import {
 } from '../../../shared/api-entities';
 import { useEvent } from '../../../hooks/useEvent';
 import { ExpandingTextEntry } from '../../common/ExpandingTextEntry';
-import { WrappedButton } from '../../common/WrappedButton';
 import { Attachment } from '../../attachments/Attachment';
 import { GiphyButton } from '../../attachments/giphy/GiphyButton';
 import { useConfig } from '../../../hooks/data/useConfig';
@@ -76,26 +75,28 @@ export const ItemEditor = memo(
           ) : null,
 
           onDelete ? (
-            <WrappedButton
+            <button
               key="delete"
+              type="button"
               title="Delete"
               className="delete"
               onClick={onDelete}
             >
               <Delete /> Delete
-            </WrappedButton>
+            </button>
           ) : null,
         ]}
         postSubmitOptions={[
           onCancel ? (
-            <WrappedButton
+            <button
               key="cancel"
+              type="button"
               title="Cancel"
               className="cancel"
               onClick={onCancel}
             >
               <Cross />
-            </WrappedButton>
+            </button>
           ) : null,
         ]}
         forceMultiline={Boolean(onCancel || onDelete)}

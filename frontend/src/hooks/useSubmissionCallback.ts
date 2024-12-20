@@ -6,13 +6,24 @@ interface StateT {
   error?: string;
 }
 
-type SubmissionT = [(e: SyntheticEvent) => void, boolean, string | undefined];
+type SubmissionT = [
+  (e?: SyntheticEvent) => void,
+  boolean,
+  string | undefined,
+  () => void,
+];
 
 export function useSubmissionCallback(
   fn: () => Promise<void> | void,
 ): SubmissionT {
   const [state, setState] = useState<StateT>({ sending: false });
   const internalState = useRef({ sending: false, mounted: false });
+
+  const resetError = useEvent(() => {
+    if (state.error !== undefined) {
+      setState({ sending: false });
+    }
+  });
 
   useEffect(() => {
     internalState.current.mounted = true;
@@ -21,8 +32,8 @@ export function useSubmissionCallback(
     };
   }, []);
 
-  const handleSubmit = useEvent(async (e: SyntheticEvent) => {
-    e.preventDefault();
+  const handleSubmit = useEvent(async (e?: SyntheticEvent) => {
+    e?.preventDefault();
 
     if (internalState.current.sending || !internalState.current.mounted) {
       return;
@@ -50,5 +61,5 @@ export function useSubmissionCallback(
     }
   });
 
-  return [handleSubmit, state.sending, state.error];
+  return [handleSubmit, state.sending, state.error, resetError];
 }

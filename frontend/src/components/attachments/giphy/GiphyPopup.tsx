@@ -1,8 +1,6 @@
 import { useState, memo } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
-import { WrappedButton } from '../../common/WrappedButton';
-import { Input } from '../../common/Input';
 import { giphyService } from '../../../api/api';
 import './GiphyPopup.less';
 
@@ -22,12 +20,15 @@ export const GiphyPopup = memo(
     );
 
     const deleteButton = defaultAttachment ? (
-      <WrappedButton onClick={() => onConfirm(null)}>Remove</WrappedButton>
+      <button type="button" onClick={() => onConfirm(null)}>
+        Remove
+      </button>
     ) : null;
 
     const optionElements = options.latestData?.map(({ small, medium }) => (
-      <WrappedButton
+      <button
         key={medium}
+        type="button"
         onClick={() => onConfirm({ type: 'giphy', url: medium })}
       >
         <img
@@ -36,7 +37,7 @@ export const GiphyPopup = memo(
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
-      </WrappedButton>
+      </button>
     ));
 
     return (
@@ -47,13 +48,16 @@ export const GiphyPopup = memo(
             setAppliedQuery(query);
           }}
         >
-          <Input
+          <input
             type="text"
             value={query}
             placeholder="Enter a search term"
-            onChange={setQuery}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            autoComplete="off"
           />
-          <button type="submit">Search</button>
+          <button type="submit" className="global-button primary">
+            Search
+          </button>
         </form>
         <p className="credit">
           Powered By{' '}
@@ -68,7 +72,9 @@ export const GiphyPopup = memo(
         <p className="choices">{optionElements}</p>
         <p className="dialog-options">
           {deleteButton}
-          <WrappedButton onClick={onCancel}>Cancel</WrappedButton>
+          <button type="button" className="global-button" onClick={onCancel}>
+            Cancel
+          </button>
         </p>
       </div>
     );

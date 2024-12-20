@@ -2,7 +2,6 @@ import { useState, memo } from 'react';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroDispatch } from '../../api/RetroTracker';
 import { context } from '../../api/reducer';
-import { Input } from '../common/Input';
 import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';
 import { Alert } from '../common/Alert';
@@ -56,15 +55,16 @@ export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
   }));
 
   return (
-    <form onSubmit={handleSubmit} className="retro-settings">
+    <form onSubmit={handleSubmit} className="global-form retro-settings">
       <label>
         Retro Name
-        <Input
+        <input
           name="name"
           type="text"
           placeholder="retro name"
           value={name}
-          onChange={setName}
+          onChange={(e) => setName(e.currentTarget.value)}
+          autoComplete="off"
           required
         />
       </label>
@@ -82,11 +82,12 @@ export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
         />
       </label>
       <label>
-        <Input
+        <input
           name="always-show-add-action"
           type="checkbox"
           checked={alwaysShowAddAction}
-          onChange={setAlwaysShowAddAction}
+          onChange={(e) => setAlwaysShowAddAction(e.currentTarget.checked)}
+          autoComplete="off"
         />
         Sticky &ldquo;add action&rdquo; input
       </label>
@@ -100,13 +101,14 @@ export const SettingsForm = memo(({ retro, dispatch, onSave }: PropsT) => {
           options={themeChoices}
         />
       </fieldset>
-      {sending ? (
-        <div className="sending">&hellip;</div>
-      ) : (
-        <button type="submit" title="Save Changes">
-          Save
-        </button>
-      )}
+      <button
+        type="submit"
+        className="wide-button"
+        title="Save Changes"
+        disabled={sending}
+      >
+        {sending ? '\u2026' : 'Save'}
+      </button>
       <Alert message={error} />
     </form>
   );

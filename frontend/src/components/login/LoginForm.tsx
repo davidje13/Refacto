@@ -49,7 +49,7 @@ export const LoginForm = memo(({ message, redirect }: PropsT) => {
         {googleConfig ? (
           <button
             type="button"
-            className="sso-google"
+            className="global-button primary sso-google"
             onClick={() => {
               const targetUrl = new URL('/sso/google', domain);
               const url = new URL(googleConfig.authUrl);
@@ -69,7 +69,7 @@ export const LoginForm = memo(({ message, redirect }: PropsT) => {
         {githubConfig ? (
           <button
             type="button"
-            className="sso-github"
+            className="global-button primary sso-github"
             onClick={() => {
               const targetUrl = new URL('/sso/github', domain);
               const url = new URL(githubConfig.authUrl);
@@ -86,7 +86,7 @@ export const LoginForm = memo(({ message, redirect }: PropsT) => {
         {gitlabConfig ? (
           <button
             type="button"
-            className="sso-gitlab"
+            className="global-button primary sso-gitlab"
             onClick={() => {
               const targetUrl = new URL('/sso/gitlab', domain);
               const url = new URL(gitlabConfig.authUrl);

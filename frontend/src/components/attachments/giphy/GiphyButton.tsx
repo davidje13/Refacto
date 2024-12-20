@@ -3,7 +3,6 @@ import { type RetroItemAttachment } from '../../../shared/api-entities';
 import { useEvent } from '../../../hooks/useEvent';
 import { useBoolean } from '../../../hooks/useBoolean';
 import { Popup } from '../../common/Popup';
-import { WrappedButton } from '../../common/WrappedButton';
 import { GiphyPopup } from './GiphyPopup';
 
 interface PropsT {
@@ -21,8 +20,8 @@ export const GiphyButton = memo(
 
     return (
       <>
-        <WrappedButton
-          key="giphy"
+        <button
+          type="button"
           title="Add GIPHY image"
           className="open-giphy"
           onClick={visible.setTrue}

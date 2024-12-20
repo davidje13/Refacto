@@ -1,0 +1,30 @@
+@import (reference) '../colours.less';
+
+.global-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #eeeeee;
+  color: @green-text-on-white;
+  transition: box-shadow 0.2s ease;
+  text-align: center;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+  }
+
+  &:active {
+    box-shadow: none;
+    text-decoration: none;
+  }
+
+  &.primary {
+    background: @green-button-dark;
+    color: #ffffff;
+  }
+
+  &:disabled {
+    background: @beige-shadow;
+  }
+}

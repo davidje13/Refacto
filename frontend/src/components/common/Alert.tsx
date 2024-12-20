@@ -3,19 +3,17 @@ import Warning from '../../../resources/warning.svg';
 import './Alert.less';
 
 interface PropsT {
-  show?: boolean;
   warning?: boolean;
-  message?: string | undefined;
-  children?: ReactNode;
+  message?: ReactNode | undefined;
+  suffix?: ReactNode;
 }
 
-export const Alert = memo(
-  ({ show, warning = false, message, children }: PropsT) =>
-    show !== false && (message || children) ? (
-      <div className={`alert-message ${warning ? 'warning' : 'error'}`}>
-        <Warning title={warning ? 'Warning' : 'Error'} />
-        {message}
-        {children}
-      </div>
-    ) : null,
+export const Alert = memo(({ warning = false, message, suffix }: PropsT) =>
+  message ? (
+    <div className={`alert-message ${warning ? 'warning' : 'error'}`}>
+      <Warning title={warning ? 'Warning' : 'Error'} />
+      {message}
+      {suffix}
+    </div>
+  ) : null,
 );

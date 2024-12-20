@@ -20,7 +20,7 @@ export const RetroNavigationForm = () => {
   };
 
   return (
-    <form onSubmit={go}>
+    <form className="global-form" onSubmit={go}>
       <div className="horizontal">
         <label>
           <SlugEntry
@@ -29,7 +29,7 @@ export const RetroNavigationForm = () => {
             ariaLabel="Enter a retro ID to open"
           />
         </label>
-        <button type="submit" disabled={!allowSlugNav}>
+        <button type="submit" className="wide-button" disabled={!allowSlugNav}>
           Go
         </button>
       </div>

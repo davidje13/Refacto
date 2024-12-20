@@ -1,6 +1,5 @@
 import { memo, HTMLAttributes } from 'react';
 import { Link } from 'wouter';
-import { WrappedButton } from './WrappedButton';
 
 export interface LinkPropsT
   extends Omit<HTMLAttributes<HTMLElement>, 'onClick'> {
@@ -19,9 +18,9 @@ export const HeaderLinkItem = memo(
     }
 
     return (
-      <WrappedButton onClick={action} {...props}>
+      <button type="button" onClick={action} {...props}>
         {label}
-      </WrappedButton>
+      </button>
     );
   },
 );

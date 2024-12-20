@@ -1,18 +1,13 @@
-import { useRef, memo } from 'react';
+import { memo, useEffect } from 'react';
 import { type Retro } from '../../shared/api-entities';
 import { type RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';
 import { Header } from '../common/Header';
-import { Popup } from '../common/Popup';
-import { useEvent } from '../../hooks/useEvent';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import { useBoolean } from '../../hooks/useBoolean';
-import { clearCovered } from '../../actions/retro';
-import { archiveService } from '../../api/api';
 import { OPTIONS } from '../../helpers/optionManager';
 import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
 import { InvitePopup } from './InvitePopup';
-import './RetroPage.less';
 
 const BLANK_STATE = {};
 
@@ -41,26 +36,6 @@ export const RetroPage = memo(
     const archivePopupVisible = useBoolean(false);
     const invitePopupVisible = useBoolean(false);
 
-    const isArchiving = useRef(false);
-    const performArchive = useEvent(() => {
-      if (isArchiving.current || group) {
-        return;
-      }
-      isArchiving.current = true;
-
-      archiveService
-        .create({ retro, retroToken })
-        .then(() => {
-          isArchiving.current = false;
-          retroDispatch!(clearCovered());
-          archivePopupVisible.setFalse();
-        })
-        .catch((e) => {
-          // TODO: report failure to user
-          console.error('Failed to create archive', e);
-        });
-    });
-
     const canFacilitate =
       !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
 
@@ -71,6 +46,12 @@ export const RetroPage = memo(
         canFacilitate &&
         !group,
     );
+
+    useEffect(() => {
+      if (!canArchive) {
+        archivePopupVisible.setFalse();
+      }
+    }, [canArchive]);
 
     const links = [
       { label: 'Invite', action: invitePopupVisible.setTrue },
@@ -114,29 +95,19 @@ export const RetroPage = memo(
           onComplete={canArchive ? archivePopupVisible.setTrue : undefined}
           archive={false}
         />
-        <Popup
-          title="Create Archive"
-          isOpen={Boolean(retroDispatch) && archivePopupVisible.value}
-          keys={{ Enter: performArchive, Escape: archivePopupVisible.setFalse }}
-          onClose={archivePopupVisible.setFalse}
-        >
+        {retroDispatch ? (
           <ArchivePopup
-            onConfirm={performArchive}
-            onCancel={archivePopupVisible.setFalse}
+            retroToken={retroToken}
+            retro={retro}
+            retroDispatch={retroDispatch}
+            isOpen={canArchive && archivePopupVisible.value}
+            onClose={archivePopupVisible.setFalse}
           />
-        </Popup>
-        <Popup
-          title="Invite"
-          hideTitle
+        ) : null}
+        <InvitePopup
           isOpen={invitePopupVisible.value}
-          keys={{
-            Enter: invitePopupVisible.setFalse,
-            Escape: invitePopupVisible.setFalse,
-          }}
           onClose={invitePopupVisible.setFalse}
-        >
-          <InvitePopup onClose={invitePopupVisible.setFalse} />
-        </Popup>
+        />
       </article>
     );
   },

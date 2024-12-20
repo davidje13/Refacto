@@ -1,5 +1,4 @@
 import { ReactNode, type FC } from 'react';
-import { Input } from '../common/Input';
 import TickBold from '../../../resources/tick-bold.svg';
 import Cross from '../../../resources/cross.svg';
 import {
@@ -60,16 +59,17 @@ export const SlugEntry: FC<PropsT> = ({
 }) => (
   <div className="prefixed-input">
     <span className="prefix">{`${document.location.host}/retros/`}</span>
-    <Input
+    <input
       name="slug"
       type="text"
       placeholder={placeholder}
       aria-label={ariaLabel}
       value={value}
-      onChange={onChange}
+      onChange={(e) => onChange(e.currentTarget.value)}
       pattern={VALID_SLUG_PATTERN}
       maxLength={MAX_SLUG_LENGTH}
       required={placeholder === ''}
+      autoComplete="off"
     />
     {showAvailability ? (
       <SlugAvailabilityDisplay

@@ -1,14 +1,16 @@
 @import (reference) './colours.less';
-@import './opensans.less';
+@import './global-styles/opensans.less';
+@import './global-styles/form.less';
+@import './global-styles/button.less';
 
 body,
 input,
 textarea,
-button {
+button,
+dialog {
   font:
-    300 1em 'Open Sans',
+    300 1em / 1.4 'Open Sans',
     sans-serif;
-  line-height: 1.4;
 }
 
 article {

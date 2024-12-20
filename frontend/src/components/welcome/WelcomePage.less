@@ -1,5 +1,4 @@
 @import (reference) '../colours.less';
-@import (reference) '../form.less';
 
 .page-welcome {
   text-align: center;
@@ -12,11 +11,6 @@
 
   section:last-child {
     margin-bottom: 128px;
-  }
-
-  form {
-    .mixin-form-styling;
-    margin: 0;
   }
 
   .logo {
@@ -54,23 +48,7 @@
   }
 
   .link-create {
-    display: inline-block;
     margin-top: 32px;
-    padding: 8px 16px;
-    background: @green-button-dark;
-    color: #ffffff;
-    transition: box-shadow 0.2s ease;
-
-    &:active,
-    &:hover,
-    &:focus {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      text-decoration: none;
-    }
-
-    &:active {
-      box-shadow: none;
-    }
   }
 
   .login-form {

@@ -2,7 +2,6 @@ import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
 import { type RetroItem } from '../../../../shared/api-entities';
 import { VoteCount } from './VoteCount';
-import { WrappedButton } from '../../../common/WrappedButton';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
@@ -18,16 +17,23 @@ export const MoodItemPlain = memo(
 
     return (
       <div className={classNames('mood-item', { done })}>
-        <WrappedButton className="message" onClick={onSelect}>
+        <button
+          type="button"
+          className="message"
+          disabled={!onSelect}
+          onClick={onSelect}
+        >
           {item.message}
-        </WrappedButton>
+        </button>
         <VoteCount votes={item.votes} onVote={onVote} />
-        <WrappedButton
-          title="Edit"
-          className="edit"
-          onClick={onEdit}
-          hideIfDisabled
-        />
+        {onEdit && (
+          <button
+            type="button"
+            title="Edit"
+            className="edit"
+            onClick={onEdit}
+          />
+        )}
         {done && <TickBold className="tick" />}
       </div>
     );
