@@ -15,6 +15,7 @@ export const extractRetroItem = json.exactObject<RetroItem>({
     json.exactObject<RetroItemAttachment>({
       type: json.string,
       url: json.string,
+      alt: json.optional(json.string),
     }),
   ),
   votes: json.number,

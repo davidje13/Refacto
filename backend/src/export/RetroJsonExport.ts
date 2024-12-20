@@ -12,6 +12,7 @@ type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 export interface RetroItemAttachmentJsonExport {
   type: string;
   url: string;
+  alt?: string | undefined;
 }
 
 export interface RetroItemJsonExport {
@@ -57,6 +58,7 @@ function exportRetroItemAttachment(
   return {
     type: attachment.type,
     url: attachment.url,
+    alt: attachment.alt,
   };
 }
 
@@ -66,6 +68,7 @@ function importRetroItemAttachment(
   return {
     type: attachment.type,
     url: attachment.url,
+    alt: attachment.alt,
   };
 }
 

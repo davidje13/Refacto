@@ -28,6 +28,7 @@ export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
     json.object<RetroItemAttachmentJsonExport>({
       type: json.string,
       url: json.string,
+      alt: json.optional(json.string),
     }),
   ),
 });

@@ -15,30 +15,9 @@ export const GiphyPopup = memo(
     const [query, setQuery] = useState('');
     const [appliedQuery, setAppliedQuery] = useState('');
     const options = useAwaited(
-      (signal) => giphyService.search(appliedQuery, signal),
+      (signal) => giphyService.search(appliedQuery, undefined, signal),
       [giphyService, appliedQuery],
     );
-
-    const deleteButton = defaultAttachment ? (
-      <button type="button" onClick={() => onConfirm(null)}>
-        Remove
-      </button>
-    ) : null;
-
-    const optionElements = options.latestData?.map(({ small, medium }) => (
-      <button
-        key={medium}
-        type="button"
-        onClick={() => onConfirm({ type: 'giphy', url: medium })}
-      >
-        <img
-          src={small}
-          alt="Insert"
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-      </button>
-    ));
 
     return (
       <div className="popup-giphy">
@@ -59,7 +38,40 @@ export const GiphyPopup = memo(
             Search
           </button>
         </form>
-        <p className="credit">
+        {options.latestData?.length ? (
+          <section className="choices">
+            {options.latestData.map(({ small, medium, alt }) => (
+              <button
+                key={medium}
+                type="button"
+                onClick={() => onConfirm({ type: 'giphy', url: medium, alt })}
+              >
+                <img
+                  src={small}
+                  alt={`${alt ?? 'no description available'} - click to use this image`}
+                  title={alt}
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
+                />
+              </button>
+            ))}
+          </section>
+        ) : null}
+        <section className="dialog-options">
+          {defaultAttachment ? (
+            <button
+              type="button"
+              className="global-button"
+              onClick={() => onConfirm(null)}
+            >
+              Remove
+            </button>
+          ) : null}
+          <button type="button" className="global-button" onClick={onCancel}>
+            Cancel
+          </button>
+        </section>
+        <div className="credit">
           Powered By{' '}
           <a
             href="https://giphy.com/"
@@ -68,14 +80,7 @@ export const GiphyPopup = memo(
           >
             GIPHY
           </a>
-        </p>
-        <p className="choices">{optionElements}</p>
-        <p className="dialog-options">
-          {deleteButton}
-          <button type="button" className="global-button" onClick={onCancel}>
-            Cancel
-          </button>
-        </p>
+        </div>
       </div>
     );
   },

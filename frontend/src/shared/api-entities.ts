@@ -19,6 +19,7 @@ export interface ClientConfig {
 export interface RetroItemAttachment {
   type: string;
   url: string;
+  alt?: string | undefined;
 }
 
 export interface UserProvidedRetroItemDetails {

@@ -5,11 +5,12 @@ interface PropsT {
   attachment: RetroItemAttachment;
 }
 
-export const GiphyAttachment = memo(({ attachment: { url } }: PropsT) => (
+export const GiphyAttachment = memo(({ attachment: { url, alt } }: PropsT) => (
   <figure>
     <img
       src={url}
-      alt="Attachment"
+      alt={alt}
+      title={alt}
       crossOrigin="anonymous"
       referrerPolicy="no-referrer"
     />
