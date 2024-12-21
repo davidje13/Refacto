@@ -2,6 +2,7 @@ import { useState, memo } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
 import { giphyService } from '../../../api/api';
+import { GiphyAttribution } from './GiphyAttribution';
 import './GiphyPopup.css';
 
 interface PropsT {
@@ -71,16 +72,14 @@ export const GiphyPopup = memo(
             Cancel
           </button>
         </section>
-        <div className="credit">
-          Powered By{' '}
-          <a
-            href="https://giphy.com/"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            GIPHY
-          </a>
-        </div>
+        <a
+          href="https://giphy.com/"
+          className="credit"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          <GiphyAttribution />
+        </a>
       </div>
     );
   },

@@ -1,12 +1,14 @@
 import { memo } from 'react';
 import { type RetroItemAttachment } from '../../../shared/api-entities';
+import { GiphyAttribution } from './GiphyAttribution';
+import './GiphyAttachment.css';
 
 interface PropsT {
   attachment: RetroItemAttachment;
 }
 
 export const GiphyAttachment = memo(({ attachment: { url, alt } }: PropsT) => (
-  <figure>
+  <figure className="giphy-attachment">
     <img
       src={url}
       alt={alt}
@@ -14,6 +16,8 @@ export const GiphyAttachment = memo(({ attachment: { url, alt } }: PropsT) => (
       crossOrigin="anonymous"
       referrerPolicy="no-referrer"
     />
-    <figcaption>Powered By GIPHY</figcaption>
+    <figcaption>
+      <GiphyAttribution />
+    </figcaption>
   </figure>
 ));
