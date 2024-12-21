@@ -1,5 +1,5 @@
 .action-item {
-  background: #ffffff;
+  background: var(--primary-back);
   padding: 16px 24px;
   border-radius: 4px;
   position: relative;
@@ -25,9 +25,9 @@
     height: 3rem;
     margin-top: -1.5rem;
     line-height: 1rem;
-    font-weight: bolder;
     border-radius: 1px;
     outline: none; /* custom focus ring */
+    color: var(--primary-text);
 
     &:focus::after {
       content: '';
@@ -40,8 +40,8 @@
       left: 50%;
       /* fake focus ring to replace outline */
       box-shadow:
-        0 0 1px 5px #ffffff,
-        0 0 1px 6px #cc6600;
+        0 0 1px 5px var(--primary-back),
+        0 0 1px 6px var(--focus-border);
     }
 
     &::before {
@@ -54,7 +54,7 @@
       left: 50%;
       border: 2px solid var(--beige-icon);
       box-sizing: border-box;
-      background: #ffffff;
+      background: var(--primary-back);
       border-radius: 4px;
       z-index: 1;
       box-shadow: 0 0 0 -2px var(--green-button-back);
@@ -68,8 +68,7 @@
       margin: -18px -11px;
       left: 50%;
       top: 50%;
-      fill: black;
-      stroke: white;
+      stroke: var(--primary-back);
       stroke-width: 2px;
       paint-order: stroke;
       z-index: 1;

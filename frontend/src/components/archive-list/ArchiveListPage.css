@@ -15,15 +15,15 @@
       padding: 16px;
       width: 20rem;
       max-width: calc(100% - 32px);
-      background: #ffffff;
+      background: var(--primary-back);
       color: var(--green-text-on-white);
 
       &:active,
       &:hover,
       &:focus {
-        color: #ffffff;
         text-decoration: none;
         background: var(--green-button-dark);
+        color: var(--highlight-text-on-dark);
       }
     }
   }

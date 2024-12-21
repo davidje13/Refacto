@@ -3,7 +3,17 @@
 @import url('./global-styles/button.css');
 
 html {
+  --page-back: #ffffff;
   --header-back: #ffffff;
+  --modal-back: #ffffff;
+  --primary-back: #ffffff;
+  --primary-text: #000000;
+  --selected-back: hsl(200deg, 30%, 84%);
+
+  --modal-screen: rgba(128, 128, 128, 0.5);
+
+  --focus-border: #005fcc;
+  --focus-border-heart: rgba(255, 0, 0, 0.3);
 
   --green-back: hsl(172deg, 50%, 55%);
   --green-shadow: hsl(172deg, 50%, 45%);
@@ -17,8 +27,12 @@ html {
   --beige-back: hsl(45deg, 20%, 92%);
   --beige-shadow: hsl(45deg, 20%, 80%);
 
+  --grey-button-back: #eeeeee;
+
   --green-button-back: hsl(172deg, 72%, 60%);
+  --green-button-text: #000000;
   --green-button-dark: hsl(172deg, 55%, 50%);
+  --green-button-dark-text: #ffffff;
 
   --green-icon: var(--green-back);
   --red-icon: #aa3300;
@@ -29,12 +43,80 @@ html {
   --green-text-on-white: var(--green-shadow);
   --yellow-text-on-white: hsl(45deg, 100%, 35%);
   --red-text-on-white: #cc0000;
+  --highlight-text-on-dark: #ffffff;
+  --input-text: #000000;
 
   --link-text: #2b9e8e;
   --link-text-hover: #268a7c;
+  --link-disabled: rgba(0, 0, 0, 0.6);
+
+  --header-link-back-hover: #dddddd;
+  --header-link-text: #666666;
+  --header-link-text-hover: #000000;
 
   --notification-back: #000000;
   --notification-text: #eeeeee;
+
+  --shadow-1: rgba(0, 0, 0, 0.2);
+  --shadow-2: rgba(0, 0, 0, 0.5);
+}
+
+/* WIP: dark mode
+@media (prefers-color-scheme: dark) {
+  html {
+    --page-back: #000000;
+    --header-back: #000000;
+    --modal-back: #000000;
+    --primary-back: #000000;
+    --primary-text: #ffffff;
+    --selected-back: hsl(200deg, 72%, 28%);
+
+    --modal-screen: rgba(64, 64, 64, 0.5);
+
+    --focus-border: #005fcc;
+
+    --beige-back: hsl(45deg, 3%, 10%);
+    --beige-shadow: hsl(45deg, 3%, 30%);
+
+    --grey-button-back: #555555;
+
+    --green-button-back: hsl(172deg, 72%, 60%);
+    --green-button-text: #000000;
+    --green-button-dark: hsl(172deg, 55%, 50%);
+    --green-button-dark-text: #ffffff;
+
+    --green-icon: var(--green-back);
+    --red-icon: #aa3300;
+    --bright-red-icon: #cc2200;
+    --beige-icon: hsl(45deg, 20%, 85%);
+
+    --pale-text-on-white: #808080;
+    --green-text-on-white: var(--green-shadow);
+    --yellow-text-on-white: hsl(43deg, 100%, 65%);
+    --red-text-on-white: #ff6633;
+    --highlight-text-on-dark: #ffffff;
+    --input-text: #ffffff;
+
+    --link-text: #25ceb7;
+    --link-text-hover: #24e5cc;
+    --link-disabled: rgba(0, 0, 0, 0.6);
+
+    --header-link-back-hover: #333333;
+    --header-link-text: #999999;
+    --header-link-text-hover: #ffffff;
+
+    --notification-back: #333333;
+    --notification-text: #eeeeee;
+
+    --shadow-1: rgba(0, 0, 0, 0.4);
+    --shadow-2: rgba(0, 0, 0, 0.8);
+  }
+}
+*/
+
+body {
+  background: var(--page-back);
+  color: var(--primary-text);
 }
 
 body,
@@ -49,7 +131,7 @@ dialog {
 
 article {
   background: var(--beige-back);
-  border-bottom: 1px solid #ffffff; /* prevent background clipping */
+  border-bottom: 1px solid var(--page-back); /* prevent background clipping */
 }
 
 a:link,

@@ -15,15 +15,15 @@
 
 .popup-content::backdrop {
   transform: translateZ(0); /* use GPU to speed up blur effect */
-  background: rgba(128, 128, 128, 0.5);
+  background: var(--modal-screen);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 .popup-content {
-  background: #ffffff;
+  background: var(--modal-back);
   padding: 16px 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px var(--shadow-2);
   transform: scale(0.97);
 
   & h1 {

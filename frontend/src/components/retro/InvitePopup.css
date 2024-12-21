@@ -21,6 +21,12 @@
     max-width: calc(100vw - 96px);
     aspect-ratio: 1;
     margin: 0 auto;
+
+    /* WIP: dark mode
+    @media (prefers-color-scheme: dark) {
+      filter: invert();
+    }
+    */
   }
 
   .dialog-options {

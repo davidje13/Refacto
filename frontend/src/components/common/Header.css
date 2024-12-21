@@ -1,7 +1,7 @@
 .top-header {
   display: flex;
   position: relative;
-  box-shadow: 0 4px 3px -5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 3px -5px var(--shadow-2);
   background: var(--header-back);
   text-align: left;
 
@@ -35,21 +35,21 @@
     display: inline-block;
     padding: 16px 12px;
     box-sizing: border-box;
-    background: #ffffff;
+    background: var(--header-back);
     line-height: 1.8rem;
     height: 100%;
 
     &,
     &:link,
     &:visited {
-      color: #666666;
+      color: var(--header-link-text);
     }
 
     &:active,
     &:hover,
     &:focus {
-      background: #dddddd;
-      color: #000000;
+      background: var(--header-link-back-hover);
+      color: var(--header-link-text-hover);
       text-decoration: none;
     }
   }

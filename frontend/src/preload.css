@@ -6,7 +6,7 @@
   line-height: 1.4;
 
   .noscript {
-    background: white;
+    background: var(--page-back, white);
     position: absolute;
     top: 0;
     left: 0;

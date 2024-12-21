@@ -1,7 +1,7 @@
 .text-entry {
   display: flex;
   flex-flow: row wrap;
-  background: #ffffff;
+  background: var(--primary-back);
 
   & textarea {
     flex: 1;

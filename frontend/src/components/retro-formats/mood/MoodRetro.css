@@ -38,7 +38,7 @@
     }
 
     &.tab-item {
-      color: #000000;
+      color: #000000; /* WIP: dark mode */
     }
   }
 
@@ -62,8 +62,8 @@
         position: relative;
         margin-top: -0.4em;
         text-shadow:
-          0 4px 8px rgba(0, 0, 0, 0.2),
-          0 2px 3px rgba(0, 0, 0, 0.2);
+          0 4px 8px var(--shadow-1),
+          0 2px 3px var(--shadow-1);
         z-index: 1;
       }
 
@@ -101,7 +101,7 @@
     font-size: 0.9em;
     padding: 0.8em 4px;
     font-weight: bolder;
-    color: #ffffff;
+    color: #ffffff; /* WIP: dark mode */
     outline: none;
 
     transition:
@@ -110,7 +110,7 @@
   }
 
   .tab-item:not(.active) {
-    box-shadow: inset 0 -7px 5px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 -7px 5px -5px rgba(0, 0, 0, 0.1); /* WIP: dark mode */
   }
 
   .tab-item.active {
@@ -142,12 +142,12 @@
       right: 2px;
       margin: 0;
       padding: 0.375rem;
+      color: var(--pale-text-on-white);
 
       & svg {
         display: block;
         width: 0.75rem;
         height: 0.75rem;
-        fill: var(--pale-text-on-white);
       }
     }
 
@@ -158,6 +158,7 @@
       white-space: nowrap;
 
       &:disabled {
+        /* WIP: dark mode */
         background: #eeeeee;
         color: #aaaaaa;
       }
@@ -167,10 +168,9 @@
       padding: 12px 20px;
       font-weight: bolder;
       background: var(--green-button-back);
-      color: #000000;
+      color: var(--green-button-text);
 
       & svg {
-        fill: currentColor;
         width: 0.9em;
         height: 0.9em;
       }
@@ -182,7 +182,6 @@
       margin-right: 8px;
 
       & svg {
-        fill: currentColor;
         width: 1.2em;
         height: 1.2em;
         vertical-align: -0.2em;
@@ -204,7 +203,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: #ffffff;
+        background: var(--primary-back);
         border-bottom-right-radius: 4px;
         border-bottom-left-radius: 4px;
       }
@@ -261,7 +260,7 @@
 
   & header .text-entry {
     border-radius: 4px;
-    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.08);
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.08); /* WIP: dark mode */
     transition:
       background 0.1s ease-out,
       box-shadow 0.1s ease-out;
@@ -272,13 +271,13 @@
         box-shadow 0.1s ease-out;
     }
 
-    textarea::placeholder {
-      color: #ffffff;
+    & textarea::placeholder {
+      color: #ffffff; /* WIP: dark mode */
       transition: color 0.1s ease-out;
     }
 
     .submit {
-      color: #ffffff;
+      color: var(--green-button-dark-text);
 
       &:disabled {
         display: none;
@@ -286,29 +285,37 @@
     }
 
     &.has-value:not(:focus-within) {
-      background: rgba(255, 255, 255, 0.8);
+      background: color-mix(
+        in srgb-linear,
+        var(--primary-back) 80%,
+        transparent
+      );
       box-shadow: none;
 
-      textarea::placeholder {
+      & textarea::placeholder {
         color: var(--pale-text-on-white);
       }
 
       .attachments::before {
-        background: rgba(255, 255, 255, 0.8);
+        background: color-mix(
+          in srgb-linear,
+          var(--primary-back) 80%,
+          transparent
+        );
       }
     }
 
     &:focus-within {
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      background: var(--primary-back);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* WIP: dark mode */
 
-      textarea::placeholder {
+      & textarea::placeholder {
         color: var(--pale-text-on-white);
       }
 
       .attachments::before {
-        background: #ffffff;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        background: var(--primary-back);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); /* WIP: dark mode */
       }
     }
   }

@@ -7,7 +7,7 @@
     margin: 32px auto 64px;
   }
 
-  section:last-child {
+  & section:last-child {
     margin-bottom: 128px;
   }
 
@@ -33,15 +33,15 @@
   .retro-link {
     display: block;
     padding: 16px;
-    background: #ffffff;
+    background: var(--primary-back);
     color: var(--green-text-on-white);
 
     &:active,
     &:hover,
     &:focus {
-      color: #ffffff;
       text-decoration: none;
       background: var(--green-button-dark);
+      color: var(--green-button-dark-text);
     }
   }
 

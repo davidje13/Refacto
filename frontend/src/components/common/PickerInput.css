@@ -1,5 +1,5 @@
 .picker-input {
-  background: #ffffff;
+  background: var(--primary-back);
   overflow-y: auto;
 
   > label {
@@ -33,12 +33,12 @@
         outline: none;
 
         & + span {
-          box-shadow: inset 0 0 0 2px #005fcc;
+          box-shadow: inset 0 0 0 2px var(--focus-border);
         }
       }
 
       &:checked + span {
-        background: hsl(200, 30%, 84%);
+        background: var(--selected-back);
       }
     }
   }

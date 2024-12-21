@@ -1,14 +1,14 @@
 .global-button {
   display: inline-block;
   padding: 8px 16px;
-  background: #eeeeee;
+  background: var(--grey-button-back);
   color: var(--green-text-on-white);
   transition: box-shadow 0.2s ease;
   text-align: center;
 
   &:hover,
   &:focus {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px var(--shadow-1);
     text-decoration: none;
   }
 
@@ -19,7 +19,7 @@
 
   &.primary {
     background: var(--green-button-dark);
-    color: #ffffff;
+    color: var(--green-button-dark-text);
   }
 
   &:disabled {
