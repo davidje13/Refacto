@@ -181,6 +181,17 @@ location /api/open-login {
 }
 ```
 
+When using the shared account, any user who can log in will see the
+same list of retros (i.e. all of the retros created by any user), and
+can access them without a password. If you want to prevent this,
+disable the "My Retros" list:
+
+```sh
+INSECURE_SHARED_ACCOUNT_ENABLED=true \
+PERMIT_MY_RETROS=false \
+./index.js
+```
+
 ## Other Integrations
 
 ### Giphy

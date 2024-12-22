@@ -26,6 +26,9 @@
       "authUrl": "/api/open-login"
     }
   },
+  "permit": {
+    "myRetros": true
+  },
   "sso": {
     "google": {
       "clientId": "",

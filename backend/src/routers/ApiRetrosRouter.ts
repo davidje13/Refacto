@@ -35,6 +35,7 @@ export class ApiRetrosRouter extends Router {
     retroAuthService: RetroAuthService,
     retroService: RetroService,
     retroArchiveService: RetroArchiveService,
+    permitMyRetros: boolean,
   ) {
     super();
 
@@ -54,6 +55,11 @@ export class ApiRetrosRouter extends Router {
       userAuthMiddleware,
       safe(async (_, res) => {
         const userId = WebSocketExpress.getAuthData(res).sub!;
+
+        if (!permitMyRetros) {
+          res.json({ retros: [] });
+          return;
+        }
 
         res.json({
           retros: await retroService.getRetroListForUser(userId),

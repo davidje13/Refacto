@@ -11,6 +11,7 @@ export class ApiAuthRouter extends Router {
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
     retroService: RetroService,
+    permitOwnerToken: boolean,
   ) {
     super();
 
@@ -25,6 +26,11 @@ export class ApiAuthRouter extends Router {
       safe<{ retroId: string }>(async (req, res) => {
         const userId = WebSocketExpress.getAuthData(res).sub!;
         const { retroId } = req.params;
+
+        if (!permitOwnerToken) {
+          res.status(403).json({ error: 'must use password' });
+          return;
+        }
 
         if (
           !retroId ||

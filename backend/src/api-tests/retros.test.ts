@@ -151,3 +151,49 @@ describe('API retros', () => {
     });
   });
 });
+
+describe('API retros with my retros disabled', () => {
+  const PROPS = testServerRunner(async () => {
+    const app = await appFactory(testConfig({ permit: { myRetros: false } }));
+
+    const hooks = app.testHooks;
+
+    await hooks.retroService.createRetro('me', 'my-retro', 'My Retro', 'mood');
+
+    return { run: app, hooks };
+  });
+
+  describe('/api/retros', () => {
+    it('returns no retros', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const userToken = getUserToken(hooks, 'me');
+
+      const response = await request(server)
+        .get('/api/retros')
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.retros.length).toEqual(0);
+    });
+  });
+
+  describe('POST /api/retros', () => {
+    it('includes an access token in the response', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const userToken = getUserToken(hooks, 'me');
+
+      const response = await request(server)
+        .post('/api/retros')
+        .send({ slug: 'new-retro', name: 'Meh', password: 'password' })
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      // requesting a token later will fail, but the initial creation still gives a token
+      expect(response.body.token).toBeTruthy();
+    });
+  });
+});

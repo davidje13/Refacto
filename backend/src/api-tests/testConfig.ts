@@ -26,6 +26,9 @@ const baseTestConfig: ConfigT = {
       authUrl: '/insecure-login',
     },
   },
+  permit: {
+    myRetros: true,
+  },
   sso: {
     google: { clientId: '', authUrl: '', tokenInfoUrl: '' },
     github: {

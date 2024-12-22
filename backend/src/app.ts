@@ -93,7 +93,12 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
 
   app.use(
     '/api/auth',
-    new ApiAuthRouter(userAuthService, retroAuthService, retroService),
+    new ApiAuthRouter(
+      userAuthService,
+      retroAuthService,
+      retroService,
+      config.permit.myRetros,
+    ),
   );
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
   app.use('/api/config', new ApiConfigRouter(config, auth.clientConfig));
@@ -103,6 +108,7 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     retroAuthService,
     retroService,
     retroArchiveService,
+    config.permit.myRetros,
   );
   app.use('/api/retros', apiRetrosRouter);
   app.use(

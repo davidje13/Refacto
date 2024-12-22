@@ -140,3 +140,34 @@ describe('API auth', () => {
     });
   });
 });
+
+describe('API auth with my retros disabled', () => {
+  const PROPS = testServerRunner(async () => {
+    const app = await appFactory(testConfig({ permit: { myRetros: false } }));
+
+    const hooks = app.testHooks;
+
+    const ownerId = 'my-id';
+    const retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
+    await hooks.retroAuthService.setPassword(retroId, 'password');
+
+    return { run: app, hooks, ownerId, retroId };
+  });
+
+  describe('/api/auth/tokens/retro-id/user', () => {
+    it('rejects all users', async (props) => {
+      const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
+
+      const userToken = getUserToken(hooks, ownerId);
+
+      const response = await request(server)
+        .get(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(403)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.retroToken).toBeFalsy();
+      expect(response.body.error).toEqual('must use password');
+    });
+  });
+});

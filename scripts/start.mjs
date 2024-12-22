@@ -24,7 +24,8 @@ if (
   forceMockSSO ||
   (!process.env['SSO_GOOGLE_CLIENT_ID'] &&
     !process.env['SSO_GITHUB_CLIENT_ID'] &&
-    !process.env['SSO_GITLAB_CLIENT_ID'])
+    !process.env['SSO_GITLAB_CLIENT_ID'] &&
+    !process.env['INSECURE_SHARED_ACCOUNT_ENABLED'])
 ) {
   log('Using mock authentication provider');
   const mockSSOPort = apiPort + 2;
