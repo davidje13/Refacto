@@ -103,7 +103,10 @@ export async function compressFile(file) {
   return { file, size, brSize, gzSize };
 }
 
-export const hasExt = (...exts) => ({ file }) => exts.some((ext) => file.endsWith(ext));
+export const hasExt =
+  (...exts) =>
+  ({ file }) =>
+    exts.some((ext) => file.endsWith(ext));
 
 export const SIZE0 = { size: 0, brSize: 0, gzSize: 0 };
 
@@ -114,7 +117,9 @@ export const sumSize = (a, b) => ({
 });
 
 export const printSize = ({ size, brSize, gzSize }) =>
-  `${prettyBytes(size)} / ${prettyBytes(gzSize)} gzip / ${prettyBytes(brSize)} brotli`;
+  `${prettyBytes(size)} / ${prettyBytes(gzSize)} gzip / ${prettyBytes(
+    brSize,
+  )} brotli`;
 
 function prettyBytes(bytes) {
   if (bytes < 2000) {

@@ -88,13 +88,13 @@ if (preserveBuildModules) {
 }
 
 log('Compressing static resources...');
-const staticFiles = await Promise.all((await findFiles(staticdir)).map(compressFile));
+const staticFiles = await Promise.all(
+  (await findFiles(staticdir)).map(compressFile),
+);
 
 const isCode = hasExt('.js', '.css', '.html');
 
-const codeTotals = staticFiles
-  .filter(isCode)
-  .reduce(sumSize, SIZE0);
+const codeTotals = staticFiles.filter(isCode).reduce(sumSize, SIZE0);
 
 const resourceTotals = staticFiles
   .filter((v) => !isCode(v))

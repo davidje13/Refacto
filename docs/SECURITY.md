@@ -74,7 +74,7 @@ be sure to specify these as well:
 node --disable-proto delete index.js
 ```
 
-Note that these must be included *before* the `index.js` argument.
+Note that these must be included _before_ the `index.js` argument.
 
 If you do not need to specify custom flags, it is recommended to
 stick with using `./index.js` to launch the application instead of

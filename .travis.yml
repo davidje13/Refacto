@@ -1,18 +1,18 @@
 language: node_js
 node_js:
-- '18'
-- '20'
-- '22'
-- '23'
+  - '18'
+  - '20'
+  - '22'
+  - '23'
 os: linux
 addons:
   chrome: stable
   firefox: latest
 env:
-- PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000
+  - PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000
 cache:
   directories:
-  - backend/node_modules
-  - frontend/node_modules
-  - e2e/node_modules
-  - build/node_modules
+    - backend/node_modules
+    - frontend/node_modules
+    - e2e/node_modules
+    - build/node_modules

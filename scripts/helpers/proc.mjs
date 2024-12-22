@@ -15,11 +15,11 @@ export async function exitWithCode(code, message) {
   if (message) {
     process.stderr.write(`\n${message}\n`);
   }
-	// process.exit may lose stream data which has been buffered in NodeJS - wait for it all to be flushed before exiting
-	await Promise.all([
-		new Promise((resolve) => process.stdout.write('', resolve)),
-		new Promise((resolve) => process.stderr.write('', resolve)),
-	]);
+  // process.exit may lose stream data which has been buffered in NodeJS - wait for it all to be flushed before exiting
+  await Promise.all([
+    new Promise((resolve) => process.stdout.write('', resolve)),
+    new Promise((resolve) => process.stderr.write('', resolve)),
+  ]);
   process.exit(code);
 }
 
@@ -239,7 +239,9 @@ export function runTask({
       }
       handled = true;
       await streamsClosed;
-      output.write(`${failureMessage} - ${e instanceof Error ? e.message : e}\n`);
+      output.write(
+        `${failureMessage} - ${e instanceof Error ? e.message : e}\n`,
+      );
       if (outputMode === 'atomic' || outputMode === 'fail_atomic') {
         printInfo();
       }
