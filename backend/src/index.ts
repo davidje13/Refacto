@@ -4,6 +4,11 @@ import { buildMockSsoApp } from 'authentication-backend';
 import { appFactory, type App } from './app';
 import { type ConfigT, config } from './config';
 
+// https://nodejs.org/en/learn/getting-started/security-best-practices#dns-rebinding-cwe-346
+process.on('SIGUSR1', () => {
+  // ignore (disable default behaviour of opening inspector port)
+});
+
 // Temporary polyfill for Node 18 support
 if (!(global as any).CustomEvent) {
   logInfo('Polyfilling CustomEvent');
@@ -24,6 +29,10 @@ if (!(global as any).CustomEvent) {
     }
   };
 }
+
+// https://nodejs.org/en/learn/getting-started/security-best-practices#prototype-pollution-attacks-cwe-1321
+// TODO: https://github.com/nodejs/undici/issues/4009
+//Object.freeze(globalThis);
 
 // This file exists mainly to enable hot module replacement.
 // app.ts is the main entry point for the application.

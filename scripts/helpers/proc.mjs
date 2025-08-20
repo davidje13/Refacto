@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import { access, constants } from 'node:fs/promises';
 
 const activeChildren = new Set();
 let shuttingDown = false;
@@ -143,32 +144,47 @@ export function waitForOutput(stream, search, timeout = 60 * 60 * 1000) {
   return { promise, getOutput: () => Buffer.concat(all).toString('utf-8') };
 }
 
-const handleExit = (resolve, reject) => (code, signal) => {
-  if (code === 0) {
-    resolve();
-  } else if (code !== null) {
-    reject(new Error(`returned exit code ${code}`));
-  } else {
-    reject(new Error(`got signal ${signal}`));
-  }
-};
+const handleExit =
+  (resolve, reject, allowSuccess = true) =>
+  (code, signal) => {
+    if (code === 0 && allowSuccess) {
+      resolve();
+    } else if (code !== null) {
+      reject(new Error(`returned exit code ${code}`));
+    } else {
+      reject(new Error(`got signal ${signal}`));
+    }
+  };
 
-export function runTask({
+export async function runTask({
+  awaitFile = undefined,
   command,
   args = [],
+  stdinPipe = false,
   output = process.stderr,
   outputPrefix = '',
   prefixFormat = '',
   outputMode = 'live',
   beginMessage = '',
+  allowExit = true,
   successMessage = '',
   failureMessage = `failure in ${outputPrefix || command}`,
   exitOnFailure = true,
   ...options
 }) {
-  let stdio = ['ignore', 'pipe', 'pipe'];
+  let stdio = [stdinPipe ? 'pipe' : 'ignore', 'pipe', 'pipe'];
   if (outputMode === 'live' && !outputPrefix) {
-    stdio = ['ignore', 'inherit', 'inherit'];
+    stdio = [stdio[0], 'inherit', 'inherit'];
+  }
+  if (awaitFile) {
+    while (true) {
+      try {
+        await access(awaitFile, constants.R_OK);
+        break;
+      } catch {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+    }
   }
   return new Promise((resolve, reject) => {
     if (shuttingDown) {
@@ -218,6 +234,9 @@ export function runTask({
       };
     }
     const wrappedResolve = async (v) => {
+      if (stdinPipe) {
+        proc.stdio[0].end();
+      }
       activeChildren.delete(proc);
       if (shuttingDown || handled) {
         return;
@@ -233,6 +252,9 @@ export function runTask({
       resolve(v);
     };
     const wrappedReject = async (e) => {
+      if (stdinPipe) {
+        proc.stdio[0].end();
+      }
       activeChildren.delete(proc);
       if (shuttingDown || handled) {
         return;
@@ -255,7 +277,7 @@ export function runTask({
       streamsClosed = Promise.resolve(); // process did not start, so do not wait for streams to close
       wrappedReject(e);
     });
-    proc.on('exit', handleExit(wrappedResolve, wrappedReject));
+    proc.on('exit', handleExit(wrappedResolve, wrappedReject, allowExit));
   });
 }
 

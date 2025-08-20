@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { join } from 'node:path';
-import { basedir, log } from './helpers/io.mjs';
+import { basedir, deleteDirectory, log } from './helpers/io.mjs';
 import { runMultipleTasks } from './helpers/proc.mjs';
+import { LOCAL_RUNTIME_FLAGS } from './helpers/flags.mjs';
 
 const forceMockSSO = process.argv.slice(2).includes('--mock-sso');
 const apiPort = Number.parseInt(process.env['PORT'] ?? '5000');
@@ -36,6 +37,8 @@ if (
   backendEnv['SSO_GOOGLE_TOKEN_INFO_URL'] = `${mockSSOHost}/tokeninfo`;
 }
 
+await deleteDirectory(join(basedir, 'backend', 'build'));
+
 log('Starting application...');
 await runMultipleTasks(
   [
@@ -50,7 +53,18 @@ await runMultipleTasks(
     },
     {
       command: 'npm',
-      args: ['start', '--quiet'],
+      args: ['run', '--quiet', 'build-watch'],
+      cwd: join(basedir, 'backend'),
+      stdinPipe: true, // stdin must remain open for rollup to keep running in watch mode
+      allowExit: false, // any exit status means we are no longer watching
+      failureMessage: 'Failed to build backend',
+      outputPrefix: 'backend-build',
+      prefixFormat: '34',
+    },
+    {
+      awaitFile: join(basedir, 'backend', 'build', 'index.js'),
+      command: 'node',
+      args: [...LOCAL_RUNTIME_FLAGS, '--watch', 'build/index.js'],
       cwd: join(basedir, 'backend'),
       env: backendEnv,
       failureMessage: 'Failed to run backend',

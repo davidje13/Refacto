@@ -12,6 +12,7 @@ import {
   waitForOutput,
 } from './helpers/proc.mjs';
 import { makeRandomAppSecrets } from './helpers/random.mjs';
+import { TEST_RUNTIME_FLAGS } from './helpers/flags.mjs';
 
 const PARALLEL_E2E = (process.env['PARALLEL_E2E'] ?? 'true') === 'true';
 const FOCUS_BROWSER = process.env['BROWSER'];
@@ -105,12 +106,7 @@ if (!testEnv['TARGET_HOST']) {
   const begin = Date.now();
   const appProc = runBackgroundTask({
     command: 'node',
-    args: [
-      '--disable-proto=throw',
-      // TODO replace express with something else to be able to add this
-      //'--disallow-code-generation-from-strings',
-      join(builddir, 'index.js'),
-    ],
+    args: [...TEST_RUNTIME_FLAGS, join(builddir, 'index.js')],
     env: appEnv,
     stdio: ['ignore', 'ignore', 'pipe'],
   });
