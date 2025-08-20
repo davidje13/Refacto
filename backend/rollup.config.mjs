@@ -1,6 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-import json from '@rollup/plugin-json';
 
 export default [
   {
@@ -12,6 +11,6 @@ export default [
       format: 'cjs', // TODO: switch to esm / mjs
     },
     external: [/node_modules/],
-    plugins: [nodeResolve(), typescript(), json()],
+    plugins: [nodeResolve(), typescript()],
   },
 ];

@@ -1,7 +1,7 @@
-import baseConfig from './config/default.json';
+import baseConfig from './config/default';
 
 // Reads configuration from environment variables (falling back to values in
-// config/default.json if not set)
+// config/default.ts if not set)
 // Variables are read in UPPER_SNAKE_CASE and exported in camelCase
 
 function getEnv<T>(name: string, def: T): T {
