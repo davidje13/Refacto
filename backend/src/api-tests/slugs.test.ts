@@ -40,7 +40,7 @@ describe('API slugs', () => {
 
       await request(server)
         .get('/api/slugs/my-retro')
-        .expect('X-Frame-Options', 'DENY');
+        .expect('X-Content-Type-Options', 'nosniff');
     });
 
     it('adds API headers', async (props) => {

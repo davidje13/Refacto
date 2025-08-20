@@ -24,15 +24,26 @@ const CSP = [
 
 const PERMISSIONS_POLICY = [
   'accelerometer=()',
+  'attribution-reporting=()',
   'autoplay=()',
+  'bluetooth=()',
+  'browsing-topics=()',
   'camera=()',
+  'compute-pressure=()',
+  'cross-origin-isolated=()',
+  'display-capture=()',
+  'encrypted-media=()',
   'geolocation=()',
   'gyroscope=()',
-  'interest-cohort=()',
+  'idle-detection=()',
+  'local-fonts=()',
   'magnetometer=()',
   'microphone=()',
+  'midi=()',
   'payment=()',
-  'sync-xhr=()',
+  'screen-wake-lock=()',
+  'serial=()',
+  'storage-access=()',
   'usb=()',
 ].join(', ');
 
@@ -40,8 +51,6 @@ export function addSecurityHeaders(
   req: express.Request,
   res: express.Response,
 ) {
-  res.header('x-frame-options', 'DENY');
-  res.header('x-xss-protection', '1; mode=block');
   res.header('x-content-type-options', 'nosniff');
   res.header(
     'content-security-policy',

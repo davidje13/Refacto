@@ -89,13 +89,17 @@ describe('API static content', () => {
     it('adds common headers', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server).get('/').expect('X-Frame-Options', 'DENY');
+      await request(server)
+        .get('/')
+        .expect('X-Content-Type-Options', 'nosniff');
 
       await request(server)
         .get('/example.abc123.js')
-        .expect('X-Frame-Options', 'DENY');
+        .expect('X-Content-Type-Options', 'nosniff');
 
-      await request(server).get('/foobar').expect('X-Frame-Options', 'DENY');
+      await request(server)
+        .get('/foobar')
+        .expect('X-Content-Type-Options', 'nosniff');
     });
 
     it('manages cache control', async (props) => {
@@ -155,7 +159,9 @@ describe('API static content', () => {
     it('adds common headers', async (props) => {
       const { server } = props.getTyped(PROPS);
 
-      await request(server).get('/').expect('X-Frame-Options', 'DENY');
+      await request(server)
+        .get('/')
+        .expect('X-Content-Type-Options', 'nosniff');
     });
 
     it('does not apply within /api', async (props) => {
