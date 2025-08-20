@@ -142,7 +142,7 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
   });
   if (config.forwardHost) {
     // Dev mode: forward unknown requests to another service
-    app.use(await ForwardingRouter.to(config.forwardHost, analyticsService));
+    app.use(new ForwardingRouter(config.forwardHost, analyticsService));
   } else {
     // Production mode: all resources are copied into /static
     app.use(new StaticRouter(join(basedir, 'static')));

@@ -24,17 +24,12 @@
     "websocket-express": "3.x",
     "ws": "8.x"
   },
-  "optionalDependencies": {
-    "http-proxy": "*"
-  },
   "devDependencies": {
     "@rollup/plugin-json": "6.x",
     "@rollup/plugin-node-resolve": "16.x",
     "@rollup/plugin-typescript": "12.x",
     "@tsconfig/strictest": "2.x",
-    "@types/http-proxy": "1.x",
     "@types/node": "20.x",
-    "http-proxy": "1.x",
     "lean-test": "2.x",
     "prettier": "3.4.2",
     "rollup": "4.x",

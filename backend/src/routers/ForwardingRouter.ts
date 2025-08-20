@@ -1,37 +1,85 @@
+import type { Readable, Writable } from 'node:stream';
+import { Agent, request } from 'node:http';
 import { Router } from 'websocket-express';
 
 export class ForwardingRouter extends Router {
-  static async to(forwardHost: string, diagnostics: Diagnostics) {
-    const { default: httpProxy } = await import('http-proxy');
-    const proxy = httpProxy.createProxyServer({ target: forwardHost });
+  constructor(forwardHost: string, diagnostics: Diagnostics) {
+    super();
 
-    proxy.on('error', (err, _req, res) => {
-      diagnostics.error('proxy error', err);
-      if ('writeHead' in res && !res.headersSent) {
-        res.writeHead(502);
+    const agent = new Agent({ keepAlive: true, maxSockets: 10 });
+    const urlProxy = safeURLProxy(forwardHost);
+
+    this.useHTTP((req, res) => {
+      try {
+        const proxyReq = request(urlProxy(req.url), {
+          agent,
+          method: req.method,
+          headers: req.headers,
+        });
+
+        proxyReq.on('error', (err) => {
+          diagnostics.error('proxy error', err);
+          if (!res.headersSent) {
+            res.writeHead(502);
+          }
+          res.end();
+        });
+
+        proxyReq.on('response', (proxyRes) => {
+          if (!res.headersSent) {
+            res.writeHead(
+              proxyRes.statusCode ?? 200,
+              proxyRes.statusMessage,
+              proxyRes.headers,
+            );
+          }
+
+          pipeWithError(proxyRes, res);
+        });
+
+        pipeWithError(req, proxyReq);
+      } catch (err) {
+        diagnostics.error('proxy request error', err);
+        res.writeHead(400);
+        res.end();
       }
-      res.end();
     });
-
-    // Patch issue with old API use in http-proxy
-    // https://github.com/chimurai/http-proxy-middleware/issues/678
-    // https://github.com/http-party/node-http-proxy/issues/1520#issue-877626125
-    // https://github.com/http-party/node-http-proxy/pull/1580
-    // https://github.com/http-party/node-http-proxy/pull/1559
-    proxy.on('proxyRes', (proxyRes, _req, res) => {
-      res.on('close', () => {
-        if (!res.writableEnded) {
-          proxyRes.destroy();
-        }
-      });
-    });
-
-    const r = new ForwardingRouter();
-    r.useHTTP((req, res) => proxy.web(req, res));
-    return r;
   }
 }
 
 interface Diagnostics {
   error(message: string, err: unknown): void;
+}
+
+function safeURLProxy(forwardHost: string) {
+  const target = new URL(forwardHost);
+  return (path: string) => {
+    const proxyURL = new URL(path, target);
+    if (!proxyURL.toString().startsWith(forwardHost)) {
+      throw new Error('invalid URL');
+    }
+    return proxyURL;
+  };
+}
+
+function pipeWithError(reader: Readable, writer: Writable) {
+  reader.on('close', () => {
+    if (!reader.readableEnded) {
+      writer.destroy();
+    }
+  });
+
+  writer.on('close', () => {
+    if (!writer.writableEnded) {
+      reader.destroy();
+    }
+  });
+
+  if (!writer.writableEnded) {
+    if (reader.readableEnded) {
+      writer.end();
+    } else {
+      reader.pipe(writer);
+    }
+  }
 }
