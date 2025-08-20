@@ -1,12 +1,10 @@
 FROM node:24-alpine
 
-# install coreutils-env (to support env's -S argument), copy application files, install npm dependencies, set /data owner
+# install coreutils-env (to support env's -S argument), copy application files, set /data owner
 # (all done as one step to reduce the number of filesystem layers in the final image, for best performance)
 RUN --mount=type=bind,readonly,source=.,target=/usr/refacto/files \
-    --mount=type=bind,readonly,source=package-lock.json,target=/usr/refacto/package-lock.json \
     apk add --no-cache coreutils-env \
- && cp -r /usr/refacto/files/package.json /usr/refacto/files/index.js /usr/refacto/files/static /usr/refacto \
- && npm ci --prefix=/usr/refacto --omit=dev \
+ && cp -r /usr/refacto/files/package.json /usr/refacto/files/*.js /usr/refacto/files/static /usr/refacto \
  && mkdir /data && chown node /data
 
 # use unprivileged 'node' user

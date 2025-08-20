@@ -36,7 +36,6 @@ build:
   script:
     - |
       set -e;
-      npm install --omit=dev;
       ./index.js > output.log 2>&1 & APP_PID="$!";
 
       while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do

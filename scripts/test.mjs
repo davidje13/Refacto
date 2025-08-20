@@ -70,15 +70,6 @@ if (!testEnv['TARGET_HOST']) {
     args: ['--keep-deps'],
   });
 
-  if (!(await stat(join(builddir, 'node_modules')).catch(() => null))) {
-    log('Installing production dependencies...');
-    await runTask({
-      command: 'npm',
-      args: ['install', '--omit=dev', '--quiet'],
-      cwd: builddir,
-    });
-  }
-
   log('Using mock authentication provider');
   const mockSSOPort = port + 2;
   const mockSSOHost = `http://localhost:${mockSSOPort}`;

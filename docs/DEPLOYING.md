@@ -44,13 +44,12 @@ The [releases](https://github.com/davidje13/Refacto/releases) also contain
 ## Deploying Without Docker
 
 You will need to have Node.js 20 or newer installed in the deployment
-environment.
+environment. Refacto currently supports Node.js 20, 22, 24, and 25.
 
 [Download and unpack a release](https://github.com/davidje13/Refacto/releases)
 (or [build your own](#building-from-source)), then in the release directory run:
 
 ```sh
-npm install --omit=dev
 INSECURE_SHARED_ACCOUNT_ENABLED=true ./index.js
 ```
 

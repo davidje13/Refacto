@@ -90,7 +90,6 @@ when running (defaults to 5000):
 
 ```sh
 cd build
-npm install --omit=dev
 PORT=8080 ./index.js
 ```
 
