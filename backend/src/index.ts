@@ -1,8 +1,8 @@
 import { createServer, type Server } from 'node:http';
 import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
-import { appFactory, type App } from './app';
-import { type ConfigT, config } from './config';
+import { appFactory } from './app';
+import { config } from './config';
 
 // https://nodejs.org/en/learn/getting-started/security-best-practices#dns-rebinding-cwe-346
 process.on('SIGUSR1', () => {
@@ -34,45 +34,87 @@ if (!(global as any).CustomEvent) {
 // TODO: https://github.com/nodejs/undici/issues/4009
 //Object.freeze(globalThis);
 
-// This file exists mainly to enable hot module replacement.
-// app.ts is the main entry point for the application.
-// (changes to index.ts will not trigger HMR)
+type MaybePromise<T> = T | Promise<T>;
+const tasks: { name: string; run: () => MaybePromise<void> }[] = [];
+const shutdownTasks: (() => MaybePromise<void>)[] = [];
 
-let activeApp: App | null = null;
-const server = createServer();
+tasks.push({
+  name: 'server',
+  run: async () => {
+    const server = createServer();
+    const app = await appFactory(config);
 
-function startServer() {
-  server.listen(config.port, config.serverBindAddress, () => {
+    shutdownTasks.push(async () => {
+      const scCount = await getConnectionCount(server);
+      logInfo(`Shutting down (open connections: ${scCount})`);
+
+      await app.softClose(1000);
+      await promisify(server.close.bind(server))();
+      await app.close();
+    });
+
+    app.express.attach(server);
+    await new Promise<void>((resolve) =>
+      server.listen(config.port, config.serverBindAddress, resolve),
+    );
     logInfo(`Available at http://localhost:${config.port}/`);
-    logInfo('Press Ctrl+C to stop');
+  },
+});
+
+if (config.mockSsoPort) {
+  // Dev mode: run an additional mock SSO server
+  tasks.push({
+    name: 'mock SSO server',
+    run: () => {
+      const mockSsoServer = buildMockSsoApp().listen(
+        config.mockSsoPort,
+        config.serverBindAddress,
+      );
+      shutdownTasks.push(async () => {
+        const mscCount = await getConnectionCount(mockSsoServer);
+        logInfo(
+          `Shutting down mock SSO server (open connections: ${mscCount})`,
+        );
+        await promisify(mockSsoServer.close.bind(mockSsoServer))();
+      });
+    },
   });
 }
 
-let latestNonce = {};
-async function refreshApp(
-  af: (config: ConfigT) => Promise<App>,
-  conf: ConfigT,
-) {
-  const currentNonce = {};
-  latestNonce = currentNonce;
-  try {
-    const newApp = await af(conf);
+function getConnectionCount(s: Server): Promise<number> {
+  return promisify(s.getConnections.bind(s))();
+}
 
-    if (latestNonce === currentNonce) {
-      const oldApp = activeApp;
-      if (oldApp) {
-        oldApp.express.detach(server);
-      } else {
-        startServer();
-      }
-      activeApp = newApp;
-      activeApp.express.attach(server);
-      if (oldApp) {
-        await oldApp.close();
-      }
+let interrupted = false;
+process.on('SIGINT', async () => {
+  // SIGINT is sent twice in quick succession, so ignore the second
+  if (!interrupted) {
+    interrupted = true;
+    logInfo('');
+    try {
+      await Promise.all(shutdownTasks.map((fn) => fn()));
+      logInfo('Shutdown complete');
+    } catch (e) {
+      logError('Failed to shutdown server', e);
     }
-  } catch (e) {
-    logError('Failed to start server', e);
+  }
+});
+
+(async () => {
+  let success = true;
+  await Promise.all(
+    tasks.map(async ({ name, run }) => {
+      try {
+        await run();
+      } catch (e) {
+        success = false;
+        logError(`Failed to start ${name}`, e);
+      }
+    }),
+  );
+  if (success) {
+    logInfo('Press Ctrl+C to stop');
+  } else {
     // process.exit may lose stream data which has been buffered in NodeJS - wait for it all to be flushed before exiting
     await Promise.all([
       new Promise((resolve) => process.stdout.write('', resolve)),
@@ -80,65 +122,7 @@ async function refreshApp(
     ]);
     process.exit(1);
   }
-}
-
-// TODO: find a HMR plugin for rollup (see https://github.com/rollup/rollup/issues/50)
-//if (import.meta.hot) {
-//  import.meta.hot.accept(['./app', './config'], ([newApp, newConfig]) => refreshApp(newApp.appFactory, newConfig.config));
-//}
-
-let mockSsoServer: Server | undefined;
-
-if (config.mockSsoPort) {
-  // Dev mode: run an additional mock SSO server
-  try {
-    mockSsoServer = buildMockSsoApp().listen(
-      config.mockSsoPort,
-      config.serverBindAddress,
-    );
-  } catch (e) {
-    logError('Failed to start mock SSO server', e);
-  }
-}
-
-function getConnectionCount(s: Server): Promise<number> {
-  return promisify(s.getConnections.bind(s))();
-}
-
-async function shutdown(): Promise<void> {
-  const scCount = await getConnectionCount(server);
-  logInfo(`Shutting down (open connections: ${scCount})`);
-
-  if (mockSsoServer) {
-    const mscCount = await getConnectionCount(mockSsoServer);
-    logInfo(`Shutting down mock SSO server (open connections: ${mscCount})`);
-  }
-
-  await activeApp?.softClose(1000);
-  await Promise.all([
-    promisify(server.close.bind(server))(),
-    mockSsoServer
-      ? promisify(mockSsoServer.close.bind(mockSsoServer))()
-      : undefined,
-  ]);
-  await activeApp?.close();
-
-  logInfo('Shutdown complete');
-}
-
-let interrupted = false;
-process.on('SIGINT', () => {
-  // SIGINT is sent twice in quick succession, so ignore the second
-  if (!interrupted) {
-    interrupted = true;
-    logInfo('');
-    shutdown().catch((e) => {
-      logError('Failed to shutdown server', e);
-    });
-  }
-});
-
-void refreshApp(appFactory, config);
+})();
 
 function logInfo(message: string) {
   process.stderr.write(`${message}\n`);
