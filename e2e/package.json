@@ -6,15 +6,18 @@
     "lint": "tsc && prettier --check .",
     "test": "lean-test --preprocess tsc"
   },
+  "config": {
+    "detect_chromedriver_version": true
+  },
   "devDependencies": {
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
-    "chromedriver": "131.x",
+    "chromedriver": "139.x",
     "geckodriver": "5.0.x",
     "lean-test": "2.x",
-    "prettier": "3.4.2",
-    "selenium-webdriver": "4.27.x",
-    "typescript": "5.7.x"
+    "prettier": "3.6.2",
+    "selenium-webdriver": "4.35.x",
+    "typescript": "5.9.x"
   }
 }

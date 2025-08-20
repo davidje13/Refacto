@@ -88,7 +88,12 @@ export default (env, argv) => ({
       patterns: [
         {
           context: 'resources/static',
-          from: '{.well-known/**/*,**/*}',
+          from: '**/*',
+          to: '.',
+        },
+        {
+          context: 'resources/static',
+          from: '.well-known/**/*',
           to: '.',
         },
       ],

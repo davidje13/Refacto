@@ -30,24 +30,24 @@
     "@svgr/plugin-jsx": "8.x",
     "@testing-library/jest-dom": "6.x",
     "@tsconfig/strictest": "2.x",
-    "@types/jest": "29.x",
+    "@types/jest": "30.x",
     "@types/react": "18.x",
     "@types/react-dom": "18.x",
-    "babel-jest": "29.x",
-    "babel-loader": "9.x",
-    "copy-webpack-plugin": "12.x",
+    "babel-jest": "30.x",
+    "babel-loader": "10.x",
+    "copy-webpack-plugin": "13.x",
     "css-loader": "7.x",
     "css-minimizer-webpack-plugin": "7.x",
     "flexible-testing-library-react": "1.x",
     "html-webpack-plugin": "5.x",
-    "jest": "29.x",
-    "jest-environment-jsdom": "29.x",
+    "jest": "30.x",
+    "jest-environment-jsdom": "30.x",
     "mini-css-extract-plugin": "2.x",
-    "prettier": "3.4.2",
+    "prettier": "3.6.2",
     "react-mock-element": "1.x",
     "terser-webpack-plugin": "5.x",
     "timezone-mock": "1.x",
-    "typescript": "5.7.x",
+    "typescript": "5.9.x",
     "webpack": "5.x",
     "webpack-cli": "6.x",
     "webpack-dev-server": "5.x"
@@ -56,6 +56,6 @@
     "jsdom": "See: https://github.com/jestjs/jest/issues/15325"
   },
   "overrides": {
-    "jsdom": "25.x"
+    "jsdom": "26.x"
   }
 }

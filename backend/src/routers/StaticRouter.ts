@@ -38,7 +38,7 @@ export class StaticRouter extends Router {
     this.use(staticRouter);
 
     // Single page app: serve index.html for any unknown GET request
-    this.get('*', (req, res, next) => {
+    this.get('/{*path}', (req, res, next) => {
       req.url = '/index.html';
       staticRouter(req, res, next);
     });

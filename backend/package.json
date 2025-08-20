@@ -12,8 +12,8 @@
   "dependencies": {
     "authentication-backend": "1.x",
     "collection-storage": "3.x",
-    "express": "4.x",
-    "express-static-gzip": "2.x",
+    "express": "5.x",
+    "express-static-gzip": "3.x",
     "ioredis": "5.x",
     "json-immutability-helper": "4.0.x",
     "jwt-simple": "0.5.x",
@@ -22,7 +22,7 @@
     "pwd-hasher": "2.x",
     "shared-reducer": "5.x",
     "tslib": "2.8.x",
-    "websocket-express": "3.x",
+    "websocket-express": "4.x",
     "ws": "8.x"
   },
   "devDependencies": {
@@ -31,10 +31,10 @@
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
     "lean-test": "2.x",
-    "prettier": "3.4.2",
+    "prettier": "3.6.2",
     "rollup": "4.x",
     "supertest": "7.x",
     "superwstest": "2.x",
-    "typescript": "5.7.x"
+    "typescript": "5.9.x"
   }
 }

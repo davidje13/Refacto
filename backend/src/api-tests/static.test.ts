@@ -28,7 +28,7 @@ describe('API static content', () => {
       const response = await request(server)
         .get('/example.abc123.js')
         .expect(200)
-        .expect('Content-Type', /application\/javascript/);
+        .expect('Content-Type', /text\/javascript/);
 
       expect(response.text).toContain('// Example Versioned Resource');
     });

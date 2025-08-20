@@ -1,10 +1,7 @@
 const COMMON_FLAGS = [
   '--force-node-api-uncaught-exceptions-policy',
   '--no-addons',
-
-  // TODO replace express with something else to be able to add these:
-  //'--disallow-code-generation-from-strings',
-  //'--frozen-intrinsics',
+  '--disallow-code-generation-from-strings',
 ];
 
 export const BUILD_RUNTIME_FLAGS = [...COMMON_FLAGS, '--disable-proto=delete'];
