@@ -1,13 +1,16 @@
 import { WebSocketExpress, Router } from 'websocket-express';
 import { type RetroArchiveService } from '../services/RetroArchiveService';
+import { type AnalyticsService } from '../services/AnalyticsService';
 import { extractRetroData } from '../helpers/jsonParsers';
-import { logError } from '../log';
 import { safe } from '../helpers/routeHelpers';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
 export class ApiRetroArchivesRouter extends Router {
-  public constructor(retroArchiveService: RetroArchiveService) {
+  public constructor(
+    retroArchiveService: RetroArchiveService,
+    analyticsService: AnalyticsService,
+  ) {
     super({ mergeParams: true });
 
     this.get(
@@ -18,6 +21,8 @@ export class ApiRetroArchivesRouter extends Router {
 
         const archives =
           await retroArchiveService.getRetroArchiveSummaries(retroId);
+
+        analyticsService.event(req, 'access archive list');
         res.json({ archives });
       }),
     );
@@ -38,13 +43,14 @@ export class ApiRetroArchivesRouter extends Router {
           }
           const id = await retroArchiveService.createArchive(retroId, data);
 
+          analyticsService.event(req, 'create archive');
           res.status(200).json({ id });
-        } catch (e) {
-          if (!(e instanceof Error)) {
-            logError('Error creating retro archive', e);
+        } catch (err) {
+          if (!(err instanceof Error)) {
+            analyticsService.error('Error creating retro archive', err);
             res.status(500).json({ error: 'Internal error' });
           } else {
-            res.status(400).json({ error: e.message });
+            res.status(400).json({ error: err.message });
           }
         }
       }),
@@ -61,11 +67,13 @@ export class ApiRetroArchivesRouter extends Router {
           archiveId,
         );
 
-        if (archive) {
-          res.json(archive);
-        } else {
+        if (!archive) {
           res.status(404).end();
+          return;
         }
+
+        analyticsService.event(req, 'access archive');
+        res.json(archive);
       }),
     );
   }

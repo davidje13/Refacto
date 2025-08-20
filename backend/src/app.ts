@@ -1,8 +1,10 @@
 import { join } from 'node:path';
+import type { ErrorRequestHandler } from 'express';
 import { WebSocketExpress } from 'websocket-express';
 import { connectDB } from './import-wrappers/collection-storage-wrap';
 import { Hasher } from 'pwd-hasher';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
+import { ApiDiagnosticsRouter } from './routers/ApiDiagnosticsRouter';
 import { ApiAuthRouter } from './routers/ApiAuthRouter';
 import { ApiSlugsRouter } from './routers/ApiSlugsRouter';
 import { ApiRetrosRouter } from './routers/ApiRetrosRouter';
@@ -17,6 +19,7 @@ import { RetroService } from './services/RetroService';
 import { RetroArchiveService } from './services/RetroArchiveService';
 import { RetroAuthService } from './services/RetroAuthService';
 import { UserAuthService } from './services/UserAuthService';
+import { AnalyticsService } from './services/AnalyticsService';
 import { getAuthBackend } from './auth';
 import { type ConfigT } from './config';
 import { basedir } from './basedir';
@@ -53,6 +56,17 @@ function readKey(value: string, length: number): Buffer {
   return buffer;
 }
 
+function readEnum<T extends string>(value: string, options: readonly T[]): T {
+  if (options.includes(value as T)) {
+    return value as T;
+  }
+  throw new Error(
+    `invalid value ${value} (permitted options: ${options.join(' / ')})`,
+  );
+}
+
+const DETAIL_LEVEL = ['version', 'brand', 'message', 'none'] as const;
+
 export const appFactory = async (config: ConfigT): Promise<App> => {
   const db = await connectDB(config.db.url);
 
@@ -61,6 +75,10 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
 
   const encryptionKey = readKey(config.encryption.secretKey, 32);
 
+  const analyticsService = new AnalyticsService(
+    readEnum(config.analytics.eventDetail, DETAIL_LEVEL),
+    readEnum(config.analytics.clientErrorDetail, DETAIL_LEVEL),
+  );
   const passwordCheckService = new PasswordCheckService(config.passwordCheck);
   const giphyService = new GiphyService(config.giphy);
   const retroService = new RetroService(db, encryptionKey);
@@ -97,9 +115,11 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
       userAuthService,
       retroAuthService,
       retroService,
+      analyticsService,
       config.permit.myRetros,
     ),
   );
+  app.use('/api/diagnostics', new ApiDiagnosticsRouter(analyticsService));
   app.use('/api/slugs', new ApiSlugsRouter(retroService));
   app.use('/api/config', new ApiConfigRouter(config, auth.clientConfig));
   auth.addRoutes(app);
@@ -108,14 +128,15 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     retroAuthService,
     retroService,
     retroArchiveService,
+    analyticsService,
     config.permit.myRetros,
   );
   app.use('/api/retros', apiRetrosRouter);
   app.use(
     '/api/password-check',
-    new ApiPasswordCheckRouter(passwordCheckService),
+    new ApiPasswordCheckRouter(passwordCheckService, analyticsService),
   );
-  app.use('/api/giphy', new ApiGiphyRouter(giphyService));
+  app.use('/api/giphy', new ApiGiphyRouter(giphyService, analyticsService));
   app.useHTTP('/api', (_, res) => {
     res.status(404).send();
   });
@@ -126,6 +147,13 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     // Production mode: all resources are copied into /static
     app.use(new StaticRouter(join(basedir, 'static')));
   }
+
+  // error handler must have all 4 parameters listed to be recognised by express
+  const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
+    analyticsService.requestError(req, 'Unhandled route error', err);
+    res.status(500).json({ error: 'internal error' });
+  };
+  app.use(errorHandler);
 
   return new App(
     app,

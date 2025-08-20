@@ -10,6 +10,7 @@ import { PasswordService } from './PasswordService';
 import { GiphyService } from './GiphyService';
 import { AsyncValue } from '../helpers/AsyncValue';
 import { AsyncValueMap } from '../helpers/AsyncValueMap';
+import { DiagnosticsService } from './DiagnosticsService';
 
 const { protocol, host } = document.location;
 const secure = protocol !== 'http:';
@@ -18,9 +19,10 @@ export const API_BASE = '/api';
 export const WS_BASE = `${secure ? 'wss' : 'ws'}://${host}${API_BASE}`;
 
 export const configService = new ConfigService(API_BASE);
+export const diagnosticsService = new DiagnosticsService(API_BASE, 5);
 export const retroListTracker = new RetroListTracker(API_BASE);
 export const slugTracker = new SlugTracker(API_BASE);
-export const retroTracker = new RetroTracker(WS_BASE);
+export const retroTracker = new RetroTracker(WS_BASE, diagnosticsService);
 export const archiveService = new ArchiveService(API_BASE);
 export const retroTokenService = new RetroTokenService(API_BASE);
 export const retroService = new RetroService(API_BASE);

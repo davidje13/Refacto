@@ -4,6 +4,10 @@
   "mockSsoPort": 0,
   "serverBindAddress": "",
   "trustProxy": false,
+  "analytics": {
+    "eventDetail": "none",
+    "clientErrorDetail": "message"
+  },
   "password": {
     "workFactor": 10,
     "secretPepper": ""

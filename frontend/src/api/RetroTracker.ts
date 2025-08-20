@@ -26,19 +26,24 @@ export class RetroTracker {
     SharedReducer<Retro, Spec<Retro>>
   >;
 
-  public constructor(wsBase: string) {
+  public constructor(
+    wsBase: string,
+    private readonly diagnostics: Diagnostics,
+  ) {
     this.subscriptionTracker = new SubscriptionTracker(
       ({ retroId, retroToken }) => {
         const s = new SharedReducer<Retro, Spec<Retro>>(context, () => ({
           url: `${wsBase}/retros/${encodeURIComponent(retroId)}`,
           token: retroToken,
         }));
-        s.addEventListener('connected', () => console.info('connected'));
+        s.addEventListener('connected', () => diagnostics.info('connected'));
         s.addEventListener('disconnected', (e) =>
-          console.info('disconnected', e.detail.code, e.detail.reason),
+          diagnostics.info(
+            `disconnected ${e.detail.code} (${e.detail.reason})`,
+          ),
         );
         s.addEventListener('warning', (e) =>
-          console.warn('connection warning', e.detail.message),
+          diagnostics.warn('connection warning', e.detail.message),
         );
         return s;
       },
@@ -66,9 +71,15 @@ export class RetroTracker {
         sub.service.removeEventListener('connected', onConnect);
         sub.service.removeEventListener('disconnected', onDisconnect);
         sub.unsubscribe().catch((e) => {
-          console.warn(`Failed to unsubscribe from retro ${retroId}`, e);
+          this.diagnostics.error('Failed to unsubscribe from retro', e);
         });
       },
     };
   }
+}
+
+interface Diagnostics {
+  info(message: string): void;
+  warn(message: string, err: unknown): void;
+  error(message: string, err: unknown): void;
 }

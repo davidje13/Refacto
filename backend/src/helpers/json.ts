@@ -135,6 +135,17 @@ export const json = {
     return source;
   },
 
+  primitive: (source: unknown): string | number | boolean => {
+    if (
+      typeof source !== 'string' &&
+      typeof source !== 'number' &&
+      typeof source !== 'boolean'
+    ) {
+      throw new Error('Expected primitive value');
+    }
+    return source;
+  },
+
   extractObject: <T>(source: unknown, maps: ObjectMapper<T>): T =>
     jsonObject(maps)(source),
   parse: <T>(source: string, map: Mapper<T>): T => map(JSON.parse(source)),

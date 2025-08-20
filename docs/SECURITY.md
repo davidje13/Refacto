@@ -70,7 +70,7 @@ When launched with `./index.js`, node hardening flags are applied
 automatically. If you need to customise the NodeJS flags, you should
 be sure to specify these as well:
 
-```
+```sh
 node --disable-proto delete index.js
 ```
 
@@ -252,3 +252,44 @@ guidance:
 
 - <https://docs.mongodb.com/manual/tutorial/configure-ssl/>
 - <https://medium.com/@rajanmaharjan/secure-your-mongodb-connections-ssl-tls-92e2addb3c89>
+
+## Analytics / Diagnostics
+
+By default, Refacto will log server and client errors, but will not
+record events or any client details (platform / browser version).
+
+Server-side errors are always logged.
+
+You can enable more detailed logging when starting the server if desired:
+
+```sh
+ANALYTICS_EVENT_DETAIL="version" \
+ANALYTICS_CLIENT_ERROR_DETAIL="version" \
+./index.js
+```
+
+By default, the event detail is set to `none`, and client error detail
+is set to `message`. The possible values for both options are:
+
+- `version`: Record the event or error, the name of the platform, and
+  the name and major version of the browser.
+
+- `brand`: Record the event or error, and the name of the platform
+  and browser (but do not include version information).
+
+- `message`: Record the event or error (and a timestamp), but do not
+  record any details about the platform or browser which is in use.
+  Note that some error messages may identify the browser implicitly.
+
+- `none`: Do not record this data at all.
+
+None of these settings involve the use of cookies to track users.
+Only the `User-Agent` header of requests is used.
+
+Any users who set the `DNT` (Do Not Track) or `Sec-GPC` (Global
+Privacy Control) header will not be included in logs (as if
+`ANALYTICS_EVENT_DETAIL` were limited to `none` and
+`ANALYTICS_CLIENT_ERROR_DETAIL` were limited to `message` or `none`).
+Removing these users from the logs goes beyond required privacy
+controls (as the details recorded are not shared with third parties),
+but is done to respect user preferences.

@@ -2,6 +2,7 @@ import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
 import { type RetroAuthService } from '../services/RetroAuthService';
 import { type UserAuthService } from '../services/UserAuthService';
 import { type RetroService } from '../services/RetroService';
+import { type AnalyticsService } from '../services/AnalyticsService';
 import { safe } from '../helpers/routeHelpers';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
@@ -11,6 +12,7 @@ export class ApiAuthRouter extends Router {
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
     retroService: RetroService,
+    analyticsService: AnalyticsService,
     permitOwnerToken: boolean,
   ) {
     super();
@@ -46,6 +48,7 @@ export class ApiAuthRouter extends Router {
           return;
         }
 
+        analyticsService.event(req, 'access own retro');
         res.status(200).json({ retroToken });
       }),
     );
@@ -57,6 +60,7 @@ export class ApiAuthRouter extends Router {
         const { retroId } = req.params;
         const { password } = req.body;
 
+        const begin = Date.now();
         const retroToken = await retroAuthService.grantForPassword(
           retroId,
           password,
@@ -66,6 +70,10 @@ export class ApiAuthRouter extends Router {
           return;
         }
 
+        const time = Date.now() - begin;
+        analyticsService.event(req, 'access retro', {
+          passwordCheckTime: time,
+        });
         res.status(200).json({ retroToken });
       }),
     );

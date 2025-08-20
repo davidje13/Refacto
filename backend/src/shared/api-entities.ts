@@ -16,6 +16,15 @@ export interface ClientConfig {
   giphy: boolean;
 }
 
+export interface ErrorReport {
+  message: string;
+  error: {
+    name: string;
+    message: string;
+    stack?: string | undefined;
+  }[];
+}
+
 export interface RetroItemAttachment {
   type: string;
   url: string;

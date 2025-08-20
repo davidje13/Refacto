@@ -20,6 +20,7 @@ const CSP = [
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",
   "frame-ancestors 'none'",
+  'report-to default',
 ].join('; ');
 
 const PERMISSIONS_POLICY = [
@@ -52,6 +53,7 @@ export function addSecurityHeaders(
   res: express.Response,
 ) {
   res.header('x-content-type-options', 'nosniff');
+  res.header('reporting-endpoints', 'default="/api/diagnostics/report"');
   res.header(
     'content-security-policy',
     CSP.replace(CSP_DOMAIN_PLACEHOLDER, getHost(req)),
@@ -67,6 +69,7 @@ export function addSecurityHeaders(
 }
 
 export function removeHtmlSecurityHeaders(res: express.Response) {
+  res.removeHeader('reporting-endpoints');
   res.removeHeader('content-security-policy');
   res.removeHeader('permissions-policy');
   res.removeHeader('referrer-policy');

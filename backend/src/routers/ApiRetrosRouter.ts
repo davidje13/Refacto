@@ -5,6 +5,7 @@ import { type UserAuthService } from '../services/UserAuthService';
 import { type RetroAuthService } from '../services/RetroAuthService';
 import { type RetroService } from '../services/RetroService';
 import { type RetroArchiveService } from '../services/RetroArchiveService';
+import { type AnalyticsService } from '../services/AnalyticsService';
 import {
   exportRetroJson,
   importRetroDataJson,
@@ -13,7 +14,6 @@ import {
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import { json } from '../helpers/json';
 import { safe } from '../helpers/routeHelpers';
-import { logError } from '../log';
 import { JSONFormatter } from '../export/JSONFormatter';
 import { CSVFormatter } from '../export/CSVFormatter';
 import { exportRetroTable } from '../export/RetroTableExport';
@@ -35,6 +35,7 @@ export class ApiRetrosRouter extends Router {
     retroAuthService: RetroAuthService,
     retroService: RetroService,
     retroArchiveService: RetroArchiveService,
+    analyticsService: AnalyticsService,
     permitMyRetros: boolean,
   ) {
     super();
@@ -53,7 +54,7 @@ export class ApiRetrosRouter extends Router {
     this.get(
       '/',
       userAuthMiddleware,
-      safe(async (_, res) => {
+      safe(async (req, res) => {
         const userId = WebSocketExpress.getAuthData(res).sub!;
 
         if (!permitMyRetros) {
@@ -61,6 +62,7 @@ export class ApiRetrosRouter extends Router {
           return;
         }
 
+        analyticsService.event(req, 'access own retros list');
         res.json({
           retros: await retroService.getRetroListForUser(userId),
         });
@@ -118,15 +120,20 @@ export class ApiRetrosRouter extends Router {
 
           const token = await retroAuthService.grantOwnerToken(id);
 
-          res.status(200).json({ id, token });
-        } catch (e) {
-          if (!(e instanceof Error)) {
-            logError('Unexpected error creating retro', e);
-            res.status(500).json({ error: 'Internal error' });
-          } else if (e.message === 'URL is already taken') {
-            res.status(409).json({ error: e.message });
+          if (importJson) {
+            analyticsService.event(req, 'import retro');
           } else {
-            res.status(400).json({ error: e.message });
+            analyticsService.event(req, 'create retro');
+          }
+          res.status(200).json({ id, token });
+        } catch (err) {
+          if (!(err instanceof Error)) {
+            analyticsService.error('Unexpected error creating retro', err);
+            res.status(500).json({ error: 'Internal error' });
+          } else if (err.message === 'URL is already taken') {
+            res.status(409).json({ error: err.message });
+          } else {
+            res.status(400).json({ error: err.message });
           }
         }
       }),
@@ -149,6 +156,20 @@ export class ApiRetrosRouter extends Router {
           retroService.getPermissions(
             WebSocketExpress.hasAuthScope(res, 'write'),
           ),
+        {
+          onDisconnect: (req, closeReason, duration) => {
+            analyticsService.event(req, 'retro session', {
+              closeReason,
+              duration,
+            });
+          },
+          onError: (req, context, err) =>
+            analyticsService.requestError(
+              req,
+              `Retro websocket error: ${context}`,
+              err,
+            ),
+        },
       ),
     );
 
@@ -164,6 +185,8 @@ export class ApiRetrosRouter extends Router {
           res.status(404).end();
           return;
         }
+
+        analyticsService.event(req, `export ${format}`);
 
         const archives = await retroArchiveService.getRetroArchiveList(retroId);
 
@@ -200,7 +223,7 @@ export class ApiRetrosRouter extends Router {
 
     this.use(
       '/:retroId/archives',
-      new ApiRetroArchivesRouter(retroArchiveService),
+      new ApiRetroArchivesRouter(retroArchiveService, analyticsService),
     );
   }
 }

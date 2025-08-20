@@ -3,7 +3,6 @@ import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
 import { appFactory, type App } from './app';
 import { type ConfigT, config } from './config';
-import { logError, logInfo } from './log';
 
 // Temporary polyfill for Node 18 support
 if (!(global as any).CustomEvent) {
@@ -131,3 +130,15 @@ process.on('SIGINT', () => {
 });
 
 void refreshApp(appFactory, config);
+
+function logInfo(message: string) {
+  process.stderr.write(`${message}\n`);
+}
+
+function logError(message: string, err: unknown) {
+  if (err instanceof Error) {
+    process.stderr.write(`${message}: ${err.message}\n`);
+  } else {
+    process.stderr.write(`${message}: ${err}\n`);
+  }
+}
