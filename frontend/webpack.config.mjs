@@ -5,6 +5,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerWebpackPlugin from 'css-minimizer-webpack-plugin';
 import TerserWebpackPlugin from 'terser-webpack-plugin';
+import express from 'express';
 
 const basedir = dirname(fileURLToPath(import.meta.url));
 
@@ -114,6 +115,12 @@ export default (env, argv) => ({
     ],
   },
   devServer: {
+    app: () => {
+      const app = new express();
+      app.disable('x-powered-by');
+      app.enable('case sensitive routing');
+      return app;
+    },
     port: process.env['PORT'] || 5000,
     host: 'localhost',
     static: join(basedir, 'resources', 'static'),
