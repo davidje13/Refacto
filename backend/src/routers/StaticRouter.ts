@@ -40,7 +40,6 @@ export class StaticRouter extends Router {
     // Single page app: serve index.html for any unknown GET request
     this.get('*', (req, res, next) => {
       req.url = '/index.html';
-      res.header('Link', '</api/config>; rel=preload; as=fetch; crossorigin');
       staticRouter(req, res, next);
     });
   }
