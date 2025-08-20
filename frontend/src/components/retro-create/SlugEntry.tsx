@@ -70,6 +70,7 @@ export const SlugEntry: FC<PropsT> = ({
       maxLength={MAX_SLUG_LENGTH}
       required={placeholder === ''}
       autoComplete="off"
+      autoCapitalize="none"
     />
     {showAvailability ? (
       <SlugAvailabilityDisplay
