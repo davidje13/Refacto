@@ -71,7 +71,7 @@ automatically. If you need to customise the NodeJS flags, you should
 be sure to specify these as well:
 
 ```sh
-node --disable-proto delete --no-addons index.js
+node --force-node-api-uncaught-exceptions-policy --no-addons --disallow-code-generation-from-strings --disable-proto delete index.js
 ```
 
 Note that these must be included _before_ the `index.js` argument.
