@@ -1,5 +1,5 @@
 import { WebSocketExpress, type Router } from 'websocket-express';
-import ab from 'authentication-backend';
+import { buildAuthenticationBackend } from 'authentication-backend';
 import type { ClientConfig } from './shared/api-entities';
 import type { ConfigT } from './config';
 import type { UserAuthService } from './services/UserAuthService';
@@ -30,7 +30,7 @@ export function getAuthBackend(
     return getInsecureAuthBackend(path, userAuthService);
   }
 
-  const sso = ab.buildAuthenticationBackend(
+  const sso = buildAuthenticationBackend(
     config.sso,
     userAuthService.grantLoginToken,
   );
