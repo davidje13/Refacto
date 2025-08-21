@@ -6,7 +6,7 @@ variables:
 build:
   stage: build
   dependencies: []
-  image: node:22
+  image: node:24
   timeout: 20 minutes
   before_script:
     - apt-get update
@@ -65,10 +65,6 @@ build:
         false;
       fi;
 
-node:18:
-  <<: *smoke-test
-  image: node:18
-
 node:20:
   <<: *smoke-test
   image: node:20
@@ -77,6 +73,6 @@ node:22:
   <<: *smoke-test
   image: node:22
 
-node:23:
+node:24:
   <<: *smoke-test
-  image: node:23
+  image: node:24

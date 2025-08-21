@@ -19,7 +19,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: npm
           cache-dependency-path: |
             backend/package-lock.json
@@ -49,10 +49,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { node: '18' }
           - { node: '20' }
           - { node: '22' }
-          - { node: '23' }
+          - { node: '24' }
     steps:
       - name: Install Node
         uses: actions/setup-node@v4
