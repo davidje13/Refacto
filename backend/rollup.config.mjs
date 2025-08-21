@@ -1,4 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import { BUILD_RUNTIME_FLAGS } from '../scripts/helpers/flags.mjs';
 
@@ -15,6 +16,6 @@ export default [
       clearScreen: false,
     },
     external: [/node_modules/],
-    plugins: [nodeResolve(), typescript({ tslib: {} })],
+    plugins: [nodeResolve(), typescript({ tslib: {} }), terser()],
   },
 ];

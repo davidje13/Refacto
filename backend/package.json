@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "16.x",
+    "@rollup/plugin-terser": "0.4.x",
     "@rollup/plugin-typescript": "12.x",
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
