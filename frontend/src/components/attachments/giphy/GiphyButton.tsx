@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { type RetroItemAttachment } from '../../../shared/api-entities';
+import type { RetroItemAttachment } from '../../../shared/api-entities';
 import { useEvent } from '../../../hooks/useEvent';
 import { useBoolean } from '../../../hooks/useBoolean';
 import { Popup } from '../../common/Popup';

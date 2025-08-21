@@ -1,4 +1,4 @@
-import { memo, HTMLAttributes } from 'react';
+import { memo, type HTMLAttributes } from 'react';
 import { Link } from 'wouter';
 
 export interface LinkPropsT

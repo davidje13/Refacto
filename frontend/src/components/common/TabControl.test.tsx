@@ -1,7 +1,7 @@
 import {
   render,
   fireEvent,
-  RenderResult,
+  type RenderResult,
 } from 'flexible-testing-library-react';
 import { css } from '../../test-helpers/queries';
 

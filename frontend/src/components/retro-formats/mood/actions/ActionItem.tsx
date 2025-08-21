@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
-import {
-  type RetroItem,
-  type UserProvidedRetroItemDetails,
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
 import { ItemEditor } from '../ItemEditor';
 import { useEvent } from '../../../../hooks/useEvent';

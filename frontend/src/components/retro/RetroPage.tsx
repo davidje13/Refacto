@@ -1,6 +1,6 @@
 import { memo, useEffect } from 'react';
-import { type Retro } from '../../shared/api-entities';
-import { type RetroPagePropsT } from '../RetroRouter';
+import type { Retro } from '../../shared/api-entities';
+import type { RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';
 import { Header } from '../common/Header';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';

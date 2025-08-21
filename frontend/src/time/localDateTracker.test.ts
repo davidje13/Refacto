@@ -1,7 +1,7 @@
 import timezoneMock from 'timezone-mock';
 
 import { localDateTracker } from './localDateTracker';
-import { type LocalDateProvider } from './LocalDateProvider';
+import type { LocalDateProvider } from './LocalDateProvider';
 
 class MockClock {
   private time: number;

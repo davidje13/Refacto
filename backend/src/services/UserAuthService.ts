@@ -1,7 +1,7 @@
-import { type DB } from 'collection-storage';
-import { type JWTPayload } from 'websocket-express';
-import { type JsonData } from '../shared/api-entities';
-import { type TokenManager, type KeyPair } from '../tokens/TokenManager';
+import type { DB } from 'collection-storage';
+import type { JWTPayload } from 'websocket-express';
+import type { JsonData } from '../shared/api-entities';
+import type { TokenManager, KeyPair } from '../tokens/TokenManager';
 
 interface StoredKeyPair extends KeyPair {
   id: string;

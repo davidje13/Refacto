@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { type RetroPagePropsT } from '../RetroRouter';
+import type { RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
 import { LoadingError, LoadingIndicator } from '../common/Loader';
 import { useArchive } from '../../hooks/data/useArchive';

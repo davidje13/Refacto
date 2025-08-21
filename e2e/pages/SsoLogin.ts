@@ -1,4 +1,4 @@
-import { By, WebDriver } from 'selenium-webdriver';
+import { By, type WebDriver } from 'selenium-webdriver';
 import { Page } from './common/Page';
 
 type Constructable<T> = new (driver: WebDriver) => T;

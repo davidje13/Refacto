@@ -1,6 +1,6 @@
 import { Router } from 'websocket-express';
-import { type PasswordCheckService } from '../services/PasswordCheckService';
-import { type AnalyticsService } from '../services/AnalyticsService';
+import type { PasswordCheckService } from '../services/PasswordCheckService';
+import type { AnalyticsService } from '../services/AnalyticsService';
 import { safe } from '../helpers/routeHelpers';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;

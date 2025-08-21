@@ -1,4 +1,4 @@
-import { type Spec } from '../api/reducer';
+import type { Spec } from '../api/reducer';
 
 class OptionType<T> {
   public constructor(

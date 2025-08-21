@@ -1,7 +1,7 @@
 import { type FC, useState, useLayoutEffect, useEffect } from 'react';
 import { Route, Switch, useLocation } from 'wouter';
-import { type Retro } from '../shared/api-entities';
-import { type RetroDispatch } from '../api/RetroTracker';
+import type { Retro } from '../shared/api-entities';
+import type { RetroDispatch } from '../api/RetroTracker';
 import { retroTracker, slugTracker } from '../api/api';
 import { RetroNotFoundPage } from './retro-not-found/RetroNotFoundPage';
 import { PasswordPage } from './password/PasswordPage';

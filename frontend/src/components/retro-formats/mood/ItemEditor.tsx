@@ -1,7 +1,7 @@
 import { memo, type ReactNode } from 'react';
-import {
-  type RetroItem,
-  type UserProvidedRetroItemDetails,
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
 } from '../../../shared/api-entities';
 import { useEvent } from '../../../hooks/useEvent';
 import { ExpandingTextEntry } from '../../common/ExpandingTextEntry';

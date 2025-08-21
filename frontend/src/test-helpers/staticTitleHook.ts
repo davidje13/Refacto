@@ -1,4 +1,4 @@
-import { type TitleHook } from '../hooks/env/useTitle';
+import type { TitleHook } from '../hooks/env/useTitle';
 
 export interface StaticTitleHook extends TitleHook {
   currentTitle: string;

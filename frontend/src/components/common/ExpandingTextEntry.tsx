@@ -1,9 +1,9 @@
 import {
   useState,
-  ReactNode,
-  ReactElement,
-  SyntheticEvent,
-  MouseEvent,
+  type ReactNode,
+  type ReactElement,
+  type SyntheticEvent,
+  type MouseEvent,
 } from 'react';
 import { classNames } from '../../helpers/classNames';
 import { isFocusable } from '../../helpers/isFocusable';

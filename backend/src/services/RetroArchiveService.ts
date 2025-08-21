@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import { type Collection, type DB, type Wrapped } from 'collection-storage';
+import type { Collection, DB, Wrapped } from 'collection-storage';
 import { encryptByRecordWithMasterKey } from '../import-wrappers/collection-storage-wrap';
-import {
-  type RetroArchive,
-  type RetroData,
-  type RetroArchiveSummary,
+import type {
+  RetroArchive,
+  RetroData,
+  RetroArchiveSummary,
 } from '../shared/api-entities';
 
 export class RetroArchiveService {

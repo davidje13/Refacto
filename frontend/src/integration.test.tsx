@@ -4,13 +4,13 @@ import {
   render,
   fireEvent,
   act,
-  RenderResult,
+  type RenderResult,
   getBy,
 } from 'flexible-testing-library-react';
 import { makeRetro } from './shared/api-entities';
 import {
   staticTitleHook,
-  StaticTitleHook,
+  type StaticTitleHook,
 } from './test-helpers/staticTitleHook';
 import { css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';

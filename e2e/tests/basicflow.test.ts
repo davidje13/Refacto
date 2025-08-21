@@ -1,11 +1,11 @@
 import { buildDriver } from '../helpers/selenium';
 import { getDownloadedBytes, Mbps } from '../helpers/downloadProfiler';
-import { type Welcome } from '../pages/Welcome';
-import { type Password } from '../pages/Password';
-import { type RetroCreate } from '../pages/RetroCreate';
-import { type Retro } from '../pages/Retro';
-import { type RetroArchiveList } from '../pages/RetroArchiveList';
-import { type RetroArchive } from '../pages/RetroArchive';
+import type { Welcome } from '../pages/Welcome';
+import type { Password } from '../pages/Password';
+import type { RetroCreate } from '../pages/RetroCreate';
+import type { Retro } from '../pages/Retro';
+import type { RetroArchiveList } from '../pages/RetroArchiveList';
+import type { RetroArchive } from '../pages/RetroArchive';
 import { SiteMap } from '../pages/SiteMap';
 import 'lean-test';
 

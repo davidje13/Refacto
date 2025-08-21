@@ -1,10 +1,10 @@
-import { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { classNames } from '../../../helpers/classNames';
-import { type RetroItem } from '../../../shared/api-entities';
+import type { RetroItem } from '../../../shared/api-entities';
 import { MoodSection } from './categories/MoodSection';
 import { ActionsPane } from './actions/ActionsPane';
 import { TabControl } from '../../common/TabControl';
-import { type RetroDispatch } from '../../../api/RetroTracker';
+import type { RetroDispatch } from '../../../api/RetroTracker';
 import {
   addRetroItem,
   editRetroItem,
@@ -13,7 +13,7 @@ import {
   deleteRetroItem,
 } from '../../../actions/retro';
 import {
-  MoodRetroStateT,
+  type MoodRetroStateT,
   allItemsDoneCallback,
   goNext,
   goPrevious,

@@ -1,6 +1,6 @@
 import { Router } from 'websocket-express';
-import { type GiphyService } from '../services/GiphyService';
-import { type AnalyticsService } from '../services/AnalyticsService';
+import type { GiphyService } from '../services/GiphyService';
+import type { AnalyticsService } from '../services/AnalyticsService';
 import { safe } from '../helpers/routeHelpers';
 
 export class ApiGiphyRouter extends Router {

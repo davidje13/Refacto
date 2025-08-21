@@ -1,7 +1,7 @@
 import {
   createContext,
-  ReactNode,
-  ReactElement,
+  type ReactNode,
+  type ReactElement,
   useCallback,
   useContext,
   useLayoutEffect,

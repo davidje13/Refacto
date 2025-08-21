@@ -1,6 +1,6 @@
-import { useState, memo, ChangeEvent, ReactNode } from 'react';
+import { useState, memo, type ChangeEvent, type ReactNode } from 'react';
 import useAwaited from 'react-hook-awaited';
-import { type JsonData } from '../../shared/api-entities';
+import type { JsonData } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { SlugEntry } from './SlugEntry';
 import { Alert } from '../common/Alert';

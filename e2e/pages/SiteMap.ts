@@ -1,4 +1,4 @@
-import { type WebDriver } from 'selenium-webdriver';
+import type { WebDriver } from 'selenium-webdriver';
 import { getDocumentHtml, getLogs } from '../helpers/debug';
 import { Welcome } from './Welcome';
 import { Password } from './Password';

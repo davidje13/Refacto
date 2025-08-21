@@ -1,4 +1,4 @@
-import { type RetroArchive } from '../../shared/api-entities';
+import type { RetroArchive } from '../../shared/api-entities';
 import { archiveService } from '../../api/api';
 import useAwaited from 'react-hook-awaited';
 

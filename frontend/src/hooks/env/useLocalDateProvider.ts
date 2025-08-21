@@ -1,6 +1,6 @@
 import { useState, useRef, useLayoutEffect } from 'react';
 import { LocalDateProvider } from '../../time/LocalDateProvider';
-import { localDateTracker, NowGetter } from '../../time/localDateTracker';
+import { localDateTracker, type NowGetter } from '../../time/localDateTracker';
 
 function readTime(clock: NowGetter | number): number {
   if (typeof clock === 'number') {

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'wouter';
-import { type RetroArchiveSummary } from '../../shared/api-entities';
+import type { RetroArchiveSummary } from '../../shared/api-entities';
 import { formatDateTime } from '../../time/formatters';
 
 interface PropsT {

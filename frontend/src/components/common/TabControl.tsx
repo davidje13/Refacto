@@ -1,4 +1,4 @@
-import { useState, memo, ReactNode } from 'react';
+import { useState, memo, type ReactNode } from 'react';
 import { classNames } from '../../helpers/classNames';
 import './TabControl.css';
 

@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import {
-  type RetroItem,
-  type UserProvidedRetroItemDetails,
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
 import { FaceIcon } from './FaceIcon';
 import { MoodItem } from './MoodItem';

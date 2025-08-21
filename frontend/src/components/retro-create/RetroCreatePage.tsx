@@ -5,7 +5,7 @@ import { useEvent } from '../../hooks/useEvent';
 import { slugTracker } from '../../api/api';
 import { useUserToken } from '../../hooks/data/useUserToken';
 import { LoginForm } from '../login/LoginForm';
-import { RetroForm, CreationT } from './RetroForm';
+import { RetroForm, type CreationT } from './RetroForm';
 
 interface PropsT {
   showImport?: boolean;

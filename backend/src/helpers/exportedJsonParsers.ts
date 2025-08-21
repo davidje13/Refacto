@@ -1,9 +1,9 @@
-import {
-  type RetroItemJsonExport,
-  type RetroJsonExport,
-  type RetroDataJsonExport,
-  type RetroItemAttachmentJsonExport,
-  type RetroArchiveJsonExport,
+import type {
+  RetroItemJsonExport,
+  RetroJsonExport,
+  RetroDataJsonExport,
+  RetroItemAttachmentJsonExport,
+  RetroArchiveJsonExport,
 } from '../export/RetroJsonExport';
 import { json } from './json';
 

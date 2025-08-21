@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, SyntheticEvent } from 'react';
+import { useState, useRef, useEffect, type SyntheticEvent } from 'react';
 import { useEvent } from './useEvent';
 
 interface StateT {

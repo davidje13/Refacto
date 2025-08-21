@@ -1,6 +1,6 @@
 import { WebSocketExpress, Router } from 'websocket-express';
-import { type RetroArchiveService } from '../services/RetroArchiveService';
-import { type AnalyticsService } from '../services/AnalyticsService';
+import type { RetroArchiveService } from '../services/RetroArchiveService';
+import type { AnalyticsService } from '../services/AnalyticsService';
 import { extractRetroData } from '../helpers/jsonParsers';
 import { safe } from '../helpers/routeHelpers';
 

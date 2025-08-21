@@ -1,7 +1,7 @@
 import { generateKeyPair, createPrivateKey, type KeyLike } from 'node:crypto';
 import { promisify } from 'node:util';
 import jwt from 'jwt-simple';
-import { type JsonData } from '../shared/api-entities';
+import type { JsonData } from '../shared/api-entities';
 
 export interface KeyPair {
   publicKey: string;

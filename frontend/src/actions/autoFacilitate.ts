@@ -1,4 +1,4 @@
-import { type RetroItem } from '../shared/api-entities';
+import type { RetroItem } from '../shared/api-entities';
 
 interface CategoryStats {
   total: number;

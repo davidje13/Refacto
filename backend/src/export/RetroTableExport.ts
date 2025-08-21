@@ -1,8 +1,4 @@
-import {
-  type Retro,
-  type RetroArchive,
-  type RetroItem,
-} from '../shared/api-entities';
+import type { Retro, RetroArchive, RetroItem } from '../shared/api-entities';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 

@@ -1,6 +1,6 @@
-import { Suspense, memo, lazy, ComponentType } from 'react';
-import { type RetroItem } from '../../shared/api-entities';
-import { type RetroDispatch } from '../../api/RetroTracker';
+import { Suspense, memo, lazy, type ComponentType } from 'react';
+import type { RetroItem } from '../../shared/api-entities';
+import type { RetroDispatch } from '../../api/RetroTracker';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
 interface ChildPropsT {

@@ -1,6 +1,6 @@
-import { type Server } from 'node:http';
-import { type AddressInfo } from 'node:net';
-import { type TypedParameter } from 'lean-test';
+import type { Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import type { TypedParameter } from 'lean-test';
 import { App } from '../app';
 
 type Runnable = Server | App;

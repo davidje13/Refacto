@@ -1,4 +1,4 @@
-import { useState, ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { Header } from '../common/Header';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';

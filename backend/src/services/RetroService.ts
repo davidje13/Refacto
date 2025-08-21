@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Spec } from 'json-immutability-helper';
-import { type Collection, type DB, type Wrapped } from 'collection-storage';
+import type { Collection, DB, Wrapped } from 'collection-storage';
 import {
   encryptByRecordWithMasterKey,
   migrate,
@@ -13,7 +13,7 @@ import {
   ReadWriteStruct,
   type Permission,
 } from 'shared-reducer/backend';
-import { type Retro, type RetroSummary } from '../shared/api-entities';
+import type { Retro, RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_\-]*$/;

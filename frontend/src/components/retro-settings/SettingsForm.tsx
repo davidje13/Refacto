@@ -1,6 +1,6 @@
 import { useState, memo } from 'react';
-import { type Retro } from '../../shared/api-entities';
-import { type RetroDispatch } from '../../api/RetroTracker';
+import type { Retro } from '../../shared/api-entities';
+import type { RetroDispatch } from '../../api/RetroTracker';
 import { context } from '../../api/reducer';
 import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';

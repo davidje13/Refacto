@@ -1,4 +1,4 @@
-import { By, Key, WebDriver } from 'selenium-webdriver';
+import { By, Key, type WebDriver } from 'selenium-webdriver';
 import { untilNoElementLocated } from '../../helpers/customUntil';
 import { byButtonText } from '../../helpers/customBy';
 import { PageFragment } from './PageFragment';

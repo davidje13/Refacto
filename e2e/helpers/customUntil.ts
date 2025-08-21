@@ -1,4 +1,4 @@
-import { type WebDriver, type Locator } from 'selenium-webdriver';
+import type { WebDriver, Locator } from 'selenium-webdriver';
 
 export const untilNoElementLocated =
   (locator: Locator) => async (driver: WebDriver) => {

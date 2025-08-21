@@ -21,7 +21,7 @@ import { RetroAuthService } from './services/RetroAuthService';
 import { UserAuthService } from './services/UserAuthService';
 import { AnalyticsService } from './services/AnalyticsService';
 import { getAuthBackend } from './auth';
-import { type ConfigT } from './config';
+import type { ConfigT } from './config';
 import { basedir } from './basedir';
 import {
   addNoCacheHeaders,

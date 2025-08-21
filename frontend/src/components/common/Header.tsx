@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { HeaderLinkItem, LinkPropsT } from './HeaderLinkItem';
+import { HeaderLinkItem, type LinkPropsT } from './HeaderLinkItem';
 import { Title } from '../../hooks/env/useTitle';
 import './Header.css';
 

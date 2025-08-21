@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import {
-  type Retro,
-  type RetroData,
-  type RetroItem,
-  type RetroItemAttachment,
-  type RetroArchive,
+import type {
+  Retro,
+  RetroData,
+  RetroItem,
+  RetroItemAttachment,
+  RetroArchive,
 } from '../shared/api-entities';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;

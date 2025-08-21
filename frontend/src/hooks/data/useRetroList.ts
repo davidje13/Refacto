@@ -1,4 +1,4 @@
-import { type RetroSummary } from '../../shared/api-entities';
+import type { RetroSummary } from '../../shared/api-entities';
 import { retroListTracker } from '../../api/api';
 import useAwaited from 'react-hook-awaited';
 

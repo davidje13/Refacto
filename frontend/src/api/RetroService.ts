@@ -1,4 +1,4 @@
-import { type JsonData } from '../shared/api-entities';
+import type { JsonData } from '../shared/api-entities';
 
 interface RetroOptions {
   name: string;

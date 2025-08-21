@@ -1,8 +1,8 @@
-import {
-  type RetroItem,
-  type RetroItemAttachment,
-  type RetroData,
-  type Retro,
+import type {
+  RetroItem,
+  RetroItemAttachment,
+  RetroData,
+  Retro,
 } from '../shared/api-entities';
 import { json } from './json';
 

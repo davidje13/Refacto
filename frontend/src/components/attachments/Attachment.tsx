@@ -1,5 +1,5 @@
-import { type FC, type ComponentType } from 'react';
-import { type RetroItemAttachment } from '../../shared/api-entities';
+import type { FC, ComponentType } from 'react';
+import type { RetroItemAttachment } from '../../shared/api-entities';
 import { GiphyAttachment } from './giphy/GiphyAttachment';
 
 interface ChildPropsT {

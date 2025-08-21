@@ -15,6 +15,6 @@ export default [
       clearScreen: false,
     },
     external: [/node_modules/],
-    plugins: [nodeResolve(), typescript()],
+    plugins: [nodeResolve(), typescript({ tslib: {} })],
   },
 ];

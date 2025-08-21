@@ -1,4 +1,4 @@
-import { ReactNode, type FC } from 'react';
+import type { ReactNode, FC } from 'react';
 import TickBold from '../../../resources/tick-bold.svg';
 import Cross from '../../../resources/cross.svg';
 import {

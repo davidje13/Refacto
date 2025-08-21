@@ -1,4 +1,4 @@
-import timezoneMock, { TimeZone } from 'timezone-mock';
+import timezoneMock, { type TimeZone } from 'timezone-mock';
 
 import { LocalDateProvider } from './LocalDateProvider';
 

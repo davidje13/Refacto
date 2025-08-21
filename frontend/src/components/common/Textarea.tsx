@@ -4,8 +4,8 @@ import {
   useRef,
   useCallback,
   useLayoutEffect,
-  TextareaHTMLAttributes,
-  CSSProperties,
+  type TextareaHTMLAttributes,
+  type CSSProperties,
   useEffect,
 } from 'react';
 import { classNames } from '../../helpers/classNames';

@@ -1,4 +1,4 @@
-import { type WebDriver } from 'selenium-webdriver';
+import type { WebDriver } from 'selenium-webdriver';
 
 const getResourcesSignature = (driver: WebDriver) =>
   driver.executeScript<string>(

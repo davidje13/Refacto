@@ -1,4 +1,4 @@
-import { useState, memo, ReactNode, SyntheticEvent } from 'react';
+import { useState, memo, type ReactNode, type SyntheticEvent } from 'react';
 import { useEvent } from '../../hooks/useEvent';
 import { API_BASE } from '../../api/api';
 import './ApiDownload.css';

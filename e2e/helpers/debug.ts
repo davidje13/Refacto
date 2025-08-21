@@ -1,5 +1,5 @@
-import { type WebDriver } from 'selenium-webdriver';
-import { type Entry } from 'selenium-webdriver/lib/logging';
+import type { WebDriver } from 'selenium-webdriver';
+import type { Entry } from 'selenium-webdriver/lib/logging';
 
 export async function getDocumentHtml(driver: WebDriver) {
   try {

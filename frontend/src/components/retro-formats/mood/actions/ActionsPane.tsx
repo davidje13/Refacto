@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
-import {
-  type RetroItem,
-  type UserProvidedRetroItemDetails,
+import type {
+  RetroItem,
+  UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
 import { ActionSection } from './ActionSection';
 import { ItemEditor } from '../ItemEditor';
-import { type LocalDateProvider } from '../../../../time/LocalDateProvider';
+import type { LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
 import { useEvent } from '../../../../hooks/useEvent';
 import TickBold from '../../../../../resources/tick-bold.svg';

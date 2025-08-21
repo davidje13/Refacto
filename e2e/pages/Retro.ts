@@ -1,4 +1,4 @@
-import { By, Key, WebDriver } from 'selenium-webdriver';
+import { By, Key, type WebDriver } from 'selenium-webdriver';
 import { Page } from './common/Page';
 import { PageFragment } from './common/PageFragment';
 import { RetroArchiveList } from './RetroArchiveList';

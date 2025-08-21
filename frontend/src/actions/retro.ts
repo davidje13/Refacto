@@ -1,9 +1,9 @@
-import {
-  type Retro,
-  type RetroItem,
-  type UserProvidedRetroItemDetails,
+import type {
+  Retro,
+  RetroItem,
+  UserProvidedRetroItemDetails,
 } from '../shared/api-entities';
-import { type Spec } from '../api/reducer';
+import type { Spec } from '../api/reducer';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;

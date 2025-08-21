@@ -21,7 +21,6 @@
     "pg": "8.x",
     "pwd-hasher": "2.x",
     "shared-reducer": "5.x",
-    "tslib": "2.8.x",
     "websocket-express": "4.x",
     "ws": "8.x"
   },

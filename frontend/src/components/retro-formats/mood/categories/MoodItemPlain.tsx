@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
-import { type RetroItem } from '../../../../shared/api-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import { VoteCount } from './VoteCount';
 import TickBold from '../../../../../resources/tick-bold.svg';
 

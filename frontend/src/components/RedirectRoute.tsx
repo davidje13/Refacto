@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import type { FC } from 'react';
 import { Route, Redirect, type RedirectProps } from 'wouter';
 
 const groupRx = /:([A-Za-z0-9_]+)([?+*]?)/g;

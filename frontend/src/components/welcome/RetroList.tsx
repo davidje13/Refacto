@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { type RetroSummary } from '../../shared/api-entities';
+import type { RetroSummary } from '../../shared/api-entities';
 import { RetroLink } from './RetroLink';
 
 interface PropsT {

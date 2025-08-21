@@ -1,11 +1,11 @@
 import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
 import { WebsocketHandlerFactory } from 'shared-reducer/backend';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
-import { type UserAuthService } from '../services/UserAuthService';
-import { type RetroAuthService } from '../services/RetroAuthService';
-import { type RetroService } from '../services/RetroService';
-import { type RetroArchiveService } from '../services/RetroArchiveService';
-import { type AnalyticsService } from '../services/AnalyticsService';
+import type { UserAuthService } from '../services/UserAuthService';
+import type { RetroAuthService } from '../services/RetroAuthService';
+import type { RetroService } from '../services/RetroService';
+import type { RetroArchiveService } from '../services/RetroArchiveService';
+import type { AnalyticsService } from '../services/AnalyticsService';
 import {
   exportRetroJson,
   importRetroDataJson,
