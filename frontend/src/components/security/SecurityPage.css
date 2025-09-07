@@ -16,5 +16,9 @@
     & p {
       margin: 16px 0;
     }
+
+    & li {
+      margin: 4px 0 4px 24px;
+    }
   }
 }
