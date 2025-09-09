@@ -8,7 +8,7 @@ simplified code, development, and deployment.
 
 ## Running locally
 
-Requires [Node.js 18 or above](https://nodejs.org/en/).
+Requires [Node.js 20 or above](https://nodejs.org/en/).
 
 ```sh
 npm start
@@ -34,7 +34,7 @@ The output is placed in `build`.
 
 ## Deploying
 
-You will need to have Node.js 18 or newer installed in the deployment
+You will need to have Node.js 20 or newer installed in the deployment
 environment.
 
 ```sh

@@ -9,27 +9,6 @@ process.on('SIGUSR1', () => {
   // ignore (disable default behaviour of opening inspector port)
 });
 
-// Temporary polyfill for Node 18 support
-if (!(global as any).CustomEvent) {
-  logInfo('Polyfilling CustomEvent');
-  (global as any).CustomEvent = class CustomEvent extends Event {
-    public readonly detail: unknown;
-
-    constructor(
-      type: string,
-      options: {
-        bubbles?: boolean;
-        cancelable?: boolean;
-        composed?: boolean;
-        detail?: unknown;
-      },
-    ) {
-      super(type, options);
-      this.detail = options?.detail ?? null;
-    }
-  };
-}
-
 // https://nodejs.org/en/learn/getting-started/security-best-practices#prototype-pollution-attacks-cwe-1321
 // TODO: https://github.com/nodejs/undici/issues/4009
 //Object.freeze(globalThis);
