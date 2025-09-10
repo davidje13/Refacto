@@ -1,5 +1,6 @@
 import request from 'superwstest';
 import { WebSocketExpress } from 'websocket-express';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { addressToString, testServerRunner } from './testServerRunner';
 import type { GiphyResponse } from '../services/GiphyService';
@@ -43,6 +44,7 @@ describe('API giphy', () => {
 
   const PROPS = testServerRunner(async (getTyped) => {
     const app = await appFactory(
+      new TestLogger(),
       testConfig({
         giphy: {
           baseUrl: addressToString(getTyped(MOCK_GIPHY).server.address()),

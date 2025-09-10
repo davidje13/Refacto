@@ -1,6 +1,6 @@
 import { Router } from 'websocket-express';
 import type { PasswordCheckService } from '../services/PasswordCheckService';
-import type { AnalyticsService } from '../services/AnalyticsService';
+import type { Logger } from '../services/LogService';
 import { safe } from '../helpers/routeHelpers';
 
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
@@ -13,10 +13,7 @@ const CACHE_CONTROL = [
 ].join(', ');
 
 export class ApiPasswordCheckRouter extends Router {
-  public constructor(
-    service: PasswordCheckService,
-    analyticsService: AnalyticsService,
-  ) {
+  public constructor(service: PasswordCheckService, logger: Logger) {
     super();
 
     this.get(
@@ -43,7 +40,7 @@ export class ApiPasswordCheckRouter extends Router {
           ) {
             res.status(503).end();
           } else {
-            analyticsService.error('Password breaches lookup error', err);
+            logger.error('Password breaches lookup error', err);
             res.status(500).end();
           }
         }

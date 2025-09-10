@@ -1,8 +1,8 @@
 import { join } from 'node:path';
 import type { ErrorRequestHandler } from 'express';
 import { WebSocketExpress } from 'websocket-express';
-import { connectDB } from './import-wrappers/collection-storage-wrap';
 import { Hasher } from 'pwd-hasher';
+import { connectDB } from './import-wrappers/collection-storage-wrap';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
 import { ApiDiagnosticsRouter } from './routers/ApiDiagnosticsRouter';
 import { ApiAuthRouter } from './routers/ApiAuthRouter';
@@ -14,6 +14,7 @@ import { ForwardingRouter } from './routers/ForwardingRouter';
 import { StaticRouter } from './routers/StaticRouter';
 import { TokenManager } from './tokens/TokenManager';
 import { PasswordCheckService } from './services/PasswordCheckService';
+import type { Logger } from './services/LogService';
 import { GiphyService } from './services/GiphyService';
 import { RetroService } from './services/RetroService';
 import { RetroArchiveService } from './services/RetroArchiveService';
@@ -67,7 +68,10 @@ function readEnum<T extends string>(value: string, options: readonly T[]): T {
 
 const DETAIL_LEVEL = ['version', 'brand', 'message', 'none'] as const;
 
-export const appFactory = async (config: ConfigT): Promise<App> => {
+export const appFactory = async (
+  logger: Logger,
+  config: ConfigT,
+): Promise<App> => {
   const db = await connectDB(config.db.url);
 
   const hasher = new Hasher(config.password);
@@ -76,6 +80,7 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
   const encryptionKey = readKey(config.encryption.secretKey, 32);
 
   const analyticsService = new AnalyticsService(
+    logger,
     readEnum(config.analytics.eventDetail, DETAIL_LEVEL),
     readEnum(config.analytics.clientErrorDetail, DETAIL_LEVEL),
   );
@@ -128,21 +133,22 @@ export const appFactory = async (config: ConfigT): Promise<App> => {
     retroAuthService,
     retroService,
     retroArchiveService,
+    logger,
     analyticsService,
     config.permit.myRetros,
   );
   app.use('/api/retros', apiRetrosRouter);
   app.use(
     '/api/password-check',
-    new ApiPasswordCheckRouter(passwordCheckService, analyticsService),
+    new ApiPasswordCheckRouter(passwordCheckService, logger),
   );
-  app.use('/api/giphy', new ApiGiphyRouter(giphyService, analyticsService));
+  app.use('/api/giphy', new ApiGiphyRouter(giphyService, logger));
   app.useHTTP('/api', (_, res) => {
     res.status(404).send();
   });
   if (config.forwardHost) {
     // Dev mode: forward unknown requests to another service
-    app.use(new ForwardingRouter(config.forwardHost, analyticsService));
+    app.use(new ForwardingRouter(config.forwardHost, logger));
   } else {
     // Production mode: all resources are copied into /static
     app.use(new StaticRouter(join(basedir, 'static')));

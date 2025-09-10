@@ -1,6 +1,7 @@
 import { createServer, type Server } from 'node:http';
 import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
+import { LogService } from './services/LogService';
 import { appFactory } from './app';
 import { config } from './config';
 
@@ -13,6 +14,11 @@ process.on('SIGUSR1', () => {
 // TODO: https://github.com/nodejs/undici/issues/4009
 //Object.freeze(globalThis);
 
+const logService = new LogService(config.log.file);
+
+// for log rotation: after renaming the old log file, send a SIGHUP to direct output to the new file
+process.on('SIGHUP', () => logService.reopen());
+
 type MaybePromise<T> = T | Promise<T>;
 const tasks: { name: string; run: () => MaybePromise<void> }[] = [];
 const shutdownTasks: (() => MaybePromise<void>)[] = [];
@@ -21,11 +27,12 @@ tasks.push({
   name: 'server',
   run: async () => {
     const server = createServer();
-    const app = await appFactory(config);
+    const app = await appFactory(logService, config);
 
     shutdownTasks.push(async () => {
       const scCount = await getConnectionCount(server);
-      logInfo(`Shutting down (open connections: ${scCount})`);
+      logService.log({ event: 'shutdown', openConnections: scCount });
+      printInfo(`Shutting down (open connections: ${scCount})`);
 
       await app.softClose(1000);
       await promisify(server.close.bind(server))();
@@ -36,7 +43,10 @@ tasks.push({
     await new Promise<void>((resolve) =>
       server.listen(config.port, config.serverBindAddress, resolve),
     );
-    logInfo(`Available at http://localhost:${config.port}/`);
+    logService.log({ event: 'startup' });
+    printInfo(
+      `Available at http://localhost:${config.port}/, logging to ${config.log.file}`,
+    );
   },
 });
 
@@ -51,7 +61,7 @@ if (config.mockSsoPort) {
       );
       shutdownTasks.push(async () => {
         const mscCount = await getConnectionCount(mockSsoServer);
-        logInfo(
+        printInfo(
           `Shutting down mock SSO server (open connections: ${mscCount})`,
         );
         await promisify(mockSsoServer.close.bind(mockSsoServer))();
@@ -69,12 +79,13 @@ process.on('SIGINT', async () => {
   // SIGINT is sent twice in quick succession, so ignore the second
   if (!interrupted) {
     interrupted = true;
-    logInfo('');
+    printInfo('');
     try {
       await Promise.all(shutdownTasks.map((fn) => fn()));
-      logInfo('Shutdown complete');
+      await logService.close();
+      printInfo('Shutdown complete');
     } catch (e) {
-      logError('Failed to shutdown server', e);
+      printError('Failed to shutdown server', e);
     }
   }
 });
@@ -87,15 +98,16 @@ process.on('SIGINT', async () => {
         await run();
       } catch (e) {
         success = false;
-        logError(`Failed to start ${name}`, e);
+        printError(`Failed to start ${name}`, e);
       }
     }),
   );
   if (success) {
-    logInfo('Press Ctrl+C to stop');
+    printInfo('Press Ctrl+C to stop');
   } else {
     // process.exit may lose stream data which has been buffered in NodeJS - wait for it all to be flushed before exiting
     await Promise.all([
+      logService.close(),
       new Promise((resolve) => process.stdout.write('', resolve)),
       new Promise((resolve) => process.stderr.write('', resolve)),
     ]);
@@ -103,11 +115,13 @@ process.on('SIGINT', async () => {
   }
 })();
 
-function logInfo(message: string) {
+// These helpers output to stderr, not the log file
+
+function printInfo(message: string) {
   process.stderr.write(`${message}\n`);
 }
 
-function logError(message: string, err: unknown) {
+function printError(message: string, err: unknown) {
   if (err instanceof Error) {
     process.stderr.write(`${message}: ${err.message}\n`);
   } else {

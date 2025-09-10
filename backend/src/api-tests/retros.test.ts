@@ -1,4 +1,5 @@
 import request from 'superwstest';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory, type TestHooks } from '../app';
@@ -13,7 +14,7 @@ function getUserToken({ userAuthService }: TestHooks, userId: string): string {
 
 describe('API retros', () => {
   const PROPS = testServerRunner(async () => {
-    const app = await appFactory(testConfig());
+    const app = await appFactory(new TestLogger(), testConfig());
 
     const hooks = app.testHooks;
 
@@ -154,7 +155,10 @@ describe('API retros', () => {
 
 describe('API retros with my retros disabled', () => {
   const PROPS = testServerRunner(async () => {
-    const app = await appFactory(testConfig({ permit: { myRetros: false } }));
+    const app = await appFactory(
+      new TestLogger(),
+      testConfig({ permit: { myRetros: false } }),
+    );
 
     const hooks = app.testHooks;
 

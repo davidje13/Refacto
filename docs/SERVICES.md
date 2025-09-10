@@ -222,3 +222,56 @@ If you wish to _disable_ this integration, you can specify a blank URL:
 ```sh
 PASSWORD_CHECK_BASE_URL="" ./index.js
 ```
+
+### Logs
+
+Refacto writes logs to `stderr` by default, which will typically be picked up
+by the service runner and written to the system logs (e.g. syslog or journal).
+
+You can configure it to write to a file instead:
+
+```sh
+LOG_FILE="/path/to/file.log" ./index.js
+```
+
+This will direct all structured logs to the file (some unstructured startup and
+shutdown logs will still be written to `stderr`). Each log entry is a single
+line containing a JSON-encoded object of the form:
+
+```json
+{ "time": 1757433145000, "event": "something", "other-fields": "" }
+{ "time": 1757433145000, "error": "type", "name": "MyError", "message": "oops", "stack": "this.js:88\nthat.js:100" }
+```
+
+When analytics are enabled, client-related log entries will also contain browser
+and OS versions (see the [security documentation](./SECURITY.md)).
+
+#### Log rotation
+
+You can use an external service such as `logrotate` to configure logrotation.
+After rotating the logs, send a `SIGHUP` to Refacto to make it reopen the log
+file (else it will continue to write logs to the renamed file).
+
+```sh
+kill -SIGHUP <refacto-pid-here>
+```
+
+For example if started as a service via systemd, the following `logrotate`
+config will work (adjust paths, user, group, frequency, etc.):
+
+```
+/path/to/refacto/logfile.log {
+  weekly
+  rotate 52
+  notifempty
+  missingok
+  create 640 refacto-user adm
+
+  compress
+  delaycompress
+
+  postrotate
+    kill -SIGHUP "$(systemctl show --property MainPID --value refacto.service)"
+  endscript
+}
+```

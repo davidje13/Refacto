@@ -1,11 +1,12 @@
 import request from 'superwstest';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API slugs', () => {
   const PROPS = testServerRunner(async () => {
-    const app = await appFactory(testConfig());
+    const app = await appFactory(new TestLogger(), testConfig());
 
     const retroId = await app.testHooks.retroService.createRetro(
       'nobody',

@@ -1,6 +1,7 @@
 import { WebSocketExpress } from 'websocket-express';
 import request from 'superwstest';
 import jwt from 'jwt-simple';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner, addressToString } from './testServerRunner';
 import { appFactory } from '../app';
@@ -20,6 +21,7 @@ describe('/api/sso/service', () => {
 
   const APP = testServerRunner(async (getTyped) => ({
     run: await appFactory(
+      new TestLogger(),
       testConfig({
         sso: {
           google: {
@@ -57,6 +59,7 @@ describe('/api/sso/service', () => {
 describe('/api/sso/public', () => {
   const APP = testServerRunner(async () => ({
     run: await appFactory(
+      new TestLogger(),
       testConfig({
         insecure: {
           sharedAccount: { enabled: true, authUrl: '/insecure-login' },

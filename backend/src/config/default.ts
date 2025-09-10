@@ -4,6 +4,9 @@ export default {
   mockSsoPort: 0,
   serverBindAddress: '',
   trustProxy: false,
+  log: {
+    file: '/dev/stderr',
+  },
   analytics: {
     eventDetail: 'none',
     clientErrorDetail: 'message',

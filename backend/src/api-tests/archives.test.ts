@@ -1,5 +1,6 @@
 import request from 'superwstest';
 import { makeRetroItem } from '../shared/api-entities';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory, type TestHooks } from '../app';
@@ -19,7 +20,7 @@ function getRetroToken(
 
 describe('API retro archives', () => {
   const PROPS = testServerRunner(async () => {
-    const app = await appFactory(testConfig());
+    const app = await appFactory(new TestLogger(), testConfig());
 
     const hooks = app.testHooks;
 

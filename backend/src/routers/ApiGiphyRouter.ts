@@ -1,13 +1,10 @@
 import { Router } from 'websocket-express';
 import type { GiphyService } from '../services/GiphyService';
-import type { AnalyticsService } from '../services/AnalyticsService';
+import type { Logger } from '../services/LogService';
 import { safe } from '../helpers/routeHelpers';
 
 export class ApiGiphyRouter extends Router {
-  public constructor(
-    service: GiphyService,
-    analyticsService: AnalyticsService,
-  ) {
+  public constructor(service: GiphyService, logger: Logger) {
     super();
 
     this.get(
@@ -30,7 +27,7 @@ export class ApiGiphyRouter extends Router {
 
           res.json({ gifs });
         } catch (err) {
-          analyticsService.error('Giphy proxy error', err);
+          logger.error('Giphy proxy error', err);
           res.status(500).json({ error: 'Proxy error' });
         }
       }),

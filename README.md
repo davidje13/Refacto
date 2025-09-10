@@ -68,6 +68,7 @@ Typical values to configure are:
 
 ```sh
 PORT=5000 \
+LOG_FILE="</path/to/log/file.log>" \
 SSO_GOOGLE_CLIENT_ID="<your-google-client-id>" \
 SSO_GITHUB_CLIENT_ID="<your-github-client-id>" \
 SSO_GITHUB_CLIENT_SECRET="<your-github-client-secret>" \

@@ -1,6 +1,7 @@
 import { WebSocketExpress, Router } from 'websocket-express';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
 import type { AnalyticsService } from '../services/AnalyticsService';
+import type { Logger } from '../services/LogService';
 import { extractRetroData } from '../helpers/jsonParsers';
 import { safe } from '../helpers/routeHelpers';
 
@@ -9,6 +10,7 @@ const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 export class ApiRetroArchivesRouter extends Router {
   public constructor(
     retroArchiveService: RetroArchiveService,
+    logger: Logger,
     analyticsService: AnalyticsService,
   ) {
     super({ mergeParams: true });
@@ -47,7 +49,7 @@ export class ApiRetroArchivesRouter extends Router {
           res.status(200).json({ id });
         } catch (err) {
           if (!(err instanceof Error)) {
-            analyticsService.error('Error creating retro archive', err);
+            logger.error('Error creating retro archive', err);
             res.status(500).json({ error: 'Internal error' });
           } else {
             res.status(400).json({ error: err.message });

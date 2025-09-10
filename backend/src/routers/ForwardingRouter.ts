@@ -1,9 +1,10 @@
 import type { Readable, Writable } from 'node:stream';
 import { Agent, request } from 'node:http';
 import { Router } from 'websocket-express';
+import type { Logger } from '../services/LogService';
 
 export class ForwardingRouter extends Router {
-  constructor(forwardHost: string, diagnostics: Diagnostics) {
+  constructor(forwardHost: string, logger: Logger) {
     super();
 
     const agent = new Agent({ keepAlive: true, maxSockets: 10 });
@@ -18,7 +19,7 @@ export class ForwardingRouter extends Router {
         });
 
         proxyReq.on('error', (err) => {
-          diagnostics.error('proxy error', err);
+          logger.error('proxy error', err);
           if (!res.headersSent) {
             res.writeHead(502);
           }
@@ -39,16 +40,12 @@ export class ForwardingRouter extends Router {
 
         pipeWithError(req, proxyReq);
       } catch (err) {
-        diagnostics.error('proxy request error', err);
+        logger.error('proxy request error', err);
         res.writeHead(400);
         res.end();
       }
     });
   }
-}
-
-interface Diagnostics {
-  error(message: string, err: unknown): void;
 }
 
 function safeURLProxy(forwardHost: string) {

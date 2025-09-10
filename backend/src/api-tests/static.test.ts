@@ -1,5 +1,6 @@
 import { WebSocketExpress } from 'websocket-express';
 import request from 'superwstest';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner, addressToString } from './testServerRunner';
 import { appFactory } from '../app';
@@ -7,7 +8,7 @@ import { appFactory } from '../app';
 describe('API static content', () => {
   describe('Embedded', () => {
     const PROPS = testServerRunner(async () => ({
-      run: await appFactory(testConfig()),
+      run: await appFactory(new TestLogger(), testConfig()),
     }));
 
     it('responds with index.html for root requests', async (props) => {
@@ -142,6 +143,7 @@ describe('API static content', () => {
 
     const PROPS = testServerRunner(async (getTyped) => ({
       run: await appFactory(
+        new TestLogger(),
         testConfig({
           forwardHost: addressToString(getTyped(PROXY).server.address()),
         }),

@@ -6,6 +6,7 @@ import type { RetroAuthService } from '../services/RetroAuthService';
 import type { RetroService } from '../services/RetroService';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
 import type { AnalyticsService } from '../services/AnalyticsService';
+import type { Logger } from '../services/LogService';
 import {
   exportRetroJson,
   importRetroDataJson,
@@ -35,6 +36,7 @@ export class ApiRetrosRouter extends Router {
     retroAuthService: RetroAuthService,
     retroService: RetroService,
     retroArchiveService: RetroArchiveService,
+    logger: Logger,
     analyticsService: AnalyticsService,
     permitMyRetros: boolean,
   ) {
@@ -128,7 +130,7 @@ export class ApiRetrosRouter extends Router {
           res.status(200).json({ id, token });
         } catch (err) {
           if (!(err instanceof Error)) {
-            analyticsService.error('Unexpected error creating retro', err);
+            logger.error('Unexpected error creating retro', err);
             res.status(500).json({ error: 'Internal error' });
           } else if (err.message === 'URL is already taken') {
             res.status(409).json({ error: err.message });
@@ -223,7 +225,7 @@ export class ApiRetrosRouter extends Router {
 
     this.use(
       '/:retroId/archives',
-      new ApiRetroArchivesRouter(retroArchiveService, analyticsService),
+      new ApiRetroArchivesRouter(retroArchiveService, logger, analyticsService),
     );
   }
 }

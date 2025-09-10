@@ -1,4 +1,5 @@
 import request from 'superwstest';
+import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
@@ -6,6 +7,7 @@ import { appFactory } from '../app';
 describe('API client config', () => {
   const PROPS = testServerRunner(async () => ({
     run: await appFactory(
+      new TestLogger(),
       testConfig({
         sso: {
           google: {

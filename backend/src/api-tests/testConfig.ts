@@ -15,6 +15,7 @@ const baseTestConfig: ConfigT = {
   mockSsoPort: 0,
   serverBindAddress: '',
   trustProxy: false,
+  log: { file: '' },
   analytics: { eventDetail: 'none', clientErrorDetail: 'none' },
   password: { workFactor: 1, secretPepper: '' },
   passwordCheck: { baseUrl: '' },
