@@ -3,7 +3,6 @@ import type { RetroArchiveService } from '../services/RetroArchiveService';
 import type { AnalyticsService } from '../services/AnalyticsService';
 import type { Logger } from '../services/LogService';
 import { extractRetroData } from '../helpers/jsonParsers';
-import { safe } from '../helpers/routeHelpers';
 
 const JSON_BODY = WebSocketExpress.json({ limit: 512 * 1024 });
 
@@ -15,10 +14,10 @@ export class ApiRetroArchivesRouter extends Router {
   ) {
     super({ mergeParams: true });
 
-    this.get(
+    this.get<{ retroId: string }>(
       '/',
       WebSocketExpress.requireAuthScope('readArchives'),
-      safe<{ retroId: string }>(async (req, res) => {
+      async (req, res) => {
         const { retroId } = req.params;
 
         const archives =
@@ -26,14 +25,14 @@ export class ApiRetroArchivesRouter extends Router {
 
         analyticsService.event(req, 'access archive list');
         res.json({ archives });
-      }),
+      },
     );
 
-    this.post(
+    this.post<{ retroId: string }>(
       '/',
       WebSocketExpress.requireAuthScope('write'),
       JSON_BODY,
-      safe<{ retroId: string }>(async (req, res) => {
+      async (req, res) => {
         try {
           const { retroId } = req.params;
           const data = extractRetroData(req.body);
@@ -55,13 +54,13 @@ export class ApiRetroArchivesRouter extends Router {
             res.status(400).json({ error: err.message });
           }
         }
-      }),
+      },
     );
 
-    this.get(
+    this.get<{ retroId: string; archiveId: string }>(
       '/:archiveId',
       WebSocketExpress.requireAuthScope('readArchives'),
-      safe<{ retroId: string; archiveId: string }>(async (req, res) => {
+      async (req, res) => {
         const { retroId, archiveId } = req.params;
 
         const archive = await retroArchiveService.getRetroArchive(
@@ -76,7 +75,7 @@ export class ApiRetroArchivesRouter extends Router {
 
         analyticsService.event(req, 'access archive');
         res.json(archive);
-      }),
+      },
     );
   }
 }

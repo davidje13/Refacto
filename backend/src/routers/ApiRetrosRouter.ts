@@ -14,7 +14,6 @@ import {
 } from '../export/RetroJsonExport';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import { json } from '../helpers/json';
-import { safe } from '../helpers/routeHelpers';
 import { JSONFormatter } from '../export/JSONFormatter';
 import { CSVFormatter } from '../export/CSVFormatter';
 import { exportRetroTable } from '../export/RetroTableExport';
@@ -53,95 +52,86 @@ export class ApiRetrosRouter extends Router {
     );
     this.softClose = (timeout) => wsHandlerFactory.softClose(timeout);
 
-    this.get(
-      '/',
-      userAuthMiddleware,
-      safe(async (req, res) => {
+    this.get('/', userAuthMiddleware, async (req, res) => {
+      const userId = WebSocketExpress.getAuthData(res).sub!;
+
+      if (!permitMyRetros) {
+        res.json({ retros: [] });
+        return;
+      }
+
+      analyticsService.event(req, 'access own retros list');
+      res.json({
+        retros: await retroService.getRetroListForUser(userId),
+      });
+    });
+
+    this.post('/', userAuthMiddleware, JSON_BODY, async (req, res) => {
+      try {
         const userId = WebSocketExpress.getAuthData(res).sub!;
+        const { slug, name, password, importJson } = json.extractObject(
+          req.body,
+          {
+            slug: json.string,
+            name: json.string,
+            password: json.string,
+            importJson: json.optional(extractExportedRetro),
+          },
+        );
 
-        if (!permitMyRetros) {
-          res.json({ retros: [] });
-          return;
+        if (!name) {
+          throw new Error('No name given');
+        }
+        if (password.length < MIN_PASSWORD_LENGTH) {
+          throw new Error('Password is too short');
+        }
+        if (password.length > MAX_PASSWORD_LENGTH) {
+          throw new Error('Password is too long');
         }
 
-        analyticsService.event(req, 'access own retros list');
-        res.json({
-          retros: await retroService.getRetroListForUser(userId),
-        });
-      }),
-    );
+        const id = await retroService.createRetro(userId, slug, name, 'mood');
+        await retroAuthService.setPassword(id, password);
 
-    this.post(
-      '/',
-      userAuthMiddleware,
-      JSON_BODY,
-      safe(async (req, res) => {
-        try {
-          const userId = WebSocketExpress.getAuthData(res).sub!;
-          const { slug, name, password, importJson } = json.extractObject(
-            req.body,
-            {
-              slug: json.string,
-              name: json.string,
-              password: json.string,
-              importJson: json.optional(extractExportedRetro),
-            },
-          );
+        if (importJson) {
+          await retroService.retroBroadcaster.update(id, [
+            'merge',
+            importRetroDataJson(importJson.current),
+          ]);
 
-          if (!name) {
-            throw new Error('No name given');
-          }
-          if (password.length < MIN_PASSWORD_LENGTH) {
-            throw new Error('Password is too short');
-          }
-          if (password.length > MAX_PASSWORD_LENGTH) {
-            throw new Error('Password is too long');
-          }
+          const archives = importJson.archives || [];
 
-          const id = await retroService.createRetro(userId, slug, name, 'mood');
-          await retroAuthService.setPassword(id, password);
-
-          if (importJson) {
-            await retroService.retroBroadcaster.update(id, [
-              'merge',
-              importRetroDataJson(importJson.current),
-            ]);
-
-            const archives = importJson.archives || [];
-
-            await Promise.all(
-              archives.map((exportedArchive) =>
-                retroArchiveService.createArchive(
-                  id,
-                  importRetroDataJson(exportedArchive.snapshot),
-                  importTimestamp(exportedArchive.created),
-                ),
+          await Promise.all(
+            archives.map((exportedArchive) =>
+              retroArchiveService.createArchive(
+                id,
+                importRetroDataJson(exportedArchive.snapshot),
+                importTimestamp(exportedArchive.created),
               ),
-            );
-          }
-
-          const token = await retroAuthService.grantOwnerToken(id);
-
-          if (importJson) {
-            analyticsService.event(req, 'import retro');
-          } else {
-            analyticsService.event(req, 'create retro');
-          }
-          res.status(200).json({ id, token });
-        } catch (err) {
-          if (!(err instanceof Error)) {
-            logger.error('Unexpected error creating retro', err);
-            res.status(500).json({ error: 'Internal error' });
-          } else if (err.message === 'URL is already taken') {
-            res.status(409).json({ error: err.message });
-          } else {
-            res.status(400).json({ error: err.message });
-          }
+            ),
+          );
         }
-      }),
-    );
 
-    this.use(
+        const token = await retroAuthService.grantOwnerToken(id);
+
+        if (importJson) {
+          analyticsService.event(req, 'import retro');
+        } else {
+          analyticsService.event(req, 'create retro');
+        }
+        res.status(200).json({ id, token });
+      } catch (err) {
+        if (!(err instanceof Error)) {
+          logger.error('Unexpected error creating retro', err);
+          res.status(500).json({ error: 'Internal error' });
+        } else if (err.message === 'URL is already taken') {
+          res.status(409).json({ error: err.message });
+        } else {
+          res.status(400).json({ error: err.message });
+        }
+      }
+    });
+
+    this.use<{ retroId: string }>(
       '/:retroId',
       WebSocketExpress.requireBearerAuth(
         (req) => req.params['retroId'] ?? '',
@@ -149,7 +139,7 @@ export class ApiRetrosRouter extends Router {
       ),
     );
 
-    this.ws(
+    this.ws<{ retroId: string }>(
       '/:retroId',
       WebSocketExpress.requireAuthScope('read'),
       wsHandlerFactory.handler(
@@ -175,11 +165,11 @@ export class ApiRetrosRouter extends Router {
       ),
     );
 
-    this.get(
+    this.get<{ retroId: string; format: string }>(
       '/:retroId/export/:format',
       WebSocketExpress.requireAuthScope('read'),
       WebSocketExpress.requireAuthScope('readArchives'),
-      safe(async (req, res) => {
+      async (req, res) => {
         const { retroId, format } = req.params;
 
         const retro = await retroService.getRetro(retroId);
@@ -220,7 +210,7 @@ export class ApiRetrosRouter extends Router {
             res.status(404).end();
             break;
         }
-      }),
+      },
     );
 
     this.use(
