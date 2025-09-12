@@ -1,9 +1,14 @@
 import { Router } from 'websocket-express';
 import type { GiphyService } from '../services/GiphyService';
 import type { Logger } from '../services/LogService';
+import type { AnalyticsService } from '../services/AnalyticsService';
 
 export class ApiGiphyRouter extends Router {
-  public constructor(service: GiphyService, logger: Logger) {
+  public constructor(
+    service: GiphyService,
+    logger: Logger,
+    analyticsService: AnalyticsService,
+  ) {
     super();
 
     this.get('/search', async (req, res) => {
@@ -22,6 +27,7 @@ export class ApiGiphyRouter extends Router {
       try {
         const gifs = await service.search(q, 0, 50, lang);
 
+        analyticsService.event(req, 'search giphy');
         res.json({ gifs });
       } catch (err) {
         logger.error('Giphy proxy error', err);

@@ -142,7 +142,10 @@ export const appFactory = async (
     '/api/password-check',
     new ApiPasswordCheckRouter(passwordCheckService, logger),
   );
-  app.use('/api/giphy', new ApiGiphyRouter(giphyService, logger));
+  app.use(
+    '/api/giphy',
+    new ApiGiphyRouter(giphyService, logger, analyticsService),
+  );
   app.useHTTP('/api', (_, res) => {
     res.status(404).send();
   });

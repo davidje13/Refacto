@@ -149,6 +149,9 @@ export class ApiRetrosRouter extends Router {
             WebSocketExpress.hasAuthScope(res, 'write'),
           ),
         {
+          onConnect: (req) => {
+            analyticsService.event(req, 'retro session begin');
+          },
           onDisconnect: (req, closeReason, duration) => {
             analyticsService.event(req, 'retro session', {
               closeReason,
