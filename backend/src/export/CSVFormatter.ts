@@ -56,7 +56,7 @@ export class CSVFormatter {
   }
 }
 
-const SIMPLE_CSV_CELL = /^[^"':;\\\r\n\t ]*$/i;
+const SIMPLE_CSV_CELL = /^[^"':;,\\\r\n\t ]*$/i;
 
 const awaitDrain = (target: Writable) =>
   new Promise<void>((resolve) => target.once('drain', resolve));

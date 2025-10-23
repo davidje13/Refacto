@@ -15,8 +15,8 @@ describe('CSVFormatter', () => {
   it('quotes values with special characters', async () => {
     const formatter = new CSVFormatter();
     const stream = TestStream();
-    await formatter.stream(stream.writable, [['a\nb', 'c"']]);
-    expect(stream.getValue()).toEqual('"a\nb","c"""\n');
+    await formatter.stream(stream.writable, [['a\nb', 'c"', 'd,e']]);
+    expect(stream.getValue()).toEqual('"a\nb","c""","d,e"\n');
   });
 
   it('consumes iterators in the input', async () => {
