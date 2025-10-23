@@ -1,23 +1,27 @@
-function getStorage(storage: Storage, key: string): string | null {
+function getStorage(storage: () => Storage, key: string): string | null {
   try {
-    return storage.getItem(key);
+    return storage().getItem(key);
   } catch (e) {
     return null;
   }
 }
 
-function setStorage(storage: Storage, key: string, value: string): boolean {
+function setStorage(
+  storage: () => Storage,
+  key: string,
+  value: string,
+): boolean {
   try {
-    storage.setItem(key, value);
-    return storage.getItem(key) === value;
+    storage().setItem(key, value);
+    return storage().getItem(key) === value;
   } catch (e) {
     return false;
   }
 }
 
-function deleteStorage(storage: Storage, key: string) {
+function deleteStorage(storage: () => Storage, key: string) {
   try {
-    storage.removeItem(key);
+    storage().removeItem(key);
   } catch (e) {
     // ignore
   }
@@ -62,30 +66,35 @@ function deleteCookie(key: string) {
   );
 }
 
+// accessing these properties can throw SecurityException (e.g. in Safari with 'Block all cookies' enabled),
+// so we provide them as getters, which are called within try...catch blocks on use
+const getLocalStorage = () => window.localStorage;
+const getSessionStorage = () => window.sessionStorage;
+
 export const storage = {
   setItem(key: string, value: string): boolean {
     let any = false;
     // sessionStorage is best option for security and privacy
-    if (setStorage(window.sessionStorage, key, value)) {
+    if (setStorage(getSessionStorage, key, value)) {
       any = true;
     }
     // if sessionStorage fails for any reason, throw everything at the wall and see what sticks:
-    any = setStorage(window.localStorage, key, value) || any; // do not short-circuit
+    any = setStorage(getLocalStorage, key, value) || any; // do not short-circuit
     any = setSessionCookie(key, value) || any;
     return any;
   },
 
   getItem(key: string): string | null {
     return (
-      getStorage(window.sessionStorage, key) ||
-      getStorage(window.localStorage, key) ||
+      getStorage(getSessionStorage, key) ||
+      getStorage(getLocalStorage, key) ||
       getCookie(key)
     );
   },
 
   removeItem(key: string) {
-    deleteStorage(window.sessionStorage, key);
-    deleteStorage(window.localStorage, key);
+    deleteStorage(getSessionStorage, key);
+    deleteStorage(getLocalStorage, key);
     deleteCookie(key);
   },
 };
