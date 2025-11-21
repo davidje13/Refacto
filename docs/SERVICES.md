@@ -116,12 +116,12 @@ SSO_GITHUB_CLIENT_ID="idhere" SSO_GITHUB_CLIENT_SECRET="secrethere" ./index.js
 
 You will need a GitLab client ID:
 
-1. Go to <https://gitlab.com/profile/applications>
+1. Go to <https://gitlab.com/-/user_settings/applications>
 2. Set the "Redirect URI" to match your deployment with
    `/sso/gitlab` appended to the end. e.g. for local
    testing, this could be `http://localhost:5000/sso/gitlab`
-3. Untick the "confidential" option. You do not need to enable
-   any scopes.
+3. Untick the "confidential" option and select the "email"
+   scope (this is the closest we can get to no scopes)
 4. Record the application ID (you will not need the secret).
 
 You can now invoke the application with the `SSO_GITLAB_CLIENT_ID`
@@ -137,6 +137,7 @@ the auth and token info URLs:
 
 ```sh
 SSO_GITLAB_AUTH_URL="https://gitlab.example.com/oauth/authorize" \
+SSO_GITLAB_ACCESS_TOKEN_URL="https://gitlab.example.com/oauth/token" \
 SSO_GITLAB_TOKEN_INFO_URL="https://gitlab.example.com/oauth/token/info" \
 SSO_GITLAB_CLIENT_ID="idhere" \
 ./index.js

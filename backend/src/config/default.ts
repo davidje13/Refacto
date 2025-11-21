@@ -52,6 +52,7 @@ export default {
     gitlab: {
       clientId: '',
       authUrl: 'https://gitlab.com/oauth/authorize',
+      accessTokenUrl: 'https://gitlab.com/oauth/token',
       tokenInfoUrl: 'https://gitlab.com/oauth/token/info',
     },
   },

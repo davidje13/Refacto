@@ -1,4 +1,4 @@
-import { sha1 } from '../helpers/crypto';
+import { digest, toHex } from '../helpers/crypto';
 
 export class PasswordService {
   public constructor(private readonly apiBase: string) {}
@@ -7,7 +7,7 @@ export class PasswordService {
     password: string,
     signal: AbortSignal,
   ): Promise<number> {
-    const passwordHash = (await sha1(password)).toUpperCase();
+    const passwordHash = toHex(await digest(password, 'SHA-1')).toUpperCase();
     const key = passwordHash.substring(0, 5);
     const rest = passwordHash.substring(5);
 

@@ -19,13 +19,21 @@ export const LoginCallback = memo(({ service }: PropsT) => {
   useEffect(() => {
     const ac = new AbortController();
     const { search, hash } = document.location;
-    const nonce = storage.getItem('login-nonce');
-    handleLogin(service, nonce, { search, hash }, ac.signal)
+    const redirectUri = document.location.href.split('?')[0]!;
+    const localState = storage.getItem('login-state');
+    handleLogin(service, localState, { search, hash, redirectUri }, ac.signal)
       .then((redirect) => {
         if (ac.signal.aborted) {
           return;
         }
-        storage.removeItem('login-nonce');
+        storage.removeItem('login-state');
+        if (
+          new URL(redirect, document.location.href).host !==
+          document.location.host
+        ) {
+          // possibly a malicious redirect - ignore it and substitute a safe one
+          redirect = '/';
+        }
         stableSetLocation(redirect, { replace: true });
       })
       .catch((err) => {
@@ -33,13 +41,13 @@ export const LoginCallback = memo(({ service }: PropsT) => {
           return;
         }
         if (!(err instanceof Error)) {
-          storage.removeItem('login-nonce');
+          storage.removeItem('login-state');
           setError(String(err));
         } else if (err.message === 'unrecognised login details') {
           // GitLab shows a bare link to the /sso/login URL on the confirmation page
           stableSetLocation('/', { replace: true });
         } else {
-          storage.removeItem('login-nonce');
+          storage.removeItem('login-state');
           setError(err.message);
         }
       });

@@ -35,7 +35,7 @@ export function getAuthBackend(
     userAuthService.grantLoginToken,
   );
   return {
-    addRoutes: (app) => app.useHTTP('/api/sso', sso.router),
+    addRoutes: (app) => app.useHTTP('/api/sso', sso.router()),
     clientConfig: sso.service.clientConfig,
   };
 }
