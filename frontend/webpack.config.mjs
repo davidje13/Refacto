@@ -5,6 +5,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerWebpackPlugin from 'css-minimizer-webpack-plugin';
 import TerserWebpackPlugin from 'terser-webpack-plugin';
+import webpack from 'webpack';
 import express from 'express';
 
 const basedir = dirname(fileURLToPath(import.meta.url));
@@ -100,6 +101,11 @@ export default (env, argv) => ({
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash:8].css',
+    }),
+    new webpack.DefinePlugin({
+      // disable react DevTools integration + console advert
+      // See https://github.com/facebook/react/pull/11448
+      __REACT_DEVTOOLS_GLOBAL_HOOK__: '({isDisabled:true})',
     }),
   ],
   optimization: {
