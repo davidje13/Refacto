@@ -192,7 +192,9 @@ describe('RetroService', () => {
       const listener = new ChangeListener();
       subscription.listen(listener.onChange);
       await subscription.send({ newThing: ['=', 'woo'] } as any);
-      expect(listener.latestError()).toEqual('Unexpected property newThing');
+      expect(listener.latestError()).toEqual(
+        'Unexpected property newThing at root',
+      );
       expect(listener.messageCount()).toEqual(1);
     });
 

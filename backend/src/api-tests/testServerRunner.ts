@@ -1,44 +1,31 @@
 import type { Server } from 'node:http';
-import type { AddressInfo } from 'node:net';
+import { type WebListener } from 'web-listener';
 import type { TypedParameter } from 'lean-test';
 import { App } from '../app';
+import type { TestLogger } from './TestLogger';
 
-type Runnable = Server | App;
+type Runnable = WebListener | App;
 type MaybePromise<T> = T | Promise<T>;
 
-export function addressToString(addr: AddressInfo | string | null): string {
-  if (!addr) {
-    throw new Error('Test server is not running');
-  }
-  if (typeof addr === 'string') {
-    return addr;
-  }
-  const { address, family, port } = addr;
-  const host = family === 'IPv6' ? `[${address}]` : address;
-  return `http://${host}:${port}`;
-}
-
-export const testServerRunner = <T extends { run: Runnable }>(
+export const testServerRunner = <
+  T extends { run: Runnable; logger?: TestLogger },
+>(
   serverFn: (getTyped: <T>(key: TypedParameter<T>) => T) => MaybePromise<T>,
 ) =>
   beforeEach<{ server: Server } & Omit<T, 'run'>>(
     async ({ setParameter, getTyped }) => {
-      let server: Server;
       const { run, ...extras } = await serverFn(getTyped);
-      if (run instanceof App) {
-        server = run.express.createServer();
-      } else {
-        server = run;
-      }
+      const listener = run instanceof App ? run.listener : run;
+      const server = await listener.listen(0, '127.0.0.1');
       setParameter({ ...extras, server });
-      await new Promise<void>((resolve) =>
-        server.listen(0, '127.0.0.1', resolve),
-      );
 
       return async () => {
-        await new Promise((resolve) => server.close(resolve));
+        await server.closeWithTimeout('end of test', 0);
         if (run instanceof App) {
           await run.close();
+        }
+        for (const log of extras.logger?.logs ?? []) {
+          console.log(log);
         }
       };
     },

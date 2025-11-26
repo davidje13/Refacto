@@ -1,4 +1,4 @@
-import { Router } from 'websocket-express';
+import { Router, sendJSON } from 'web-listener';
 import type { ClientConfig } from '../shared/api-entities';
 
 interface ServerConfig {
@@ -17,8 +17,6 @@ export class ApiConfigRouter extends Router {
       giphy: serverConfig.giphy.apiKey !== '',
     };
 
-    this.get('/', (_, res) => {
-      res.json(clientConfig);
-    });
+    this.get('/', (_, res) => sendJSON(res, clientConfig));
   }
 }

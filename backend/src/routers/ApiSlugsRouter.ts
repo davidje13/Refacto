@@ -1,4 +1,4 @@
-import { Router } from 'websocket-express';
+import { getPathParameters, Router, sendJSON } from 'web-listener';
 import type { RetroService } from '../services/RetroService';
 
 export class ApiSlugsRouter extends Router {
@@ -6,13 +6,13 @@ export class ApiSlugsRouter extends Router {
     super();
 
     this.get('/:slug', async (req, res) => {
-      const { slug } = req.params;
+      const { slug } = getPathParameters(req);
       const retroId = await retroService.getRetroIdForSlug(slug);
 
-      if (retroId !== null) {
-        res.json({ id: retroId });
+      if (retroId === null) {
+        res.writeHead(404).end();
       } else {
-        res.status(404).end();
+        sendJSON(res, { id: retroId });
       }
     });
   }

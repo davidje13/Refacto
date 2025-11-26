@@ -1,5 +1,4 @@
 import type { Collection, DB } from 'collection-storage';
-import type { JWTPayload } from 'websocket-express';
 import type { Hasher } from 'pwd-hasher';
 import type { TokenManager } from '../tokens/TokenManager';
 import { json } from '../helpers/json';
@@ -24,19 +23,6 @@ const PASSWORD_SCOPES = {
   readArchives: true,
   write: true,
 };
-
-const extractJwtPayload = json.object<JWTPayload>({
-  iss: json.optional(json.string),
-  iat: json.optional(json.number),
-  nbf: json.optional(json.number),
-  exp: json.optional(json.number),
-  sub: json.optional(json.string),
-  aud: json.optional(json.string),
-  jti: json.optional(json.string),
-  scopes: json.optional(
-    json.oneOf(json.array(json.string), json.record(json.boolean), json.string),
-  ),
-});
 
 export class RetroAuthService {
   private readonly retroAuthCollection: Collection<RetroAuth>;
@@ -110,7 +96,7 @@ export class RetroAuthService {
     }
 
     const now = Math.floor(Date.now() / 1000);
-    const tokenData = {
+    const tokenData: RetroJWTPayload = {
       iat: now,
       exp: now + tokenLifespan,
       aud: `retro-${retroId}`,
@@ -123,7 +109,7 @@ export class RetroAuthService {
   public async readAndVerifyToken(
     retroId: string,
     retroToken: string,
-  ): Promise<JWTPayload | null> {
+  ): Promise<RetroJWTPayload | null> {
     const retroData = await this.retroAuthCollection.get('id', retroId, [
       'publicKey',
     ]);
@@ -138,6 +124,20 @@ export class RetroAuthService {
     if (!raw) {
       return null;
     }
-    return extractJwtPayload(raw);
+    return extractRetroJwtPayload(raw);
   }
 }
+
+interface RetroJWTPayload {
+  iat: number;
+  exp: number;
+  aud: string;
+  scopes: Record<string, boolean>;
+}
+
+const extractRetroJwtPayload = json.object<RetroJWTPayload>({
+  iat: json.number,
+  exp: json.number,
+  aud: json.string,
+  scopes: json.record(json.boolean),
+});

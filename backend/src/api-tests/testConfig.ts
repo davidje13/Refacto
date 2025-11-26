@@ -16,7 +16,7 @@ const baseTestConfig: ConfigT = {
   serverBindAddress: '',
   trustProxy: false,
   log: { file: '' },
-  analytics: { eventDetail: 'none', clientErrorDetail: 'none' },
+  analytics: { eventDetail: 'none', clientErrorDetail: 'message' },
   password: { workFactor: 1, secretPepper: '' },
   passwordCheck: { baseUrl: '' },
   token: { secretPassphrase: '' },

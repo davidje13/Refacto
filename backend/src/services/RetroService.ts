@@ -28,11 +28,15 @@ function validateSlug(slug: string) {
   }
 }
 
-function dbErrorMessage(e: any): string {
-  if (e.message === 'duplicate' || e.code === 11000) {
-    return 'URL is already taken';
+export class DuplicateError extends Error {}
+
+function dbError(e: unknown): unknown {
+  if (e instanceof Error) {
+    if (e.message === 'duplicate' || ('code' in e && e.code === 11000)) {
+      return new DuplicateError('URL is already taken');
+    }
   }
-  return e.message;
+  return e;
 }
 
 export class RetroService {
@@ -68,7 +72,7 @@ export class RetroService {
         validateSlug(d.slug);
         return d;
       },
-      { writeErrorIntercept: (e) => new Error(dbErrorMessage(e)) },
+      { writeErrorIntercept: dbError },
     );
 
     this.retroBroadcaster = new Broadcaster<Retro, Spec<Retro>>(
@@ -114,7 +118,7 @@ export class RetroService {
         items: [],
       });
     } catch (e) {
-      throw new Error(dbErrorMessage(e));
+      throw dbError(e);
     }
 
     return id;

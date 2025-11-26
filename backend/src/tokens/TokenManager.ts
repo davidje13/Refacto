@@ -54,10 +54,7 @@ export class TokenManager {
     });
   }
 
-  public signData(
-    data: Readonly<JsonData>,
-    privateKey: string | Buffer,
-  ): string {
+  public signData(data: unknown, privateKey: string | Buffer): string {
     const key = createPrivateKey({
       key: privateKey,
       format: 'pem',

@@ -1,6 +1,18 @@
 import { join } from 'node:path';
-import type { ErrorRequestHandler } from 'express';
-import { WebSocketExpress } from 'websocket-express';
+import {
+  CONTINUE,
+  fileServer,
+  findCause,
+  HTTPError,
+  jsonErrorHandler,
+  makeGetClient,
+  negotiateEncoding,
+  Negotiator,
+  proxy,
+  Router,
+  typedErrorHandler,
+  WebListener,
+} from 'web-listener';
 import { Hasher } from 'pwd-hasher';
 import { connectDB } from './import-wrappers/collection-storage-wrap';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
@@ -10,8 +22,7 @@ import { ApiSlugsRouter } from './routers/ApiSlugsRouter';
 import { ApiRetrosRouter } from './routers/ApiRetrosRouter';
 import { ApiPasswordCheckRouter } from './routers/ApiPasswordCheckRouter';
 import { ApiGiphyRouter } from './routers/ApiGiphyRouter';
-import { ForwardingRouter } from './routers/ForwardingRouter';
-import { StaticRouter } from './routers/StaticRouter';
+import { setCacheHeaders } from './routers/StaticRouter';
 import { TokenManager } from './tokens/TokenManager';
 import { PasswordCheckService } from './services/PasswordCheckService';
 import type { Logger } from './services/LogService';
@@ -29,6 +40,7 @@ import {
   addSecurityHeaders,
   removeHtmlSecurityHeaders,
 } from './headers';
+import { ValidationError } from './helpers/json';
 
 export interface TestHooks {
   retroService: RetroService;
@@ -39,9 +51,8 @@ export interface TestHooks {
 
 export class App {
   constructor(
-    public readonly express: WebSocketExpress,
+    public readonly listener: WebListener,
     public readonly testHooks: TestHooks,
-    public readonly softClose: (timeout: number) => void | Promise<void>,
     public readonly close: () => void | Promise<void>,
   ) {}
 }
@@ -94,27 +105,25 @@ export const appFactory = async (
 
   const auth = getAuthBackend(config, userAuthService);
 
-  const app = new WebSocketExpress();
+  const app = new Router();
 
-  app.disable('x-powered-by');
-  app.enable('case sensitive routing');
-  if (config.trustProxy) {
-    app.enable('trust proxy');
-  }
-  app.set('shutdown timeout', 5000);
-
-  app.useHTTP((req, res, next) => {
-    addSecurityHeaders(req, res);
-    next();
+  const getClient = makeGetClient({
+    trustedProxyCount: config.trustProxy ? 1 : 0,
+    trustedHeaders: ['x-forwarded-for', 'x-forwarded-host'],
   });
 
-  app.useHTTP('/api', (_, res, next) => {
+  app.use((req, res) => {
+    addSecurityHeaders(req, res, getClient);
+    return CONTINUE;
+  });
+
+  app.mount('/api', (_, res) => {
     removeHtmlSecurityHeaders(res);
     addNoCacheHeaders(res);
-    next();
+    return CONTINUE;
   });
 
-  app.use(
+  app.mount(
     '/api/auth',
     new ApiAuthRouter(
       userAuthService,
@@ -124,55 +133,72 @@ export const appFactory = async (
       config.permit.myRetros,
     ),
   );
-  app.use('/api/diagnostics', new ApiDiagnosticsRouter(analyticsService));
-  app.use('/api/slugs', new ApiSlugsRouter(retroService));
-  app.use('/api/config', new ApiConfigRouter(config, auth.clientConfig));
+  app.mount('/api/diagnostics', new ApiDiagnosticsRouter(analyticsService));
+  app.mount('/api/slugs', new ApiSlugsRouter(retroService));
+  app.mount('/api/config', new ApiConfigRouter(config, auth.clientConfig));
   auth.addRoutes(app);
-  const apiRetrosRouter = new ApiRetrosRouter(
-    userAuthService,
-    retroAuthService,
-    retroService,
-    retroArchiveService,
-    logger,
-    analyticsService,
-    config.permit.myRetros,
+  app.mount(
+    '/api/retros',
+    new ApiRetrosRouter(
+      userAuthService,
+      retroAuthService,
+      retroService,
+      retroArchiveService,
+      analyticsService,
+      config.permit.myRetros,
+    ),
   );
-  app.use('/api/retros', apiRetrosRouter);
-  app.use(
+  app.mount(
     '/api/password-check',
-    new ApiPasswordCheckRouter(passwordCheckService, logger),
+    new ApiPasswordCheckRouter(passwordCheckService),
   );
-  app.use(
-    '/api/giphy',
-    new ApiGiphyRouter(giphyService, logger, analyticsService),
+  app.mount('/api/giphy', new ApiGiphyRouter(giphyService, analyticsService));
+  app.mount(
+    '/api',
+    (_, res) => res.writeHead(404).end(),
+    typedErrorHandler(ValidationError, (error) => {
+      throw new HTTPError(422, { body: error.message, cause: error });
+    }),
+    jsonErrorHandler((error) => ({ error: error.body }), {
+      onlyIfRequested: false,
+    }),
   );
-  app.useHTTP('/api', (_, res) => {
-    res.status(404).send();
-  });
+
   if (config.forwardHost) {
     // Dev mode: forward unknown requests to another service
-    app.use(new ForwardingRouter(config.forwardHost, logger));
+    app.use(proxy(config.forwardHost, { keepAlive: true, maxSockets: 10 }));
   } else {
     // Production mode: all resources are copied into /static
-    app.use(new StaticRouter(join(basedir, 'static')));
+    app.use(
+      await fileServer(join(basedir, 'static'), {
+        mode: 'static-paths',
+        negotiator: new Negotiator([negotiateEncoding(['br', 'gzip'])]),
+        fallback: { filePath: 'index.html' }, // Single page app: serve index.html for any unknown GET request
+        hide: [/\.(br|gz)^/],
+        callback: setCacheHeaders,
+      }),
+    );
   }
 
-  // error handler must have all 4 parameters listed to be recognised by express
-  const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
-    analyticsService.requestError(req, 'Unhandled route error', err);
-    res.status(500).json({ error: 'internal error' });
-  };
-  app.use(errorHandler);
+  const listener = new WebListener(app);
+  listener.addEventListener('error', (evt) => {
+    evt.preventDefault();
+    const { request, context, error } = evt.detail;
+    if (!request) {
+      logger.error(context, error);
+    } else if ((findCause(error, HTTPError)?.statusCode ?? 500) >= 500) {
+      analyticsService.requestError(request, context, error);
+    }
+  });
 
   return new App(
-    app,
+    listener,
     {
       retroService,
       retroArchiveService,
       retroAuthService,
       userAuthService,
     },
-    apiRetrosRouter.softClose,
     db.close.bind(db),
   );
 };

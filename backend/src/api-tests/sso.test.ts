@@ -1,22 +1,27 @@
-import { WebSocketExpress } from 'websocket-express';
+import {
+  getAddressURL,
+  requestHandler,
+  sendJSON,
+  WebListener,
+} from 'web-listener';
 import request from 'superwstest';
 import jwt from 'jwt-simple';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner, addressToString } from './testServerRunner';
+import { testServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('/api/sso/service', () => {
   const MOCK_SSO = testServerRunner(() => {
-    const ssoApp = new WebSocketExpress();
-    ssoApp.use(WebSocketExpress.urlencoded({ extended: false }));
-    ssoApp.get('/', (_, res) => {
-      res.json({
-        aud: 'my-client-id',
-        sub: 'my-external-id',
-      });
-    });
-    return { run: ssoApp.createServer() };
+    const ssoApp = new WebListener(
+      requestHandler((_, res) =>
+        sendJSON(res, {
+          aud: 'my-client-id',
+          sub: 'my-external-id',
+        }),
+      ),
+    );
+    return { run: ssoApp };
   });
 
   const APP = testServerRunner(async (getTyped) => ({
@@ -27,7 +32,7 @@ describe('/api/sso/service', () => {
           google: {
             clientId: 'my-client-id',
             authUrl: 'foo',
-            tokenInfoUrl: addressToString(getTyped(MOCK_SSO).server.address()),
+            tokenInfoUrl: getAddressURL(getTyped(MOCK_SSO).server.address()),
           },
         },
       }),

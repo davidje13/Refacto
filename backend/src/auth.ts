@@ -1,12 +1,16 @@
-import { WebSocketExpress, type Router } from 'websocket-express';
 import { buildAuthenticationBackend } from 'authentication-backend';
+import {
+  getBodyJson,
+  getQuery,
+  HTTPError,
+  sendJSON,
+  type Router,
+} from 'web-listener';
 import type { ClientConfig } from './shared/api-entities';
 import type { ConfigT } from './config';
 import type { UserAuthService } from './services/UserAuthService';
 import { addNoCacheHeaders } from './headers';
 import { json } from './helpers/json';
-
-const JSON_BODY = WebSocketExpress.json({ limit: 5 * 1024 });
 
 interface AuthBackend {
   addRoutes(app: Router): void;
@@ -35,7 +39,7 @@ export function getAuthBackend(
     userAuthService.grantLoginToken,
   );
   return {
-    addRoutes: (app) => app.useHTTP('/api/sso', sso.router()),
+    addRoutes: (app) => app.mount('/api/sso', sso.router()),
     clientConfig: sso.service.clientConfig,
   };
 }
@@ -46,34 +50,21 @@ function getInsecureAuthBackend(
 ): AuthBackend {
   return {
     addRoutes: (app) => {
-      app.useHTTP('/api/sso/public', JSON_BODY, (req, res) => {
-        try {
-          const { externalToken } = json.extractObject(req.body, {
-            externalToken: json.string,
-          });
-          res.status(200).json({ userToken: externalToken });
-        } catch (e) {
-          if (!(e instanceof Error)) {
-            res.status(500).json({ error: 'Internal error' });
-          } else {
-            res.status(400).json({ error: e.message });
-          }
-        }
+      app.post('/api/sso/public', async (req, res) => {
+        const body = await getBodyJson(req, { maxContentBytes: 5 * 1024 });
+        const { externalToken } = json.extractObject(body, {
+          externalToken: json.string,
+        });
+        return sendJSON(res, { userToken: externalToken });
       });
 
-      app.useHTTP(path, (req, res) => {
+      app.get(path, (req, res) => {
         addNoCacheHeaders(res);
+        const redirectUri = getQuery(req, 'redirect_uri');
+        const state = getQuery(req, 'state');
 
-        const { redirect_uri: redirectUri, state } = req.query;
-
-        if (
-          typeof redirectUri !== 'string' ||
-          !redirectUri ||
-          typeof state !== 'string' ||
-          !state
-        ) {
-          res.status(400).json({ error: 'Bad request' });
-          return;
+        if (!redirectUri || !state) {
+          throw new HTTPError(400, { body: 'bad request' });
         }
 
         const userToken = userAuthService.grantLoginToken(
@@ -86,8 +77,8 @@ function getInsecureAuthBackend(
           token: userToken,
         }).toString();
 
-        res.header('Location', target.toString());
-        res.status(303).end();
+        res.setHeader('location', target.toString());
+        res.writeHead(303).end();
       });
     },
     clientConfig: { public: { authUrl: path, clientId: '' } },

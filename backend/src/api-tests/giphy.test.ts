@@ -1,14 +1,13 @@
+import { getAddressURL, Router, sendJSON, WebListener } from 'web-listener';
 import request from 'superwstest';
-import { WebSocketExpress } from 'websocket-express';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { addressToString, testServerRunner } from './testServerRunner';
+import { testServerRunner } from './testServerRunner';
 import type { GiphyResponse } from '../services/GiphyService';
 import { appFactory } from '../app';
 
 describe('API giphy', () => {
   const MOCK_GIPHY = testServerRunner(async () => {
-    const giphyApp = new WebSocketExpress();
     const response: GiphyResponse = {
       meta: { status: 200 },
       data: [
@@ -34,12 +33,11 @@ describe('API giphy', () => {
       ],
       pagination: {},
     };
-    giphyApp.use(WebSocketExpress.urlencoded({ extended: false }));
-    giphyApp.get('/gifs/search', (_, res) => {
-      res.json(response);
-    });
+    const giphyApp = new WebListener(
+      new Router().get('/gifs/search', (_, res) => sendJSON(res, response)),
+    );
 
-    return { run: giphyApp.createServer() };
+    return { run: giphyApp };
   });
 
   const PROPS = testServerRunner(async (getTyped) => {
@@ -47,7 +45,7 @@ describe('API giphy', () => {
       new TestLogger(),
       testConfig({
         giphy: {
-          baseUrl: addressToString(getTyped(MOCK_GIPHY).server.address()),
+          baseUrl: getAddressURL(getTyped(MOCK_GIPHY).server.address()),
           apiKey: 'my-giphy-key',
         },
       }),

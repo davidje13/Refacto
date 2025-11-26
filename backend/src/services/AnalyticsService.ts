@@ -1,7 +1,9 @@
+import type { IncomingHttpHeaders } from 'node:http';
 import { UserAgent } from '../helpers/UserAgent';
 import type { Logger } from './LogService';
 
 type DetailLevel = 'version' | 'brand' | 'message' | 'none';
+type Request = { headers: IncomingHttpHeaders };
 
 export class AnalyticsService {
   constructor(
@@ -44,12 +46,8 @@ export class AnalyticsService {
   }
 }
 
-interface Request {
-  header(name: string): string | string[] | undefined;
-}
-
 function canTrack(request: Request) {
-  return request.header('dnt') !== '1' && request.header('sec-gpc') !== '1';
+  return request.headers['dnt'] !== '1' && request.headers['sec-gpc'] !== '1';
 }
 
 function getClient(request: Request, detail: DetailLevel) {
@@ -57,10 +55,6 @@ function getClient(request: Request, detail: DetailLevel) {
     return { platform: null, browser: null };
   }
 
-  let ua = request.header('user-agent');
-  if (Array.isArray(ua)) {
-    ua = ua[0];
-  }
-  const agent = new UserAgent(ua ?? '');
+  const agent = new UserAgent(request.headers['user-agent'] ?? '');
   return agent.getSummary(detail === 'version');
 }

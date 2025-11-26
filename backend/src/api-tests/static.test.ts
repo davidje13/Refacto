@@ -1,9 +1,9 @@
-import { WebSocketExpress } from 'websocket-express';
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner, addressToString } from './testServerRunner';
+import { testServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
+import { getAddressURL, requestHandler, WebListener } from 'web-listener';
 
 describe('API static content', () => {
   describe('Embedded', () => {
@@ -18,7 +18,7 @@ describe('API static content', () => {
         .get('/')
         .expect(200)
         .expect('Content-Type', /text\/html/)
-        .expect('Vary', 'Accept-Encoding');
+        .expect('Vary', 'accept-encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
@@ -43,7 +43,7 @@ describe('API static content', () => {
         .expect(200)
         .expect('Content-Type', /text\/html/)
         .expect('Content-Encoding', 'gzip')
-        .expect('Vary', 'Accept-Encoding');
+        .expect('Vary', 'accept-encoding');
 
       expect(response.text).toContain(
         '<title>Example Compressed Static Resource</title>',
@@ -57,7 +57,7 @@ describe('API static content', () => {
         .get('/foobar')
         .expect(200)
         .expect('Content-Type', /text\/html/)
-        .expect('Vary', 'Accept-Encoding');
+        .expect('Vary', 'accept-encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
@@ -71,7 +71,7 @@ describe('API static content', () => {
         .expect(200)
         .expect('Content-Type', /text\/html/)
         .expect('Content-Encoding', 'gzip')
-        .expect('Vary', 'Accept-Encoding');
+        .expect('Vary', 'accept-encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
@@ -84,7 +84,7 @@ describe('API static content', () => {
         .expect(200);
 
       const vary = response.header['vary'] || '';
-      expect(vary).not(toContain('Content-Type'));
+      expect(vary).not(toContain('content-type'));
     });
 
     it('adds common headers', async (props) => {
@@ -134,18 +134,17 @@ describe('API static content', () => {
 
   describe('Proxy', () => {
     const PROXY = testServerRunner(() => {
-      const proxyApp = new WebSocketExpress();
-      proxyApp.get('/', (_, res) => {
-        res.send('proxied content here');
-      });
-      return { run: proxyApp.createServer() };
+      const proxyApp = new WebListener(
+        requestHandler((_, res) => res.end('proxied content here')),
+      );
+      return { run: proxyApp };
     });
 
     const PROPS = testServerRunner(async (getTyped) => ({
       run: await appFactory(
         new TestLogger(),
         testConfig({
-          forwardHost: addressToString(getTyped(PROXY).server.address()),
+          forwardHost: getAddressURL(getTyped(PROXY).server.address()),
         }),
       ),
     }));

@@ -13,7 +13,7 @@ export class PasswordCheckService {
 
   public async getBreachesRange(prefix: string): Promise<string> {
     if (!VALID_RANGE.test(prefix)) {
-      throw new Error('Invalid range prefix');
+      throw new RangeError('Invalid range prefix');
     }
     if (!this.baseUrl) {
       throw new Error('Service unavailable');

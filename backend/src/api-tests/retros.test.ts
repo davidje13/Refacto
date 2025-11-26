@@ -94,7 +94,7 @@ describe('API retros', () => {
       expect(response.body.token).toBeTruthy();
     });
 
-    it('responds HTTP Bad Request if data is missing', async (props) => {
+    it('responds HTTP Unprocessable Entity if data is missing', async (props) => {
       const { server, hooks } = props.getTyped(PROPS);
 
       const userToken = getUserToken(hooks, 'me');
@@ -103,9 +103,9 @@ describe('API retros', () => {
         .post('/api/retros')
         .send({ slug: 'new-retro', name: 'Meh' })
         .set('Authorization', `Bearer ${userToken}`)
-        .expect(400);
+        .expect(422);
 
-      expect(response.body.error).toEqual('Expected string');
+      expect(response.body.error).toEqual('Expected string at .password');
     });
 
     it('responds HTTP Bad Request if data is blank', async (props) => {

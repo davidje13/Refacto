@@ -1,10 +1,16 @@
-import { WebSocketExpress, Router, type JWTPayload } from 'websocket-express';
+import {
+  getBodyJson,
+  getPathParameters,
+  HTTPError,
+  requireBearerAuth,
+  Router,
+  sendJSON,
+} from 'web-listener';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroService } from '../services/RetroService';
 import type { AnalyticsService } from '../services/AnalyticsService';
-
-const JSON_BODY = WebSocketExpress.json({ limit: 4 * 1024 });
+import { json } from '../helpers/json';
 
 export class ApiAuthRouter extends Router {
   public constructor(
@@ -16,41 +22,40 @@ export class ApiAuthRouter extends Router {
   ) {
     super();
 
-    const userAuthMiddleware = WebSocketExpress.requireBearerAuth(
-      'user',
-      (token): JWTPayload | null => userAuthService.readAndVerifyToken(token),
-    );
+    const userAuth = requireBearerAuth({
+      realm: 'user',
+      extractAndValidateToken: (token) =>
+        userAuthService.readAndVerifyToken(token),
+    });
 
-    this.get('/tokens/:retroId/user', userAuthMiddleware, async (req, res) => {
-      const userId = WebSocketExpress.getAuthData(res).sub!;
-      const { retroId } = req.params;
+    this.get('/tokens/:retroId/user', userAuth, async (req, res) => {
+      const userId = userAuth.getTokenData(req).sub;
+      const { retroId } = getPathParameters(req);
 
       if (!permitOwnerToken) {
-        res.status(403).json({ error: 'must use password' });
-        return;
+        throw new HTTPError(403, { body: 'must use password' });
       }
 
       if (
         !retroId ||
         !(await retroService.isRetroOwnedByUser(retroId, userId))
       ) {
-        res.status(403).json({ error: 'not retro owner' });
-        return;
+        throw new HTTPError(403, { body: 'not retro owner' });
       }
 
       const retroToken = await retroAuthService.grantOwnerToken(retroId);
       if (!retroToken) {
-        res.status(500).json({ error: 'retro not found' });
-        return;
+        throw new HTTPError(500, { body: 'retro not found' });
       }
 
       analyticsService.event(req, 'access own retro');
-      res.status(200).json({ retroToken });
+      return sendJSON(res, { retroToken });
     });
 
-    this.post('/tokens/:retroId', JSON_BODY, async (req, res) => {
-      const { retroId } = req.params;
-      const { password } = req.body;
+    this.post('/tokens/:retroId', async (req, res) => {
+      const { retroId } = getPathParameters(req);
+      const body = await getBodyJson(req, { maxContentBytes: 4 * 1024 });
+      const { password } = json.extractObject(body, { password: json.string });
 
       const begin = Date.now();
       const retroToken = await retroAuthService.grantForPassword(
@@ -58,15 +63,14 @@ export class ApiAuthRouter extends Router {
         password,
       );
       if (!retroToken) {
-        res.status(400).json({ error: 'incorrect password' });
-        return;
+        throw new HTTPError(400, { body: 'incorrect password' });
       }
 
       const time = Date.now() - begin;
       analyticsService.event(req, 'access retro', {
         passwordCheckTime: time,
       });
-      res.status(200).json({ retroToken });
+      sendJSON(res, { retroToken });
     });
   }
 }

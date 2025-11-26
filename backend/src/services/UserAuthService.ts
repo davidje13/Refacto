@@ -1,7 +1,6 @@
 import type { DB } from 'collection-storage';
-import type { JWTPayload } from 'websocket-express';
-import type { JsonData } from '../shared/api-entities';
 import type { TokenManager, KeyPair } from '../tokens/TokenManager';
+import { json } from '../helpers/json';
 
 interface StoredKeyPair extends KeyPair {
   id: string;
@@ -45,20 +44,39 @@ export class UserAuthService {
     });
   };
 
-  public grantToken(tokenData: JWTPayload): string {
+  public grantToken(tokenData: UserJWTPayload): string {
     if (!this.privateKey) {
       throw new Error('Not initialised');
     }
-    return this.tokenManager.signData(tokenData as JsonData, this.privateKey);
+    return this.tokenManager.signData(tokenData, this.privateKey);
   }
 
-  public readAndVerifyToken(userToken: string): JWTPayload | null {
+  public readAndVerifyToken(userToken: string): UserJWTPayload {
     if (!this.publicKey) {
       throw new Error('Not initialised');
     }
-    return this.tokenManager.readAndVerifySigned(
-      userToken,
-      this.publicKey,
-    ) as JWTPayload;
+    return extractUserJwtPayload(
+      this.tokenManager.readAndVerifySigned(userToken, this.publicKey),
+    );
   }
 }
+
+interface UserJWTPayload {
+  iss: string;
+  iat?: number | undefined;
+  exp?: number | undefined;
+  sub: string;
+  aud: string;
+  scopes?: string[] | Record<string, boolean> | string | undefined;
+}
+
+const extractUserJwtPayload = json.object<UserJWTPayload>({
+  iss: json.string,
+  iat: json.optional(json.number),
+  exp: json.optional(json.number),
+  sub: json.string,
+  aud: json.string,
+  scopes: json.optional(
+    json.oneOf(json.array(json.string), json.record(json.boolean), json.string),
+  ),
+});

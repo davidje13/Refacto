@@ -5,15 +5,15 @@ import type {
   RetroItemAttachmentJsonExport,
   RetroArchiveJsonExport,
 } from '../export/RetroJsonExport';
-import { json } from './json';
+import { json, ValidationError } from './json';
 
-const jsonIsoDate = (source: unknown): string => {
+const jsonIsoDate = (source: unknown, path = ''): string => {
   if (typeof source !== 'string') {
-    throw new Error('Expected ISO date');
+    throw new ValidationError('Expected ISO date', path);
   }
   const timestamp = Date.parse(source);
   if (Number.isNaN(timestamp)) {
-    throw new Error('Expected ISO date');
+    throw new ValidationError('Expected ISO date', path);
   }
   return source;
 };

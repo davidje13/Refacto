@@ -7,7 +7,7 @@
     "clean": "scripts/clean.mjs",
     "install": "scripts/install.mjs --force",
     "lint": "scripts/install.mjs && scripts/lint.mjs",
-    "start": "SKIP_E2E_DEPS=true scripts/install.mjs && scripts/start.mjs",
+    "start": "SKIP_E2E_DEPS=true scripts/install.mjs && NODE_ENV=development scripts/start.mjs",
     "test": "scripts/install.mjs && scripts/lint.mjs && scripts/test.mjs",
     "format": "npm --prefix=backend run format --quiet && npm --prefix=frontend run format --quiet && npm --prefix=e2e run format --quiet",
     "test:backend": "npm --prefix=backend test --quiet --",

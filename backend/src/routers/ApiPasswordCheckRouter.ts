@@ -1,8 +1,11 @@
-import { Router } from 'websocket-express';
+import {
+  conditionalErrorHandler,
+  getPathParameters,
+  HTTPError,
+  Router,
+  typedErrorHandler,
+} from 'web-listener';
 import type { PasswordCheckService } from '../services/PasswordCheckService';
-import type { Logger } from '../services/LogService';
-
-const VALID_RANGE = /^[0-9A-Z]{5}$/;
 
 const CACHE_CONTROL = [
   'public',
@@ -12,35 +15,27 @@ const CACHE_CONTROL = [
 ].join(', ');
 
 export class ApiPasswordCheckRouter extends Router {
-  public constructor(service: PasswordCheckService, logger: Logger) {
+  public constructor(service: PasswordCheckService) {
     super();
 
-    this.get('/:range', async (req, res) => {
-      const { range } = req.params;
+    this.get(
+      '/:range',
+      async (req, res) => {
+        const { range } = getPathParameters(req);
 
-      if (!VALID_RANGE.test(range)) {
-        res.status(400).end();
-      }
-
-      try {
         const data = await service.getBreachesRange(range);
-        res.header('cache-control', CACHE_CONTROL);
+        res.setHeader('cache-control', CACHE_CONTROL);
         res.removeHeader('expires');
         res.removeHeader('pragma');
-        res.end(data);
-      } catch (err) {
-        if (err instanceof Error && err.message === 'Invalid range prefix') {
-          res.status(400).end();
-        } else if (
-          err instanceof Error &&
-          err.message === 'Service unavailable'
-        ) {
-          res.status(503).end();
-        } else {
-          logger.error('Password breaches lookup error', err);
-          res.status(500).end();
-        }
-      }
-    });
+        return res.end(data);
+      },
+      typedErrorHandler(RangeError, () => {
+        throw new HTTPError(400, { body: 'Invalid range' });
+      }),
+      conditionalErrorHandler(
+        (e) => e instanceof Error && e.message === 'Service unavailable',
+        (_error, _req, res) => res.writeHead(503).end(),
+      ),
+    );
   }
 }

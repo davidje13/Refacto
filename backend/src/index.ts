@@ -1,4 +1,4 @@
-import { createServer, type Server } from 'node:http';
+import type { Server } from 'node:http';
 import { promisify } from 'node:util';
 import { buildMockSsoApp } from 'authentication-backend';
 import { LogService } from './services/LogService';
@@ -26,20 +26,18 @@ const shutdownTasks: (() => MaybePromise<void>)[] = [];
 tasks.push({
   name: 'server',
   run: async () => {
-    const server = createServer();
     const app = await appFactory(logService, config);
+    const server = app.listener.createServer();
 
     shutdownTasks.push(async () => {
       const scCount = await getConnectionCount(server);
       logService.log({ event: 'shutdown', openConnections: scCount });
       printInfo(`Shutting down (open connections: ${scCount})`);
 
-      await app.softClose(1000);
-      await promisify(server.close.bind(server))();
+      await server.closeWithTimeout('shutdown', 2000);
       await app.close();
     });
 
-    app.express.attach(server);
     await new Promise<void>((resolve) =>
       server.listen(config.port, config.serverBindAddress, resolve),
     );
