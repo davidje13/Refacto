@@ -185,7 +185,7 @@ export const appFactory = async (
     evt.preventDefault();
     const { request, context, error } = evt.detail;
     if (!request) {
-      logger.error(context, error);
+      logger.error(error, { context });
     } else if ((findCause(error, HTTPError)?.statusCode ?? 500) >= 500) {
       analyticsService.requestError(request, context, error);
     }

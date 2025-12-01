@@ -67,9 +67,7 @@ export class ApiAuthRouter extends Router {
       }
 
       const time = Date.now() - begin;
-      analyticsService.event(req, 'access retro', {
-        passwordCheckTime: time,
-      });
+      analyticsService.event(req, 'access retro', { passwordCheckTime: time });
       sendJSON(res, { retroToken });
     });
   }

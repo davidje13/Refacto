@@ -5,7 +5,7 @@ import type { Writable } from 'node:stream';
 
 export interface Logger {
   log(record: Record<string, unknown>): void;
-  error(errorType: string, err: unknown, extra?: Record<string, unknown>): void;
+  error(err: unknown, extra?: Record<string, unknown>): void;
 }
 
 export class LogService implements Logger {
@@ -53,8 +53,8 @@ export class LogService implements Logger {
     }
   }
 
-  error(errorType: string, err: unknown, extra: Record<string, unknown> = {}) {
-    this.log({ ...extra, error: errorType, ...parseError(err) });
+  error(err: unknown, extra: Record<string, unknown> = {}) {
+    this.log({ ...extra, ...parseError(err) });
   }
 
   reopen() {

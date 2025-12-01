@@ -89,23 +89,31 @@ export const SecurityPage = memo(() => (
         with third-parties, and proactively avoids recording unnecessary
         information (in particular: no personal or retro identifying data is
         recorded, and system information is limited to the minimum required for
-        investigating issues). Cookies are not used. The details recorded are:
+        investigating issues). Cookies are not used and IP addresses are not
+        stored. The details recorded are:
       </p>
       <ul>
-        <li>Platform name (e.g. "Windows", "Android", "iPad")</li>
-        <li>Browser name (e.g. "Chrome", "Firefox", "Safari")</li>
-        <li>Browser major version (e.g. "130")</li>
-        <li>Current UTC time</li>
-        <li>Action (e.g. "create retro", "create archive", "export json").</li>
-        <li>Total amount of time spent in a retro</li>
-        <li>Error information / disconnection reason</li>
+        <li>Platform name (e.g. "Windows", "Android", "iPad");</li>
+        <li>Browser name (e.g. "Chrome", "Firefox", "Safari");</li>
+        <li>Browser major version (e.g. "130");</li>
+        <li>Current UTC time;</li>
+        <li>Action (e.g. "create retro", "create archive", "export json");</li>
+        <li>
+          Total amount of time spent in a retro, and reason for closing the
+          connection (e.g. "disconnect", "lost");
+        </li>
+        <li>
+          Error information (including API path requested). Note that client
+          errors caused by browser plugins may identify the plugin being used.
+        </li>
       </ul>
       <p>
         Users can opt out of tracking using standard browser mechanisms; both
         the Do Not Track (DNT) and Global Privacy Control (Sec-GPC) headers are
         respected if present (these can typically be turned on in the browser
-        settings). When either of these are enabled, only errors will be
-        recorded, and platform and browser information will not be included.
+        settings). When either of these are enabled, events and errors will
+        still be recorded but will not include any platform or browser
+        information.
       </p>
     </section>
     <section>

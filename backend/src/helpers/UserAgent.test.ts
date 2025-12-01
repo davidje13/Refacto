@@ -21,9 +21,14 @@ describe('UserAgent', () => {
     });
   });
 
+  it('handles unknown user agents', () => {
+    const ua = new UserAgent('Gecko/1.0');
+    expect(ua.getSummary()).equals({ platform: 'unknown', browser: 'unknown' });
+  });
+
   it('handles empty strings', () => {
     const ua = new UserAgent('');
-    expect(ua.getSummary()).equals({ platform: null, browser: null });
+    expect(ua.getSummary()).equals({ platform: 'unknown', browser: 'unknown' });
   });
 
   it(

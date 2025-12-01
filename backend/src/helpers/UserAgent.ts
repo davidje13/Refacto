@@ -38,7 +38,7 @@ export class UserAgent {
       const rawVersion = includeVersion ? first[1] : null;
       return { name: first[0], version: rawVersion?.split('.')[0] || null };
     }
-    return { name: null, version: null };
+    return { name: 'unknown', version: null };
   }
 
   getSummary(includeVersion = true) {
