@@ -1,5 +1,14 @@
-import React from 'react';
-import { makeHooks } from 'json-immutability-helper/helpers/hooks';
-import { context } from '../api/reducer';
+import { useLayoutEffect, useRef, useState } from 'react';
 
-export const { useEvent } = makeHooks(context, React);
+export const useEvent = <Fn extends (...args: any) => any>(fn: Fn) => {
+  const latest = useRef(fn);
+  useLayoutEffect(() => {
+    latest.current = fn;
+  }, [fn]);
+  const [stable] = useState(
+    () =>
+      (...args: Parameters<Fn>): ReturnType<Fn> =>
+        latest.current.apply(undefined, args),
+  );
+  return stable;
+};
