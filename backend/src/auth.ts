@@ -1,4 +1,4 @@
-import { buildAuthenticationBackend } from 'authentication-backend';
+import { buildAuthAPI } from 'authentication-backend/backend';
 import {
   getBodyJson,
   getQuery,
@@ -34,10 +34,7 @@ export function getAuthBackend(
     return getInsecureAuthBackend(path, userAuthService);
   }
 
-  const sso = buildAuthenticationBackend(
-    config.sso,
-    userAuthService.grantLoginToken,
-  );
+  const sso = buildAuthAPI(config.sso, userAuthService.grantLoginToken);
   return {
     addRoutes: (app) => app.mount('/api/sso', sso.router()),
     clientConfig: sso.service.clientConfig,

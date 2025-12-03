@@ -1,4 +1,4 @@
-import { decodeJWT } from 'authentication-backend';
+import { decodeJWT } from 'authentication-backend/jwt';
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';

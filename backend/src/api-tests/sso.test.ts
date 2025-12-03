@@ -1,6 +1,7 @@
 import type { Server } from 'node:http';
 import { getAddressURL } from 'web-listener';
-import { buildMockSsoApp, decodeJWT } from 'authentication-backend';
+import { decodeJWT } from 'authentication-backend/jwt';
+import { buildMockSSO } from 'authentication-backend/mock';
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
@@ -8,7 +9,7 @@ import { testServerRunner, testSimpleServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('/api/sso/service', () => {
-  const MOCK_SSO = testSimpleServerRunner(() => buildMockSsoApp());
+  const MOCK_SSO = testSimpleServerRunner(() => buildMockSSO());
 
   const APP = testServerRunner(async (getTyped) => ({
     run: await appFactory(

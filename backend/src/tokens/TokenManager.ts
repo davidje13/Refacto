@@ -5,7 +5,7 @@ import {
   encodeJWT,
   RS256,
   type DecodeOptions,
-} from 'authentication-backend';
+} from 'authentication-backend/jwt';
 import type { JsonData } from '../shared/api-entities';
 
 export interface KeyPair {

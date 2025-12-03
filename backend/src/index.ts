@@ -1,6 +1,6 @@
 import type { Server } from 'node:http';
 import { promisify } from 'node:util';
-import { buildMockSsoApp } from 'authentication-backend';
+import { buildMockSSO } from 'authentication-backend/mock';
 import { LogService } from './services/LogService';
 import { appFactory } from './app';
 import { config } from './config';
@@ -53,7 +53,7 @@ if (config.mockSsoPort) {
   tasks.push({
     name: 'mock SSO server',
     run: () => {
-      const mockSsoServer = buildMockSsoApp().listen(
+      const mockSsoServer = buildMockSSO().listen(
         config.mockSsoPort,
         config.serverBindAddress,
       );

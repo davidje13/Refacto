@@ -9,7 +9,7 @@
     "test": "lean-test --preprocess tsc --parallel"
   },
   "dependencies": {
-    "authentication-backend": "1.4.x",
+    "authentication-backend": "2.x",
     "collection-storage": "3.x",
     "ioredis": "5.x",
     "json-immutability-helper": "4.0.x",
