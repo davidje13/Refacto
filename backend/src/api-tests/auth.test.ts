@@ -1,5 +1,5 @@
+import { decodeJWT } from 'authentication-backend';
 import request from 'superwstest';
-import jwt from 'jwt-simple';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
@@ -126,10 +126,14 @@ describe('API auth', () => {
         .expect(200);
 
       const { retroToken } = response.body;
-      const data = jwt.decode(retroToken, '', true);
+      const data = decodeJWT(retroToken, {
+        verifyKey: false,
+        verifyIss: false,
+        verifyAud: `retro-${retroId}`,
+        verifyActive: true,
+      });
 
-      expect(data.aud).toEqual(`retro-${retroId}`);
-      expect(data.scopes).toEqual({
+      expect(data.payload.scopes).toEqual({
         read: true,
         write: true,
         readArchives: true,

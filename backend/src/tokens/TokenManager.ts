@@ -1,6 +1,11 @@
 import { generateKeyPair, createPrivateKey, type KeyLike } from 'node:crypto';
 import { promisify } from 'node:util';
-import jwt from 'jwt-simple';
+import {
+  decodeJWT,
+  encodeJWT,
+  RS256,
+  type DecodeOptions,
+} from 'authentication-backend';
 import type { JsonData } from '../shared/api-entities';
 
 export interface KeyPair {
@@ -30,7 +35,7 @@ export class TokenManager {
 
   private readonly modulusLength = 2048;
 
-  private readonly algorithm = 'RS256';
+  private readonly algorithm = RS256;
 
   public constructor({ secretPassphrase = '' } = {}) {
     this.secretPassphrase = secretPassphrase;
@@ -55,21 +60,32 @@ export class TokenManager {
   }
 
   public signData(data: unknown, privateKey: string | Buffer): string {
-    const key = createPrivateKey({
-      key: privateKey,
-      format: 'pem',
-      passphrase: this.secretPassphrase,
-    });
-    // https://github.com/hokaccha/node-jwt-simple/pull/98
-    return jwt.encode(data, key as any, this.algorithm);
+    return encodeJWT(
+      this.algorithm.signer({
+        kid: undefined,
+        privateKey: createPrivateKey({
+          key: privateKey,
+          format: 'pem',
+          passphrase: this.secretPassphrase,
+        }),
+      }),
+      data,
+    );
   }
 
   public readAndVerifySigned(
     token: string,
     publicKey: KeyLike,
+    options: Partial<Omit<DecodeOptions, 'verifyKey'>> = {},
   ): JsonData | null {
     try {
-      return jwt.decode(token, publicKey, false, this.algorithm);
+      return decodeJWT(token, {
+        verifyIss: false,
+        verifyAud: false,
+        verifyActive: false,
+        ...options,
+        verifyKey: this.algorithm.verifier({ kid: undefined, publicKey }),
+      }).payload;
     } catch (e) {
       return null;
     }

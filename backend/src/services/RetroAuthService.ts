@@ -120,6 +120,7 @@ export class RetroAuthService {
     const raw = this.tokenManager.readAndVerifySigned(
       retroToken,
       retroData.publicKey,
+      { verifyAud: `retro-${retroId}` },
     );
     if (!raw) {
       return null;

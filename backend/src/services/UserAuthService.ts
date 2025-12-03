@@ -56,7 +56,9 @@ export class UserAuthService {
       throw new Error('Not initialised');
     }
     return extractUserJwtPayload(
-      this.tokenManager.readAndVerifySigned(userToken, this.publicKey),
+      this.tokenManager.readAndVerifySigned(userToken, this.publicKey, {
+        verifyAud: 'user',
+      }),
     );
   }
 }

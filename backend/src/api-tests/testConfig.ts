@@ -32,7 +32,7 @@ const baseTestConfig: ConfigT = {
     myRetros: true,
   },
   sso: {
-    google: { clientId: '', authUrl: '', tokenInfoUrl: '' },
+    google: { clientId: '', authUrl: '', certsUrl: '' },
     github: {
       clientId: '',
       clientSecret: '',

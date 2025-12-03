@@ -34,7 +34,7 @@ if (
   backendEnv['MOCK_SSO_PORT'] = mockSSOPort;
   backendEnv['SSO_GOOGLE_CLIENT_ID'] = 'mock-client-id';
   backendEnv['SSO_GOOGLE_AUTH_URL'] = `${mockSSOHost}/auth`;
-  backendEnv['SSO_GOOGLE_TOKEN_INFO_URL'] = `${mockSSOHost}/tokeninfo`;
+  backendEnv['SSO_GOOGLE_CERTS_URL'] = `${mockSSOHost}/certs`;
 }
 
 await deleteDirectory(join(basedir, 'backend', 'build'));

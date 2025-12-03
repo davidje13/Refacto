@@ -30,3 +30,17 @@ export const testServerRunner = <
       };
     },
   );
+
+export const testSimpleServerRunner = (serverFn: () => Server) =>
+  beforeEach<Server>(async ({ setParameter }) => {
+    const server = serverFn();
+    await new Promise<void>((resolve) =>
+      server.listen(0, '127.0.0.1', resolve),
+    );
+    setParameter(server);
+
+    return () => {
+      server.close();
+      server.closeAllConnections();
+    };
+  });

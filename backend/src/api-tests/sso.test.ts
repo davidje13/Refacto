@@ -1,28 +1,14 @@
-import {
-  getAddressURL,
-  requestHandler,
-  sendJSON,
-  WebListener,
-} from 'web-listener';
+import type { Server } from 'node:http';
+import { getAddressURL } from 'web-listener';
+import { buildMockSsoApp, decodeJWT } from 'authentication-backend';
 import request from 'superwstest';
-import jwt from 'jwt-simple';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner } from './testServerRunner';
+import { testServerRunner, testSimpleServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('/api/sso/service', () => {
-  const MOCK_SSO = testServerRunner(() => {
-    const ssoApp = new WebListener(
-      requestHandler((_, res) =>
-        sendJSON(res, {
-          aud: 'my-client-id',
-          sub: 'my-external-id',
-        }),
-      ),
-    );
-    return { run: ssoApp };
-  });
+  const MOCK_SSO = testSimpleServerRunner(() => buildMockSsoApp());
 
   const APP = testServerRunner(async (getTyped) => ({
     run: await appFactory(
@@ -32,7 +18,7 @@ describe('/api/sso/service', () => {
           google: {
             clientId: 'my-client-id',
             authUrl: 'foo',
-            tokenInfoUrl: getAddressURL(getTyped(MOCK_SSO).server.address()),
+            certsUrl: getAddressURL(getTyped(MOCK_SSO).address()) + '/certs',
           },
         },
       }),
@@ -40,19 +26,28 @@ describe('/api/sso/service', () => {
   }));
 
   it('returns a signed JWT token with the user ID', async (props) => {
+    const token = await getSignedToken(props.getTyped(MOCK_SSO), {
+      nonce: 'my-nonce',
+      client_id: 'my-client-id',
+      identifier: 'my-external-id',
+    });
+
     const { server } = props.getTyped(APP);
 
     const response = await request(server)
       .post('/api/sso/google')
-      .send({ externalToken: 'my-external-token' })
+      .send({ externalToken: token })
       .expect(200);
 
     const { userToken } = response.body;
-    const data = jwt.decode(userToken, '', true);
+    const data = decodeJWT(userToken, {
+      verifyKey: false,
+      verifyIss: 'google',
+      verifyAud: 'user',
+      verifyActive: true,
+    });
 
-    expect(data.aud).toEqual('user');
-    expect(data.sub).toEqual('google-my-external-id');
-    expect(data.iss).toEqual('google');
+    expect(data.payload.sub).toEqual('google-my-external-id');
 
     await request(server)
       .get('/api/retros')
@@ -92,11 +87,14 @@ describe('/api/sso/public', () => {
       .expect(200);
 
     const { userToken } = response2.body;
-    const data = jwt.decode(userToken, '', true);
+    const data = decodeJWT(userToken, {
+      verifyKey: false,
+      verifyIss: 'public',
+      verifyAud: 'user',
+      verifyActive: true,
+    });
 
-    expect(data.aud).toEqual('user');
-    expect(data.sub).toEqual('everybody');
-    expect(data.iss).toEqual('public');
+    expect(data.payload.sub).toEqual('everybody');
 
     await request(server)
       .get('/api/retros')
@@ -104,3 +102,18 @@ describe('/api/sso/public', () => {
       .expect(200);
   });
 });
+
+async function getSignedToken(mock: Server, payload: Record<string, unknown>) {
+  const tokenResponse = await fetch(getAddressURL(mock.address()) + '/auth', {
+    method: 'POST',
+    body: new URLSearchParams({
+      redirect_uri: 'https://example.com',
+      ...payload,
+    }).toString(),
+    redirect: 'manual',
+  });
+  const tokenParams = new URLSearchParams(
+    new URL(tokenResponse.headers.get('location') ?? '').hash.substring(1),
+  );
+  return tokenParams.get('id_token');
+}

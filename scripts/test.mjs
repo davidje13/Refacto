@@ -91,7 +91,7 @@ if (!testEnv['TARGET_HOST']) {
     MOCK_SSO_PORT: mockSSOPort,
     SSO_GOOGLE_CLIENT_ID: 'mock-client-id',
     SSO_GOOGLE_AUTH_URL: `${mockSSOHost}/auth`,
-    SSO_GOOGLE_TOKEN_INFO_URL: `${mockSSOHost}/tokeninfo`,
+    SSO_GOOGLE_CERTS_URL: `${mockSSOHost}/certs`,
     PASSWORD_WORK_FACTOR: 4,
   };
 

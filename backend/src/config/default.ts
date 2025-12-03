@@ -40,7 +40,7 @@ export default {
     google: {
       clientId: '',
       authUrl: 'https://accounts.google.com/o/oauth2/auth',
-      tokenInfoUrl: 'https://oauth2.googleapis.com/tokeninfo',
+      certsUrl: 'https://www.googleapis.com/oauth2/v3/certs',
     },
     github: {
       clientId: '',

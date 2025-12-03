@@ -13,7 +13,7 @@ describe('API client config', () => {
           google: {
             clientId: 'abc',
             authUrl: 'foobar',
-            tokenInfoUrl: 'woo',
+            certsUrl: 'woo',
           },
         },
       }),
@@ -37,7 +37,7 @@ describe('API client config', () => {
 
       const response = await request(server).get('/api/config').expect(200);
 
-      expect(response.body.sso.google.tokenInfoUrl).toEqual(undefined);
+      expect(response.body.sso.google.certsUrl).toEqual(undefined);
     });
 
     it('skips SSO data for unconfigured services', async (props) => {
