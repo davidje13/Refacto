@@ -15,9 +15,9 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: npm
@@ -33,7 +33,7 @@ jobs:
           rm -r node_modules
           tar -czf ../build.tar.gz .
       - name: Upload Bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: refacto
           retention-days: 1
@@ -54,11 +54,11 @@ jobs:
           - { node: '24' }
     steps:
       - name: Install Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
       - name: Download Bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: refacto
       - name: Unpack
@@ -105,7 +105,7 @@ jobs:
       contents: write
     steps:
       - name: Download Bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: refacto
       - name: Create Release
