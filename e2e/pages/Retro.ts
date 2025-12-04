@@ -102,6 +102,10 @@ export class Retro extends Page {
     );
   }
 
+  public getBeginDiscussionPopup() {
+    return this.getPopup('popup-begin');
+  }
+
   public getArchivePopup() {
     return this.getPopup('popup-archive');
   }

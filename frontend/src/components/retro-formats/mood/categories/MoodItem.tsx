@@ -6,7 +6,8 @@ import type {
 import { MoodItemPlain } from './MoodItemPlain';
 import { MoodItemFocused } from './MoodItemFocused';
 import { ItemEditor } from '../ItemEditor';
-import { useEvent, useOptionalBoundEvent } from '../../../../hooks/useEvent';
+import { useEvent } from '../../../../hooks/useEvent';
+import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './MoodItem.css';

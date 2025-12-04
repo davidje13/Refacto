@@ -143,8 +143,16 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
       expect(await user2.driver.getCurrentUrl()).toContain(newSlug);
     });
 
+    it('prompts when beginning the discussion', async () => {
+      expect(await retro2.getBeginDiscussionPopup().exists()).toBeFalsy();
+      await retro2.focusMoodItem(0);
+      expect(await retro2.getBeginDiscussionPopup().exists()).toBeTruthy();
+    });
+
     it('maintains connectivity after changing URL', async () => {
-      await retro.expectChange(() => retro2.focusMoodItem(0));
+      await retro.expectChange(() =>
+        retro2.getBeginDiscussionPopup().clickButton('Begin'),
+      );
       await retro.expectChange(() => retro2.pressReturn());
     });
 

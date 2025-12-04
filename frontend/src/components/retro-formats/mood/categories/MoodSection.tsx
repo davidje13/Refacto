@@ -7,7 +7,7 @@ import { FaceIcon } from './FaceIcon';
 import { MoodItem } from './MoodItem';
 import { ItemColumn } from '../ItemColumn';
 import { ItemEditor } from '../ItemEditor';
-import { useOptionalBoundEvent } from '../../../../hooks/useEvent';
+import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {

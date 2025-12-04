@@ -20,11 +20,19 @@ const INITIAL_TIMEOUT = 5 * 60 * 1000 + 999;
 
 export const addRetroActionItem = addRetroItem.bind(null, 'action');
 
-const moodItem =
+export const moodItem =
   (group: string | undefined) =>
   (item: RetroItem): boolean =>
     (!group || !item.group || item.group === group) &&
     item.category !== 'action';
+
+export const actionItemWithinRange =
+  (group: string | undefined, from: number, to: number) =>
+  (item: RetroItem): boolean =>
+    item.category === 'action' &&
+    (!group || !item.group || item.group === group) &&
+    item.created >= from &&
+    item.created < to;
 
 const pickNextItem: NextIDPicker = (group, { items }, currentItemID) =>
   autoFacilitate(items.filter(moodItem(group)), ['happy', 'meh'], currentItemID)

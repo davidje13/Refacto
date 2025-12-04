@@ -1,0 +1,18 @@
+.popup-begin {
+  & p {
+    margin: 16px 0;
+    max-width: 600px;
+  }
+
+  .dialog-options {
+    text-align: center;
+
+    & button {
+      margin: 0 16px;
+    }
+  }
+
+  .reminder {
+    font-weight: bolder;
+  }
+}

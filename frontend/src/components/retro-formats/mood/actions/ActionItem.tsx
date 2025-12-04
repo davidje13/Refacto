@@ -5,7 +5,8 @@ import type {
   UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
 import { ItemEditor } from '../ItemEditor';
-import { useEvent, useOptionalBoundEvent } from '../../../../hooks/useEvent';
+import { useEvent } from '../../../../hooks/useEvent';
+import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import Tick from '../../../../../resources/tick.svg';
 import TickBold from '../../../../../resources/tick-bold.svg';

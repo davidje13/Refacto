@@ -1,8 +1,6 @@
 import { useState, type ReactElement } from 'react';
 import { classNames } from '../../../helpers/classNames';
 import type { RetroItem } from '../../../shared/api-entities';
-import { MoodSection } from './categories/MoodSection';
-import { ActionsPane } from './actions/ActionsPane';
 import { TabControl } from '../../common/TabControl';
 import type { RetroDispatch } from '../../../api/RetroTracker';
 import {
@@ -20,12 +18,18 @@ import {
   switchFocus,
   setItemTimeout,
   addRetroActionItem,
+  moodItem,
+  actionItemWithinRange,
 } from '../../../actions/moodRetro';
 import { useWindowSize, type Size } from '../../../hooks/env/useWindowSize';
 import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import { useActionFactory } from '../../../hooks/useActionFactory';
 import { useGlobalKeyListener } from '../../../hooks/useGlobalKeyListener';
+import { useGate } from '../../../hooks/useGate';
 import { OPTIONS } from '../../../helpers/optionManager';
+import { MoodSection } from './categories/MoodSection';
+import { ActionsPane } from './actions/ActionsPane';
+import { BeginDiscussionPopup } from './BeginDiscussionPopup';
 import './MoodRetro.css';
 
 interface Category {
@@ -84,26 +88,35 @@ export const MoodRetro = ({
   const useFacilitatorAction = useActionFactory(
     canFacilitate ? dispatch : undefined,
   );
+  const start = useGate(
+    () => focusedItemId !== null || isAnyItemDone(retroItems, group),
+  );
 
   const handleAddItem = useAction(addRetroItem);
   const handleAddActionItem = useAction(addRetroActionItem);
   const handleUpvoteItem = useAction(upvoteRetroItem);
   const handleEditItem = useAction(editRetroItem);
   const handleDeleteItem = useAction(deleteRetroItem);
+  const handleSetActionItemDone = useAction(setRetroItemDone);
+
   const handleAddExtraTime = useFacilitatorAction((duration: number) =>
     setItemTimeout(group, duration),
   );
-  const handleSetActionItemDone = useAction(setRetroItemDone);
 
-  const handleSelectItem = useFacilitatorAction((id: string | null) => {
-    const setCurrentDone = Date.now() > autoAdvanceTime + ADVANCE_GRACE_PERIOD;
-    setAutoAdvanceTime(NEVER);
-    return switchFocus(group, () => id, { setCurrentDone });
-  });
-  const handleGoNext = useFacilitatorAction((id?: string) => {
-    setAutoAdvanceTime(Date.now());
-    return [...goNext(group, id), ...allItemsDoneCallback(onComplete)];
-  });
+  const handleSelectItem = start.useGated(
+    useFacilitatorAction((id: string) => {
+      const setCurrentDone =
+        Date.now() > autoAdvanceTime + ADVANCE_GRACE_PERIOD;
+      setAutoAdvanceTime(NEVER);
+      return switchFocus(group, () => id, { setCurrentDone });
+    }),
+  );
+  const handleGoNext = start.useGated(
+    useFacilitatorAction((id?: string) => {
+      setAutoAdvanceTime(Date.now());
+      return [...goNext(group, id), ...allItemsDoneCallback(onComplete)];
+    }),
+  );
   const handleClose = useFacilitatorAction((id?: string) => [
     ...switchFocus(group, () => null, {
       expectCurrentId: id,
@@ -171,6 +184,19 @@ export const MoodRetro = ({
     { 'has-focused': hasFocused, archive },
   );
 
+  const popup = (
+    <BeginDiscussionPopup
+      isOpen={start.pending}
+      hasPastActions={hasPastActions(
+        retroItems,
+        group,
+        localDateProvider.getMidnightTimestamp(),
+      )}
+      onConfirm={start.accept}
+      onClose={start.reject}
+    />
+  );
+
   if (singleColumn) {
     const tabs = [
       ...CATEGORIES.map((category) => ({
@@ -190,6 +216,7 @@ export const MoodRetro = ({
     return (
       <div className={baseClassName}>
         <TabControl tabs={tabs} />
+        {popup}
       </div>
     );
   }
@@ -200,6 +227,19 @@ export const MoodRetro = ({
         {CATEGORIES.map((category) => createMoodSection(category))}
       </section>
       {actionSection}
+      {popup}
     </div>
   );
 };
+
+const isAnyItemDone = (retroItems: RetroItem[], group: string | undefined) =>
+  retroItems.filter(moodItem(group)).some((item) => item.doneTime !== 0);
+
+const hasPastActions = (
+  retroItems: RetroItem[],
+  group: string | undefined,
+  before: number,
+) =>
+  retroItems
+    .filter(actionItemWithinRange(group, Number.NEGATIVE_INFINITY, before))
+    .some((item) => item.doneTime === 0);

@@ -8,7 +8,7 @@ import { ActionSection } from './ActionSection';
 import { ItemEditor } from '../ItemEditor';
 import type { LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
-import { useOptionalBoundEvent } from '../../../../hooks/useEvent';
+import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {

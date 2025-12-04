@@ -3,20 +3,9 @@ import type {
   RetroItem,
   UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
-import { ActionItem } from './ActionItem';
+import { actionItemWithinRange } from '../../../../actions/moodRetro';
 import { ItemColumn } from '../ItemColumn';
-
-function actionItemWithinRange(
-  group: string | undefined,
-  from: number,
-  to: number,
-) {
-  return (item: RetroItem): boolean =>
-    item.category === 'action' &&
-    (!group || !item.group || item.group === group) &&
-    item.created >= from &&
-    item.created < to;
-}
+import { ActionItem } from './ActionItem';
 
 interface PropsT {
   title: string;
