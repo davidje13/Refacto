@@ -6,7 +6,7 @@ import type {
 import { MoodItemPlain } from './MoodItemPlain';
 import { MoodItemFocused } from './MoodItemFocused';
 import { ItemEditor } from '../ItemEditor';
-import { useEvent } from '../../../../hooks/useEvent';
+import { useEvent, useOptionalBoundEvent } from '../../../../hooks/useEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import './MoodItem.css';
@@ -24,6 +24,7 @@ interface PropsT {
   onDelete?: ((id: string) => void) | undefined;
   onSelect?: ((id: string) => void) | undefined;
   onCancel?: ((id: string) => void) | undefined;
+  onClose?: ((id: string) => void) | undefined;
   onContinue?: ((id: string) => void) | undefined;
 }
 
@@ -39,13 +40,15 @@ export const MoodItem = memo(
     onDelete,
     onSelect,
     onCancel,
+    onClose,
     onContinue,
   }: PropsT) => {
-    const handleVote = useEvent(() => onVote?.(item.id));
-    const handleDelete = useEvent(() => onDelete?.(item.id));
-    const handleSelect = useEvent(() => onSelect?.(item.id));
-    const handleCancel = useEvent(() => onCancel?.(item.id));
-    const handleContinue = useEvent(() => onContinue?.(item.id));
+    const handleVote = useOptionalBoundEvent(onVote, item.id);
+    const handleDelete = useOptionalBoundEvent(onDelete, item.id);
+    const handleSelect = useOptionalBoundEvent(onSelect, item.id);
+    const handleCancel = useOptionalBoundEvent(onCancel, item.id);
+    const handleClose = useOptionalBoundEvent(onClose, item.id);
+    const handleContinue = useOptionalBoundEvent(onContinue, item.id);
 
     const editing = useBoolean(false);
     const handleSaveEdit = useEvent(
@@ -55,7 +58,7 @@ export const MoodItem = memo(
       },
     );
 
-    if (editing.value) {
+    if (editing.value && onEdit) {
       return (
         <div className="mood-item editing">
           <ItemEditor
@@ -67,7 +70,7 @@ export const MoodItem = memo(
             }
             submitButtonTitle="Save changes"
             onSubmit={handleSaveEdit}
-            onDelete={onDelete ? handleDelete : undefined}
+            onDelete={handleDelete}
             onCancel={editing.setFalse}
             allowAttachments
             autoFocus
@@ -83,8 +86,9 @@ export const MoodItem = memo(
           focusedItemTimeout={focusedItemTimeout}
           onAddExtraTime={onAddExtraTime}
           autoScroll={autoScroll}
-          onCancel={onCancel ? handleCancel : undefined}
-          onContinue={onContinue ? handleContinue : undefined}
+          onCancel={handleCancel}
+          onClose={handleClose}
+          onContinue={handleContinue}
         />
       );
     }
@@ -92,9 +96,9 @@ export const MoodItem = memo(
     return (
       <MoodItemPlain
         item={item}
-        onVote={onVote ? handleVote : undefined}
+        onVote={handleVote}
         onEdit={onEdit ? editing.setTrue : undefined}
-        onSelect={onSelect ? handleSelect : undefined}
+        onSelect={handleSelect}
       />
     );
   },

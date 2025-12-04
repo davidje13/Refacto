@@ -115,26 +115,31 @@
       }
     }
 
-    .cancel,
-    .continue {
-      border-radius: 4px;
-      font-size: 0.9em;
-      white-space: nowrap;
-    }
+    .navigation {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: end;
+      gap: 8px;
 
-    .cancel {
-      padding: 4px 8px;
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-    }
+      .cancel,
+      .close,
+      .continue {
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.9em;
+        white-space: nowrap;
+      }
 
-    .continue {
-      padding: 12px 20px;
-      font-weight: bolder;
-      background: var(--green-button-back);
-      color: var(--green-button-text);
-      float: right;
+      .spacer {
+        flex: 1;
+      }
+
+      .continue {
+        padding: 12px 20px;
+        font-weight: bolder;
+        background: var(--green-button-back);
+        color: var(--green-button-text);
+      }
     }
 
     &::after {

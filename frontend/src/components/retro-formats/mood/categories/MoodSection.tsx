@@ -31,6 +31,7 @@ interface PropsT {
   onDelete?: ((id: string) => void) | undefined;
   onSelect?: ((id: string) => void) | undefined;
   onCancel?: ((id: string) => void) | undefined;
+  onClose?: ((id: string) => void) | undefined;
   onContinue?: ((id: string) => void) | undefined;
   onAddExtraTime?: ((time: number) => void) | undefined;
   focusedItemId?: string | null;
@@ -58,6 +59,7 @@ export const MoodSection = memo(
     onDelete,
     onSelect,
     onCancel,
+    onClose,
     onContinue,
     onAddExtraTime,
     focusedItemId = null,
@@ -101,6 +103,7 @@ export const MoodSection = memo(
             onSelect,
             onAddExtraTime,
             onCancel,
+            onClose,
             onContinue,
           }}
         />

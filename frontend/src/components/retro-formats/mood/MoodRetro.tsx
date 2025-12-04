@@ -94,15 +94,16 @@ export const MoodRetro = ({
     ...goNext(group),
     ...allItemsDoneCallback(onComplete),
   ]);
+  const handleClose = useFacilitatorAction(() => [
+    ...switchFocus(group, () => null, { setCurrentDone: true }),
+    ...allItemsDoneCallback(onComplete),
+  ]);
   const handleGoPrevious = useFacilitatorAction(() => goPrevious(group));
 
   useGlobalKeyListener({
     ArrowRight: handleGoNext,
     ArrowLeft: handleGoPrevious,
-    Enter: useFacilitatorAction(() => [
-      ...switchFocus(group, () => null, { setCurrentDone: true }),
-      ...allItemsDoneCallback(onComplete),
-    ]),
+    Enter: handleClose,
     Escape: useFacilitatorAction(() => switchFocus(group, () => null)),
   });
 
@@ -117,6 +118,7 @@ export const MoodRetro = ({
       onDelete={handleDeleteItem}
       onSelect={handleSelectItem}
       onCancel={handleGoPrevious}
+      onClose={handleClose}
       onContinue={handleGoNext}
       onAddExtraTime={handleAddExtraTime}
       focusedItemId={focusedItemId}

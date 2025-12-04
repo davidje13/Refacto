@@ -39,7 +39,11 @@ export const ArchivePopup = memo(
 
     return (
       <Popup
-        title="Create Archive"
+        title={
+          hasRemainingItems
+            ? 'Create Archive'
+            : 'Retro Complete! Create Archive?'
+        }
         isOpen={isOpen}
         keys={{ Enter: performArchive, Escape: onClose }}
         onClose={onClose}
