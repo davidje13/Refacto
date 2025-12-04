@@ -7,7 +7,7 @@ import { FaceIcon } from './FaceIcon';
 import { MoodItem } from './MoodItem';
 import { ItemColumn } from '../ItemColumn';
 import { ItemEditor } from '../ItemEditor';
-import { useEvent } from '../../../../hooks/useEvent';
+import { useOptionalBoundEvent } from '../../../../hooks/useEvent';
 import TickBold from '../../../../../resources/tick-bold.svg';
 
 interface PropsT {
@@ -66,10 +66,7 @@ export const MoodSection = memo(
     focusedItemTimeout = 0,
     autoScroll = false,
   }: PropsT) => {
-    const handleAddItem = useEvent(
-      (itemParts: Partial<UserProvidedRetroItemDetails>) =>
-        onAddItem?.(category, group, itemParts),
-    );
+    const handleAddItem = useOptionalBoundEvent(onAddItem, category, group);
 
     return (
       <section className={category}>
@@ -77,7 +74,7 @@ export const MoodSection = memo(
           <h2 title={categoryLabel}>
             <FaceIcon theme={theme} type={category} />
           </h2>
-          {onAddItem && (
+          {handleAddItem && (
             <ItemEditor
               identifier={`new-item-${category}`}
               onSubmit={handleAddItem}

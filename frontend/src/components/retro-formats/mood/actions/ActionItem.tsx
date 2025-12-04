@@ -5,7 +5,7 @@ import type {
   UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
 import { ItemEditor } from '../ItemEditor';
-import { useEvent } from '../../../../hooks/useEvent';
+import { useEvent, useOptionalBoundEvent } from '../../../../hooks/useEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import Tick from '../../../../../resources/tick.svg';
 import TickBold from '../../../../../resources/tick-bold.svg';
@@ -24,7 +24,7 @@ export const ActionItem = memo(
   ({ item, onSetDone, onEdit, onDelete }: PropsT) => {
     const done = item.doneTime > 0;
 
-    const handleDelete = useEvent(() => onDelete?.(item.id));
+    const handleDelete = useOptionalBoundEvent(onDelete, item.id);
 
     const editing = useBoolean(false);
     const handleSaveEdit = useEvent(
