@@ -31,7 +31,11 @@ async function installPackage(pkg) {
       args: ['install', '--quiet'],
       beginMessage: `Installing ${pkg} dependencies...`,
       cwd: join(basedir, pkg),
-      env: { ...process.env, DISABLE_OPENCOLLECTIVE: '1' },
+      env: {
+        ...process.env,
+        DISABLE_OPENCOLLECTIVE: '1',
+        DETECT_CHROMEDRIVER_VERSION: 'true', // work around https://github.com/giggio/node-chromedriver/issues/579
+      },
     });
   }
 }
