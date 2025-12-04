@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import { classNames } from '../../../helpers/classNames';
 import type { RetroItem } from '../../../shared/api-entities';
 import { MoodSection } from './categories/MoodSection';
@@ -57,6 +57,11 @@ interface PropsT {
 
 const isSmallScreen = ({ width }: Size) => width <= 800;
 
+// Some users click 'next' then select another item to discuss (ignoring the auto facilitated suggestion)
+// So we provide a grace period after auto-advancing, where manually selecting another item will not cause the auto-facilitated item to be marked as done.
+const ADVANCE_GRACE_PERIOD = 2000;
+const NEVER = Number.NEGATIVE_INFINITY;
+
 export const MoodRetro = ({
   retroOptions,
   retroState: { focusedItemId = null, focusedItemTimeout = 0 },
@@ -73,6 +78,8 @@ export const MoodRetro = ({
   const canFacilitate =
     !singleColumn || OPTIONS.enableMobileFacilitation.read(retroOptions);
 
+  const [autoAdvanceTime, setAutoAdvanceTime] = useState(NEVER);
+
   const useAction = useActionFactory(dispatch);
   const useFacilitatorAction = useActionFactory(
     canFacilitate ? dispatch : undefined,
@@ -86,25 +93,37 @@ export const MoodRetro = ({
   const handleAddExtraTime = useFacilitatorAction((duration: number) =>
     setItemTimeout(group, duration),
   );
-  const handleSelectItem = useFacilitatorAction((id: string | null) =>
-    switchFocus(group, () => id, { setCurrentDone: true }),
-  );
   const handleSetActionItemDone = useAction(setRetroItemDone);
-  const handleGoNext = useFacilitatorAction(() => [
-    ...goNext(group),
+
+  const handleSelectItem = useFacilitatorAction((id: string | null) => {
+    const setCurrentDone = Date.now() > autoAdvanceTime + ADVANCE_GRACE_PERIOD;
+    setAutoAdvanceTime(NEVER);
+    return switchFocus(group, () => id, { setCurrentDone });
+  });
+  const handleGoNext = useFacilitatorAction((id?: string) => {
+    setAutoAdvanceTime(Date.now());
+    return [...goNext(group, id), ...allItemsDoneCallback(onComplete)];
+  });
+  const handleClose = useFacilitatorAction((id?: string) => [
+    ...switchFocus(group, () => null, {
+      expectCurrentId: id,
+      setCurrentDone: true,
+    }),
     ...allItemsDoneCallback(onComplete),
   ]);
-  const handleClose = useFacilitatorAction(() => [
-    ...switchFocus(group, () => null, { setCurrentDone: true }),
-    ...allItemsDoneCallback(onComplete),
-  ]);
-  const handleGoPrevious = useFacilitatorAction(() => goPrevious(group));
+  const handleGoPrevious = useFacilitatorAction((id?: string) => {
+    setAutoAdvanceTime(NEVER);
+    return goPrevious(group, id);
+  });
+  const handleCancel = useFacilitatorAction((id?: string) =>
+    switchFocus(group, () => null, { expectCurrentId: id }),
+  );
 
   useGlobalKeyListener({
     ArrowRight: handleGoNext,
     ArrowLeft: handleGoPrevious,
     Enter: handleClose,
-    Escape: useFacilitatorAction(() => switchFocus(group, () => null)),
+    Escape: handleCancel,
   });
 
   const createMoodSection = (category: Category): ReactElement => (

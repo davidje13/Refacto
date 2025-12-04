@@ -102,7 +102,10 @@ export const switchFocus = (
 ];
 
 export const goNext = (group: string | undefined, expectCurrentId?: string) =>
-  switchFocus(group, pickNextItem, { expectCurrentId, setCurrentDone: true });
+  switchFocus(group, pickNextItem, {
+    expectCurrentId,
+    setCurrentDone: true,
+  });
 
 export const goPrevious = (
   group: string | undefined,
