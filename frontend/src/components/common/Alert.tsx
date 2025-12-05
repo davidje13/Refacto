@@ -11,7 +11,11 @@ interface PropsT {
 export const Alert = memo(({ warning = false, message, suffix }: PropsT) =>
   message ? (
     <div className={`alert-message ${warning ? 'warning' : 'error'}`}>
-      <Warning title={warning ? 'Warning' : 'Error'} />
+      <Warning
+        title={warning ? 'Warning' : 'Error'}
+        aria-label={warning ? 'Warning' : 'Error'}
+        role="img"
+      />
       {message}
       {suffix}
     </div>

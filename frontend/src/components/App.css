@@ -13,7 +13,7 @@ html {
   --modal-screen: rgba(128, 128, 128, 0.5);
 
   --focus-border: #005fcc;
-  --focus-border-heart: rgba(255, 0, 0, 0.3);
+  --focus-border-heart: #dd4422;
 
   --green-back: hsl(172deg, 50%, 55%);
   --green-shadow: hsl(172deg, 50%, 45%);
@@ -41,8 +41,8 @@ html {
   --bright-red-icon: #cc2200;
   --beige-icon: hsl(45deg, 20%, 85%);
 
-  --pale-text-on-white: #808080;
-  --green-text-on-white: var(--green-shadow);
+  --pale-text-on-white: #666666;
+  --green-text-on-white: #25794f;
   --yellow-text-on-white: hsl(45deg, 100%, 35%);
   --red-text-on-white: #cc0000;
   --highlight-text-on-dark: #ffffff;
@@ -75,6 +75,7 @@ html {
     --modal-screen: rgba(64, 64, 64, 0.5);
 
     --focus-border: #005fcc;
+    --focus-border-heart: #dd4422;
 
     --beige-back: hsl(30, 3%, 17%);
     --beige-shadow: hsl(45deg, 3%, 30%);

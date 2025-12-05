@@ -66,7 +66,7 @@ export const MoodItem = memo(
             defaultItem={item}
             submitButtonLabel={
               <>
-                <TickBold /> Save
+                <TickBold role="presentation" /> Save
               </>
             }
             submitButtonTitle="Save changes"

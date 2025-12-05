@@ -58,7 +58,9 @@ export const ActionsPane = memo(
                 <ItemEditor
                   identifier="new-action"
                   onSubmit={handleAddItem}
-                  submitButtonLabel={<TickBold />}
+                  submitButtonLabel={
+                    <TickBold aria-label="Save action" role="img" />
+                  }
                   submitButtonTitle="Add"
                   placeholder="Add an action item"
                   clearAfterSubmit

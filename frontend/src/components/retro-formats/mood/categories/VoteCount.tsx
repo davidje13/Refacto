@@ -34,14 +34,16 @@ export const VoteCount = memo(({ votes, onVote }: PropsT) => {
       disabled={!click}
       onClick={click}
     >
-      <div className="inner">
+      <div className="inner" role="presentation">
         <div className="hearts" style={{ transform: `scale(${scale(votes)})` }}>
-          <Heart className="heart n3" />
-          <Heart className="heart n2" />
-          <Heart className="heart n1" />
+          <Heart className="heart n3" role="presentation" />
+          <Heart className="heart n2" role="presentation" />
+          <Heart className="heart n1" role="presentation" />
         </div>
       </div>
-      <span className="count">{votes}</span>
+      <span className="count" aria-label={`${votes} agree with this`}>
+        {votes}
+      </span>
     </button>
   );
 });

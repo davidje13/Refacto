@@ -82,7 +82,7 @@ export const ItemEditor = memo(
               className="delete"
               onClick={onDelete}
             >
-              <Delete /> Delete
+              <Delete role="presentation" /> Delete
             </button>
           ) : null,
         ]}
@@ -95,7 +95,7 @@ export const ItemEditor = memo(
               className="cancel"
               onClick={onCancel}
             >
-              <Cross />
+              <Cross aria-label="Cancel" role="img" />
             </button>
           ) : null,
         ]}

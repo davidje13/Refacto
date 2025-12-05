@@ -78,7 +78,7 @@ export const MoodSection = memo(
             <ItemEditor
               identifier={`new-item-${category}`}
               onSubmit={handleAddItem}
-              submitButtonLabel={<TickBold />}
+              submitButtonLabel={<TickBold aria-label="Post" role="img" />}
               submitButtonTitle="Add"
               placeholder={addItemPlaceholder}
               allowAttachments

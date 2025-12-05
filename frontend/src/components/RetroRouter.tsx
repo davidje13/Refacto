@@ -150,7 +150,7 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
       {routes}
       {connected ? (
         <div className="connectionMessage connected" aria-hidden>
-          <TickBold /> Connected
+          <TickBold role="presentation" /> Connected
         </div>
       ) : (
         <div className="connectionMessage disconnected" role="status">

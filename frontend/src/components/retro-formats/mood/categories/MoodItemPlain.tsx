@@ -34,7 +34,9 @@ export const MoodItemPlain = memo(
             onClick={onEdit}
           />
         )}
-        {done && <TickBold className="tick" />}
+        {done && (
+          <TickBold className="tick" aria-label="Discussed" role="img" />
+        )}
       </div>
     );
   },

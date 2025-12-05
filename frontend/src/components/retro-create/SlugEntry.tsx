@@ -26,17 +26,17 @@ const availabilityJsx: Record<SlugAvailability, ReactNode> = {
   ),
   [SlugAvailability.INVALID]: (
     <div className="slug-checker invalid">
-      Invalid <Cross />
+      Invalid <Cross role="presentation" />
     </div>
   ),
   [SlugAvailability.TAKEN]: (
     <div className="slug-checker taken">
-      Taken <Cross />
+      Taken <Cross role="presentation" />
     </div>
   ),
   [SlugAvailability.AVAILABLE]: (
     <div className="slug-checker available">
-      Available <TickBold />
+      Available <TickBold role="presentation" />
     </div>
   ),
 };

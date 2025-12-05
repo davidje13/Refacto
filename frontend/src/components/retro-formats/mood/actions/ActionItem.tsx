@@ -42,7 +42,7 @@ export const ActionItem = memo(
             defaultItem={item}
             submitButtonLabel={
               <>
-                <TickBold /> Save
+                <TickBold role="presentation" /> Save
               </>
             }
             submitButtonTitle="Save changes"
@@ -67,7 +67,7 @@ export const ActionItem = memo(
           className="toggle-done"
           onClick={() => onSetDone?.(item.id, !done)}
         >
-          <Tick />
+          <Tick role="presentation" />
         </button>
         {onEdit && (
           <button

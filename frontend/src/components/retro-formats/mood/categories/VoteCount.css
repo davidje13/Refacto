@@ -5,7 +5,7 @@
   color: var(--primary-text);
   outline: none;
 
-  &:focus:before {
+  &:focus-visible:before {
     content: '';
     position: absolute;
     top: 2px;
@@ -13,7 +13,9 @@
     right: 2px;
     bottom: 2px;
     border-radius: 100%;
-    box-shadow: 0 0 2px 1px var(--focus-border-heart);
+    box-shadow:
+      0 0 0 2px var(--focus-border-heart),
+      0 0 0 3px var(--primary-back);
   }
 
   .inner {

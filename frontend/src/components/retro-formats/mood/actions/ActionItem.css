@@ -29,7 +29,7 @@
     outline: none; /* custom focus ring */
     color: var(--primary-text);
 
-    &:focus::after {
+    &:focus-visible::after {
       content: '';
       position: absolute;
       width: 24px;
@@ -40,8 +40,8 @@
       left: 50%;
       /* fake focus ring to replace outline */
       box-shadow:
-        0 0 1px 5px var(--primary-back),
-        0 0 1px 6px var(--focus-border);
+        0 0 0 4px var(--primary-back),
+        0 0 0 6px var(--focus-border);
     }
 
     &::before {
