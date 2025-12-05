@@ -28,9 +28,11 @@ html {
   --beige-shadow: hsl(45deg, 20%, 80%);
 
   --grey-button-back: #eeeeee;
+  --grey-button-text: var(--green-text-on-white);
 
   --green-button-back: hsl(172deg, 72%, 60%);
   --green-button-text: #000000;
+  --green-button-icon: #ffffff;
   --green-button-dark: hsl(172deg, 55%, 50%);
   --green-button-dark-text: #ffffff;
 
@@ -61,44 +63,45 @@ html {
   --shadow-2: rgba(0, 0, 0, 0.5);
 }
 
-/* WIP: dark mode
 @media (prefers-color-scheme: dark) {
   html {
-    --page-back: #000000;
-    --header-back: #000000;
-    --modal-back: #000000;
-    --primary-back: #000000;
-    --primary-text: #ffffff;
+    --page-back: hsl(30, 3%, 10%);
+    --header-back: hsl(30, 3%, 10%);
+    --modal-back: hsl(30, 3%, 10%);
+    --primary-back: hsl(30, 3%, 10%);
+    --primary-text: #f8f8f8;
     --selected-back: hsl(200deg, 72%, 28%);
 
     --modal-screen: rgba(64, 64, 64, 0.5);
 
     --focus-border: #005fcc;
 
-    --beige-back: hsl(45deg, 3%, 10%);
+    --beige-back: hsl(30, 3%, 17%);
     --beige-shadow: hsl(45deg, 3%, 30%);
 
     --grey-button-back: #555555;
+    --grey-button-text: #f8f8f8;
 
-    --green-button-back: hsl(172deg, 72%, 60%);
-    --green-button-text: #000000;
-    --green-button-dark: hsl(172deg, 55%, 50%);
-    --green-button-dark-text: #ffffff;
+    --green-button-back: hsl(172, 95%, 36%);
+    --green-button-text: #f8f8f8;
+    --green-button-icon: #f8f8f8;
+    --green-button-dark: hsl(172, 95%, 44%);
+    --green-button-dark-text: #111111;
 
-    --green-icon: var(--green-back);
-    --red-icon: #aa3300;
-    --bright-red-icon: #cc2200;
+    --green-icon: hsl(172deg, 50%, 55%);
+    --red-icon: #cc3300;
+    --bright-red-icon: #ee3300;
     --beige-icon: hsl(45deg, 20%, 85%);
 
-    --pale-text-on-white: #808080;
-    --green-text-on-white: var(--green-shadow);
+    --pale-text-on-white: #a8a8a8;
+    --green-text-on-white: hsl(172, 63%, 46%);
     --yellow-text-on-white: hsl(43deg, 100%, 65%);
-    --red-text-on-white: #ff6633;
+    --red-text-on-white: #ff5511;
     --highlight-text-on-dark: #ffffff;
     --input-text: #ffffff;
 
-    --link-text: #25ceb7;
-    --link-text-hover: #24e5cc;
+    --link-text: #1de1c7;
+    --link-text-hover: #13f0d2;
     --link-disabled: rgba(0, 0, 0, 0.6);
 
     --header-link-back-hover: #333333;
@@ -112,7 +115,6 @@ html {
     --shadow-2: rgba(0, 0, 0, 0.8);
   }
 }
-*/
 
 body {
   background: var(--page-back);

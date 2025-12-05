@@ -2,9 +2,7 @@
   vertical-align: bottom;
   filter: invert() opacity(0.5);
 
-  /* WIP: dark mode
   @media (prefers-color-scheme: dark) {
     filter: none;
   }
-  */
 }

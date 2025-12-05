@@ -2,7 +2,7 @@
   display: inline-block;
   padding: 8px 16px;
   background: var(--grey-button-back);
-  color: var(--green-text-on-white);
+  color: var(--grey-button-text);
   transition: box-shadow 0.2s ease;
   text-align: center;
 

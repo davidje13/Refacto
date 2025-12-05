@@ -41,6 +41,11 @@
     opacity: 0.3;
     background: center no-repeat url(../../../../../resources/pencil.svg);
 
+    @media (prefers-color-scheme: dark) {
+      filter: invert();
+      opacity: 0.6;
+    }
+
     &:hover {
       opacity: 0.9;
     }

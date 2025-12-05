@@ -109,6 +109,12 @@
       transform: translate(8px, -2px) rotate(20deg) scale(0.6);
       opacity: 0.3;
     }
+    @media (prefers-color-scheme: dark) {
+      .n2,
+      .n3 {
+        opacity: 0.6;
+      }
+    }
   }
 }
 

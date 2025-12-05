@@ -9,11 +9,17 @@
   & form {
     display: flex;
 
-    & input {
+    & input[type='text'] {
       border: 1px solid var(--beige-shadow);
       margin: 0;
       padding: 8px 16px;
       flex: 1;
+      background: var(--primary-back);
+      color: var(--input-text);
+    }
+
+    & input::placeholder {
+      color: var(--pale-text-on-white);
     }
   }
 

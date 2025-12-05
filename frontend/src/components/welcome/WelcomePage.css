@@ -16,6 +16,10 @@
     width: 192px;
     height: 192px;
     margin: 0 auto 16px;
+
+    @media (prefers-color-scheme: dark) {
+      filter: brightness(0.94) contrast(1.27);
+    }
   }
 
   & p {

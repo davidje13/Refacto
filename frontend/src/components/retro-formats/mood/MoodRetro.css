@@ -277,7 +277,7 @@
     }
 
     .submit {
-      color: var(--green-button-dark-text);
+      color: var(--green-button-icon);
 
       &:disabled {
         display: none;
