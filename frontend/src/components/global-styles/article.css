@@ -1,4 +1,4 @@
-.page-security {
+.global-article {
   padding-bottom: 128px;
 
   & section {
@@ -13,11 +13,20 @@
       margin-bottom: 16px;
     }
 
+    & p,
+    & li {
+      line-height: 1.7;
+    }
+
     & p {
       margin: 16px 0;
     }
 
     & li {
+      margin: 16px 0 16px 24px;
+    }
+
+    & ul.narrow li {
       margin: 4px 0 4px 24px;
     }
   }

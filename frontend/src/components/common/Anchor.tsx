@@ -1,18 +1,39 @@
-import { useRef, useEffect, memo } from 'react';
+import {
+  useRef,
+  useEffect,
+  memo,
+  type PropsWithChildren,
+  type ElementType,
+} from 'react';
+import './Anchor.css';
 
 interface PropsT {
-  tag: string;
+  tag?: ElementType;
+  name: string;
+  className?: string;
 }
 
-export const Anchor = memo(({ tag }: PropsT) => {
-  const ref = useRef<HTMLElement>(null);
+export const Anchor = memo(
+  ({
+    tag: Tag = 'span',
+    name,
+    className = '',
+    children,
+  }: PropsWithChildren<PropsT>) => {
+    const ref = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const anchor = window.location.hash.substring(1);
-    if (anchor === tag && ref.current && ref.current.scrollIntoView) {
-      ref.current.scrollIntoView();
-    }
-  }, [ref, tag]);
+    useEffect(() => {
+      const anchor = window.location.hash.substring(1);
+      if (anchor === name && ref.current && ref.current.scrollIntoView) {
+        ref.current.scrollIntoView();
+      }
+    }, [ref, name]);
 
-  return <span ref={ref} id={tag} />;
-});
+    return (
+      <Tag ref={ref} id={name} className={`${className} anchor`}>
+        {children}
+        <a href={`#${name}`} aria-label="Link to this" />
+      </Tag>
+    );
+  },
+);

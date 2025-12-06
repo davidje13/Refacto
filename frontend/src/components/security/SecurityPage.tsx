@@ -1,20 +1,18 @@
 import { memo } from 'react';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';
-import './SecurityPage.css';
 
 export const SecurityPage = memo(() => (
-  <article className="page-security">
+  <article className="page-security global-article">
     <Header
       documentTitle="Privacy &amp; Security - Refacto"
       title="Privacy &amp; Security"
       backLink={{ label: 'Home', action: '/' }}
     />
     <section>
-      <h2>
-        <Anchor tag="single-sign-on" />
+      <Anchor tag="h2" name="single-sign-on">
         Single Sign On
-      </h2>
+      </Anchor>
       <p>
         To create a new retro, a single-sign-on (SSO) provider must be used.
         Several providers are supported, and the data gathered is the minimum
@@ -31,10 +29,9 @@ export const SecurityPage = memo(() => (
       </p>
     </section>
     <section>
-      <h2>
-        <Anchor tag="passwords" />
+      <Anchor tag="h2" name="passwords">
         Passwords
-      </h2>
+      </Anchor>
       <p>
         The minimum requirement for passwords is that they be at least 8
         characters long. Beyond this there are no restrictions, but all
@@ -65,10 +62,9 @@ export const SecurityPage = memo(() => (
       </p>
     </section>
     <section>
-      <h2>
-        <Anchor tag="retro-data" />
+      <Anchor tag="h2" name="retro-data">
         Retro Data
-      </h2>
+      </Anchor>
       <p>
         This service takes several precautions to protect retro data against
         accidental or deliberate exposure (see the technical details below for
@@ -79,10 +75,9 @@ export const SecurityPage = memo(() => (
       </p>
     </section>
     <section>
-      <h2>
-        <Anchor tag="analytics" />
+      <Anchor tag="h2" name="analytics">
         Analytics
-      </h2>
+      </Anchor>
       <p>
         Minimal analytics are recorded to identify bugs, track feature usage,
         and prioritise browser support. This does not involve sharing any data
@@ -92,7 +87,7 @@ export const SecurityPage = memo(() => (
         investigating issues). Cookies are not used and IP addresses are not
         stored. The details recorded are:
       </p>
-      <ul>
+      <ul className="narrow">
         <li>Platform name (e.g. "Windows", "Android", "iPad");</li>
         <li>Browser name (e.g. "Chrome", "Firefox", "Safari");</li>
         <li>Browser major version (e.g. "130");</li>
@@ -117,8 +112,9 @@ export const SecurityPage = memo(() => (
       </p>
     </section>
     <section>
-      <Anchor tag="technical-details" />
-      <h2>Technical Details</h2>
+      <Anchor tag="h2" name="technical-details">
+        Technical Details
+      </Anchor>
       <p>
         Further technical details on the privacy and security choices are
         available in the{' '}

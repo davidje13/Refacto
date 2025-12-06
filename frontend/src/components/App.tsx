@@ -6,6 +6,7 @@ import { LoginCallback } from './login/LoginCallback';
 import { RetroRouter } from './RetroRouter';
 import { WelcomePage } from './welcome/WelcomePage';
 import { SecurityPage } from './security/SecurityPage';
+import { GuidancePage } from './guidance/GuidancePage';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
 import { NotFoundPage } from './not-found/NotFoundPage';
 import './App.css';
@@ -21,6 +22,9 @@ export const App: FC = () => (
       </Route>
       <Route path="/security">
         <SecurityPage />
+      </Route>
+      <Route path="/guidance">
+        <GuidancePage />
       </Route>
       <Route path="/create">
         <RetroCreatePage />

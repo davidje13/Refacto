@@ -54,9 +54,15 @@ export const WelcomePage = memo(() => {
       <section>
         <img src="/favicon512.png" className="logo" alt="Refacto" />
         {userToken ? null : (
-          <p>
-            Refacto makes it easy to run team retros with remote team members.
-          </p>
+          <>
+            <p>
+              Refacto makes it easy to run team retros with remote team members.
+            </p>
+            <p>
+              Not familiar with retros?{' '}
+              <Link to="/guidance">Learn more here</Link>.
+            </p>
+          </>
         )}
       </section>
       {loading ? (
