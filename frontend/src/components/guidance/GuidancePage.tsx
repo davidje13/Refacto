@@ -125,11 +125,11 @@ export const GuidancePage = memo(() => (
         </li>
         <li>
           <strong>Write actionable tasks.</strong> When problems are discussed,
-          try to agree and write down one or more <em>actionable</em> tasks to
-          help the situation which can be performed before the next retro.
-          Assign each task to a specific person who is present in the session.
-          Discuss the actions and any progress (or lack of progress) at the
-          start of the next session.
+          try to agree and write down one or more <em>actionable</em> tasks or
+          experiments to help the situation which can be performed before the
+          next retro. Assign each task to a specific person who is present in
+          the session. Discuss the actions and any progress (or lack of
+          progress) at the start of the next session.
         </li>
         <li>
           <strong>Do the actionable tasks.</strong> Between retros, it&rsquo;s
