@@ -144,6 +144,14 @@ jobs:
           tags: |
             docker.io/refacto/refacto:${{ needs.build_and_test.outputs.version }}
             docker.io/refacto/refacto:latest
+          labels: |
+            org.opencontainers.image.title=Refacto
+            org.opencontainers.image.description=The Refacto app for running online Retrospectives
+            org.opencontainers.image.version=${{ needs.build_and_test.outputs.version }}
+            org.opencontainers.image.url=https://retro.davidje13.com/
+            org.opencontainers.image.source=${{ github.repositoryUrl }}
+            org.opencontainers.image.licenses=GPL-3.0-or-later
+            org.opencontainers.image.base.name=docker.io/node:24-alpine
 
   create_github_release:
     needs:
