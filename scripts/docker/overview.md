@@ -1,3 +1,5 @@
+# Refacto
+
 Refacto makes it easy to run team retros with remote team members.
 
 ![Refacto](https://raw.githubusercontent.com/davidje13/Refacto/refs/heads/main/docs/screenshot.png)

@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Determine version
+        id: version
+        run: |
+          set -e
+          VERSION="$(date -u '+%Y%m%d-%H%M%S')"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version $VERSION";
       - name: Checkout
         uses: actions/checkout@v6
       - name: Install Node
@@ -39,6 +46,8 @@ jobs:
           retention-days: 1
           if-no-files-found: error
           path: build.tar.gz
+    outputs:
+      VERSION: ${{ steps.version.outputs.VERSION }}
 
   smoke_test:
     needs:
@@ -95,27 +104,20 @@ jobs:
             false;
           fi;
 
-  create_release:
+  create_docker_release:
     needs:
+      - build_and_test
       - smoke_test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: ${{ github.ref == 'refs/heads/main' && github.head_ref == null }}
-    permissions:
-      contents: write
     steps:
-      - name: Pick version name
-        run: |
-          set -e
-          RELEASE_NAME="$(date -u '+%Y%m%d-%H%M%S')"
-          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
-          echo "Creating release $RELEASE_NAME...";
       - name: Download Bundle
         uses: actions/download-artifact@v6
         with:
           name: refacto
-      - name: Extract
-        run: mkdir build && tar -xf build.tar.gz -C build
+      - name: Unpack
+        run: tar -xf build.tar.gz && rm build.tar.gz
       - name: Authenticate with Docker Hub
         uses: docker/login-action@v3
         with:
@@ -131,25 +133,40 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
-          context: build
+          context: .
           github-token: '-'
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            docker.io/refacto/refacto:${{ env.RELEASE_NAME }}
+            docker.io/refacto/refacto:${{ needs.build_and_test.outputs.VERSION }}
             docker.io/refacto/refacto:latest
+
+  create_github_release:
+    needs:
+      - build_and_test
+      - smoke_test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: ${{ github.ref == 'refs/heads/main' && github.head_ref == null }}
+    permissions:
+      contents: write
+    steps:
+      - name: Download Bundle
+        uses: actions/download-artifact@v6
+        with:
+          name: refacto
       - name: Create GitHub Release
         env:
           API_BASE: 'https://api.github.com/repos/${{ github.repository }}'
           COMMIT: ${{ github.sha }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NAME: ${{ env.RELEASE_NAME }}
+          VERSION: ${{ needs.build_and_test.outputs.VERSION }}
         run: |
           set -e;
           wget -S \
             --header='Accept: application/vnd.github.v3+json' \
             --header="Authorization: token $GITHUB_TOKEN" \
-            --post-data="$(jq -n --arg n "$RELEASE_NAME" --arg c "$COMMIT" '{tag_name: $n, target_commitish: $c}')" \
+            --post-data="$(jq -n --arg n "$VERSION" --arg c "$COMMIT" '{tag_name: $n, target_commitish: $c}')" \
             "$API_BASE/releases" -O release.json;
           cat release.json;
           echo "Uploading bundle...";
