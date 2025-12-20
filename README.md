@@ -36,10 +36,10 @@ The output is placed in `build`.
 
 ### With Docker
 
-You can deploy using the [Docker Hub image](https://hub.docker.com/repository/docker/refacto/refacto/general):
+You can deploy using the [Docker Hub image](https://hub.docker.com/r/refacto/refacto):
 
 ```sh
-docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true refacto/refacto
+docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 refacto/refacto
 ```
 
 (see the image details for information on how to configure and secure docker deployments).

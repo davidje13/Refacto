@@ -73,20 +73,22 @@ function getConnectionCount(s: Server): Promise<number> {
 }
 
 let interrupted = false;
-process.on('SIGINT', async () => {
-  // SIGINT is sent twice in quick succession, so ignore the second
-  if (!interrupted) {
-    interrupted = true;
-    printInfo('');
-    try {
-      await Promise.all(shutdownTasks.map((fn) => fn()));
-      await logService.close();
-      printInfo('Shutdown complete');
-    } catch (e) {
-      printError('Failed to shutdown server', e);
-    }
+const shutdown = async () => {
+  if (interrupted) {
+    return;
   }
-});
+  interrupted = true;
+  printInfo('');
+  try {
+    await Promise.all(shutdownTasks.map((fn) => fn()));
+    await logService.close();
+    printInfo('Shutdown complete');
+  } catch (e) {
+    printError('Failed to shutdown server', e);
+  }
+};
+process.on('SIGINT', shutdown); // respond to Ctrl+C from terminal
+process.on('SIGTERM', shutdown); // e.g. sent by Docker when container is stopped
 
 (async () => {
   let success = true;
