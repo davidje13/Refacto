@@ -108,7 +108,7 @@ jobs:
         run: |
           set -e
           RELEASE_NAME="$(date -u '+%Y%m%d-%H%M%S')"
-          echo "RELEASE_NAME='$RELEASE_NAME'" >> $GITHUB_ENV
+          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
           echo "Creating release $RELEASE_NAME...";
       - name: Download Bundle
         uses: actions/download-artifact@v6
@@ -125,7 +125,7 @@ jobs:
       - name: Set up QEMU for Cross-Architecture Builds
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: x86_64,arm64
+          platforms: arm64
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and Push Docker Image
