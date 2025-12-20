@@ -123,6 +123,7 @@ export const appFactory = async (
     return CONTINUE;
   });
 
+  app.get('/api/health', (_, res) => res.end('OK'));
   app.mount(
     '/api/auth',
     new ApiAuthRouter(

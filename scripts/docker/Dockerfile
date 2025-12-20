@@ -19,5 +19,7 @@ USER 1000
 
 EXPOSE 5000
 ENV NODE_ENV=production
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --start-interval=1s --retries=3 \
+  CMD wget --tries=1 -qO /dev/null "http://localhost:${PORT:-5000}/api/health"
 ENTRYPOINT ["/usr/refacto/index.js"]
 CMD []
