@@ -136,6 +136,8 @@ jobs:
           context: .
           github-token: '-'
           platforms: linux/amd64,linux/arm64
+          cache-from: type=gha,timeout=3m
+          cache-to: type=gha,timeout=3m
           push: true
           tags: |
             docker.io/refacto/refacto:${{ needs.build_and_test.outputs.version }}
