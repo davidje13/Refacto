@@ -19,7 +19,7 @@ jobs:
         run: |
           set -e
           VERSION="$(date -u '+%Y%m%d-%H%M%S')"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Version $VERSION";
       - name: Checkout
         uses: actions/checkout@v6
@@ -47,7 +47,7 @@ jobs:
           if-no-files-found: error
           path: build.tar.gz
     outputs:
-      VERSION: ${{ steps.version.outputs.VERSION }}
+      version: ${{ steps.version.outputs.version }}
 
   smoke_test:
     needs:
@@ -138,7 +138,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            docker.io/refacto/refacto:${{ needs.build_and_test.outputs.VERSION }}
+            docker.io/refacto/refacto:${{ needs.build_and_test.outputs.version }}
             docker.io/refacto/refacto:latest
 
   create_github_release:
@@ -160,7 +160,7 @@ jobs:
           API_BASE: 'https://api.github.com/repos/${{ github.repository }}'
           COMMIT: ${{ github.sha }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ needs.build_and_test.outputs.VERSION }}
+          VERSION: ${{ needs.build_and_test.outputs.version }}
         run: |
           set -e;
           wget -S \
