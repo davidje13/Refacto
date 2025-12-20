@@ -34,19 +34,35 @@ The output is placed in `build`.
 
 ## Deploying
 
+### With Docker
+
+You can deploy using the [Docker Hub image](https://hub.docker.com/repository/docker/refacto/refacto/general):
+
+```sh
+docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true refacto/refacto
+```
+
+(see the image details for information on how to configure and secure docker deployments).
+
+### Without Docker
+
 You will need to have Node.js 20 or newer installed in the deployment
 environment.
 
+[Download and unpack a release](https://github.com/davidje13/Refacto/releases) (or
+[build your own](#building-for-deployment)), then in the release directory run:
+
 ```sh
-cd build
 npm install --omit=dev
-./index.js
+INSECURE_SHARED_ACCOUNT_ENABLED=true ./index.js
 ```
+
+### Configuration
 
 By default:
 
-- no authentication providers are available
-  (you will need to add at least one to use the service);
+- no authentication providers are available (setting `INSECURE_SHARED_ACCOUNT_ENABLED`
+  means everybody who can access the site will be able to see all retros);
 - an in-memory database is used
   (all data will be lost when the process ends);
 - blank secrets are used for encryption and password hashing

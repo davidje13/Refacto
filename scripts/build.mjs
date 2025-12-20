@@ -81,6 +81,10 @@ await copy(join(basedir, 'backend', 'build'), builddir);
 await deleteDirectory(staticdir);
 await copy(join(basedir, 'frontend', 'build'), staticdir);
 await chmod(join(builddir, 'index.js'), 0o755);
+await copy(
+  join(basedir, 'scripts', 'docker', 'Dockerfile'),
+  join(builddir, 'Dockerfile'),
+);
 
 if (preserveBuildModules) {
   log('Restoring build/node_modules...');
