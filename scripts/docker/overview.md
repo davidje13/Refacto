@@ -26,16 +26,28 @@ For a real deployment, there are various things you should customise:
 
 ## Adding persistence
 
-You will need to run a separate database, for example with docker:
+You will need to run a separate database and a network connection, for example with docker:
 
 ```sh
-docker run -d -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
+docker network create refactonet
+docker run -d \
+  --name refactodb \
+  -e POSTGRES_DB=refacto \
+  -e POSTGRES_USER=myuser \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  --network refactonet \
+  postgres
 ```
 
-Then add this to your Refacto command (before `refacto/refacto`):
+Wait for the postgres instance to boot, then run Refacto with:
 
 ```sh
--e DB_URL="postgresql://postgres:mysecretpassword@localhost:5432/postgres"
+docker run -d \
+  -e INSECURE_SHARED_ACCOUNT_ENABLED=true \
+  -e DB_URL="postgresql://myuser:mysecretpassword@refactodb:5432/refacto" \
+  --network refactonet \
+  -p 5000:5000 \
+  refacto/refacto
 ```
 
 You can also use other database services, such as MongoDB
@@ -45,7 +57,7 @@ You can also use other database services, such as MongoDB
 
 You can set up one or more authentication providers for your deployment domain
 ([instructions](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md#authentication-providers))
-then configure Refacto with:
+then update your Refacto launch command with:
 
 ```sh
 -e SSO_GOOGLE_CLIENT_ID="<your-google-client-id>" \
@@ -65,7 +77,7 @@ will access.
 
 If you want to enable Giphy images,
 [set up an account](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md#giphy)
-then configure Refacto with:
+then update your Refacto launch command with:
 
 ```sh
 -e GIPHY_API_KEY="<your-giphy-api-key>" \
@@ -81,14 +93,16 @@ If you are deploying behind a trusted reverse proxy, set `-e TRUST_PROXY=true`
 
 ## Security
 
-To enable additional security, set the following options to random secrets.
-These values must be preserved between runs:
+To enable additional security (specifically to protect data against attackers even if they gain
+access to the database), set the following options to random secrets:
 
 ```sh
 -e PASSWORD_SECRET_PEPPER="<any-random-text>" \
 -e ENCRYPTION_SECRET_KEY="<64-random-hex-characters>" \
 -e TOKEN_SECRET_PASSPHRASE="<any-random-text>" \
 ```
+
+These values must be preserved between runs.
 
 ## Additional Options
 
