@@ -128,6 +128,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
+          cache-image: false # this step does not take long anyway, and cache saving step seems to always fail
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build and Push Docker Image

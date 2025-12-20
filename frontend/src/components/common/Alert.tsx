@@ -5,10 +5,9 @@ import './Alert.css';
 interface PropsT {
   warning?: boolean;
   message?: ReactNode | undefined;
-  suffix?: ReactNode;
 }
 
-export const Alert = memo(({ warning = false, message, suffix }: PropsT) =>
+export const Alert = memo(({ warning = false, message }: PropsT) =>
   message ? (
     <div className={`alert-message ${warning ? 'warning' : 'error'}`}>
       <Warning
@@ -17,7 +16,6 @@ export const Alert = memo(({ warning = false, message, suffix }: PropsT) =>
         role="img"
       />
       {message}
-      {suffix}
     </div>
   ) : null,
 );

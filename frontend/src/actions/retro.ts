@@ -4,6 +4,7 @@ import type {
   UserProvidedRetroItemDetails,
 } from '../shared/api-entities';
 import type { Spec } from '../api/reducer';
+import { randomUUID } from '../helpers/crypto';
 
 const IRRELEVANT_WHITESPACE = /[ \t\v]+/g;
 const PADDING = /^[ \r\n]+|[ \r\n]+$/g;
@@ -33,7 +34,7 @@ export const addRetroItem = (
   }
 
   const item: RetroItem = {
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     category,
     group,
     created: Date.now(),

@@ -83,17 +83,25 @@ export const RetroForm = memo(
       },
     );
 
-    const passwordWarningRequest = useAwaited(
+    const passwordWarningRequest = useAwaited<ReactNode>(
       async (signal) => {
+        if (!window.isSecureContext) {
+          return (
+            <>
+              You are accessing Refacto over an insecure connection; other users
+              on your network can see the password you enter{HTTPS_INFO_LINK}
+            </>
+          );
+        }
         if (!password || password !== passwordConf) {
-          return;
+          return null;
         }
 
         if (password.length < MIN_PASSWORD_LENGTH) {
-          return 'This password is too short';
+          return <>This password is too short{PASSWORD_INFO_LINK}</>;
         }
         if (password.length > MAX_PASSWORD_LENGTH) {
-          return 'This password is too long';
+          return <>This password is too long{PASSWORD_INFO_LINK}</>;
         }
 
         const count = await passwordService.countPasswordBreaches(
@@ -101,13 +109,15 @@ export const RetroForm = memo(
           signal,
         );
         if (count > 100) {
-          return 'This password is very common and insecure';
+          return (
+            <>This password is very common and insecure{PASSWORD_INFO_LINK}</>
+          );
         } else if (count > 20) {
-          return 'This password is common and insecure';
+          return <>This password is common and insecure{PASSWORD_INFO_LINK}</>;
         } else if (count > 0) {
-          return 'This password may be insecure';
+          return <>This password may be insecure{PASSWORD_INFO_LINK}</>;
         }
-        return '';
+        return null;
       },
       [password, passwordConf],
     );
@@ -115,7 +125,7 @@ export const RetroForm = memo(
     const passwordWarning =
       passwordWarningRequest.state === 'resolved'
         ? passwordWarningRequest.data
-        : '';
+        : null;
 
     const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
       if (showImport && !importJson) {
@@ -219,22 +229,7 @@ export const RetroForm = memo(
             required
           />
         </label>
-        <Alert
-          warning
-          message={passwordWarning}
-          suffix={
-            <>
-              {' \u2014 '}
-              <a
-                href="/security#passwords"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Learn more
-              </a>
-            </>
-          }
-        />
+        <Alert warning message={passwordWarning} />
         <button
           type="submit"
           className="wide-button"
@@ -247,4 +242,26 @@ export const RetroForm = memo(
       </form>
     );
   },
+);
+
+const PASSWORD_INFO_LINK = (
+  <>
+    {' \u2014 '}
+    <a href="/security#passwords" target="_blank" rel="noopener noreferrer">
+      Learn more
+    </a>
+  </>
+);
+
+const HTTPS_INFO_LINK = (
+  <>
+    {' \u2014 '}
+    <a
+      href="https://www.cloudflare.com/learning/ssl/what-is-https/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Learn more
+    </a>
+  </>
 );
