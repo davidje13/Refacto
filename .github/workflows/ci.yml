@@ -48,9 +48,9 @@ jobs:
       - name: Determine version
         id: version
         run: |
-          set -e
-          VERSION="$(date -u '+%Y%m%d-%H%M%S')"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          set -e;
+          VERSION="$(date -u '+%Y%m%d-%H%M%S')";
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT";
           echo "Version $VERSION";
       - name: Checkout
         uses: actions/checkout@v6
@@ -67,9 +67,9 @@ jobs:
         run: PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 npm test
       - name: Bundle
         run: |
-          cd build
-          rm -r node_modules
-          tar -czf ../build.tar.gz .
+          cd build;
+          rm -r node_modules;
+          tar -czf ../build.tar.gz .;
       - name: Upload Bundle
         uses: actions/upload-artifact@v5
         with:
@@ -200,9 +200,60 @@ jobs:
       - name: Prune old ECR images
         # work around lack of support for lifecycle policies in ECR Public (see https://github.com/aws/containers-roadmap/issues/1268)
         run: |
-          set -e
-          # temporary: for now, just print out the information from the repository
-          aws ecr-public describe-images --repository-name refacto --output json
+          set -e;
+          cat >task.mjs <<"EOF"
+          import { json } from 'node:stream/consumers';
+          import { spawnSync } from 'node:child_process';
+
+          const untaggedThresholdTime = Date.now() - 1000 * 60 * 60 * 24; // 1 day
+          const repositorySizeLimitBytes = 20 * 1024 * 1024 * 1024; // 20GB (ECR Public free tier max across all repositories is 50GB)
+
+          const aws = process.argv[2];
+          const input = await json(process.stdin);
+          const indexItems = input.imageDetails.filter((item) => item.imageManifestMediaType.includes('image.index.v1'));
+          console.log(`total index items: ${indexItems.length}`);
+
+          for (const item of indexItems) {
+            item.imagePushedTimestamp = Date.parse(item.imagePushedAt);
+          }
+          indexItems.sort((a, b) => b.imagePushedTimestamp - a.imagePushedTimestamp); // sort newest first
+
+          let totalSize = 0;
+          const toDelete = [];
+          for (const item of indexItems) {
+            if (!item.imageTags?.length && item.imagePushedTimestamp < untaggedThresholdTime) {
+              // untagged image index: obvious candidate for deletion
+              console.log(`untagged image: ${item.imageDigest}`);
+              toDelete.push(item.imageDigest);
+              continue;
+            }
+            totalSize += item.imageSizeInBytes;
+            if (item.imageTags?.includes('latest')) {
+              // never remove image tagged as 'latest'
+              continue;
+            }
+            if (totalSize > repositorySizeLimitBytes) {
+              // max repository size exceeded: prune oldest images
+              console.log(`old image: ${item.imageDigest}`);
+              toDelete.push(item.imageDigest);
+            }
+          }
+          while (toDelete.length > 0) {
+            const batch = toDelete.splice(0, 100);
+            console.log('deleting batch:', batch);
+            const batchFilter = batch.map((digest) => `imageDigest=${digest}`).join(',');
+            const result = spawnSync(
+              aws,
+              ['ecr-public', 'batch-delete-image', '--repository-name', 'refacto', '--image-ids', batchFilter],
+              { stdio: ['ignore', 'inherit', 'inherit'] },
+            );
+            if (result.status !== 0) {
+              console.log(`batch delete failed (status ${result.status}, signal ${result.signal}, error ${result.error})`);
+              process.exit(1);
+            }
+          }
+          EOF
+          aws ecr-public describe-images --repository-name refacto --output json | node task.mjs "$(which aws)";
 
   create_github_release:
     needs:
