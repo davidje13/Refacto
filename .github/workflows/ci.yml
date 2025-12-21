@@ -131,7 +131,7 @@ jobs:
           username: ${{ secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.ECR_PUBLIC_AWS_SECRET_ACCESS_KEY }}
         env:
-          AWS_REGION: eu-west-2
+          AWS_REGION: us-east-1 # ECR public is only available via the N. Virginia region
       - name: Set up QEMU for Cross-Architecture Builds
         uses: docker/setup-qemu-action@v3
         with:
