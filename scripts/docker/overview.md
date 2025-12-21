@@ -1,11 +1,11 @@
 # Refacto
 
-Refacto makes it easy to run team retros with remote team members.
+Refacto makes it easy to run team retros with remote team members. See the
+official public deployment at <https://retro.davidje13.com/> and the source code
+on [GitHub](https://github.com/davidje13/Refacto) and
+[GitLab](https://gitlab.com/davidje13/refacto).
 
 ![Refacto](https://raw.githubusercontent.com/davidje13/Refacto/refs/heads/main/docs/screenshot.png)
-
-See the official public deployment at <https://retro.davidje13.com/> and the source code on
-[GitHub](https://github.com/davidje13/Refacto) and [GitLab](https://gitlab.com/davidje13/refacto).
 
 # Quickstart
 
@@ -17,8 +17,17 @@ docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 refacto/refac
 
 You can access the tool at <http://localhost:5000/>.
 
-Note that by default, Docker binds ports to all addresses (`0.0.0.0`), meaning your application will
-also be available over the local network at your IP (unless blocked by a firewall).
+Note that by default, Docker binds ports to all addresses (`0.0.0.0`), meaning
+your application will also be available over the local network at your IP
+(unless blocked by a firewall).
+
+# Provisioning
+
+Refacto does not require much CPU or RAM allocated to run smoothly. You should
+be able to provision the minimum available CPU on your platform of choice, and
+at least 0.5GB RAM (provision 1GB if you expect very heavy usage). One area
+which can be improved by allocating more CPU is the password login: this will be
+noticeably faster with more CPU resource available.
 
 # Customising
 
@@ -26,7 +35,8 @@ For a real deployment, there are various things you should customise:
 
 ## Adding persistence
 
-You will need to run a separate database and a network connection, for example with docker:
+You will need to run a separate database and a network connection, for example
+with docker:
 
 ```sh
 docker network create refactonet
@@ -66,12 +76,12 @@ then update your Refacto launch command with:
 -e SSO_GITLAB_CLIENT_ID="<your-gitlab-client-id>" \
 ```
 
-You will also need to _remove_ `INSECURE_SHARED_ACCOUNT_ENABLED` from your command (and Refacto will
-refuse to start if it is still set).
+You will also need to _remove_ `INSECURE_SHARED_ACCOUNT_ENABLED` from your
+command (and Refacto will refuse to start if it is still set).
 
-Note that you do not need to be deploying to the public internet to use these services; you can
-configure them with an internal domain or with localhost, as long as it matches the URL your browser
-will access.
+Note that you do not need to be deploying to the public internet to use these
+services; you can configure them with an internal domain or with localhost, as
+long as it matches the URL your browser will access.
 
 ## Giphy integration
 
@@ -91,10 +101,25 @@ If you are deploying behind a trusted reverse proxy, set `-e TRUST_PROXY=true`
 -e TRUST_PROXY=true
 ```
 
+## Load Balancing
+
+If you are deploying Refacto on a service which offers automatic scaling, it is
+easiest to configure it to only run a single instance (ensure the maximum
+instance count is set to 1). Even a single tiny instance is more than enough
+capacity for most uses. If you _need_ to scale out to multiple instances, you
+must configure your load balancer to direct WebSocket requests to
+`/api/retros/<id>` to _consistent_ servers. Failing to do this can result in
+visitors accessing the same retro not seeing each other's updates unless they
+refresh the page.
+
+See an
+[example of how to correctly load balance Refacto using NGINX](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md#load-balancing).
+
 ## Security
 
-To enable additional security (specifically to protect data against attackers even if they gain
-access to the database), set the following options to random secrets:
+To enable additional security (specifically to protect data against attackers
+even if they gain access to the database), set the following options to random
+secrets:
 
 ```sh
 -e PASSWORD_SECRET_PEPPER="<any-random-text>" \
@@ -106,61 +131,7 @@ These values must be preserved between runs.
 
 ## Additional Options
 
-See the [services](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md) and
-[security](https://github.com/davidje13/Refacto/blob/main/docs/SECURITY.md) documentation for more
-options which can be set.
-
-## Load Balancing
-
-If you are deploying Refacto on a service which offers automatic scaling, it is easiest to
-configure it to only run a single instance. Even a single tiny instance is more than enough
-capacity for most uses. If you _need_ to scale up to multiple instances, you must configure your
-load balancer to direct WebSocket requests to `/api/retros/<id>` to _consistent_ servers. Failing
-to do this can result in visitors accessing the same retro not seeing each other's updates unless
-they refresh the page.
-
-An example NGINX configuration which achieves this:
-
-```nginx
-upstream refacto_backend {
-  # (list of servers here)
-}
-
-upstream refacto_backend_ws {
-  # this is the important line to ensure all visitors
-  # to the same retro reach the same server:
-  hash $request_uri consistent;
-
-  # (list of servers here)
-}
-
-map $http_upgrade $connection_upgrade {
-  default upgrade;
-  '' close;
-}
-
-server {
-  # (regular config here)
-
-  location / {
-    proxy_pass http://refacto_backend;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    proxy_set_header X-Forwarded-Host $host:443;
-    proxy_set_header Connection "";
-  }
-
-  location /api/retros {
-    proxy_pass http://refacto_backend_ws;
-    proxy_http_version 1.1;
-    proxy_redirect off;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    proxy_set_header X-Forwarded-Host $host:443;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection $connection_upgrade;
-    proxy_request_buffering off;
-    proxy_buffering off;
-  }
-}
-```
+See the
+[services](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md) and
+[security](https://github.com/davidje13/Refacto/blob/main/docs/SECURITY.md)
+documentation for more options which can be set.

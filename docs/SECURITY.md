@@ -2,9 +2,9 @@
 
 ## HTTPS
 
-This application runs a HTTP server which should be deployed behind a
-reverse proxy (such as Apache HTTPD or NGINX) to enable HTTPS. The
-proxy should also be configured to block or redirect HTTP traffic.
+This application runs a HTTP server which should be deployed behind a reverse
+proxy (such as Apache HTTPD or NGINX) to enable HTTPS. The proxy should also be
+configured to block or redirect HTTP traffic.
 
 Deploying to a platform-as-a-service will handle this automatically.
 
@@ -14,61 +14,60 @@ When deploying behind a proxy, you should set `TRUST_PROXY=true`:
 TRUST_PROXY=true ./index.js
 ```
 
-(do not set this to `true` unless behind a trusted proxy which sets
-the `X-Forwarded-*` headers)
+(do not set this to `true` unless behind a trusted proxy which sets the
+`X-Forwarded-*` headers)
+
+See [Reverse Proxy in the services documentation](./SERVICES.md#reverse-proxy)
+for more details.
 
 ## Passwords
 
-All passwords are protected using the bcrypt hashing algorithm with a
-work factor, individual salts, and a "brute-force salt".
+All passwords are protected using the bcrypt hashing algorithm with a work
+factor, individual salts, and a "brute-force salt".
 
 ### Work factor
 
-If you have a powerful webserver, you can increase the hash work
-factor:
+If you have a powerful webserver, you can increase the hash work factor:
 
 ```sh
 PASSWORD_WORK_FACTOR=12 ./index.js
 ```
 
-This value can be changed with each deployment (and should slowly
-increase over time as your deployment hardware becomes more powerful).
-Passwords which are weaker than the current value will automatically be
-re-hashed during successful logins. Lowering this value will only
-affect new passwords; existing passwords will never be rehashed to a
-weaker hash.
+This value can be changed with each deployment (and should slowly increase over
+time as your deployment hardware becomes more powerful). Passwords which are
+weaker than the current value will automatically be re-hashed during successful
+logins. Lowering this value will only affect new passwords; existing passwords
+will never be rehashed to a weaker hash.
 
-Increasing this value by 1 will double the time taken to perform a
-hash (assuming the same hardware). The default value (as of 2019)
-is 10. Due to the use of a brute-force salt, this has an effective
-average value of 12 for a successful login and 13 for an unsuccessful
-login.
+Increasing this value by 1 will double the time taken to perform a hash
+(assuming the same hardware). The default value (as of 2019) is 10. Due to the
+use of a brute-force salt, this has an effective average value of 12 for a
+successful login and 13 for an unsuccessful login.
 
 ### Secret pepper
 
-For extra security against database breaches, you can also specify a
-secret pepper value. This protects passwords in the event of a database
-breach if the webserver itself is not compromised. The pepper value
-must be the same for all instances of the webserver, and must remain
-constant with deployments of new versions of the app. The best place to
-store this value is in a deployment pipeline configuration, or a
-configuration server.
+For extra security against database breaches, you can also specify a secret
+pepper value. This protects passwords in the event of a database breach if the
+webserver itself is not compromised. The pepper value must be the same for all
+instances of the webserver, and must remain constant with deployments of new
+versions of the app. The best place to store this value is in a deployment
+pipeline configuration, or a configuration server.
 
 ```sh
 PASSWORD_SECRET_PEPPER="asecretwhichmustnotbeknown" ./index.js
 ```
 
-Currently it is not possible to cycle this secret value, as passwords
-can only be re-hashed during a successful login.
+Currently it is not possible to cycle this secret value, as passwords can only
+be re-hashed during a successful login.
 
-**If this value ever changes, all passwords will become invalid.
-If you specify a secret pepper, ensure it will never be lost!**
+**If this value ever changes, all passwords will become invalid. If you specify
+a secret pepper, ensure it will never be lost!**
 
 ## NodeJS runtime flags
 
-When launched with `./index.js`, node hardening flags are applied
-automatically. If you need to customise the NodeJS flags, you should
-be sure to specify these as well:
+When launched with `./index.js`, node hardening flags are applied automatically.
+If you need to customise the NodeJS flags, you should be sure to specify these
+as well:
 
 ```sh
 node --force-node-api-uncaught-exceptions-policy --no-addons --disallow-code-generation-from-strings --disable-proto delete index.js
@@ -76,73 +75,68 @@ node --force-node-api-uncaught-exceptions-policy --no-addons --disallow-code-gen
 
 Note that these must be included _before_ the `index.js` argument.
 
-If you do not need to specify custom flags, it is recommended to
-stick with using `./index.js` to launch the application instead of
-`node index.js`, as the former will automatically get new security
-flags as they are added.
+If you do not need to specify custom flags, it is recommended to stick with
+using `./index.js` to launch the application instead of `node index.js`, as the
+former will automatically get new security flags as they are added.
 
 ## Data encryption
 
-All retro item data is encrypted in the database using aes-256-cbc,
-regardless of database choice. By default, a secret key of all zeros
-is used, providing no real protection. To get the benefits of data
-encryption, supply a secret key on startup.
+All retro item data is encrypted in the database using aes-256-cbc, regardless
+of database choice. By default, a secret key of all zeros is used, providing no
+real protection. To get the benefits of data encryption, supply a secret key on
+startup.
 
 ```sh
 ENCRYPTION_SECRET_KEY="0000000000000000000000000000000000000000000000000000000000000000" ./index.js
 ```
 
-The secret key should be 32 random bytes (256 bits) encoded in
-base16 (hex). You can generate a random key with:
+The secret key should be 32 random bytes (256 bits) encoded in base16 (hex). You
+can generate a random key with:
 
 ```sh
 ./scripts/random-secrets.mjs
 ```
 
-Non-item data (such as the retro name, settings, and current state)
-is not encrypted.
+Non-item data (such as the retro name, settings, and current state) is not
+encrypted.
 
 Currently it is not possible to cycle this secret value.
 
-**If this value ever changes, all retro data will be lost.
-If you specify a secret key, ensure it will never be lost!**
+**If this value ever changes, all retro data will be lost. If you specify a
+secret key, ensure it will never be lost!**
 
 ## Signed tokens
 
-All user and retro tokens are signed using the RSA256 algorithm.
-This requires a private key for signing, and a public key for
-verifying. The application will automatically generate these keys and
-store them in the database (a global pair for user tokens and a
-per-retro pair for retro tokens).
+All user and retro tokens are signed using the RSA256 algorithm. This requires a
+private key for signing, and a public key for verifying. The application will
+automatically generate these keys and store them in the database (a global pair
+for user tokens and a per-retro pair for retro tokens).
 
 ### Private key passphrase
 
-For extra security against database breaches, you can also specify a
-private key passphrase. This encrypts the private key, protecting your
-application from malicious tokens in the event of a database breach if
-the webserver itself is not compromised. The passphrase must be the
-same for all instances of the webserver, and must remain constant with
-deployments of new versions of the app. The best place to store this
-value is in a deployment pipeline configuration, or a configuration
-server.
+For extra security against database breaches, you can also specify a private key
+passphrase. This encrypts the private key, protecting your application from
+malicious tokens in the event of a database breach if the webserver itself is
+not compromised. The passphrase must be the same for all instances of the
+webserver, and must remain constant with deployments of new versions of the app.
+The best place to store this value is in a deployment pipeline configuration, or
+a configuration server.
 
 ```sh
 TOKEN_SECRET_PASSPHRASE="asecretwhichmustnotbeknown" ./index.js
 ```
 
-**If this value ever changes, you will need to regenerate all key
-pairs. This will invalidate any active sessions, forcing all users to
-reauthenticate.**
+**If this value ever changes, you will need to regenerate all key pairs. This
+will invalidate any active sessions, forcing all users to reauthenticate.**
 
 ## MongoDB
 
 ### User authentication (access control)
 
-Before configuring authentication, you should create the database,
-collections and indices necessary; the `refacto` user will not have
-permission to change these. You can do this by running the application
-without exposing it to the internet; after startup the configuration
-will be complete.
+Before configuring authentication, you should create the database, collections
+and indices necessary; the `refacto` user will not have permission to change
+these. You can do this by running the application without exposing it to the
+internet; after startup the configuration will be complete.
 
 1. Create users:
 
@@ -190,8 +184,8 @@ DB_URL="mongodb://refacto:<pass>@localhost:27017/refacto" ./index.js
 
 ### Encrypted communication
 
-To enable SSL (encrypted) communications, but without server or client
-identity checks:
+To enable SSL (encrypted) communications, but without server or client identity
+checks:
 
 ```sh
 # macOS
@@ -236,9 +230,8 @@ After enabling security, change the database URL when starting Refacto:
 DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
 ```
 
-Note that after enabling this, unless you also configure identity
-checks, you will need to skip certificate validation when connecting
-via the commandline:
+Note that after enabling this, unless you also configure identity checks, you
+will need to skip certificate validation when connecting via the commandline:
 
 ```sh
 mongo --ssl --sslAllowInvalidCertificates
@@ -246,17 +239,16 @@ mongo --ssl --sslAllowInvalidCertificates
 
 ### Client / server identity checks
 
-If the database is running on a separate server, you should enable
-client & server identity checks. The following resources offer
-guidance:
+If the database is running on a separate server, you should enable client &
+server identity checks. The following resources offer guidance:
 
 - <https://docs.mongodb.com/manual/tutorial/configure-ssl/>
 - <https://medium.com/@rajanmaharjan/secure-your-mongodb-connections-ssl-tls-92e2addb3c89>
 
 ## Analytics / Diagnostics
 
-By default, Refacto will log server and client errors, but will not
-record events or any client details (platform / browser version).
+By default, Refacto will log server and client errors, but will not record
+events or any client details (platform / browser version).
 
 Server-side errors are always logged.
 
@@ -268,28 +260,27 @@ ANALYTICS_CLIENT_ERROR_DETAIL="version" \
 ./index.js
 ```
 
-By default, the event detail is set to `none`, and client error detail
-is set to `message`. The possible values for both options are:
+By default, the event detail is set to `none`, and client error detail is set to
+`message`. The possible values for both options are:
 
-- `version`: Record the event or error, the name of the platform, and
-  the name and major version of the browser.
+- `version`: Record the event or error, the name of the platform, and the name
+  and major version of the browser.
 
-- `brand`: Record the event or error, and the name of the platform
-  and browser (but do not include version information).
+- `brand`: Record the event or error, and the name of the platform and browser
+  (but do not include version information).
 
-- `message`: Record the event or error (and a timestamp), but do not
-  record any details about the platform or browser which is in use.
-  Note that some error messages may identify the browser implicitly.
+- `message`: Record the event or error (and a timestamp), but do not record any
+  details about the platform or browser which is in use. Note that some error
+  messages may identify the browser implicitly.
 
 - `none`: Do not record this data at all.
 
-None of these settings involve the use of cookies to track users.
-Only the `User-Agent` header of requests is used.
+None of these settings involve the use of cookies to track users. Only the
+`User-Agent` header of requests is used.
 
-Any users who set the `DNT` (Do Not Track) or `Sec-GPC` (Global
-Privacy Control) header will not be included in logs (as if
-`ANALYTICS_EVENT_DETAIL` were limited to `none` and
-`ANALYTICS_CLIENT_ERROR_DETAIL` were limited to `message` or `none`).
-Removing these users from the logs goes beyond required privacy
-controls (as the details recorded are not shared with third parties),
-but is done to respect user preferences.
+Any users who set the `DNT` (Do Not Track) or `Sec-GPC` (Global Privacy Control)
+header will not be included in logs (as if `ANALYTICS_EVENT_DETAIL` were limited
+to `none` and `ANALYTICS_CLIENT_ERROR_DETAIL` were limited to `message` or
+`none`). Removing these users from the logs goes beyond required privacy
+controls (as the details recorded are not shared with third parties), but is
+done to respect user preferences.
