@@ -9,6 +9,37 @@ on:
       - main
   workflow_dispatch: {}
 
+# Deployment requirements:
+# - secrets.DOCKERHUB_TOKEN is a Personal Access Token for hub.docker.com with Read & Write access
+# - secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID & secrets.ECR_PUBLIC_AWS_SECRET_ACCESS_KEY are for an AWS IAM User with the policy:
+#   {
+#     "Version": "2012-10-17",
+#     "Statement": [
+#       {
+#         "Effect": "Allow",
+#         "Action": [
+#           "ecr-public:InitiateLayerUpload",
+#           "ecr-public:UploadLayerPart",
+#           "ecr-public:PutImage",
+#           "ecr-public:CompleteLayerUpload",
+#           "ecr-public:BatchCheckLayerAvailability",
+#           "ecr-public:DescribeImages",
+#           "ecr-public:BatchDeleteImage"
+#         ],
+#         "Resource": "arn:aws:ecr-public::<aws-account-here>:repository/refacto"
+#       },
+#       {
+#         "Effect": "Allow",
+#         "Action": [
+#           "sts:GetServiceBearerToken",
+#           "ecr-public:GetAuthorizationToken"
+#         ],
+#         "Resource": "*"
+#       }
+#     ]
+#   }
+#   (DescribeImages & BatchDeleteImage are required for auto-pruning old images. The rest are needed by docker/build-push-action)
+
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
@@ -124,39 +155,16 @@ jobs:
           registry: docker.io
           username: refacto
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Authenticate with Public ECR
+      - name: Authenticate with AWS
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-access-key-id: ${{ secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_PUBLIC_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # ECR public is only available via the N. Virginia region
+      - name: Authenticate with ECR Public
         uses: docker/login-action@v3
-        # this uses an access key for an IAM user with the policy:
-        # {
-        #   "Version": "2012-10-17",
-        #   "Statement": [
-        #     {
-        #       "Effect": "Allow",
-        #       "Action": [
-        #         "ecr-public:InitiateLayerUpload",
-        #         "ecr-public:UploadLayerPart",
-        #         "ecr-public:PutImage",
-        #         "ecr-public:CompleteLayerUpload",
-        #         "ecr-public:BatchCheckLayerAvailability"
-        #       ],
-        #       "Resource": "arn:aws:ecr-public::<aws-account-here>:repository/refacto"
-        #     },
-        #     {
-        #       "Effect": "Allow",
-        #       "Action": [
-        #         "sts:GetServiceBearerToken",
-        #         "ecr-public:GetAuthorizationToken"
-        #       ],
-        #       "Resource": "*"
-        #     }
-        #   ]
-        # }
         with:
           registry: public.ecr.aws
-          username: ${{ secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID }}
-          password: ${{ secrets.ECR_PUBLIC_AWS_SECRET_ACCESS_KEY }}
-        env:
-          AWS_REGION: us-east-1 # ECR public is only available via the N. Virginia region
       - name: Set up QEMU for Cross-Architecture Builds
         uses: docker/setup-qemu-action@v3
         with:
@@ -189,6 +197,12 @@ jobs:
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.licenses=GPL-3.0-or-later
             org.opencontainers.image.base.name=docker.io/node:24-alpine
+      - name: Prune old ECR images
+        # work around lack of support for lifecycle policies in ECR Public (see https://github.com/aws/containers-roadmap/issues/1268)
+        run: |
+          set -e
+          # temporary: for now, just print out the information from the repository
+          aws ecr-public describe-images --repository-name refacto --output json
 
   create_github_release:
     needs:
