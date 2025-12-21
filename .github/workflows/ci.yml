@@ -126,6 +126,31 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Authenticate with Public ECR
         uses: docker/login-action@v3
+        # this uses an access key for an IAM user with the policy:
+        # {
+        #   "Version": "2012-10-17",
+        #   "Statement": [
+        #     {
+        #       "Effect": "Allow",
+        #       "Action": [
+        #         "ecr-public:InitiateLayerUpload",
+        #         "ecr-public:UploadLayerPart",
+        #         "ecr-public:PutImage",
+        #         "ecr-public:CompleteLayerUpload",
+        #         "ecr-public:BatchCheckLayerAvailability"
+        #       ],
+        #       "Resource": "arn:aws:ecr-public::<aws-account-here>:repository/refacto"
+        #     },
+        #     {
+        #       "Effect": "Allow",
+        #       "Action": [
+        #         "sts:GetServiceBearerToken",
+        #         "ecr-public:GetAuthorizationToken"
+        #       ],
+        #       "Resource": "*"
+        #     }
+        #   ]
+        # }
         with:
           registry: public.ecr.aws
           username: ${{ secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID }}
@@ -154,8 +179,8 @@ jobs:
           tags: |
             docker.io/refacto/refacto:${{ needs.build_and_test.outputs.version }}
             docker.io/refacto/refacto:latest
-            public.ecr.aws/refacto/refacto:${{ needs.build_and_test.outputs.version }}
-            public.ecr.aws/refacto/refacto:latest
+            public.ecr.aws/w4z9z1e2/refacto:${{ needs.build_and_test.outputs.version }}
+            public.ecr.aws/w4z9z1e2/refacto:latest
           labels: |
             org.opencontainers.image.title=Refacto
             org.opencontainers.image.description=The Refacto app for running online Retrospectives
