@@ -90,11 +90,21 @@ startup.
 ENCRYPTION_SECRET_KEY="0000000000000000000000000000000000000000000000000000000000000000" ./index.js
 ```
 
-The secret key should be 32 random bytes (256 bits) encoded in base16 (hex). You
-can generate a random key with:
+The secret key should be 32 random bytes (256 bits) encoded in base16 (hex). As
+a convenience, you can generate suggested random secrets with:
 
 ```sh
-./scripts/random-secrets.mjs
+./index.js random-secrets
+# or
+docker run --rm refacto/refacto random-secrets
+```
+
+Example output:
+
+```
+PASSWORD_SECRET_PEPPER=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
+ENCRYPTION_SECRET_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+TOKEN_SECRET_PASSPHRASE=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 ```
 
 Non-item data (such as the retro name, settings, and current state) is not

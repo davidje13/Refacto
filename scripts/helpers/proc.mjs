@@ -281,6 +281,36 @@ export async function runTask({
   });
 }
 
+export async function runTaskCaptureOutput({ command, args = [], ...options }) {
+  if (shuttingDown) {
+    throw new Error('shutting down');
+  }
+  const proc = spawn(command, args, {
+    ...options,
+    stdio: ['ignore', 'pipe', 'inherit'],
+  });
+  let stdout = '';
+  proc.stdout.on('data', (part) => {
+    stdout += part.toString();
+  });
+  activeChildren.add(proc);
+  await new Promise((resolve, reject) => {
+    proc.on('error', (err) => {
+      activeChildren.delete(proc);
+      reject(err);
+    });
+    proc.on('close', (code) => {
+      activeChildren.delete(proc);
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Exit code ${code}`));
+      }
+    });
+  });
+  return stdout;
+}
+
 export async function runMultipleTasks(tasks, { parallel = true } = {}) {
   if (parallel) {
     try {

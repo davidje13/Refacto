@@ -3,14 +3,14 @@ import { randomBytes } from 'node:crypto';
 const ASCII62 =
   'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-export function makeRandomAscii(length) {
+function makeRandomAscii(length: number) {
   const alphabet = ASCII62;
   const limit = Math.floor(256 / alphabet.length) * alphabet.length;
   return new Array(length)
     .fill(0)
     .map(() => {
       while (true) {
-        const v = randomBytes(1)[0];
+        const v = randomBytes(1)[0]!;
         if (v < limit) {
           return alphabet[v % alphabet.length];
         }
@@ -19,7 +19,7 @@ export function makeRandomAscii(length) {
     .join('');
 }
 
-export function makeRandomKey(bytes) {
+function makeRandomKey(bytes: number) {
   return randomBytes(bytes).toString('hex');
 }
 

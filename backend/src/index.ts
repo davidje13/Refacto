@@ -1,6 +1,7 @@
 import type { Server } from 'node:http';
 import { promisify } from 'node:util';
 import { buildMockSSO } from 'authentication-backend/mock';
+import { makeRandomAppSecrets } from './helpers/random';
 import { LogService } from './services/LogService';
 import { appFactory } from './app';
 import { config } from './config';
@@ -13,6 +14,18 @@ process.on('SIGUSR1', () => {
 // https://nodejs.org/en/learn/getting-started/security-best-practices#prototype-pollution-attacks-cwe-1321
 // TODO: https://github.com/nodejs/undici/issues/4009
 //Object.freeze(globalThis);
+
+if (process.argv[2] === 'random-secrets') {
+  const secrets = makeRandomAppSecrets();
+  if (process.argv.includes('--json')) {
+    process.stdout.write(JSON.stringify(Object.fromEntries(secrets)));
+  } else {
+    for (const [env, value] of secrets) {
+      process.stdout.write(`${env}=${value}\n`);
+    }
+  }
+  process.exit(0);
+}
 
 const logService = new LogService(config.log.file);
 

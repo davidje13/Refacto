@@ -1,5 +1,12 @@
 # Refacto - Contributing
 
+Refacto is a from-scratch re-write of
+[Postfacto](https://github.com/vmware-archive/postfacto).
+
+Refacto uses TypeScript throughout. See
+[Library Documentation](#library-documentation) for a list of the major
+libraries used.
+
 ## Running locally
 
 ```sh
@@ -7,12 +14,14 @@ npm start
 ```
 
 The site (both frontend resources and backend API) will be available at
-<http://localhost:5000/>. The frontend will automatically rebuild if changed,
-but the backend will not (looking for a good Rollup HMR plugin!)
+<http://localhost:5000/>. The frontend and backend will automatically rebuild if
+changed.
 
 By default, this will run a mock Google authentication provider and an in-memory
 database. To enable real authentication providers (e.g. Google sign in) and data
-persistence, see the [services documentation](./SERVICES.md).
+persistence, see the [services documentation](./SERVICES.md). Note that all
+backend state (e.g. created retros) is lost when the backend rebuilds if you are
+using the default in-memory database.
 
 ## Running tests
 
@@ -122,7 +131,7 @@ npm install --save-dev jest
 
 ```sh
 cd backend
-npm install --save express
+npm install --save web-listener
 npm install --save-dev supertest
 ```
 
@@ -136,11 +145,18 @@ npm install --save-dev selenium-webdriver
 The latest versions of Google Chrome and Mozilla Firefox are supported, and the
 end-to-end tests will run in both (see [Running tests](#running-tests)).
 
+The latest version of Safari is supported but not automatically tested. Older
+(still maintained) versions of Safari are supported on a "best effort" basis,
+currently back as far as iOS Safari 16. The latest versions of Edge, Opera,
+Chromium, Brave, etc. are assumed to work since they use the same engine as
+Chrome. Internet Explorer is not supported.
+
 ## Library documentation
 
 - React: <https://reactjs.org/docs/react-api.html>
 - `update`: <https://github.com/davidje13/json-immutability-helper>
 - Wouter: <https://github.com/molefrog/wouter>
+- Web Listener: <https://github.com/davidje13/web-listener>
 - Jest: <https://jestjs.io/docs/en/api>
 - Flexible Testing Library React
   <https://github.com/davidje13/flexible-testing-library-react>

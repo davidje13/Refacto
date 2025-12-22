@@ -9,9 +9,9 @@ import {
   runBackgroundTask,
   runMultipleTasks,
   runTask,
+  runTaskCaptureOutput,
   waitForOutput,
 } from './helpers/proc.mjs';
-import { makeRandomAppSecrets } from './helpers/random.mjs';
 import { TEST_RUNTIME_FLAGS } from './helpers/flags.mjs';
 
 const PARALLEL_E2E = (process.env['PARALLEL_E2E'] ?? 'true') === 'true';
@@ -96,8 +96,11 @@ if (!testEnv['TARGET_HOST']) {
   };
 
   log('Using randomised secrets');
-  const secrets = makeRandomAppSecrets();
-  for (const [env, value] of secrets) {
+  const secrets = await runTaskCaptureOutput({
+    command: 'node',
+    args: [join(builddir, 'index.js'), 'random-secrets', '--json'],
+  });
+  for (const [env, value] of Object.entries(JSON.parse(secrets))) {
     process.stderr.write(`${env}=${value}\n`);
     appEnv[env] = value;
   }
