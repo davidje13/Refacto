@@ -29,6 +29,12 @@ at least 0.5GB RAM (provision 1GB if you expect very heavy usage). One area
 which can be improved by allocating more CPU is the password login: this will be
 noticeably faster with more CPU resource available.
 
+Ensure auto-scaling is disabled (in most services this means setting the maximum
+instance count to 1). Even a single tiny instance is more than enough capacity
+for most uses, and naïve load balancing will not work with Refacto. See
+[Load Balancing in the deploying documentation](https://github.com/davidje13/Refacto/blob/main/docs/DEPLOYING.md#load-balancing)
+for details and an example of how to set up load balancing correctly if needed.
+
 # Customising
 
 For a real deployment, there are various things you should customise:
@@ -101,20 +107,6 @@ If you are deploying behind a trusted reverse proxy, set `-e TRUST_PROXY=true`
 -e TRUST_PROXY=true
 ```
 
-## Load Balancing
-
-If you are deploying Refacto on a service which offers automatic scaling, it is
-easiest to configure it to only run a single instance (ensure the maximum
-instance count is set to 1). Even a single tiny instance is more than enough
-capacity for most uses. If you _need_ to scale out to multiple instances, you
-must configure your load balancer to direct WebSocket requests to
-`/api/retros/<id>` to _consistent_ servers. Failing to do this can result in
-visitors accessing the same retro not seeing each other's updates unless they
-refresh the page.
-
-See an
-[example of how to correctly load balance Refacto using NGINX](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md#load-balancing).
-
 ## Security
 
 To enable additional security (specifically to protect data against attackers
@@ -129,9 +121,17 @@ secrets:
 
 These values must be preserved between runs.
 
+As a convenience, you can easily generate randomised secrets by running:
+
+```sh
+docker run --rm refacto/refacto random-secrets
+```
+
 ## Additional Options
 
 See the
+[deploying](https://github.com/davidje13/Refacto/blob/main/docs/DEPLOYING.md)
+documentation for more details on how to self-host Refacto, and the
 [services](https://github.com/davidje13/Refacto/blob/main/docs/SERVICES.md) and
 [security](https://github.com/davidje13/Refacto/blob/main/docs/SECURITY.md)
 documentation for more options which can be set.

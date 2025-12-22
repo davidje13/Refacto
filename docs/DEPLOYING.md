@@ -1,6 +1,7 @@
 # Deploying
 
 Refacto has a public, free to use deployment at <https://retro.davidje13.com/>.
+This is hosted on Amazon Web Services in the eu-west-2 (London) region.
 
 If you want to host your own instance (e.g. for data sovereignty or to protect
 access within a VPN), there are several options available:
@@ -12,6 +13,12 @@ You can deploy using the
 
 ```sh
 docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 refacto/refacto
+```
+
+or the [AWS ECR Public image](https://gallery.ecr.aws/w4z9z1e2/refacto):
+
+```sh
+docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 public.ecr.aws/w4z9z1e2/refacto
 ```
 
 (see the image details for information on how to configure and secure docker
@@ -38,7 +45,7 @@ If you see an error along the lines of "unrecognised option `-S`", make sure you
 have a recent version of `env` installed (e.g. `apk add coreutils-env`). If you
 cannot install a newer `env`, you can launch the app using `node index.js`
 instead (but note that if doing this, you will need to specify your own
-[Node.js hardening](./SECURITY.md#nodejs-runtime-flags) flags).
+[Node.js hardening flags](./SECURITY.md#nodejs-runtime-flags)).
 
 ## Building From Source
 
@@ -67,26 +74,17 @@ which can be improved by allocating more CPU is the password login: this will be
 noticeably faster with more CPU resource available (or you can
 [enable more hashing rounds](./SECURITY.md#work-factor) to increase security).
 
-Note that because Refacto uses Web Sockets for live collaboration, you will need
+Note that because Refacto uses WebSockets for live collaboration, you will need
 to ensure your deployment is capable of holding open a large number of
 simultaneous connections (at least one per expected concurrent user, plus some
 extra for static asset and API requests). For small deployments this is not a
 concern, as the defaults are usually ample.
 
-You should _not_ enable any auto-scaling provided by your platform. Where
-possible, set the maximum number of instances to 1 (note that some platforms
-enable auto-scaling by default). For efficiency reasons, Refacto needs all
-participants in a particular retro to be connected to the same server, otherwise
-they will not see each other's changes in real time. Most deployments will not
-need more than a single small instance to run Refacto successfully, but if you
-have a very high load and _need_ additional instances, see
-[Load Balancing in the services documentation](./SERVICES.md#load-balancing) for
-an example of how to correctly load balance using an NGINX reverse proxy.
-
-## Health Check
-
-If you want to configure a health check, you can make HTTP requests to the
-`/api/health` endpoint. This will return `200 OK` during normal operation.
+Ensure auto-scaling is disabled (in most services this means setting the maximum
+instance count to 1). Even a single tiny instance is more than enough capacity
+for most uses, and naïve load balancing will not work with Refacto. See
+[Load Balancing](#load-balancing) for details and an example of how to set up
+load balancing correctly if needed.
 
 ## Configuration
 
@@ -131,3 +129,91 @@ ENCRYPTION_SECRET_KEY="<value-from-random-secrets>" \
 TOKEN_SECRET_PASSPHRASE="<value-from-random-secrets>" \
 ./index.js
 ```
+
+## Health Check
+
+If you want to configure a health check, you can make HTTP requests to the
+`/api/health` endpoint. This will return `200 OK` during normal operation.
+
+## Reverse Proxy
+
+When deploying behind a proxy such as NGINX, Apache HTTPD, or a PaaS load
+balancer, you should set `TRUST_PROXY=true`:
+
+```sh
+TRUST_PROXY=true ./index.js
+```
+
+(do not set this to `true` unless the only way for users to access the site is
+via a trusted proxy which sets the `X-Forwarded-*` headers)
+
+### Load Balancing
+
+For efficiency reasons, Refacto needs all participants in a particular retro to
+be connected to the same server, otherwise they will not see each other's
+changes in real time. Using a CDN such as CloudFront or CloudFlare is fine, as
+it will always proxy API requests and WebSockets to your server. However using a
+standard load balancer with multiple instances of Refacto will not work, as
+users accessing the same retro may end up on different backend instances.
+
+Even a single tiny instance of Refacto is able to support several concurrent
+retros with many participants in each, and larger deployments can easily be
+handled by scaling up the hardware, so most deployments will not need multiple
+instances. If you are hosting a very large number of simultaneous retros and
+_need_ additional instances, you must configure your load balancer to direct
+WebSocket requests to `/api/retros/<id>` to _consistent_ backend servers.
+
+An example NGINX configuration which achieves this:
+
+```nginx
+upstream refacto_backend {
+  # Regular load balancing for non-WebSocket requests
+
+  # list of servers here, e.g.:
+  server 10.0.0.1:5000;
+  server 10.0.0.2:5000;
+}
+
+upstream refacto_backend_ws {
+  # Consistent load balancing for WebSocket requests
+  hash $request_uri consistent;
+
+  # same list of servers again:
+  server 10.0.0.1:5000;
+  server 10.0.0.2:5000;
+}
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+server {
+  # (regular config here)
+
+  location / {
+    proxy_pass http://refacto_backend;
+    proxy_http_version 1.1;
+    proxy_redirect off;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Host $host:443;
+    proxy_set_header Connection "";
+  }
+
+  location /api/retros {
+    proxy_pass http://refacto_backend_ws;
+    proxy_http_version 1.1;
+    proxy_redirect off;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Host $host:443;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_request_buffering off;
+    proxy_buffering off;
+  }
+}
+```
+
+See the
+[NGINX upstream documentation](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)
+for more details.

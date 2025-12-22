@@ -6,7 +6,7 @@ the official public deployment at <https://retro.davidje13.com/>, or
 
 ![Refacto](docs/screenshot.png)
 
-## Running locally
+## Running Locally
 
 Requires [Node.js 20 or above](https://nodejs.org/en/).
 
@@ -30,7 +30,7 @@ own instance of Refacto.
 See the [services documentation](docs/SERVICES.md) for details on setting up a
 database and integrating with authentication providers.
 
-## Extra security
+## Extra Security
 
 See the [security documentation](docs/SECURITY.md) for details on configuring
 additional security for deployments.
