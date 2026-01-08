@@ -15,10 +15,10 @@ You can deploy using the
 docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 refacto/refacto
 ```
 
-or the [AWS ECR Public image](https://gallery.ecr.aws/w4z9z1e2/refacto):
+or the [AWS ECR Public image](https://gallery.ecr.aws/refacto/refacto):
 
 ```sh
-docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 public.ecr.aws/w4z9z1e2/refacto
+docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 public.ecr.aws/refacto/refacto
 ```
 
 (see the image details for information on how to configure and secure docker
