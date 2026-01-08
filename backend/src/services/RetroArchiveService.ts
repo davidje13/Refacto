@@ -1,6 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import type { Collection, DB, Wrapped } from 'collection-storage';
-import { encryptByRecordWithMasterKey } from '../import-wrappers/collection-storage-wrap';
+import {
+  encryptByRecordWithMasterKey,
+  type Collection,
+  type DB,
+  type Wrapped,
+} from 'collection-storage';
 import type {
   RetroArchive,
   RetroData,
@@ -48,24 +52,27 @@ export class RetroArchiveService {
 
   public getRetroArchiveSummaries(
     retroId: string,
-  ): Promise<Readonly<RetroArchiveSummary>[]> {
-    return this.archiveCollection.getAll('retroId', retroId, ['id', 'created']);
+  ): AsyncGenerator<Readonly<RetroArchiveSummary>, void, undefined> {
+    return this.archiveCollection
+      .where('retroId', retroId)
+      .attrs(['id', 'created'])
+      .values();
   }
 
   public async getRetroArchive(
     retroId: string,
     archiveId: string,
   ): Promise<Readonly<RetroArchive> | null> {
-    const archiveData = await this.archiveCollection.get('id', archiveId);
+    const archiveData = await this.archiveCollection
+      .where('id', archiveId)
+      .get();
     if (!archiveData || archiveData.retroId !== retroId) {
       return null;
     }
     return archiveData;
   }
 
-  public getRetroArchiveList(
-    retroId: string,
-  ): Promise<Readonly<RetroArchive[]>> {
-    return this.archiveCollection.getAll('retroId', retroId);
+  public getRetroArchiveList(retroId: string) {
+    return this.archiveCollection.where('retroId', retroId).values();
   }
 }

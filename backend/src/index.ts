@@ -5,6 +5,7 @@ import { makeRandomAppSecrets } from './helpers/random';
 import { LogService } from './services/LogService';
 import { appFactory } from './app';
 import { config } from './config';
+import './databases';
 
 // https://nodejs.org/en/learn/getting-started/security-best-practices#dns-rebinding-cwe-346
 process.on('SIGUSR1', () => {

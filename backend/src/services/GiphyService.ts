@@ -1,4 +1,4 @@
-import { LruCache } from '../import-wrappers/collection-storage-wrap';
+import { LruCache } from 'collection-storage';
 
 interface Config {
   baseUrl: string;

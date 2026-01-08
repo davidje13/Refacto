@@ -145,7 +145,7 @@ export function exportRetroJson(
 async function* map<I, O>(
   input: MaybeAsyncIterable<I>,
   fn: (i: I) => O,
-): AsyncGenerator<O> {
+): AsyncGenerator<O, void, undefined> {
   for await (const item of input) {
     yield fn(item);
   }

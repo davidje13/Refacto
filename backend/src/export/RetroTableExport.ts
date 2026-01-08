@@ -35,7 +35,7 @@ function dateString(date: Date) {
 export async function* exportRetroTable(
   retro: Retro,
   archives?: MaybeAsyncIterable<RetroArchive>,
-): AsyncGenerator<string[]> {
+): AsyncGenerator<string[], void, undefined> {
   yield ['Archive', 'Category', 'Message', 'Votes', 'State'];
   yield* exportItems(retro.items, null, 0);
   if (archives) {

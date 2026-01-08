@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { MemoryDb } from '../import-wrappers/collection-storage-wrap';
+import { MemoryDB } from 'collection-storage';
 import { RetroArchiveService } from './RetroArchiveService';
 
 describe('RetroArchiveService', () => {
@@ -7,7 +7,7 @@ describe('RetroArchiveService', () => {
   let a1: string;
 
   beforeEach(async () => {
-    const db = new MemoryDb();
+    const db = MemoryDB.connect('memory://');
     service = new RetroArchiveService(db, randomBytes(32));
     a1 = await service.createArchive('my-retro-id', {
       format: 'foo',

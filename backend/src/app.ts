@@ -14,7 +14,7 @@ import {
   WebListener,
 } from 'web-listener';
 import { Hasher } from 'pwd-hasher';
-import { connectDB } from './import-wrappers/collection-storage-wrap';
+import { CollectionStorage } from 'collection-storage';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
 import { ApiDiagnosticsRouter } from './routers/ApiDiagnosticsRouter';
 import { ApiAuthRouter } from './routers/ApiAuthRouter';
@@ -83,7 +83,7 @@ export const appFactory = async (
   logger: Logger,
   config: ConfigT,
 ): Promise<App> => {
-  const db = await connectDB(config.db.url);
+  const db = await CollectionStorage.connect(config.db.url);
 
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);

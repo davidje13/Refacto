@@ -20,10 +20,10 @@ export class UserAuthService {
 
   public async initialise(db: DB): Promise<void> {
     const configCollection = db.getCollection<StoredKeyPair>('config');
-    let keys = await configCollection.get('id', 'user-auth', [
-      'privateKey',
-      'publicKey',
-    ]);
+    let keys = await configCollection
+      .where('id', 'user-auth')
+      .attrs(['privateKey', 'publicKey'])
+      .get();
     if (!keys) {
       keys = await this.tokenManager.generateKeys();
       await configCollection.add({ id: 'user-auth', ...keys });

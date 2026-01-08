@@ -1,11 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Spec } from 'json-immutability-helper';
-import type { Collection, DB, Wrapped } from 'collection-storage';
 import {
+  DuplicateError,
   encryptByRecordWithMasterKey,
   migrate,
-} from '../import-wrappers/collection-storage-wrap';
+  type Collection,
+  type DB,
+  type Wrapped,
+} from 'collection-storage';
 import {
   Broadcaster,
   CollectionStorageModel,
@@ -28,15 +31,10 @@ function validateSlug(slug: string) {
   }
 }
 
-export class DuplicateError extends Error {}
-
-function dbError(e: unknown): unknown {
-  if (e instanceof Error) {
-    if (e.message === 'duplicate' || ('code' in e && e.code === 11000)) {
-      return new DuplicateError('URL is already taken');
-    }
-  }
-  return e;
+function dbError(err: unknown): unknown {
+  return err instanceof DuplicateError
+    ? new Error('URL is already taken')
+    : err;
 }
 
 export class RetroService {
@@ -52,9 +50,7 @@ export class RetroService {
     );
 
     this.retroCollection = migrate(
-      {
-        groupStates: (v) => v || {},
-      },
+      { groupStates: (v) => v || {} },
       enc<Retro>()(
         ['items'],
         db.getCollection<Wrapped<Retro, 'items', Buffer>>('retro', {
@@ -89,7 +85,10 @@ export class RetroService {
   }
 
   public async getRetroIdForSlug(slug: string): Promise<string | null> {
-    const retroData = await this.retroCollection.get('slug', slug, ['id']);
+    const retroData = await this.retroCollection
+      .where('slug', slug)
+      .attrs(['id'])
+      .get();
     if (!retroData) {
       return null;
     }
@@ -105,38 +104,38 @@ export class RetroService {
     validateSlug(slug);
     const id = randomUUID();
 
-    try {
-      await this.retroCollection.add({
-        id,
-        slug,
-        name,
-        ownerId,
-        state: {},
-        groupStates: {},
-        format,
-        options: {},
-        items: [],
-      });
-    } catch (e) {
-      throw dbError(e);
-    }
+    await this.retroCollection.add({
+      id,
+      slug,
+      name,
+      ownerId,
+      state: {},
+      groupStates: {},
+      format,
+      options: {},
+      items: [],
+    });
 
     return id;
   }
 
-  public getRetroListForUser(ownerId: string): Promise<RetroSummary[]> {
-    return this.retroCollection.getAll('ownerId', ownerId, [
-      'id',
-      'slug',
-      'name',
-    ]);
+  public getRetroListForUser(
+    ownerId: string,
+  ): AsyncGenerator<RetroSummary, void, undefined> {
+    return this.retroCollection
+      .where('ownerId', ownerId)
+      .attrs(['id', 'slug', 'name'])
+      .values();
   }
 
   public async isRetroOwnedByUser(
     retroId: string,
     ownerId: string,
   ): Promise<boolean> {
-    const retro = await this.retroCollection.get('id', retroId, ['ownerId']);
+    const retro = await this.retroCollection
+      .where('id', retroId)
+      .attrs(['ownerId'])
+      .get();
     if (!retro) {
       return false;
     }
@@ -144,6 +143,6 @@ export class RetroService {
   }
 
   public getRetro(retroId: string): Promise<Retro | null> {
-    return this.retroCollection.get('id', retroId);
+    return this.retroCollection.where('id', retroId).get();
   }
 }

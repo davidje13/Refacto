@@ -17,10 +17,11 @@ import {
 } from 'web-listener';
 import { WebSocketServer } from 'ws';
 import { WebsocketHandlerFactory } from 'shared-reducer/backend';
+import { DuplicateError } from 'collection-storage';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroAuthService } from '../services/RetroAuthService';
-import { DuplicateError, type RetroService } from '../services/RetroService';
+import type { RetroService } from '../services/RetroService';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
 import type { AnalyticsService } from '../services/AnalyticsService';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
@@ -65,9 +66,12 @@ export class ApiRetrosRouter extends Router {
       }
 
       analyticsService.event(req, 'access own retros list');
-      sendJSON(res, {
-        retros: await retroService.getRetroListForUser(userId),
-      });
+      const retros = retroService.getRetroListForUser(userId);
+      try {
+        await sendJSONStream(res, { retros });
+      } finally {
+        retros.return();
+      }
     });
 
     this.post(
@@ -124,8 +128,8 @@ export class ApiRetrosRouter extends Router {
         }
         return sendJSON(res, { id, token });
       },
-      typedErrorHandler(DuplicateError, (e) => {
-        throw new HTTPError(409, { body: e.message });
+      typedErrorHandler(DuplicateError, () => {
+        throw new HTTPError(409, { body: 'URL is already taken' });
       }),
     );
 
@@ -184,29 +188,36 @@ export class ApiRetrosRouter extends Router {
 
         analyticsService.event(req, `export ${format}`);
 
-        const archives = await retroArchiveService.getRetroArchiveList(retroId);
-
-        switch (format) {
-          case 'json': {
-            res.setHeader(
-              'content-disposition',
-              `attachment; filename="${encodeURIComponent(`${retro.slug}-export.json`)}"`,
-            );
-            return sendJSONStream(res, exportRetroJson(retro, archives), {
-              space: 2,
-            });
+        const archives = retroArchiveService.getRetroArchiveList(retroId);
+        try {
+          switch (format) {
+            case 'json': {
+              res.setHeader(
+                'content-disposition',
+                `attachment; filename="${encodeURIComponent(`${retro.slug}-export.json`)}"`,
+              );
+              return await sendJSONStream(
+                res,
+                exportRetroJson(retro, archives),
+                { space: 2 },
+              );
+            }
+            case 'csv': {
+              res.setHeader(
+                'content-disposition',
+                `attachment; filename="${encodeURIComponent(`${retro.slug}-export.csv`)}"`,
+              );
+              return await sendCSVStream(
+                res,
+                exportRetroTable(retro, archives),
+                { headerRow: true },
+              );
+            }
+            default:
+              throw new HTTPError(404, { body: 'Unknown format' });
           }
-          case 'csv': {
-            res.setHeader(
-              'content-disposition',
-              `attachment; filename="${encodeURIComponent(`${retro.slug}-export.csv`)}"`,
-            );
-            return sendCSVStream(res, exportRetroTable(retro, archives), {
-              headerRow: true,
-            });
-          }
-          default:
-            throw new HTTPError(404, { body: 'Unknown format' });
+        } finally {
+          await archives.return();
         }
       },
     );

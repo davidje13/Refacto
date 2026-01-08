@@ -5,7 +5,7 @@
 By default, Refacto will use an in-memory database. This means it cannot be
 load-balanced, and all data will be erased if the server is restarted or an
 update is deployed. To persist data and allow load-balancing, configure a real
-database:
+database. Several database options are supported:
 
 ### MongoDB
 
@@ -20,6 +20,8 @@ The URL can also contain options, such as:
 ```sh
 DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
 ```
+
+[More details](http://npmjs.com/package/@collection-storage/mongodb).
 
 #### Installation
 
@@ -46,11 +48,14 @@ should lock it down further in deployments. See the
 ### Redis
 
 Redis is also supported for persisting data, but is experimental and not
-recommended for production deployments.
+recommended for production deployments. The storage format may change in
+breaking ways in future releases _without_ a migration path for existing data.
 
 ```sh
 DB_URL="redis://localhost:6379/0" ./index.js
 ```
+
+[More details](http://npmjs.com/package/@collection-storage/redis).
 
 ### PostgreSQL
 
@@ -64,6 +69,25 @@ when the app starts.
 ```sh
 DB_URL="postgresql://localhost:5432/refacto" ./index.js
 ```
+
+[More details](http://npmjs.com/package/@collection-storage/postgresql).
+
+### SQLite
+
+SQLite is also supported for persisting data when running on Node.js 22.13+, but
+does not support concurrent access or load balancing. For very small
+deployments, it may be easier to use SQLite because it does not require any
+external systems, yet still allows persisting data to disk.
+
+```sh
+DB_URL="sqlite:///absolute/path/to/database/file?timeout=100" ./index.js
+```
+
+Note that SQLite queries run synchronously on the main thread, so it is
+important to set a `timeout` (in milliseconds) which will apply to all queries
+to avoid denial of service.
+
+[More details](http://npmjs.com/package/@collection-storage/sqlite).
 
 ## Authentication providers
 

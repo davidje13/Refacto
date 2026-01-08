@@ -9,12 +9,14 @@
     "test": "lean-test --preprocess tsc --parallel"
   },
   "dependencies": {
+    "@collection-storage/dynamodb": "4.x",
+    "@collection-storage/mongodb": "4.x",
+    "@collection-storage/postgresql": "4.x",
+    "@collection-storage/redis": "4.x",
+    "@collection-storage/sqlite": "4.x",
     "authentication-backend": "2.x",
-    "collection-storage": "3.x",
-    "ioredis": "5.x",
+    "collection-storage": "4.x",
     "json-immutability-helper": "4.0.x",
-    "mongodb": "6.x",
-    "pg": "8.x",
     "pwd-hasher": "2.x",
     "shared-reducer": "6.x",
     "web-listener": "0.17.1",

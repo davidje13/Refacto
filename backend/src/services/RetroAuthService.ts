@@ -43,9 +43,7 @@ export class RetroAuthService {
     const passwordHash = await this.hasher.hash(password);
     if (cycleKeys) {
       const keys = await this.tokenManager.generateKeys();
-      await this.retroAuthCollection.update(
-        'id',
-        retroId,
+      await this.retroAuthCollection.where('id', retroId).update(
         {
           passwordHash,
           privateKey: keys.privateKey,
@@ -54,7 +52,9 @@ export class RetroAuthService {
         { upsert: true },
       );
     } else {
-      await this.retroAuthCollection.update('id', retroId, { passwordHash });
+      await this.retroAuthCollection
+        .where('id', retroId)
+        .update({ passwordHash });
     }
   }
 
@@ -62,9 +62,10 @@ export class RetroAuthService {
     retroId: string,
     password: string,
   ): Promise<string | null> {
-    const retroData = await this.retroAuthCollection.get('id', retroId, [
-      'passwordHash',
-    ]);
+    const retroData = await this.retroAuthCollection
+      .where('id', retroId)
+      .attrs(['passwordHash'])
+      .get();
     if (!retroData) {
       return null;
     }
@@ -88,9 +89,10 @@ export class RetroAuthService {
     retroId: string,
     scopes: Readonly<Record<string, boolean>>,
   ): Promise<string | null> {
-    const retroData = await this.retroAuthCollection.get('id', retroId, [
-      'privateKey',
-    ]);
+    const retroData = await this.retroAuthCollection
+      .where('id', retroId)
+      .attrs(['privateKey'])
+      .get();
     if (!retroData) {
       return null;
     }
@@ -110,9 +112,10 @@ export class RetroAuthService {
     retroId: string,
     retroToken: string,
   ): Promise<RetroJWTPayload | null> {
-    const retroData = await this.retroAuthCollection.get('id', retroId, [
-      'publicKey',
-    ]);
+    const retroData = await this.retroAuthCollection
+      .where('id', retroId)
+      .attrs(['publicKey'])
+      .get();
     if (!retroData) {
       return null;
     }

@@ -1,8 +1,12 @@
 import { randomBytes } from 'node:crypto';
-import { MemoryDb } from '../import-wrappers/collection-storage-wrap';
+import { MemoryDB } from 'collection-storage';
 import type { Spec } from 'json-immutability-helper';
 import type { ChangeInfo, Subscription } from 'shared-reducer/backend';
-import { makeRetroItem, type Retro } from '../shared/api-entities';
+import {
+  makeRetroItem,
+  type Retro,
+  type RetroSummary,
+} from '../shared/api-entities';
 import { RetroService } from './RetroService';
 
 interface CapturedChange {
@@ -51,7 +55,7 @@ describe('RetroService', () => {
   let r2: string;
 
   beforeEach(async () => {
-    const db = new MemoryDb();
+    const db = MemoryDB.connect('memory://');
     service = new RetroService(db, randomBytes(32));
     r1 = await service.createRetro('me', 'my-retro', 'My Retro', 'something');
     r2 = await service.createRetro(
@@ -82,7 +86,10 @@ describe('RetroService', () => {
 
   describe('getRetroListForUser', () => {
     it('returns a list of summarised retros for the user', async () => {
-      const retros = await service.getRetroListForUser('me');
+      const retros: RetroSummary[] = [];
+      for await (const retro of service.getRetroListForUser('me')) {
+        retros.push(retro);
+      }
 
       expect(retros.length).toEqual(1);
       expect(retros[0]).toEqual({

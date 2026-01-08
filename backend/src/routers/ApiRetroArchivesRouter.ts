@@ -5,6 +5,7 @@ import {
   requireAuthScope,
   Router,
   sendJSON,
+  sendJSONStream,
   type WithPathParameters,
 } from 'web-listener';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
@@ -23,11 +24,14 @@ export class ApiRetroArchivesRouter extends Router<
     this.get('/', requireAuthScope('readArchives'), async (req, res) => {
       const { retroId } = getPathParameters(req);
 
-      const archives =
-        await retroArchiveService.getRetroArchiveSummaries(retroId);
-
       analyticsService.event(req, 'access archive list');
-      return sendJSON(res, { archives });
+
+      const archives = retroArchiveService.getRetroArchiveSummaries(retroId);
+      try {
+        await sendJSONStream(res, { archives });
+      } finally {
+        archives.return();
+      }
     });
 
     this.post('/', requireAuthScope('write'), async (req, res) => {
