@@ -24,6 +24,19 @@ docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 public.ecr.aw
 (see the image details for information on how to configure and secure docker
 deployments).
 
+By default, the docker container will use a SQLite database which persists its
+data in an anonymous volume mounted to `/data`. You can customise this to
+persist data in a named volume (which will allow you to keep your data when
+updating to a later version) by adding this to the `docker run` command:
+
+```sh
+--mount type=volume,src=my-refacto-data,dst=/data
+```
+
+Or see [SERVICES.md](docs/SERVICES.md) for details on using an external
+database. Note that SQLite databases cannot be shared between multiple proceses
+at once.
+
 The [releases](https://github.com/davidje13/Refacto/releases) also contain
 `Dockerfile`s if you wish to generate your own docker image, or you can
 [build your own from source](#building-from-source).
@@ -93,7 +106,9 @@ By default:
 - no authentication providers are available (setting
   `INSECURE_SHARED_ACCOUNT_ENABLED` means everybody who can access the site will
   be able to see all retros);
-- an in-memory database is used (all data will be lost when the process ends);
+- with Docker, a SQLite database is used, storing data in an anonymous volume
+  mounted to `/data`. Without Docker, an in-memory database is used (all data
+  will be lost when the process ends);
 - blank secrets are used for encryption and password hashing (you can use
   `./index.js random-secrets` or
   `docker run --rm refacto/refacto random-secrets` to generate a set of secure

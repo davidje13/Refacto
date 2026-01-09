@@ -85,6 +85,10 @@ await copy(
   join(basedir, 'scripts', 'docker', 'Dockerfile'),
   join(builddir, 'Dockerfile'),
 );
+await copy(
+  join(basedir, 'scripts', 'docker', '.dockerignore'),
+  join(builddir, '.dockerignore'),
+);
 
 if (preserveBuildModules) {
   log('Restoring build/node_modules...');

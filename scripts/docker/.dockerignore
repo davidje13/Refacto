@@ -1,0 +1,4 @@
+.DS_Store
+Dockerfile
+node_modules
+*.tar.gz
