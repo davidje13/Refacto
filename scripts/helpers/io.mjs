@@ -66,7 +66,7 @@ export async function readJSON(path) {
 }
 
 export async function writeNiceJSON(path, json) {
-  await writeFile(path, JSON.stringify(json, undefined, 2));
+  await writeFile(path, JSON.stringify(json, undefined, 2) + '\n');
 }
 
 export async function compressFile(file) {

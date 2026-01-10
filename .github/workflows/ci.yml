@@ -66,10 +66,7 @@ jobs:
       - name: Build and Test
         run: PARALLEL_BUILD=false PARALLEL_E2E=false EXPLICIT_WAIT_TIMEOUT=20000 TEST_TIMEOUT=60000 npm test
       - name: Bundle
-        run: |
-          cd build;
-          rm -r node_modules;
-          tar -czf ../build.tar.gz .;
+        run: cd build && tar -czf ../build.tar.gz .
       - name: Upload Bundle
         uses: actions/upload-artifact@v5
         with:

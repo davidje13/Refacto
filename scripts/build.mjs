@@ -51,29 +51,6 @@ await runMultipleTasks(
   { parallel: PARALLEL_BUILD },
 );
 
-let preserveBuildModules = false;
-const buildModules = join(builddir, 'node_modules');
-const tempBuildModules = join(basedir, 'build_node_modules');
-if (KEEP_DEPS) {
-  const buildModulesStat = await stat(buildModules).catch(() => null);
-  if (buildModulesStat) {
-    const buildPackageStat = await stat(
-      join(basedir, 'backend', 'package.json'),
-    );
-    if (buildPackageStat.mtime.getTime() < buildModulesStat.ctime.getTime()) {
-      preserveBuildModules = true;
-    } else {
-      log(
-        'Deleting build/node_modules because backend/package.json has changed...',
-      );
-    }
-  }
-}
-
-if (preserveBuildModules) {
-  await rename(buildModules, tempBuildModules);
-}
-
 await deleteDirectory(builddir);
 
 log('Combining output...');
@@ -89,11 +66,6 @@ await copy(
   join(basedir, 'scripts', 'docker', '.dockerignore'),
   join(builddir, '.dockerignore'),
 );
-
-if (preserveBuildModules) {
-  log('Restoring build/node_modules...');
-  await rename(tempBuildModules, buildModules);
-}
 
 log('Compressing static resources...');
 const staticFiles = await Promise.all(
@@ -120,9 +92,11 @@ await writeNiceJSON(join(builddir, 'package.json'), {
   optionalDependencies: undefined,
   devDependencies: undefined,
 });
-await copy(
-  join(basedir, 'backend', 'package-lock.json'),
-  join(builddir, 'package-lock.json'),
-);
+await writeNiceJSON(join(builddir, 'package-lock.json'), {
+  name: 'refacto-app',
+  lockfileVersion: 3,
+  requires: true,
+  packages: { '': { name: 'refacto-app' } },
+});
 
 log('Build complete.');
