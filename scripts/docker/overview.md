@@ -41,8 +41,18 @@ For a real deployment, there are various things you should customise:
 
 ## Adding persistence
 
-You will need to run a separate database and a network connection, for example
-with docker:
+By default, this Docker image uses a SQLite database persisted to an anonymous
+volume mounted at `/data`. You can re-use this volume in subsequent deployments
+to retain the data. The easiest way to manage this is to mount a named volume by
+adding the following to the `docker run` command:
+
+```sh
+--mount type=volume,src=my-refacto-data,dst=/data
+```
+
+For a more robust database (e.g. to support load balancing with simultaneous
+access), you will need to run a separate database and a network connection. For
+example with docker:
 
 ```sh
 docker network create refactonet
