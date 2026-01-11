@@ -1,5 +1,3 @@
-# Refacto
-
 Refacto makes it easy to run team retros with remote team members. See the
 official public deployment at <https://retro.davidje13.com/> and the source code
 on [GitHub](https://github.com/davidje13/Refacto) and
@@ -9,7 +7,8 @@ on [GitHub](https://github.com/davidje13/Refacto) and
 
 # Quickstart
 
-To run a simple instance locally with no authentication and no persistence:
+To run a simple instance locally with no authentication and a SQLite database in
+an anonymous volume:
 
 ```sh
 docker run -d -e INSECURE_SHARED_ACCOUNT_ENABLED=true -p 5000:5000 refacto/refacto
