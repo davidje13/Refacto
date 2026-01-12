@@ -31,109 +31,8 @@ import { PasswordForm } from './password/PasswordForm';
 import { RedirectRoute } from './RedirectRoute';
 import './RetroRouter.css';
 
-type RetroReducerStatus =
-  | 'init'
-  | 'connected'
-  | 'reconnecting'
-  | 'reauthenticate';
-
-type RetroReducerState = [
-  Retro | null,
-  RetroDispatch | null,
-  string | null,
-  RetroReducerStatus,
-];
-
-const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
-
-function useRetroReducer(retroId: string | null): RetroReducerState {
-  const retroToken = useRetroToken(retroId);
-  const [location, setLocation] = useLocation();
-  const [retroState, setRetroState] = useState<Retro | null>(null);
-  const [status, setStatus] = useState<RetroReducerStatus>('init');
-  const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
-    null,
-  );
-
-  // This cannot be useEffect; the websocket would be closed & reopened
-  // when switching between pages within the retro
-  useLayoutEffect(() => {
-    const ac = new AbortController();
-    setRetroState(null);
-    setRetroDispatch(null);
-    if (!retroId || !retroToken) {
-      return undefined;
-    }
-
-    const subscription = retroTracker.subscribe(
-      retroId,
-      retroToken,
-      (data) => setRetroState(data),
-      (status) => setStatus(status ? 'connected' : 'reconnecting'),
-      () =>
-        reauthenticateByUser(retroId, ac.signal).then((success) => {
-          if (!success) {
-            setStatus('reauthenticate');
-          }
-        }),
-    );
-    setRetroDispatch(() => subscription.dispatch);
-
-    return () => {
-      ac.abort();
-      subscription.unsubscribe();
-    };
-  }, [retroId, retroToken]);
-
-  const updateSlug = useEvent((slug: string) => {
-    const old = RETRO_SLUG_PATH.exec(location);
-    const oldSlug = decodeURIComponent(old?.[1] ?? '');
-    if (!retroId || !oldSlug || oldSlug === slug) {
-      return;
-    }
-    slugTracker.remove(oldSlug);
-    slugTracker.set(slug, retroId);
-    setLocation(`/retros/${encodeURIComponent(slug)}${old?.[2] ?? ''}`, {
-      replace: true,
-    });
-  });
-
-  const slug = retroState?.slug;
-  useEffect(() => {
-    if (slug) {
-      updateSlug(slug);
-    }
-  }, [slug, updateSlug]);
-
-  return [retroState, retroDispatch, retroToken, status];
-}
-
 interface PropsT {
   slug: string;
-}
-
-export interface RetroPagePropsT {
-  retroToken: string;
-  retro: Retro;
-  retroDispatch: RetroDispatch | null;
-}
-
-async function reauthenticateByUser(retroId: string, signal: AbortSignal) {
-  const userToken = userTokenTracker.peekState()[0];
-  if (!userToken) {
-    return false;
-  }
-  try {
-    const retroToken = await retroTokenService.getRetroTokenForUser(
-      retroId,
-      userToken,
-      signal,
-    );
-    retroTokenTracker.set(retroId, retroToken);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export const RetroRouter: FC<PropsT> = ({ slug }) => {
@@ -225,3 +124,104 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
     </StateMapProvider>
   );
 };
+
+export interface RetroPagePropsT {
+  retroToken: string;
+  retro: Retro;
+  retroDispatch: RetroDispatch | null;
+}
+
+type RetroReducerStatus =
+  | 'init'
+  | 'connected'
+  | 'reconnecting'
+  | 'reauthenticate';
+
+type RetroReducerState = [
+  Retro | null,
+  RetroDispatch | null,
+  string | null,
+  RetroReducerStatus,
+];
+
+const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
+
+function useRetroReducer(retroId: string | null): RetroReducerState {
+  const retroToken = useRetroToken(retroId);
+  const [location, setLocation] = useLocation();
+  const [retroState, setRetroState] = useState<Retro | null>(null);
+  const [status, setStatus] = useState<RetroReducerStatus>('init');
+  const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
+    null,
+  );
+
+  // This cannot be useEffect; the websocket would be closed & reopened
+  // when switching between pages within the retro
+  useLayoutEffect(() => {
+    const ac = new AbortController();
+    setRetroState(null);
+    setRetroDispatch(null);
+    if (!retroId || !retroToken) {
+      return undefined;
+    }
+
+    const subscription = retroTracker.subscribe(
+      retroId,
+      retroToken,
+      (data) => setRetroState(data),
+      (status) => setStatus(status ? 'connected' : 'reconnecting'),
+      () =>
+        reauthenticateByUser(retroId, ac.signal).then((success) => {
+          if (!success) {
+            setStatus('reauthenticate');
+          }
+        }),
+    );
+    setRetroDispatch(() => subscription.dispatch);
+
+    return () => {
+      ac.abort();
+      subscription.unsubscribe();
+    };
+  }, [retroId, retroToken]);
+
+  const updateSlug = useEvent((slug: string) => {
+    const old = RETRO_SLUG_PATH.exec(location);
+    const oldSlug = decodeURIComponent(old?.[1] ?? '');
+    if (!retroId || !oldSlug || oldSlug === slug) {
+      return;
+    }
+    slugTracker.remove(oldSlug);
+    slugTracker.set(slug, retroId);
+    setLocation(`/retros/${encodeURIComponent(slug)}${old?.[2] ?? ''}`, {
+      replace: true,
+    });
+  });
+
+  const slug = retroState?.slug;
+  useEffect(() => {
+    if (slug) {
+      updateSlug(slug);
+    }
+  }, [slug, updateSlug]);
+
+  return [retroState, retroDispatch, retroToken, status];
+}
+
+async function reauthenticateByUser(retroId: string, signal: AbortSignal) {
+  const userToken = userTokenTracker.peekState()[0];
+  if (!userToken) {
+    return false;
+  }
+  try {
+    const retroToken = await retroTokenService.getRetroTokenForUser(
+      retroId,
+      userToken,
+      signal,
+    );
+    retroTokenTracker.set(retroId, retroToken);
+    return true;
+  } catch {
+    return false;
+  }
+}
