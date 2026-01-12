@@ -17,21 +17,11 @@ const DATETIME_FORMATTER = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit',
 });
 
-function wrap(timestamp: number): Date {
-  if (typeof timestamp === 'object') {
-    return timestamp;
-  }
-  return new Date(timestamp);
-}
+export const formatDate = (timestamp: number) =>
+  DATE_FORMATTER.format(new Date(timestamp));
 
-export function formatDate(timestamp: number): string {
-  return DATE_FORMATTER.format(wrap(timestamp));
-}
+export const formatTime = (timestamp: number) =>
+  TIME_FORMATTER.format(new Date(timestamp));
 
-export function formatTime(timestamp: number): string {
-  return TIME_FORMATTER.format(wrap(timestamp));
-}
-
-export function formatDateTime(timestamp: number): string {
-  return DATETIME_FORMATTER.format(wrap(timestamp));
-}
+export const formatDateTime = (timestamp: number) =>
+  DATETIME_FORMATTER.format(new Date(timestamp));
