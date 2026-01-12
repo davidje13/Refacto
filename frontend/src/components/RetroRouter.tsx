@@ -1,33 +1,56 @@
-import { type FC, useState, useLayoutEffect, useEffect } from 'react';
+import {
+  type FC,
+  useState,
+  useLayoutEffect,
+  useEffect,
+  type ReactNode,
+} from 'react';
 import { Route, Switch, useLocation } from 'wouter';
+import TickBold from '../../resources/tick-bold.svg';
 import type { Retro } from '../shared/api-entities';
 import type { RetroDispatch } from '../api/RetroTracker';
-import { retroTracker, slugTracker } from '../api/api';
+import {
+  retroTokenService,
+  retroTokenTracker,
+  retroTracker,
+  slugTracker,
+  userTokenTracker,
+} from '../api/api';
+import { useSlug } from '../hooks/data/useSlug';
+import { useEvent } from '../hooks/useEvent';
+import { useRetroToken } from '../hooks/data/useRetroToken';
+import { StateMapProvider } from '../hooks/useStateMap';
+import { Popup } from './common/Popup';
 import { RetroNotFoundPage } from './retro-not-found/RetroNotFoundPage';
 import { PasswordPage } from './password/PasswordPage';
 import { RetroPage } from './retro/RetroPage';
 import { ArchiveListPage } from './archive-list/ArchiveListPage';
 import { ArchivePage } from './archive/ArchivePage';
 import { RetroSettingsPage } from './retro-settings/RetroSettingsPage';
-import { useSlug } from '../hooks/data/useSlug';
-import { useRetroToken } from '../hooks/data/useRetroToken';
-import { StateMapProvider } from '../hooks/useStateMap';
+import { PasswordForm } from './password/PasswordForm';
 import { RedirectRoute } from './RedirectRoute';
-import { useEvent } from '../hooks/useEvent';
-import TickBold from '../../resources/tick-bold.svg';
 import './RetroRouter.css';
 
-type RetroReducerState = [Retro | null, RetroDispatch | null, boolean];
+type RetroReducerStatus =
+  | 'init'
+  | 'connected'
+  | 'reconnecting'
+  | 'reauthenticate';
+
+type RetroReducerState = [
+  Retro | null,
+  RetroDispatch | null,
+  string | null,
+  RetroReducerStatus,
+];
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
 
-function useRetroReducer(
-  retroId: string | null,
-  retroToken: string | null,
-): RetroReducerState {
+function useRetroReducer(retroId: string | null): RetroReducerState {
+  const retroToken = useRetroToken(retroId);
   const [location, setLocation] = useLocation();
   const [retroState, setRetroState] = useState<Retro | null>(null);
-  const [connected, setConnected] = useState(false);
+  const [status, setStatus] = useState<RetroReducerStatus>('init');
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
     null,
   );
@@ -35,6 +58,7 @@ function useRetroReducer(
   // This cannot be useEffect; the websocket would be closed & reopened
   // when switching between pages within the retro
   useLayoutEffect(() => {
+    const ac = new AbortController();
     setRetroState(null);
     setRetroDispatch(null);
     if (!retroId || !retroToken) {
@@ -45,10 +69,20 @@ function useRetroReducer(
       retroId,
       retroToken,
       (data) => setRetroState(data),
-      setConnected,
+      (status) => setStatus(status ? 'connected' : 'reconnecting'),
+      () =>
+        reauthenticateByUser(retroId, ac.signal).then((success) => {
+          if (!success) {
+            setStatus('reauthenticate');
+          }
+        }),
     );
     setRetroDispatch(() => subscription.dispatch);
-    return () => subscription.unsubscribe();
+
+    return () => {
+      ac.abort();
+      subscription.unsubscribe();
+    };
   }, [retroId, retroToken]);
 
   const updateSlug = useEvent((slug: string) => {
@@ -71,7 +105,7 @@ function useRetroReducer(
     }
   }, [slug, updateSlug]);
 
-  return [retroState, retroDispatch, connected];
+  return [retroState, retroDispatch, retroToken, status];
 }
 
 interface PropsT {
@@ -84,13 +118,27 @@ export interface RetroPagePropsT {
   retroDispatch: RetroDispatch | null;
 }
 
+async function reauthenticateByUser(retroId: string, signal: AbortSignal) {
+  const userToken = userTokenTracker.peekState()[0];
+  if (!userToken) {
+    return false;
+  }
+  try {
+    const retroToken = await retroTokenService.getRetroTokenForUser(
+      retroId,
+      userToken,
+      signal,
+    );
+    retroTokenTracker.set(retroId, retroToken);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export const RetroRouter: FC<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
-  const retroToken = useRetroToken(retroId);
-  const [retro, retroDispatch, connected] = useRetroReducer(
-    retroId,
-    retroToken,
-  );
+  const [retro, retroDispatch, retroToken, status] = useRetroReducer(retroId);
 
   if (slugError?.message === 'not found') {
     return <RetroNotFoundPage slug={slug} />;
@@ -104,8 +152,39 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
     return <PasswordPage slug={slug} retroId={retroId} />;
   }
 
-  if (!retro || !retroToken) {
+  if (!retroId || !retro || !retroToken) {
     return <div className="loader">Loading&hellip;</div>;
+  }
+
+  let overlay: ReactNode = null;
+  switch (status) {
+    case 'connected':
+      overlay = (
+        <div className="connectionMessage connected" aria-hidden>
+          <TickBold role="presentation" /> Connected
+        </div>
+      );
+      break;
+    case 'reconnecting':
+      overlay = (
+        <div className="connectionMessage disconnected" role="status">
+          Reconnecting&hellip;
+        </div>
+      );
+      break;
+    case 'reauthenticate':
+      overlay = (
+        <Popup title="Login expired" isOpen onClose={() => null}>
+          <div className="popup-password">
+            <p>
+              Your login has expired or the retro password has been changed.
+            </p>
+            <p>Please enter the retro password to continue:</p>
+            <PasswordForm slug={slug} retroId={retroId} />
+          </div>
+        </Popup>
+      );
+      break;
   }
 
   const retroParams = {
@@ -114,7 +193,7 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
     retroDispatch,
   };
 
-  const routes = (
+  return (
     <StateMapProvider scope={slug}>
       <Switch>
         <Route path="/retros/:slug">
@@ -142,21 +221,7 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
 
         <RedirectRoute path="/retros/:slug/:rest*" to="/retros/:slug" replace />
       </Switch>
+      {overlay}
     </StateMapProvider>
-  );
-
-  return (
-    <>
-      {routes}
-      {connected ? (
-        <div className="connectionMessage connected" aria-hidden>
-          <TickBold role="presentation" /> Connected
-        </div>
-      ) : (
-        <div className="connectionMessage disconnected" role="status">
-          Reconnecting&hellip;
-        </div>
-      )}
-    </>
   );
 };

@@ -2,6 +2,7 @@ import {
   SharedReducer,
   type Dispatch,
   type DispatchSpec,
+  type DisconnectDetail,
 } from 'shared-reducer/frontend';
 import type { Retro } from '../shared/api-entities';
 import { SubscriptionTracker } from './SubscriptionTracker';
@@ -9,6 +10,9 @@ import { context, type Spec } from './reducer';
 
 interface RetroKey {
   retroId: string;
+}
+
+interface RetroAuth {
   retroToken: string;
 }
 
@@ -23,6 +27,7 @@ export interface RetroSubscription {
 export class RetroTracker {
   private readonly subscriptionTracker: SubscriptionTracker<
     RetroKey,
+    RetroAuth,
     SharedReducer<Retro, Spec<Retro>>
   >;
 
@@ -31,11 +36,11 @@ export class RetroTracker {
     private readonly diagnostics: Diagnostics,
   ) {
     this.subscriptionTracker = new SubscriptionTracker(
-      ({ retroId, retroToken }) => {
-        const s = new SharedReducer<Retro, Spec<Retro>>(context, () => ({
+      ({ retroId }, { retroToken }) => {
+        const s = new SharedReducer<Retro, Spec<Retro>>(context, {
           url: `${wsBase}/retros/${encodeURIComponent(retroId)}`,
           token: retroToken,
-        }));
+        });
         s.addEventListener('connected', () => diagnostics.info('connected'));
         s.addEventListener('disconnected', (e) =>
           diagnostics.info(
@@ -48,6 +53,11 @@ export class RetroTracker {
         return s;
       },
       (service) => service.close(),
+      (service, { retroId }, { retroToken }) =>
+        service.reconnect({
+          url: `${wsBase}/retros/${encodeURIComponent(retroId)}`,
+          token: retroToken,
+        }),
     );
   }
 
@@ -56,13 +66,22 @@ export class RetroTracker {
     retroToken: string,
     retroStateCallback: (state: Retro) => void,
     connectivityCallback: (connected: boolean) => void,
+    reauthenticateCallback: () => void,
   ): RetroSubscription {
-    const sub = this.subscriptionTracker.subscribe({ retroId, retroToken });
+    const sub = this.subscriptionTracker.subscribe({ retroId }, { retroToken });
     sub.service.addStateListener(retroStateCallback);
     const onConnect = () => connectivityCallback(true);
     const onDisconnect = () => connectivityCallback(false);
+    const onRejected = (e: CustomEvent<DisconnectDetail>) => {
+      const code = e.detail.code;
+      if (code === 4401 || code === 4403) {
+        e.preventDefault();
+        reauthenticateCallback();
+      }
+    };
     sub.service.addEventListener('connected', onConnect);
     sub.service.addEventListener('disconnected', onDisconnect);
+    sub.service.addEventListener('rejected', onRejected);
 
     return {
       dispatch: sub.service.dispatch,
@@ -70,6 +89,7 @@ export class RetroTracker {
         sub.service.removeStateListener(retroStateCallback);
         sub.service.removeEventListener('connected', onConnect);
         sub.service.removeEventListener('disconnected', onDisconnect);
+        sub.service.removeEventListener('rejected', onRejected);
         sub.unsubscribe().catch((e) => {
           this.diagnostics.error('Failed to unsubscribe from retro', e);
         });

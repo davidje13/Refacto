@@ -31,7 +31,7 @@
     "prettier": "3.7.4",
     "pwd-hasher": "2.x",
     "rollup": "4.x",
-    "shared-reducer": "6.1.x",
+    "shared-reducer": "6.2.x",
     "supertest": "7.x",
     "superwstest": "2.x",
     "typescript": "5.9.x",

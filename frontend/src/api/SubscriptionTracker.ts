@@ -15,6 +15,7 @@ function makeKey(id: any): string {
 
 interface ServiceInfo<T> {
   count: number;
+  sExtra: string;
   service: T;
 }
 
@@ -23,23 +24,29 @@ interface Subscription<T> {
   unsubscribe(): Promise<void>;
 }
 
-export class SubscriptionTracker<K, S> {
+export class SubscriptionTracker<K, E, S> {
   private readonly services = new Map<string, ServiceInfo<S>>();
 
   public constructor(
-    private readonly generator: (id: K) => S,
+    private readonly generator: (id: K, extra: E) => S,
     private readonly destructor: (service: S, id: K) => void,
+    private readonly reconnector?: (service: S, id: K, extra: E) => void,
   ) {}
 
-  public subscribe(id: K): Subscription<S> {
+  public subscribe(id: K, extra: E): Subscription<S> {
     const key = makeKey(id);
     let serviceInfo = this.services.get(key);
+    const sExtra = makeKey(extra);
     if (!serviceInfo) {
       serviceInfo = {
         count: 0,
-        service: this.generator(id),
+        sExtra: sExtra,
+        service: this.generator(id, extra),
       };
       this.services.set(key, serviceInfo);
+    } else if (sExtra !== serviceInfo.sExtra) {
+      serviceInfo.sExtra = sExtra;
+      this.reconnector?.(serviceInfo.service, id, extra);
     }
 
     serviceInfo.count += 1;

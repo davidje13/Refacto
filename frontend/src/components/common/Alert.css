@@ -16,4 +16,8 @@
   &.error {
     color: var(--red-text-on-white);
   }
+
+  &.spacer {
+    height: 1.4em;
+  }
 }
