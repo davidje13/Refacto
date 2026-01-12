@@ -41,10 +41,10 @@ export const RetroPage = memo(
 
     const canArchive = Boolean(
       retroDispatch &&
-        retro &&
-        retro.items.length > 0 &&
-        canFacilitate &&
-        !group,
+      retro &&
+      retro.items.length > 0 &&
+      canFacilitate &&
+      !group,
     );
 
     useEffect(() => {

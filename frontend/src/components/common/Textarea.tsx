@@ -23,11 +23,10 @@ function sanitiseInput(value: string): string {
   return value.replace(NEWLINE, '\n');
 }
 
-interface PropsT
-  extends Omit<
-    TextareaHTMLAttributes<HTMLTextAreaElement>,
-    'onChange' | 'value' | 'defaultValue' | 'defaultChecked'
-  > {
+interface PropsT extends Omit<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'onChange' | 'value' | 'defaultValue' | 'defaultChecked'
+> {
   onChange?: (v: string) => void;
   onChangeMultiline?: (v: boolean) => void;
   value?: string;

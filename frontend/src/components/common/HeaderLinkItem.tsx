@@ -1,8 +1,10 @@
 import { memo, type HTMLAttributes } from 'react';
 import { Link } from 'wouter';
 
-export interface LinkPropsT
-  extends Omit<HTMLAttributes<HTMLElement>, 'onClick'> {
+export interface LinkPropsT extends Omit<
+  HTMLAttributes<HTMLElement>,
+  'onClick'
+> {
   label: string;
   action: string | (() => void);
 }

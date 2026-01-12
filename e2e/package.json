@@ -14,10 +14,10 @@
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
     "chromedriver": "143.x",
-    "geckodriver": "6.0.x",
+    "geckodriver": "6.1.x",
     "lean-test": "2.x",
-    "prettier": "3.6.2",
-    "selenium-webdriver": "4.37.x",
+    "prettier": "3.7.4",
+    "selenium-webdriver": "4.39.x",
     "typescript": "5.9.x"
   }
 }

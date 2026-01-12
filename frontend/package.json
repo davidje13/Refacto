@@ -17,7 +17,7 @@
     "react-dom": "18.x",
     "react-hook-awaited": "1.x",
     "react-hook-final-countdown": "2.x",
-    "shared-reducer": "5.x",
+    "shared-reducer": "6.1.x",
     "wouter": "3.x"
   },
   "devDependencies": {
@@ -43,7 +43,7 @@
     "jest": "30.x",
     "jest-environment-jsdom": "30.x",
     "mini-css-extract-plugin": "2.x",
-    "prettier": "3.6.2",
+    "prettier": "3.7.4",
     "react-mock-element": "1.x",
     "terser-webpack-plugin": "5.x",
     "timezone-mock": "1.x",
