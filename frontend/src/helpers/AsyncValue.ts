@@ -7,8 +7,6 @@ export class AsyncValue<T, Err = never> {
   private state: ResolvedState<T, Err> = [null, null];
   private loaderAC: AbortController | null = null;
 
-  constructor() {}
-
   static readonly EMPTY = new AsyncValue<never, never>();
 
   static withProducer<T>(producer: (signal: AbortSignal) => Promise<T>) {

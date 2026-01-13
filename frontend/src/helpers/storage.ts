@@ -71,7 +71,7 @@ function deleteCookie(key: string) {
 const getLocalStorage = () => window.localStorage;
 const getSessionStorage = () => window.sessionStorage;
 
-export const storage = {
+export const sessionStore = {
   setItem(key: string, value: string): boolean {
     let any = false;
     // sessionStorage is best option for security and privacy
@@ -96,5 +96,19 @@ export const storage = {
     deleteStorage(getSessionStorage, key);
     deleteStorage(getLocalStorage, key);
     deleteCookie(key);
+  },
+};
+
+export const store = {
+  setItem(key: string, value: string): boolean {
+    return setStorage(getLocalStorage, key, value);
+  },
+
+  getItem(key: string): string | null {
+    return getStorage(getLocalStorage, key);
+  },
+
+  removeItem(key: string) {
+    deleteStorage(getLocalStorage, key);
   },
 };

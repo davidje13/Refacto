@@ -125,6 +125,12 @@ export const SecurityPage = memo(() => (
         complete, or if the browser tab is closed.
       </p>
       <p>
+        If "keep me logged in" is selected when entering the password for a
+        retro, an authentication token will be saved to the local storage of the
+        browser. This is only used for the purpose of keeping the user logged in
+        to the retro without needing to re-enter the password each time.
+      </p>
+      <p>
         This service does not use any tracking, advertising, or third-party
         cookies or data storage.
       </p>

@@ -9,6 +9,7 @@ interface PropsT {
 }
 
 export const PasswordForm = ({ slug, retroId }: PropsT): ReactElement => {
+  const [rememberMe, setRememberMe] = useState(false);
   const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState('');
 
@@ -21,7 +22,7 @@ export const PasswordForm = ({ slug, retroId }: PropsT): ReactElement => {
       retroId,
       password,
     );
-    retroAuthTracker.set(retroId, retroAuth);
+    retroAuthTracker.set(retroId, retroAuth, rememberMe);
     setSuccess(true);
   });
 
@@ -45,6 +46,15 @@ export const PasswordForm = ({ slug, retroId }: PropsT): ReactElement => {
         autoComplete="current-password"
         required
       />
+      <label className="checkbox">
+        <input
+          type="checkbox"
+          checked={rememberMe}
+          onChange={(e) => setRememberMe(e.currentTarget.checked)}
+          autoComplete="off"
+        />
+        Keep me logged in to this retro for 6 months
+      </label>
       <button
         type="submit"
         className="wide-button"

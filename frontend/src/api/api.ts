@@ -1,4 +1,4 @@
-import type { RetroAuth, UserData } from '../shared/api-entities';
+import type { UserData } from '../shared/api-entities';
 import { ConfigService } from './ConfigService';
 import { RetroListTracker } from './RetroListTracker';
 import { SlugTracker } from './SlugTracker';
@@ -10,7 +10,7 @@ import { RetroService } from './RetroService';
 import { PasswordService } from './PasswordService';
 import { GiphyService } from './GiphyService';
 import { AsyncValue } from '../helpers/AsyncValue';
-import { AsyncValueMap } from '../helpers/AsyncValueMap';
+import { RetroAuthTracker } from './RetroAuthTracker';
 import { DiagnosticsService } from './DiagnosticsService';
 
 const { protocol, host } = document.location;
@@ -31,5 +31,5 @@ export const userDataService = new UserDataService(API_BASE);
 export const passwordService = new PasswordService(API_BASE);
 export const giphyService = new GiphyService(API_BASE);
 
-export const retroAuthTracker = new AsyncValueMap<string, RetroAuth>();
+export const retroAuthTracker = new RetroAuthTracker();
 export const userDataTracker = new AsyncValue<UserData | null>();

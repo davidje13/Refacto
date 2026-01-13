@@ -47,11 +47,15 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
     return <div className="loader error">{slugError.message}</div>;
   }
 
-  if (retroId && !retroAuth) {
+  if (!retroId) {
+    return <div className="loader">Loading&hellip;</div>;
+  }
+
+  if (!retroAuth || (!retro && status === 'reauthenticate')) {
     return <PasswordPage slug={slug} retroId={retroId} />;
   }
 
-  if (!retroId || !retro || !retroAuth) {
+  if (!retro) {
     return <div className="loader">Loading&hellip;</div>;
   }
 
