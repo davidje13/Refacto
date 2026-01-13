@@ -4,26 +4,19 @@ import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory, type TestHooks } from '../app';
 
-function getUserToken({ userAuthService }: TestHooks, userId: string): string {
-  return userAuthService.grantToken({
-    aud: 'user',
-    iss: 'test',
-    sub: userId,
-  });
-}
-
 describe('API retros', () => {
   const PROPS = testServerRunner(async () => {
     const app = await appFactory(new TestLogger(), testConfig());
 
     const hooks = app.testHooks;
 
-    await hooks.retroService.createRetro(
+    const myRetroId = await hooks.retroService.createRetro(
       'nobody',
       'my-retro',
       'My Retro',
       'mood',
     );
+    await hooks.retroAuthService.setPassword(myRetroId, 'password1');
 
     await hooks.retroService.createRetro(
       'me',
@@ -151,6 +144,118 @@ describe('API retros', () => {
         .expect(401);
     });
   });
+
+  describe('PUT /api/retros/retro-id/password', () => {
+    it('changes the retro password', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
+      const retroToken = await hooks.retroAuthService.grantForPassword(
+        id,
+        'password1',
+      );
+      if (!retroToken) {
+        throw new Error('failed to get retro token');
+      }
+
+      await request(server)
+        .put(`/api/retros/${id}/password`)
+        .send({ password: 'password2', evictUsers: false })
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      // existing token is still valid
+      expect(
+        await hooks.retroAuthService.readAndVerifyToken(id, retroToken),
+      ).isTruthy();
+
+      // new token requests must use new password
+      expect(
+        await hooks.retroAuthService.grantForPassword(id, 'password1'),
+      ).isNull();
+
+      const retroToken2 = await hooks.retroAuthService.grantForPassword(
+        id,
+        'password2',
+      );
+      expect(retroToken2).isTruthy();
+      expect(
+        await hooks.retroAuthService.readAndVerifyToken(id, retroToken2!),
+      ).isTruthy();
+    });
+
+    it('voids existing tokens if requested', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
+      const retroToken = await hooks.retroAuthService.grantForPassword(
+        id,
+        'password1',
+      );
+      if (!retroToken) {
+        throw new Error('failed to get retro token');
+      }
+
+      await request(server)
+        .put(`/api/retros/${id}/password`)
+        .send({ password: 'password2', evictUsers: true })
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      // existing token is no longer valid
+      expect(
+        await hooks.retroAuthService.readAndVerifyToken(id, retroToken),
+      ).isNull();
+
+      // new tokens are valid
+      const retroToken2 = await hooks.retroAuthService.grantForPassword(
+        id,
+        'password2',
+      );
+      expect(retroToken2).isTruthy();
+      expect(
+        await hooks.retroAuthService.readAndVerifyToken(id, retroToken2!),
+      ).isTruthy();
+    });
+
+    it('responds HTTP Unauthorized if no credentials are given', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
+      await request(server)
+        .put(`/api/retros/${id}/password`)
+        .send({ password: 'password2', evictUsers: false })
+        .expect(401);
+    });
+
+    it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
+      await request(server)
+        .put(`/api/retros/${id}/password`)
+        .send({ password: 'password2', evictUsers: false })
+        .set('Authorization', 'Bearer Foo')
+        .expect(401);
+    });
+
+    it('responds HTTP Forbidden if scope is not "manage"', async (props) => {
+      const { server, hooks } = props.getTyped(PROPS);
+
+      const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
+      const retroToken = await getRetroToken(hooks, id, {
+        manage: false,
+      });
+
+      await request(server)
+        .put(`/api/retros/${id}/password`)
+        .send({ password: 'password2', evictUsers: false })
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(403);
+    });
+  });
 });
 
 describe('API retros with my retros disabled', () => {
@@ -201,3 +306,25 @@ describe('API retros with my retros disabled', () => {
     });
   });
 });
+
+function getUserToken({ userAuthService }: TestHooks, userId: string): string {
+  return userAuthService.grantToken({
+    aud: 'user',
+    iss: 'test',
+    sub: userId,
+  });
+}
+
+function getRetroToken(
+  { retroAuthService }: TestHooks,
+  retroId: string,
+  scopes = {},
+): Promise<string | null> {
+  return retroAuthService.grantToken(retroId, {
+    read: true,
+    readArchives: true,
+    write: true,
+    manage: true,
+    ...scopes,
+  });
+}

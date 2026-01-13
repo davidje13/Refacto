@@ -42,4 +42,28 @@ export class RetroService {
     }
     return body;
   }
+
+  public async setPassword(
+    retroId: string,
+    retroToken: string,
+    password: string,
+    evictUsers: boolean,
+  ): Promise<void> {
+    const response = await fetch(
+      `${this.apiBase}/retros/${encodeURIComponent(retroId)}/password`,
+      {
+        method: 'PUT',
+        cache: 'no-cache',
+        headers: {
+          Authorization: `Bearer ${retroToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password, evictUsers }),
+      },
+    );
+    const body = await response.json();
+    if (response.status >= 300 || body.error) {
+      throw new Error(body.error || 'Connection failed');
+    }
+  }
 }

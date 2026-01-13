@@ -54,16 +54,33 @@
 
   & fieldset {
     margin-top: 8px;
+    padding: 8px 8px 0;
+    border: 1px solid var(--beige-shadow);
 
     & legend {
       margin-bottom: 8px;
+      padding: 0 4px;
     }
+
+    &.minimal {
+      padding: 0;
+      border: none;
+
+      & legend {
+        padding: 0;
+      }
+    }
+  }
+
+  & label.checkbox {
+    display: flex;
+    margin: 0 0 16px;
   }
 
   & input[type='checkbox'],
   & input[type='radio'] {
     display: inline-block;
-    margin: 4px 12px 16px 8px;
+    margin: 4px 12px 4px 8px;
     vertical-align: top;
     padding: 0;
     border: none;

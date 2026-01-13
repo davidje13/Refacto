@@ -11,6 +11,12 @@ import { WelcomePage } from './WelcomePage';
 
 jest.mock('./RetroList', () => ({ RetroList: mockElement('mock-retro-list') }));
 
+const BASE_CONFIG: ClientConfig = {
+  sso: {},
+  giphy: false,
+  passwordRequirements: { minLength: 8, maxLength: 512 },
+};
+
 describe('WelcomePage', () => {
   beforeEach(() => {
     userTokenTracker.set('');
@@ -18,10 +24,10 @@ describe('WelcomePage', () => {
 
   it('displays login buttons if configured', async () => {
     const config: ClientConfig = {
+      ...BASE_CONFIG,
       sso: {
         google: { clientId: 'wheee', authUrl: 'http://example.com/wherever' },
       },
-      giphy: false,
     };
     const location = memoryLocation({ path: '/', record: true });
     const dom = render(
@@ -38,10 +44,7 @@ describe('WelcomePage', () => {
 
   it('displays no login buttons if not configured', async () => {
     const location = memoryLocation({ path: '/', record: true });
-    const config: ClientConfig = {
-      sso: {},
-      giphy: false,
-    };
+    const config: ClientConfig = { ...BASE_CONFIG, sso: {} };
 
     const dom = render(
       <ConfigProvider value={config}>

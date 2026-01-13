@@ -55,7 +55,7 @@ export const ArchivePopup = memo(
             Incomplete actions will remain.
           </p>
           {hasRemainingItems ? (
-            <label>
+            <label className="checkbox">
               <input
                 type="checkbox"
                 checked={preserveRemaining}

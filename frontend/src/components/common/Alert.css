@@ -1,6 +1,6 @@
 .alert-message {
   font-weight: bolder;
-  margin: 16px 0;
+  margin: 16px 6px;
 
   & svg {
     width: 1.2em;

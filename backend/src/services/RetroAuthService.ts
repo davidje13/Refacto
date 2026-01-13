@@ -16,12 +16,14 @@ const USER_SCOPES = {
   read: true,
   readArchives: true,
   write: true,
+  manage: true,
 };
 
 const PASSWORD_SCOPES = {
   read: true,
   readArchives: true,
   write: true,
+  manage: true,
 };
 
 export class RetroAuthService {

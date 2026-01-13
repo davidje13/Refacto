@@ -14,7 +14,7 @@ export class AnalyticsService {
   event(
     request: IncomingMessage,
     eventName: string,
-    metadata?: Record<string, string | number>,
+    metadata?: Record<string, string | number | boolean>,
   ) {
     if (this.eventDetail === 'none') {
       return;

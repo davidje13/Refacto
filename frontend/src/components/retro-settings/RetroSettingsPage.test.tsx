@@ -11,7 +11,11 @@ describe('RetroSettingsPage', () => {
     const location = memoryLocation({ path: '/', record: true });
     const dom = render(
       <Router hook={location.hook}>
-        <RetroSettingsPage retro={makeRetro()} retroDispatch={nullDispatch} />
+        <RetroSettingsPage
+          retro={makeRetro()}
+          retroToken="my-token"
+          retroDispatch={nullDispatch}
+        />
       </Router>,
     );
     await act(() => Promise.resolve()); // slug availability update

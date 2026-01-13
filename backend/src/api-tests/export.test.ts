@@ -14,6 +14,7 @@ function getRetroToken(
     read: true,
     readArchives: true,
     write: true,
+    manage: true,
     ...scopes,
   });
 }

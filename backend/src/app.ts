@@ -85,6 +85,7 @@ export const appFactory = async (
 ): Promise<App> => {
   const db = await CollectionStorage.connect(config.db.url);
 
+  const passwordRequirements = { minLength: 8, maxLength: 512 };
   const hasher = new Hasher(config.password);
   const tokenManager = new TokenManager(config.token);
 
@@ -136,7 +137,10 @@ export const appFactory = async (
   );
   app.mount('/api/diagnostics', new ApiDiagnosticsRouter(analyticsService));
   app.mount('/api/slugs', new ApiSlugsRouter(retroService));
-  app.mount('/api/config', new ApiConfigRouter(config, auth.clientConfig));
+  app.mount(
+    '/api/config',
+    new ApiConfigRouter(config, auth.clientConfig, passwordRequirements),
+  );
   auth.addRoutes(app);
   app.mount(
     '/api/retros',
@@ -147,6 +151,7 @@ export const appFactory = async (
       retroArchiveService,
       analyticsService,
       config.permit.myRetros,
+      passwordRequirements,
     ),
   );
   app.mount(

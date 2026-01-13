@@ -13,7 +13,13 @@ export interface ClientConfig {
       clientId: string;
     };
   };
+  passwordRequirements: PasswordRequirements;
   giphy: boolean;
+}
+
+export interface PasswordRequirements {
+  minLength: number;
+  maxLength: number;
 }
 
 export interface ErrorReport {

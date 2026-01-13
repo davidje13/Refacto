@@ -1,6 +1,15 @@
 form.retro-settings {
   margin: 64px auto 128px;
 
+  .edit-password {
+    margin: 32px 0;
+  }
+
+  .edit-password-button {
+    display: block;
+    margin: 32px auto;
+  }
+
   .theme {
     max-height: 18rem;
   }

@@ -1,17 +1,13 @@
 import { useState, memo, type ChangeEvent, type ReactNode } from 'react';
-import useAwaited from 'react-hook-awaited';
 import type { JsonData } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { SlugEntry } from './SlugEntry';
 import { Alert } from '../common/Alert';
+import { SetPassword } from '../common/SetPassword';
 import { makeValidSlug } from '../../hooks/data/useSlugAvailability';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { useNonce } from '../../hooks/useNonce';
-import {
-  retroService,
-  retroTokenTracker,
-  passwordService,
-} from '../../api/api';
+import { retroService, retroTokenTracker } from '../../api/api';
 import './RetroForm.css';
 
 export interface CreationT {
@@ -27,9 +23,6 @@ interface PropsT {
   onCreate: (data: CreationT) => void;
   showImport?: boolean;
 }
-
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_PASSWORD_LENGTH = 512;
 
 function readFileText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -48,8 +41,8 @@ export const RetroForm = memo(
   ({ defaultSlug, userToken, onCreate, showImport = false }: PropsT) => {
     const [name, setName] = useState(defaultSlug || '');
     const [slug, setSlug] = useState(defaultSlug || '');
+    const [passwordMatches, setPasswordMatches] = useState(false);
     const [password, setPassword] = useState('');
-    const [passwordConf, setPasswordConf] = useState('');
     const [importJson, setImportJson] = useState<JsonData>();
     const [importError, setImportError] = useState<string>();
 
@@ -83,50 +76,6 @@ export const RetroForm = memo(
       },
     );
 
-    const passwordWarningRequest = useAwaited<ReactNode>(
-      async (signal) => {
-        if (!window.isSecureContext) {
-          return (
-            <>
-              You are accessing Refacto over an insecure connection; other users
-              on your network can see the password you enter{HTTPS_INFO_LINK}
-            </>
-          );
-        }
-        if (!password || password !== passwordConf) {
-          return null;
-        }
-
-        if (password.length < MIN_PASSWORD_LENGTH) {
-          return <>This password is too short{PASSWORD_INFO_LINK}</>;
-        }
-        if (password.length > MAX_PASSWORD_LENGTH) {
-          return <>This password is too long{PASSWORD_INFO_LINK}</>;
-        }
-
-        const count = await passwordService.countPasswordBreaches(
-          password,
-          signal,
-        );
-        if (count > 100) {
-          return (
-            <>This password is very common and insecure{PASSWORD_INFO_LINK}</>
-          );
-        } else if (count > 20) {
-          return <>This password is common and insecure{PASSWORD_INFO_LINK}</>;
-        } else if (count > 0) {
-          return <>This password may be insecure{PASSWORD_INFO_LINK}</>;
-        }
-        return null;
-      },
-      [password, passwordConf],
-    );
-
-    const passwordWarning =
-      passwordWarningRequest.state === 'resolved'
-        ? passwordWarningRequest.data
-        : null;
-
     const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
       if (showImport && !importJson) {
         throw new Error('Must specify valid file to import');
@@ -137,7 +86,7 @@ export const RetroForm = memo(
         throw new Error('Must specify name, password and URL');
       }
 
-      if (password !== passwordConf) {
+      if (!passwordMatches) {
         throw new Error('Passwords do not match');
       }
 
@@ -203,33 +152,14 @@ export const RetroForm = memo(
             showAvailability
           />
         </label>
-        <label>
-          Collaborator password
-          <input
-            name="password"
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            minLength={MIN_PASSWORD_LENGTH}
-            maxLength={MAX_PASSWORD_LENGTH}
-            autoComplete="new-password"
-            required
-          />
-        </label>
-        <label>
-          Confirm password
-          <input
-            name="password-confirmation"
-            type="password"
-            placeholder="password"
-            value={passwordConf}
-            onChange={(e) => setPasswordConf(e.currentTarget.value)}
-            autoComplete="new-password"
-            required
-          />
-        </label>
-        <Alert warning message={passwordWarning} />
+        <SetPassword
+          label="Collaborator password"
+          confirmLabel="Confirm password"
+          required
+          password={password}
+          setPassword={setPassword}
+          setMatches={setPasswordMatches}
+        />
         <button
           type="submit"
           className="wide-button"
@@ -242,26 +172,4 @@ export const RetroForm = memo(
       </form>
     );
   },
-);
-
-const PASSWORD_INFO_LINK = (
-  <>
-    {' \u2014 '}
-    <a href="/security#passwords" target="_blank" rel="noopener noreferrer">
-      Learn more
-    </a>
-  </>
-);
-
-const HTTPS_INFO_LINK = (
-  <>
-    {' \u2014 '}
-    <a
-      href="https://www.cloudflare.com/learning/ssl/what-is-https/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Learn more
-    </a>
-  </>
 );

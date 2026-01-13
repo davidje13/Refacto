@@ -22,6 +22,12 @@
     color: var(--green-button-dark-text);
   }
 
+  &.optional {
+    background: var(--primary-back);
+    color: var(--green-text-on-white);
+    border: 1px solid var(--green-button-dark);
+  }
+
   &:disabled {
     background: var(--beige-shadow);
   }

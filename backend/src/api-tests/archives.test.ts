@@ -5,19 +5,6 @@ import { testConfig } from './testConfig';
 import { testServerRunner } from './testServerRunner';
 import { appFactory, type TestHooks } from '../app';
 
-function getRetroToken(
-  { retroAuthService }: TestHooks,
-  retroId: string,
-  scopes = {},
-): Promise<string | null> {
-  return retroAuthService.grantToken(retroId, {
-    read: true,
-    readArchives: true,
-    write: true,
-    ...scopes,
-  });
-}
-
 describe('API retro archives', () => {
   const PROPS = testServerRunner(async () => {
     const app = await appFactory(new TestLogger(), testConfig());
@@ -216,3 +203,17 @@ describe('API retro archives', () => {
     });
   });
 });
+
+function getRetroToken(
+  { retroAuthService }: TestHooks,
+  retroId: string,
+  scopes = {},
+): Promise<string | null> {
+  return retroAuthService.grantToken(retroId, {
+    read: true,
+    readArchives: true,
+    write: true,
+    manage: true,
+    ...scopes,
+  });
+}

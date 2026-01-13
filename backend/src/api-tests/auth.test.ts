@@ -137,6 +137,7 @@ describe('API auth', () => {
         read: true,
         write: true,
         readArchives: true,
+        manage: true,
       });
 
       await request(server)

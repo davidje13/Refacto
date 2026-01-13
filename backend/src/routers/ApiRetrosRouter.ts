@@ -1,4 +1,6 @@
+import type { IncomingMessage } from 'node:http';
 import {
+  addTeardown,
   getBodyJson,
   getPathParameter,
   getPathParameters,
@@ -9,6 +11,7 @@ import {
   requireAuthScope,
   requireBearerAuth,
   Router,
+  scheduleClose,
   sendCSVStream,
   sendJSON,
   sendJSONStream,
@@ -18,6 +21,7 @@ import {
 import { WebSocketServer } from 'ws';
 import { WebsocketHandlerFactory } from 'shared-reducer/backend';
 import { DuplicateError } from 'collection-storage';
+import type { PasswordRequirements } from '../shared/api-entities';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroAuthService } from '../services/RetroAuthService';
@@ -25,6 +29,7 @@ import type { RetroService } from '../services/RetroService';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
 import type { AnalyticsService } from '../services/AnalyticsService';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
+import { MultiMap } from '../helpers/MultiMap';
 import { json } from '../helpers/json';
 import {
   exportRetroJson,
@@ -32,9 +37,6 @@ import {
   importTimestamp,
 } from '../export/RetroJsonExport';
 import { exportRetroTable } from '../export/RetroTableExport';
-
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_PASSWORD_LENGTH = 512;
 
 export class ApiRetrosRouter extends Router {
   public constructor(
@@ -44,6 +46,7 @@ export class ApiRetrosRouter extends Router {
     retroArchiveService: RetroArchiveService,
     analyticsService: AnalyticsService,
     permitMyRetros: boolean,
+    passwordRequirements: PasswordRequirements,
   ) {
     super();
 
@@ -53,6 +56,7 @@ export class ApiRetrosRouter extends Router {
       extractAndValidateToken: (token) =>
         userAuthService.readAndVerifyToken(token),
     });
+    const activeConnections = new MultiMap<string, IncomingMessage>();
 
     const wsHandlerFactory = new WebsocketHandlerFactory(
       retroService.retroBroadcaster,
@@ -90,10 +94,10 @@ export class ApiRetrosRouter extends Router {
         if (!name) {
           throw new HTTPError(400, { body: 'No name given' });
         }
-        if (password.length < MIN_PASSWORD_LENGTH) {
+        if (password.length < passwordRequirements.minLength) {
           throw new HTTPError(400, { body: 'Password is too short' });
         }
-        if (password.length > MAX_PASSWORD_LENGTH) {
+        if (password.length > passwordRequirements.maxLength) {
           throw new HTTPError(400, { body: 'Password is too long' });
         }
 
@@ -157,6 +161,9 @@ export class ApiRetrosRouter extends Router {
         setSoftCloseHandler,
         pongTimeout: 60_000,
         onConnect: (req) => {
+          const { retroId } = getPathParameters(req);
+          activeConnections.add(retroId, req);
+          addTeardown(req, () => activeConnections.remove(retroId, req));
           analyticsService.event(req, 'retro session begin');
         },
         onDisconnect: (req, closeReason, duration) => {
@@ -172,6 +179,49 @@ export class ApiRetrosRouter extends Router {
             err,
           ),
       }),
+    );
+
+    retroRouter.put(
+      '/password',
+      requireAuthScope('manage'),
+      async (req, res) => {
+        const { retroId } = getPathParameters(req);
+        const body = await getBodyJson(req, { maxContentBytes: 4 * 1024 });
+        const { password, evictUsers } = json.extractObject(body, {
+          password: json.string,
+          evictUsers: json.boolean,
+        });
+        if (password.length < passwordRequirements.minLength) {
+          throw new HTTPError(400, { body: 'Password is too short' });
+        }
+        if (password.length > passwordRequirements.maxLength) {
+          throw new HTTPError(400, { body: 'Password is too long' });
+        }
+
+        await retroAuthService.setPassword(retroId, password, {
+          cycleKeys: evictUsers,
+        });
+        let evicted = 0;
+        if (evictUsers) {
+          const connections = activeConnections.listAndPurge(retroId);
+          evicted = connections.size;
+          const now = Date.now();
+          const timeout = 3000;
+          for (const connection of connections) {
+            scheduleClose(
+              connection,
+              'password changed',
+              now + timeout,
+              timeout,
+            );
+          }
+        }
+        analyticsService.event(req, 'change retro password', {
+          evictUsers,
+          evicted,
+        });
+        return sendJSON(res, {});
+      },
     );
 
     retroRouter.get(
