@@ -112,6 +112,24 @@ export const SecurityPage = memo(() => (
       </p>
     </section>
     <section>
+      <Anchor tag="h2" name="cookies">
+        Cookies and Persisted Data
+      </Anchor>
+      <p>
+        When logging in using an external provider (such as Google, GitHub, or
+        GitLab), this service stores a randomised session cookie (a short-lived
+        token) for security. This is used for validation once the login is
+        complete, and exists to protect against attacks where an attacker could
+        force a legitimate user to log in to an unexpected account, potentially
+        exposing data. The session cookie is deleted as soon as the login is
+        complete, or if the browser tab is closed.
+      </p>
+      <p>
+        This service does not use any tracking, advertising, or third-party
+        cookies or data storage.
+      </p>
+    </section>
+    <section>
       <Anchor tag="h2" name="technical-details">
         Technical Details
       </Anchor>
