@@ -3,7 +3,7 @@ import { memoryLocation } from 'wouter/memory-location';
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import type { ClientConfig } from '../../shared/api-entities';
-import { userTokenTracker, retroListTracker } from '../../api/api';
+import { userDataTracker, retroListTracker } from '../../api/api';
 import { ConfigProvider } from '../../hooks/data/useConfig';
 import { css } from '../../test-helpers/queries';
 
@@ -19,7 +19,7 @@ const BASE_CONFIG: ClientConfig = {
 
 describe('WelcomePage', () => {
   beforeEach(() => {
-    userTokenTracker.set('');
+    userDataTracker.set(null);
   });
 
   it('displays login buttons if configured', async () => {
@@ -60,7 +60,7 @@ describe('WelcomePage', () => {
 
   it('loads data if logged in', async () => {
     const location = memoryLocation({ path: '/', record: true });
-    userTokenTracker.set('foobar');
+    userDataTracker.set({ userToken: 'foobar' });
     jest
       .spyOn(retroListTracker, 'get')
       .mockResolvedValue({ retros: [{ id: 'u1', slug: 'a', name: 'R1' }] });

@@ -60,10 +60,7 @@ export class RetroAuthService {
     }
   }
 
-  public async grantForPassword(
-    retroId: string,
-    password: string,
-  ): Promise<string | null> {
+  public async grantForPassword(retroId: string, password: string) {
     const retroData = await this.retroAuthCollection
       .where('id', retroId)
       .attrs(['passwordHash'])
@@ -83,14 +80,14 @@ export class RetroAuthService {
     return this.grantToken(retroId, PASSWORD_SCOPES);
   }
 
-  public grantOwnerToken(retroId: string): Promise<string | null> {
+  public grantOwnerToken(retroId: string) {
     return this.grantToken(retroId, USER_SCOPES);
   }
 
   public async grantToken(
     retroId: string,
     scopes: Readonly<Record<string, boolean>>,
-  ): Promise<string | null> {
+  ) {
     const retroData = await this.retroAuthCollection
       .where('id', retroId)
       .attrs(['privateKey'])
@@ -100,14 +97,18 @@ export class RetroAuthService {
     }
 
     const now = Math.floor(Date.now() / 1000);
+    const exp = now + tokenLifespan;
     const tokenData: RetroJWTPayload = {
       iat: now,
-      exp: now + tokenLifespan,
+      exp,
       aud: `retro-${retroId}`,
       scopes,
     };
 
-    return this.tokenManager.signData(tokenData, retroData.privateKey);
+    return {
+      token: this.tokenManager.signData(tokenData, retroData.privateKey),
+      expires: exp * 1000,
+    };
   }
 
   public async readAndVerifyToken(

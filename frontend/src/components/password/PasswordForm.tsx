@@ -1,6 +1,6 @@
 import { useState, type ReactElement } from 'react';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
-import { retroTokenService, retroTokenTracker } from '../../api/api';
+import { retroAuthService, retroAuthTracker } from '../../api/api';
 import { Alert } from '../common/Alert';
 
 interface PropsT {
@@ -17,11 +17,11 @@ export const PasswordForm = ({ slug, retroId }: PropsT): ReactElement => {
       throw new Error('Enter a password');
     }
 
-    const retroToken = await retroTokenService.getRetroTokenForPassword(
+    const retroAuth = await retroAuthService.getRetroAuthForPassword(
       retroId,
       password,
     );
-    retroTokenTracker.set(retroId, retroToken);
+    retroAuthTracker.set(retroId, retroAuth);
     setSuccess(true);
   });
 

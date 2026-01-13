@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { Header } from '../common/Header';
 import { useEvent } from '../../hooks/useEvent';
 import { slugTracker } from '../../api/api';
-import { useUserToken } from '../../hooks/data/useUserToken';
+import { useUserData } from '../../hooks/data/useUserData';
 import { LoginForm } from '../login/LoginForm';
 import { RetroForm, type CreationT } from './RetroForm';
 
@@ -12,7 +12,7 @@ interface PropsT {
 }
 
 export const RetroCreatePage = memo(({ showImport = false }: PropsT) => {
-  const userToken = useUserToken();
+  const userData = useUserData();
   const [, setLocation] = useLocation();
   const handleCreate = useEvent(({ id, slug }: CreationT) => {
     slugTracker.set(slug, id);
@@ -21,7 +21,7 @@ export const RetroCreatePage = memo(({ showImport = false }: PropsT) => {
 
   const title = showImport ? 'Import Retro' : 'New Retro';
 
-  if (!userToken) {
+  if (!userData) {
     return (
       <article className="page-retro-create">
         <Header
@@ -47,7 +47,7 @@ export const RetroCreatePage = memo(({ showImport = false }: PropsT) => {
         }
       />
       <RetroForm
-        userToken={userToken}
+        userToken={userData.userToken}
         onCreate={handleCreate}
         showImport={showImport}
       />

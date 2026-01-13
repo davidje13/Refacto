@@ -1,8 +1,8 @@
 import type { ReactElement } from 'react';
 import useAwaited from 'react-hook-awaited';
 import { Header } from '../common/Header';
-import { useUserToken } from '../../hooks/data/useUserToken';
-import { retroTokenService, retroTokenTracker } from '../../api/api';
+import { useUserData } from '../../hooks/data/useUserData';
+import { retroAuthService, retroAuthTracker } from '../../api/api';
 import { PasswordForm } from './PasswordForm';
 import './PasswordPage.css';
 
@@ -12,23 +12,23 @@ interface PropsT {
 }
 
 export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
-  const userToken = useUserToken();
+  const userData = useUserData();
   const checkingUser = useAwaited(
     async (signal) => {
-      if (!userToken) {
+      if (!userData) {
         return;
       }
-      const retroToken = await retroTokenService.getRetroTokenForUser(
+      const retroAuth = await retroAuthService.getRetroAuthForUser(
         retroId,
-        userToken,
+        userData.userToken,
         signal,
       );
-      retroTokenTracker.set(retroId, retroToken);
+      retroAuthTracker.set(retroId, retroAuth);
     },
-    [userToken, retroId, retroTokenService, retroTokenTracker],
+    [userData, retroId, retroAuthService, retroAuthTracker],
   );
 
-  if (userToken && checkingUser.state !== 'rejected') {
+  if (userData && checkingUser.state !== 'rejected') {
     return (
       <article className="page-password-user">
         <Header

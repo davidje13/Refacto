@@ -1,4 +1,4 @@
-import { userTokenService, userTokenTracker } from '../../api/api';
+import { userDataService, userDataTracker } from '../../api/api';
 
 interface LocationT {
   search: string;
@@ -50,13 +50,13 @@ export async function handleLogin(
     throw new Error('possible cross-site request forgery');
   }
 
-  const userToken = await userTokenService.login(
+  const userData = await userDataService.login(
     service,
     externalToken,
     redirectUri,
     local.codeVerifier,
     signal,
   );
-  userTokenTracker.set(userToken);
+  userDataTracker.set(userData);
   return redirect || '/';
 }

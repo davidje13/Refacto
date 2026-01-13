@@ -1,7 +1,7 @@
 import type { Server } from 'node:http';
 import { type WebListener } from 'web-listener';
 import type { TypedParameter } from 'lean-test';
-import { App } from '../app';
+import { App, type TestHooks } from '../app';
 import type { TestLogger } from './TestLogger';
 
 type Runnable = WebListener | App;
@@ -44,3 +44,29 @@ export const testSimpleServerRunner = (serverFn: () => Server) =>
       server.closeAllConnections();
     };
   });
+
+export function getUserToken(
+  { userAuthService }: TestHooks,
+  userId: string,
+): string {
+  return userAuthService.grantToken({
+    aud: 'user',
+    iss: 'test',
+    sub: userId,
+  });
+}
+
+export async function getRetroToken(
+  { retroAuthService }: TestHooks,
+  retroId: string,
+  scopes = {},
+): Promise<string | null> {
+  const grant = await retroAuthService.grantToken(retroId, {
+    read: true,
+    readArchives: true,
+    write: true,
+    manage: true,
+    ...scopes,
+  });
+  return grant?.token ?? null;
+}

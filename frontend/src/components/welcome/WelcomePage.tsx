@@ -4,7 +4,7 @@ import { Header } from '../common/Header';
 import { LoadingError, LoadingIndicator } from '../common/Loader';
 import type { RetroSummary } from '../../shared/api-entities';
 import { useRetroList } from '../../hooks/data/useRetroList';
-import { useUserToken } from '../../hooks/data/useUserToken';
+import { useUserData } from '../../hooks/data/useUserData';
 import { useEvent } from '../../hooks/useEvent';
 import { LoginForm } from '../login/LoginForm';
 import { RetroList } from './RetroList';
@@ -13,14 +13,14 @@ import './WelcomePage.css';
 
 export const WelcomePage = memo(() => {
   const [, setLocation] = useLocation();
-  const userToken = useUserToken();
-  const [retroList, error] = useRetroList(userToken);
-  const loading = Boolean(userToken && !error && !retroList);
+  const userData = useUserData();
+  const [retroList, error] = useRetroList(userData);
+  const loading = Boolean(userData && !error && !retroList);
   const recent: RetroSummary[] = [];
 
   const stableSetLocation = useEvent(setLocation);
   useEffect(() => {
-    if (!userToken || !retroList) {
+    if (!userData || !retroList) {
       return;
     }
     if (document.location.hash === '#first') {
@@ -30,7 +30,7 @@ export const WelcomePage = memo(() => {
         stableSetLocation('/create', { replace: true });
       }
     }
-  }, [stableSetLocation, userToken, retroList]);
+  }, [stableSetLocation, userData, retroList]);
 
   const combinedList = useMemo(() => {
     const combined = [...recent];
@@ -48,12 +48,12 @@ export const WelcomePage = memo(() => {
   return (
     <article className="page-welcome">
       <Header
-        documentTitle={userToken ? 'Account - Refacto' : 'Refacto'}
-        title={userToken ? 'Account' : 'Refacto'}
+        documentTitle={userData ? 'Account - Refacto' : 'Refacto'}
+        title={userData ? 'Account' : 'Refacto'}
       />
       <section>
         <img src="/favicon512.png" className="logo" alt="Refacto" />
-        {userToken ? null : (
+        {userData ? null : (
           <>
             <p>
               Refacto makes it easy to run team retros with remote team members.
@@ -69,10 +69,10 @@ export const WelcomePage = memo(() => {
         <LoadingIndicator />
       ) : (
         <section>
-          {userToken ? <p>Open a retro</p> : <p>Open an existing retro</p>}
+          {userData ? <p>Open a retro</p> : <p>Open an existing retro</p>}
           <RetroList retros={combinedList} />
           <RetroNavigationForm />
-          {userToken ? (
+          {userData ? (
             <Link className="global-button primary link-create" to="/create">
               Create a new retro
             </Link>

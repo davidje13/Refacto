@@ -1,4 +1,4 @@
-import type { JsonData } from '../shared/api-entities';
+import type { JsonData, RetroCreationInfo } from '../shared/api-entities';
 
 interface RetroOptions {
   name: string;
@@ -6,11 +6,6 @@ interface RetroOptions {
   password: string;
   userToken: string;
   importJson?: JsonData | undefined;
-}
-
-export interface RetroCreationInfo {
-  id: string;
-  token: string;
 }
 
 export class RetroService {

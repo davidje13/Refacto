@@ -1,16 +1,17 @@
+import type { UserData } from '../shared/api-entities';
 import { jsonFetch } from './jsonFetch';
 
-export class UserTokenService {
+export class UserDataService {
   public constructor(private readonly apiBase: string) {}
 
-  public async login(
+  public login(
     service: string,
     externalToken: string,
     redirectUri: string,
     codeVerifier: string | undefined,
     signal: AbortSignal,
-  ): Promise<string> {
-    const body = await jsonFetch<{ userToken: string }>(
+  ): Promise<UserData> {
+    return jsonFetch<UserData>(
       `${this.apiBase}/sso/${encodeURIComponent(service)}`,
       {
         method: 'POST',
@@ -20,6 +21,5 @@ export class UserTokenService {
         signal,
       },
     );
-    return body.userToken;
   }
 }

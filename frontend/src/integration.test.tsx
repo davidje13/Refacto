@@ -65,6 +65,7 @@ describe('Application', () => {
 
     mockFetchExpect('/api/auth/tokens/id-foobar').andRespondJsonOk({
       retroToken: 'my-token',
+      expires: Number.MAX_SAFE_INTEGER,
     });
 
     mockWsExpect('/api/retros/id-foobar', async (ws) => {

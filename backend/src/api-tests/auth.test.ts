@@ -2,16 +2,8 @@ import { decodeJWT } from 'authentication-backend/jwt';
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner } from './testServerRunner';
-import { appFactory, type TestHooks } from '../app';
-
-function getUserToken({ userAuthService }: TestHooks, userId: string): string {
-  return userAuthService.grantToken({
-    aud: 'user',
-    iss: 'test',
-    sub: userId,
-  });
-}
+import { getUserToken, testServerRunner } from './testServerRunner';
+import { appFactory } from '../app';
 
 describe('API auth', () => {
   const PROPS = testServerRunner(async () => {

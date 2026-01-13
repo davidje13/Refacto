@@ -6,6 +6,7 @@ import {
   Router,
   sendJSON,
 } from 'web-listener';
+import type { RetroAuth } from '../shared/api-entities';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroService } from '../services/RetroService';
@@ -43,13 +44,17 @@ export class ApiAuthRouter extends Router {
         throw new HTTPError(403, { body: 'not retro owner' });
       }
 
-      const retroToken = await retroAuthService.grantOwnerToken(retroId);
-      if (!retroToken) {
+      const grant = await retroAuthService.grantOwnerToken(retroId);
+      if (!grant) {
         throw new HTTPError(500, { body: 'retro not found' });
       }
 
       analyticsService.event(req, 'access own retro');
-      return sendJSON(res, { retroToken });
+      const response: RetroAuth = {
+        retroToken: grant.token,
+        expires: grant.expires,
+      };
+      return sendJSON(res, response);
     });
 
     this.post('/tokens/:retroId', async (req, res) => {
@@ -58,17 +63,18 @@ export class ApiAuthRouter extends Router {
       const { password } = json.extractObject(body, { password: json.string });
 
       const begin = Date.now();
-      const retroToken = await retroAuthService.grantForPassword(
-        retroId,
-        password,
-      );
-      if (!retroToken) {
+      const grant = await retroAuthService.grantForPassword(retroId, password);
+      if (!grant) {
         throw new HTTPError(400, { body: 'incorrect password' });
       }
 
       const time = Date.now() - begin;
       analyticsService.event(req, 'access retro', { passwordCheckTime: time });
-      sendJSON(res, { retroToken });
+      const response: RetroAuth = {
+        retroToken: grant.token,
+        expires: grant.expires,
+      };
+      sendJSON(res, response);
     });
   }
 }

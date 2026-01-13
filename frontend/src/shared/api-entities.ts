@@ -31,6 +31,21 @@ export interface ErrorReport {
   }[];
 }
 
+export interface UserData {
+  userToken: string;
+}
+
+export interface RetroAuth {
+  retroToken: string;
+  expires: number;
+}
+
+export interface RetroCreationInfo {
+  id: string;
+  token: string;
+  expires: number;
+}
+
 export interface RetroItemAttachment {
   type: string;
   url: string;

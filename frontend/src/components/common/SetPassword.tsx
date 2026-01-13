@@ -45,14 +45,13 @@ export const SetPassword = memo(
           return null;
         }
 
-        if (password.length < (config?.passwordRequirements.minLength ?? 0)) {
-          return <>This password is too short{PASSWORD_INFO_LINK}</>;
-        }
-        if (
-          password.length >
-          (config?.passwordRequirements.maxLength ?? Number.POSITIVE_INFINITY)
-        ) {
-          return <>This password is too long{PASSWORD_INFO_LINK}</>;
+        if (config) {
+          if (password.length < config.passwordRequirements.minLength) {
+            return <>This password is too short{PASSWORD_INFO_LINK}</>;
+          }
+          if (password.length > config.passwordRequirements.maxLength) {
+            return <>This password is too long{PASSWORD_INFO_LINK}</>;
+          }
         }
 
         const count = await passwordService.countPasswordBreaches(

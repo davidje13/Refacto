@@ -1,3 +1,5 @@
+import type { RetroAuth } from '../shared/api-entities';
+
 async function handleResponse(response: Response): Promise<any> {
   try {
     const body = await response.json();
@@ -10,13 +12,13 @@ async function handleResponse(response: Response): Promise<any> {
   }
 }
 
-export class RetroTokenService {
+export class RetroAuthService {
   public constructor(private readonly apiBase: string) {}
 
-  public async getRetroTokenForPassword(
+  public async getRetroAuthForPassword(
     retroId: string,
     password: string,
-  ): Promise<string> {
+  ): Promise<RetroAuth> {
     const response = await fetch(
       `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}`,
       {
@@ -29,15 +31,14 @@ export class RetroTokenService {
     if (response.status === 400) {
       throw new Error('Incorrect password');
     }
-    const body = await handleResponse(response);
-    return body.retroToken;
+    return handleResponse(response);
   }
 
-  public async getRetroTokenForUser(
+  public async getRetroAuthForUser(
     retroId: string,
     userToken: string,
     signal: AbortSignal,
-  ): Promise<string> {
+  ): Promise<RetroAuth> {
     const response = await fetch(
       `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}/user`,
       {
@@ -47,7 +48,6 @@ export class RetroTokenService {
         signal,
       },
     );
-    const body = await handleResponse(response);
-    return body.retroToken;
+    return handleResponse(response);
   }
 }

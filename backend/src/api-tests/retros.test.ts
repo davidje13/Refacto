@@ -1,8 +1,12 @@
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner } from './testServerRunner';
-import { appFactory, type TestHooks } from '../app';
+import {
+  getRetroToken,
+  getUserToken,
+  testServerRunner,
+} from './testServerRunner';
+import { appFactory } from '../app';
 
 describe('API retros', () => {
   const PROPS = testServerRunner(async () => {
@@ -150,24 +154,24 @@ describe('API retros', () => {
       const { server, hooks } = props.getTyped(PROPS);
 
       const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
-      const retroToken = await hooks.retroAuthService.grantForPassword(
+      const grant1 = await hooks.retroAuthService.grantForPassword(
         id,
         'password1',
       );
-      if (!retroToken) {
+      if (!grant1) {
         throw new Error('failed to get retro token');
       }
 
       await request(server)
         .put(`/api/retros/${id}/password`)
         .send({ password: 'password2', evictUsers: false })
-        .set('Authorization', `Bearer ${retroToken}`)
+        .set('Authorization', `Bearer ${grant1.token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
       // existing token is still valid
       expect(
-        await hooks.retroAuthService.readAndVerifyToken(id, retroToken),
+        await hooks.retroAuthService.readAndVerifyToken(id, grant1.token),
       ).isTruthy();
 
       // new token requests must use new password
@@ -175,13 +179,13 @@ describe('API retros', () => {
         await hooks.retroAuthService.grantForPassword(id, 'password1'),
       ).isNull();
 
-      const retroToken2 = await hooks.retroAuthService.grantForPassword(
+      const grant2 = await hooks.retroAuthService.grantForPassword(
         id,
         'password2',
       );
-      expect(retroToken2).isTruthy();
+      expect(grant2).isTruthy();
       expect(
-        await hooks.retroAuthService.readAndVerifyToken(id, retroToken2!),
+        await hooks.retroAuthService.readAndVerifyToken(id, grant2!.token),
       ).isTruthy();
     });
 
@@ -189,34 +193,34 @@ describe('API retros', () => {
       const { server, hooks } = props.getTyped(PROPS);
 
       const id = (await hooks.retroService.getRetroIdForSlug('my-retro'))!;
-      const retroToken = await hooks.retroAuthService.grantForPassword(
+      const grant1 = await hooks.retroAuthService.grantForPassword(
         id,
         'password1',
       );
-      if (!retroToken) {
+      if (!grant1) {
         throw new Error('failed to get retro token');
       }
 
       await request(server)
         .put(`/api/retros/${id}/password`)
         .send({ password: 'password2', evictUsers: true })
-        .set('Authorization', `Bearer ${retroToken}`)
+        .set('Authorization', `Bearer ${grant1.token}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
       // existing token is no longer valid
       expect(
-        await hooks.retroAuthService.readAndVerifyToken(id, retroToken),
+        await hooks.retroAuthService.readAndVerifyToken(id, grant1.token),
       ).isNull();
 
       // new tokens are valid
-      const retroToken2 = await hooks.retroAuthService.grantForPassword(
+      const grant2 = await hooks.retroAuthService.grantForPassword(
         id,
         'password2',
       );
-      expect(retroToken2).isTruthy();
+      expect(grant2).isTruthy();
       expect(
-        await hooks.retroAuthService.readAndVerifyToken(id, retroToken2!),
+        await hooks.retroAuthService.readAndVerifyToken(id, grant2!.token),
       ).isTruthy();
     });
 
@@ -306,25 +310,3 @@ describe('API retros with my retros disabled', () => {
     });
   });
 });
-
-function getUserToken({ userAuthService }: TestHooks, userId: string): string {
-  return userAuthService.grantToken({
-    aud: 'user',
-    iss: 'test',
-    sub: userId,
-  });
-}
-
-function getRetroToken(
-  { retroAuthService }: TestHooks,
-  retroId: string,
-  scopes = {},
-): Promise<string | null> {
-  return retroAuthService.grantToken(retroId, {
-    read: true,
-    readArchives: true,
-    write: true,
-    manage: true,
-    ...scopes,
-  });
-}

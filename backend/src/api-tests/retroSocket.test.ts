@@ -1,22 +1,8 @@
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner } from './testServerRunner';
-import { appFactory, type TestHooks } from '../app';
-
-function getRetroToken(
-  { retroAuthService }: TestHooks,
-  retroId: string,
-  scopes = {},
-): Promise<string | null> {
-  return retroAuthService.grantToken(retroId, {
-    read: true,
-    readArchives: true,
-    write: true,
-    manage: true,
-    ...scopes,
-  });
-}
+import { getRetroToken, testServerRunner } from './testServerRunner';
+import { appFactory } from '../app';
 
 describe('API retro websocket', () => {
   const PROPS = testServerRunner(async () => {

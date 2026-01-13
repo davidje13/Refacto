@@ -3,9 +3,9 @@ import type { Retro } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import {
   retroService,
-  retroTokenService,
-  retroTokenTracker,
-  userTokenTracker,
+  retroAuthService,
+  retroAuthTracker,
+  userDataTracker,
 } from '../../api/api';
 import { context } from '../../api/reducer';
 import { PickerInput } from '../common/PickerInput';
@@ -184,22 +184,22 @@ export const SettingsForm = memo(
 async function updateRetroToken(retroId: string, password: string) {
   // prefer obtaining token from the logged in user, as this is likely to have more permissions
   try {
-    const userToken = userTokenTracker.peekState()[0];
-    if (userToken) {
-      const newRetroToken = await retroTokenService.getRetroTokenForUser(
+    const userData = userDataTracker.peekState()[0];
+    if (userData) {
+      const retroAuth = await retroAuthService.getRetroAuthForUser(
         retroId,
-        userToken,
+        userData.userToken,
         new AbortController().signal,
       );
-      retroTokenTracker.set(retroId, newRetroToken);
+      retroAuthTracker.set(retroId, retroAuth);
       return;
     }
   } catch {}
 
   // fall-back to obtaining token from the password
-  const newRetroToken = await retroTokenService.getRetroTokenForPassword(
+  const retroAuth = await retroAuthService.getRetroAuthForPassword(
     retroId,
     password,
   );
-  retroTokenTracker.set(retroId, newRetroToken);
+  retroAuthTracker.set(retroId, retroAuth);
 }

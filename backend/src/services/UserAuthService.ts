@@ -32,19 +32,20 @@ export class UserAuthService {
     this.publicKey = keys.publicKey;
   }
 
-  public grantLoginToken = (userId: string, service: string): string => {
+  public grantLoginToken = (userId: string, service: string) => {
     const now = Math.floor(Date.now() / 1000);
+    const exp = now + this.loginTokenLifespan;
 
     return this.grantToken({
       iat: now,
-      exp: now + this.loginTokenLifespan,
+      exp,
       aud: 'user',
       iss: service,
       sub: userId,
     });
   };
 
-  public grantToken(tokenData: UserJWTPayload): string {
+  public grantToken(tokenData: UserJWTPayload) {
     if (!this.privateKey) {
       throw new Error('Not initialised');
     }

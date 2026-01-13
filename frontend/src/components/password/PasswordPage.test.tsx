@@ -1,14 +1,15 @@
 import { render, fireEvent, act, getBy } from 'flexible-testing-library-react';
-import { retroTokenService, retroTokenTracker } from '../../api/api';
+import { retroAuthService, retroAuthTracker } from '../../api/api';
 import { css } from '../../test-helpers/queries';
 
 import { PasswordPage } from './PasswordPage';
 
 describe('PasswordPage', () => {
   it('exchanges passwords for tokens', async () => {
-    jest
-      .spyOn(retroTokenService, 'getRetroTokenForPassword')
-      .mockResolvedValue('some-token');
+    jest.spyOn(retroAuthService, 'getRetroAuthForPassword').mockResolvedValue({
+      retroToken: 'some-token',
+      expires: Number.MAX_SAFE_INTEGER,
+    });
 
     const dom = render(<PasswordPage slug="abc" retroId="myRetroId" />);
 
@@ -18,12 +19,12 @@ describe('PasswordPage', () => {
     fireEvent.submit(form);
     await act(() => Promise.resolve()); // fetch and store retro token
 
-    expect(retroTokenService.getRetroTokenForPassword).toHaveBeenCalledWith(
+    expect(retroAuthService.getRetroAuthForPassword).toHaveBeenCalledWith(
       'myRetroId',
       'my-password',
     );
 
-    const retroToken = await retroTokenTracker.get('myRetroId').getOneValue();
-    expect(retroToken).toEqual('some-token');
+    const retroAuth = await retroAuthTracker.get('myRetroId').getOneValue();
+    expect(retroAuth?.retroToken).toEqual('some-token');
   });
 });

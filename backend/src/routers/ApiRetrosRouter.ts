@@ -21,7 +21,10 @@ import {
 import { WebSocketServer } from 'ws';
 import { WebsocketHandlerFactory } from 'shared-reducer/backend';
 import { DuplicateError } from 'collection-storage';
-import type { PasswordRequirements } from '../shared/api-entities';
+import type {
+  PasswordRequirements,
+  RetroCreationInfo,
+} from '../shared/api-entities';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroAuthService } from '../services/RetroAuthService';
@@ -123,14 +126,24 @@ export class ApiRetrosRouter extends Router {
           );
         }
 
-        const token = await retroAuthService.grantOwnerToken(id);
+        const grant = await retroAuthService.grantOwnerToken(id);
+        if (!grant) {
+          throw new Error(
+            `retro ${id} auth deleted immediately after creation`,
+          );
+        }
 
         if (importJson) {
           analyticsService.event(req, 'import retro');
         } else {
           analyticsService.event(req, 'create retro');
         }
-        return sendJSON(res, { id, token });
+        const response: RetroCreationInfo = {
+          id,
+          token: grant.token,
+          expires: grant.expires,
+        };
+        return sendJSON(res, response);
       },
       typedErrorHandler(DuplicateError, () => {
         throw new HTTPError(409, { body: 'URL is already taken' });

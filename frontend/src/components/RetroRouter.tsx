@@ -7,18 +7,18 @@ import {
 } from 'react';
 import { Route, Switch, useLocation } from 'wouter';
 import TickBold from '../../resources/tick-bold.svg';
-import type { Retro } from '../shared/api-entities';
+import type { Retro, RetroAuth } from '../shared/api-entities';
 import type { RetroDispatch } from '../api/RetroTracker';
 import {
-  retroTokenService,
-  retroTokenTracker,
+  retroAuthService,
+  retroAuthTracker,
   retroTracker,
   slugTracker,
-  userTokenTracker,
+  userDataTracker,
 } from '../api/api';
 import { useSlug } from '../hooks/data/useSlug';
 import { useEvent } from '../hooks/useEvent';
-import { useRetroToken } from '../hooks/data/useRetroToken';
+import { useRetroAuth } from '../hooks/data/useRetroAuth';
 import { StateMapProvider } from '../hooks/useStateMap';
 import { Popup } from './common/Popup';
 import { RetroNotFoundPage } from './retro-not-found/RetroNotFoundPage';
@@ -37,7 +37,7 @@ interface PropsT {
 
 export const RetroRouter: FC<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
-  const [retro, retroDispatch, retroToken, status] = useRetroReducer(retroId);
+  const [retro, retroDispatch, retroAuth, status] = useRetroReducer(retroId);
 
   if (slugError?.message === 'not found') {
     return <RetroNotFoundPage slug={slug} />;
@@ -47,11 +47,11 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
     return <div className="loader error">{slugError.message}</div>;
   }
 
-  if (retroId && !retroToken) {
+  if (retroId && !retroAuth) {
     return <PasswordPage slug={slug} retroId={retroId} />;
   }
 
-  if (!retroId || !retro || !retroToken) {
+  if (!retroId || !retro || !retroAuth) {
     return <div className="loader">Loading&hellip;</div>;
   }
 
@@ -87,7 +87,7 @@ export const RetroRouter: FC<PropsT> = ({ slug }) => {
   }
 
   const retroParams = {
-    retroToken,
+    retroToken: retroAuth.retroToken,
     retro,
     retroDispatch,
   };
@@ -140,14 +140,14 @@ type RetroReducerStatus =
 type RetroReducerState = [
   Retro | null,
   RetroDispatch | null,
-  string | null,
+  RetroAuth | null,
   RetroReducerStatus,
 ];
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
 
 function useRetroReducer(retroId: string | null): RetroReducerState {
-  const retroToken = useRetroToken(retroId);
+  const retroAuth = useRetroAuth(retroId);
   const [location, setLocation] = useLocation();
   const [retroState, setRetroState] = useState<Retro | null>(null);
   const [status, setStatus] = useState<RetroReducerStatus>('init');
@@ -161,13 +161,13 @@ function useRetroReducer(retroId: string | null): RetroReducerState {
     const ac = new AbortController();
     setRetroState(null);
     setRetroDispatch(null);
-    if (!retroId || !retroToken) {
+    if (!retroId || !retroAuth) {
       return undefined;
     }
 
     const subscription = retroTracker.subscribe(
       retroId,
-      retroToken,
+      retroAuth.retroToken,
       (data) => setRetroState(data),
       (status) => setStatus(status ? 'connected' : 'reconnecting'),
       () =>
@@ -183,7 +183,7 @@ function useRetroReducer(retroId: string | null): RetroReducerState {
       ac.abort();
       subscription.unsubscribe();
     };
-  }, [retroId, retroToken]);
+  }, [retroId, retroAuth]);
 
   const updateSlug = useEvent((slug: string) => {
     const old = RETRO_SLUG_PATH.exec(location);
@@ -205,21 +205,21 @@ function useRetroReducer(retroId: string | null): RetroReducerState {
     }
   }, [slug, updateSlug]);
 
-  return [retroState, retroDispatch, retroToken, status];
+  return [retroState, retroDispatch, retroAuth, status];
 }
 
 async function reauthenticateByUser(retroId: string, signal: AbortSignal) {
-  const userToken = userTokenTracker.peekState()[0];
-  if (!userToken) {
+  const userData = userDataTracker.peekState()[0];
+  if (!userData) {
     return false;
   }
   try {
-    const retroToken = await retroTokenService.getRetroTokenForUser(
+    const retroAuth = await retroAuthService.getRetroAuthForUser(
       retroId,
-      userToken,
+      userData.userToken,
       signal,
     );
-    retroTokenTracker.set(retroId, retroToken);
+    retroAuthTracker.set(retroId, retroAuth);
     return true;
   } catch {
     return false;

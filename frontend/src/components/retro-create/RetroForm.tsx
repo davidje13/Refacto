@@ -7,7 +7,7 @@ import { SetPassword } from '../common/SetPassword';
 import { makeValidSlug } from '../../hooks/data/useSlugAvailability';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { useNonce } from '../../hooks/useNonce';
-import { retroService, retroTokenTracker } from '../../api/api';
+import { retroService, retroAuthTracker } from '../../api/api';
 import './RetroForm.css';
 
 export interface CreationT {
@@ -90,7 +90,7 @@ export const RetroForm = memo(
         throw new Error('Passwords do not match');
       }
 
-      const { id, token } = await retroService.create({
+      const { id, token, expires } = await retroService.create({
         name,
         slug: resolvedSlug,
         password,
@@ -98,7 +98,7 @@ export const RetroForm = memo(
         importJson,
       });
 
-      retroTokenTracker.set(id, token);
+      retroAuthTracker.set(id, { retroToken: token, expires });
       onCreate({
         id,
         slug: resolvedSlug,
