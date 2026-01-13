@@ -1,5 +1,5 @@
 import {
-  type FC,
+  type FunctionComponent,
   useState,
   useLayoutEffect,
   useEffect,
@@ -35,7 +35,7 @@ interface PropsT {
   slug: string;
 }
 
-export const RetroRouter: FC<PropsT> = ({ slug }) => {
+export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
   const [retro, retroDispatch, retroAuth, status] = useRetroReducer(retroId);
 

@@ -2,8 +2,8 @@ import {
   useRef,
   useEffect,
   memo,
-  type PropsWithChildren,
   type ElementType,
+  type ReactNode,
 } from 'react';
 import './Anchor.css';
 
@@ -11,15 +11,11 @@ interface PropsT {
   tag?: ElementType;
   name: string;
   className?: string;
+  children?: ReactNode;
 }
 
 export const Anchor = memo(
-  ({
-    tag: Tag = 'span',
-    name,
-    className = '',
-    children,
-  }: PropsWithChildren<PropsT>) => {
+  ({ tag: Tag = 'span', name, className = '', children }: PropsT) => {
     const ref = useRef<HTMLElement>(null);
 
     useEffect(() => {

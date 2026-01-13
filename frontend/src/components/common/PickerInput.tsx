@@ -27,7 +27,7 @@ export const PickerInput = memo(
             value={o.value}
             checked={value === o.value}
             onChange={(e) => {
-              if (e.target.checked) {
+              if (e.currentTarget.checked) {
                 onChange?.(o.value);
               }
             }}

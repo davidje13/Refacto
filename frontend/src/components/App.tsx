@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FunctionComponent } from 'react';
 import { Route, Switch } from 'wouter';
 import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
@@ -11,7 +11,7 @@ import { RetroCreatePage } from './retro-create/RetroCreatePage';
 import { NotFoundPage } from './not-found/NotFoundPage';
 import './App.css';
 
-export const App: FC = () => (
+export const App: FunctionComponent = () => (
   <>
     <Switch>
       <Route path="/sso/:service">

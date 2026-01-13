@@ -1,5 +1,5 @@
 import {
-  type FC,
+  type FunctionComponent,
   useState,
   useRef,
   useCallback,
@@ -36,7 +36,7 @@ interface PropsT extends Omit<
   className?: string;
 }
 
-export const Textarea: FC<PropsT> = ({
+export const Textarea: FunctionComponent<PropsT> = ({
   onChange,
   onChangeMultiline,
   value = '',
@@ -128,7 +128,7 @@ export const Textarea: FC<PropsT> = ({
       ref={textareaRef}
       className={classNames(className, extraClassNames)}
       value={value}
-      onChange={(e) => onChange?.(sanitiseInput(e.target.value))}
+      onChange={(e) => onChange?.(sanitiseInput(e.currentTarget.value))}
       style={style}
       autoComplete="off"
       {...rest}

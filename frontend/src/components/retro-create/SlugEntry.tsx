@@ -1,4 +1,4 @@
-import type { ReactNode, FC } from 'react';
+import type { ReactNode, FunctionComponent } from 'react';
 import TickBold from '../../../resources/tick-bold.svg';
 import Cross from '../../../resources/cross.svg';
 import {
@@ -49,7 +49,7 @@ const SlugAvailabilityDisplay = ({
   oldValue: string | undefined;
 }) => availabilityJsx[useSlugAvailability(slug, oldValue)];
 
-export const SlugEntry: FC<PropsT> = ({
+export const SlugEntry: FunctionComponent<PropsT> = ({
   placeholder = '',
   ariaLabel,
   value,

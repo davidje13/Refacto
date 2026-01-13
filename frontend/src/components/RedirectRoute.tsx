@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FunctionComponent } from 'react';
 import { Route, Redirect, type RedirectProps } from 'wouter';
 
 const groupRx = /:([A-Za-z0-9_]+)([?+*]?)/g;
@@ -12,7 +12,11 @@ type RedirectRouteProps = RedirectProps & {
   path: string;
 };
 
-export const RedirectRoute: FC<RedirectRouteProps> = ({ to, path, ...props }) =>
+export const RedirectRoute: FunctionComponent<RedirectRouteProps> = ({
+  to,
+  path,
+  ...props
+}) =>
   Route({
     children: (params) => <Redirect to={makePath(to, params)} {...props} />,
     path,

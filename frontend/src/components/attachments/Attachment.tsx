@@ -1,4 +1,4 @@
-import type { FC, ComponentType } from 'react';
+import type { FunctionComponent, ComponentType } from 'react';
 import type { RetroItemAttachment } from '../../shared/api-entities';
 import { GiphyAttachment } from './giphy/GiphyAttachment';
 
@@ -13,7 +13,7 @@ interface PropsT {
 const TYPES = new Map<string, ComponentType<ChildPropsT>>();
 TYPES.set('giphy', GiphyAttachment);
 
-export const Attachment: FC<PropsT> = ({ attachment }) => {
+export const Attachment: FunctionComponent<PropsT> = ({ attachment }) => {
   if (attachment) {
     const Type = TYPES.get(attachment.type);
     if (Type) {

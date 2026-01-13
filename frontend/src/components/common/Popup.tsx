@@ -1,6 +1,6 @@
 import {
-  type FC,
-  type PropsWithChildren,
+  type FunctionComponent,
+  type ReactNode,
   type SyntheticEvent,
   useId,
   useLayoutEffect,
@@ -16,9 +16,10 @@ interface PropsT {
   keys?: Record<string, () => void>;
   isOpen: boolean;
   onClose: () => void;
+  children?: ReactNode;
 }
 
-export const Popup: FC<PropsWithChildren<PropsT>> = ({
+export const Popup: FunctionComponent<PropsT> = ({
   title,
   hideTitle = false,
   keys,

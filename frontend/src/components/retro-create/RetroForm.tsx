@@ -49,7 +49,7 @@ export const RetroForm = memo(
     const importNonce = useNonce();
     const handleImportChange = useEvent(
       async (e: ChangeEvent<HTMLInputElement>) => {
-        const file = (e.target.files || [])[0];
+        const file = (e.currentTarget.files || [])[0];
         setImportJson(undefined);
         setImportError(undefined);
         if (!file) {
