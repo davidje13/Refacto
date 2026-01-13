@@ -56,12 +56,14 @@ const extractReports = json.array(
     type: json.string,
     body: json.nullable(
       json.object({
+        // CSP Violation
+        // https://developer.mozilla.org/en-US/docs/Web/API/CSPViolationReportBody
         effectiveDirective: OPTIONAL_PRIMITIVE,
+        effectivePolicy: OPTIONAL_PRIMITIVE,
         blockedURL: OPTIONAL_PRIMITIVE,
         statusCode: OPTIONAL_PRIMITIVE,
 
-        effectivePolicy: OPTIONAL_PRIMITIVE,
-
+        // Cross-Origin Opener Policy
         type: OPTIONAL_PRIMITIVE,
         previousResponseURL: OPTIONAL_PRIMITIVE,
         nextResponseURL: OPTIONAL_PRIMITIVE,
@@ -70,10 +72,21 @@ const extractReports = json.array(
         openedWindowInitialURL: OPTIONAL_PRIMITIVE,
         otherURL: OPTIONAL_PRIMITIVE,
 
+        // Permissions Policy
+        // https://w3c.github.io/webappsec-permissions-policy/#reporting
+        featureId: OPTIONAL_PRIMITIVE,
+        policyId: OPTIONAL_PRIMITIVE,
+        allowAttribute: OPTIONAL_PRIMITIVE,
+        //srcAttribute: OPTIONAL_PRIMITIVE, // potentially sensitive
+
+        // common
+        // https://developer.mozilla.org/en-US/docs/Web/API/Report/body
         id: OPTIONAL_PRIMITIVE,
 
         reason: OPTIONAL_PRIMITIVE,
         stack: OPTIONAL_PRIMITIVE,
+        //message: OPTIONAL_PRIMITIVE, // potentially sensitive
+        //disposition: OPTIONAL_PRIMITIVE, // not interesting
 
         sourceFile: OPTIONAL_PRIMITIVE,
         lineNumber: OPTIONAL_PRIMITIVE,
