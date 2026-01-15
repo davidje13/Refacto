@@ -173,7 +173,8 @@ retros with many participants in each, and larger deployments can easily be
 handled by scaling up the hardware, so most deployments will not need multiple
 instances. If you are hosting a very large number of simultaneous retros and
 _need_ additional instances, you must configure your load balancer to direct
-WebSocket requests to `/api/retros/<id>` to _consistent_ backend servers.
+HTTP and WebSocket requests to `/api/retros/<id>` to _consistent_ backend
+servers.
 
 An example NGINX configuration which achieves this:
 
@@ -186,9 +187,9 @@ upstream refacto_backend {
   server 10.0.0.2:5000;
 }
 
-upstream refacto_backend_ws {
-  # Consistent load balancing for WebSocket requests
-  hash $request_uri consistent;
+upstream refacto_backend_retro {
+  # Consistent load balancing for retro API requests
+  hash $uri consistent;
 
   # same list of servers again:
   server 10.0.0.1:5000;
@@ -213,7 +214,7 @@ server {
   }
 
   location /api/retros {
-    proxy_pass http://refacto_backend_ws;
+    proxy_pass http://refacto_backend_retro;
     proxy_http_version 1.1;
     proxy_redirect off;
     proxy_set_header X-Forwarded-For $remote_addr;

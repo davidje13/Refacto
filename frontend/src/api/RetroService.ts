@@ -45,15 +45,15 @@ export class RetroService {
     evictUsers: boolean,
   ): Promise<void> {
     const response = await fetch(
-      `${this.apiBase}/retros/${encodeURIComponent(retroId)}/password`,
+      `${this.apiBase}/retros/${encodeURIComponent(retroId)}`,
       {
-        method: 'PUT',
+        method: 'PATCH',
         cache: 'no-cache',
         headers: {
           Authorization: `Bearer ${retroToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password, evictUsers }),
+        body: JSON.stringify({ setPassword: { password, evictUsers } }),
       },
     );
     const body = await response.json();

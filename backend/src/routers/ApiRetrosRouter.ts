@@ -194,28 +194,56 @@ export class ApiRetrosRouter extends Router {
       }),
     );
 
-    retroRouter.put(
-      '/password',
-      requireAuthScope('manage'),
-      async (req, res) => {
-        const { retroId } = getPathParameters(req);
-        const body = await getBodyJson(req, { maxContentBytes: 4 * 1024 });
-        const { password, evictUsers } = json.extractObject(body, {
-          password: json.string,
-          evictUsers: json.boolean,
-        });
-        if (password.length < passwordRequirements.minLength) {
+    retroRouter.get('/', requireAuthScope('read'), async (req, res) => {
+      const { retroId } = getPathParameters(req);
+      const data = await retroService.getRetro(retroId);
+      if (!data) {
+        throw new HTTPError(404);
+      }
+      analyticsService.event(req, 'get retro snapshot');
+      sendJSON(res, data);
+    });
+
+    retroRouter.patch('/', async (req, res) => {
+      const { retroId } = getPathParameters(req);
+      const body = await getBodyJson(req, { maxContentBytes: 64 * 1024 });
+      const { setPassword, change } = json.extractObject(body, {
+        change: json.optional(json.any),
+        setPassword: json.optional(
+          json.object({
+            password: json.string,
+            evictUsers: json.boolean,
+          }),
+        ),
+      });
+
+      // early validation (to avoid partial updates)
+
+      if (setPassword) {
+        await requireAuthScope('manage').handleRequest(req, res);
+        if (setPassword.password.length < passwordRequirements.minLength) {
           throw new HTTPError(400, { body: 'Password is too short' });
         }
-        if (password.length > passwordRequirements.maxLength) {
+        if (setPassword.password.length > passwordRequirements.maxLength) {
           throw new HTTPError(400, { body: 'Password is too long' });
         }
+      }
 
-        await retroAuthService.setPassword(retroId, password, {
-          cycleKeys: evictUsers,
+      // apply
+
+      if (change) {
+        await requireAuthScope('write').handleRequest(req, res);
+        const permission = retroService.getPermissions(true);
+        await retroService.retroBroadcaster.update(retroId, change, permission);
+        analyticsService.event(req, 'patch retro content');
+      }
+
+      if (setPassword) {
+        await retroAuthService.setPassword(retroId, setPassword.password, {
+          cycleKeys: setPassword.evictUsers,
         });
         let evicted = 0;
-        if (evictUsers) {
+        if (setPassword.evictUsers) {
           const connections = activeConnections.listAndPurge(retroId);
           evicted = connections.size;
           const now = Date.now();
@@ -230,12 +258,13 @@ export class ApiRetrosRouter extends Router {
           }
         }
         analyticsService.event(req, 'change retro password', {
-          evictUsers,
+          evictUsers: setPassword.evictUsers,
           evicted,
         });
-        return sendJSON(res, {});
-      },
-    );
+      }
+
+      return sendJSON(res, {});
+    });
 
     retroRouter.get(
       '/export/:format',
