@@ -42,8 +42,8 @@ The configuration file will be created at `/usr/local/etc/mongod.conf` on macOS
 and `/etc/mongod.conf` on Ubuntu.
 
 _Note: MongoDB's default security model is enough for local development, but you
-should lock it down further in deployments. See the
-[security documentation](./SECURITY.md) for details._
+should lock it down further in deployments. See [SECURITY.md](./SECURITY.md) for
+details._
 
 ### Redis
 
@@ -265,7 +265,8 @@ line containing a JSON-encoded object of the form:
 ```
 
 When analytics are enabled, client-related log entries will also contain browser
-and OS versions (see the [security documentation](./SECURITY.md)).
+and OS versions (see the configuration options in
+[SECURITY.md](./SECURITY.md#analytics--diagnostics)).
 
 #### Log rotation
 

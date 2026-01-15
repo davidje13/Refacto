@@ -143,117 +143,95 @@ will invalidate any active sessions, forcing all users to reauthenticate.**
 
 ### User authentication (access control)
 
-Before configuring authentication, you should create the database, collections
-and indices necessary; the `refacto` user will not have permission to change
-these. You can do this by running the application without exposing it to the
-internet; after startup the configuration will be complete.
+Refacto manages its own database, creating and modifying collections and indices
+automatically. For this reason, it is best to configure mongo access with the
+`readWrite` and `dbAdmin` roles within the database you want it to use.
 
-1. Create users:
+These permissions are quite broad, but enabling user authentication is still
+beneficial for a number of reasons:
 
-   ```
-   use admin
-   db.createUser({
-     user: 'admin',
-     pwd: '<something secret>',
-     roles: [
-       { role: 'userAdminAnyDatabase', db: 'admin' },
-       'readWriteAnyDatabase',
-     ],
-   });
+- Without authentication, any user on the machine is able to connect to MongoDB
+  and perform any operation (and if MongoDB is exposed on a network, any machine
+  which can reach the server can connect and perform any operation);
+- Admin-level commands such as managing users and clusters can be restricted;
+- Access to other databases hosted in the same MongoDB instance can be
+  restricted.
 
-   use refacto
-   db.createUser({
-     user: 'refacto',
-     pwd: '<another secret>',
-     roles: [
-       { role: 'readWrite', db: 'refacto' },
-     ],
-   });
-   ```
+To set up user roles from scratch in a MongoDB deployment:
 
-2. Enforce authorization:
+1.  Create an admin user: (this will be used to create the other users)
 
-   ```sh
-   echo 'security.authorization: enabled' >> /usr/local/etc/mongod.conf
-   brew services restart mongodb
-   ```
+    - Pick a secure password for the admin user, and note it somewhere safe. For
+      example:
 
-You can now connect as the `admin` user:
+      ```sh
+      openssl rand -base64 30 | tr '/+' '_-'
+      ```
+
+    - Create the user:
+
+      ```sh
+      mongosh admin --eval 'db.createUser({user:"my-admin-user",pwd:passwordPrompt(),roles:["root"],mechanisms:["SCRAM-SHA-256"]})';
+      ```
+
+      Replace `my-admin-user` with the username you want to use.
+
+      Note: if you want to specify the password programmatically rather than
+      entering it manually, you can pipe the password to the `mongosh` command
+      via `stdin`.
+
+2.  Create a refacto user with access to the specific database you plan to use:
+
+    ```sh
+    mongosh my-refacto-db --authenticationDatabase=admin -u my-admin-user -p \
+      --eval 'db.createUser({user:"my-refacto-user",pwd:passwordPrompt(),roles:[{"db":"my-refacto-db","role":"readWrite"},{"db":"my-refacto-db","role":"dbAdmin"}],mechanisms:["SCRAM-SHA-256"]})';
+    ```
+
+    Replace all occurrences of `my-refacto-db` with the database name you are
+    using, and replace `my-refacto-user` with the username you want to use.
+
+    Note: if you want to specify the passwords programmatically rather than
+    entering them manually, you can pipe the passwords to the `mongosh` command
+    via `stdin`, separated by newlines (admin password + newline + refacto user
+    password).
+
+3.  Enforce authorization:
+
+    Check the location of your `mongod.conf` file
+    ([typical locations](https://www.mongodb.com/docs/manual/reference/configuration-options/#configuration-file))
+    and modify it to enable authorization:
+
+    ```sh
+    echo 'security.authorization: enabled' >> /etc/mongod.conf
+    ```
+
+    Restart MongoDB: (the exact command will depend on your system and how you
+    installed it)
+
+    ```sh
+    sudo systemctl restart mongod
+    ```
+
+You can now connect as the `my-admin-user` user:
 
 ```sh
-mongo --authenticationDatabase admin -u admin -p
+mongosh --authenticationDatabase admin -u my-admin-user -p
 ```
 
-And configure Refacto to connect as the `refacto` user:
+And configure Refacto to connect as the `my-refacto-user` user:
 
 ```sh
-DB_URL="mongodb://refacto:<pass>@localhost:27017/refacto" ./index.js
+DB_URL="mongodb://my-refacto-user:<pass>@localhost:27017/my-refacto-db" ./index.js
 ```
 
 <https://docs.mongodb.com/manual/tutorial/enable-authentication/>
 
 ### Encrypted communication
 
-To enable SSL (encrypted) communications, but without server or client identity
-checks:
-
-```sh
-# macOS
-MONGO_VAR="/usr/local/var/mongodb"
-MONGO_CONF="/usr/local/etc/mongod.conf"
-
-# Ubuntu
-MONGO_VAR="/var/mongodb"
-MONGO_CONF="/etc/mongod.conf"
-
-openssl req \
-  -x509 \
-  -newkey rsa:4096 \
-  -keyout "$MONGO_VAR/server-key.pem" \
-  -out "$MONGO_VAR/server-cert.pem" \
-  -subj "/C=/ST=/L=/O=/OU=/CN=localhost" \
-  -nodes \
-  -days 36500 \
-  -batch
-
-cat \
-  "$MONGO_VAR/server-key.pem" \
-  "$MONGO_VAR/server-cert.pem" \
-  > "$MONGO_VAR/server.pem"
-
-cat <<EOF >> "$MONGO_CONF"
-net.ssl:
-  mode: requireSSL
-  PEMKeyFile: $MONGO_VAR/server.pem
-EOF
-
-# macOS
-brew services restart mongodb
-
-# Ubuntu
-sudo service mongod restart
-```
-
-After enabling security, change the database URL when starting Refacto:
-
-```sh
-DB_URL="mongodb://localhost:27017/refacto?ssl=true" ./index.js
-```
-
-Note that after enabling this, unless you also configure identity checks, you
-will need to skip certificate validation when connecting via the commandline:
-
-```sh
-mongo --ssl --sslAllowInvalidCertificates
-```
-
-### Client / server identity checks
-
-If the database is running on a separate server, you should enable client &
-server identity checks. The following resources offer guidance:
-
-- <https://docs.mongodb.com/manual/tutorial/configure-ssl/>
-- <https://medium.com/@rajanmaharjan/secure-your-mongodb-connections-ssl-tls-92e2addb3c89>
+If the database is running on a separate server, you should enable encrypted
+communication (to avoid eavesdropping) as well as client and server identity
+checks (to avoid man-in-the-middle attacks). See the
+[MongoDB documentation for guidance](https://www.mongodb.com/docs/manual/tutorial/configure-ssl/).
 
 ## Analytics / Diagnostics
 

@@ -33,9 +33,8 @@ updating to a later version) by adding this to the `docker run` command:
 --mount type=volume,src=my-refacto-data,dst=/data
 ```
 
-Or see [SERVICES.md](docs/SERVICES.md) for details on using an external
-database. Note that SQLite databases cannot be shared between multiple proceses
-at once.
+Or see [SERVICES.md](./SERVICES.md) for details on using an external database.
+Note that SQLite databases cannot be shared between multiple proceses at once.
 
 The [releases](https://github.com/davidje13/Refacto/releases) also contain
 `Dockerfile`s if you wish to generate your own docker image, or you can
@@ -116,8 +115,7 @@ By default:
 - haveibeenpwned integration _is_ enabled;
 - the server listens on port `5000`.
 
-See [SERVICES.md](docs/SERVICES.md) and [SECURITY.md](docs/SECURITY.md) for
-details.
+See [SERVICES.md](./SERVICES.md) and [SECURITY.md](./SECURITY.md) for details.
 
 The full list of recognised configuration options (and their default values) can
 be found in [config/default.ts](../backend/src/config/default.ts) (nested
@@ -229,5 +227,5 @@ server {
 ```
 
 See the
-[NGINX upstream documentation](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)
+[NGINX upstream module documentation](https://nginx.org/en/docs/http/ngx_http_upstream_module.html)
 for more details.

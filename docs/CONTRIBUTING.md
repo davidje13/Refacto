@@ -19,9 +19,9 @@ changed.
 
 By default, this will run a mock Google authentication provider and an in-memory
 database. To enable real authentication providers (e.g. Google sign in) and data
-persistence, see the [services documentation](./SERVICES.md). Note that all
-backend state (e.g. created retros) is lost when the backend rebuilds if you are
-using the default in-memory database.
+persistence, see [SERVICES.md](./SERVICES.md). Note that all backend state (e.g.
+created retros) is lost when the backend rebuilds if you are using the default
+in-memory database.
 
 ## Running tests
 
@@ -106,11 +106,11 @@ This client ID is configured for use on `localhost` on ports 80, 443, 8080,
 8443, and 5000. The client secret is not required, as Refacto does not access
 any personal data.
 
-See the [services documentation](./SERVICES.md) for details on setting up a
-database and integrating with authentication providers.
+See [SERVICES.md](./SERVICES.md) for details on setting up a database and
+integrating with authentication providers.
 
-See the [security documentation](./SECURITY.md) for additional considerations
-when running in production.
+See [SECURITY.md](./SECURITY.md) for additional considerations when running in
+production.
 
 ## Dependency management
 

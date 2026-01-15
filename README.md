@@ -2,9 +2,9 @@
 
 Refacto makes it easy to run team retros with remote team members. You can use
 the official public deployment at <https://retro.davidje13.com/>, or
-[host your own instance](docs/DEPLOYING.md).
+[host your own instance](./docs/DEPLOYING.md).
 
-![Refacto](docs/screenshot.png)
+![Refacto](./docs/screenshot.png)
 
 ## Running Locally
 
@@ -17,20 +17,20 @@ npm start
 The site will be available at <http://localhost:5000/>, using a mock Google
 authentication server and an in-memory database.
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for full guidance on local
+See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) for full guidance on local
 development.
 
 ## Self-Hosting
 
-See the [deploying documentation](docs/DEPLOYING.md) for details on hosting your
-own instance of Refacto.
+See [DEPLOYING.md](./docs/DEPLOYING.md) for details on hosting your own instance
+of Refacto.
 
 ## Services
 
-See the [services documentation](docs/SERVICES.md) for details on setting up a
-database and integrating with authentication providers.
+See [SERVICES.md](./docs/SERVICES.md) for details on setting up a database and
+integrating with authentication providers.
 
 ## Extra Security
 
-See the [security documentation](docs/SECURITY.md) for details on configuring
-additional security for deployments.
+See [SECURITY.md](./docs/SECURITY.md) for details on configuring additional
+security for deployments.
