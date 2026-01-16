@@ -15,11 +15,10 @@ import {
   hasExt,
   printSize,
 } from './helpers/io.mjs';
-import { stat, rename, chmod } from 'node:fs/promises';
+import { chmod } from 'node:fs/promises';
 import { runMultipleTasks, runTask } from './helpers/proc.mjs';
 
 const PARALLEL_BUILD = (process.env['PARALLEL_BUILD'] ?? 'true') === 'true';
-const KEEP_DEPS = process.argv.slice(2).includes('--keep-deps');
 
 const packages = [
   { dir: 'frontend', format: '35' },

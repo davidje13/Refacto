@@ -65,10 +65,7 @@ if (!testEnv['TARGET_HOST']) {
   const port = Number.parseInt(process.env['PORT'] ?? '5010');
 
   log('Building application...');
-  await runTask({
-    command: join(basedir, 'scripts', 'build.mjs'),
-    args: ['--keep-deps'],
-  });
+  await runTask({ command: join(basedir, 'scripts', 'build.mjs') });
 
   log('Using mock authentication provider');
   const mockSSOPort = port + 2;
