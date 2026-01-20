@@ -1,9 +1,10 @@
 import {
   render,
   fireEvent,
+  role,
+  text,
   type RenderResult,
 } from 'flexible-testing-library-react';
-import { css } from '../../test-helpers/queries';
 
 import { TabControl } from './TabControl';
 
@@ -12,13 +13,13 @@ describe('TabControl', () => {
     {
       key: 'a',
       title: 'A',
-      content: <strong>A</strong>,
+      content: <p>first</p>,
       className: 'cls',
     },
     {
       key: 'b',
       title: 'B',
-      content: <em>B</em>,
+      content: <p>second</p>,
     },
   ];
 
@@ -27,7 +28,7 @@ describe('TabControl', () => {
 
   beforeEach(() => {
     dom = render(<TabControl tabs={tabs} />);
-    headers = dom.getAllBy(css('button'));
+    headers = dom.getAllBy(role('tab'));
   });
 
   it('renders a tab header for each item', () => {
@@ -35,27 +36,27 @@ describe('TabControl', () => {
   });
 
   it('assigns optional class names to headers', () => {
-    expect(headers[0]).toHaveClass('cls');
-    expect(headers[1]).not.toHaveClass('cls');
+    expect(headers[0]?.parentElement).toHaveClass('cls');
+    expect(headers[1]?.parentElement).not.toHaveClass('cls');
   });
 
   it('marks the current tab as active', () => {
-    expect(headers[0]).toHaveClass('active');
-    expect(headers[1]).not.toHaveClass('active');
+    expect(headers[0]?.parentElement).toHaveClass('active');
+    expect(headers[1]?.parentElement).not.toHaveClass('active');
   });
 
   it('renders the first tab by default', () => {
-    expect(dom).toContainElementWith(css('strong'));
-    expect(dom).not.toContainElementWith(css('em'));
+    expect(dom).toContainElementWith(text('first'));
+    expect(dom).not.toContainElementWith(text('second'));
   });
 
   it('switches tab when a header is clicked', () => {
     fireEvent.click(headers[1]!);
 
-    expect(dom).not.toContainElementWith(css('strong'));
-    expect(dom).toContainElementWith(css('em'));
+    expect(dom).not.toContainElementWith(text('first'));
+    expect(dom).toContainElementWith(text('second'));
 
-    expect(headers[0]).not.toHaveClass('active');
-    expect(headers[1]).toHaveClass('active');
+    expect(headers[0]?.parentElement).not.toHaveClass('active');
+    expect(headers[1]?.parentElement).toHaveClass('active');
   });
 });

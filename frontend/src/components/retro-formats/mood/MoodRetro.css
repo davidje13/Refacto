@@ -43,7 +43,7 @@
   }
 
   .columns > section,
-  .tab-control > section,
+  .tab-content > section,
   & section.actions {
     box-sizing: border-box;
     padding: var(--base-padding) var(--base-padding)
@@ -101,12 +101,18 @@
     font-size: 0.9em;
     padding: 0.8em 4px;
     font-weight: bolder;
+    text-align: center;
     color: #ffffff; /* WIP: dark mode */
     outline: none;
+    flex: 1;
 
     transition:
       margin-top 0.1s ease-out,
       padding-bottom 0.1s ease-out;
+  }
+
+  .tab-item:has(:focus-visible) {
+    box-shadow: 0 0 0 2px inset var(--focus-border);
   }
 
   .tab-item:not(.active) {
@@ -407,7 +413,7 @@
       display: none;
     }
 
-    .tab-control > section {
+    .tab-content > section {
       padding-bottom: 192px;
       min-height: 100vh;
 

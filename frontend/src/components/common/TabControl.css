@@ -1,15 +1,17 @@
 .tab-bar {
-  & ul {
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-  }
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+}
 
-  & li {
-    flex: 1;
-  }
+.tab-item {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
 
-  .tab-item {
-    width: 100%;
+  & input {
+    position: absolute;
+    left: -100px;
+    opacity: 0;
   }
 }
