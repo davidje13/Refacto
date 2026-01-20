@@ -33,8 +33,9 @@ describe('API auth', () => {
       const userToken = getUserToken(hooks, ownerId);
 
       const response = await request(server)
-        .get(`/api/auth/tokens/${retroId}/user`)
+        .post(`/api/auth/tokens/${retroId}/user`)
         .set('Authorization', `Bearer ${userToken}`)
+        .send({})
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -48,8 +49,9 @@ describe('API auth', () => {
       const userToken = getUserToken(hooks, 'not-my-id');
 
       const response = await request(server)
-        .get(`/api/auth/tokens/${retroId}/user`)
+        .post(`/api/auth/tokens/${retroId}/user`)
         .set('Authorization', `Bearer ${userToken}`)
+        .send({})
         .expect(403)
         .expect('Content-Type', /application\/json/);
 
@@ -60,15 +62,19 @@ describe('API auth', () => {
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
-      await request(server).get(`/api/auth/tokens/${retroId}/user`).expect(401);
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}/user`)
+        .send({})
+        .expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
       await request(server)
-        .get(`/api/auth/tokens/${retroId}/user`)
+        .post(`/api/auth/tokens/${retroId}/user`)
         .set('Authorization', 'Bearer Foo')
+        .send({})
         .expect(401);
     });
   });
@@ -163,8 +169,9 @@ describe('API auth with my retros disabled', () => {
       const userToken = getUserToken(hooks, ownerId);
 
       const response = await request(server)
-        .get(`/api/auth/tokens/${retroId}/user`)
+        .post(`/api/auth/tokens/${retroId}/user`)
         .set('Authorization', `Bearer ${userToken}`)
+        .send({})
         .expect(403)
         .expect('Content-Type', /application\/json/);
 

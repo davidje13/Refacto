@@ -42,9 +42,13 @@ export class RetroAuthService {
     const response = await fetch(
       `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}/user`,
       {
-        method: 'GET',
+        method: 'POST',
         cache: 'no-cache',
-        headers: { Authorization: `Bearer ${userToken}` },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
         signal,
       },
     );

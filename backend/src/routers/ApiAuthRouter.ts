@@ -29,7 +29,7 @@ export class ApiAuthRouter extends Router {
         userAuthService.readAndVerifyToken(token),
     });
 
-    this.get('/tokens/:retroId/user', userAuth, async (req, res) => {
+    this.post('/tokens/:retroId/user', userAuth, async (req, res) => {
       const userId = userAuth.getTokenData(req).sub;
       const { retroId } = getPathParameters(req);
 
