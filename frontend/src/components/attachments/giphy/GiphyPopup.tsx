@@ -76,7 +76,7 @@ export const GiphyPopup = memo(
           href="https://giphy.com/"
           className="credit"
           target="_blank"
-          rel="noreferrer noopener"
+          rel="noopener noreferrer"
         >
           <GiphyAttribution />
         </a>
