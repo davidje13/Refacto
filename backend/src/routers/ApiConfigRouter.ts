@@ -1,4 +1,4 @@
-import { Router, sendJSON } from 'web-listener';
+import { Router, staticJSON } from 'web-listener';
 import type {
   ClientConfig,
   PasswordRequirements,
@@ -22,6 +22,11 @@ export class ApiConfigRouter extends Router {
       passwordRequirements,
     };
 
-    this.get('/', (_, res) => sendJSON(res, clientConfig));
+    this.get(
+      '/',
+      staticJSON(clientConfig, {
+        headers: { 'cache-control': 'public, max-age=0' },
+      }),
+    );
   }
 }

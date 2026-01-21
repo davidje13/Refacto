@@ -1,5 +1,5 @@
 import {
-  getBodyJson,
+  getBodyJSON,
   getPathParameters,
   HTTPError,
   requireAuthScope,
@@ -37,7 +37,7 @@ export class ApiRetroArchivesRouter extends Router<
     this.post('/', requireAuthScope('write'), async (req, res) => {
       const { retroId } = getPathParameters(req);
       const data = extractRetroData(
-        await getBodyJson(req, { maxContentBytes: 512 * 1024 }),
+        await getBodyJSON(req, { maxContentBytes: 512 * 1024 }),
       );
       if (!data.format) {
         throw new HTTPError(400, { body: 'No format given' });

@@ -1,6 +1,6 @@
 import { buildAuthAPI } from 'authentication-backend/backend';
 import {
-  getBodyJson,
+  getBodyJSON,
   getQuery,
   HTTPError,
   sendJSON,
@@ -48,7 +48,7 @@ function getInsecureAuthBackend(
   return {
     addRoutes: (app) => {
       app.post('/api/sso/public', async (req, res) => {
-        const body = await getBodyJson(req, { maxContentBytes: 5 * 1024 });
+        const body = await getBodyJSON(req, { maxContentBytes: 5 * 1024 });
         const { externalToken } = json.extractObject(body, {
           externalToken: json.string,
         });

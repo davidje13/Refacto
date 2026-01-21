@@ -1,5 +1,5 @@
 import {
-  getBodyJson,
+  getBodyJSON,
   getPathParameters,
   HTTPError,
   requireBearerAuth,
@@ -59,7 +59,7 @@ export class ApiAuthRouter extends Router {
 
     this.post('/tokens/:retroId', async (req, res) => {
       const { retroId } = getPathParameters(req);
-      const body = await getBodyJson(req, { maxContentBytes: 4 * 1024 });
+      const body = await getBodyJSON(req, { maxContentBytes: 4 * 1024 });
       const { password } = json.extractObject(body, { password: json.string });
 
       const begin = Date.now();

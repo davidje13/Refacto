@@ -1,4 +1,4 @@
-import { getBodyJson, HTTPError, Router } from 'web-listener';
+import { getBodyJSON, HTTPError, Router } from 'web-listener';
 import type { ErrorReport } from '../shared/api-entities';
 import type { AnalyticsService } from '../services/AnalyticsService';
 import { json } from '../helpers/json';
@@ -8,7 +8,7 @@ export class ApiDiagnosticsRouter extends Router {
     super();
 
     this.post('/error', async (req, res) => {
-      const body = await getBodyJson(req, { maxContentBytes: 16 * 1024 });
+      const body = await getBodyJSON(req, { maxContentBytes: 16 * 1024 });
       for (const report of extractErrors(body)) {
         analyticsService.clientError(req, `Frontend error: ${report.message}`, {
           error: report.error,
@@ -21,7 +21,7 @@ export class ApiDiagnosticsRouter extends Router {
       if (req.headers['content-type'] !== 'application/reports+json') {
         throw new HTTPError(415, { body: 'Invalid report' });
       }
-      const body = await getBodyJson(req, { maxContentBytes: 64 * 1024 });
+      const body = await getBodyJSON(req, { maxContentBytes: 64 * 1024 });
       const now = Date.now();
       for (const item of extractReports(body)) {
         const time = now - (item.age ?? 0);

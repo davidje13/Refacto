@@ -1,7 +1,7 @@
 import type { IncomingMessage } from 'node:http';
 import {
   addTeardown,
-  getBodyJson,
+  getBodyJSON,
   getPathParameter,
   getPathParameters,
   hasAuthScope,
@@ -86,7 +86,7 @@ export class ApiRetrosRouter extends Router {
       userAuth,
       async (req, res) => {
         const userId = userAuth.getTokenData(req).sub;
-        const body = await getBodyJson(req, { maxContentBytes: 512 * 1024 });
+        const body = await getBodyJSON(req, { maxContentBytes: 512 * 1024 });
         const { slug, name, password, importJson } = json.extractObject(body, {
           slug: json.string,
           name: json.string,
@@ -206,7 +206,7 @@ export class ApiRetrosRouter extends Router {
 
     retroRouter.patch('/', async (req, res) => {
       const { retroId } = getPathParameters(req);
-      const body = await getBodyJson(req, { maxContentBytes: 64 * 1024 });
+      const body = await getBodyJSON(req, { maxContentBytes: 64 * 1024 });
       const { setPassword, change } = json.extractObject(body, {
         change: json.optional(json.any),
         setPassword: json.optional(
