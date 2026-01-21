@@ -647,6 +647,12 @@ export const openapi = Buffer.from(
         UnauthorizedError: {
           description:
             'The required access token was not provided, or is invalid.',
+          headers: {
+            'WWW-Authenticate': {
+              schema: { type: 'string' },
+              example: 'Bearer realm="user"',
+            },
+          },
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/Error' },
@@ -656,6 +662,12 @@ export const openapi = Buffer.from(
         ForbiddenError: {
           description:
             'The access token provided does not have permission to perform this operation.',
+          headers: {
+            'WWW-Authenticate': {
+              schema: { type: 'string' },
+              example: 'Bearer realm="user", scope="write"',
+            },
+          },
           content: {
             'application/json': {
               schema: { $ref: '#/components/schemas/Error' },

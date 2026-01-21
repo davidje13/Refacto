@@ -133,7 +133,7 @@ export const RestExample = memo(
             );
             setResponse({
               state: 'done',
-              content: await readResponse(response),
+              content: await readResponse(root, def, response),
             });
           } catch (err) {
             setResponse({
@@ -220,12 +220,24 @@ const STATUS_TEXT = new Map([
   ['422', 'Unprocessable Content'],
 ]);
 
-async function readResponse(response: Response): Promise<ReactNode[]> {
+async function readResponse(
+  root: OpenApiSpec,
+  def: MethodSpec,
+  response: Response,
+): Promise<ReactNode[]> {
+  const expectedHeaders = new Set(ALWAYS_ALLOW_HEADERS);
+  for (const resRef of Object.values(def.responses)) {
+    const res = resolveRef(root, resRef);
+    for (const header of Object.keys(res.headers ?? {})) {
+      expectedHeaders.add(header.toLowerCase());
+    }
+  }
+
   const out: ReactNode[] = [
     `HTTP/1.1 ${response.status} ${response.statusText}\n`,
   ];
   for (const [header, value] of response.headers) {
-    if (!OMIT_HEADERS.has(header)) {
+    if (expectedHeaders.has(header.toLowerCase())) {
       out.push(`${header}: ${value}\n`);
     }
   }
@@ -244,18 +256,7 @@ async function readResponse(response: Response): Promise<ReactNode[]> {
   return out;
 }
 
-const OMIT_HEADERS = new Set([
-  'cache-control',
-  'connection',
-  'content-length',
-  'cross-origin-resource-policy',
-  'date',
-  'expires',
-  'keep-alive',
-  'pragma',
-  'transfer-encoding',
-  'x-content-type-options',
-]);
+const ALWAYS_ALLOW_HEADERS = new Set(['content-type', 'location']);
 
 const useSelect = <T,>(
   name: string,
