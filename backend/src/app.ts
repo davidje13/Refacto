@@ -15,6 +15,7 @@ import {
 } from 'web-listener';
 import { Hasher } from 'pwd-hasher';
 import { CollectionStorage } from 'collection-storage';
+import { ApiSpecRouter } from './routers/ApiSpecRouter';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
 import { ApiDiagnosticsRouter } from './routers/ApiDiagnosticsRouter';
 import { ApiAuthRouter } from './routers/ApiAuthRouter';
@@ -117,6 +118,8 @@ export const appFactory = async (
     addSecurityHeaders(req, res, getClient);
     return CONTINUE;
   });
+
+  app.mount('/api', new ApiSpecRouter());
 
   app.mount('/api', (_, res) => {
     removeHtmlSecurityHeaders(res);
