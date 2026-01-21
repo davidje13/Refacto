@@ -79,3 +79,18 @@
     right: 0;
   }
 }
+
+@media print {
+  .top-header {
+    box-shadow: none;
+    background: none;
+
+    .back {
+      display: none;
+    }
+
+    .menu {
+      display: none;
+    }
+  }
+}

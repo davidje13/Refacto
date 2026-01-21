@@ -155,3 +155,20 @@ a:focus {
   text-decoration: underline;
   color: var(--link-text-hover);
 }
+
+@media print {
+  html {
+    --page-back: #ffffff;
+    --header-back: none;
+    --modal-back: #ffffff;
+    --primary-back: #ffffff;
+    --primary-text: #000000;
+    --beige-back: #ffffff;
+    --beige-shadow: #808080;
+  }
+
+  a:link,
+  a:visited {
+    text-decoration: underline;
+  }
+}

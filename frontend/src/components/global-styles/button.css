@@ -32,3 +32,11 @@
     background: var(--beige-shadow);
   }
 }
+
+@media print {
+  .global-button {
+    background: none !important;
+    color: var(--primary-text) !important;
+    border: 1px solid var(--beige-shadow);
+  }
+}

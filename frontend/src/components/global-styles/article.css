@@ -1,5 +1,5 @@
 .global-article {
-  padding-bottom: 128px;
+  padding-bottom: 50vh;
 
   & section {
     margin: 64px auto;
@@ -11,6 +11,8 @@
       font-size: 1.2em;
       font-weight: bolder;
       margin-bottom: 16px;
+      break-inside: avoid;
+      break-after: avoid;
     }
 
     & p,
@@ -28,6 +30,17 @@
 
     & ul.narrow li {
       margin: 4px 0 4px 24px;
+    }
+  }
+}
+
+@media print {
+  .global-article {
+    padding-bottom: 0;
+
+    & section {
+      width: auto !important;
+      max-width: none;
     }
   }
 }
