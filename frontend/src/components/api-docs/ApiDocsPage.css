@@ -1,0 +1,155 @@
+.page-api-docs {
+  .endpoint {
+    margin: 16px 0;
+    border: 1px solid var(--beige-shadow);
+    padding: 0 8px;
+
+    & > summary {
+      margin: 0 -8px;
+      padding: 8px;
+      background: var(--beige-shadow);
+      font-size: 1.1em;
+      font-weight: bolder;
+      text-align: start;
+      cursor: pointer;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      break-inside: avoid;
+
+      & h3 {
+        display: inline;
+      }
+
+      & p {
+        margin: 4px 0 0;
+        font-weight: lighter;
+        font-size: 0.8em;
+      }
+    }
+
+    & section {
+      margin: 16px 0 8px;
+
+      & h4 {
+        font-size: 1.05em;
+        font-weight: bolder;
+        margin-bottom: 8px;
+      }
+    }
+
+    & summary + section {
+      margin-top: 8px;
+    }
+  }
+
+  .tab-control {
+    margin: 16px 0 8px;
+  }
+
+  .tab-bar {
+    margin-bottom: -1px;
+  }
+
+  .tab-item {
+    border: 1px solid transparent;
+    border-bottom: none;
+    padding: 4px 8px;
+    z-index: 1;
+
+    &.active {
+      border-color: var(--beige-shadow);
+      background: var(--beige-back);
+      font-weight: bolder;
+    }
+
+    &:has(:focus-visible) {
+      box-shadow: 0 0 0 2px inset var(--focus-border);
+    }
+  }
+
+  .tab-content {
+    border: 1px solid var(--beige-shadow);
+    padding: 0 8px;
+  }
+
+  .json-spec {
+    padding: 8px 0;
+    overflow: auto;
+    max-height: 400px;
+  }
+
+  .rest-run {
+    display: block;
+    margin: 24px auto;
+  }
+
+  .rest-request,
+  .rest-response {
+    background: #333333;
+    color: #eeeeee;
+    margin: 24px 16px;
+    padding: 8px;
+    border: 1px solid #000000;
+    overflow: auto;
+
+    & input[type='text'],
+    & input[type='password'] {
+      border: 1px solid #808080;
+      background: #333333;
+      color: #eeeeee;
+
+      &::placeholder {
+        color: #eeeeee;
+        opacity: 0.6;
+      }
+    }
+
+    & textarea {
+      display: block;
+      resize: vertical;
+      width: 100%;
+      min-height: calc(6px + 1em);
+      field-sizing: content;
+      margin: -4px;
+      padding: 3px;
+      border: 1px solid #808080;
+      background: #333333;
+      color: #eeeeee;
+    }
+  }
+
+  .login-form {
+    margin: 0;
+  }
+}
+
+@media print {
+  .page-api-docs {
+    .endpoint > summary {
+      background: none;
+      position: static;
+    }
+
+    .json-spec {
+      max-height: none;
+    }
+
+    .rest-request,
+    .rest-response {
+      background: none;
+      color: var(--primary-text);
+
+      & textarea,
+      & input[type='text'],
+      & input[type='password'] {
+        background: none;
+        color: var(--primary-text);
+      }
+
+      & input[type='text'] {
+        field-sizing: content;
+      }
+    }
+  }
+}

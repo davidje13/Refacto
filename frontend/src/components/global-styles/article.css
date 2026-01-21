@@ -7,6 +7,10 @@
     max-width: calc(100% - 32px);
     text-align: justify;
 
+    &.wide {
+      width: 800px;
+    }
+
     & h2 {
       font-size: 1.2em;
       font-weight: bolder;
@@ -30,6 +34,11 @@
 
     & ul.narrow li {
       margin: 4px 0 4px 24px;
+    }
+
+    & section {
+      width: auto;
+      max-width: none;
     }
   }
 }

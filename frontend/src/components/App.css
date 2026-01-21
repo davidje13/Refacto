@@ -156,6 +156,11 @@ a:focus {
   color: var(--link-text-hover);
 }
 
+code {
+  font-family: monospace;
+  font-size: 1.1em;
+}
+
 @media print {
   html {
     --page-back: #ffffff;

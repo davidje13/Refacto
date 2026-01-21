@@ -1,0 +1,28 @@
+ul.json-spec-object {
+  list-style: none;
+
+  & > li {
+    margin: 8px 0 0 24px;
+    padding: 0;
+  }
+}
+
+.json-description {
+  font-size: 0.9em;
+  margin: 0 0 8px;
+}
+
+.json-type {
+  font-weight: bolder;
+  color: var(--green-text-on-white);
+}
+
+.json-toggle {
+  padding: 0 8px;
+  border: 1px solid var(--beige-shadow);
+
+  &.active {
+    margin-right: 4px;
+    background: var(--beige-shadow);
+  }
+}

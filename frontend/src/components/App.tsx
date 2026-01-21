@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import { lazy, Suspense, type FunctionComponent } from 'react';
 import { Route, Switch } from 'wouter';
 import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
@@ -10,6 +10,10 @@ import { GuidancePage } from './guidance/GuidancePage';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
 import { NotFoundPage } from './not-found/NotFoundPage';
 import './App.css';
+
+const LazyApiDocsPage = lazy(() =>
+  import('./api-docs/ApiDocsPage').then((m) => ({ default: m.ApiDocsPage })),
+);
 
 export const App: FunctionComponent = () => (
   <>
@@ -25,6 +29,11 @@ export const App: FunctionComponent = () => (
       </Route>
       <Route path="/guidance">
         <GuidancePage />
+      </Route>
+      <Route path="/api-docs">
+        <Suspense fallback={LOADER}>
+          <LazyApiDocsPage />
+        </Suspense>
       </Route>
       <Route path="/create">
         <RetroCreatePage />
@@ -47,3 +56,5 @@ export const App: FunctionComponent = () => (
     <Footer />
   </>
 );
+
+const LOADER = <div className="loader">Loading&hellip;</div>;

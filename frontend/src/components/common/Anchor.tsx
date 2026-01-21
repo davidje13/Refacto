@@ -10,18 +10,20 @@ import './Anchor.css';
 interface PropsT {
   tag?: ElementType;
   name: string;
+  onVisit?: (target: HTMLElement) => void;
   className?: string;
   children?: ReactNode;
 }
 
 export const Anchor = memo(
-  ({ tag: Tag = 'span', name, className = '', children }: PropsT) => {
+  ({ tag: Tag = 'span', name, onVisit, className = '', children }: PropsT) => {
     const ref = useRef<HTMLElement>(null);
 
     useEffect(() => {
       const anchor = window.location.hash.substring(1);
-      if (anchor === name && ref.current && ref.current.scrollIntoView) {
-        ref.current.scrollIntoView();
+      if (anchor === name && ref.current) {
+        ref.current.scrollIntoView?.();
+        onVisit?.(ref.current);
       }
     }, [ref, name]);
 
