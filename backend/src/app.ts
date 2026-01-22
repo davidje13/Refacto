@@ -30,7 +30,7 @@ import type { Logger } from './services/LogService';
 import { GiphyService } from './services/GiphyService';
 import { RetroService } from './services/RetroService';
 import { RetroArchiveService } from './services/RetroArchiveService';
-import { RetroAuthService } from './services/RetroAuthService';
+import { RetroAuthService, ScopesError } from './services/RetroAuthService';
 import { UserAuthService } from './services/UserAuthService';
 import { AnalyticsService } from './services/AnalyticsService';
 import { getAuthBackend } from './auth';
@@ -167,6 +167,9 @@ export const appFactory = async (
     (_, res) => res.writeHead(404).end(),
     typedErrorHandler(ValidationError, (error) => {
       throw new HTTPError(422, { body: error.message, cause: error });
+    }),
+    typedErrorHandler(ScopesError, (error) => {
+      throw new HTTPError(403, { body: error.message, cause: error });
     }),
     jsonErrorHandler((error) => ({ error: error.body }), {
       onlyIfRequested: false,

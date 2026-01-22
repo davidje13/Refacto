@@ -32,6 +32,15 @@ export class ApiAuthRouter extends Router {
     this.post('/tokens/:retroId/user', userAuth, async (req, res) => {
       const userId = userAuth.getTokenData(req).sub;
       const { retroId } = getPathParameters(req);
+      const body = await getBodyJSON(req, { maxContentBytes: 4 * 1024 });
+      const { scopes } = json.extractObject(body, {
+        scopes: json.optional(
+          json.object({
+            required: json.optional(json.array(json.string)),
+            optional: json.optional(json.array(json.string)),
+          }),
+        ),
+      });
 
       if (!permitOwnerToken) {
         throw new HTTPError(403, { body: 'must use password' });
@@ -44,7 +53,7 @@ export class ApiAuthRouter extends Router {
         throw new HTTPError(403, { body: 'not retro owner' });
       }
 
-      const grant = await retroAuthService.grantOwnerToken(retroId);
+      const grant = await retroAuthService.grantOwnerToken(retroId, scopes);
       if (!grant) {
         throw new HTTPError(500, { body: 'retro not found' });
       }
@@ -52,6 +61,7 @@ export class ApiAuthRouter extends Router {
       analyticsService.event(req, 'access own retro');
       const response: RetroAuth = {
         retroToken: grant.token,
+        scopes: [...grant.scopes],
         expires: grant.expires,
       };
       return sendJSON(res, response);
@@ -60,10 +70,22 @@ export class ApiAuthRouter extends Router {
     this.post('/tokens/:retroId', async (req, res) => {
       const { retroId } = getPathParameters(req);
       const body = await getBodyJSON(req, { maxContentBytes: 4 * 1024 });
-      const { password } = json.extractObject(body, { password: json.string });
+      const { password, scopes } = json.extractObject(body, {
+        password: json.string,
+        scopes: json.optional(
+          json.object({
+            required: json.optional(json.array(json.string)),
+            optional: json.optional(json.array(json.string)),
+          }),
+        ),
+      });
 
       const begin = Date.now();
-      const grant = await retroAuthService.grantForPassword(retroId, password);
+      const grant = await retroAuthService.grantForPassword(
+        retroId,
+        password,
+        scopes,
+      );
       if (!grant) {
         throw new HTTPError(400, { body: 'incorrect password' });
       }
@@ -72,6 +94,7 @@ export class ApiAuthRouter extends Router {
       analyticsService.event(req, 'access retro', { passwordCheckTime: time });
       const response: RetroAuth = {
         retroToken: grant.token,
+        scopes: [...grant.scopes],
         expires: grant.expires,
       };
       sendJSON(res, response);

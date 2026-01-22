@@ -80,7 +80,15 @@ export const openapi = Buffer.from(
             required: true,
             content: {
               'application/json': {
-                schema: { type: 'object', additionalProperties: false },
+                schema: {
+                  type: 'object',
+                  properties: {
+                    scopes: {
+                      $ref: '#/components/schemas/RetroTokenScopeRequest',
+                    },
+                  },
+                  additionalProperties: false,
+                },
               },
             },
           },
@@ -131,6 +139,9 @@ export const openapi = Buffer.from(
                       type: 'string',
                       description: 'The collaborator password for the retro.',
                       example: 'Secret',
+                    },
+                    scopes: {
+                      $ref: '#/components/schemas/RetroTokenScopeRequest',
                     },
                   },
                   additionalProperties: false,
@@ -232,7 +243,7 @@ export const openapi = Buffer.from(
                 'application/json': {
                   schema: {
                     type: 'object',
-                    required: ['id', 'token', 'expires'],
+                    required: ['id', 'token', 'scopes', 'expires'],
                     properties: {
                       id: {
                         type: 'string',
@@ -244,7 +255,15 @@ export const openapi = Buffer.from(
                         type: 'string',
                         format: 'jwt',
                         description:
-                          'A retro token generated for the current user for the newly created retro.',
+                          'A retro token generated for the current user for the newly created retro with all available scopes.',
+                      },
+                      scopes: {
+                        type: 'array',
+                        items: { $ref: '#/components/schemas/RetroTokenScope' },
+                        uniqueItems: true,
+                        description:
+                          'The scopes which are enabled for the retro token.',
+                        example: ['read', 'readArchives', 'write', 'manage'],
                       },
                       expires: {
                         type: 'integer',
@@ -757,15 +776,47 @@ export const openapi = Buffer.from(
           description:
             'Retro-specific settings. The contents of this structure may change in arbitrary ways in future versions.',
         },
+        RetroTokenScope: {
+          enum: ['read', 'readArchives', 'write', 'manage'],
+        },
+        RetroTokenScopeRequest: {
+          type: 'object',
+          properties: {
+            required: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/RetroTokenScope' },
+              uniqueItems: true,
+              default: [],
+              description:
+                'A list of scopes which must be granted to the new token. If any required scope is unavailable, the request will fail with 403 Forbidden.',
+            },
+            optional: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/RetroTokenScope' },
+              uniqueItems: true,
+              default: ['read', 'readArchives', 'write', 'manage'],
+              description:
+                'A list of scopes which may be granted to the new token. If any optional scope is unavailable, it will be silently ignored.',
+            },
+          },
+          additionalProperties: false,
+        },
         RetroTokenResponse: {
           type: 'object',
-          required: ['retroToken', 'expires'],
+          required: ['retroToken', 'scopes', 'expires'],
           properties: {
             retroToken: {
               type: 'string',
               format: 'jwt',
               description:
                 'A token which can be used to perform operations on the retro.',
+            },
+            scopes: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/RetroTokenScope' },
+              uniqueItems: true,
+              description: 'The scopes which are enabled for the retro token.',
+              example: ['read', 'readArchives', 'write', 'manage'],
             },
             expires: {
               type: 'integer',

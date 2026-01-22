@@ -37,12 +37,14 @@ export interface UserData {
 
 export interface RetroAuth {
   retroToken: string;
+  scopes: string[];
   expires: number;
 }
 
 export interface RetroCreationInfo {
   id: string;
   token: string;
+  scopes: string[];
   expires: number;
 }
 

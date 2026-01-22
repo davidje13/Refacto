@@ -141,6 +141,7 @@ export class ApiRetrosRouter extends Router {
         const response: RetroCreationInfo = {
           id,
           token: grant.token,
+          scopes: [...grant.scopes],
           expires: grant.expires,
         };
         return sendJSON(res, response);

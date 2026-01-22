@@ -8,6 +8,7 @@ describe('PasswordPage', () => {
   it('exchanges passwords for tokens', async () => {
     jest.spyOn(retroAuthService, 'getRetroAuthForPassword').mockResolvedValue({
       retroToken: 'some-token',
+      scopes: ['read', 'write'],
       expires: Number.MAX_SAFE_INTEGER,
     });
 

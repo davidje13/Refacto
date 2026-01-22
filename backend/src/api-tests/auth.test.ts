@@ -40,6 +40,29 @@ describe('API auth', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.scopes).toEqual([
+        'read',
+        'readArchives',
+        'write',
+        'manage',
+      ]);
+      expect(response.body.error).toBeFalsy();
+    });
+
+    it('limits scopes if requested', async (props) => {
+      const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
+
+      const userToken = getUserToken(hooks, ownerId);
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ scopes: { required: ['read'], optional: ['write', 'nope'] } })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.scopes).toEqual(['read', 'write']);
       expect(response.body.error).toBeFalsy();
     });
 
@@ -57,6 +80,30 @@ describe('API auth', () => {
 
       expect(response.body.retroToken).toBeFalsy();
       expect(response.body.error).toEqual('not retro owner');
+    });
+
+    it('responds HTTP Forbidden if a required scope is unavailable', async (props) => {
+      const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
+
+      const userToken = getUserToken(hooks, ownerId);
+
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ scopes: { required: ['nope'] } })
+        .expect(403);
+    });
+
+    it('responds HTTP Forbidden if no scopes are available', async (props) => {
+      const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
+
+      const userToken = getUserToken(hooks, ownerId);
+
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}/user`)
+        .set('Authorization', `Bearer ${userToken}`)
+        .send({ scopes: { optional: ['nope'] } })
+        .expect(403);
     });
 
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
@@ -90,7 +137,48 @@ describe('API auth', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.scopes).toEqual([
+        'read',
+        'readArchives',
+        'write',
+        'manage',
+      ]);
       expect(response.body.error).toBeFalsy();
+    });
+
+    it('limits scopes if requested', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}`)
+        .send({
+          password: 'password',
+          scopes: { required: ['read'], optional: ['write', 'nope'] },
+        })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.scopes).toEqual(['read', 'write']);
+      expect(response.body.error).toBeFalsy();
+    });
+
+    it('responds HTTP Forbidden if a required scope is unavailable', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}`)
+        .send({ password: 'password', scopes: { required: ['nope'] } })
+        .expect(403);
+    });
+
+    it('responds HTTP Forbidden if no scopes are available', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}`)
+        .send({ password: 'password', scopes: { optional: ['nope'] } })
+        .expect(403);
     });
 
     it('responds HTTP Bad Request for incorrect password', async (props) => {

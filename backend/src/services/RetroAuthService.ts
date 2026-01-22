@@ -12,19 +12,8 @@ interface RetroAuth {
 
 const tokenLifespan = 60 * 60 * 24 * 30 * 6;
 
-const USER_SCOPES = {
-  read: true,
-  readArchives: true,
-  write: true,
-  manage: true,
-};
-
-const PASSWORD_SCOPES = {
-  read: true,
-  readArchives: true,
-  write: true,
-  manage: true,
-};
+const USER_SCOPES = new Set(['read', 'readArchives', 'write', 'manage']);
+const PASSWORD_SCOPES = new Set(['read', 'readArchives', 'write', 'manage']);
 
 export class RetroAuthService {
   private readonly retroAuthCollection: Collection<RetroAuth>;
@@ -60,7 +49,11 @@ export class RetroAuthService {
     }
   }
 
-  public async grantForPassword(retroId: string, password: string) {
+  public async grantForPassword(
+    retroId: string,
+    password: string,
+    scopes: ScopesConfig = {},
+  ) {
     const retroData = await this.retroAuthCollection
       .where('id', retroId)
       .attrs(['passwordHash'])
@@ -68,6 +61,7 @@ export class RetroAuthService {
     if (!retroData) {
       return null;
     }
+    const resolvedScopes = resolveScopes(PASSWORD_SCOPES, scopes);
 
     const match = await this.hasher.compare(password, retroData.passwordHash);
     if (!match) {
@@ -77,11 +71,12 @@ export class RetroAuthService {
     if (this.hasher.needsRegenerate(retroData.passwordHash)) {
       await this.setPassword(retroId, password, { cycleKeys: false });
     }
-    return this.grantToken(retroId, PASSWORD_SCOPES);
+    return this.grantToken(retroId, resolvedScopes);
   }
 
-  public grantOwnerToken(retroId: string) {
-    return this.grantToken(retroId, USER_SCOPES);
+  public grantOwnerToken(retroId: string, scopes: ScopesConfig = {}) {
+    const resolvedScopes = resolveScopes(USER_SCOPES, scopes);
+    return this.grantToken(retroId, resolvedScopes);
   }
 
   public async grantToken(
@@ -107,6 +102,11 @@ export class RetroAuthService {
 
     return {
       token: this.tokenManager.signData(tokenData, retroData.privateKey),
+      scopes: new Set(
+        Object.entries(scopes)
+          .filter(([_, v]) => v)
+          .map(([k]) => k),
+      ),
       expires: exp * 1000,
     };
   }
@@ -133,6 +133,37 @@ export class RetroAuthService {
     }
     return extractRetroJwtPayload(raw);
   }
+}
+
+export class ScopesError extends Error {}
+
+function resolveScopes(
+  available: Set<string>,
+  request: ScopesConfig,
+): Record<string, boolean> {
+  const scopes: Record<string, boolean> = {};
+  for (const scope of request.required ?? []) {
+    if (!available.has(scope)) {
+      throw new ScopesError(
+        `The requested scope ${JSON.stringify(scope)} is not available`,
+      );
+    }
+    scopes[scope] = true;
+  }
+  for (const scope of request.optional ?? available) {
+    if (available.has(scope)) {
+      scopes[scope] = true;
+    }
+  }
+  if (!Object.entries(scopes).length) {
+    throw new ScopesError('No requested scopes are available');
+  }
+  return scopes;
+}
+
+export interface ScopesConfig {
+  required?: string[] | undefined;
+  optional?: string[] | undefined;
 }
 
 interface RetroJWTPayload {

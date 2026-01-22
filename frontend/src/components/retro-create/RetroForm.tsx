@@ -90,7 +90,7 @@ export const RetroForm = memo(
         throw new Error('Passwords do not match');
       }
 
-      const { id, token, expires } = await retroService.create({
+      const { id, token, scopes, expires } = await retroService.create({
         name,
         slug: resolvedSlug,
         password,
@@ -98,7 +98,7 @@ export const RetroForm = memo(
         importJson,
       });
 
-      retroAuthTracker.set(id, { retroToken: token, expires });
+      retroAuthTracker.set(id, { retroToken: token, scopes, expires });
       onCreate({
         id,
         slug: resolvedSlug,
