@@ -35,10 +35,8 @@ function sortArchives(archives: RetroArchiveSummary[]): RetroArchiveSummary[] {
   return sorted;
 }
 
-function archiveCreatedComparator(
+// sort newer-to-older
+const archiveCreatedComparator = (
   a: RetroArchiveSummary,
   b: RetroArchiveSummary,
-): number {
-  // sort newer-to-older
-  return b.created - a.created;
-}
+) => b.created - a.created;

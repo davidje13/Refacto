@@ -63,6 +63,65 @@ export const openapi = Buffer.from(
           },
         },
       },
+      '/auth/tokens/{retro_id}/api-key': {
+        post: {
+          summary: 'Authenticate with a retro using an API key',
+          description:
+            'Exchange an API key for a retro token. The token will be valid for up to one hour (cut short if the API key is revoked). Generally integrations should store a single API key and exchange it for a token just before performing a request or batch of requests.',
+          parameters: [
+            {
+              name: 'retro_id',
+              in: 'path',
+              description: 'The ID of the retro to create a token for.',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['apiKey'],
+                  properties: {
+                    apiKey: {
+                      type: 'string',
+                      description: 'The API key to exchange for a retro token.',
+                      example:
+                        '0000000000000000000000000000000000000000000000000000000000000000',
+                    },
+                    scopes: {
+                      $ref: '#/components/schemas/RetroTokenScopeRequest',
+                    },
+                  },
+                  additionalProperties: false,
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Authentication was successful.',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/RetroTokenResponse' },
+                },
+              },
+            },
+            '400': {
+              description:
+                'The API key was invalid, is for a different retro, or the retro ID does not exist.',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Error' },
+                },
+              },
+            },
+            '422': { $ref: '#/components/responses/ValidationError' },
+          },
+        },
+      },
       '/auth/tokens/{retro_id}/user': {
         post: {
           summary: "Authenticate with a retro using the owner's user token",
@@ -118,6 +177,8 @@ export const openapi = Buffer.from(
       '/auth/tokens/{retro_id}': {
         post: {
           summary: 'Authenticate with a retro using the shared retro password',
+          description:
+            'Exchange a collaborator password for a retro token. The token will be valid for up to 6 months (cut short if the retro password is changed). Generally integrations should prefer using API keys rather than password authentication.',
           parameters: [
             {
               name: 'retro_id',
@@ -360,7 +421,7 @@ export const openapi = Buffer.from(
                         evictUsers: {
                           type: 'boolean',
                           description:
-                            'true (recommended) to invalidate all existing tokens for this retro immediately after changing the password (active connections will be given a few seconds to gracefully close). If false, existing tokens will continue to be valid until they expire (which may be many months in the future).',
+                            '`true` (recommended) to invalidate all existing tokens for this retro immediately after changing the password (active connections will be given a few seconds to gracefully close). If `false`, existing tokens will continue to be valid until they expire (which may be many months in the future).',
                         },
                       },
                       description:
@@ -496,8 +557,8 @@ export const openapi = Buffer.from(
                               description: 'A unique ID for this archive.',
                             },
                             created: {
-                              type: 'string',
-                              format: 'date-time',
+                              type: 'integer',
+                              format: 'unix-millis',
                               description:
                                 'The time when this archive was created.',
                             },
@@ -615,15 +676,16 @@ export const openapi = Buffer.from(
                       options: { $ref: '#/components/schemas/RetroOptions' },
                       items: { $ref: '#/components/schemas/RetroItems' },
                       created: {
-                        type: 'string',
-                        format: 'date-time',
+                        type: 'integer',
+                        format: 'unix-millis',
                         description: 'The time when this archive was created.',
                       },
                       imported: {
-                        type: 'string',
-                        format: 'date-time',
+                        type: 'integer',
+                        format: 'unix-millis',
+                        nullable: true,
                         description:
-                          'The time when this archive was imported (usually the same as created, but different when importing archives during retro creation).',
+                          'The time when this archive was imported (if it was created as part of importing a retro), or `null`.',
                       },
                     },
                   },
@@ -635,6 +697,209 @@ export const openapi = Buffer.from(
             '404': {
               description:
                 'The requested archive ID does not exist in this retro.',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Error' },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/retros/{retro_id}/api-keys': {
+        get: {
+          summary: 'List all active API keys for the retro',
+          security: [{ retroToken: ['manage'] }],
+          parameters: [
+            {
+              name: 'retro_id',
+              in: 'path',
+              description: 'The ID of the retro.',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {
+            '200': {
+              description: 'A list of API keys for this retro.',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    required: ['apiKeys'],
+                    properties: {
+                      apiKeys: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          required: [
+                            'id',
+                            'name',
+                            'scopes',
+                            'created',
+                            'lastUsed',
+                          ],
+                          properties: {
+                            id: {
+                              type: 'string',
+                              format: 'uuid',
+                              description: 'A unique ID for this API key.',
+                            },
+                            name: {
+                              type: 'string',
+                              description: 'An arbitrary user-chosen name.',
+                            },
+                            scopes: {
+                              type: 'array',
+                              items: {
+                                $ref: '#/components/schemas/RetroTokenScope',
+                              },
+                              uniqueItems: true,
+                              description:
+                                'The retro token scopes which this API key can claim.',
+                            },
+                            created: {
+                              type: 'integer',
+                              format: 'unix-millis',
+                              description:
+                                'The time when this API key was created.',
+                            },
+                            lastUsed: {
+                              type: 'integer',
+                              format: 'unix-millis',
+                              description:
+                                'The time when this API key was last exchanged for a retro token (or `0` if it has never been used).',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            '401': { $ref: '#/components/responses/UnauthorizedError' },
+            '403': { $ref: '#/components/responses/ForbiddenError' },
+          },
+        },
+        post: {
+          summary: 'Create a new API key for the retro',
+          description:
+            'Creates a random API key and associates it with the retro. The key returned by this call cannot be retrieved later. The intent is to have a single long-lived API key per service integration. In particular note that there is a limit to the number of active keys each retro may have, configured with `PERMIT_RETRO_API_KEYS` (by default this is set to `5`). API keys do not expire, but can be revoked.',
+          security: [{ retroToken: ['manage'] }],
+          parameters: [
+            {
+              name: 'retro_id',
+              in: 'path',
+              description: 'The ID of the retro.',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['name', 'scopes'],
+                  properties: {
+                    name: {
+                      type: 'string',
+                      description:
+                        'An arbitrary name to attach to this API key, for user reference.',
+                    },
+                    scopes: {
+                      type: 'array',
+                      items: {
+                        $ref: '#/components/schemas/RetroTokenScope',
+                      },
+                      example: ['read', 'readArchives', 'write', 'manage'],
+                      uniqueItems: true,
+                      description:
+                        'The scopes which this API key should be able to claim. Note that this list can only contain scopes which are granted to the current retro token.',
+                    },
+                  },
+                  additionalProperties: false,
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'API key created successfully.',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    required: ['id', 'key'],
+                    properties: {
+                      id: {
+                        type: 'string',
+                        format: 'uuid',
+                        description:
+                          'The internally-assigned unique ID of the newly created API key (used in API calls).',
+                      },
+                      key: {
+                        type: 'string',
+                        description:
+                          'The internally-generated random API key. This value must be stored by the client, as it is not possible to retrieve it later.',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            '400': {
+              description: 'The retro has too many API keys.',
+              content: {
+                'application/json': {
+                  schema: { $ref: '#/components/schemas/Error' },
+                },
+              },
+            },
+            '401': { $ref: '#/components/responses/UnauthorizedError' },
+            '403': { $ref: '#/components/responses/ForbiddenError' },
+            '422': { $ref: '#/components/responses/ValidationError' },
+          },
+        },
+      },
+      '/retros/{retro_id}/api-keys/{api_key_id}': {
+        delete: {
+          summary: 'Revoke an API key',
+          description:
+            'Revokes the requested API key immediately (clients will not be able to exchange the key for a retro token, and any existing retro tokens issued by this API key will be considered expired).',
+          security: [{ retroToken: ['manage'] }],
+          parameters: [
+            {
+              name: 'retro_id',
+              in: 'path',
+              description: 'The ID of the retro.',
+              required: true,
+              schema: { type: 'string' },
+            },
+            {
+              name: 'api_key_id',
+              in: 'path',
+              description: 'The ID of the API key.',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {
+            '200': {
+              description: 'API key revoked successfully.',
+              content: {
+                'application/json': {
+                  schema: { type: 'object', additionalProperties: false },
+                },
+              },
+            },
+            '401': { $ref: '#/components/responses/UnauthorizedError' },
+            '403': { $ref: '#/components/responses/ForbiddenError' },
+            '404': {
+              description:
+                'The API key does not exist, or is for a different retro.',
               content: {
                 'application/json': {
                   schema: { $ref: '#/components/schemas/Error' },
@@ -659,7 +924,7 @@ export const openapi = Buffer.from(
           scheme: 'bearer',
           bearerFormat: 'retro token',
           description:
-            'These are issued by the `POST /auth/tokens/{retro_id}/user` and `POST /auth/tokens/{retro_id}` endpoints.',
+            'Integrations should use `POST /auth/tokens/{retro_id}/api-key` to obtain a retro token.',
         },
       },
       responses: {

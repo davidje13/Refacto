@@ -28,14 +28,20 @@ html {
   --beige-back: hsl(45deg, 20%, 92%);
   --beige-shadow: hsl(45deg, 20%, 80%);
 
-  --grey-button-back: #eeeeee;
+  --grey-button-back: #f8f8f8;
+  --grey-button-outline: #aabbaa;
   --grey-button-text: var(--green-text-on-white);
 
   --green-button-back: hsl(172deg, 72%, 60%);
   --green-button-text: #000000;
   --green-button-icon: #ffffff;
   --green-button-dark: hsl(172deg, 55%, 50%);
+  --green-button-dark-outline: var(--green-button-dark);
   --green-button-dark-text: #ffffff;
+
+  --red-button-dark: var(--red-shadow);
+  --red-button-dark-outline: var(--red-button-dark);
+  --red-button-dark-text: #ffffff;
 
   --green-icon: var(--green-back);
   --red-icon: #aa3300;
@@ -82,13 +88,19 @@ html {
     --beige-shadow: hsl(45deg, 3%, 30%);
 
     --grey-button-back: #555555;
+    --grey-button-outline: var(--grey-button-back);
     --grey-button-text: #f8f8f8;
 
     --green-button-back: hsl(172, 95%, 36%);
     --green-button-text: #f8f8f8;
     --green-button-icon: #f8f8f8;
     --green-button-dark: hsl(172, 95%, 44%);
+    --green-button-dark-outline: var(--green-button-dark);
     --green-button-dark-text: #111111;
+
+    --red-button-dark: var(--red-shadow);
+    --red-button-dark-outline: var(--red-button-dark);
+    --red-button-dark-text: #ffffff;
 
     --green-icon: hsl(172deg, 50%, 55%);
     --red-icon: #cc3300;

@@ -1,7 +1,8 @@
-.popup-begin {
+.popup-delete-api-key {
+  max-width: 600px;
+
   & p {
     margin: 16px 0;
-    max-width: 600px;
   }
 
   .dialog-options {
@@ -11,9 +12,5 @@
     & button {
       margin: 0 16px;
     }
-  }
-
-  .reminder {
-    font-weight: bolder;
   }
 }

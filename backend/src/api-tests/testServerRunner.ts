@@ -61,12 +61,15 @@ export async function getRetroToken(
   retroId: string,
   scopes = {},
 ): Promise<string | null> {
-  const grant = await retroAuthService.grantToken(retroId, {
-    read: true,
-    readArchives: true,
-    write: true,
-    manage: true,
-    ...scopes,
+  const grant = await retroAuthService.grantToken(retroId, 60 * 60, {
+    iss: 'test',
+    scopes: {
+      read: true,
+      readArchives: true,
+      write: true,
+      manage: true,
+      ...scopes,
+    },
   });
   return grant?.token ?? null;
 }

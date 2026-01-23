@@ -1,4 +1,4 @@
-import { useState, memo, type ReactNode } from 'react';
+import { useState, memo } from 'react';
 import type { Retro } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import {
@@ -15,6 +15,7 @@ import { SetPassword } from '../common/SetPassword';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { OPTIONS } from '../../helpers/optionManager';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
+import { APIKeyManager } from './APIKeyManager';
 import './SettingsForm.css';
 
 interface PropsT {
@@ -68,45 +69,6 @@ export const SettingsForm = memo(
       onSave?.(saved);
     });
 
-    let passwordSection: ReactNode;
-
-    if (editingPassword) {
-      passwordSection = (
-        <fieldset className="edit-password">
-          <legend>Change password</legend>
-          <SetPassword
-            username={retro.id}
-            name={slug}
-            label="Collaborator password"
-            confirmLabel="Confirm password"
-            password={newPassword}
-            setPassword={setNewPassword}
-            setMatches={setPasswordMatches}
-          />
-          <label className="checkbox">
-            <input
-              name="evict-users"
-              type="checkbox"
-              checked={evictUsers}
-              onChange={(e) => setEvictUsers(e.currentTarget.checked)}
-              autoComplete="off"
-            />
-            Prompt current participants to enter new password immediately
-          </label>
-        </fieldset>
-      );
-    } else {
-      passwordSection = (
-        <button
-          type="button"
-          className="global-button optional edit-password-button"
-          onClick={() => setEditingPassword(true)}
-        >
-          Change collaborator password
-        </button>
-      );
-    }
-
     const themeChoices = getThemes().map(([value, detail]) => ({
       value,
       label: (
@@ -133,7 +95,29 @@ export const SettingsForm = memo(
             required
           />
         </label>
-        <label>
+        <fieldset className="minimal">
+          <legend>Theme</legend>
+          <PickerInput
+            className="theme"
+            name="theme"
+            value={theme}
+            onChange={setTheme}
+            options={themeChoices}
+          />
+        </fieldset>
+        <h2>Behaviour</h2>
+        <label className="checkbox">
+          <input
+            name="always-show-add-action"
+            type="checkbox"
+            checked={alwaysShowAddAction}
+            onChange={(e) => setAlwaysShowAddAction(e.currentTarget.checked)}
+            autoComplete="off"
+          />
+          Sticky &ldquo;add action&rdquo; input
+        </label>
+        <h2>Access</h2>
+        <label className="retro-url">
           Retro URL
           <div className="info">
             (may contain lowercase letters, numbers, dashes and underscores)
@@ -146,36 +130,64 @@ export const SettingsForm = memo(
             showAvailability
           />
         </label>
-        {passwordSection}
-        <label className="checkbox">
-          <input
-            name="always-show-add-action"
-            type="checkbox"
-            checked={alwaysShowAddAction}
-            onChange={(e) => setAlwaysShowAddAction(e.currentTarget.checked)}
-            autoComplete="off"
-          />
-          Sticky &ldquo;add action&rdquo; input
-        </label>
-        <fieldset className="minimal">
-          <legend>Theme</legend>
-          <PickerInput
-            className="theme"
-            name="theme"
-            value={theme}
-            onChange={setTheme}
-            options={themeChoices}
-          />
-        </fieldset>
-        <button
-          type="submit"
-          className="wide-button"
-          title="Save Changes"
-          disabled={sending}
+        <details
+          open={editingPassword}
+          onToggle={(e) => setEditingPassword(e.currentTarget.open)}
         >
-          {sending ? '\u2026' : 'Save'}
-        </button>
-        <Alert message={error} />
+          <summary>Change Collaborator Password</summary>
+          {editingPassword ? ( // only render content if editing, to avoid validation of hidden items
+            <>
+              <SetPassword
+                username={retro.id}
+                name={slug}
+                label="New collaborator password"
+                confirmLabel="Confirm password"
+                password={newPassword}
+                setPassword={setNewPassword}
+                setMatches={setPasswordMatches}
+              />
+              <label className="checkbox">
+                <input
+                  name="evict-users"
+                  type="checkbox"
+                  checked={evictUsers}
+                  onChange={(e) => setEvictUsers(e.currentTarget.checked)}
+                  autoComplete="off"
+                />
+                Prompt current participants to enter new password immediately
+              </label>
+            </>
+          ) : null}
+        </details>
+        <details>
+          <summary>Manage API Keys</summary>
+          <p>
+            API keys can be used to link external services, for example
+            displaying action items in a chat. To build your own integration,
+            see the{' '}
+            <a href="/api-docs" target="_blank" rel="noopener noreferrer">
+              API Documentation
+            </a>
+            .
+          </p>
+          <p>
+            This retro&rsquo;s ID is: <code>{retro.id}</code>
+          </p>
+          <APIKeyManager retro={retro} retroToken={retroToken} />
+        </details>
+        <div className="form-actions-shadow" />
+        <div className="bottom-shadow-cover" />
+        <div className="form-actions">
+          <button
+            type="submit"
+            className="wide-button"
+            title="Save Changes"
+            disabled={sending}
+          >
+            {sending ? '\u2026' : 'Save'}
+          </button>
+          <Alert message={error} spacer />
+        </div>
       </form>
     );
   },

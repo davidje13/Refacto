@@ -34,12 +34,7 @@ export class ApiAuthRouter extends Router {
       const { retroId } = getPathParameters(req);
       const body = await getBodyJSON(req, { maxContentBytes: 4 * 1024 });
       const { scopes } = json.extractObject(body, {
-        scopes: json.optional(
-          json.object({
-            required: json.optional(json.array(json.string)),
-            optional: json.optional(json.array(json.string)),
-          }),
-        ),
+        scopes: json.optional(scopeRequestJson),
       });
 
       if (!permitOwnerToken) {
@@ -72,12 +67,7 @@ export class ApiAuthRouter extends Router {
       const body = await getBodyJSON(req, { maxContentBytes: 4 * 1024 });
       const { password, scopes } = json.extractObject(body, {
         password: json.string,
-        scopes: json.optional(
-          json.object({
-            required: json.optional(json.array(json.string)),
-            optional: json.optional(json.array(json.string)),
-          }),
-        ),
+        scopes: json.optional(scopeRequestJson),
       });
 
       const begin = Date.now();
@@ -99,5 +89,36 @@ export class ApiAuthRouter extends Router {
       };
       sendJSON(res, response);
     });
+
+    this.post('/tokens/:retroId/api-key', async (req, res) => {
+      const { retroId } = getPathParameters(req);
+      const body = await getBodyJSON(req, { maxContentBytes: 4 * 1024 });
+      const { apiKey, scopes } = json.extractObject(body, {
+        apiKey: json.string,
+        scopes: json.optional(scopeRequestJson),
+      });
+
+      const grant = await retroAuthService.grantForApiKey(
+        retroId,
+        apiKey,
+        scopes,
+      );
+      if (!grant) {
+        throw new HTTPError(400, { body: 'unknown key' });
+      }
+
+      analyticsService.event(req, 'exchange retro key');
+      const response: RetroAuth = {
+        retroToken: grant.token,
+        scopes: [...grant.scopes],
+        expires: grant.expires,
+      };
+      sendJSON(res, response);
+    });
   }
 }
+
+const scopeRequestJson = json.object({
+  required: json.optional(json.array(json.string)),
+  optional: json.optional(json.array(json.string)),
+});

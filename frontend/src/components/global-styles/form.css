@@ -69,12 +69,30 @@
       & legend {
         padding: 0;
       }
+
+      & > :last-child {
+        margin-bottom: 0;
+      }
     }
   }
 
-  & label.checkbox {
-    display: flex;
-    margin: 0 0 16px;
+  & details {
+    margin-top: 32px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+
+    & summary {
+      position: relative;
+      margin: -0.8em 0 0.8em -4px;
+      padding: 2px 8px 2px 8px;
+      background: var(--beige-back);
+      width: fit-content;
+      cursor: pointer;
+    }
+
+    &:open {
+      border-color: var(--beige-shadow);
+    }
   }
 
   & input[type='checkbox'],
@@ -85,6 +103,17 @@
     padding: 0;
     border: none;
     width: auto;
+  }
+
+  & label.checkbox {
+    display: flex;
+    margin: 0 0 16px;
+    align-items: baseline;
+
+    & input[type='checkbox'] {
+      position: relative;
+      top: 2px;
+    }
   }
 
   & input[type='file'] {

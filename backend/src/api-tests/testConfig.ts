@@ -30,6 +30,7 @@ const baseTestConfig: ConfigT = {
   },
   permit: {
     myRetros: true,
+    retroApiKeys: 5,
   },
   sso: {
     google: { clientId: '', authUrl: '', certsUrl: '' },

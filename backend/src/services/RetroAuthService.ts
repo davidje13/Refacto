@@ -1,5 +1,7 @@
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import type { Collection, DB } from 'collection-storage';
 import type { Hasher } from 'pwd-hasher';
+import type { NewRetroApiKey, RetroApiKey } from '../shared/api-entities';
 import type { TokenManager } from '../tokens/TokenManager';
 import { json } from '../helpers/json';
 
@@ -10,20 +12,51 @@ interface RetroAuth {
   passwordHash: string;
 }
 
-const tokenLifespan = 60 * 60 * 24 * 30 * 6;
+interface RetroApiKeyStorage extends RetroApiKey {
+  retroId: string;
+  keyHash: string;
+}
 
-const USER_SCOPES = new Set(['read', 'readArchives', 'write', 'manage']);
+const OWNER_SCOPES = new Set(['read', 'readArchives', 'write', 'manage']);
 const PASSWORD_SCOPES = new Set(['read', 'readArchives', 'write', 'manage']);
 
+interface RetroAuthOptions {
+  ownerTokenLifespan: number;
+  passwordTokenLifespan: number;
+  keyTokenLifespan: number;
+  retroApiKeyLimit: number;
+}
+
 export class RetroAuthService {
-  private readonly retroAuthCollection: Collection<RetroAuth>;
+  declare private readonly hasher: Hasher;
+  declare private readonly tokenManager: TokenManager;
+  declare private readonly retroAuthCollection: Collection<RetroAuth>;
+  declare private readonly retroApiKeyCollection: Collection<RetroApiKeyStorage>;
+  declare private readonly ownerTokenLifespan: number;
+  declare private readonly passwordTokenLifespan: number;
+  declare private readonly keyTokenLifespan: number;
+  declare private readonly retroApiKeyLimit: number;
 
   public constructor(
     db: DB,
-    private readonly hasher: Hasher,
-    private readonly tokenManager: TokenManager,
+    hasher: Hasher,
+    tokenManager: TokenManager,
+    options: RetroAuthOptions,
   ) {
+    this.hasher = hasher;
+    this.tokenManager = tokenManager;
     this.retroAuthCollection = db.getCollection<RetroAuth>('retro_auth');
+    this.retroApiKeyCollection = db.getCollection<RetroApiKeyStorage>(
+      'retro_api_key',
+      {
+        keyHash: { unique: true },
+        retroId: {},
+      },
+    );
+    this.ownerTokenLifespan = options.ownerTokenLifespan;
+    this.passwordTokenLifespan = options.passwordTokenLifespan;
+    this.keyTokenLifespan = options.keyTokenLifespan;
+    this.retroApiKeyLimit = options.retroApiKeyLimit;
   }
 
   public async setPassword(
@@ -49,6 +82,60 @@ export class RetroAuthService {
     }
   }
 
+  public async createApiKey(
+    retroId: string,
+    name: string,
+    scopes: string[],
+  ): Promise<NewRetroApiKey | null> {
+    const id = randomUUID();
+    const key = randomBytes(48).toString('base64url');
+    const keyHash = hashKey(retroId, key);
+
+    // check key limit - this is not enforced atomically so it is possible for
+    // races to exceed the limit, but it only exists to catch client mistakes
+    // like creating a new key with every connection, so this is good enough.
+    const existing = await this.retroApiKeyCollection
+      .where('retroId', retroId)
+      .count();
+    if (existing >= this.retroApiKeyLimit) {
+      return null;
+    }
+
+    await this.retroApiKeyCollection.add({
+      id,
+      name,
+      created: Date.now(),
+      lastUsed: 0,
+      retroId,
+      keyHash,
+      scopes: [...new Set(scopes)].sort(),
+    });
+    return { id, key };
+  }
+
+  public getApiKeysForRetro(
+    retroId: string,
+  ): AsyncGenerator<Readonly<RetroApiKey>, void, undefined> {
+    return this.retroApiKeyCollection
+      .where('retroId', retroId)
+      .attrs(['id', 'name', 'created', 'lastUsed', 'scopes'])
+      .values();
+  }
+
+  public async deleteApiKey(retroId: string, apiKeyId: string) {
+    const keyData = await this.retroApiKeyCollection
+      .where('id', apiKeyId)
+      .attrs(['retroId'])
+      .get();
+    if (!keyData || keyData.retroId !== retroId) {
+      return false;
+    }
+    const deleted = await this.retroApiKeyCollection
+      .where('id', apiKeyId)
+      .remove();
+    return deleted > 0;
+  }
+
   public async grantForPassword(
     retroId: string,
     password: string,
@@ -71,17 +158,47 @@ export class RetroAuthService {
     if (this.hasher.needsRegenerate(retroData.passwordHash)) {
       await this.setPassword(retroId, password, { cycleKeys: false });
     }
-    return this.grantToken(retroId, resolvedScopes);
+    return this.grantToken(retroId, this.passwordTokenLifespan, {
+      iss: 'retro-password',
+      scopes: resolvedScopes,
+    });
+  }
+
+  public async grantForApiKey(
+    retroId: string,
+    apiKey: string,
+    scopes: ScopesConfig = {},
+  ) {
+    const keyData = await this.retroApiKeyCollection
+      .where('keyHash', hashKey(retroId, apiKey))
+      .attrs(['id', 'retroId', 'scopes'])
+      .get();
+    if (!keyData || keyData.retroId !== retroId) {
+      return null;
+    }
+
+    const token = await this.grantToken(retroId, this.keyTokenLifespan, {
+      iss: 'retro-key',
+      sub: keyData.id,
+      scopes: resolveScopes(new Set(keyData.scopes), scopes),
+    });
+    await this.retroApiKeyCollection
+      .where('id', keyData.id)
+      .update({ lastUsed: Date.now() });
+    return token;
   }
 
   public grantOwnerToken(retroId: string, scopes: ScopesConfig = {}) {
-    const resolvedScopes = resolveScopes(USER_SCOPES, scopes);
-    return this.grantToken(retroId, resolvedScopes);
+    return this.grantToken(retroId, this.ownerTokenLifespan, {
+      iss: 'retro-owner',
+      scopes: resolveScopes(OWNER_SCOPES, scopes),
+    });
   }
 
   public async grantToken(
     retroId: string,
-    scopes: Readonly<Record<string, boolean>>,
+    tokenLifespan: number,
+    payload: Omit<RetroJWTPayload, 'iat' | 'exp' | 'aud'>,
   ) {
     const retroData = await this.retroAuthCollection
       .where('id', retroId)
@@ -94,16 +211,16 @@ export class RetroAuthService {
     const now = Math.floor(Date.now() / 1000);
     const exp = now + tokenLifespan;
     const tokenData: RetroJWTPayload = {
+      ...payload,
       iat: now,
       exp,
       aud: `retro-${retroId}`,
-      scopes,
     };
 
     return {
       token: this.tokenManager.signData(tokenData, retroData.privateKey),
       scopes: new Set(
-        Object.entries(scopes)
+        Object.entries(payload.scopes)
           .filter(([_, v]) => v)
           .map(([k]) => k),
       ),
@@ -131,11 +248,29 @@ export class RetroAuthService {
     if (!raw) {
       return null;
     }
-    return extractRetroJwtPayload(raw);
+    const data = extractRetroJwtPayload(raw);
+    if (data.iss === 'retro-key') {
+      if (!data.sub) {
+        return null; // invalid data
+      }
+      const exists = await this.retroApiKeyCollection
+        .where('id', data.sub)
+        .exists();
+      if (!exists) {
+        return null; // key has been revoked
+      }
+    }
+    return data;
   }
 }
 
 export class ScopesError extends Error {}
+
+function hashKey(retroId: string, key: string) {
+  const hash = createHash('sha256');
+  hash.write(`${retroId}-${key}`);
+  return hash.digest('base64url');
+}
 
 function resolveScopes(
   available: Set<string>,
@@ -167,15 +302,19 @@ export interface ScopesConfig {
 }
 
 interface RetroJWTPayload {
+  iss?: string | undefined;
   iat: number;
   exp: number;
+  sub?: string | undefined;
   aud: string;
   scopes: Record<string, boolean>;
 }
 
 const extractRetroJwtPayload = json.object<RetroJWTPayload>({
+  iss: json.optional(json.string),
   iat: json.number,
   exp: json.number,
+  sub: json.optional(json.string),
   aud: json.string,
   scopes: json.record(json.boolean),
 });

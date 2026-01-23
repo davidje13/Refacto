@@ -101,7 +101,12 @@ export const appFactory = async (
   const giphyService = new GiphyService(config.giphy);
   const retroService = new RetroService(db, encryptionKey);
   const retroArchiveService = new RetroArchiveService(db, encryptionKey);
-  const retroAuthService = new RetroAuthService(db, hasher, tokenManager);
+  const retroAuthService = new RetroAuthService(db, hasher, tokenManager, {
+    ownerTokenLifespan: 60 * 60 * 24 * 30 * 6,
+    passwordTokenLifespan: 60 * 60 * 24 * 30 * 6,
+    keyTokenLifespan: 60 * 60,
+    retroApiKeyLimit: config.permit.retroApiKeys,
+  });
   const userAuthService = new UserAuthService(tokenManager);
   await userAuthService.initialise(db);
 

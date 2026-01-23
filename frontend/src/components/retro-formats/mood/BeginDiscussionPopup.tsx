@@ -32,7 +32,7 @@ export const BeginDiscussionPopup = memo(
             is usually best to review these before discussing new topics.
           </p>
         ) : null}
-        <p className="dialog-options">
+        <section className="dialog-options">
           <button type="button" className="global-button" onClick={onClose}>
             Cancel
           </button>
@@ -43,7 +43,7 @@ export const BeginDiscussionPopup = memo(
           >
             Begin
           </button>
-        </p>
+        </section>
       </div>
     </Popup>
   ),

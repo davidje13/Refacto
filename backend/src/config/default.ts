@@ -35,6 +35,7 @@ export default {
   },
   permit: {
     myRetros: true,
+    retroApiKeys: 5,
   },
   sso: {
     google: {

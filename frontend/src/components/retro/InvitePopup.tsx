@@ -23,7 +23,7 @@ export const InvitePopup = memo(({ isOpen, onClose }: PropsT) => {
         <p>Attendees can join on their computer or phone:</p>
         <p className="link">{url}</p>
         <QR className="qr-code" content={url} />
-        <p className="dialog-options">
+        <section className="dialog-options">
           <button
             type="button"
             className="global-button primary"
@@ -31,7 +31,7 @@ export const InvitePopup = memo(({ isOpen, onClose }: PropsT) => {
           >
             Close
           </button>
-        </p>
+        </section>
       </div>
     </Popup>
   );

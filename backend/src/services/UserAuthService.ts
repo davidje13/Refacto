@@ -7,15 +7,17 @@ interface StoredKeyPair extends KeyPair {
 }
 
 export class UserAuthService {
-  private privateKey?: string;
-
-  private publicKey?: string;
+  declare private readonly tokenManager: TokenManager;
+  declare private readonly loginTokenLifespan: number;
+  declare private privateKey?: string;
+  declare private publicKey?: string;
 
   public constructor(
-    private readonly tokenManager: TokenManager,
-    private readonly loginTokenLifespan = 60 * 60 * 2,
+    tokenManager: TokenManager,
+    { loginTokenLifespan = 60 * 60 * 2 } = {},
   ) {
     this.tokenManager = tokenManager;
+    this.loginTokenLifespan = loginTokenLifespan;
   }
 
   public async initialise(db: DB): Promise<void> {

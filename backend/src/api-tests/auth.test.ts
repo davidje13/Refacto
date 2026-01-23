@@ -26,6 +26,194 @@ describe('API auth', () => {
     return { run: app, hooks, ownerId, retroId };
   });
 
+  describe('/api/auth/tokens/retro-id/api-key', () => {
+    it('responds with a token for a valid API key', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        retroId,
+        'test',
+        ['read', 'write'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.scopes).toEqual(['read', 'write']);
+      expect(response.body.error).toBeFalsy();
+    });
+
+    it('limits scopes if requested', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        retroId,
+        'test',
+        ['read', 'write', 'readArchives'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({
+          apiKey,
+          scopes: { required: ['read'], optional: ['write', 'nope'] },
+        })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      expect(response.body.retroToken).toBeTruthy();
+      expect(response.body.scopes).toEqual(['read', 'write']);
+      expect(response.body.error).toBeFalsy();
+    });
+
+    it('responds HTTP Forbidden if a required scope is unavailable', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        retroId,
+        'test',
+        ['read', 'write'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey, scopes: { required: ['nope'] } })
+        .expect(403);
+    });
+
+    it('responds HTTP Forbidden if no scopes are available', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        retroId,
+        'test',
+        ['read', 'write'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey, scopes: { optional: ['nope'] } })
+        .expect(403);
+    });
+
+    it('responds HTTP Bad Request for unknown keys', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey: 'unknown' })
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+      expect(response.body.retroToken).toBeFalsy();
+      expect(response.body.error).toEqual('unknown key');
+    });
+
+    it('responds HTTP Bad Request for key/retro mismatches', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey: 'unknown' })
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+      expect(response.body.retroToken).toBeFalsy();
+      expect(response.body.error).toEqual('unknown key');
+    });
+
+    it('responds HTTP Bad Request for unknown retro IDs', async (props) => {
+      const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
+      const otherRetroId = await hooks.retroService.createRetro(
+        ownerId,
+        's2',
+        '',
+        '',
+      );
+      await hooks.retroAuthService.setPassword(otherRetroId, 'password');
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        otherRetroId,
+        'test',
+        ['read', 'write'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey })
+        .expect(400);
+      expect(response.body.retroToken).toBeFalsy();
+      expect(response.body.error).toEqual('unknown key');
+    });
+
+    it('returns a signed JWT token with scopes', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        retroId,
+        'test',
+        ['read', 'write'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      const { retroToken } = response.body;
+      const data = decodeJWT(retroToken, {
+        verifyKey: false,
+        verifyIss: 'retro-key',
+        verifyAud: `retro-${retroId}`,
+        verifyActive: true,
+      });
+      expect(data.payload.sub).toEqual(createdApiKey!.id);
+      expect(data.payload.scopes).toEqual({
+        read: true,
+        write: true,
+      });
+
+      await request(server)
+        .get(`/api/retros/${retroId}`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200);
+    });
+
+    it('revokes keys and tokens if deleted', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const createdApiKey = await hooks.retroAuthService.createApiKey(
+        retroId,
+        'test',
+        ['read', 'write'],
+      );
+      const apiKey = createdApiKey!.key;
+
+      const response = await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey })
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      const { retroToken } = response.body;
+
+      await request(server)
+        .get(`/api/retros/${retroId}`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200);
+
+      await hooks.retroAuthService.deleteApiKey(retroId, createdApiKey!.id);
+
+      // key is invalidated
+      await request(server)
+        .post(`/api/auth/tokens/${retroId}/api-key`)
+        .send({ apiKey })
+        .expect(400);
+
+      // existing tokens are invalidated
+      await request(server)
+        .get(`/api/retros/${retroId}`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(401);
+    });
+  });
+
   describe('/api/auth/tokens/retro-id/user', () => {
     it('responds with a token for the owner user', async (props) => {
       const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
@@ -203,7 +391,7 @@ describe('API auth', () => {
         .expect(400);
     });
 
-    it('returns a signed JWT token with read/write scope', async (props) => {
+    it('returns a signed JWT token with scopes', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
       const response = await request(server)
@@ -214,7 +402,7 @@ describe('API auth', () => {
       const { retroToken } = response.body;
       const data = decodeJWT(retroToken, {
         verifyKey: false,
-        verifyIss: false,
+        verifyIss: 'retro-password',
         verifyAud: `retro-${retroId}`,
         verifyActive: true,
       });

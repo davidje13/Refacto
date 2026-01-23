@@ -217,7 +217,10 @@ const STATUS_TEXT = new Map([
   ['403', 'Forbidden'],
   ['404', 'Not Found'],
   ['409', 'Conflict'],
+  ['413', 'Content Too Large'],
+  ['415', 'Unsupported Media Type'],
   ['422', 'Unprocessable Content'],
+  ['500', 'Internal Server Error'],
 ]);
 
 async function readResponse(
@@ -233,9 +236,12 @@ async function readResponse(
     }
   }
 
-  const out: ReactNode[] = [
-    `HTTP/1.1 ${response.status} ${response.statusText}\n`,
-  ];
+  // HTTP/2 does not support status text, but we want to show the message as
+  // if it had been performed using HTTP/1.1, so try to lookup a standard
+  // status message if the server did not include one.
+  const statusText =
+    response.statusText || STATUS_TEXT.get(String(response.status)) || '';
+  const out: ReactNode[] = [`HTTP/1.1 ${response.status} ${statusText}\n`];
   for (const [header, value] of response.headers) {
     if (expectedHeaders.has(header.toLowerCase())) {
       out.push(`${header}: ${value}\n`);

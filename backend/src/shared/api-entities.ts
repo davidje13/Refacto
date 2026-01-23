@@ -141,3 +141,16 @@ export function makeRetroArchive(
     ...details,
   };
 }
+
+export interface RetroApiKey {
+  id: string;
+  name: string;
+  created: number;
+  lastUsed: number;
+  scopes: string[];
+}
+
+export interface NewRetroApiKey {
+  id: string;
+  key: string;
+}

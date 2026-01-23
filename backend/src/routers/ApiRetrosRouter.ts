@@ -26,6 +26,7 @@ import type {
   RetroCreationInfo,
 } from '../shared/api-entities';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
+import { ApiRetroApiKeysRouter } from './ApiRetroApiKeysRouter';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { RetroService } from '../services/RetroService';
@@ -313,6 +314,11 @@ export class ApiRetrosRouter extends Router {
           await archives.return();
         }
       },
+    );
+
+    retroRouter.mount(
+      '/api-keys',
+      new ApiRetroApiKeysRouter(retroAuthService, analyticsService),
     );
 
     retroRouter.mount(

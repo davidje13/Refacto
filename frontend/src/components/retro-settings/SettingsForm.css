@@ -1,17 +1,18 @@
 form.retro-settings {
-  margin: 64px auto 128px;
+  margin: 64px auto;
 
-  .edit-password {
-    margin: 32px 0;
+  & h2 {
+    font-size: 1.2em;
+    font-weight: bolder;
+    margin: 32px 0 16px;
   }
 
-  .edit-password-button {
-    display: block;
-    margin: 32px auto;
+  & p {
+    margin: 8px 0;
   }
 
-  .theme {
-    max-height: 18rem;
+  .retro-url {
+    padding-bottom: 4px;
   }
 
   .theme-row {
@@ -30,6 +31,51 @@ form.retro-settings {
       vertical-align: middle;
       display: inline-block;
       text-align: center;
+    }
+  }
+
+  .form-actions {
+    margin: 0 -16px;
+    padding: 16px;
+    background: color-mix(in srgb-linear, var(--beige-back) 90%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: sticky;
+    bottom: 0;
+    anchor-name: --form-bottom;
+
+    @media (prefers-reduced-transparency) {
+      background: var(--beige-back);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    & button {
+      margin: 0;
+    }
+  }
+
+  @supports (position-anchor: --form-bottom) {
+    .form-actions-shadow {
+      position-anchor: --form-bottom;
+      position-area: center center;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 40px;
+      box-shadow: 0 -12px 4px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .bottom-shadow-cover {
+      margin: 0 -16px;
+      height: 24px;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--beige-back) 80%
+      );
+      position: relative;
     }
   }
 }

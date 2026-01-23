@@ -65,7 +65,7 @@ export const ArchivePopup = memo(
               Keep unticked items for next retro
             </label>
           ) : null}
-          <p className="dialog-options">
+          <section className="dialog-options">
             <button type="button" className="global-button" onClick={onClose}>
               Cancel
             </button>
@@ -77,7 +77,7 @@ export const ArchivePopup = memo(
               Archive
             </button>
             <Alert message={error} />
-          </p>
+          </section>
         </form>
       </Popup>
     );
