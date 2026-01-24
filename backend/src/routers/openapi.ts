@@ -373,6 +373,25 @@ export const openapi = Buffer.from(
               required: true,
               schema: { type: 'string' },
             },
+            {
+              name: 'items',
+              in: 'query',
+              description:
+                'A [json-immutability-helper condition](https://www.npmjs.com/package/json-immutability-helper#conditions) to apply to the items as a filter.',
+              required: false,
+              default: '{}',
+              content: {
+                'application/json': {
+                  schema: {
+                    oneOf: [
+                      { type: 'object', additionalProperties: {} },
+                      { type: 'array' },
+                    ],
+                    example: { category: ['=', 'action'] },
+                  },
+                },
+              },
+            },
           ],
           responses: {
             '200': {

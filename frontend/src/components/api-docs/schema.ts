@@ -29,8 +29,12 @@ export interface ParameterSpec {
   in: 'path' | 'query';
   description: string;
   required: boolean;
-  schema: JsonSchemaRef;
+  schema?: JsonSchemaRef;
+  content?: {
+    [mime: string]: { schema: JsonSchemaRef };
+  };
   example?: string;
+  default?: string;
 }
 
 export interface RequestSpec {
@@ -43,7 +47,7 @@ export interface ResponseSpec {
     [header: string]: { schema: JsonSchemaRef; example?: string };
   };
   content?: {
-    [mime: string]: { example?: unknown; schema?: JsonSchemaRef };
+    [mime: string]: { schema?: JsonSchemaRef; example?: unknown };
   };
 }
 

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import listCommands from 'json-immutability-helper/commands/list';
-import { context, type Spec } from 'json-immutability-helper';
+import { context, type Context, type Spec } from 'json-immutability-helper';
 import {
   DuplicateError,
   encryptByRecordWithMasterKey,
@@ -38,8 +38,8 @@ function dbError(err: unknown): unknown {
 }
 
 export class RetroService {
+  public readonly mutationContext: Context;
   public readonly retroBroadcaster: Broadcaster<Retro, Spec<Retro>>;
-
   private readonly retroCollection: Collection<Retro>;
 
   public constructor(db: DB, encryptionKey: Buffer) {
@@ -71,9 +71,10 @@ export class RetroService {
       { writeErrorIntercept: dbError },
     );
 
+    this.mutationContext = context.with(listCommands);
     this.retroBroadcaster = new Broadcaster<Retro, Spec<Retro>>(
       model,
-      context.with(listCommands),
+      this.mutationContext,
     );
   }
 

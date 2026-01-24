@@ -12,7 +12,7 @@ import {
 } from './schema';
 import { inlineFormat } from './inlineFormat';
 import { RestExample } from './RestExample';
-import { JSONSpec } from './JSONSpec';
+import { JSONSpec, makeExampleJSON } from './JSONSpec';
 
 interface EndpointListPropsT {
   spec: OpenApiSpec;
@@ -102,6 +102,31 @@ const Endpoint = memo(
       </section>
       <section>
         <h4>Request</h4>
+        {(def.parameters ?? [])
+          .filter((p) => p.in === 'query')
+          .map((query) => {
+            const content = Object.values(query.content ?? {});
+            const schema = query.schema
+              ? resolveRef(spec, query.schema)
+              : content.length
+                ? resolveRef(spec, content[0]!.schema)
+                : undefined;
+            const example =
+              query.example ??
+              JSON.stringify(makeExampleJSON(spec, schema ?? {}, true));
+            return (
+              <Fragment key={query.name}>
+                <p>
+                  Query parameter: <code>{query.name}</code>
+                  {query.required ? '' : ' (optional)'}
+                  <br />
+                  {inlineFormat(query.description)}
+                  <br />
+                  Example: <code>{example}</code>
+                </p>
+              </Fragment>
+            );
+          })}
         <TabControl
           tabs={Object.entries(def.requestBody?.content ?? {}).map(
             ([mime, req]) => ({

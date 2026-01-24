@@ -4,6 +4,7 @@ import {
   getBodyJSON,
   getPathParameter,
   getPathParameters,
+  getQuery,
   hasAuthScope,
   HTTPError,
   makeAcceptWebSocket,
@@ -202,8 +203,25 @@ export class ApiRetrosRouter extends Router {
       if (!data) {
         throw new HTTPError(404);
       }
-      analyticsService.event(req, 'get retro snapshot');
-      sendJSON(res, data);
+      const itemsCondition = getQuery(req, 'items');
+      if (itemsCondition) {
+        let predicate: (o: unknown) => boolean;
+        try {
+          predicate = retroService.mutationContext.makeConditionPredicate(
+            JSON.parse(itemsCondition),
+          );
+        } catch (err) {
+          throw new HTTPError(400, { body: 'invalid item filter', cause: err });
+        }
+        analyticsService.event(req, 'get filtered retro snapshot');
+        sendJSON(res, {
+          ...data,
+          items: data.items.filter(predicate),
+        });
+      } else {
+        analyticsService.event(req, 'get retro snapshot');
+        sendJSON(res, data);
+      }
     });
 
     retroRouter.patch('/', async (req, res) => {

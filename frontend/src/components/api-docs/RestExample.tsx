@@ -1,4 +1,10 @@
-import { memo, useLayoutEffect, useState, type ReactNode } from 'react';
+import {
+  Fragment,
+  memo,
+  useLayoutEffect,
+  useState,
+  type ReactNode,
+} from 'react';
 import { replaceAll } from '../../helpers/replaceAll';
 import { resolveRef, type MethodSpec, type OpenApiSpec } from './schema';
 import { makeExampleJSON } from './JSONSpec';
@@ -35,12 +41,16 @@ export const RestExample = memo(
 
     const base = new URL(basePath, document.location.href);
 
+    const queries = (def.parameters ?? []).filter((p) => p.in === 'query');
+
     const parts: ReactNode[] = [
       `${method.toUpperCase()} `,
       base.pathname,
       ...replaceAll(path, /\{([^{}]+)\}/g, ([_, name]) => {
-        const spec = def.parameters?.find((p) => p.name === name);
-        const schema = spec ? resolveRef(root, spec.schema) : undefined;
+        const spec = def.parameters?.find(
+          (p) => p.in === 'path' && p.name === name,
+        );
+        const schema = spec?.schema ? resolveRef(root, spec.schema) : undefined;
         return (
           <input
             type="text"
@@ -51,6 +61,33 @@ export const RestExample = memo(
             pattern={schema?.type === 'string' ? schema.pattern : undefined}
             required
           />
+        );
+      }),
+      ...queries.map((query, i) => {
+        const content = Object.values(query.content ?? {});
+        const schema = query.schema
+          ? resolveRef(root, query.schema)
+          : content.length
+            ? resolveRef(root, content[0]!.schema)
+            : undefined;
+        const example =
+          query.example ??
+          JSON.stringify(makeExampleJSON(root, schema ?? {}, true));
+        return (
+          <Fragment key={`query-${query.name}`}>
+            {i === 0 ? '?' : '&'}
+            <label>
+              {query.name}=
+              <input
+                type="text"
+                name={`query-${query.name}`}
+                placeholder={query.default ?? ''}
+                defaultValue={query.required ? example : ''}
+                pattern={schema?.type === 'string' ? schema.pattern : undefined}
+                required={query.required}
+              />
+            </label>
+          </Fragment>
         );
       }),
       ` HTTP/1.1\n`,
@@ -120,11 +157,19 @@ export const RestExample = memo(
             if (contentType) {
               headers['content-type'] = contentType.mime;
             }
+            const search = new URLSearchParams();
+            for (const query of queries) {
+              const value = findElement(`query-${query.name}`)!.value;
+              if (value) {
+                search.append(query.name, value);
+              }
+            }
             const response = await fetch(
               base.href +
                 path.replaceAll(/\{([^{}]+)\}/g, (_, name) =>
                   encodeURIComponent(findElement(`path-${name}`)!.value),
-                ),
+                ) +
+                (search.size ? `?${search}` : ''),
               {
                 method: method.toUpperCase(),
                 headers,
