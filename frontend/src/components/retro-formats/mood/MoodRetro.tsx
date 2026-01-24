@@ -29,6 +29,7 @@ import { useGate } from '../../../hooks/useGate';
 import { OPTIONS } from '../../../helpers/optionManager';
 import { MoodSection } from './categories/MoodSection';
 import { ActionsPane } from './actions/ActionsPane';
+import { ActionToast } from './actions/ActionToast';
 import { BeginDiscussionPopup } from './BeginDiscussionPopup';
 import './MoodRetro.css';
 
@@ -197,6 +198,10 @@ export const MoodRetro = ({
     />
   );
 
+  const actionToast = archive ? null : (
+    <ActionToast group={group} items={retroItems} />
+  );
+
   if (singleColumn) {
     const tabs = [
       ...CATEGORIES.map((category) => ({
@@ -216,6 +221,7 @@ export const MoodRetro = ({
     return (
       <div className={baseClassName}>
         <TabControl tabs={tabs} />
+        {actionToast}
         {popup}
       </div>
     );
@@ -227,6 +233,7 @@ export const MoodRetro = ({
         {CATEGORIES.map((category) => createMoodSection(category))}
       </section>
       {actionSection}
+      {actionToast}
       {popup}
     </div>
   );
