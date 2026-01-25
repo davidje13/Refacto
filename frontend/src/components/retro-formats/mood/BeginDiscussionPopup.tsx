@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { realAutoFocus } from '../../../helpers/realAutoFocus';
 import { Popup } from '../../common/Popup';
 import './BeginDiscussionPopup.css';
 
@@ -37,6 +38,7 @@ export const BeginDiscussionPopup = memo(
             Cancel
           </button>
           <button
+            ref={realAutoFocus}
             type="button"
             className="global-button primary"
             onClick={onConfirm}

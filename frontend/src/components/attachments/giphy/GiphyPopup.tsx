@@ -1,6 +1,7 @@
 import { useState, memo } from 'react';
 import useAwaited from 'react-hook-awaited';
 import type { RetroItemAttachment } from '../../../shared/api-entities';
+import { realAutoFocus } from '../../../helpers/realAutoFocus';
 import { giphyService } from '../../../api/api';
 import { GiphyAttribution } from './GiphyAttribution';
 import './GiphyPopup.css';
@@ -29,6 +30,7 @@ export const GiphyPopup = memo(
           }}
         >
           <input
+            ref={realAutoFocus}
             type="text"
             value={query}
             placeholder="Enter a search term"

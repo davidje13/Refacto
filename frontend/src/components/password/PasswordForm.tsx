@@ -1,14 +1,20 @@
 import { useState, type ReactElement } from 'react';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
+import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { retroAuthService, retroAuthTracker } from '../../api/api';
 import { Alert } from '../common/Alert';
 
 interface PropsT {
   slug: string;
   retroId: string;
+  autoFocus?: boolean;
 }
 
-export const PasswordForm = ({ slug, retroId }: PropsT): ReactElement => {
+export const PasswordForm = ({
+  slug,
+  retroId,
+  autoFocus,
+}: PropsT): ReactElement => {
   const [rememberMe, setRememberMe] = useState(false);
   const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState('');
@@ -38,6 +44,7 @@ export const PasswordForm = ({ slug, retroId }: PropsT): ReactElement => {
       {/* 'name' is a friendly name for password managers (but can be changed) */}
       <input type="hidden" name="name" value={slug} autoComplete="name" />
       <input
+        ref={autoFocus ? realAutoFocus : undefined}
         type="password"
         placeholder="password"
         value={password}

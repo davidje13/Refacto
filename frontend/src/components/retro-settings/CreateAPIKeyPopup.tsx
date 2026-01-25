@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import type { Retro } from '../../shared/api-entities';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
+import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { retroApiKeyService } from '../../api/api';
 import { Popup } from '../common/Popup';
 import { Alert } from '../common/Alert';
@@ -78,6 +79,7 @@ export const CreateAPIKeyPopup = memo(
             <label>
               API Key Name
               <input
+                ref={realAutoFocus}
                 name="api-key-name"
                 type="text"
                 placeholder="key name"

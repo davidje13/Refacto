@@ -84,7 +84,7 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
               Your login has expired or the retro password has been changed.
             </p>
             <p>Please enter the retro password to continue:</p>
-            <PasswordForm slug={slug} retroId={retroId} />
+            <PasswordForm slug={slug} retroId={retroId} autoFocus />
           </div>
         </Popup>
       );

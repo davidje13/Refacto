@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { QR } from '../common/QR';
 import { Popup } from '../common/Popup';
 import './InvitePopup.css';
@@ -25,6 +26,7 @@ export const InvitePopup = memo(({ isOpen, onClose }: PropsT) => {
         <QR className="qr-code" content={url} />
         <section className="dialog-options">
           <button
+            ref={realAutoFocus}
             type="button"
             className="global-button primary"
             onClick={onClose}

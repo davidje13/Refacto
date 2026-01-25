@@ -1,6 +1,7 @@
 import { memo, useEffect } from 'react';
 import type { Retro, RetroApiKey } from '../../shared/api-entities';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
+import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { retroApiKeyService } from '../../api/api';
 import { Popup } from '../common/Popup';
 import { Alert } from '../common/Alert';
@@ -48,7 +49,12 @@ export const DeleteAPIKeyPopup = memo(
             the key, and cannot be undone.
           </p>
           <section className="dialog-options">
-            <button type="button" className="global-button" onClick={onClose}>
+            <button
+              ref={realAutoFocus}
+              type="button"
+              className="global-button"
+              onClick={onClose}
+            >
               Cancel
             </button>
             <button

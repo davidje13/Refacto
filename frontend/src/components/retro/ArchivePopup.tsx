@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import type { Retro } from '../../shared/api-entities';
 import { Popup } from '../common/Popup';
 import { Alert } from '../common/Alert';
+import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { archiveService } from '../../api/api';
 import type { RetroDispatch } from '../../api/RetroTracker';
@@ -72,6 +73,7 @@ export const ArchivePopup = memo(
               Cancel
             </button>
             <button
+              ref={realAutoFocus}
               type="submit"
               className="global-button primary"
               disabled={sending}
