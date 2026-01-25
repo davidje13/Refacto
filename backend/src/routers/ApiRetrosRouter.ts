@@ -254,7 +254,9 @@ export class ApiRetrosRouter extends Router {
       if (change) {
         await requireAuthScope('write').handleRequest(req, res);
         const permission = retroService.getPermissions(true);
-        await retroService.retroBroadcaster.update(retroId, change, permission);
+        await retroService.retroBroadcaster.update(retroId, change, {
+          permission,
+        });
         analyticsService.event(req, 'patch retro content');
       }
 

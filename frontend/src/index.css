@@ -1,3 +1,7 @@
+:root {
+  view-transition-name: none;
+}
+
 html,
 body {
   margin: 0;
@@ -75,4 +79,8 @@ body.headless * {
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   text-shadow: none !important;
+
+  & * {
+    view-transition-name: none !important;
+  }
 }

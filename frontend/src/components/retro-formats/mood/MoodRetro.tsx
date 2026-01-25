@@ -50,6 +50,7 @@ const CATEGORIES: Category[] = [
 ];
 
 interface PropsT {
+  className?: string;
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: MoodRetroStateT;
@@ -68,6 +69,7 @@ const ADVANCE_GRACE_PERIOD = 2000;
 const NEVER = Number.NEGATIVE_INFINITY;
 
 export const MoodRetro = ({
+  className,
   retroOptions,
   retroState: { focusedItemId = null, focusedItemTimeout = 0 },
   retroItems,
@@ -181,6 +183,7 @@ export const MoodRetro = ({
 
   const baseClassName = classNames(
     'retro-format-mood',
+    className,
     singleColumn ? 'single-column' : 'multi-column',
     { 'has-focused': hasFocused, archive },
   );

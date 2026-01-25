@@ -1,0 +1,137 @@
+html:active-view-transition-type(archive) {
+  .retro-content {
+    view-transition-name: retro-content;
+  }
+
+  .archives-link {
+    view-transition-name: archives-link;
+  }
+}
+
+::view-transition-group(retro-content) {
+  animation-duration: 2s;
+}
+
+::view-transition-old(retro-content) {
+  position: absolute;
+  animation-name: dull-archive, scale-archive, x-archive, y-archive;
+  z-index: 1;
+}
+
+::view-transition-new(retro-content) {
+  animation: none;
+}
+
+::view-transition-group(archives-link) {
+  animation-delay: 1.8s;
+  animation-duration: 0.5s;
+  z-index: 1;
+}
+
+::view-transition-old(archives-link) {
+  animation: none;
+}
+
+::view-transition-new(archives-link) {
+  filter: brightness(0) invert(0.7) sepia(1) saturate(3) hue-rotate(-10deg)
+    drop-shadow(0 0 5px #f9cd3e);
+  animation-name: archives-link-flash;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(retro-content) {
+    animation-duration: 0.4s;
+  }
+
+  ::view-transition-group(archives-link) {
+    animation-delay: 0.2s;
+  }
+
+  ::view-transition-old(retro-content) {
+    animation-name: fade-archive;
+  }
+}
+
+@keyframes dull-archive {
+  from {
+    filter: none;
+    animation-timing-function: ease-out;
+  }
+
+  20% {
+    filter: saturate(0.5);
+  }
+
+  80% {
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+
+  to {
+    filter: saturate(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes scale-archive {
+  from {
+    transform: translate(-50%, -50%);
+    animation-timing-function: cubic-bezier(0.2, 0.1, 0.2, 1);
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(0.05);
+  }
+}
+
+@keyframes x-archive {
+  from {
+    left: 50%;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+
+  to {
+    left: calc(100% - 48px);
+  }
+}
+
+@keyframes y-archive {
+  from {
+    top: 50%;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 0);
+  }
+
+  to {
+    top: 0;
+  }
+}
+
+@keyframes archives-link-flash {
+  from {
+    opacity: 0;
+    animation-timing-function: ease-in-out;
+  }
+
+  33% {
+    opacity: 0.5;
+  }
+
+  66% {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-archive {
+  from {
+    opacity: 1;
+    animation-timing-function: ease;
+  }
+
+  to {
+    opacity: 0;
+  }
+}

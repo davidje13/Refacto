@@ -5,6 +5,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
+import { flushSync } from 'react-dom';
 import { Route, Switch, useLocation } from 'wouter';
 import TickBold from '../../resources/tick-bold.svg';
 import type { Retro, RetroAuth } from '../shared/api-entities';
@@ -172,7 +173,19 @@ function useRetroReducer(retroId: string | null): RetroReducerState {
     const subscription = retroTracker.subscribe(
       retroId,
       retroAuth.retroToken,
-      (data) => setRetroState(data),
+      (data, events) => {
+        const animation = events.some(([evt]) => evt === 'archive')
+          ? 'archive'
+          : null;
+        if (animation) {
+          document.startViewTransition({
+            update: () => flushSync(() => setRetroState(data)),
+            types: [animation],
+          });
+        } else {
+          setRetroState(data);
+        }
+      },
       (status) => setStatus(status ? 'connected' : 'reconnecting'),
       () =>
         reauthenticateByUser(retroId, ac.signal).then((success) => {

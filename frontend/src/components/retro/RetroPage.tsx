@@ -8,6 +8,7 @@ import { useBoolean } from '../../hooks/useBoolean';
 import { OPTIONS } from '../../helpers/optionManager';
 import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
 import { InvitePopup } from './InvitePopup';
+import './RetroPage.css';
 
 const BLANK_STATE = {};
 
@@ -67,6 +68,7 @@ export const RetroPage = memo(
       {
         label: 'Archives',
         action: `/retros/${encodeURIComponent(retro.slug)}/archives`,
+        className: 'archives-link',
       },
     ];
 
@@ -86,6 +88,7 @@ export const RetroPage = memo(
           links={retro ? links : []}
         />
         <RetroFormatPicker
+          className="retro-content"
           retroFormat={retro.format}
           retroOptions={retro.options}
           retroItems={retro.items}

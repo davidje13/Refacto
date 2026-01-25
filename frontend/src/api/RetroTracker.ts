@@ -3,6 +3,7 @@ import {
   type Dispatch,
   type DispatchSpec,
   type DisconnectDetail,
+  type StateListener,
 } from 'shared-reducer/frontend';
 import type { Retro } from '../shared/api-entities';
 import { SubscriptionTracker } from './SubscriptionTracker';
@@ -64,7 +65,7 @@ export class RetroTracker {
   public subscribe(
     retroId: string,
     retroToken: string,
-    retroStateCallback: (state: Retro) => void,
+    retroStateCallback: StateListener<Retro>,
     connectivityCallback: (connected: boolean) => void,
     reauthenticateCallback: () => void,
   ): RetroSubscription {

@@ -4,6 +4,7 @@ import type { RetroDispatch } from '../../api/RetroTracker';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
 interface ChildPropsT {
+  className?: string;
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: Record<string, unknown>;

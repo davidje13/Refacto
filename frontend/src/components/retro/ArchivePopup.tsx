@@ -22,7 +22,9 @@ export const ArchivePopup = memo(
     const [performArchive, sending, error, resetError] = useSubmissionCallback(
       async () => {
         await archiveService.create({ retro, retroToken });
-        retroDispatch?.(clearCovered(preserveRemaining));
+        retroDispatch?.(clearCovered(preserveRemaining), {
+          events: [['archive']],
+        });
         onClose();
       },
     );
