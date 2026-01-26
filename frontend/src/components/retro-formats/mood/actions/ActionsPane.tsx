@@ -1,15 +1,17 @@
 import { memo } from 'react';
-import { classNames } from '../../../../helpers/classNames';
 import type {
   RetroItem,
   UserProvidedRetroItemDetails,
 } from '../../../../shared/api-entities';
-import { ActionSection } from './ActionSection';
-import { ItemEditor } from '../ItemEditor';
+import TickBold from '../../../../../resources/tick-bold.svg';
+import { classNames } from '../../../../helpers/classNames';
+import { useTypingEvent } from '../../../../hooks/useTypingEvent';
+import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import type { LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
-import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
-import TickBold from '../../../../../resources/tick-bold.svg';
+import { ActionSection } from './ActionSection';
+import { TypingIndicator } from './TypingIndicator';
+import { ItemEditor } from '../ItemEditor';
 
 interface PropsT {
   items: RetroItem[];
@@ -43,6 +45,7 @@ export const ActionsPane = memo(
     const handleAddItem = useOptionalBoundEvent(onAddItem, group);
     const today = localDateProvider.getMidnightTimestamp();
     const lastWeek = localDateProvider.getMidnightTimestamp(-7);
+    const typing = useTypingEvent(`action${group ? `-${group}` : ''}:`);
 
     return (
       <section className="actions">
@@ -58,6 +61,7 @@ export const ActionsPane = memo(
                 <ItemEditor
                   identifier="new-action"
                   onSubmit={handleAddItem}
+                  onChange={typing.onChange}
                   submitButtonLabel={
                     <TickBold aria-label="Save action" role="img" />
                   }
@@ -67,6 +71,7 @@ export const ActionsPane = memo(
                   blurOnSubmit
                   blurOnCancel
                 />
+                <TypingIndicator other={typing.other} me={typing.me} />
               </div>
             </div>
           )}

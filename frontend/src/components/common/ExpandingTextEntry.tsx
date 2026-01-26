@@ -23,6 +23,7 @@ function hasContent(o: ReactNode): boolean {
 interface PropsT {
   onSubmit: (value: string) => void;
   onCancel?: (() => void) | undefined;
+  onChange?: ((value: string) => void) | undefined;
   placeholder?: string;
   defaultValue?: string;
   identifier?: string | undefined;
@@ -41,6 +42,7 @@ interface PropsT {
 export const ExpandingTextEntry = ({
   onSubmit,
   onCancel,
+  onChange,
   placeholder = '',
   defaultValue = '',
   identifier,
@@ -74,6 +76,9 @@ export const ExpandingTextEntry = ({
     }
 
     onSubmit(value);
+    if (clearAfterSubmit && onChange) {
+      onChange('');
+    }
   });
 
   const handleCancel = useEvent(() => {
@@ -106,7 +111,10 @@ export const ExpandingTextEntry = ({
         wrap="soft"
         autoFocus={autoFocus}
         sizeToFit
-        onChange={setValue}
+        onChange={(newValue) => {
+          setValue(newValue);
+          onChange?.(newValue);
+        }}
         onChangeMultiline={setTextMultiline}
         multilineClass={alwaysMultiline ? null : 'multiline'}
         multilineClassElement={form}

@@ -348,17 +348,32 @@
         }
       }
 
-      .new-action-item .text-entry {
-        margin: 0 auto;
-        min-width: 24em;
-        width: calc(100vw / 3 + 48px);
+      .new-action-item-hold {
+        position: relative;
+      }
+
+      .new-action-item {
+        --entry-width: max(calc(100vw / 3 + 48px), 24rem);
+
+        .text-entry {
+          margin: 0 auto;
+          width: var(--entry-width);
+        }
+
+        .typing-indicator {
+          position: absolute;
+          left: calc(50vw + var(--entry-width) / 2);
+          padding: 8px 16px;
+          bottom: 0;
+          font-size: 0.8em;
+          opacity: 0.8;
+        }
       }
 
       /* new-action-item is sticky on the bottom of the page
        * but because it needs to escape its parent, this
        * hierarchy is needed */
       .new-action-item-hold.always-visible {
-        position: relative;
         margin: calc(var(--add-action-max-scroll) * -1) 0 -8px;
         pointer-events: none;
         z-index: 2; /* above face icons */
@@ -382,6 +397,10 @@
           -webkit-backdrop-filter: blur(10px);
           position: sticky;
           bottom: 0;
+
+          .typing-indicator {
+            padding-bottom: 24px;
+          }
 
           @media (prefers-reduced-transparency) {
             background: var(--beige-back);
@@ -420,6 +439,14 @@
       > section {
         padding-bottom: 20px;
       }
+    }
+
+    .new-action-item .typing-indicator {
+      min-height: 1.4em;
+      text-align: right;
+      padding: 8px 16px;
+      font-size: 0.8em;
+      opacity: 0.8;
     }
   }
 }

@@ -19,6 +19,7 @@ import {
 } from '../api/api';
 import { useSlug } from '../hooks/data/useSlug';
 import { useEvent } from '../hooks/useEvent';
+import { LiveEventsProvider } from '../hooks/useLiveEvents';
 import { useRetroAuth } from '../hooks/data/useRetroAuth';
 import { StateMapProvider } from '../hooks/useStateMap';
 import { Popup } from './common/Popup';
@@ -38,7 +39,8 @@ interface PropsT {
 
 export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
-  const [retro, retroDispatch, retroAuth, status] = useRetroReducer(retroId);
+  const [retroState, retroDispatch, retroAuth, status] =
+    useRetroReducer(retroId);
 
   if (slugError?.message === 'not found') {
     return <RetroNotFoundPage slug={slug} />;
@@ -52,11 +54,11 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
     return <div className="loader">Loading&hellip;</div>;
   }
 
-  if (!retroAuth || (!retro && status === 'reauthenticate')) {
+  if (!retroAuth || (!retroState && status === 'reauthenticate')) {
     return <PasswordPage slug={slug} retroId={retroId} />;
   }
 
-  if (!retro) {
+  if (!retroState) {
     return <div className="loader">Loading&hellip;</div>;
   }
 
@@ -93,40 +95,50 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
 
   const retroParams = {
     retroToken: retroAuth.retroToken,
-    retro,
+    retro: retroState.retro,
     retroDispatch,
   };
 
   return (
-    <StateMapProvider scope={slug}>
-      <Switch>
-        <Route path="/retros/:slug">
-          <RetroPage {...retroParams} />
-        </Route>
-        <Route path="/retros/:slug/groups/:group">
-          {({ group }) => <RetroPage {...retroParams} group={group} />}
-        </Route>
-        <Route path="/retros/:slug/archives">
-          <ArchiveListPage {...retroParams} />
-        </Route>
-        <Route path="/retros/:slug/archives/:archiveId">
-          {({ archiveId }) => (
-            <ArchivePage {...retroParams} archiveId={archiveId} />
-          )}
-        </Route>
-        <Route path="/retros/:slug/archives/:archiveId/groups/:group">
-          {({ archiveId, group }) => (
-            <ArchivePage {...retroParams} archiveId={archiveId} group={group} />
-          )}
-        </Route>
-        <Route path="/retros/:slug/settings">
-          <RetroSettingsPage {...retroParams} />
-        </Route>
+    <LiveEventsProvider dispatch={retroDispatch} events={retroState.events}>
+      <StateMapProvider scope={slug}>
+        <Switch>
+          <Route path="/retros/:slug">
+            <RetroPage {...retroParams} />
+          </Route>
+          <Route path="/retros/:slug/groups/:group">
+            {({ group }) => <RetroPage {...retroParams} group={group} />}
+          </Route>
+          <Route path="/retros/:slug/archives">
+            <ArchiveListPage {...retroParams} />
+          </Route>
+          <Route path="/retros/:slug/archives/:archiveId">
+            {({ archiveId }) => (
+              <ArchivePage {...retroParams} archiveId={archiveId} />
+            )}
+          </Route>
+          <Route path="/retros/:slug/archives/:archiveId/groups/:group">
+            {({ archiveId, group }) => (
+              <ArchivePage
+                {...retroParams}
+                archiveId={archiveId}
+                group={group}
+              />
+            )}
+          </Route>
+          <Route path="/retros/:slug/settings">
+            <RetroSettingsPage {...retroParams} />
+          </Route>
 
-        <RedirectRoute path="/retros/:slug/:rest*" to="/retros/:slug" replace />
-      </Switch>
-      {overlay}
-    </StateMapProvider>
+          <RedirectRoute
+            path="/retros/:slug/:rest*"
+            to="/retros/:slug"
+            replace
+          />
+        </Switch>
+        {overlay}
+      </StateMapProvider>
+    </LiveEventsProvider>
   );
 };
 
@@ -142,8 +154,13 @@ type RetroReducerStatus =
   | 'reconnecting'
   | 'reauthenticate';
 
+interface RetroState {
+  retro: Retro;
+  events: Map<string, unknown[]>;
+}
+
 type RetroReducerState = [
-  Retro | null,
+  RetroState | null,
   RetroDispatch | null,
   RetroAuth | null,
   RetroReducerStatus,
@@ -151,10 +168,12 @@ type RetroReducerState = [
 
 const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
 
+const MAX_EVENT_MEMORY = 512;
+
 function useRetroReducer(retroId: string | null): RetroReducerState {
   const retroAuth = useRetroAuth(retroId);
   const [location, setLocation] = useLocation();
-  const [retroState, setRetroState] = useState<Retro | null>(null);
+  const [retroState, setRetroState] = useState<RetroState | null>(null);
   const [status, setStatus] = useState<RetroReducerStatus>('init');
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
     null,
@@ -174,16 +193,30 @@ function useRetroReducer(retroId: string | null): RetroReducerState {
       retroId,
       retroAuth.retroToken,
       (data, events) => {
+        const setter = (oldState: RetroState | null): RetroState => {
+          let newEvents = oldState?.events;
+          if (events.length > 0) {
+            newEvents = new Map(newEvents);
+            for (const [id, ...details] of events) {
+              newEvents.delete(id);
+              if (newEvents.size > MAX_EVENT_MEMORY) {
+                newEvents.delete(newEvents.keys().next().value!);
+              }
+              newEvents.set(id, details);
+            }
+          }
+          return { retro: data, events: newEvents ?? new Map() };
+        };
         const animation = events.some(([evt]) => evt === 'archive')
           ? 'archive'
           : null;
         if (animation) {
           document.startViewTransition({
-            update: () => flushSync(() => setRetroState(data)),
+            update: () => flushSync(() => setRetroState(setter)),
             types: [animation],
           });
         } else {
-          setRetroState(data);
+          setRetroState(setter);
         }
       },
       (status) => setStatus(status ? 'connected' : 'reconnecting'),
@@ -215,7 +248,7 @@ function useRetroReducer(retroId: string | null): RetroReducerState {
     });
   });
 
-  const slug = retroState?.slug;
+  const slug = retroState?.retro.slug;
   useEffect(() => {
     if (slug) {
       updateSlug(slug);

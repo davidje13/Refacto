@@ -18,6 +18,7 @@ interface PropsT {
   onSubmit: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
   onCancel?: (() => void) | undefined;
   onDelete?: (() => void) | undefined;
+  onChange?: ((value: string) => void) | undefined;
   placeholder?: string;
   autoFocus?: boolean;
   submitButtonLabel?: ReactNode;
@@ -35,6 +36,7 @@ export const ItemEditor = memo(
     onSubmit,
     onCancel,
     onDelete,
+    onChange,
     allowAttachments = false,
     clearAfterSubmit = false,
     ...rest
@@ -59,6 +61,7 @@ export const ItemEditor = memo(
       <ExpandingTextEntry
         defaultValue={defaultItem?.message ?? ''}
         identifier={identifier}
+        onChange={onChange}
         onSubmit={handleSubmit}
         onCancel={onCancel}
         extraInputs={attachmentElement}
