@@ -52,6 +52,10 @@
     box-sizing: border-box;
   }
 
+  & input[hidden] {
+    display: none;
+  }
+
   & fieldset {
     margin-top: 8px;
     padding: 8px 8px 0;

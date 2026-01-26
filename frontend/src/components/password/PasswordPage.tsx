@@ -48,7 +48,7 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
         title={`Password for ${slug}`}
         backLink={{ label: 'Home', action: '/' }}
       />
-      <PasswordForm slug={slug} retroId={retroId} />
+      <PasswordForm slug={slug} retroId={retroId} encourageBrowserSave />
     </article>
   );
 };

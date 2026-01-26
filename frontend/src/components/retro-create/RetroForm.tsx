@@ -152,6 +152,17 @@ export const RetroForm = memo(
             showAvailability
           />
         </label>
+        {/* this field exists to fix some wonkiness in Firefox's autocomplete
+            (see https://bugzilla.mozilla.org/show_bug.cgi?id=499223), but we don't
+            have a retro ID yet so we can't fill it in properly */}
+        <input
+          type="text"
+          hidden
+          readOnly
+          name="username"
+          value={slug}
+          autoComplete="username"
+        />
         <SetPassword
           label="Collaborator password"
           confirmLabel="Confirm password"

@@ -8,12 +8,14 @@ interface PropsT {
   slug: string;
   retroId: string;
   autoFocus?: boolean;
+  encourageBrowserSave?: boolean;
 }
 
 export const PasswordForm = ({
   slug,
   retroId,
   autoFocus,
+  encourageBrowserSave,
 }: PropsT): ReactElement => {
   const [rememberMe, setRememberMe] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -30,19 +32,39 @@ export const PasswordForm = ({
     );
     retroAuthTracker.set(retroId, retroAuth, rememberMe);
     setSuccess(true);
+    if (encourageBrowserSave) {
+      try {
+        // This navigation is required for iOS Safari to notice the form has been
+        // submitted successfully and offer to save the password
+        window.history.replaceState(null, '');
+      } catch {}
+    }
   });
 
   return (
-    <form className="global-form" onSubmit={handleSubmit}>
+    <form
+      className="global-form"
+      onSubmit={handleSubmit}
+      action={encourageBrowserSave ? '#login' : undefined}
+    >
       {/* 'username' is included for password managers to distinguish between retros */}
       <input
-        type="hidden"
+        type="text" // note: Chrome + Firefox fail to recognise type="hidden"
+        hidden
+        readOnly
         name="username"
         value={retroId}
         autoComplete="username"
       />
       {/* 'name' is a friendly name for password managers (but can be changed) */}
-      <input type="hidden" name="name" value={slug} autoComplete="name" />
+      <input
+        type="text"
+        hidden
+        readOnly
+        name="name"
+        value={slug}
+        autoComplete="name"
+      />
       <input
         ref={autoFocus ? realAutoFocus : undefined}
         type="password"
