@@ -4,6 +4,8 @@ import { retroAuthService } from '../api/api';
 import { LiveEventsProvider } from '../hooks/useLiveEvents';
 import { useRetroReducer } from '../hooks/data/useRetroReducer';
 import { useLocationHash } from '../hooks/env/useLocationHash';
+import { Header } from './common/Header';
+import { LoadingIndicator } from './common/Loader';
 import { ConnectionOverlay } from './retro/ConnectionOverlay';
 import { RetroPage } from './retro/RetroPage';
 
@@ -30,14 +32,28 @@ export const WatchRetro: FunctionComponent<PropsT> = ({ retroId }) => {
 
   if (retroAuth.state === 'rejected') {
     return (
-      <div className="loader error">
-        Incorrect URL, or access to this retro has been revoked
-      </div>
+      <article className="page-watch-auth-error short-page">
+        <Header
+          documentTitle="Incorrect URL - Refacto"
+          title="Incorrect URL"
+          backLink={{ label: 'Home', action: '/' }}
+        />
+        <p>Incorrect URL, or access to this retro has been revoked</p>
+      </article>
     );
   }
 
   if (!retroAuth.latestData || !retroState) {
-    return <div className="loader">Loading&hellip;</div>;
+    return (
+      <article className="page-retro-loading">
+        <Header
+          documentTitle="Refacto"
+          title="Refacto"
+          backLink={{ label: 'Home', action: '/' }}
+        />
+        <LoadingIndicator />
+      </article>
+    );
   }
 
   return (

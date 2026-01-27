@@ -3,6 +3,7 @@ import useAwaited from 'react-hook-awaited';
 import { Header } from '../common/Header';
 import { useUserData } from '../../hooks/data/useUserData';
 import { retroAuthService, retroAuthTracker } from '../../api/api';
+import { LoadingIndicator } from '../common/Loader';
 import { PasswordForm } from './PasswordForm';
 import './PasswordPage.css';
 
@@ -36,7 +37,7 @@ export const PasswordPage = ({ slug, retroId }: PropsT): ReactElement => {
           title={slug}
           backLink={{ label: 'Home', action: '/' }}
         />
-        <div className="loader">Loading&hellip;</div>
+        <LoadingIndicator />
       </article>
     );
   }

@@ -16,7 +16,7 @@ export const ArchiveListPage = memo(({ retroAuth, retro }: PropsT) => {
   );
 
   return (
-    <article className="page-archive-list">
+    <article className="page-archive-list short-page">
       <Header
         documentTitle={`Archives - ${retro.name} - Refacto`}
         title={`${retro.name} Archives`}

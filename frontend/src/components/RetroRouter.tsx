@@ -14,6 +14,8 @@ import { useRetroAuth } from '../hooks/data/useRetroAuth';
 import { useRetroReducer } from '../hooks/data/useRetroReducer';
 import { StateMapProvider } from '../hooks/useStateMap';
 import { RetroNotFoundPage } from './retro-not-found/RetroNotFoundPage';
+import { Header } from './common/Header';
+import { LoadingError, LoadingIndicator } from './common/Loader';
 import { PasswordPage } from './password/PasswordPage';
 import { ConnectionOverlay } from './retro/ConnectionOverlay';
 import { RetroPage } from './retro/RetroPage';
@@ -41,11 +43,29 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
   }
 
   if (slugError) {
-    return <div className="loader error">{slugError.message}</div>;
+    return (
+      <article className="page-retro-error">
+        <Header
+          documentTitle={`${slug} - Refacto`}
+          title={slug}
+          backLink={{ label: 'Home', action: '/' }}
+        />
+        <LoadingError error={slugError.message} />
+      </article>
+    );
   }
 
   if (!retroId) {
-    return <div className="loader">Loading&hellip;</div>;
+    return (
+      <article className="page-retro-loading">
+        <Header
+          documentTitle={`${slug} - Refacto`}
+          title={slug}
+          backLink={{ label: 'Home', action: '/' }}
+        />
+        <LoadingIndicator />
+      </article>
+    );
   }
 
   if (!retroAuth || (!retroState && status === 'reauthenticate')) {
@@ -53,7 +73,16 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
   }
 
   if (!retroState) {
-    return <div className="loader">Loading&hellip;</div>;
+    return (
+      <article className="page-retro-loading">
+        <Header
+          documentTitle={`${slug} - Refacto`}
+          title={slug}
+          backLink={{ label: 'Home', action: '/' }}
+        />
+        <LoadingIndicator />
+      </article>
+    );
   }
 
   const retroParams = {

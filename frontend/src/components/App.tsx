@@ -2,6 +2,8 @@ import { lazy, Suspense, type FunctionComponent } from 'react';
 import { Route, Switch } from 'wouter';
 import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
+import { Header } from './common/Header';
+import { LoadingIndicator } from './common/Loader';
 import { LoginCallback } from './login/LoginCallback';
 import { RetroRouter } from './RetroRouter';
 import { WatchRetro } from './WatchRetro';
@@ -61,4 +63,9 @@ export const App: FunctionComponent = () => (
   </>
 );
 
-const LOADER = <div className="loader">Loading&hellip;</div>;
+const LOADER = (
+  <article className="page-loading">
+    <Header documentTitle="Refacto" title="Refacto" />
+    <LoadingIndicator />
+  </article>
+);

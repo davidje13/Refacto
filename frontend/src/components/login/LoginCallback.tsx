@@ -4,7 +4,6 @@ import { handleLogin } from './handleLogin';
 import { useEvent } from '../../hooks/useEvent';
 import { sessionStore } from '../../helpers/storage';
 import { Header } from '../common/Header';
-import './LoginCallback.css';
 
 interface PropsT {
   service: string;
@@ -55,7 +54,7 @@ export const LoginCallback = memo(({ service }: PropsT) => {
   }, [stableSetLocation]);
 
   return (
-    <article className="page-login-callback">
+    <article className="page-login-callback short-page">
       <Header
         documentTitle="Refacto"
         title="Refacto"

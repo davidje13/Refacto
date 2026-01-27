@@ -53,3 +53,11 @@
     }
   }
 }
+
+.short-page {
+  text-align: center;
+
+  & p {
+    margin: 64px 32px;
+  }
+}

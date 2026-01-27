@@ -1,10 +1,4 @@
 .page-archive-list {
-  text-align: center;
-
-  & p {
-    margin: 64px 32px;
-  }
-
   & ul.archives {
     margin: 64px 16px 128px;
     list-style: none;

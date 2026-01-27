@@ -1,6 +1,7 @@
 import { Suspense, memo, lazy, type ComponentType } from 'react';
 import type { RetroItem } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
+import { LoadingIndicator } from '../common/Loader';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
 interface ChildPropsT {
@@ -28,7 +29,7 @@ formats.set(
   ),
 );
 
-const LOADER = <div className="loader">Loading&hellip;</div>;
+const LOADER = <LoadingIndicator />;
 
 export const RetroFormatPicker = memo(
   ({ retroFormat, archive = false, ...props }: PropsT) => {
