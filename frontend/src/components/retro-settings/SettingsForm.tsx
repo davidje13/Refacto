@@ -110,7 +110,7 @@ export const SettingsForm = memo(
         >
           <summary>Change Collaborator Password</summary>
           {editingPassword ? ( // only render content if editing, to avoid validation of hidden items
-            <>
+            <div className="content">
               <SetPassword
                 username={retro.id}
                 name={slug}
@@ -130,24 +130,26 @@ export const SettingsForm = memo(
                 />
                 Prompt current participants to enter new password immediately
               </label>
-            </>
+            </div>
           ) : null}
         </details>
         <details>
           <summary>Manage API Keys</summary>
-          <p>
-            API keys can be used to link external services, for example
-            displaying action items in a chat. To build your own integration,
-            see the{' '}
-            <a href="/api-docs" target="_blank" rel="noopener noreferrer">
-              API Documentation
-            </a>
-            .
-          </p>
-          <p>
-            This retro&rsquo;s ID is: <code>{retro.id}</code>
-          </p>
-          <APIKeyManager retro={retro} retroAuth={retroAuth} />
+          <div className="content">
+            <p>
+              API keys can be used to link external services, for example
+              displaying action items in a chat. To build your own integration,
+              see the{' '}
+              <a href="/api-docs" target="_blank" rel="noopener noreferrer">
+                API Documentation
+              </a>
+              .
+            </p>
+            <p>
+              This retro&rsquo;s ID is: <code>{retro.id}</code>
+            </p>
+            <APIKeyManager retro={retro} retroAuth={retroAuth} />
+          </div>
         </details>
       </>
     );

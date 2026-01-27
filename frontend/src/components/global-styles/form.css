@@ -81,14 +81,13 @@
   }
 
   & details {
-    margin-top: 32px;
+    margin-top: 40px;
     padding: 0 8px;
     border: 1px solid transparent;
 
     & summary {
-      position: relative;
-      margin: -0.8em 0 0.8em -4px;
-      padding: 2px 8px 2px 8px;
+      margin: -0.9em 0 0 -4px;
+      padding: 2px 8px;
       background: var(--beige-back);
       width: fit-content;
       cursor: pointer;
@@ -96,6 +95,21 @@
 
     &:open {
       border-color: var(--beige-shadow);
+
+      & summary {
+        margin-bottom: 0.9em;
+      }
+
+      & > .content {
+        margin: 0 -8px;
+        padding: 0 8px;
+        animation: 0.2s swipe-down;
+        overflow: hidden;
+
+        & > :first-child {
+          margin-top: 0;
+        }
+      }
     }
   }
 
@@ -190,5 +204,20 @@
     &.sending {
       background: var(--beige-shadow);
     }
+  }
+}
+
+@keyframes swipe-down {
+  from {
+    max-height: 0;
+    animation-timing-function: cubic-bezier(0.4, 0.2, 1, 0.8);
+  }
+
+  99% {
+    max-height: 600px;
+  }
+
+  to {
+    max-height: none;
   }
 }
