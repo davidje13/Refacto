@@ -13,7 +13,7 @@
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
-    "chromedriver": "143.x",
+    "chromedriver": "144.x",
     "geckodriver": "6.1.x",
     "lean-test": "2.x",
     "prettier": "3.7.4",

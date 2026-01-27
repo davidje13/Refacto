@@ -2,7 +2,7 @@
 
 import { join } from 'node:path';
 import { basedir, deleteDirectory, findFiles, log } from './helpers/io.mjs';
-import { stat, mkdir } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import {
   exitWithCode,
   printPrefixed,
@@ -14,7 +14,9 @@ import {
 } from './helpers/proc.mjs';
 import { TEST_RUNTIME_FLAGS } from './helpers/flags.mjs';
 
-const PARALLEL_E2E = (process.env['PARALLEL_E2E'] ?? 'true') === 'true';
+const PARALLEL_E2E =
+  (process.env['PARALLEL_E2E'] ?? 'true') === 'true' ||
+  process.env['HEADLESS'] === 'false';
 const FOCUS_BROWSER = process.env['BROWSER'];
 const SKIP_UNIT = process.argv.slice(2).includes('--only-e2e');
 

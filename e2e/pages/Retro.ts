@@ -4,6 +4,7 @@ import { PageFragment } from './common/PageFragment';
 import { RetroArchiveList } from './RetroArchiveList';
 import { RetroSettings } from './RetroSettings';
 import { byButtonText } from '../helpers/customBy';
+import { headless } from '../helpers/selenium';
 
 class ItemEntry extends PageFragment {
   public setText(value: string) {
@@ -118,6 +119,9 @@ export class Retro extends Page {
 
     await popup.clickButton('Archive');
     await popup.waitUntilDismissed();
+    if (!headless) {
+      await this.driver.sleep(2500); // wait for animation to complete
+    }
   }
 
   public async clickViewArchives() {

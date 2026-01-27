@@ -106,23 +106,31 @@ describe('Refacto', { stopAtFirstFailure: true, timeout }, () => {
     });
 
     it('synchronises activity (A -> B) in real time', async () => {
-      await retro2.expectChange(() =>
-        retro.getActionItemEntry().enter('some action'),
-      );
+      await retro.getActionItemEntry().enter('some action');
 
       const expectedActions1 = ['some action'];
-      expect(await retro.getActionItemLabels()).toEqual(expectedActions1);
-      expect(await retro2.getActionItemLabels()).toEqual(expectedActions1);
+      await expect.poll(
+        () => retro.getActionItemLabels(),
+        resolves(expectedActions1),
+      );
+      await expect.poll(
+        () => retro2.getActionItemLabels(),
+        resolves(expectedActions1),
+      );
     });
 
     it('synchronises activity (B -> A) in real time', async () => {
-      await retro.expectChange(() =>
-        retro2.getActionItemEntry().enter('another action'),
-      );
+      await retro2.getActionItemEntry().enter('another action');
 
       const expectedActions2 = ['another action', 'some action'];
-      expect(await retro.getActionItemLabels()).toEqual(expectedActions2);
-      expect(await retro2.getActionItemLabels()).toEqual(expectedActions2);
+      await expect.poll(
+        () => retro.getActionItemLabels(),
+        resolves(expectedActions2),
+      );
+      await expect.poll(
+        () => retro2.getActionItemLabels(),
+        resolves(expectedActions2),
+      );
     });
 
     it('synchronises configuration changes', async () => {

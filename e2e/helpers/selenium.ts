@@ -44,6 +44,8 @@ if (headless) {
     .setPreference('general.useragent.override', headlessUserAgent);
 }
 
+export { headless };
+
 const logPrefs = new logging.Preferences();
 logPrefs.setLevel('driver', logging.Level.WARNING);
 logPrefs.setLevel('browser', logging.Level.ALL);

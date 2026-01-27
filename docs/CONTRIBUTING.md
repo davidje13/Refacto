@@ -73,7 +73,8 @@ built in dev mode via `npm start`)
 Run end-to-end tests with non-headless browsers:
 
 ```sh
-HEADLESS=false npm run test:e2e
+BROWSER=chrome HEADLESS=false npm run test:e2e
+BROWSER=firefox HEADLESS=false npm run test:e2e
 ```
 
 The server logs generated during the end-to-end test run are written to
