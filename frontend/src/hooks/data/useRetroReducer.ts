@@ -51,7 +51,7 @@ export function useRetroReducer(
         const animation = events.some(([evt]) => evt === 'archive')
           ? 'archive'
           : null;
-        if (animation) {
+        if (animation && document.startViewTransition) {
           const viewTransition = document.startViewTransition({
             update: () => flushSync(() => setRetroState(setter)),
             types: [animation],
