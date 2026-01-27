@@ -15,6 +15,7 @@ import {
   ReadOnly,
   ReadWriteStruct,
   type Permission,
+  type EventFilter,
 } from 'shared-reducer/backend';
 import type { Retro, RetroSummary } from '../shared/api-entities';
 import { extractRetro } from '../helpers/jsonParsers';
@@ -83,6 +84,13 @@ export class RetroService {
       return new ReadWriteStruct(['id', 'ownerId']);
     }
     return ReadOnly;
+  }
+
+  public getEventFilter(allowWrite: boolean): EventFilter | undefined {
+    if (allowWrite) {
+      return undefined;
+    }
+    return (evt) => evt[0] === 'archive';
   }
 
   public async getRetroIdForSlug(slug: string): Promise<string | null> {

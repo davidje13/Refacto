@@ -172,6 +172,7 @@ export class ApiRetrosRouter extends Router {
         accessGetter: (req) => ({
           id: getPathParameter(req, 'retroId'),
           permission: retroService.getPermissions(hasAuthScope(req, 'write')),
+          eventFilter: retroService.getEventFilter(hasAuthScope(req, 'write')),
         }),
         acceptWebSocket,
         setSoftCloseHandler,
