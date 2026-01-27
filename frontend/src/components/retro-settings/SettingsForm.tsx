@@ -1,13 +1,12 @@
 import { useState, memo } from 'react';
 import type { Retro, RetroAuth } from '../../shared/api-entities';
-import type { RetroDispatch } from '../../api/RetroTracker';
+import type { RetroDispatch, RetroDispatchSpec } from '../../api/RetroTracker';
 import {
   retroService,
   retroAuthService,
   retroAuthTracker,
   userDataTracker,
 } from '../../api/api';
-import { context } from '../../api/reducer';
 import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';
 import { Alert } from '../common/Alert';
@@ -56,16 +55,24 @@ export const SettingsForm = memo(
         );
         await updateRetroToken(retro.id, newPassword);
       }
-      const saved = await dispatch.sync([
-        {
-          name: ['=', name],
-          slug: ['=', slug],
-          options: context.combine([
-            OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
-            OPTIONS.theme.specSet(theme),
-          ]),
-        },
-      ]);
+      const specs: RetroDispatchSpec = [];
+      if (name !== retro.name) {
+        specs.push({ name: ['=', name] });
+      }
+      if (retroAuth.scopes.includes('manage') && slug !== retro.slug) {
+        specs.push({ slug: ['=', slug] });
+      }
+      if (
+        alwaysShowAddAction !== OPTIONS.alwaysShowAddAction.read(retro.options)
+      ) {
+        specs.push({
+          options: OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
+        });
+      }
+      if (theme !== OPTIONS.theme.read(retro.options)) {
+        specs.push({ options: OPTIONS.theme.specSet(theme) });
+      }
+      const saved = await dispatch.sync(specs);
       onSave?.(saved);
     });
 
@@ -80,6 +87,70 @@ export const SettingsForm = memo(
         </span>
       ),
     }));
+
+    const manageOptions = (
+      <>
+        <h2>Access</h2>
+        <label className="retro-url">
+          Retro URL
+          <div className="info">
+            (may contain lowercase letters, numbers, dashes and underscores)
+          </div>
+          <SlugEntry
+            value={slug}
+            ariaLabel="Retro ID"
+            onChange={setSlug}
+            oldValue={retro.slug}
+            showAvailability
+          />
+        </label>
+        <details
+          open={editingPassword}
+          onToggle={(e) => setEditingPassword(e.currentTarget.open)}
+        >
+          <summary>Change Collaborator Password</summary>
+          {editingPassword ? ( // only render content if editing, to avoid validation of hidden items
+            <>
+              <SetPassword
+                username={retro.id}
+                name={slug}
+                label="New collaborator password"
+                confirmLabel="Confirm password"
+                password={newPassword}
+                setPassword={setNewPassword}
+                setMatches={setPasswordMatches}
+              />
+              <label className="checkbox">
+                <input
+                  name="evict-users"
+                  type="checkbox"
+                  checked={evictUsers}
+                  onChange={(e) => setEvictUsers(e.currentTarget.checked)}
+                  autoComplete="off"
+                />
+                Prompt current participants to enter new password immediately
+              </label>
+            </>
+          ) : null}
+        </details>
+        <details>
+          <summary>Manage API Keys</summary>
+          <p>
+            API keys can be used to link external services, for example
+            displaying action items in a chat. To build your own integration,
+            see the{' '}
+            <a href="/api-docs" target="_blank" rel="noopener noreferrer">
+              API Documentation
+            </a>
+            .
+          </p>
+          <p>
+            This retro&rsquo;s ID is: <code>{retro.id}</code>
+          </p>
+          <APIKeyManager retro={retro} retroAuth={retroAuth} />
+        </details>
+      </>
+    );
 
     return (
       <form onSubmit={handleSubmit} className="global-form retro-settings">
@@ -116,69 +187,7 @@ export const SettingsForm = memo(
           />
           Sticky &ldquo;add action&rdquo; input
         </label>
-        <h2>Access</h2>
-        <label className="retro-url">
-          Retro URL
-          <div className="info">
-            (may contain lowercase letters, numbers, dashes and underscores)
-          </div>
-          <SlugEntry
-            value={slug}
-            ariaLabel="Retro ID"
-            onChange={setSlug}
-            oldValue={retro.slug}
-            showAvailability
-          />
-        </label>
-        {retroAuth.scopes.includes('manage') ? (
-          <details
-            open={editingPassword}
-            onToggle={(e) => setEditingPassword(e.currentTarget.open)}
-          >
-            <summary>Change Collaborator Password</summary>
-            {editingPassword ? ( // only render content if editing, to avoid validation of hidden items
-              <>
-                <SetPassword
-                  username={retro.id}
-                  name={slug}
-                  label="New collaborator password"
-                  confirmLabel="Confirm password"
-                  password={newPassword}
-                  setPassword={setNewPassword}
-                  setMatches={setPasswordMatches}
-                />
-                <label className="checkbox">
-                  <input
-                    name="evict-users"
-                    type="checkbox"
-                    checked={evictUsers}
-                    onChange={(e) => setEvictUsers(e.currentTarget.checked)}
-                    autoComplete="off"
-                  />
-                  Prompt current participants to enter new password immediately
-                </label>
-              </>
-            ) : null}
-          </details>
-        ) : null}
-        {retroAuth.scopes.includes('manage') ? (
-          <details>
-            <summary>Manage API Keys</summary>
-            <p>
-              API keys can be used to link external services, for example
-              displaying action items in a chat. To build your own integration,
-              see the{' '}
-              <a href="/api-docs" target="_blank" rel="noopener noreferrer">
-                API Documentation
-              </a>
-              .
-            </p>
-            <p>
-              This retro&rsquo;s ID is: <code>{retro.id}</code>
-            </p>
-            <APIKeyManager retro={retro} retroAuth={retroAuth} />
-          </details>
-        ) : null}
+        {retroAuth.scopes.includes('manage') ? manageOptions : null}
         <div className="form-actions-shadow" />
         <div className="bottom-shadow-cover" />
         <div className="form-actions">

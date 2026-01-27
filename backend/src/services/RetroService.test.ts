@@ -126,7 +126,7 @@ describe('RetroService', () => {
     beforeEach(async () => {
       const sub = await service.retroBroadcaster.subscribe(
         r2,
-        service.getPermissions(true),
+        service.getPermissions(new Set(['read', 'write', 'manage'])),
       );
       if (!sub) {
         throw new Error('Failed to subscribe to retro');
@@ -155,7 +155,7 @@ describe('RetroService', () => {
     it('returns null if the ID is not found', async () => {
       const failedSubscription = await service.retroBroadcaster.subscribe(
         'nope',
-        service.getPermissions(true),
+        service.getPermissions(new Set(['read', 'write', 'manage'])),
       );
 
       expect(failedSubscription).toBeNull();
@@ -195,6 +195,20 @@ describe('RetroService', () => {
       expect(listener.messageCount()).toEqual(1);
     });
 
+    it('rejects changing slug without "manage" scope', async () => {
+      const reducedSubscription = await service.retroBroadcaster.subscribe(
+        r2,
+        service.getPermissions(new Set(['read', 'write'])),
+      );
+      const listener = new ChangeListener();
+      reducedSubscription?.listen(listener.onChange);
+
+      await reducedSubscription?.send({ slug: ['=', 'wooo'] });
+      expect(listener.latestError()).toEqual('Cannot edit field slug');
+
+      await reducedSubscription?.close();
+    });
+
     it('rejects attempts to add new top-level fields', async () => {
       const listener = new ChangeListener();
       subscription.listen(listener.onChange);
@@ -224,10 +238,13 @@ describe('RetroService', () => {
     it('rejects all writes in readonly mode', async () => {
       const readSubscription = await service.retroBroadcaster.subscribe(
         r2,
-        service.getPermissions(false),
+        service.getPermissions(new Set(['read'])),
       );
       const listener = new ChangeListener();
       readSubscription?.listen(listener.onChange);
+
+      await readSubscription?.send({ items: ['=', []] });
+      expect(listener.latestError()).toEqual('Cannot modify data');
 
       await readSubscription?.send({ slug: ['=', 'wooo'] });
       expect(listener.latestError()).toEqual('Cannot modify data');

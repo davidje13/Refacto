@@ -137,5 +137,8 @@ const SCOPES = [
     ),
   },
   { id: 'readArchives', description: <>Read the retro archives.</> },
-  { id: 'manage', description: <>Edit the retro password and API keys.</> },
+  {
+    id: 'manage',
+    description: <>Edit the retro URL, password, and API keys.</>,
+  },
 ];

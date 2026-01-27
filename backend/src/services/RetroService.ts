@@ -79,18 +79,21 @@ export class RetroService {
     );
   }
 
-  public getPermissions(allowWrite: boolean): Permission<Retro, Spec<Retro>> {
-    if (allowWrite) {
-      return new ReadWriteStruct(['id', 'ownerId']);
+  public getPermissions(scopes: Set<string>): Permission<Retro, Spec<Retro>> {
+    if (!scopes.has('write')) {
+      return ReadOnly;
     }
-    return ReadOnly;
+    if (!scopes.has('manage')) {
+      return new ReadWriteStruct(['id', 'ownerId', 'slug']);
+    }
+    return new ReadWriteStruct(['id', 'ownerId']);
   }
 
-  public getEventFilter(allowWrite: boolean): EventFilter | undefined {
-    if (allowWrite) {
-      return undefined;
+  public getEventFilter(scopes: Set<string>): EventFilter | undefined {
+    if (!scopes.has('write')) {
+      return (evt) => evt[0] === 'archive';
     }
-    return (evt) => evt[0] === 'archive';
+    return undefined;
   }
 
   public async getRetroIdForSlug(slug: string): Promise<string | null> {

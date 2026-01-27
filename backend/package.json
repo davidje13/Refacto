@@ -35,7 +35,7 @@
     "supertest": "7.x",
     "superwstest": "2.x",
     "typescript": "5.9.x",
-    "web-listener": "0.18.0",
+    "web-listener": "0.18.1",
     "ws": "8.x"
   }
 }

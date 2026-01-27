@@ -1,11 +1,11 @@
 import type { IncomingMessage } from 'node:http';
 import {
   addTeardown,
+  getAuthScopes,
   getBodyJSON,
   getPathParameter,
   getPathParameters,
   getQuery,
-  hasAuthScope,
   HTTPError,
   makeAcceptWebSocket,
   makeWebSocketFallbackTokenFetcher,
@@ -171,8 +171,8 @@ export class ApiRetrosRouter extends Router {
       wsHandlerFactory.handler({
         accessGetter: (req) => ({
           id: getPathParameter(req, 'retroId'),
-          permission: retroService.getPermissions(hasAuthScope(req, 'write')),
-          eventFilter: retroService.getEventFilter(hasAuthScope(req, 'write')),
+          permission: retroService.getPermissions(getAuthScopes(req)),
+          eventFilter: retroService.getEventFilter(getAuthScopes(req)),
         }),
         acceptWebSocket,
         setSoftCloseHandler,
@@ -254,7 +254,7 @@ export class ApiRetrosRouter extends Router {
 
       if (change) {
         await requireAuthScope('write').handleRequest(req, res);
-        const permission = retroService.getPermissions(true);
+        const permission = retroService.getPermissions(getAuthScopes(req));
         await retroService.retroBroadcaster.update(retroId, change, {
           permission,
         });
