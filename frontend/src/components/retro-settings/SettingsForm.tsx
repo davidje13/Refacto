@@ -146,7 +146,8 @@ export const SettingsForm = memo(
               .
             </p>
             <p>
-              This retro&rsquo;s ID is: <code>{retro.id}</code>
+              This retro&rsquo;s ID is:{' '}
+              <code className="retro-id-display">{retro.id}</code>
             </p>
             <APIKeyManager retro={retro} retroAuth={retroAuth} />
           </div>

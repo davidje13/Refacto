@@ -5,7 +5,10 @@
     margin: 16px 0 8px;
 
     &.options {
-      text-align: center;
+      display: flex;
+      flex-flow: row wrap;
+      gap: 8px 16px;
+      justify-content: center;
     }
   }
 

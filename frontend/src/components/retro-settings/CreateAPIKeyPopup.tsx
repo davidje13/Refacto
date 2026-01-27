@@ -58,7 +58,7 @@ export const CreateAPIKeyPopup = memo(
               API Key created. Make a note of this value; it will not be
               possible to read it again.
             </p>
-            <p>
+            <p className="key-output">
               <code>{key}</code>
             </p>
             <section className="dialog-options">
@@ -76,8 +76,17 @@ export const CreateAPIKeyPopup = memo(
             className="global-form popup-add-api-key"
             onSubmit={performCreate}
           >
+            <p>
+              API keys can be used to link external services, for example
+              displaying action items in a chat. To build your own integration,
+              see the{' '}
+              <a href="/api-docs" target="_blank" rel="noopener noreferrer">
+                API Documentation
+              </a>
+              .
+            </p>
             <label>
-              API Key Name
+              Reference Name (for identifying this key later)
               <input
                 ref={realAutoFocus}
                 name="api-key-name"
@@ -114,7 +123,7 @@ export const CreateAPIKeyPopup = memo(
                 className="global-button primary"
                 disabled={sending}
               >
-                Add
+                Create
               </button>
               <Alert message={error} />
             </section>

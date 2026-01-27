@@ -5,6 +5,7 @@ import type { Retro, RetroApiKey, RetroAuth } from '../../shared/api-entities';
 import { retroApiKeyService } from '../../api/api';
 import { formatDateTime } from '../../time/formatters';
 import { CreateAPIKeyPopup } from './CreateAPIKeyPopup';
+import { CreateReadonlyUrlPopup } from './CreateReadonlyUrlPopup';
 import { DeleteAPIKeyPopup } from './DeleteAPIKeyPopup';
 import './APIKeyManager.css';
 
@@ -15,7 +16,7 @@ interface PropsT {
 
 export const APIKeyManager = memo(({ retro, retroAuth }: PropsT) => {
   const [deleting, setDeleting] = useState<RetroApiKey | null>(null);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(0);
   const apiKeys = useAwaited(
     (signal) =>
       retroApiKeyService.getList(retro.id, retroAuth.retroToken, signal),
@@ -71,17 +72,31 @@ export const APIKeyManager = memo(({ retro, retroAuth }: PropsT) => {
         <button
           type="button"
           className="global-button"
-          onClick={() => setAdding(true)}
+          onClick={() => setAdding(1)}
         >
           + Create new API Key
+        </button>
+        <button
+          type="button"
+          className="global-button"
+          onClick={() => setAdding(2)}
+        >
+          + Create new read-only URL
         </button>
       </li>
       <CreateAPIKeyPopup
         retro={retro}
         retroToken={retroAuth.retroToken}
-        isOpen={adding}
+        isOpen={adding === 1}
         onSave={() => apiKeys.forceRefresh()}
-        onClose={() => setAdding(false)}
+        onClose={() => setAdding(0)}
+      />
+      <CreateReadonlyUrlPopup
+        retro={retro}
+        retroToken={retroAuth.retroToken}
+        isOpen={adding === 2}
+        onSave={() => apiKeys.forceRefresh()}
+        onClose={() => setAdding(0)}
       />
       <DeleteAPIKeyPopup
         retro={retro}

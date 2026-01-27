@@ -1,16 +1,16 @@
-.popup-add-api-key.global-form {
+.popup-add-readonly-url.global-form {
   width: auto;
   max-width: 600px;
 }
 
-.popup-add-api-key {
-  max-width: calc(100vw - 64px);
+.popup-add-readonly-url {
+  max-width: min(calc(100vw - 64px), 800px);
 
   & p {
     margin: 16px 0;
   }
 
-  .key-output {
+  .url-output {
     text-align: center;
     overflow: auto;
     padding: 20px;
@@ -18,11 +18,6 @@
     border-radius: 5px;
     white-space: nowrap;
     user-select: all;
-  }
-
-  .scope-id {
-    display: inline-block;
-    min-width: 7em;
   }
 
   .dialog-options {
