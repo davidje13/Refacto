@@ -1,37 +1,26 @@
-import {
-  type FunctionComponent,
-  useState,
-  useLayoutEffect,
-  useEffect,
-  type ReactNode,
-} from 'react';
-import { flushSync } from 'react-dom';
-import { Route, Switch, useLocation } from 'wouter';
-import TickBold from '../../resources/tick-bold.svg';
+import type { FunctionComponent } from 'react';
+import { Route, Switch } from 'wouter';
 import type { Retro, RetroAuth } from '../shared/api-entities';
 import type { RetroDispatch } from '../api/RetroTracker';
 import {
   retroAuthService,
   retroAuthTracker,
-  retroTracker,
-  slugTracker,
   userDataTracker,
 } from '../api/api';
 import { useSlug } from '../hooks/data/useSlug';
-import { useEvent } from '../hooks/useEvent';
+import { useSlugURL } from '../hooks/useSlugURL';
 import { LiveEventsProvider } from '../hooks/useLiveEvents';
 import { useRetroAuth } from '../hooks/data/useRetroAuth';
+import { useRetroReducer } from '../hooks/data/useRetroReducer';
 import { StateMapProvider } from '../hooks/useStateMap';
-import { Popup } from './common/Popup';
 import { RetroNotFoundPage } from './retro-not-found/RetroNotFoundPage';
 import { PasswordPage } from './password/PasswordPage';
+import { ConnectionOverlay } from './retro/ConnectionOverlay';
 import { RetroPage } from './retro/RetroPage';
 import { ArchiveListPage } from './archive-list/ArchiveListPage';
 import { ArchivePage } from './archive/ArchivePage';
 import { RetroSettingsPage } from './retro-settings/RetroSettingsPage';
-import { PasswordForm } from './password/PasswordForm';
 import { RedirectRoute } from './RedirectRoute';
-import './RetroRouter.css';
 
 interface PropsT {
   slug: string;
@@ -39,8 +28,13 @@ interface PropsT {
 
 export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
   const [retroId, slugError] = useSlug(slug);
-  const [retroState, retroDispatch, retroAuth, status] =
-    useRetroReducer(retroId);
+  const retroAuth = useRetroAuth(retroId);
+  const [retroState, retroDispatch, status] = useRetroReducer(
+    retroId,
+    retroAuth,
+    reauthenticateByUser,
+  );
+  useSlugURL(retroState?.retro);
 
   if (slugError?.message === 'not found') {
     return <RetroNotFoundPage slug={slug} />;
@@ -62,46 +56,15 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
     return <div className="loader">Loading&hellip;</div>;
   }
 
-  let overlay: ReactNode = null;
-  switch (status) {
-    case 'connected':
-      overlay = (
-        <div className="connectionMessage connected" aria-hidden>
-          <TickBold role="presentation" /> Connected
-        </div>
-      );
-      break;
-    case 'reconnecting':
-      overlay = (
-        <div className="connectionMessage disconnected" role="status">
-          Reconnecting&hellip;
-        </div>
-      );
-      break;
-    case 'reauthenticate':
-      overlay = (
-        <Popup title="Login expired" isOpen onClose={() => null}>
-          <div className="popup-password">
-            <p>
-              Your login has expired or the retro password has been changed.
-            </p>
-            <p>Please enter the retro password to continue:</p>
-            <PasswordForm slug={slug} retroId={retroId} autoFocus />
-          </div>
-        </Popup>
-      );
-      break;
-  }
-
   const retroParams = {
-    retroToken: retroAuth.retroToken,
+    retroAuth,
     retro: retroState.retro,
     retroDispatch,
   };
 
   return (
     <LiveEventsProvider dispatch={retroDispatch} events={retroState.events}>
-      <StateMapProvider scope={slug}>
+      <StateMapProvider scope={retroId}>
         <Switch>
           <Route path="/retros/:slug">
             <RetroPage {...retroParams} />
@@ -136,127 +99,16 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
             replace
           />
         </Switch>
-        {overlay}
+        <ConnectionOverlay status={status} slug={slug} retroId={retroId} />
       </StateMapProvider>
     </LiveEventsProvider>
   );
 };
 
 export interface RetroPagePropsT {
-  retroToken: string;
+  retroAuth: RetroAuth;
   retro: Retro;
   retroDispatch: RetroDispatch | null;
-}
-
-type RetroReducerStatus =
-  | 'init'
-  | 'connected'
-  | 'reconnecting'
-  | 'reauthenticate';
-
-interface RetroState {
-  retro: Retro;
-  events: Map<string, unknown[]>;
-}
-
-type RetroReducerState = [
-  RetroState | null,
-  RetroDispatch | null,
-  RetroAuth | null,
-  RetroReducerStatus,
-];
-
-const RETRO_SLUG_PATH = /^\/retros\/([^/]+)($|\/.*)/;
-
-const MAX_EVENT_MEMORY = 512;
-
-function useRetroReducer(retroId: string | null): RetroReducerState {
-  const retroAuth = useRetroAuth(retroId);
-  const [location, setLocation] = useLocation();
-  const [retroState, setRetroState] = useState<RetroState | null>(null);
-  const [status, setStatus] = useState<RetroReducerStatus>('init');
-  const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
-    null,
-  );
-
-  // This cannot be useEffect; the websocket would be closed & reopened
-  // when switching between pages within the retro
-  useLayoutEffect(() => {
-    const ac = new AbortController();
-    setRetroState(null);
-    setRetroDispatch(null);
-    if (!retroId || !retroAuth) {
-      return undefined;
-    }
-
-    const subscription = retroTracker.subscribe(
-      retroId,
-      retroAuth.retroToken,
-      (data, events) => {
-        const setter = (oldState: RetroState | null): RetroState => {
-          let newEvents = oldState?.events;
-          if (events.length > 0) {
-            newEvents = new Map(newEvents);
-            for (const [id, ...details] of events) {
-              newEvents.delete(id);
-              if (newEvents.size > MAX_EVENT_MEMORY) {
-                newEvents.delete(newEvents.keys().next().value!);
-              }
-              newEvents.set(id, details);
-            }
-          }
-          return { retro: data, events: newEvents ?? new Map() };
-        };
-        const animation = events.some(([evt]) => evt === 'archive')
-          ? 'archive'
-          : null;
-        if (animation) {
-          const viewTransition = document.startViewTransition({
-            update: () => flushSync(() => setRetroState(setter)),
-            types: [animation],
-          });
-          viewTransition.ready.catch(() => {}); // ignore errors (e.g. 'Skipped ViewTransition due to document being hidden')
-        } else {
-          setRetroState(setter);
-        }
-      },
-      (status) => setStatus(status ? 'connected' : 'reconnecting'),
-      () =>
-        reauthenticateByUser(retroId, ac.signal).then((success) => {
-          if (!success) {
-            setStatus('reauthenticate');
-          }
-        }),
-    );
-    setRetroDispatch(() => subscription.dispatch);
-
-    return () => {
-      ac.abort();
-      subscription.unsubscribe();
-    };
-  }, [retroId, retroAuth]);
-
-  const updateSlug = useEvent((slug: string) => {
-    const old = RETRO_SLUG_PATH.exec(location);
-    const oldSlug = decodeURIComponent(old?.[1] ?? '');
-    if (!retroId || !oldSlug || oldSlug === slug) {
-      return;
-    }
-    slugTracker.remove(oldSlug);
-    slugTracker.set(slug, retroId);
-    setLocation(`/retros/${encodeURIComponent(slug)}${old?.[2] ?? ''}`, {
-      replace: true,
-    });
-  });
-
-  const slug = retroState?.retro.slug;
-  useEffect(() => {
-    if (slug) {
-      updateSlug(slug);
-    }
-  }, [slug, updateSlug]);
-
-  return [retroState, retroDispatch, retroAuth, status];
 }
 
 async function reauthenticateByUser(retroId: string, signal: AbortSignal) {

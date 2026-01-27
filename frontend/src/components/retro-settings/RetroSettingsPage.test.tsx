@@ -3,6 +3,7 @@ import { memoryLocation } from 'wouter/memory-location';
 import { act, render, placeholderText } from 'flexible-testing-library-react';
 import { makeRetro } from '../../shared/api-entities';
 import { nullDispatch } from '../../test-helpers/nullDispatch';
+import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 import { mockFetchExpect } from '../../test-helpers/fetch';
 
 import { RetroSettingsPage } from './RetroSettingsPage';
@@ -18,7 +19,7 @@ describe('RetroSettingsPage', () => {
       <Router hook={location.hook}>
         <RetroSettingsPage
           retro={makeRetro({ id: 'r1' })}
-          retroToken="my-token"
+          retroAuth={COMMON_AUTH}
           retroDispatch={nullDispatch}
         />
       </Router>,

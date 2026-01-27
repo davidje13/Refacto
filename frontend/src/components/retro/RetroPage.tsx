@@ -22,17 +22,14 @@ function getState<T>(
   return retro.groupStates[group] || BLANK_STATE;
 }
 
-type PropsT = Pick<
-  RetroPagePropsT,
-  'retroToken' | 'retro' | 'retroDispatch'
-> & {
+type PropsT = Pick<RetroPagePropsT, 'retroAuth' | 'retro' | 'retroDispatch'> & {
   group?: string | undefined;
 };
 
 const isSmallScreen = ({ width }: Size) => width <= 800;
 
 export const RetroPage = memo(
-  ({ retroToken, retro, retroDispatch, group }: PropsT) => {
+  ({ retroAuth, retro, retroDispatch, group }: PropsT) => {
     const smallScreen = useWindowSize(isSmallScreen);
     const archivePopupVisible = useBoolean(false);
     const invitePopupVisible = useBoolean(false);
@@ -100,7 +97,7 @@ export const RetroPage = memo(
         />
         {retroDispatch ? (
           <ArchivePopup
-            retroToken={retroToken}
+            retroToken={retroAuth.retroToken}
             retro={retro}
             retroDispatch={retroDispatch}
             isOpen={canArchive && archivePopupVisible.value}

@@ -1,17 +1,18 @@
 import { useState, memo, type ReactNode, type SyntheticEvent } from 'react';
+import type { RetroAuth } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { API_BASE } from '../../api/api';
 import './ApiDownload.css';
 
 interface PropsT {
   url: string;
-  token: string | null;
+  retroAuth: RetroAuth;
   filename: string;
   children: ReactNode;
 }
 
 export const ApiDownload = memo(
-  ({ url, token, filename, children }: PropsT) => {
+  ({ url, retroAuth, filename, children }: PropsT) => {
     // Thanks, https://stackoverflow.com/a/43133108/1180785
 
     const [pending, setPending] = useState(false);
@@ -24,7 +25,7 @@ export const ApiDownload = memo(
       setPending(true);
       try {
         const result = await fetch(`${API_BASE}/${url}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${retroAuth.retroToken}` },
         });
         const blob = await result.blob();
         const blobUrl = URL.createObjectURL(blob);
@@ -41,7 +42,7 @@ export const ApiDownload = memo(
       }
     });
 
-    if (pending || !token) {
+    if (pending) {
       return <span className="api-download">{children}</span>;
     }
 

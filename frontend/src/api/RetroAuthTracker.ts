@@ -14,6 +14,16 @@ export class RetroAuthTracker extends CacheMap<string, AsyncValue<RetroAuth>> {
         if (stored) {
           const auth: RetroAuth = JSON.parse(stored);
           if (Date.now() + MINIMUM_VALIDITY < auth.expires) {
+            if (!auth.scopes) {
+              // migration for old persisted data (can be removed ~ end 2026)
+              try {
+                auth.scopes = Object.keys(
+                  JSON.parse(atob(auth.retroToken.split('.')[1]!)).scopes,
+                );
+              } catch {
+                auth.scopes = [];
+              }
+            }
             value.set(auth);
           }
         }

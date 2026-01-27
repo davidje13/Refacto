@@ -6,14 +6,18 @@ import { useArchive } from '../../hooks/data/useArchive';
 import { formatDate } from '../../time/formatters';
 import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
 
-type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'> & {
+type PropsT = Pick<RetroPagePropsT, 'retroAuth' | 'retro'> & {
   archiveId: string;
   group?: string | undefined;
 };
 
 export const ArchivePage = memo(
-  ({ retroToken, retro, archiveId, group }: PropsT) => {
-    const [archive, archiveError] = useArchive(retro.id, archiveId, retroToken);
+  ({ retroAuth, retro, archiveId, group }: PropsT) => {
+    const [archive, archiveError] = useArchive(
+      retro.id,
+      archiveId,
+      retroAuth.retroToken,
+    );
 
     let archiveName = 'Archive';
     if (archive) {

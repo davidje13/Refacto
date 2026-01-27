@@ -1,4 +1,4 @@
-.connectionMessage {
+.connection-overlay {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -55,7 +55,7 @@
   }
 }
 
-.connectionMessage.disconnected {
+.connection-overlay.disconnected {
   top: 8px;
   opacity: 1;
   visibility: visible;

@@ -3,6 +3,7 @@ import mockElement from 'react-mock-element';
 import { makeRetro } from '../../shared/api-entities';
 import { css } from '../../test-helpers/queries';
 import { nullDispatch } from '../../test-helpers/nullDispatch';
+import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 
 import { RetroPage } from './RetroPage';
 
@@ -14,7 +15,7 @@ describe('RetroPage', () => {
   it('renders a retro page', () => {
     const dom = render(
       <RetroPage
-        retroToken="token-1"
+        retroAuth={COMMON_AUTH}
         retro={makeRetro()}
         retroDispatch={nullDispatch}
       />,

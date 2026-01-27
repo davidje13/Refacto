@@ -1,5 +1,5 @@
 import { useState, memo } from 'react';
-import type { Retro } from '../../shared/api-entities';
+import type { Retro, RetroAuth } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import {
   retroService,
@@ -20,13 +20,13 @@ import './SettingsForm.css';
 
 interface PropsT {
   retro: Retro;
-  retroToken: string;
+  retroAuth: RetroAuth;
   dispatch: RetroDispatch;
   onSave?: (savedRetro: Retro) => void;
 }
 
 export const SettingsForm = memo(
-  ({ retro, retroToken, dispatch, onSave }: PropsT) => {
+  ({ retro, retroAuth, dispatch, onSave }: PropsT) => {
     const [name, setName] = useState(retro.name);
     const [slug, setSlug] = useState(retro.slug);
     const [editingPassword, setEditingPassword] = useState(false);
@@ -50,7 +50,7 @@ export const SettingsForm = memo(
       if (editingPassword && newPassword) {
         await retroService.setPassword(
           retro.id,
-          retroToken,
+          retroAuth.retroToken,
           newPassword,
           evictUsers,
         );
@@ -130,51 +130,55 @@ export const SettingsForm = memo(
             showAvailability
           />
         </label>
-        <details
-          open={editingPassword}
-          onToggle={(e) => setEditingPassword(e.currentTarget.open)}
-        >
-          <summary>Change Collaborator Password</summary>
-          {editingPassword ? ( // only render content if editing, to avoid validation of hidden items
-            <>
-              <SetPassword
-                username={retro.id}
-                name={slug}
-                label="New collaborator password"
-                confirmLabel="Confirm password"
-                password={newPassword}
-                setPassword={setNewPassword}
-                setMatches={setPasswordMatches}
-              />
-              <label className="checkbox">
-                <input
-                  name="evict-users"
-                  type="checkbox"
-                  checked={evictUsers}
-                  onChange={(e) => setEvictUsers(e.currentTarget.checked)}
-                  autoComplete="off"
+        {retroAuth.scopes.includes('manage') ? (
+          <details
+            open={editingPassword}
+            onToggle={(e) => setEditingPassword(e.currentTarget.open)}
+          >
+            <summary>Change Collaborator Password</summary>
+            {editingPassword ? ( // only render content if editing, to avoid validation of hidden items
+              <>
+                <SetPassword
+                  username={retro.id}
+                  name={slug}
+                  label="New collaborator password"
+                  confirmLabel="Confirm password"
+                  password={newPassword}
+                  setPassword={setNewPassword}
+                  setMatches={setPasswordMatches}
                 />
-                Prompt current participants to enter new password immediately
-              </label>
-            </>
-          ) : null}
-        </details>
-        <details>
-          <summary>Manage API Keys</summary>
-          <p>
-            API keys can be used to link external services, for example
-            displaying action items in a chat. To build your own integration,
-            see the{' '}
-            <a href="/api-docs" target="_blank" rel="noopener noreferrer">
-              API Documentation
-            </a>
-            .
-          </p>
-          <p>
-            This retro&rsquo;s ID is: <code>{retro.id}</code>
-          </p>
-          <APIKeyManager retro={retro} retroToken={retroToken} />
-        </details>
+                <label className="checkbox">
+                  <input
+                    name="evict-users"
+                    type="checkbox"
+                    checked={evictUsers}
+                    onChange={(e) => setEvictUsers(e.currentTarget.checked)}
+                    autoComplete="off"
+                  />
+                  Prompt current participants to enter new password immediately
+                </label>
+              </>
+            ) : null}
+          </details>
+        ) : null}
+        {retroAuth.scopes.includes('manage') ? (
+          <details>
+            <summary>Manage API Keys</summary>
+            <p>
+              API keys can be used to link external services, for example
+              displaying action items in a chat. To build your own integration,
+              see the{' '}
+              <a href="/api-docs" target="_blank" rel="noopener noreferrer">
+                API Documentation
+              </a>
+              .
+            </p>
+            <p>
+              This retro&rsquo;s ID is: <code>{retro.id}</code>
+            </p>
+            <APIKeyManager retro={retro} retroAuth={retroAuth} />
+          </details>
+        ) : null}
         <div className="form-actions-shadow" />
         <div className="bottom-shadow-cover" />
         <div className="form-actions">

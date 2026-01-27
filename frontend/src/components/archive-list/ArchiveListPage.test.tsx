@@ -1,6 +1,7 @@
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro } from '../../shared/api-entities';
+import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 import { archiveService } from '../../api/api';
 import { css } from '../../test-helpers/queries';
 
@@ -15,7 +16,10 @@ describe('ArchiveListPage', () => {
     jest.spyOn(archiveService, 'getList').mockResolvedValue({ archives: [] });
 
     const dom = render(
-      <ArchiveListPage retro={makeRetro({ id: 'r1' })} retroToken="token-1" />,
+      <ArchiveListPage
+        retro={makeRetro({ id: 'r1' })}
+        retroAuth={{ ...COMMON_AUTH, retroToken: 'token-1' }}
+      />,
     );
     await act(() => Promise.resolve()); // data fetch
 

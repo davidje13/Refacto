@@ -7,10 +7,13 @@ import { useArchiveList } from '../../hooks/data/useArchiveList';
 import { ArchiveList } from './ArchiveList';
 import './ArchiveListPage.css';
 
-type PropsT = Pick<RetroPagePropsT, 'retroToken' | 'retro'>;
+type PropsT = Pick<RetroPagePropsT, 'retroAuth' | 'retro'>;
 
-export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
-  const [archives, archivesError] = useArchiveList(retro.id, retroToken);
+export const ArchiveListPage = memo(({ retroAuth, retro }: PropsT) => {
+  const [archives, archivesError] = useArchiveList(
+    retro.id,
+    retroAuth.retroToken,
+  );
 
   return (
     <article className="page-archive-list">
@@ -32,7 +35,7 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
       <div className="extra-links">
         <ApiDownload
           url={`retros/${encodeURIComponent(retro.id)}/export/json`}
-          token={retroToken}
+          retroAuth={retroAuth}
           filename={`${retro.slug}-export.json`}
         >
           Export as JSON
@@ -40,7 +43,7 @@ export const ArchiveListPage = memo(({ retroToken, retro }: PropsT) => {
         {' / '}
         <ApiDownload
           url={`retros/${encodeURIComponent(retro.id)}/export/csv`}
-          token={retroToken}
+          retroAuth={retroAuth}
           filename={`${retro.slug}-export.csv`}
         >
           Export items as CSV

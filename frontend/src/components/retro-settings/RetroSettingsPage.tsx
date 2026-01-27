@@ -6,10 +6,10 @@ import type { RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
 import { SettingsForm } from './SettingsForm';
 
-type PropsT = Pick<RetroPagePropsT, 'retro' | 'retroToken' | 'retroDispatch'>;
+type PropsT = Pick<RetroPagePropsT, 'retro' | 'retroAuth' | 'retroDispatch'>;
 
 export const RetroSettingsPage = memo(
-  ({ retro, retroToken, retroDispatch }: PropsT) => {
+  ({ retro, retroAuth, retroDispatch }: PropsT) => {
     const [, setLocation] = useLocation();
 
     const handleSave = useEvent((savedRetro: Retro) => {
@@ -29,7 +29,7 @@ export const RetroSettingsPage = memo(
         {retroDispatch ? (
           <SettingsForm
             retro={retro}
-            retroToken={retroToken}
+            retroAuth={retroAuth}
             dispatch={retroDispatch}
             onSave={handleSave}
           />

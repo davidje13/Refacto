@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import useAwaited from 'react-hook-awaited';
 import Delete from '../../../resources/delete.svg';
-import type { Retro, RetroApiKey } from '../../shared/api-entities';
+import type { Retro, RetroApiKey, RetroAuth } from '../../shared/api-entities';
 import { retroApiKeyService } from '../../api/api';
 import { formatDateTime } from '../../time/formatters';
 import { CreateAPIKeyPopup } from './CreateAPIKeyPopup';
@@ -10,15 +10,16 @@ import './APIKeyManager.css';
 
 interface PropsT {
   retro: Retro;
-  retroToken: string;
+  retroAuth: RetroAuth;
 }
 
-export const APIKeyManager = memo(({ retro, retroToken }: PropsT) => {
+export const APIKeyManager = memo(({ retro, retroAuth }: PropsT) => {
   const [deleting, setDeleting] = useState<RetroApiKey | null>(null);
   const [adding, setAdding] = useState(false);
   const apiKeys = useAwaited(
-    (signal) => retroApiKeyService.getList(retro.id, retroToken, signal),
-    [retro.id, retroToken],
+    (signal) =>
+      retroApiKeyService.getList(retro.id, retroAuth.retroToken, signal),
+    [retro.id, retroAuth],
   );
 
   return (
@@ -77,14 +78,14 @@ export const APIKeyManager = memo(({ retro, retroToken }: PropsT) => {
       </li>
       <CreateAPIKeyPopup
         retro={retro}
-        retroToken={retroToken}
+        retroToken={retroAuth.retroToken}
         isOpen={adding}
         onSave={() => apiKeys.forceRefresh()}
         onClose={() => setAdding(false)}
       />
       <DeleteAPIKeyPopup
         retro={retro}
-        retroToken={retroToken}
+        retroToken={retroAuth.retroToken}
         apiKey={deleting}
         onDelete={() => apiKeys.forceRefresh()}
         onClose={() => setDeleting(null)}

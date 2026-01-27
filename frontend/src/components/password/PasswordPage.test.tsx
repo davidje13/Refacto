@@ -1,16 +1,15 @@
 import { render, fireEvent, act, getBy } from 'flexible-testing-library-react';
-import { retroAuthService, retroAuthTracker } from '../../api/api';
+import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 import { css } from '../../test-helpers/queries';
+import { retroAuthService, retroAuthTracker } from '../../api/api';
 
 import { PasswordPage } from './PasswordPage';
 
 describe('PasswordPage', () => {
   it('exchanges passwords for tokens', async () => {
-    jest.spyOn(retroAuthService, 'getRetroAuthForPassword').mockResolvedValue({
-      retroToken: 'some-token',
-      scopes: ['read', 'write'],
-      expires: Number.MAX_SAFE_INTEGER,
-    });
+    jest
+      .spyOn(retroAuthService, 'getRetroAuthForPassword')
+      .mockResolvedValue({ ...COMMON_AUTH, retroToken: 'some-token' });
 
     const dom = render(<PasswordPage slug="abc" retroId="myRetroId" />);
 

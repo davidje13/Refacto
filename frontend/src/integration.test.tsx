@@ -12,6 +12,7 @@ import {
   staticTitleHook,
   type StaticTitleHook,
 } from './test-helpers/staticTitleHook';
+import { COMMON_AUTH } from './test-helpers/commonAuth';
 import { css } from './test-helpers/queries';
 import { mockFetchExpect } from './test-helpers/fetch';
 import { mockWsExpect } from './test-helpers/ws';
@@ -64,8 +65,8 @@ describe('Application', () => {
     });
 
     mockFetchExpect('/api/auth/tokens/id-foobar').andRespondJsonOk({
+      ...COMMON_AUTH,
       retroToken: 'my-token',
-      expires: Number.MAX_SAFE_INTEGER,
     });
 
     mockWsExpect('/api/retros/id-foobar', async (ws) => {

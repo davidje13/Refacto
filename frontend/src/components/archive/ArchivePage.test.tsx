@@ -1,6 +1,7 @@
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetro, makeRetroArchive } from '../../shared/api-entities';
+import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 import { archiveService } from '../../api/api';
 import { css } from '../../test-helpers/queries';
 
@@ -16,7 +17,7 @@ describe('ArchivePage', () => {
 
     const dom = render(
       <ArchivePage
-        retroToken="token-1"
+        retroAuth={{ ...COMMON_AUTH, retroToken: 'token-1' }}
         retro={makeRetro({ id: 'r1' })}
         archiveId="myArchiveId"
       />,
