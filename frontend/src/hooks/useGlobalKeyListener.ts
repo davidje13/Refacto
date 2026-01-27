@@ -10,8 +10,14 @@ export function useGlobalKeyListener(
     if (
       t.tagName === 'INPUT' ||
       t.tagName === 'TEXTAREA' ||
-      t.tagName === 'SELECT' ||
-      document.body.classList.contains('ReactModal__Body--open')
+      t.tagName === 'SELECT'
+    ) {
+      return;
+    }
+    if (
+      (t.tagName === 'A' || t.tagName === 'BUTTON') &&
+      !t.hasAttribute('disabled') &&
+      e.key === 'Enter'
     ) {
       return;
     }
