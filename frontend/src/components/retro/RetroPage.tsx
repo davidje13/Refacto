@@ -64,6 +64,7 @@ export const RetroPage = memo(
         label: 'Archives',
         action: `${basePath}/archives`,
         className: 'archives-link',
+        disabled: !retroAuth.scopes.includes('readArchives'),
       },
     ];
 

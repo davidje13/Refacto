@@ -31,7 +31,8 @@
   }
 
   & a,
-  & button {
+  & button,
+  .disabled-link {
     display: inline-block;
     padding: 16px 12px;
     box-sizing: border-box;
@@ -45,12 +46,19 @@
       color: var(--header-link-text);
     }
 
-    &:active,
-    &:hover,
-    &:focus {
-      background: var(--header-link-back-hover);
-      color: var(--header-link-text-hover);
-      text-decoration: none;
+    &:disabled,
+    &.disabled-link {
+      opacity: 0.5;
+    }
+
+    &:not(:disabled):not(.disabled-link) {
+      &:active,
+      &:hover,
+      &:focus {
+        background: var(--header-link-back-hover);
+        color: var(--header-link-text-hover);
+        text-decoration: none;
+      }
     }
 
     &:focus-visible {
