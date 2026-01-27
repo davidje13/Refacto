@@ -25,7 +25,7 @@
     "@types/node": "20.x",
     "authentication-backend": "2.x",
     "collection-storage": "4.x",
-    "json-immutability-helper": "4.0.x",
+    "json-immutability-helper": "4.1.x",
     "jwt-simple": "0.5.x",
     "lean-test": "2.x",
     "prettier": "3.7.4",

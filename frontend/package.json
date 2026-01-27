@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@openfonts/open-sans_all": "1.x",
-    "json-immutability-helper": "4.0.x",
+    "json-immutability-helper": "4.1.x",
     "lean-qr": "2.x",
     "react": "18.x",
     "react-dom": "18.x",
