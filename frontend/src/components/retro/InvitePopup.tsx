@@ -7,10 +7,11 @@ import './InvitePopup.css';
 interface PropsT {
   isOpen: boolean;
   onClose: () => void;
+  pathname: string;
 }
 
-export const InvitePopup = memo(({ isOpen, onClose }: PropsT) => {
-  const { protocol, host, pathname } = document.location;
+export const InvitePopup = memo(({ isOpen, onClose, pathname }: PropsT) => {
+  const { protocol, host } = document.location;
   const url = `${protocol}//${host}${pathname}`;
   return (
     <Popup

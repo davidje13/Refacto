@@ -2,7 +2,7 @@ import { memo, useEffect } from 'react';
 import type { Retro } from '../../shared/api-entities';
 import type { RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';
-import { Header } from '../common/Header';
+import { Header, type HeaderLinks } from '../common/Header';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import { useBoolean } from '../../hooks/useBoolean';
 import { OPTIONS } from '../../helpers/optionManager';
@@ -33,6 +33,7 @@ export const RetroPage = memo(
     const smallScreen = useWindowSize(isSmallScreen);
     const archivePopupVisible = useBoolean(false);
     const invitePopupVisible = useBoolean(false);
+    const basePath = `/retros/${encodeURIComponent(retro.slug)}`;
 
     const canFacilitate =
       !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
@@ -51,20 +52,17 @@ export const RetroPage = memo(
       }
     }, [canArchive]);
 
-    const links = [
+    const links: HeaderLinks = [
       { label: 'Invite', action: invitePopupVisible.setTrue },
       retroDispatch
-        ? {
-            label: 'Settings',
-            action: `/retros/${encodeURIComponent(retro.slug)}/settings`,
-          }
+        ? { label: 'Settings', action: `${basePath}/settings` }
         : null,
       canArchive
         ? { label: 'Create Archive', action: archivePopupVisible.setTrue }
         : null,
       {
         label: 'Archives',
-        action: `/retros/${encodeURIComponent(retro.slug)}/archives`,
+        action: `${basePath}/archives`,
         className: 'archives-link',
       },
     ];
@@ -74,14 +72,7 @@ export const RetroPage = memo(
         <Header
           documentTitle={`${retro.name} - Refacto`}
           title={retro.name}
-          backLink={
-            group
-              ? {
-                  label: 'Main Retro',
-                  action: `/retros/${encodeURIComponent(retro.slug)}`,
-                }
-              : null
-          }
+          backLink={group ? { label: 'Main Retro', action: basePath } : null}
           links={retro ? links : []}
         />
         <RetroFormatPicker
@@ -107,6 +98,7 @@ export const RetroPage = memo(
         <InvitePopup
           isOpen={invitePopupVisible.value}
           onClose={invitePopupVisible.setFalse}
+          pathname={basePath}
         />
       </article>
     );
