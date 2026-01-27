@@ -4,6 +4,7 @@ import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
 import { LoginCallback } from './login/LoginCallback';
 import { RetroRouter } from './RetroRouter';
+import { WatchRetro } from './WatchRetro';
 import { WelcomePage } from './welcome/WelcomePage';
 import { SecurityPage } from './security/SecurityPage';
 import { GuidancePage } from './guidance/GuidancePage';
@@ -43,6 +44,9 @@ export const App: FunctionComponent = () => (
       </Route>
       <Route path="/retros/:slug/*?">
         {({ slug }) => <RetroRouter slug={slug} />}
+      </Route>
+      <Route path="/watch/:retroId">
+        {({ retroId }) => <WatchRetro retroId={retroId} />}
       </Route>
 
       <RedirectRoute path="/retros" to="/" replace />

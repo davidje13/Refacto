@@ -5,7 +5,7 @@ import { jsonFetch } from '../../api/jsonFetch';
 import { useAsyncValue } from '../../hooks/useAsyncValue';
 import { useUserData } from '../../hooks/data/useUserData';
 import { useRetroList } from '../../hooks/data/useRetroList';
-import { useRelativeURL } from '../../hooks/useRelativeURL';
+import { useRelativeURL } from '../../hooks/env/useRelativeURL';
 import { LoginForm } from '../login/LoginForm';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';

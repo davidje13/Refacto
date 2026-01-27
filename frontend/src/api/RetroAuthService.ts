@@ -34,6 +34,27 @@ export class RetroAuthService {
     return handleResponse(response);
   }
 
+  public async getRetroAuthForApiKey(
+    retroId: string,
+    apiKey: string,
+    signal: AbortSignal,
+  ): Promise<RetroAuth> {
+    const response = await fetch(
+      `${this.apiBase}/auth/tokens/${encodeURIComponent(retroId)}/api-key`,
+      {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey }),
+        signal,
+      },
+    );
+    if (response.status === 400) {
+      throw new Error('Invalid key');
+    }
+    return handleResponse(response);
+  }
+
   public async getRetroAuthForUser(
     retroId: string,
     userToken: string,
