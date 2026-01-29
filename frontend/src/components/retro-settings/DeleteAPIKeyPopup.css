@@ -4,13 +4,4 @@
   & p {
     margin: 16px 0;
   }
-
-  .dialog-options {
-    margin: 16px 0;
-    text-align: center;
-
-    & button {
-      margin: 0 16px;
-    }
-  }
 }

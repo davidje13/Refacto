@@ -4,15 +4,6 @@
     max-width: 600px;
   }
 
-  .dialog-options {
-    margin: 16px 0;
-    text-align: center;
-
-    & button {
-      margin: 0 16px;
-    }
-  }
-
   .reminder {
     font-weight: bolder;
   }

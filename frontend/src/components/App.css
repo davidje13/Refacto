@@ -1,6 +1,7 @@
 @import url('./global-styles/opensans.css');
 @import url('./global-styles/form.css');
 @import url('./global-styles/button.css');
+@import url('./global-styles/dialog.css');
 @import url('./global-styles/article.css');
 
 html {

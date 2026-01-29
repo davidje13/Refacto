@@ -1,0 +1,7 @@
+.dialog-options {
+  margin: 16px 0;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 16px 32px;
+}
