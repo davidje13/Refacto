@@ -32,7 +32,7 @@ export const ConnectionOverlay: FunctionComponent<PropsT> = ({
     case 'reauthenticate':
       if (slug && retroId) {
         return (
-          <Popup title="Login expired" isOpen onClose={() => null}>
+          <Popup title="Login expired" isOpen onClose={null}>
             <div className="popup-password">
               <p>
                 Your login has expired or the retro password has been changed.

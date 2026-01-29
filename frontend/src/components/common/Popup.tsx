@@ -15,7 +15,7 @@ interface PropsT {
   hideTitle?: boolean;
   keys?: Record<string, () => void>;
   isOpen: boolean;
-  onClose: () => void;
+  onClose: (() => void) | null;
   children?: ReactNode;
 }
 
@@ -34,7 +34,7 @@ export const Popup: FunctionComponent<PropsT> = ({
 
   const handleCancel = useEvent((e: Event) => {
     e.preventDefault();
-    onClose();
+    onClose?.();
   });
 
   const handleKeyDown = useEvent((e: KeyboardEvent) => {
