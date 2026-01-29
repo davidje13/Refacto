@@ -472,7 +472,7 @@ export const openapi = Buffer.from(
         delete: {
           summary: 'Delete the retro, or schedule it for deletion',
           description:
-            'Depending on the configured `DELETE_RETRO_DELAY_DAYS`, this may delete the retro immediately (if `0`), after a countdown (if greater than `0`), or reject the request (if less than `0`). If a countdown is configured, any user with the `manage` scope may cancel the deletion during this window by sending a `PATCH` request.',
+            'Depending on the configured `DELETE_RETRO_DELAY`, this may delete the retro immediately (if `0`), after a countdown (if greater than `0`), or reject the request (if less than `0`). If a countdown is configured, any user with the `manage` scope may cancel the deletion during this window by sending a `PATCH` request.',
           security: [{ retroToken: ['manage'] }],
           parameters: [
             {
@@ -496,8 +496,9 @@ export const openapi = Buffer.from(
                 'application/json': {
                   schema: {
                     type: 'object',
+                    required: ['scheduledDelete'],
                     properties: {
-                      scheduledTime: {
+                      scheduledDelete: {
                         type: 'integer',
                         format: 'unix-millis',
                         description:

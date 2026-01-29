@@ -448,7 +448,7 @@ describe('API retros', () => {
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(202);
 
-      expect(response.body.scheduledTime).toBeGreaterThan(begin);
+      expect(response.body.scheduledDelete).toBeGreaterThan(begin);
     });
 
     it('responds HTTP Forbidden if scope is not "manage"', async (props) => {

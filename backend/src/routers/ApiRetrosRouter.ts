@@ -305,7 +305,7 @@ export class ApiRetrosRouter extends Router {
         await retroDeletionService.scheduleDeletion(retroId, schedule);
         analyticsService.event(req, 'delete retro scheduled', { retroId });
         res.statusCode = 202;
-        return sendJSON(res, { scheduledTime: schedule });
+        return sendJSON(res, { scheduledDelete: schedule });
       } else {
         await retroDeletionService.scheduleDeletion(retroId, 0);
         analyticsService.event(req, 'delete retro immediate', { retroId });
