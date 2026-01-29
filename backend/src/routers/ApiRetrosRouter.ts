@@ -44,6 +44,8 @@ import {
 import { exportRetroTable } from '../export/RetroTableExport';
 
 export class ApiRetrosRouter extends Router {
+  private readonly _activeConnections = new MultiMap<string, IncomingMessage>();
+
   constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
@@ -61,7 +63,6 @@ export class ApiRetrosRouter extends Router {
       extractAndValidateToken: (token) =>
         userAuthService.readAndVerifyToken(token),
     });
-    const activeConnections = new MultiMap<string, IncomingMessage>();
 
     const wsHandlerFactory = new WebsocketHandlerFactory(
       retroService.retroBroadcaster,
@@ -179,8 +180,8 @@ export class ApiRetrosRouter extends Router {
         pongTimeout: 60_000,
         onConnect: (req) => {
           const { retroId } = getPathParameters(req);
-          activeConnections.add(retroId, req);
-          addTeardown(req, () => activeConnections.remove(retroId, req));
+          this._activeConnections.add(retroId, req);
+          addTeardown(req, () => this._activeConnections.remove(retroId, req));
           analyticsService.event(req, 'retro session begin');
         },
         onDisconnect: (req, closeReason, duration) => {
@@ -267,18 +268,7 @@ export class ApiRetrosRouter extends Router {
         });
         let evicted = 0;
         if (setPassword.evictUsers) {
-          const connections = activeConnections.listAndPurge(retroId);
-          evicted = connections.size;
-          const now = Date.now();
-          const timeout = 3000;
-          for (const connection of connections) {
-            scheduleClose(
-              connection,
-              'password changed',
-              now + timeout,
-              timeout,
-            );
-          }
+          evicted = this.evictUsers(retroId, 'password changed');
         }
         analyticsService.event(req, 'change retro password', {
           evictUsers: setPassword.evictUsers,
@@ -347,4 +337,21 @@ export class ApiRetrosRouter extends Router {
       new ApiRetroArchivesRouter(retroArchiveService, analyticsService),
     );
   }
+
+  evictUsers(retroId: string, reason: string) {
+    const connections = this._activeConnections.listAndPurge(retroId);
+    const evicted = connections.size;
+    const time = Date.now();
+    for (const connection of connections) {
+      scheduleClose(
+        connection,
+        reason,
+        time + DISCONNECT_GRACE,
+        DISCONNECT_GRACE,
+      );
+    }
+    return evicted;
+  }
 }
+
+const DISCONNECT_GRACE = 3000;
