@@ -44,7 +44,7 @@ import {
 import { exportRetroTable } from '../export/RetroTableExport';
 
 export class ApiRetrosRouter extends Router {
-  public constructor(
+  constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
     retroService: RetroService,

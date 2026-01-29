@@ -6,9 +6,9 @@ interface RetroList {
 }
 
 export class RetroListTracker {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public get(userToken: string, signal: AbortSignal): Promise<RetroList> {
+  get(userToken: string, signal: AbortSignal): Promise<RetroList> {
     return jsonFetch(`${this.apiBase}/retros`, {
       headers: { Authorization: `Bearer ${userToken}` },
       signal,

@@ -5,13 +5,13 @@ interface Config {
 const VALID_RANGE = /^[0-9A-Z]{5}$/;
 
 export class PasswordCheckService {
-  private readonly baseUrl: string;
+  declare private readonly baseUrl: string;
 
-  public constructor(config: Config) {
+  constructor(config: Config) {
     this.baseUrl = config.baseUrl;
   }
 
-  public async getBreachesRange(prefix: string): Promise<string> {
+  async getBreachesRange(prefix: string): Promise<string> {
     if (!VALID_RANGE.test(prefix)) {
       throw new RangeError('Invalid range prefix');
     }

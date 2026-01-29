@@ -1,9 +1,9 @@
 export class CacheMap<K, V> {
   private readonly data = new Map<K, V>();
 
-  public constructor(private readonly builder: (key: K) => V) {}
+  constructor(private readonly builder: (key: K) => V) {}
 
-  public get(key: K): V {
+  get(key: K): V {
     if (this.data.has(key)) {
       return this.data.get(key)!;
     }
@@ -12,7 +12,7 @@ export class CacheMap<K, V> {
     return value;
   }
 
-  public remove(key: K) {
+  remove(key: K) {
     this.data.delete(key);
   }
 }

@@ -1,9 +1,9 @@
 import { digest, toHex } from '../helpers/crypto';
 
 export class PasswordService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public async countPasswordBreaches(
+  async countPasswordBreaches(
     password: string,
     signal: AbortSignal,
   ): Promise<number> {

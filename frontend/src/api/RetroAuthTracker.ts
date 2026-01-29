@@ -6,7 +6,7 @@ import { store } from '../helpers/storage';
 const MINIMUM_VALIDITY = 1000 * 60 * 60 * 12;
 
 export class RetroAuthTracker extends CacheMap<string, AsyncValue<RetroAuth>> {
-  public constructor() {
+  constructor() {
     super((retroId) => {
       const value = new AsyncValue<RetroAuth>();
       try {
@@ -32,7 +32,7 @@ export class RetroAuthTracker extends CacheMap<string, AsyncValue<RetroAuth>> {
     });
   }
 
-  public set(retroId: string, auth: RetroAuth, persist?: boolean) {
+  set(retroId: string, auth: RetroAuth, persist?: boolean) {
     if (persist) {
       store.setItem(storageKey(retroId), JSON.stringify(auth));
     } else if (persist === false) {

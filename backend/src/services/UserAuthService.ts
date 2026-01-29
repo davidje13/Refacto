@@ -12,7 +12,7 @@ export class UserAuthService {
   declare private privateKey?: string;
   declare private publicKey?: string;
 
-  public constructor(
+  constructor(
     tokenManager: TokenManager,
     { loginTokenLifespan = 60 * 60 * 2 } = {},
   ) {
@@ -20,7 +20,7 @@ export class UserAuthService {
     this.loginTokenLifespan = loginTokenLifespan;
   }
 
-  public async initialise(db: DB): Promise<void> {
+  async initialise(db: DB): Promise<void> {
     const configCollection = db.getCollection<StoredKeyPair>('config');
     let keys = await configCollection
       .where('id', 'user-auth')
@@ -34,7 +34,7 @@ export class UserAuthService {
     this.publicKey = keys.publicKey;
   }
 
-  public grantLoginToken = (userId: string, service: string) => {
+  grantLoginToken = (userId: string, service: string) => {
     const now = Math.floor(Date.now() / 1000);
     const exp = now + this.loginTokenLifespan;
 
@@ -47,14 +47,14 @@ export class UserAuthService {
     });
   };
 
-  public grantToken(tokenData: UserJWTPayload) {
+  grantToken(tokenData: UserJWTPayload) {
     if (!this.privateKey) {
       throw new Error('Not initialised');
     }
     return this.tokenManager.signData(tokenData, this.privateKey);
   }
 
-  public readAndVerifyToken(userToken: string): UserJWTPayload {
+  readAndVerifyToken(userToken: string): UserJWTPayload {
     if (!this.publicKey) {
       throw new Error('Not initialised');
     }

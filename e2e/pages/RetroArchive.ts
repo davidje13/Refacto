@@ -3,9 +3,9 @@ import { Page } from './common/Page';
 import { RetroArchiveList } from './RetroArchiveList';
 
 export class RetroArchive extends Page {
-  private readonly slug: string;
+  declare private readonly slug: string;
 
-  public constructor(driver: WebDriver, slug: string, archiveId: string) {
+  constructor(driver: WebDriver, slug: string, archiveId: string) {
     super(
       driver,
       `/retros/${encodeURIComponent(slug)}/archives/${encodeURIComponent(archiveId)}`,
@@ -14,17 +14,17 @@ export class RetroArchive extends Page {
     this.slug = slug;
   }
 
-  public async clickBack() {
+  async clickBack() {
     await this.click(By.linkText('Archives'));
 
     return new RetroArchiveList(this.driver, this.slug).wait();
   }
 
-  public getNameText() {
+  getNameText() {
     return this.getName().getText();
   }
 
-  public async getActionItemLabels(): Promise<string[]> {
+  async getActionItemLabels(): Promise<string[]> {
     const items = await this.getActionItems();
     return Promise.all(
       items.map((item) => item.findElement(By.css('.message')).getText()),

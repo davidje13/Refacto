@@ -31,17 +31,15 @@ const asyncGenerateKeyPair = promisify(
 );
 
 export class TokenManager {
-  private readonly secretPassphrase: string;
-
+  declare private readonly secretPassphrase: string;
   private readonly modulusLength = 2048;
-
   private readonly algorithm = RS256;
 
-  public constructor({ secretPassphrase = '' } = {}) {
+  constructor({ secretPassphrase = '' } = {}) {
     this.secretPassphrase = secretPassphrase;
   }
 
-  public generateKeys(): Promise<KeyPair> {
+  generateKeys(): Promise<KeyPair> {
     const secret = this.secretPassphrase;
 
     return asyncGenerateKeyPair('rsa', {
@@ -59,7 +57,7 @@ export class TokenManager {
     });
   }
 
-  public signData(data: unknown, privateKey: string | Buffer): string {
+  signData(data: unknown, privateKey: string | Buffer): string {
     return encodeJWT(
       this.algorithm.signer({
         kid: undefined,
@@ -73,7 +71,7 @@ export class TokenManager {
     );
   }
 
-  public readAndVerifySigned(
+  readAndVerifySigned(
     token: string,
     publicKey: KeyLike,
     options: Partial<Omit<DecodeOptions, 'verifyKey'>> = {},

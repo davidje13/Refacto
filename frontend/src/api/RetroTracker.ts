@@ -26,13 +26,13 @@ export interface RetroSubscription {
 }
 
 export class RetroTracker {
-  private readonly subscriptionTracker: SubscriptionTracker<
+  declare private readonly subscriptionTracker: SubscriptionTracker<
     RetroKey,
     RetroAuth,
     SharedReducer<Retro, Spec<Retro>>
   >;
 
-  public constructor(
+  constructor(
     wsBase: string,
     private readonly diagnostics: Diagnostics,
   ) {
@@ -62,7 +62,7 @@ export class RetroTracker {
     );
   }
 
-  public subscribe(
+  subscribe(
     retroId: string,
     retroToken: string,
     retroStateCallback: StateListener<Retro>,

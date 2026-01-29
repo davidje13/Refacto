@@ -4,7 +4,7 @@ import type { AnalyticsService } from '../services/AnalyticsService';
 import { json } from '../helpers/json';
 
 export class ApiDiagnosticsRouter extends Router {
-  public constructor(analyticsService: AnalyticsService) {
+  constructor(analyticsService: AnalyticsService) {
     super();
 
     this.post('/error', async (req, res) => {

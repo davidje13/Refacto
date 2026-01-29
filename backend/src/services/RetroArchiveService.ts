@@ -12,9 +12,9 @@ import type {
 } from '../shared/api-entities';
 
 export class RetroArchiveService {
-  private readonly archiveCollection: Collection<RetroArchive>;
+  declare private readonly archiveCollection: Collection<RetroArchive>;
 
-  public constructor(db: DB, encryptionKey: Buffer) {
+  constructor(db: DB, encryptionKey: Buffer) {
     const enc = encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('archive_key'),
@@ -29,7 +29,7 @@ export class RetroArchiveService {
     );
   }
 
-  public async createArchive(
+  async createArchive(
     retroId: string,
     data: RetroData,
     created?: number,
@@ -50,7 +50,7 @@ export class RetroArchiveService {
     return id;
   }
 
-  public getRetroArchiveSummaries(
+  getRetroArchiveSummaries(
     retroId: string,
   ): AsyncGenerator<Readonly<RetroArchiveSummary>, void, undefined> {
     return this.archiveCollection
@@ -59,7 +59,7 @@ export class RetroArchiveService {
       .values();
   }
 
-  public async getRetroArchive(
+  async getRetroArchive(
     retroId: string,
     archiveId: string,
   ): Promise<Readonly<RetroArchive> | null> {
@@ -72,7 +72,7 @@ export class RetroArchiveService {
     return archiveData;
   }
 
-  public getRetroArchiveList(retroId: string) {
+  getRetroArchiveList(retroId: string) {
     return this.archiveCollection.where('retroId', retroId).values();
   }
 }

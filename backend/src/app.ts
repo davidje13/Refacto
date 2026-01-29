@@ -52,9 +52,9 @@ export interface TestHooks {
 
 export class App {
   constructor(
-    public readonly listener: WebListener,
-    public readonly testHooks: TestHooks,
-    public readonly close: () => void | Promise<void>,
+    readonly listener: WebListener,
+    readonly testHooks: TestHooks,
+    readonly close: () => void | Promise<void>,
   ) {}
 }
 

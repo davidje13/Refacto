@@ -27,13 +27,13 @@ interface Subscription<T> {
 export class SubscriptionTracker<K, E, S> {
   private readonly services = new Map<string, ServiceInfo<S>>();
 
-  public constructor(
+  constructor(
     private readonly generator: (id: K, extra: E) => S,
     private readonly destructor: (service: S, id: K) => void,
     private readonly reconnector?: (service: S, id: K, extra: E) => void,
   ) {}
 
-  public subscribe(id: K, extra: E): Subscription<S> {
+  subscribe(id: K, extra: E): Subscription<S> {
     const key = makeKey(id);
     let serviceInfo = this.services.get(key);
     const sExtra = makeKey(extra);
@@ -71,7 +71,7 @@ export class SubscriptionTracker<K, E, S> {
     }
   }
 
-  public find(id: K): S | null {
+  find(id: K): S | null {
     const key = makeKey(id);
     const o = this.services.get(key);
     return o?.service ?? null;

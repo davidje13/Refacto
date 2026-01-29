@@ -36,19 +36,18 @@ export interface GiphyResponse {
 }
 
 export class GiphyService {
-  private readonly baseUrl: string;
-
-  private readonly apiKey: string;
+  declare private readonly baseUrl: string;
+  declare private readonly apiKey: string;
 
   // memory used = ~200 bytes per gif entry * max limit * cache size
   private readonly searchCache = new LruCache<string, GifInfo[]>(256);
 
-  public constructor(config: Config) {
+  constructor(config: Config) {
     this.baseUrl = config.baseUrl;
     this.apiKey = config.apiKey;
   }
 
-  public async search(
+  async search(
     query: string,
     offset: number,
     limit: number,

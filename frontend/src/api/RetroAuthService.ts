@@ -13,9 +13,9 @@ async function handleResponse(response: Response): Promise<any> {
 }
 
 export class RetroAuthService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public async getRetroAuthForPassword(
+  async getRetroAuthForPassword(
     retroId: string,
     password: string,
   ): Promise<RetroAuth> {
@@ -34,7 +34,7 @@ export class RetroAuthService {
     return handleResponse(response);
   }
 
-  public async getRetroAuthForApiKey(
+  async getRetroAuthForApiKey(
     retroId: string,
     apiKey: string,
     signal: AbortSignal,
@@ -55,7 +55,7 @@ export class RetroAuthService {
     return handleResponse(response);
   }
 
-  public async getRetroAuthForUser(
+  async getRetroAuthForUser(
     retroId: string,
     userToken: string,
     signal: AbortSignal,

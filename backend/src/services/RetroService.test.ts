@@ -15,32 +15,31 @@ interface CapturedChange {
 }
 
 class ChangeListener {
-  public readonly messages: CapturedChange[] = [];
-
-  public readonly onChange: (
+  readonly messages: CapturedChange[] = [];
+  declare readonly onChange: (
     message: ChangeInfo<Spec<Retro>>,
     meta: unknown,
   ) => void;
 
-  public constructor() {
+  constructor() {
     this.onChange = (message: ChangeInfo<Spec<Retro>>, meta: unknown) => {
       this.messages.push({ message, meta });
     };
   }
 
-  public messageCount(): number {
+  messageCount(): number {
     return this.messages.length;
   }
 
-  public latestChange(): Spec<Retro> | undefined {
+  latestChange(): Spec<Retro> | undefined {
     return this.latestMessage()?.message?.change;
   }
 
-  public latestError(): string | undefined {
+  latestError(): string | undefined {
     return this.latestMessage()?.message?.error;
   }
 
-  public latestMeta(): unknown {
+  latestMeta(): unknown {
     return this.latestMessage()?.meta;
   }
 

@@ -16,7 +16,7 @@ if (!HOST) {
 const untilNoLoaders = untilNoElementLocated(By.css('.loader'));
 
 export abstract class Page extends PageFragment {
-  private readonly untilNavigated: WebElementCondition;
+  declare private readonly untilNavigated: WebElementCondition;
 
   protected constructor(
     driver: WebDriver,
@@ -27,13 +27,13 @@ export abstract class Page extends PageFragment {
     this.untilNavigated = until.elementLocated(By.css(expectedCSS));
   }
 
-  public async load() {
+  async load() {
     await this.navigate();
     await this.wait();
     return this;
   }
 
-  public async wait() {
+  async wait() {
     await this.driver.wait(
       this.untilNavigated,
       this.explicitWaitTimeout,
@@ -49,7 +49,7 @@ export abstract class Page extends PageFragment {
     return this;
   }
 
-  public getTitle() {
+  getTitle() {
     return this.driver.getTitle();
   }
 

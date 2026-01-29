@@ -7,9 +7,9 @@ export interface GifInfo {
 }
 
 export class GiphyService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public async search(
+  async search(
     query: string,
     lang: string | undefined,
     signal: AbortSignal,

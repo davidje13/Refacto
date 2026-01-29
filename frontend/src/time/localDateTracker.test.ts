@@ -4,30 +4,30 @@ import { localDateTracker } from './localDateTracker';
 import type { LocalDateProvider } from './LocalDateProvider';
 
 class MockClock {
-  private time: number;
+  declare private time: number;
 
-  public constructor(time = 0) {
+  constructor(time = 0) {
     this.time = time;
   }
 
-  public set(millis: number) {
+  set(millis: number) {
     this.time = millis;
   }
 
-  public now(): number {
+  now(): number {
     return this.time;
   }
 
-  public advanceByTime(millis: number) {
+  advanceByTime(millis: number) {
     this.advanceWallTimeOnly(millis);
     this.advanceTickTimeOnly(millis);
   }
 
-  public advanceWallTimeOnly(millis: number) {
+  advanceWallTimeOnly(millis: number) {
     this.time += millis;
   }
 
-  public advanceTickTimeOnly = (millis: number) => {
+  advanceTickTimeOnly = (millis: number) => {
     jest.advanceTimersByTime(millis);
   };
 }

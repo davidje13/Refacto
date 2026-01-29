@@ -37,7 +37,7 @@ export class RetroAuthService {
   declare private readonly keyTokenLifespan: number;
   declare private readonly retroApiKeyLimit: number;
 
-  public constructor(
+  constructor(
     db: DB,
     hasher: Hasher,
     tokenManager: TokenManager,
@@ -59,7 +59,7 @@ export class RetroAuthService {
     this.retroApiKeyLimit = options.retroApiKeyLimit;
   }
 
-  public async setPassword(
+  async setPassword(
     retroId: string,
     password: string,
     { cycleKeys = true } = {},
@@ -82,7 +82,7 @@ export class RetroAuthService {
     }
   }
 
-  public async createApiKey(
+  async createApiKey(
     retroId: string,
     name: string,
     scopes: string[],
@@ -113,7 +113,7 @@ export class RetroAuthService {
     return { id, key };
   }
 
-  public getApiKeysForRetro(
+  getApiKeysForRetro(
     retroId: string,
   ): AsyncGenerator<Readonly<RetroApiKey>, void, undefined> {
     return this.retroApiKeyCollection
@@ -122,7 +122,7 @@ export class RetroAuthService {
       .values();
   }
 
-  public async deleteApiKey(retroId: string, apiKeyId: string) {
+  async deleteApiKey(retroId: string, apiKeyId: string) {
     const keyData = await this.retroApiKeyCollection
       .where('id', apiKeyId)
       .attrs(['retroId'])
@@ -136,7 +136,7 @@ export class RetroAuthService {
     return deleted > 0;
   }
 
-  public async grantForPassword(
+  async grantForPassword(
     retroId: string,
     password: string,
     scopes: ScopesConfig = {},
@@ -164,7 +164,7 @@ export class RetroAuthService {
     });
   }
 
-  public async grantForApiKey(
+  async grantForApiKey(
     retroId: string,
     apiKey: string,
     scopes: ScopesConfig = {},
@@ -188,14 +188,14 @@ export class RetroAuthService {
     return token;
   }
 
-  public grantOwnerToken(retroId: string, scopes: ScopesConfig = {}) {
+  grantOwnerToken(retroId: string, scopes: ScopesConfig = {}) {
     return this.grantToken(retroId, this.ownerTokenLifespan, {
       iss: 'retro-owner',
       scopes: resolveScopes(OWNER_SCOPES, scopes),
     });
   }
 
-  public async grantToken(
+  async grantToken(
     retroId: string,
     tokenLifespan: number,
     payload: Omit<RetroJWTPayload, 'iat' | 'exp' | 'aud'>,
@@ -228,7 +228,7 @@ export class RetroAuthService {
     };
   }
 
-  public async readAndVerifyToken(
+  async readAndVerifyToken(
     retroId: string,
     retroToken: string,
   ): Promise<RetroJWTPayload | null> {

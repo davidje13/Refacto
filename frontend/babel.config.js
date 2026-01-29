@@ -4,7 +4,7 @@
 // See https://github.com/babel/babel-loader/issues/824
 
 module.exports = {
-  presets: ['@babel/preset-typescript'],
+  presets: [['@babel/preset-typescript', { allowDeclareFields: true }]],
   plugins: [
     ['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }],
     ['@babel/plugin-transform-dynamic-import'],

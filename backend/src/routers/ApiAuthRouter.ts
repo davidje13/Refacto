@@ -14,7 +14,7 @@ import type { AnalyticsService } from '../services/AnalyticsService';
 import { json } from '../helpers/json';
 
 export class ApiAuthRouter extends Router {
-  public constructor(
+  constructor(
     userAuthService: UserAuthService,
     retroAuthService: RetroAuthService,
     retroService: RetroService,

@@ -4,7 +4,7 @@ import { byButtonText } from '../helpers/customBy';
 import { Retro } from './Retro';
 
 export class RetroSettings extends Page {
-  public constructor(
+  constructor(
     driver: WebDriver,
     private slug: string,
   ) {
@@ -15,16 +15,16 @@ export class RetroSettings extends Page {
     );
   }
 
-  public setName(name: string) {
+  setName(name: string) {
     return this.setFormValue(By.css('input[name=name]'), name);
   }
 
-  public setSlug(slug: string) {
+  setSlug(slug: string) {
     this.slug = slug;
     return this.setFormValue(By.css('input[name=slug]'), slug);
   }
 
-  public async clickSave() {
+  async clickSave() {
     await this.click(byButtonText('Save'));
 
     return new Retro(this.driver, this.slug).wait();

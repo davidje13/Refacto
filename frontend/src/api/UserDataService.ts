@@ -2,9 +2,9 @@ import type { UserData } from '../shared/api-entities';
 import { jsonFetch } from './jsonFetch';
 
 export class UserDataService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public login(
+  login(
     service: string,
     externalToken: string,
     redirectUri: string,

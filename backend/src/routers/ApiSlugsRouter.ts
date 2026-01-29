@@ -2,7 +2,7 @@ import { getPathParameters, Router, sendJSON } from 'web-listener';
 import type { RetroService } from '../services/RetroService';
 
 export class ApiSlugsRouter extends Router {
-  public constructor(retroService: RetroService) {
+  constructor(retroService: RetroService) {
     super();
 
     this.get('/:slug', async (req, res) => {

@@ -16,7 +16,7 @@ import { json } from '../helpers/json';
 export class ApiRetroApiKeysRouter extends Router<
   WithPathParameters<{ retroId: string }>
 > {
-  public constructor(
+  constructor(
     retroAuthService: RetroAuthService,
     analyticsService: AnalyticsService,
   ) {

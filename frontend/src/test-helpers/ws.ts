@@ -16,10 +16,9 @@ interface Expectation {
 
 class MockWebSocketClient extends EventTarget {
   private static expectations: Expectation[] = [];
+  declare private readonly messages: BlockingQueue<string>;
 
-  private readonly messages: BlockingQueue<string>;
-
-  public constructor(public readonly url: string) {
+  constructor(readonly url: string) {
     super();
     const expected = MockWebSocketClient.expectations.find((expectation) =>
       url.endsWith(expectation.url),
@@ -53,23 +52,23 @@ class MockWebSocketClient extends EventTarget {
     });
   }
 
-  public static expect(url: string, scriptFn: ScriptFn) {
+  static expect(url: string, scriptFn: ScriptFn) {
     MockWebSocketClient.expectations.push({ url, scriptFn });
   }
 
-  public send(msg: string) {
+  send(msg: string) {
     this.messages.push(msg);
   }
 
-  public close() {
+  close() {
     this.messages.push('<CLOSED BY CLIENT>');
   }
 }
 
 class MockWebSocket {
-  private originalWebSocket: typeof WebSocket | undefined;
+  declare private originalWebSocket: typeof WebSocket | undefined;
 
-  public register() {
+  register() {
     if (this.originalWebSocket) {
       throw new Error('mock WebSocket is already registered!');
     }
@@ -77,7 +76,7 @@ class MockWebSocket {
     globalThis.WebSocket = MockWebSocketClient as unknown as typeof WebSocket;
   }
 
-  public unregister() {
+  unregister() {
     if (this.originalWebSocket) {
       globalThis.WebSocket = this.originalWebSocket;
       this.originalWebSocket = undefined;

@@ -4,39 +4,39 @@ import { Retro } from './Retro';
 import { Welcome } from './Welcome';
 
 export class RetroCreate extends Page {
-  private slug?: string;
+  declare private slug?: string;
 
-  public constructor(driver: WebDriver) {
+  constructor(driver: WebDriver) {
     super(driver, '/create', '.page-retro-create');
   }
 
-  public async clickAccount() {
+  async clickAccount() {
     await this.click(By.linkText('Account'));
 
     return new Welcome(this.driver).wait();
   }
 
-  public setName(name: string) {
+  setName(name: string) {
     return this.setFormValue(By.css('form input[name=name]'), name);
   }
 
-  public setSlug(slug: string) {
+  setSlug(slug: string) {
     this.slug = slug;
     return this.setFormValue(By.css('form input[name=slug]'), slug);
   }
 
-  public setPassword(pass: string) {
+  setPassword(pass: string) {
     return this.setFormValue(By.css('form input[name=password]'), pass);
   }
 
-  public setPasswordConfirmation(pass: string) {
+  setPasswordConfirmation(pass: string) {
     return this.setFormValue(
       By.css('form input[name=password-confirmation]'),
       pass,
     );
   }
 
-  public async submit() {
+  async submit() {
     await this.click(By.css('form button'));
 
     return new Retro(this.driver, this.slug || 'unknown').wait();

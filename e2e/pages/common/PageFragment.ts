@@ -12,11 +12,11 @@ export abstract class PageFragment {
     protected readonly locator: By,
   ) {}
 
-  public async exists() {
+  async exists() {
     return (await this.driver.findElements(this.locator)).length > 0;
   }
 
-  public async expectChange(fn: () => void | Promise<void>): Promise<void> {
+  async expectChange(fn: () => void | Promise<void>): Promise<void> {
     const container = await this.container();
     const oldState = await container.getText();
     await fn();

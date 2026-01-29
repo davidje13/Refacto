@@ -14,7 +14,7 @@ const babelLoader = {
   loader: 'babel-loader',
   options: {
     configFile: false,
-    presets: ['@babel/preset-typescript'],
+    presets: [['@babel/preset-typescript', { allowDeclareFields: true }]],
     plugins: [['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }]],
   },
 };

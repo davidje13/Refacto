@@ -1,7 +1,7 @@
 import type { Logger } from '../services/LogService';
 
 export class TestLogger implements Logger {
-  public readonly logs: Record<string, unknown>[] = [];
+  readonly logs: Record<string, unknown>[] = [];
 
   clear() {
     this.logs.length = 0;

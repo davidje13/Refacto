@@ -1,12 +1,12 @@
 import type { Spec } from '../api/reducer';
 
 class OptionType<T> {
-  public constructor(
+  constructor(
     private readonly key: string,
     private readonly def: T,
   ) {}
 
-  public read(options?: Record<string, unknown>): T {
+  read(options?: Record<string, unknown>): T {
     if (options?.[this.key] === undefined) {
       return this.def;
     }
@@ -19,7 +19,7 @@ class OptionType<T> {
     return value as T;
   }
 
-  public specSet(value: T): Spec<Record<string, unknown>> {
+  specSet(value: T): Spec<Record<string, unknown>> {
     if (value === undefined || value === this.def) {
       return { [this.key]: ['unset'] };
     }

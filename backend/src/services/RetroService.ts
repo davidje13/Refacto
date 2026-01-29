@@ -39,11 +39,11 @@ function dbError(err: unknown): unknown {
 }
 
 export class RetroService {
-  public readonly mutationContext: Context;
-  public readonly retroBroadcaster: Broadcaster<Retro, Spec<Retro>>;
-  private readonly retroCollection: Collection<Retro>;
+  declare readonly mutationContext: Context;
+  declare readonly retroBroadcaster: Broadcaster<Retro, Spec<Retro>>;
+  declare private readonly retroCollection: Collection<Retro>;
 
-  public constructor(db: DB, encryptionKey: Buffer) {
+  constructor(db: DB, encryptionKey: Buffer) {
     const enc = encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('retro_key'),
@@ -79,7 +79,7 @@ export class RetroService {
     );
   }
 
-  public getPermissions(scopes: Set<string>): Permission<Retro, Spec<Retro>> {
+  getPermissions(scopes: Set<string>): Permission<Retro, Spec<Retro>> {
     if (!scopes.has('write')) {
       return ReadOnly;
     }
@@ -89,14 +89,14 @@ export class RetroService {
     return new ReadWriteStruct(['id', 'ownerId']);
   }
 
-  public getEventFilter(scopes: Set<string>): EventFilter | undefined {
+  getEventFilter(scopes: Set<string>): EventFilter | undefined {
     if (!scopes.has('write')) {
       return (evt) => evt[0] === 'archive';
     }
     return undefined;
   }
 
-  public async getRetroIdForSlug(slug: string): Promise<string | null> {
+  async getRetroIdForSlug(slug: string): Promise<string | null> {
     const retroData = await this.retroCollection
       .where('slug', slug)
       .attrs(['id'])
@@ -107,7 +107,7 @@ export class RetroService {
     return retroData.id;
   }
 
-  public async createRetro(
+  async createRetro(
     ownerId: string,
     slug: string,
     name: string,
@@ -131,7 +131,7 @@ export class RetroService {
     return id;
   }
 
-  public getRetroListForUser(
+  getRetroListForUser(
     ownerId: string,
   ): AsyncGenerator<RetroSummary, void, undefined> {
     return this.retroCollection
@@ -140,10 +140,7 @@ export class RetroService {
       .values();
   }
 
-  public async isRetroOwnedByUser(
-    retroId: string,
-    ownerId: string,
-  ): Promise<boolean> {
+  async isRetroOwnedByUser(retroId: string, ownerId: string): Promise<boolean> {
     const retro = await this.retroCollection
       .where('id', retroId)
       .attrs(['ownerId'])
@@ -154,7 +151,7 @@ export class RetroService {
     return retro.ownerId === ownerId;
   }
 
-  public getRetro(retroId: string): Promise<Retro | null> {
+  getRetro(retroId: string): Promise<Retro | null> {
     return this.retroCollection.where('id', retroId).get();
   }
 }

@@ -15,7 +15,7 @@ import { extractRetroData } from '../helpers/jsonParsers';
 export class ApiRetroArchivesRouter extends Router<
   WithPathParameters<{ retroId: string }>
 > {
-  public constructor(
+  constructor(
     retroArchiveService: RetroArchiveService,
     analyticsService: AnalyticsService,
   ) {

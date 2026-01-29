@@ -6,20 +6,20 @@ import { Security } from './Security';
 import { Retro } from './Retro';
 
 export class Welcome extends Page {
-  public constructor(driver: WebDriver) {
+  constructor(driver: WebDriver) {
     super(driver, '/', '.page-welcome');
   }
 
-  public getHeaderText() {
+  getHeaderText() {
     return this.getHeader().getText();
   }
 
-  public async getRetroNames(): Promise<string[]> {
+  async getRetroNames(): Promise<string[]> {
     const items = await this.getRetroItems();
     return Promise.all(items.map((item) => item.getText()));
   }
 
-  public async clickRetroNamed(name: string) {
+  async clickRetroNamed(name: string) {
     const names = await this.getRetroNames();
     const index = names.indexOf(name);
     if (index === -1) {
@@ -32,13 +32,13 @@ export class Welcome extends Page {
     return new Retro(this.driver, 'unknown').wait();
   }
 
-  public async clickCreateRetro() {
+  async clickCreateRetro() {
     await this.click(By.css('.link-create'));
 
     return new RetroCreate(this.driver).wait();
   }
 
-  public async clickLoginWithGoogle<K extends keyof typeof LoginTargets>(
+  async clickLoginWithGoogle<K extends keyof typeof LoginTargets>(
     expectation: K,
   ): Promise<SsoLogin<InstanceType<(typeof LoginTargets)[K]>>> {
     await this.click(By.css('.sso-google'));
@@ -49,7 +49,7 @@ export class Welcome extends Page {
     ).wait() as any;
   }
 
-  public async loginAs<K extends keyof typeof LoginTargets>(
+  async loginAs<K extends keyof typeof LoginTargets>(
     userName: string,
     expectation: K,
   ): Promise<InstanceType<(typeof LoginTargets)[K]>> {
@@ -57,7 +57,7 @@ export class Welcome extends Page {
     return await ssoLogin.loginAs(userName);
   }
 
-  public async clickSecurity() {
+  async clickSecurity() {
     const element = this.findElement(
       By.linkText('Privacy & Security information'),
     );

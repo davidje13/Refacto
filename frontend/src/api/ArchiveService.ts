@@ -11,9 +11,9 @@ interface ArchiveOptions {
 }
 
 export class ArchiveService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public async create({ retro, retroToken }: ArchiveOptions): Promise<string> {
+  async create({ retro, retroToken }: ArchiveOptions): Promise<string> {
     const retroData: RetroData = {
       format: retro.format,
       options: retro.options,
@@ -34,7 +34,7 @@ export class ArchiveService {
     return body.id;
   }
 
-  public getList(
+  getList(
     retroId: string,
     retroToken: string,
     signal: AbortSignal,
@@ -48,7 +48,7 @@ export class ArchiveService {
     );
   }
 
-  public get(
+  get(
     retroId: string,
     archiveId: string,
     retroToken: string,

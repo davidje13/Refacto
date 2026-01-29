@@ -9,7 +9,7 @@ interface ServerConfig {
 }
 
 export class ApiConfigRouter extends Router {
-  public constructor(
+  constructor(
     serverConfig: ServerConfig,
     ssoClientConfig: ClientConfig['sso'],
     passwordRequirements: PasswordRequirements,

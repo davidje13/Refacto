@@ -9,9 +9,9 @@ interface RetroOptions {
 }
 
 export class RetroService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public async create({
+  async create({
     name,
     slug,
     password,
@@ -38,7 +38,7 @@ export class RetroService {
     return body;
   }
 
-  public async setPassword(
+  async setPassword(
     retroId: string,
     retroToken: string,
     password: string,

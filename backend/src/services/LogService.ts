@@ -12,7 +12,7 @@ export class LogService implements Logger {
   private writable: Writable | null = null;
   private reopening: Promise<void> | null = null;
   private closing: Promise<void> | null = null;
-  private readonly reopenable: boolean;
+  declare private readonly reopenable: boolean;
   private readonly queue: string[] = [];
 
   constructor(private readonly filePath: string) {

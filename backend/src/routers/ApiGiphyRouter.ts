@@ -3,10 +3,7 @@ import type { GiphyService } from '../services/GiphyService';
 import type { AnalyticsService } from '../services/AnalyticsService';
 
 export class ApiGiphyRouter extends Router {
-  public constructor(
-    service: GiphyService,
-    analyticsService: AnalyticsService,
-  ) {
+  constructor(service: GiphyService, analyticsService: AnalyticsService) {
     super();
 
     this.get('/search', async (req, res) => {

@@ -15,7 +15,7 @@ const CACHE_CONTROL = [
 ].join(', ');
 
 export class ApiPasswordCheckRouter extends Router {
-  public constructor(service: PasswordCheckService) {
+  constructor(service: PasswordCheckService) {
     super();
 
     this.get(

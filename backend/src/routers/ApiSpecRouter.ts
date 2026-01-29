@@ -4,7 +4,7 @@ import { openapi } from './openapi';
 const devMode = process.env['NODE_ENV'] === 'development';
 
 export class ApiSpecRouter extends Router {
-  public constructor() {
+  constructor() {
     super();
 
     this.get(

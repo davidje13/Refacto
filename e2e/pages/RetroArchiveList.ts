@@ -5,7 +5,7 @@ import { Retro } from './Retro';
 import { waitForFile } from '../helpers/downloads';
 
 export class RetroArchiveList extends Page {
-  public constructor(
+  constructor(
     driver: WebDriver,
     private readonly slug: string,
   ) {
@@ -16,13 +16,13 @@ export class RetroArchiveList extends Page {
     );
   }
 
-  public async clickBack() {
+  async clickBack() {
     await this.click(By.linkText('Back to Retro'));
 
     return new Retro(this.driver, this.slug).wait();
   }
 
-  public async clickExportJson(): Promise<string> {
+  async clickExportJson(): Promise<string> {
     await this.click(By.linkText('Export as JSON'));
     return waitForFile(
       `${this.slug}-export.json`,
@@ -31,12 +31,12 @@ export class RetroArchiveList extends Page {
     );
   }
 
-  public async getArchiveLabels(): Promise<string[]> {
+  async getArchiveLabels(): Promise<string[]> {
     const items = await this.getArchiveItems();
     return Promise.all(items.map((item) => item.getText()));
   }
 
-  public async clickArchiveAtIndex(index: number) {
+  async clickArchiveAtIndex(index: number) {
     const item = await this.getArchiveItemAtIndex(index);
     await item.click();
 

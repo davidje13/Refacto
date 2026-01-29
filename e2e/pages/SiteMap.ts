@@ -4,17 +4,17 @@ import { Welcome } from './Welcome';
 import { Password } from './Password';
 
 export class SiteMap {
-  public constructor(public readonly driver: WebDriver) {}
+  constructor(readonly driver: WebDriver) {}
 
-  public navigateToWelcome() {
+  navigateToWelcome() {
     return new Welcome(this.driver).load();
   }
 
-  public navigateToRetroPassword(slug: string) {
+  navigateToRetroPassword(slug: string) {
     return new Password(this.driver, slug).load();
   }
 
-  public async close() {
+  async close() {
     const [url, content, logs] = await Promise.all([
       this.driver.getCurrentUrl(),
       getDocumentHtml(this.driver),

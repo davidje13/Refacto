@@ -17,9 +17,9 @@ interface RetroApiKeyOptions {
 }
 
 export class RetroApiKeyService {
-  public constructor(private readonly apiBase: string) {}
+  constructor(private readonly apiBase: string) {}
 
-  public create({ retro, retroToken, name, scopes }: RetroApiKeyOptions) {
+  create({ retro, retroToken, name, scopes }: RetroApiKeyOptions) {
     return jsonFetch<NewRetroApiKey>(
       `${this.apiBase}/retros/${encodeURIComponent(retro.id)}/api-keys`,
       {
@@ -34,7 +34,7 @@ export class RetroApiKeyService {
     );
   }
 
-  public getList(
+  getList(
     retroId: string,
     retroToken: string,
     signal: AbortSignal,
@@ -48,11 +48,7 @@ export class RetroApiKeyService {
     );
   }
 
-  public revoke(
-    retroId: string,
-    apiKeyId: string,
-    retroToken: string,
-  ): Promise<void> {
+  revoke(retroId: string, apiKeyId: string, retroToken: string): Promise<void> {
     return jsonFetch(
       `${this.apiBase}/retros/${encodeURIComponent(retroId)}/api-keys/${encodeURIComponent(apiKeyId)}`,
       {

@@ -2,11 +2,11 @@ import { By, type WebDriver } from 'selenium-webdriver';
 import { Page } from './common/Page';
 
 export class Security extends Page {
-  public constructor(driver: WebDriver) {
+  constructor(driver: WebDriver) {
     super(driver, '/security', '.page-security');
   }
 
-  public getHeaderText() {
+  getHeaderText() {
     return this.getHeader().getText();
   }
 

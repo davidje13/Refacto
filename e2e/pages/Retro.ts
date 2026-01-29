@@ -7,49 +7,49 @@ import { byButtonText } from '../helpers/customBy';
 import { headless } from '../helpers/selenium';
 
 class ItemEntry extends PageFragment {
-  public setText(value: string) {
+  setText(value: string) {
     return this.setFormValue(By.css('textarea'), value);
   }
 
-  public submit() {
+  submit() {
     return this.click(By.css('button'));
   }
 
-  public async enter(value: string) {
+  async enter(value: string) {
     await this.setText(value);
     await this.submit();
   }
 }
 
 export class Retro extends Page {
-  public constructor(
+  constructor(
     driver: WebDriver,
     private readonly slug: string,
   ) {
     super(driver, `/retros/${encodeURIComponent(slug)}`, '.page-retro');
   }
 
-  public getNameText() {
+  getNameText() {
     return this.getName().getText();
   }
 
-  public getHappyItemEntry() {
+  getHappyItemEntry() {
     return new ItemEntry(this.driver, By.css('.happy .text-entry'));
   }
 
-  public getMehItemEntry() {
+  getMehItemEntry() {
     return new ItemEntry(this.driver, By.css('.meh .text-entry'));
   }
 
-  public getSadItemEntry() {
+  getSadItemEntry() {
     return new ItemEntry(this.driver, By.css('.sad .text-entry'));
   }
 
-  public getActionItemEntry() {
+  getActionItemEntry() {
     return new ItemEntry(this.driver, By.css('.actions .text-entry'));
   }
 
-  public async toggleActionItemDone(index: number) {
+  async toggleActionItemDone(index: number) {
     const items = await this.getActionItems();
     const item = items[index];
     if (!item) {
@@ -58,60 +58,60 @@ export class Retro extends Page {
     await item.findElement(By.css('.toggle-done')).click();
   }
 
-  public async getActionItemLabels(): Promise<string[]> {
+  async getActionItemLabels(): Promise<string[]> {
     const items = await this.getActionItems();
     return Promise.all(
       items.map((item) => item.findElement(By.css('.message')).getText()),
     );
   }
 
-  public async focusMoodItem(index: number) {
+  async focusMoodItem(index: number) {
     const item = await this.getMoodItemAtIndex(index);
     await item.findElement(By.css('.message')).click();
   }
 
-  public async cancelMoodItem(index: number) {
+  async cancelMoodItem(index: number) {
     const item = await this.getMoodItemAtIndex(index);
     await item.findElement(By.css('.cancel')).click();
   }
 
-  public async continueMoodItem(index: number) {
+  async continueMoodItem(index: number) {
     const item = await this.getMoodItemAtIndex(index);
     await item.findElement(By.css('.continue')).click();
   }
 
-  public pressReturn() {
+  pressReturn() {
     return this.sendKeys(Key.RETURN);
   }
 
-  public pressEscape() {
+  pressEscape() {
     return this.sendKeys(Key.ESCAPE);
   }
 
-  public pressLeftArrow() {
+  pressLeftArrow() {
     return this.sendKeys(Key.ARROW_LEFT);
   }
 
-  public pressRightArrow() {
+  pressRightArrow() {
     return this.sendKeys(Key.ARROW_RIGHT);
   }
 
-  public async getMoodItemLabels(): Promise<string[]> {
+  async getMoodItemLabels(): Promise<string[]> {
     const items = await this.getMoodItems();
     return Promise.all(
       items.map((item) => item.findElement(By.css('.message')).getText()),
     );
   }
 
-  public getBeginDiscussionPopup() {
+  getBeginDiscussionPopup() {
     return this.getPopup('popup-begin');
   }
 
-  public getArchivePopup() {
+  getArchivePopup() {
     return this.getPopup('popup-archive');
   }
 
-  public async performArchive() {
+  async performArchive() {
     const popup = this.getArchivePopup();
     if (!(await popup.exists())) {
       await this.click(byButtonText('Create Archive'));
@@ -124,13 +124,13 @@ export class Retro extends Page {
     }
   }
 
-  public async clickViewArchives() {
+  async clickViewArchives() {
     await this.click(By.linkText('Archives'));
 
     return new RetroArchiveList(this.driver, this.slug).wait();
   }
 
-  public async clickSettings() {
+  async clickSettings() {
     await this.click(By.linkText('Settings'));
 
     return new RetroSettings(this.driver, this.slug).wait();
