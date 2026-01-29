@@ -58,7 +58,6 @@ html {
 
   --link-text: #017767;
   --link-text-hover: #097460;
-  --link-disabled: rgba(0, 0, 0, 0.6);
 
   --header-link-back-hover: #dddddd;
   --header-link-text: #666666;
@@ -117,7 +116,6 @@ html {
 
     --link-text: #1de1c7;
     --link-text-hover: #13f0d2;
-    --link-disabled: rgba(0, 0, 0, 0.6);
 
     --header-link-back-hover: #333333;
     --header-link-text: #999999;

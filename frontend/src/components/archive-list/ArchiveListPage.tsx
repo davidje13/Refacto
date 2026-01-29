@@ -2,7 +2,7 @@ import { memo } from 'react';
 import type { RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
 import { LoadingError, LoadingIndicator } from '../common/Loader';
-import { ApiDownload } from '../common/ApiDownload';
+import { ApiDownloadButton } from '../common/ApiDownloadButton';
 import { useArchiveList } from '../../hooks/data/useArchiveList';
 import { ArchiveList } from './ArchiveList';
 import './ArchiveListPage.css';
@@ -33,21 +33,20 @@ export const ArchiveListPage = memo(({ retroAuth, retro }: PropsT) => {
         <ArchiveList slug={retro.slug} archives={archives} />
       )}
       <div className="extra-links">
-        <ApiDownload
+        <ApiDownloadButton
           url={`retros/${encodeURIComponent(retro.id)}/export/json`}
           retroAuth={retroAuth}
           filename={`${retro.slug}-export.json`}
         >
           Export as JSON
-        </ApiDownload>
-        {' / '}
-        <ApiDownload
+        </ApiDownloadButton>
+        <ApiDownloadButton
           url={`retros/${encodeURIComponent(retro.id)}/export/csv`}
           retroAuth={retroAuth}
           filename={`${retro.slug}-export.csv`}
         >
           Export items as CSV
-        </ApiDownload>
+        </ApiDownloadButton>
       </div>
     </article>
   );

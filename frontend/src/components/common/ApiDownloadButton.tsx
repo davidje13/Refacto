@@ -2,7 +2,7 @@ import { useState, memo, type ReactNode, type SyntheticEvent } from 'react';
 import type { RetroAuth } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { API_BASE } from '../../api/api';
-import './ApiDownload.css';
+import './ApiDownloadButton.css';
 
 interface PropsT {
   url: string;
@@ -11,7 +11,7 @@ interface PropsT {
   children: ReactNode;
 }
 
-export const ApiDownload = memo(
+export const ApiDownloadButton = memo(
   ({ url, retroAuth, filename, children }: PropsT) => {
     // Thanks, https://stackoverflow.com/a/43133108/1180785
 
@@ -43,12 +43,14 @@ export const ApiDownload = memo(
     });
 
     if (pending) {
-      return <span className="api-download">{children}</span>;
+      return (
+        <span className="global-button api-download disabled">{children}</span>
+      );
     }
 
     return (
       <a
-        className="api-download"
+        className="global-button api-download"
         href={url}
         download={filename}
         onClick={handleDownload}
