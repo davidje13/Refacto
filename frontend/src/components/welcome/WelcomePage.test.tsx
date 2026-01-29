@@ -15,6 +15,8 @@ const BASE_CONFIG: ClientConfig = {
   sso: {},
   giphy: false,
   passwordRequirements: { minLength: 8, maxLength: 512 },
+  maxApiKeys: 5,
+  deleteRetroDelay: 1000,
 };
 
 describe('WelcomePage', () => {

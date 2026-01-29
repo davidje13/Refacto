@@ -61,4 +61,41 @@ export class RetroService {
       throw new Error(body.error || 'Connection failed');
     }
   }
+
+  async scheduleDelete(retroId: string, retroToken: string): Promise<void> {
+    const response = await fetch(
+      `${this.apiBase}/retros/${encodeURIComponent(retroId)}`,
+      {
+        method: 'DELETE',
+        cache: 'no-cache',
+        headers: {
+          Authorization: `Bearer ${retroToken}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    const body = await response.json();
+    if (response.status >= 300 || body.error) {
+      throw new Error(body.error || 'Connection failed');
+    }
+  }
+
+  async cancelDelete(retroId: string, retroToken: string): Promise<void> {
+    const response = await fetch(
+      `${this.apiBase}/retros/${encodeURIComponent(retroId)}`,
+      {
+        method: 'PATCH',
+        cache: 'no-cache',
+        headers: {
+          Authorization: `Bearer ${retroToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cancelDelete: true }),
+      },
+    );
+    const body = await response.json();
+    if (response.status >= 300 || body.error) {
+      throw new Error(body.error || 'Connection failed');
+    }
+  }
 }

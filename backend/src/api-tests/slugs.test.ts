@@ -1,19 +1,14 @@
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { testServerRunner } from './testServerRunner';
+import { createRetro, testServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API slugs', () => {
   const PROPS = testServerRunner(async () => {
     const app = await appFactory(new TestLogger(), testConfig());
 
-    const retroId = await app.testHooks.retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
+    const { retroId } = await createRetro(app.testHooks, { slug: 'my-retro' });
 
     return { run: app, retroId };
   });

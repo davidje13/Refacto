@@ -75,4 +75,8 @@ export class RetroArchiveService {
   getRetroArchiveList(retroId: string) {
     return this.archiveCollection.where('retroId', retroId).values();
   }
+
+  async deleteRetro(retroId: string) {
+    await this.archiveCollection.where('retroId', retroId).remove();
+  }
 }

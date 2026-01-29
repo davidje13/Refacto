@@ -2,7 +2,11 @@ import request from 'superwstest';
 import { makeRetroItem } from '../shared/api-entities';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { getRetroToken, testServerRunner } from './testServerRunner';
+import {
+  createRetro,
+  getRetroToken,
+  testServerRunner,
+} from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API retros', () => {
@@ -11,12 +15,10 @@ describe('API retros', () => {
 
     const hooks = app.testHooks;
 
-    const retroId = await hooks.retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
+    const { retroId, retroToken } = await createRetro(hooks, {
+      slug: 'my-retro',
+      name: 'My Retro',
+    });
 
     await hooks.retroArchiveService.createArchive(retroId, {
       format: 'mood',
@@ -31,16 +33,12 @@ describe('API retros', () => {
       ],
     });
 
-    await hooks.retroAuthService.setPassword(retroId, 'password');
-
-    return { run: app, hooks, retroId };
+    return { run: app, hooks, retroId, retroToken };
   });
 
   describe('/api/retros/retro-id/export', () => {
     it('returns the retro and its archives in a API-friendly JSON format', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
-
-      const retroToken = await getRetroToken(hooks, retroId);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
       const response = await request(server)
         .get(`/api/retros/${retroId}/export/json`)
@@ -58,9 +56,7 @@ describe('API retros', () => {
     });
 
     it('returns the retro and its archives in a spreadsheet-friendly CSV format', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
-
-      const retroToken = await getRetroToken(hooks, retroId);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
       const response = await request(server)
         .get(`/api/retros/${retroId}/export/csv`)
@@ -79,9 +75,7 @@ describe('API retros', () => {
     });
 
     it('returns HTTP Not Found if the format is unknown', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
-
-      const retroToken = await getRetroToken(hooks, retroId);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
       const response = await request(server)
         .get(`/api/retros/${retroId}/export/nope`)

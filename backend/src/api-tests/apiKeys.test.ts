@@ -1,7 +1,11 @@
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { getRetroToken, testServerRunner } from './testServerRunner';
+import {
+  createRetro,
+  getRetroToken,
+  testServerRunner,
+} from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API keys', () => {
@@ -9,22 +13,13 @@ describe('API keys', () => {
     const app = await appFactory(new TestLogger(), testConfig());
 
     const hooks = app.testHooks;
+    const { retroId, retroToken } = await createRetro(hooks);
 
-    const retroId = await hooks.retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
-
-    await hooks.retroAuthService.setPassword(retroId, 'password');
     const apiKey = await hooks.retroAuthService.createApiKey(
       retroId,
       'my-key',
       ['read'],
     );
-
-    const retroToken = await getRetroToken(hooks, retroId);
 
     return { run: app, hooks, retroId, retroToken, apiKey: apiKey! };
   });
@@ -49,13 +44,8 @@ describe('API keys', () => {
     it('does not include API keys for other retros', async (props) => {
       const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
 
-      const otherRetroId = await hooks.retroService.createRetro(
-        '',
-        's',
-        '',
-        '',
-      );
-      await hooks.retroAuthService.createApiKey(otherRetroId, 'my-other-key', [
+      const other = await createRetro(hooks);
+      await hooks.retroAuthService.createApiKey(other.retroId, 'my-other-key', [
         'read',
       ]);
 
@@ -143,9 +133,9 @@ describe('API keys', () => {
 
   describe('/api/retros/retro-id/api-keys/api-key-id', () => {
     it('deletes the key', async (props) => {
-      const { server, hooks, retroId, apiKey } = props.getTyped(PROPS);
+      const { server, hooks, retroId, retroToken, apiKey } =
+        props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .delete(`/api/retros/${retroId}/api-keys/${apiKey.id}`)
         .set('Authorization', `Bearer ${retroToken}`)
@@ -190,14 +180,9 @@ describe('API keys', () => {
     it('responds HTTP Not Found for mismatched retro/key IDs', async (props) => {
       const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
 
-      const otherRetroId = await hooks.retroService.createRetro(
-        '',
-        's',
-        '',
-        '',
-      );
+      const other = await createRetro(hooks);
       const otherApiKey = await hooks.retroAuthService.createApiKey(
-        otherRetroId,
+        other.retroId,
         'my-other-key',
         ['read'],
       );

@@ -4,6 +4,7 @@ export default {
   mockSsoPort: 0,
   serverBindAddress: '',
   trustProxy: false,
+  deleteRetroDelay: 30 * 24 * 60 * 60 * 1000,
   log: {
     file: '/dev/stderr',
   },

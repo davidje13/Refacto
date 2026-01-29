@@ -3,6 +3,7 @@ import {
   formatTime,
   formatDateTime,
   formatDurationShort,
+  formatDurationLong,
 } from './formatters';
 
 describe('formatters', () => {
@@ -72,6 +73,31 @@ describe('formatters', () => {
     it('returns a h:mm:ss representation for large durations', () => {
       expect(formatDurationShort(60 * 60 * 1000)).toEqual('1:00:00');
       expect(formatDurationShort(100 * 60 * 60 * 1000)).toEqual('100:00:00');
+    });
+  });
+
+  describe('formatDurationLong', () => {
+    it('displays the time in an appropriate scale', () => {
+      expect(formatDurationLong(500)).toEqual('0 seconds');
+      expect(formatDurationLong(1000)).toEqual('1 second');
+      expect(formatDurationLong(10 * 1000)).toEqual('10 seconds');
+      expect(formatDurationLong(110 * 1000)).toEqual('110 seconds');
+      expect(formatDurationLong(2 * 60 * 1000)).toEqual('2 minutes');
+      expect(formatDurationLong(110 * 60 * 1000)).toEqual('110 minutes');
+      expect(formatDurationLong(2 * 60 * 60 * 1000)).toEqual('2 hours');
+      expect(formatDurationLong(47 * 60 * 60 * 1000)).toEqual('47 hours');
+      expect(formatDurationLong(2 * 24 * 60 * 60 * 1000)).toEqual('2 days');
+    });
+
+    it('uses singular units if requested', () => {
+      expect(formatDurationLong(500, true)).toEqual('0 second');
+      expect(formatDurationLong(1000, true)).toEqual('1 second');
+      expect(formatDurationLong(10 * 1000, true)).toEqual('10 second');
+      expect(formatDurationLong(2 * 60 * 1000, true)).toEqual('2 minute');
+      expect(formatDurationLong(2 * 60 * 60 * 1000, true)).toEqual('2 hour');
+      expect(formatDurationLong(2 * 24 * 60 * 60 * 1000, true)).toEqual(
+        '2 day',
+      );
     });
   });
 });

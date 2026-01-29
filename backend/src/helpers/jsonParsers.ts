@@ -39,4 +39,5 @@ export const extractRetro = json.exactObject<Retro>({
   format: json.string,
   options: json.record(json.any),
   items: json.array(extractRetroItem),
+  scheduledDelete: json.number,
 });

@@ -14,6 +14,7 @@ import { SetPassword } from '../common/SetPassword';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { OPTIONS } from '../../helpers/optionManager';
 import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
+import { DeleteRetroButton } from './DeleteRetroButton';
 import { APIKeyManager } from './APIKeyManager';
 import './SettingsForm.css';
 
@@ -150,6 +151,12 @@ export const SettingsForm = memo(
               <code className="retro-id-display">{retro.id}</code>
             </p>
             <APIKeyManager retro={retro} retroAuth={retroAuth} />
+          </div>
+        </details>
+        <details>
+          <summary>Delete Retro</summary>
+          <div className="content">
+            <DeleteRetroButton retro={retro} retroAuth={retroAuth} />
           </div>
         </details>
       </>

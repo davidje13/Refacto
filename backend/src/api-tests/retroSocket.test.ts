@@ -1,7 +1,7 @@
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { getRetroToken, testServerRunner } from './testServerRunner';
+import { createRetro, testServerRunner } from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API retro websocket', () => {
@@ -10,23 +10,17 @@ describe('API retro websocket', () => {
 
     const hooks = app.testHooks;
 
-    const retroId = await hooks.retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
+    const { retroId, retroToken } = await createRetro(hooks, {
+      name: 'My Retro',
+    });
 
-    await hooks.retroAuthService.setPassword(retroId, 'password');
-
-    return { run: app, hooks, retroId };
+    return { run: app, hooks, retroId, retroToken };
   });
 
   describe('ws://api/retros/retro-id', () => {
     it('sends initial retro data for known retro IDs', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
@@ -36,9 +30,8 @@ describe('API retro websocket', () => {
     });
 
     it('reflects update requests and persists changes', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)
@@ -57,9 +50,8 @@ describe('API retro websocket', () => {
     });
 
     it('rejects invalid changes', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .ws(`/api/retros/${retroId}`)
         .send(retroToken)

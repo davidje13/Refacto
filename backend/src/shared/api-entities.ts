@@ -14,6 +14,8 @@ export interface ClientConfig {
     };
   };
   passwordRequirements: PasswordRequirements;
+  maxApiKeys: number;
+  deleteRetroDelay: number;
   giphy: boolean;
 }
 
@@ -100,6 +102,7 @@ export interface Retro<StateT = AnyState> extends RetroSummary, RetroData {
   ownerId: string;
   state: StateT;
   groupStates: Record<string, StateT>;
+  scheduledDelete: number;
 }
 
 export function makeRetro(details: Partial<Retro> = {}): Retro {
@@ -113,6 +116,7 @@ export function makeRetro(details: Partial<Retro> = {}): Retro {
     format: '',
     options: {},
     items: [],
+    scheduledDelete: 0,
     ...details,
   };
 }

@@ -1,0 +1,8 @@
+.popup-scheduled-delete {
+  max-width: 600px;
+
+  & p {
+    margin: 16px 0;
+    text-align: center;
+  }
+}

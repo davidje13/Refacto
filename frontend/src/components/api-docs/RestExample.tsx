@@ -257,6 +257,7 @@ function makeExampleResponse(root: OpenApiSpec, def: MethodSpec): ReactNode[] {
 
 const STATUS_TEXT = new Map([
   ['200', 'OK'],
+  ['202', 'Accepted'],
   ['400', 'Bad Request'],
   ['401', 'Unauthorized'],
   ['403', 'Forbidden'],

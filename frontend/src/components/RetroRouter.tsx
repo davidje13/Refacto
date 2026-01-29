@@ -18,6 +18,7 @@ import { Header } from './common/Header';
 import { LoadingError, LoadingIndicator } from './common/Loader';
 import { PasswordPage } from './password/PasswordPage';
 import { ConnectionOverlay } from './retro/ConnectionOverlay';
+import { ScheduledDeleteOverlay } from './retro/ScheduledDeleteOverlay';
 import { RetroPage } from './retro/RetroPage';
 import { ArchiveListPage } from './archive-list/ArchiveListPage';
 import { ArchivePage } from './archive/ArchivePage';
@@ -128,7 +129,14 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
             replace
           />
         </Switch>
-        <ConnectionOverlay status={status} slug={slug} retroId={retroId} />
+        {retroState.retro.scheduledDelete ? (
+          <ScheduledDeleteOverlay
+            retro={retroState.retro}
+            retroAuth={retroAuth}
+          />
+        ) : (
+          <ConnectionOverlay status={status} slug={slug} retroId={retroId} />
+        )}
       </StateMapProvider>
     </LiveEventsProvider>
   );

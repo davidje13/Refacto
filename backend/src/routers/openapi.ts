@@ -363,7 +363,7 @@ export const openapi = Buffer.from(
         get: {
           summary: 'Read a snapshot of the current retro state',
           description:
-            'Returns the current active retro state, excluding any archives. Note that all retro data is user-generated and user modifiable (with the exception of the id and ownerId). The structure of the data is enforced, but the content can be set to anything. Therefore you should consider all retro data as untrusted input.',
+            'Returns the current active retro state, excluding any archives. Note that all retro data is user-generated and user modifiable (with the exception of `id`, `ownerId`, and `scheduledDelete`). The structure of the data is enforced, but the content can be set to anything. Therefore you should consider all retro data as untrusted input.',
           security: [{ retroToken: ['read'] }],
           parameters: [
             {
@@ -446,6 +446,11 @@ export const openapi = Buffer.from(
                       description:
                         "If set, this changes the retro password and optionally invalidates current tokens. Requires a retro token with 'manage' access.",
                     },
+                    cancelDelete: {
+                      type: 'boolean',
+                      description:
+                        "If `true`, this cancels any active deletion countdown. Requires a retro token with 'manage' access.",
+                    },
                   },
                   additionalProperties: false,
                 },
@@ -462,6 +467,49 @@ export const openapi = Buffer.from(
             '401': { $ref: '#/components/responses/UnauthorizedError' },
             '403': { $ref: '#/components/responses/ForbiddenError' },
             '422': { $ref: '#/components/responses/ValidationError' },
+          },
+        },
+        delete: {
+          summary: 'Delete the retro, or schedule it for deletion',
+          description:
+            'Depending on the configured `DELETE_RETRO_DELAY_DAYS`, this may delete the retro immediately (if `0`), after a countdown (if greater than `0`), or reject the request (if less than `0`). If a countdown is configured, any user with the `manage` scope may cancel the deletion during this window by sending a `PATCH` request.',
+          security: [{ retroToken: ['manage'] }],
+          parameters: [
+            {
+              name: 'retro_id',
+              in: 'path',
+              description: 'The ID of the retro.',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {
+            '200': {
+              description: 'Retro deleted.',
+              content: {
+                'application/json': { schema: { type: 'object' } },
+              },
+            },
+            '202': {
+              description: 'Retro scheduled for deletion.',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      scheduledTime: {
+                        type: 'integer',
+                        format: 'unix-millis',
+                        description:
+                          'The (approximate) time when the retro is scheduled for deletion.',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            '401': { $ref: '#/components/responses/UnauthorizedError' },
+            '403': { $ref: '#/components/responses/ForbiddenError' },
           },
         },
       },
@@ -1192,6 +1240,12 @@ export const openapi = Buffer.from(
             format: { $ref: '#/components/schemas/RetroFormat' },
             options: { $ref: '#/components/schemas/RetroOptions' },
             items: { $ref: '#/components/schemas/RetroItems' },
+            scheduledDelete: {
+              type: 'integer',
+              format: 'unix-millis',
+              description:
+                'The (approximate) time when this retro is scheduled for deletion, or `0` if no deletion has been scheduled.',
+            },
           },
         },
         RetroState: {

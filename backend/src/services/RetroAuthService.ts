@@ -136,6 +136,11 @@ export class RetroAuthService {
     return deleted > 0;
   }
 
+  async deleteRetro(retroId: string) {
+    await this.retroAuthCollection.where('id', retroId).remove();
+    await this.retroApiKeyCollection.where('retroId', retroId).remove();
+  }
+
   async grantForPassword(
     retroId: string,
     password: string,

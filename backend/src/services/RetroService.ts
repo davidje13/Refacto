@@ -51,7 +51,7 @@ export class RetroService {
     );
 
     this.retroCollection = migrate(
-      { groupStates: (v) => v || {} },
+      { groupStates: (v) => v || {}, scheduledDelete: (v) => v || 0 },
       enc<Retro>()(
         ['items'],
         db.getCollection<Wrapped<Retro, 'items', Buffer>>('retro', {
@@ -84,9 +84,9 @@ export class RetroService {
       return ReadOnly;
     }
     if (!scopes.has('manage')) {
-      return new ReadWriteStruct(['id', 'ownerId', 'slug']);
+      return new ReadWriteStruct([...LOCKED_FIELDS, ...MANAGER_FIELDS]);
     }
-    return new ReadWriteStruct(['id', 'ownerId']);
+    return new ReadWriteStruct(LOCKED_FIELDS);
   }
 
   getEventFilter(scopes: Set<string>): EventFilter | undefined {
@@ -126,6 +126,7 @@ export class RetroService {
       format,
       options: {},
       items: [],
+      scheduledDelete: 0,
     });
 
     return id;
@@ -154,4 +155,11 @@ export class RetroService {
   getRetro(retroId: string): Promise<Retro | null> {
     return this.retroCollection.where('id', retroId).get();
   }
+
+  async deleteRetro(retroId: string) {
+    await this.retroCollection.where('id', retroId).remove();
+  }
 }
+
+const LOCKED_FIELDS: (keyof Retro)[] = ['id', 'ownerId', 'scheduledDelete'];
+const MANAGER_FIELDS: (keyof Retro)[] = ['slug'];

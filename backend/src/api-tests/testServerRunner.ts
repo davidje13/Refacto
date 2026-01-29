@@ -73,3 +73,26 @@ export async function getRetroToken(
   });
   return grant?.token ?? null;
 }
+
+export async function createRetro(
+  hooks: TestHooks,
+  {
+    ownerId = `owner-${Math.random()}`,
+    slug = `my-retro-${Math.floor(Math.random() * 1000000)}`,
+    name = `My Retro ${Math.random()}`,
+    format = 'mood',
+    password = `password-${Math.random()}`,
+  } = {},
+) {
+  const retroId = await hooks.retroService.createRetro(
+    ownerId,
+    slug,
+    name,
+    format,
+  );
+  await hooks.retroAuthService.setPassword(retroId, password);
+
+  const retroToken = await getRetroToken(hooks, retroId);
+
+  return { retroId, retroToken: retroToken! };
+}

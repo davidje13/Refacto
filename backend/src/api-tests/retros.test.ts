@@ -2,6 +2,7 @@ import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import {
+  createRetro,
   getRetroToken,
   getUserToken,
   testServerRunner,
@@ -14,31 +15,29 @@ describe('API retros', () => {
 
     const hooks = app.testHooks;
 
-    const retroId = await hooks.retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
-    await hooks.retroAuthService.setPassword(retroId, 'password1');
+    const { retroId, retroToken } = await createRetro(hooks, {
+      ownerId: 'nobody',
+      slug: 'my-retro',
+      name: 'My Retro',
+      password: 'password1',
+    });
 
-    await hooks.retroService.createRetro(
-      'me',
-      'my-second-retro',
-      'My Second Retro',
-      'mood',
-    );
+    await createRetro(hooks, {
+      ownerId: 'me',
+      slug: 'my-second-retro',
+      name: 'My Second Retro',
+    });
 
-    await hooks.retroService.createRetro(
-      'nobody',
-      'unknown-retro',
-      'An Unknown Retro Format',
-      'nope',
-    );
+    await createRetro(hooks, {
+      ownerId: 'nobody',
+      slug: 'unknown-retro',
+      name: 'An Unknown Retro Format',
+      format: 'nope',
+    });
 
     const userToken = getUserToken(hooks, 'me');
 
-    return { run: app, hooks, retroId, userToken };
+    return { run: app, hooks, retroId, userToken, retroToken };
   });
 
   describe('/api/retros', () => {
@@ -164,13 +163,12 @@ describe('API retros', () => {
         format: 'mood',
         options: {},
         items: [],
+        scheduledDelete: 0,
       });
     });
 
     it('filters retro items if requested', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
-
-      const retroToken = await getRetroToken(hooks, retroId);
+      const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
 
       await hooks.retroService.retroBroadcaster.update(retroId, {
         items: [
@@ -219,9 +217,7 @@ describe('API retros', () => {
     });
 
     it('rejects invalid item filters', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
-
-      const retroToken = await getRetroToken(hooks, retroId);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
       await request(server)
         .get(`/api/retros/${retroId}?items=nope`)
@@ -261,9 +257,7 @@ describe('API retros', () => {
   describe('PATCH /api/retros/retro-id', () => {
     describe('with retro spec', () => {
       it('applies the spec to the retro', async (props) => {
-        const { server, hooks, retroId } = props.getTyped(PROPS);
-
-        const retroToken = await getRetroToken(hooks, retroId);
+        const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
 
         await request(server)
           .patch(`/api/retros/${retroId}`)
@@ -443,6 +437,48 @@ describe('API retros', () => {
         .expect(401);
     });
   });
+
+  describe('DELETE /api/retros/retro-id', () => {
+    it('schedules retro deletion', async (props) => {
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
+
+      const begin = Date.now();
+      const response = await request(server)
+        .delete(`/api/retros/${retroId}`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(202);
+
+      expect(response.body.scheduledTime).toBeGreaterThan(begin);
+    });
+
+    it('responds HTTP Forbidden if scope is not "manage"', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+
+      const retroToken = await getRetroToken(hooks, retroId, {
+        manage: false,
+      });
+
+      await request(server)
+        .delete(`/api/retros/${retroId}`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(403);
+    });
+
+    it('responds HTTP Unauthorized if no credentials are given', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
+      await request(server).delete(`/api/retros/${retroId}`).expect(401);
+    });
+
+    it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
+      const { server, retroId } = props.getTyped(PROPS);
+
+      await request(server)
+        .delete(`/api/retros/${retroId}`)
+        .set('Authorization', 'Bearer Foo')
+        .expect(401);
+    });
+  });
 });
 
 describe('API retros with my retros disabled', () => {
@@ -453,12 +489,9 @@ describe('API retros with my retros disabled', () => {
     );
 
     const hooks = app.testHooks;
-
-    await hooks.retroService.createRetro('me', 'my-retro', 'My Retro', 'mood');
-
     const userToken = getUserToken(hooks, 'me');
-
-    return { run: app, hooks, userToken };
+    const { retroId, retroToken } = await createRetro(hooks);
+    return { run: app, hooks, userToken, retroId, retroToken };
   });
 
   describe('/api/retros', () => {
@@ -489,5 +522,56 @@ describe('API retros with my retros disabled', () => {
       // requesting a token later will fail, but the initial creation still gives a token
       expect(response.body.token).toBeTruthy();
     });
+  });
+});
+
+describe('delete with no delay', () => {
+  const PROPS = testServerRunner(async () => {
+    const app = await appFactory(
+      new TestLogger(),
+      testConfig({ deleteRetroDelay: 0 }),
+    );
+
+    const hooks = app.testHooks;
+    const { retroId, retroToken } = await createRetro(hooks);
+    return { run: app, hooks, retroId, retroToken };
+  });
+
+  it('deletes a retro immediately', async (props) => {
+    const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+    await request(server)
+      .delete(`/api/retros/${retroId}`)
+      .set('Authorization', `Bearer ${retroToken}`)
+      .expect(200);
+
+    expect(await hooks.retroService.getRetro(retroId)).toBeNull();
+    expect(
+      await hooks.retroAuthService.grantToken(retroId, 1000, { scopes: {} }),
+    ).toBeNull();
+  });
+});
+
+describe('delete not permitted', () => {
+  const PROPS = testServerRunner(async () => {
+    const app = await appFactory(
+      new TestLogger(),
+      testConfig({ deleteRetroDelay: -1 }),
+    );
+
+    const hooks = app.testHooks;
+    const { retroId, retroToken } = await createRetro(hooks);
+    return { run: app, hooks, retroId, retroToken };
+  });
+
+  it('responds HTTP Forbidden', async (props) => {
+    const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+    await request(server)
+      .delete(`/api/retros/${retroId}`)
+      .set('Authorization', `Bearer ${retroToken}`)
+      .expect(403);
+
+    expect(await hooks.retroService.getRetro(retroId)).not(toBeNull());
   });
 });

@@ -13,6 +13,8 @@ export class ApiConfigRouter extends Router {
     serverConfig: ServerConfig,
     ssoClientConfig: ClientConfig['sso'],
     passwordRequirements: PasswordRequirements,
+    maxApiKeys: number,
+    deleteRetroDelay: number,
   ) {
     super();
 
@@ -20,6 +22,8 @@ export class ApiConfigRouter extends Router {
       sso: ssoClientConfig,
       giphy: serverConfig.giphy.apiKey !== '',
       passwordRequirements,
+      maxApiKeys,
+      deleteRetroDelay,
     };
 
     this.get(

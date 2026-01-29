@@ -2,7 +2,11 @@ import request from 'superwstest';
 import { makeRetroItem } from '../shared/api-entities';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { getRetroToken, testServerRunner } from './testServerRunner';
+import {
+  createRetro,
+  getRetroToken,
+  testServerRunner,
+} from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API retro archives', () => {
@@ -10,13 +14,7 @@ describe('API retro archives', () => {
     const app = await appFactory(new TestLogger(), testConfig());
 
     const hooks = app.testHooks;
-
-    const retroId = await hooks.retroService.createRetro(
-      'nobody',
-      'my-retro',
-      'My Retro',
-      'mood',
-    );
+    const { retroId, retroToken } = await createRetro(hooks);
 
     const archiveId = await hooks.retroArchiveService.createArchive(retroId, {
       format: 'mood',
@@ -24,16 +22,13 @@ describe('API retro archives', () => {
       items: [makeRetroItem({ id: 'z9' })],
     });
 
-    await hooks.retroAuthService.setPassword(retroId, 'password');
-
-    return { run: app, hooks, retroId, archiveId };
+    return { run: app, hooks, retroId, retroToken, archiveId };
   });
 
   describe('/api/retros/retro-id/archives', () => {
     it('lists all retro archives in JSON format', async (props) => {
-      const { server, hooks, retroId, archiveId } = props.getTyped(PROPS);
+      const { server, retroId, retroToken, archiveId } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .get(`/api/retros/${retroId}/archives`)
         .set('Authorization', `Bearer ${retroToken}`)
@@ -75,9 +70,8 @@ describe('API retro archives', () => {
 
   describe('POST /api/retros/retro-id/archives', () => {
     it('creates a new archive', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .post(`/api/retros/${retroId}/archives`)
         .send({
@@ -100,9 +94,8 @@ describe('API retro archives', () => {
     });
 
     it('rejects empty archives', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const { server, retroId, retroToken } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .post(`/api/retros/${retroId}/archives`)
         .send({ format: 'foo', options: {}, items: [] })
@@ -138,9 +131,8 @@ describe('API retro archives', () => {
 
   describe('/api/retros/retro-id/archives/archive-id', () => {
     it('responds with retro archives in JSON format', async (props) => {
-      const { server, hooks, retroId, archiveId } = props.getTyped(PROPS);
+      const { server, retroId, retroToken, archiveId } = props.getTyped(PROPS);
 
-      const retroToken = await getRetroToken(hooks, retroId);
       const response = await request(server)
         .get(`/api/retros/${retroId}/archives/${archiveId}`)
         .set('Authorization', `Bearer ${retroToken}`)
@@ -181,21 +173,14 @@ describe('API retro archives', () => {
     });
 
     it('responds HTTP Not Found for mismatched retro/archive IDs', async (props) => {
-      const { server, hooks, retroId } = props.getTyped(PROPS);
+      const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
 
-      const otherRetroId = await hooks.retroService.createRetro(
-        '',
-        's',
-        '',
-        '',
-      );
-
+      const other = await createRetro(hooks);
       const otherArchiveId = await hooks.retroArchiveService.createArchive(
-        otherRetroId,
+        other.retroId,
         { format: 'mood', options: {}, items: [] },
       );
 
-      const retroToken = await getRetroToken(hooks, retroId);
       await request(server)
         .get(`/api/retros/${retroId}/archives/${otherArchiveId}`)
         .set('Authorization', `Bearer ${retroToken}`)

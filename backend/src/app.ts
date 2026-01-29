@@ -15,6 +15,7 @@ import {
 } from 'web-listener';
 import { Hasher } from 'pwd-hasher';
 import { CollectionStorage } from 'collection-storage';
+import { ValidationError } from './helpers/json';
 import { ApiSpecRouter } from './routers/ApiSpecRouter';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
 import { ApiDiagnosticsRouter } from './routers/ApiDiagnosticsRouter';
@@ -29,10 +30,12 @@ import { PasswordCheckService } from './services/PasswordCheckService';
 import type { Logger } from './services/LogService';
 import { GiphyService } from './services/GiphyService';
 import { RetroService } from './services/RetroService';
+import { RetroDeletionService } from './services/RetroDeletionService';
 import { RetroArchiveService } from './services/RetroArchiveService';
 import { RetroAuthService, ScopesError } from './services/RetroAuthService';
 import { UserAuthService } from './services/UserAuthService';
 import { AnalyticsService } from './services/AnalyticsService';
+import { ScheduledRetroDeletionTask } from './tasks/ScheduledRetroDeletionTask';
 import { getAuthBackend } from './auth';
 import type { ConfigT } from './config';
 import { basedir } from './basedir';
@@ -41,7 +44,6 @@ import {
   addSecurityHeaders,
   removeHtmlSecurityHeaders,
 } from './headers';
-import { ValidationError } from './helpers/json';
 
 export interface TestHooks {
   retroService: RetroService;
@@ -107,6 +109,12 @@ export const appFactory = async (
     keyTokenLifespan: 60 * 60,
     retroApiKeyLimit: config.permit.retroApiKeys,
   });
+  const retroDeletionService = new RetroDeletionService(
+    db,
+    retroAuthService,
+    retroService,
+    retroArchiveService,
+  );
   const userAuthService = new UserAuthService(tokenManager);
   await userAuthService.initialise(db);
 
@@ -147,7 +155,13 @@ export const appFactory = async (
   app.mount('/api/slugs', new ApiSlugsRouter(retroService));
   app.mount(
     '/api/config',
-    new ApiConfigRouter(config, auth.clientConfig, passwordRequirements),
+    new ApiConfigRouter(
+      config,
+      auth.clientConfig,
+      passwordRequirements,
+      config.permit.retroApiKeys,
+      config.deleteRetroDelay,
+    ),
   );
   auth.addRoutes(app);
   app.mount(
@@ -157,9 +171,11 @@ export const appFactory = async (
       retroAuthService,
       retroService,
       retroArchiveService,
+      retroDeletionService,
       analyticsService,
       config.permit.myRetros,
       passwordRequirements,
+      config.deleteRetroDelay,
     ),
   );
   app.mount(
@@ -208,6 +224,12 @@ export const appFactory = async (
     }
   });
 
+  const scheduledRetroDeletionTask = new ScheduledRetroDeletionTask(
+    retroDeletionService,
+    logger,
+    config.deleteRetroDelay,
+  );
+
   return new App(
     listener,
     {
@@ -216,6 +238,9 @@ export const appFactory = async (
       retroAuthService,
       userAuthService,
     },
-    db.close.bind(db),
+    async () => {
+      await scheduledRetroDeletionTask.close();
+      await db.close();
+    },
   );
 };

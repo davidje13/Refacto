@@ -32,6 +32,7 @@ import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { RetroService } from '../services/RetroService';
 import type { RetroArchiveService } from '../services/RetroArchiveService';
+import type { RetroDeletionService } from '../services/RetroDeletionService';
 import type { AnalyticsService } from '../services/AnalyticsService';
 import { extractExportedRetro } from '../helpers/exportedJsonParsers';
 import { MultiMap } from '../helpers/MultiMap';
@@ -51,9 +52,11 @@ export class ApiRetrosRouter extends Router {
     retroAuthService: RetroAuthService,
     retroService: RetroService,
     retroArchiveService: RetroArchiveService,
+    retroDeletionService: RetroDeletionService,
     analyticsService: AnalyticsService,
     permitMyRetros: boolean,
     passwordRequirements: PasswordRequirements,
+    deleteRetroDelay: number,
   ) {
     super();
 
@@ -229,7 +232,7 @@ export class ApiRetrosRouter extends Router {
     retroRouter.patch('/', async (req, res) => {
       const { retroId } = getPathParameters(req);
       const body = await getBodyJSON(req, { maxContentBytes: 64 * 1024 });
-      const { setPassword, change } = json.extractObject(body, {
+      const { change, setPassword, cancelDelete } = json.extractObject(body, {
         change: json.optional(json.any),
         setPassword: json.optional(
           json.object({
@@ -237,12 +240,16 @@ export class ApiRetrosRouter extends Router {
             evictUsers: json.boolean,
           }),
         ),
+        cancelDelete: json.optional(json.boolean),
       });
 
       // early validation (to avoid partial updates)
 
-      if (setPassword) {
+      if (setPassword || cancelDelete) {
         await requireAuthScope('manage').handleRequest(req, res);
+      }
+
+      if (setPassword) {
         if (setPassword.password.length < passwordRequirements.minLength) {
           throw new HTTPError(400, { body: 'Password is too short' });
         }
@@ -276,7 +283,34 @@ export class ApiRetrosRouter extends Router {
         });
       }
 
+      if (cancelDelete) {
+        await retroDeletionService.cancelDeletion(retroId);
+        analyticsService.event(req, 'cancel retro delete');
+      }
+
       return sendJSON(res, {});
+    });
+
+    retroRouter.delete('/', requireAuthScope('manage'), async (req, res) => {
+      const { retroId } = getPathParameters(req);
+
+      if (deleteRetroDelay < 0) {
+        throw new HTTPError(403, {
+          body: 'Retro deletion is not permitted',
+        });
+      }
+
+      if (deleteRetroDelay > 0) {
+        const schedule = Date.now() + deleteRetroDelay;
+        await retroDeletionService.scheduleDeletion(retroId, schedule);
+        analyticsService.event(req, 'delete retro scheduled', { retroId });
+        res.statusCode = 202;
+        return sendJSON(res, { scheduledTime: schedule });
+      } else {
+        await retroDeletionService.scheduleDeletion(retroId, 0);
+        analyticsService.event(req, 'delete retro immediate', { retroId });
+        return sendJSON(res, {});
+      }
     });
 
     retroRouter.get(

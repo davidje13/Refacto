@@ -2,7 +2,11 @@ import { decodeJWT } from 'authentication-backend/jwt';
 import request from 'superwstest';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
-import { getUserToken, testServerRunner } from './testServerRunner';
+import {
+  createRetro,
+  getUserToken,
+  testServerRunner,
+} from './testServerRunner';
 import { appFactory } from '../app';
 
 describe('API auth', () => {
@@ -20,8 +24,10 @@ describe('API auth', () => {
     const hooks = app.testHooks;
 
     const ownerId = 'my-id';
-    const retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
-    await hooks.retroAuthService.setPassword(retroId, 'password');
+    const { retroId } = await createRetro(hooks, {
+      ownerId,
+      password: 'password',
+    });
 
     return { run: app, hooks, ownerId, retroId };
   });
@@ -122,15 +128,9 @@ describe('API auth', () => {
 
     it('responds HTTP Bad Request for unknown retro IDs', async (props) => {
       const { server, hooks, ownerId, retroId } = props.getTyped(PROPS);
-      const otherRetroId = await hooks.retroService.createRetro(
-        ownerId,
-        's2',
-        '',
-        '',
-      );
-      await hooks.retroAuthService.setPassword(otherRetroId, 'password');
+      const other = await createRetro(hooks, { ownerId });
       const createdApiKey = await hooks.retroAuthService.createApiKey(
-        otherRetroId,
+        other.retroId,
         'test',
         ['read', 'write'],
       );
@@ -432,8 +432,7 @@ describe('API auth with my retros disabled', () => {
     const hooks = app.testHooks;
 
     const ownerId = 'my-id';
-    const retroId = await hooks.retroService.createRetro(ownerId, 's', '', '');
-    await hooks.retroAuthService.setPassword(retroId, 'password');
+    const { retroId } = await createRetro(hooks, { ownerId });
 
     return { run: app, hooks, ownerId, retroId };
   });
