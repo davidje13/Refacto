@@ -25,3 +25,15 @@ export const formatTime = (timestamp: number) =>
 
 export const formatDateTime = (timestamp: number) =>
   DATETIME_FORMATTER.format(new Date(timestamp));
+
+export const formatDurationShort = (duration: number) => {
+  if (duration < 0) {
+    return '-';
+  }
+  const hours = Math.floor(duration / 1000 / 60 / 60);
+  const minutes = Math.floor(duration / 1000 / 60) % 60;
+  const seconds = Math.floor(duration / 1000) % 60;
+  return hours
+    ? `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+    : `${minutes}:${String(seconds).padStart(2, '0')}`;
+};

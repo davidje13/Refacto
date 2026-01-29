@@ -1,4 +1,9 @@
-import { formatDate, formatTime, formatDateTime } from './formatters';
+import {
+  formatDate,
+  formatTime,
+  formatDateTime,
+  formatDurationShort,
+} from './formatters';
 
 describe('formatters', () => {
   describe('formatDate', () => {
@@ -53,6 +58,20 @@ describe('formatters', () => {
 
       const formatted = formatDateTime(timestamp);
       expect(formatted).toEqual(expected);
+    });
+  });
+
+  describe('formatDurationShort', () => {
+    it('returns a m:ss representation for small durations', () => {
+      expect(formatDurationShort(500)).toEqual('0:00');
+      expect(formatDurationShort(10000)).toEqual('0:10');
+      expect(formatDurationShort(60000)).toEqual('1:00');
+      expect(formatDurationShort(121000)).toEqual('2:01');
+    });
+
+    it('returns a h:mm:ss representation for large durations', () => {
+      expect(formatDurationShort(60 * 60 * 1000)).toEqual('1:00:00');
+      expect(formatDurationShort(100 * 60 * 60 * 1000)).toEqual('100:00:00');
     });
   });
 });
