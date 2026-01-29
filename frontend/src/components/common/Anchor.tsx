@@ -20,7 +20,7 @@ export const Anchor = memo(
     const ref = useRef<HTMLElement>(null);
 
     useEffect(() => {
-      const anchor = window.location.hash.substring(1);
+      const anchor = document.location.hash.substring(1);
       if (anchor === name && ref.current) {
         ref.current.scrollIntoView?.();
         onVisit?.(ref.current);

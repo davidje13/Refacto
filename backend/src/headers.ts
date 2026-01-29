@@ -15,7 +15,7 @@ const CSP = [
   `connect-src 'self' wss://(domain)${devMode ? ' ws://(domain)' : ''}`,
   "img-src 'self' data: https://*.giphy.com",
   "form-action 'none'",
-  "frame-ancestors 'none'",
+  "frame-ancestors 'self'",
   'report-to default',
 ].join('; ');
 

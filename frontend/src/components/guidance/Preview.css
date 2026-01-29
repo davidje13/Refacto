@@ -1,0 +1,29 @@
+.preview {
+  display: block;
+  --width: 1024;
+  --height: 640;
+  --targetw: 300;
+  --scale: calc(var(--targetw) / var(--width));
+  width: calc(1px * var(--width));
+  height: calc(1px * var(--height));
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+  margin-bottom: calc(var(--height) * (var(--scale) - 1) * 1px);
+  overflow: hidden;
+  pointer-events: none;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* not currently possible to calculate scale from sizes dynamically in CSS, so we have thresholds instead */
+@media (min-width: 500px) {
+  .preview {
+    --targetw: 440;
+  }
+}
+
+@media (min-width: 630px) {
+  .preview {
+    --targetw: 570;
+  }
+}

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';
+import { Preview, type PreviewContent } from './Preview';
 
 export const GuidancePage = memo(() => (
   <article className="page-guidance global-article">
@@ -147,12 +148,16 @@ export const GuidancePage = memo(() => (
       <ul>
         <li>
           <p>
-            <strong>3-column.</strong> In a 3-column retro, there are 3 columns
-            on the whiteboard and all participants spend the first 5&ndash;10
-            minutes writing down potential talking points and adding them to the
-            appropriate column. The meaning of the columns can vary, but they
-            are often along the lines of &ldquo;Happy&rdquo; (things which went
-            well), &ldquo;Wondering&rdquo; (questions or suggestions), and
+            <strong>3-column.</strong>
+          </p>
+          <Preview content={MOOD_RETRO_PREVIEW} />
+          <p>
+            In a 3-column retro, there are 3 columns on the whiteboard and all
+            participants spend the first 5&ndash;10 minutes writing down
+            potential talking points and adding them to the appropriate column.
+            The meaning of the columns can vary, but they are often along the
+            lines of &ldquo;Happy&rdquo; (things which went well),
+            &ldquo;Wondering&rdquo; (questions or suggestions), and
             &ldquo;Sad&ldquo; (things which went badly).
           </p>
           <p>
@@ -221,3 +226,27 @@ export const GuidancePage = memo(() => (
     </section>
   </article>
 ));
+
+const now = Date.parse('2026-01-29T16:09:33Z');
+const MOOD_RETRO_PREVIEW: PreviewContent = {
+  format: 'mood',
+  simulatedTime: now,
+  state: { focusedItemId: 'cur', focusedItemTimeout: now + 282000 },
+  items: [
+    { category: 'happy', message: 'We can run retros remotely 😃' },
+    { category: 'meh', message: 'other retro formats', votes: 2 },
+    { category: 'happy', message: 'Everything is awesome!', votes: 7 },
+    { category: 'sad', message: 'It rained' },
+    {
+      id: 'cur',
+      category: 'sad',
+      message: 'That thing happened',
+      attachment: {
+        type: 'giphy',
+        url: 'https://media3.giphy.com/media/Y4z9olnoVl5QI/200.gif',
+      },
+    },
+    { category: 'happy', message: 'That TV show' },
+    { category: 'action', message: 'do a thing', doneTime: 1 },
+  ],
+};
