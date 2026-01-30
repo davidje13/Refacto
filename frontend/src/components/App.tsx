@@ -7,7 +7,6 @@ import { LoadingIndicator } from './common/Loader';
 import { LoginCallback } from './login/LoginCallback';
 import { RetroRouter } from './RetroRouter';
 import { WatchRetro } from './WatchRetro';
-import { RetroPreviewPage } from './retro-formats/RetroPreviewPage';
 import { WelcomePage } from './welcome/WelcomePage';
 import { SecurityPage } from './security/SecurityPage';
 import { RetroCreatePage } from './retro-create/RetroCreatePage';
@@ -20,6 +19,12 @@ const LazyGuidancePage = lazy(() =>
 
 const LazyApiDocsPage = lazy(() =>
   import('./api-docs/ApiDocsPage').then((m) => ({ default: m.ApiDocsPage })),
+);
+
+const LazyRetroPreviewPage = lazy(() =>
+  import('./retro-formats/RetroPreviewPage').then((m) => ({
+    default: m.RetroPreviewPage,
+  })),
 );
 
 export const App: FunctionComponent = () => (
@@ -54,7 +59,7 @@ export const App: FunctionComponent = () => (
           {({ retroId }) => <WatchRetro retroId={retroId} />}
         </Route>
         <Route path="/preview">
-          <RetroPreviewPage />
+          <LazyRetroPreviewPage />
         </Route>
 
         <RedirectRoute path="/retros" to="/" replace />

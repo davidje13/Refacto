@@ -311,7 +311,8 @@
       }
     }
 
-    &:focus-within {
+    &:focus-within,
+    .page-retro-preview &.has-value {
       background: var(--primary-back);
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* WIP: dark mode */
 

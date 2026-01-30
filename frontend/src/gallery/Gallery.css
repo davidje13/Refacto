@@ -1,0 +1,59 @@
+.page-gallery {
+  background: conic-gradient(
+      #ffffff 25%,
+      #cccccc 25%,
+      #cccccc 50%,
+      #ffffff 50%,
+      #ffffff 75%,
+      #cccccc 75%
+    )
+    0 / 32px 32px;
+
+  .gallery-item {
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .docs {
+    position: relative;
+    width: 1300px;
+    height: 900px;
+    overflow: hidden;
+
+    .browser {
+      position: absolute;
+      left: 138px;
+      top: 20px;
+      background: white url('./browser.png') top left / contain no-repeat;
+      padding: 65px 0 0;
+      width: 1024px;
+      border-radius: 5px;
+      box-shadow:
+        0 20px 20px rgba(0, 0, 0, 0.3),
+        0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .phone-frame {
+      position: absolute;
+      left: 40px;
+      top: -15px;
+      width: 472px;
+      height: 972px;
+      transform: rotate(15deg) scale(0.75);
+      background: url(./iphone.png);
+      filter: drop-shadow(7px 20px 20px rgba(0, 0, 0, 0.3))
+        drop-shadow(2px 10px 40px rgba(0, 0, 0, 0.2));
+    }
+
+    .phone {
+      top: 95px;
+      left: 22px;
+      width: 429px;
+      height: 488px;
+    }
+  }
+
+  .thumb {
+    width: 240px;
+  }
+}

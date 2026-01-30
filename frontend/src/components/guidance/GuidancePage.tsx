@@ -1,7 +1,13 @@
 import { memo } from 'react';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';
-import { Preview, type PreviewContent } from './Preview';
+import {
+  moodFocus,
+  Preview,
+  typeItem,
+  vote,
+  type PreviewContent,
+} from './Preview';
 
 export const GuidancePage = memo(() => (
   <article className="page-guidance global-article">
@@ -227,26 +233,156 @@ export const GuidancePage = memo(() => (
   </article>
 ));
 
-const now = Date.parse('2026-01-29T16:09:33Z');
+const now = Date.now();
 const MOOD_RETRO_PREVIEW: PreviewContent = {
   format: 'mood',
   simulatedTime: now,
-  state: { focusedItemId: 'cur', focusedItemTimeout: now + 282000 },
-  items: [
-    { category: 'happy', message: 'We can run retros remotely 😃' },
-    { category: 'meh', message: 'other retro formats', votes: 2 },
-    { category: 'happy', message: 'Everything is awesome!', votes: 7 },
-    { category: 'sad', message: 'It rained' },
-    {
-      id: 'cur',
+  name: 'Step 1: Everybody adds items',
+
+  frames: [
+    ...typeItem(500, 'new-item-happy:value', {
+      id: 'i0',
+      category: 'happy',
+      message: 'We can run retros remotely 😃',
+      created: 0,
+      attachment: null,
+      votes: 0,
+      doneTime: 0,
+    }),
+    ...typeItem(700, 'new-item-sad:value', {
+      id: 'i2',
       category: 'sad',
-      message: 'That thing happened',
-      attachment: {
-        type: 'giphy',
-        url: 'https://media3.giphy.com/media/Y4z9olnoVl5QI/200.gif',
+      message: 'It rained',
+      created: 2,
+      attachment: null,
+      votes: 0,
+      doneTime: 0,
+    }),
+    {
+      delay: 100,
+      spec: {
+        items: [
+          'push',
+          {
+            id: 'i1',
+            category: 'happy',
+            message: 'Everything is awesome!',
+            created: 1,
+            attachment: null,
+            votes: 0,
+            doneTime: 0,
+          },
+        ],
       },
     },
-    { category: 'happy', message: 'That TV show' },
-    { category: 'action', message: 'do a thing', doneTime: 1 },
+    { delay: 200, spec: vote('i1') },
+    {
+      delay: 300,
+      spec: {
+        items: [
+          'push',
+          {
+            id: 'i3',
+            category: 'meh',
+            message: 'other retro formats',
+            created: 3,
+            attachment: null,
+            votes: 0,
+            doneTime: 0,
+          },
+        ],
+      },
+    },
+    { delay: 400, spec: vote('i1') },
+    { delay: 200, spec: vote('i1') },
+    { delay: 300, spec: vote('i1') },
+    {
+      delay: 100,
+      spec: {
+        items: [
+          'push',
+          {
+            id: 'i4',
+            category: 'sad',
+            message: 'That thing happened',
+            created: 4,
+            attachment: {
+              type: 'giphy',
+              url: 'https://media3.giphy.com/media/Y4z9olnoVl5QI/200.gif',
+            },
+            votes: 0,
+            doneTime: 0,
+          },
+        ],
+      },
+    },
+    {
+      delay: 1100,
+      spec: {
+        items: [
+          'push',
+          {
+            id: 'i5',
+            category: 'happy',
+            message: 'That TV show',
+            created: 5,
+            attachment: null,
+            votes: 0,
+            doneTime: 0,
+          },
+        ],
+      },
+    },
+    { delay: 200, spec: vote('i4') },
+    { delay: 600, spec: vote('i1') },
+    { delay: 300, spec: vote('i1') },
+    { delay: 900, spec: vote('i1') },
+    {
+      delay: 2000,
+      spec: { name: ['=', 'Step 2: Discuss the items…'] },
+    },
+    { delay: 1500, spec: moodFocus('', 'i4', now) },
+    { delay: 3000, spec: moodFocus('i4', 'i1', now) },
+    { delay: 4000, spec: moodFocus('i1', 'i2', now) },
+    {
+      delay: 2000,
+      spec: { name: ['=', 'Step 2: Discuss the items… and record actions'] },
+    },
+    ...typeItem(700, 'new-action:value', {
+      id: 'a0',
+      category: 'action',
+      message: 'Buy an umbrella ☂️ [Sam]',
+      created: now,
+      attachment: null,
+      votes: 0,
+      doneTime: 0,
+    }),
+    { delay: 1500, spec: moodFocus('i2', 'i3', now) },
+    { delay: 500, spec: moodFocus('i3', 'i0', now) },
+    { delay: 500, spec: moodFocus('i0', 'i5', now) },
+    { delay: 500, spec: moodFocus('i5', '', now) },
+    {
+      delay: 2000,
+      spec: { name: ['=', 'Step 3: Archive'] },
+    },
+    {
+      delay: 1000,
+      spec: { items: ['delete', ['all', { category: ['!=', 'action'] }]] },
+      animation: 'archive',
+    },
+    {
+      delay: 4000,
+      spec: { name: ['=', 'Step 4: Tick actions when they are done'] },
+    },
+    {
+      delay: 1000,
+      spec: {
+        items: [
+          'update',
+          ['first', { id: ['=', 'a0'] }],
+          { doneTime: ['=', 1] },
+        ],
+      },
+    },
   ],
 };

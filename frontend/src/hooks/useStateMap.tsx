@@ -6,6 +6,7 @@ import {
   useContext,
   useLayoutEffect,
   useState,
+  useEffect,
 } from 'react';
 
 const StateMapContext = createContext(new Map<string, unknown>());
@@ -33,6 +34,18 @@ export function StateMapProvider({
   );
 }
 
+interface StaticStateMapProviderProps {
+  children: ReactNode;
+  data: Map<string, unknown>;
+}
+
+export const StaticStateMapProvider = ({
+  children,
+  data,
+}: StaticStateMapProviderProps) => (
+  <StateMapContext.Provider value={data}>{children}</StateMapContext.Provider>
+);
+
 export function useStateMap<T>(
   identifier: string | undefined,
   subIdentifier: string,
@@ -46,6 +59,13 @@ export function useStateMap<T>(
     }
     return (map.get(id) || defaultValue) as T;
   });
+
+  useEffect(() => {
+    if (id) {
+      setValue((map.get(id) || defaultValue) as T);
+    }
+  }, [map, id]);
+
   const setter = useCallback(
     (v: T) => {
       if (id) {

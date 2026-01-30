@@ -29,7 +29,10 @@ export default (env, argv) => ({
   context: basedir,
   devtool: argv.mode === 'production' ? undefined : 'source-map',
   entry: {
-    index: './src/index.tsx',
+    index:
+      process.env['MODE'] === 'GALLERY'
+        ? './src/gallery/Gallery.tsx'
+        : './src/index.tsx',
   },
   output: {
     path: join(basedir, 'build'),

@@ -27,7 +27,7 @@ export const MoodItemFocused = memo(
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-      if (autoScroll) {
+      if (autoScroll && window.top === window.self) {
         ref.current?.scrollIntoView?.({
           behavior: 'smooth',
           block: 'nearest',

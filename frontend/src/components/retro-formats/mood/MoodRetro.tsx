@@ -41,7 +41,11 @@ interface Category {
 
 const CATEGORIES: Category[] = [
   { id: 'happy', title: 'Happy', placeholder: 'I\u2019m glad that\u2026' },
-  { id: 'meh', title: 'Meh', placeholder: 'I\u2019m wondering about\u2026' },
+  {
+    id: 'meh',
+    title: 'Idea',
+    placeholder: 'I\u2019m wondering about\u2026',
+  },
   {
     id: 'sad',
     title: 'Sad',
