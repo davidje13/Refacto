@@ -38,7 +38,7 @@
     }
 
     &.tab-item {
-      color: #000000; /* WIP: dark mode */
+      color: var(--primary-text);
     }
   }
 
