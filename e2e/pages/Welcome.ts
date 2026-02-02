@@ -72,7 +72,7 @@ export class Welcome extends Page {
   }
 
   private getRetroItems() {
-    return this.findElements(By.css('.retro-link'));
+    return this.findElements(By.css('.retro-link .name'));
   }
 
   private async getRetroItemAtIndex(index: number) {

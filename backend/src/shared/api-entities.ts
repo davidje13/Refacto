@@ -84,12 +84,6 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
   };
 }
 
-export interface RetroSummary {
-  id: string;
-  slug: string;
-  name: string;
-}
-
 export interface RetroData {
   format: string;
   options: Record<string, unknown>;
@@ -98,12 +92,17 @@ export interface RetroData {
 
 type AnyState = Record<string, unknown>;
 
-export interface Retro<StateT = AnyState> extends RetroSummary, RetroData {
+export interface Retro<StateT = AnyState> extends RetroData {
+  id: string;
+  slug: string;
+  name: string;
   ownerId: string;
   state: StateT;
   groupStates: Record<string, StateT>;
   scheduledDelete: number;
 }
+
+export type RetroSummary = Pick<Retro, 'id' | 'slug' | 'name' | 'format'>;
 
 export function makeRetro(details: Partial<Retro> = {}): Retro {
   return {
@@ -121,15 +120,17 @@ export function makeRetro(details: Partial<Retro> = {}): Retro {
   };
 }
 
-export interface RetroArchiveSummary {
+export interface RetroArchive extends RetroData {
   id: string;
   created: number;
-}
-
-export interface RetroArchive extends RetroArchiveSummary, RetroData {
   imported: number | null;
   retroId: string;
 }
+
+export type RetroArchiveSummary = Pick<
+  RetroArchive,
+  'id' | 'created' | 'format'
+>;
 
 export function makeRetroArchive(
   details: Partial<RetroArchive> = {},

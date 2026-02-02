@@ -21,8 +21,8 @@ describe('ArchiveList', () => {
     const time1 = Date.parse('2021-02-03T04:05:06Z');
     const time2 = Date.parse('2000-01-01T00:00:00Z');
     const archives = [
-      { id: 'a1', created: time1 },
-      { id: 'a2', created: time2 },
+      { id: 'a1', created: time1, format: 'mood' },
+      { id: 'a2', created: time2, format: 'other' },
     ];
 
     const dom = render(<ArchiveList slug="foo" archives={archives} />);
@@ -38,7 +38,7 @@ describe('ArchiveList', () => {
   });
 
   it('links to each archive', () => {
-    const archives = [{ id: 'a1', created: 10 }];
+    const archives = [{ id: 'a1', created: 10, format: 'mood' }];
     const location = memoryLocation({ path: '/', record: true });
 
     const dom = render(
@@ -54,9 +54,9 @@ describe('ArchiveList', () => {
 
   it('orders archives newest-to-oldest', () => {
     const archives = [
-      { id: 'a1', created: 100 },
-      { id: 'a2', created: 0 },
-      { id: 'a3', created: 10 },
+      { id: 'a1', created: 100, format: 'mood' },
+      { id: 'a2', created: 0, format: 'mood' },
+      { id: 'a3', created: 10, format: 'mood' },
     ];
 
     const dom = render(<ArchiveList slug="foo" archives={archives} />);

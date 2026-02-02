@@ -95,6 +95,7 @@ describe('RetroService', () => {
         id: r1,
         slug: 'my-retro',
         name: 'My Retro',
+        format: 'something',
       });
     });
   });

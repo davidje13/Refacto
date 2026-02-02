@@ -9,7 +9,7 @@ describe('RetroLink', () => {
     const location = memoryLocation({ path: '/', record: true });
     const dom = render(
       <Router hook={location.hook}>
-        <RetroLink name="Foo" slug="bar" />
+        <RetroLink name="Foo" slug="bar" format="mood" />
       </Router>,
     );
 

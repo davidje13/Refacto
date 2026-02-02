@@ -251,11 +251,14 @@ export const openapi = Buffer.from(
                         type: 'array',
                         items: {
                           type: 'object',
-                          required: ['id', 'slug', 'name'],
+                          required: ['id', 'slug', 'name', 'format'],
                           properties: {
                             id: { $ref: '#/components/schemas/RetroID' },
                             slug: { $ref: '#/components/schemas/RetroSlug' },
                             name: { $ref: '#/components/schemas/RetroName' },
+                            format: {
+                              $ref: '#/components/schemas/RetroFormat',
+                            },
                           },
                         },
                       },
@@ -618,7 +621,7 @@ export const openapi = Buffer.from(
                         type: 'array',
                         items: {
                           type: 'object',
-                          required: ['id', 'created'],
+                          required: ['id', 'created', 'format'],
                           properties: {
                             id: {
                               type: 'string',
@@ -630,6 +633,9 @@ export const openapi = Buffer.from(
                               format: 'unix-millis',
                               description:
                                 'The time when this archive was created.',
+                            },
+                            format: {
+                              $ref: '#/components/schemas/RetroFormat',
                             },
                           },
                         },

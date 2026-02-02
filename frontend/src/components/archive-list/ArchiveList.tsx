@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Link } from 'wouter';
 import type { RetroArchiveSummary } from '../../shared/api-entities';
 import { formatDateTime } from '../../time/formatters';
+import { RetroFormatIcon } from '../retro-formats/RetroFormatIcon';
 
 interface PropsT {
   slug: string;
@@ -15,13 +16,14 @@ export const ArchiveList = memo(({ slug, archives }: PropsT) => {
 
   return (
     <ul className="archives">
-      {sortArchives(archives).map(({ id, created }) => (
+      {sortArchives(archives).map(({ id, created, format }) => (
         <li key={id}>
           <Link
             className="archive-link"
             to={`/retros/${encodeURIComponent(slug)}/archives/${encodeURIComponent(id)}`}
           >
-            {formatDateTime(created)}
+            <span className="date">{formatDateTime(created)}</span>
+            <RetroFormatIcon format={format} />
           </Link>
         </li>
       ))}

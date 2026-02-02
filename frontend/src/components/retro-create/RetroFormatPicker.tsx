@@ -1,5 +1,6 @@
 import type { FunctionComponent, ReactNode } from 'react';
 import { PickerInput } from '../common/PickerInput';
+import { RETRO_FORMATS } from '../retro-formats/formats';
 import './RetroFormatPicker.css';
 
 interface PropsT {
@@ -26,19 +27,18 @@ export const RetroFormatPicker: FunctionComponent<PropsT> = ({
   </fieldset>
 );
 
-interface FormatT {
-  value: string;
-  label: string;
-}
-
-const FORMATS: FormatT[] = [{ value: 'mood', label: '3 Column' }];
-
-const FORMAT_OPTIONS = FORMATS.map(({ value, label }) => ({
-  value,
-  label: (
-    <span className="format-item">
-      <img className="tile" src={`/formats/${value}.png`} role="presentation" />
-      <span className="label">{label}</span>
-    </span>
-  ),
-}));
+const FORMAT_OPTIONS = [...RETRO_FORMATS.entries()].map(
+  ([value, { label }]) => ({
+    value,
+    label: (
+      <span className="format-item">
+        <img
+          className="tile"
+          src={`/formats/${value}.png`}
+          role="presentation"
+        />
+        <span className="label">{label}</span>
+      </span>
+    ),
+  }),
+);

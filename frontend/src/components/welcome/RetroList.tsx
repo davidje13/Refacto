@@ -8,9 +8,9 @@ interface PropsT {
 
 export const RetroList = memo(({ retros }: PropsT) => (
   <ul className="retros">
-    {retros.map(({ id, slug, name }) => (
+    {retros.map(({ id, slug, name, format }) => (
       <li key={id}>
-        <RetroLink name={name} slug={slug} />
+        <RetroLink name={name} slug={slug} format={format} />
       </li>
     ))}
   </ul>

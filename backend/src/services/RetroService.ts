@@ -137,7 +137,7 @@ export class RetroService {
   ): AsyncGenerator<RetroSummary, void, undefined> {
     return this.retroCollection
       .where('ownerId', ownerId)
-      .attrs(['id', 'slug', 'name'])
+      .attrs(['id', 'slug', 'name', 'format'])
       .values();
   }
 

@@ -55,7 +55,7 @@ export class RetroArchiveService {
   ): AsyncGenerator<Readonly<RetroArchiveSummary>, void, undefined> {
     return this.archiveCollection
       .where('retroId', retroId)
-      .attrs(['id', 'created'])
+      .attrs(['id', 'created', 'format'])
       .values();
   }
 

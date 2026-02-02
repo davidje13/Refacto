@@ -35,7 +35,8 @@
   }
 
   .retro-link {
-    display: block;
+    display: grid;
+    grid-template-columns: 32px 1fr 32px;
     padding: 16px;
     background: var(--primary-back);
     color: var(--green-text-on-white);
@@ -46,6 +47,14 @@
       text-decoration: none;
       background: var(--green-button-dark);
       color: var(--green-button-dark-text);
+    }
+
+    .name {
+      grid-column: 2;
+    }
+
+    .retro-format-icon {
+      margin: -4px;
     }
   }
 

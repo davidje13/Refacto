@@ -63,9 +63,9 @@ describe('WelcomePage', () => {
   it('loads data if logged in', async () => {
     const location = memoryLocation({ path: '/', record: true });
     userDataTracker.set({ userToken: 'foobar' });
-    jest
-      .spyOn(retroListTracker, 'get')
-      .mockResolvedValue({ retros: [{ id: 'u1', slug: 'a', name: 'R1' }] });
+    jest.spyOn(retroListTracker, 'get').mockResolvedValue({
+      retros: [{ id: 'u1', slug: 'a', name: 'R1', format: 'mood' }],
+    });
 
     const dom = render(
       <Router hook={location.hook}>

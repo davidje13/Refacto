@@ -1,13 +1,16 @@
 import { memo } from 'react';
 import { Link } from 'wouter';
+import { RetroFormatIcon } from '../retro-formats/RetroFormatIcon';
 
 interface PropsT {
   name: string;
   slug: string;
+  format: string;
 }
 
-export const RetroLink = memo(({ name, slug }: PropsT) => (
+export const RetroLink = memo(({ name, slug, format }: PropsT) => (
   <Link className="retro-link" to={`/retros/${encodeURIComponent(slug)}`}>
-    {name}
+    <span className="name">{name}</span>
+    <RetroFormatIcon format={format} />
   </Link>
 ));
