@@ -83,6 +83,11 @@ export const deleteRetroItem = (itemId: string): Spec<Retro>[] => [
   { items: ['delete', ['all', { id: ['=', itemId] }]] },
 ];
 
+export const isArchivable = (retro: Retro) => retro.items.length > 0;
+
+export const needArchive = (retro: Retro) =>
+  retro.items.some((item) => item.category !== 'action');
+
 export const clearCovered = (preserveNotDone: boolean): Spec<Retro>[] => [
   {
     state: ['=', {}],

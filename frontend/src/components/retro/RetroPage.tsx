@@ -1,12 +1,13 @@
 import { memo, useEffect } from 'react';
 import type { Retro } from '../../shared/api-entities';
+import { isArchivable } from '../../actions/retro';
 import type { RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';
 import { Header, type HeaderLinks } from '../common/Header';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import { useBoolean } from '../../hooks/useBoolean';
 import { OPTIONS } from '../../helpers/optionManager';
-import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
+import { RetroFormat } from '../retro-formats/RetroFormat';
 import { InvitePopup } from './InvitePopup';
 import './RetroPage.css';
 
@@ -39,11 +40,7 @@ export const RetroPage = memo(
       !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
 
     const canArchive = Boolean(
-      retroDispatch &&
-      retro &&
-      retro.items.length > 0 &&
-      canFacilitate &&
-      !group,
+      retroDispatch && retro && isArchivable(retro) && canFacilitate && !group,
     );
 
     useEffect(() => {
@@ -76,7 +73,7 @@ export const RetroPage = memo(
           backLink={group ? { label: 'Main Retro', action: basePath } : null}
           links={retro ? links : []}
         />
-        <RetroFormatPicker
+        <RetroFormat
           className="retro-content"
           retroFormat={retro.format}
           retroOptions={retro.options}

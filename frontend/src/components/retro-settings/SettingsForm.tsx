@@ -1,4 +1,5 @@
-import { useState, memo } from 'react';
+import { useState, memo, type ReactNode } from 'react';
+import type { ChangeEvent } from 'shared-reducer/frontend';
 import type { Retro, RetroAuth } from '../../shared/api-entities';
 import type { RetroDispatch, RetroDispatchSpec } from '../../api/RetroTracker';
 import {
@@ -6,9 +7,12 @@ import {
   retroAuthService,
   retroAuthTracker,
   userDataTracker,
+  archiveService,
 } from '../../api/api';
+import { clearCovered, needArchive } from '../../actions/retro';
 import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';
+import { RetroFormatPicker } from '../retro-create/RetroFormatPicker';
 import { Alert } from '../common/Alert';
 import { SetPassword } from '../common/SetPassword';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
@@ -28,6 +32,7 @@ interface PropsT {
 export const SettingsForm = memo(
   ({ retro, retroAuth, dispatch, onSave }: PropsT) => {
     const [name, setName] = useState(retro.name);
+    const [format, setFormat] = useState(retro.format);
     const [slug, setSlug] = useState(retro.slug);
     const [editingPassword, setEditingPassword] = useState(false);
     const [passwordMatches, setPasswordMatches] = useState(false);
@@ -57,8 +62,20 @@ export const SettingsForm = memo(
         await updateRetroToken(retro.id, newPassword);
       }
       const specs: RetroDispatchSpec = [];
+      const events: ChangeEvent[] = [];
       if (name !== retro.name) {
         specs.push({ name: ['=', name] });
+      }
+      if (format !== retro.format) {
+        if (needArchive(retro)) {
+          await archiveService.create({
+            retro,
+            retroToken: retroAuth.retroToken,
+          });
+          specs.push(...clearCovered(false));
+          events.push(['archive']);
+        }
+        specs.push({ format: ['=', format] });
       }
       if (retroAuth.scopes.includes('manage') && slug !== retro.slug) {
         specs.push({ slug: ['=', slug] });
@@ -73,7 +90,7 @@ export const SettingsForm = memo(
       if (theme !== OPTIONS.theme.read(retro.options)) {
         specs.push({ options: OPTIONS.theme.specSet(theme) });
       }
-      const saved = await dispatch.sync(specs);
+      const saved = await dispatch.sync(specs, { events });
       onSave?.(saved);
     });
 
@@ -88,6 +105,36 @@ export const SettingsForm = memo(
         </span>
       ),
     }));
+
+    let formatOptions: ReactNode = null;
+    if (format === 'mood') {
+      formatOptions = (
+        <>
+          <fieldset className="minimal">
+            <legend>Theme</legend>
+            <PickerInput
+              mode="list"
+              className="theme"
+              name="theme"
+              value={theme}
+              onChange={setTheme}
+              options={themeChoices}
+            />
+          </fieldset>
+          <h2>Behaviour</h2>
+          <label className="checkbox">
+            <input
+              name="always-show-add-action"
+              type="checkbox"
+              checked={alwaysShowAddAction}
+              onChange={(e) => setAlwaysShowAddAction(e.currentTarget.checked)}
+              autoComplete="off"
+            />
+            Sticky &ldquo;add action&rdquo; input
+          </label>
+        </>
+      );
+    }
 
     const manageOptions = (
       <>
@@ -176,27 +223,8 @@ export const SettingsForm = memo(
             required
           />
         </label>
-        <fieldset className="minimal">
-          <legend>Theme</legend>
-          <PickerInput
-            className="theme"
-            name="theme"
-            value={theme}
-            onChange={setTheme}
-            options={themeChoices}
-          />
-        </fieldset>
-        <h2>Behaviour</h2>
-        <label className="checkbox">
-          <input
-            name="always-show-add-action"
-            type="checkbox"
-            checked={alwaysShowAddAction}
-            onChange={(e) => setAlwaysShowAddAction(e.currentTarget.checked)}
-            autoComplete="off"
-          />
-          Sticky &ldquo;add action&rdquo; input
-        </label>
+        <RetroFormatPicker value={format} onChange={setFormat} />
+        {formatOptions}
         {retroAuth.scopes.includes('manage') ? manageOptions : null}
         <div className="form-actions-shadow" />
         <div className="bottom-shadow-cover" />
@@ -209,7 +237,16 @@ export const SettingsForm = memo(
           >
             {sending ? '\u2026' : 'Save'}
           </button>
-          <Alert message={error} spacer />
+          <Alert
+            warning={!error}
+            message={
+              error ||
+              (format !== retro.format && needArchive(retro)
+                ? 'The current retro will be archived when changing the format'
+                : null)
+            }
+            spacer
+          />
         </div>
       </form>
     );

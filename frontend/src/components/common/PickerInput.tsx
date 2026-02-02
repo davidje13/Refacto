@@ -9,6 +9,7 @@ interface OptionT {
 
 interface PropsT {
   className?: string;
+  mode: 'list' | 'tiles';
   name: string;
   value: string;
   onChange: (value: string) => void;
@@ -16,8 +17,8 @@ interface PropsT {
 }
 
 export const PickerInput = memo(
-  ({ className, name, value, onChange, options }: PropsT) => (
-    <div className={classNames('picker-input', className)}>
+  ({ className, mode, name, value, onChange, options }: PropsT) => (
+    <div className={classNames('picker-input', mode, className)}>
       {options.map((o) => (
         <label key={o.value}>
           <input

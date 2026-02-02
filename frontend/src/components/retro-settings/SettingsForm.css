@@ -40,7 +40,7 @@ form.retro-settings {
 
   .form-actions {
     margin: 0 -16px;
-    padding: 16px;
+    padding: 16px 16px 4px;
     background: color-mix(in srgb-linear, var(--beige-back) 90%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);

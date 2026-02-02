@@ -7,8 +7,8 @@ import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 
 import { RetroPage } from './RetroPage';
 
-jest.mock('../retro-formats/RetroFormatPicker', () => ({
-  RetroFormatPicker: mockElement('mock-retro-format-picker'),
+jest.mock('../retro-formats/RetroFormat', () => ({
+  RetroFormat: mockElement('mock-retro-format'),
 }));
 
 describe('RetroPage', () => {
@@ -20,6 +20,6 @@ describe('RetroPage', () => {
         retroDispatch={nullDispatch}
       />,
     );
-    expect(dom).toContainElementWith(css('mock-retro-format-picker'));
+    expect(dom).toContainElementWith(css('mock-retro-format'));
   });
 });

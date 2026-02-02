@@ -93,10 +93,17 @@ export class ApiRetrosRouter extends Router {
       async (req, res) => {
         const userId = userAuth.getTokenData(req).sub;
         const body = await getBodyJSON(req, { maxContentBytes: 512 * 1024 });
-        const { slug, name, password, importJson } = json.extractObject(body, {
+        const {
+          slug,
+          name,
+          password,
+          format = 'mood',
+          importJson,
+        } = json.extractObject(body, {
           slug: json.string,
           name: json.string,
           password: json.string,
+          format: json.optional(json.string),
           importJson: json.optional(extractExportedRetro),
         });
 
@@ -110,7 +117,7 @@ export class ApiRetrosRouter extends Router {
           throw new HTTPError(400, { body: 'Password is too long' });
         }
 
-        const id = await retroService.createRetro(userId, slug, name, 'mood');
+        const id = await retroService.createRetro(userId, slug, name, format);
         await retroAuthService.setPassword(id, password);
 
         if (importJson) {

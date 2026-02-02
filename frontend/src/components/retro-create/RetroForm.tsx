@@ -1,20 +1,20 @@
 import { useState, memo, type ChangeEvent, type ReactNode } from 'react';
 import type { JsonData } from '../../shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
-import { SlugEntry } from './SlugEntry';
 import { Alert } from '../common/Alert';
 import { SetPassword } from '../common/SetPassword';
 import { makeValidSlug } from '../../hooks/data/useSlugAvailability';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { useNonce } from '../../hooks/useNonce';
 import { retroService, retroAuthTracker } from '../../api/api';
+import { RetroFormatPicker } from './RetroFormatPicker';
+import { SlugEntry } from './SlugEntry';
 import './RetroForm.css';
 
 export interface CreationT {
   id: string;
   name: string;
   slug: string;
-  password: string;
 }
 
 interface PropsT {
@@ -41,6 +41,7 @@ export const RetroForm = memo(
   ({ defaultSlug, userToken, onCreate, showImport = false }: PropsT) => {
     const [name, setName] = useState(defaultSlug || '');
     const [slug, setSlug] = useState(defaultSlug || '');
+    const [format, setFormat] = useState('mood');
     const [passwordMatches, setPasswordMatches] = useState(false);
     const [password, setPassword] = useState('');
     const [importJson, setImportJson] = useState<JsonData>();
@@ -65,6 +66,7 @@ export const RetroForm = memo(
           const json = JSON.parse(content);
           setName(String(json.name || ''));
           setSlug(String(json.url || ''));
+          setFormat(String(json.format || 'mood'));
           setImportJson(json);
         } catch (err) {
           if (err instanceof Error) {
@@ -94,6 +96,7 @@ export const RetroForm = memo(
         name,
         slug: resolvedSlug,
         password,
+        format,
         userToken,
         importJson,
       });
@@ -103,11 +106,11 @@ export const RetroForm = memo(
         id,
         slug: resolvedSlug,
         name,
-        password,
       });
     });
 
     let importComponent: ReactNode = null;
+    let formatComponent: ReactNode = null;
     if (showImport) {
       importComponent = (
         <label>
@@ -120,6 +123,21 @@ export const RetroForm = memo(
             required
           />
         </label>
+      );
+    } else {
+      formatComponent = (
+        <RetroFormatPicker
+          legend={
+            <>
+              Format
+              <div className="info">
+                (this can be changed later in Settings)
+              </div>
+            </>
+          }
+          value={format}
+          onChange={setFormat}
+        />
       );
     }
 
@@ -171,6 +189,7 @@ export const RetroForm = memo(
           setPassword={setPassword}
           setMatches={setPasswordMatches}
         />
+        {formatComponent}
         <button
           type="submit"
           className="wide-button"

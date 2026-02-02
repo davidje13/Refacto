@@ -3,7 +3,7 @@ import mockElement from 'react-mock-element';
 import type { RetroItem } from '../../shared/api-entities';
 import { css } from '../../test-helpers/queries';
 
-import { RetroFormatPicker } from './RetroFormatPicker';
+import { RetroFormat } from './RetroFormat';
 
 jest.mock('./mood/MoodRetro', () => ({
   MoodRetro: mockElement('mock-mood-retro'),
@@ -18,7 +18,7 @@ describe('Retro', () => {
     const retroState = { foo: 'bar' };
 
     const dom = render(
-      <RetroFormatPicker
+      <RetroFormat
         retroFormat="mood"
         retroOptions={{}}
         retroItems={retroItems}
@@ -34,7 +34,7 @@ describe('Retro', () => {
 
   it('displays UnknownRetro for unknown formats', async () => {
     const dom = render(
-      <RetroFormatPicker
+      <RetroFormat
         retroFormat="nope"
         retroOptions={{}}
         retroItems={[]}

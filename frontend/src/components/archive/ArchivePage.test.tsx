@@ -7,8 +7,8 @@ import { css } from '../../test-helpers/queries';
 
 import { ArchivePage } from './ArchivePage';
 
-jest.mock('../retro-formats/RetroFormatPicker', () => ({
-  RetroFormatPicker: mockElement('mock-retro-format-picker'),
+jest.mock('../retro-formats/RetroFormat', () => ({
+  RetroFormat: mockElement('mock-retro-format'),
 }));
 
 describe('ArchivePage', () => {
@@ -24,7 +24,7 @@ describe('ArchivePage', () => {
     );
     await act(() => Promise.resolve()); // data fetch
 
-    expect(dom).toContainElementWith(css('mock-retro-format-picker'));
+    expect(dom).toContainElementWith(css('mock-retro-format'));
     expect(archiveService.get).toHaveBeenCalledWith(
       'r1',
       'myArchiveId',

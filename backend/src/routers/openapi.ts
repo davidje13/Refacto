@@ -271,7 +271,7 @@ export const openapi = Buffer.from(
         post: {
           summary: 'Create a new retro',
           description:
-            'Creates a new retro, optionally importing existing data. The importJson structure is returned by the `GET /retros/{retro_id}/export/json` endpoint.',
+            'Creates a new retro, optionally importing existing data. The `importJson` structure is returned by the `GET /retros/{retro_id}/export/json` endpoint and may be used for (e.g.) transfering a retro from one instance to another, or restoring a backup. Note that the `importJson` structure can contain conflicting values for `name`, `slug`, and `format`: if there are mismatches, the top-level `name` and `slug` will be used, and the `format` inside `importJson` will be used.',
           security: [{ userToken: [] }],
           requestBody: {
             description: 'The retro to create',
@@ -280,7 +280,7 @@ export const openapi = Buffer.from(
               'application/json': {
                 schema: {
                   type: 'object',
-                  required: ['slug', 'name', 'password'],
+                  required: ['slug', 'name', 'password', 'format'],
                   properties: {
                     slug: { $ref: '#/components/schemas/RetroSlug' },
                     name: { $ref: '#/components/schemas/RetroName' },
@@ -290,6 +290,7 @@ export const openapi = Buffer.from(
                         'The collaborator password to use for accessing this retro. This is expected to be shared with other users.',
                       example: 'Secret',
                     },
+                    format: { $ref: '#/components/schemas/RetroFormat' },
                     importJson: { $ref: '#/components/schemas/RetroExport' },
                   },
                   additionalProperties: false,

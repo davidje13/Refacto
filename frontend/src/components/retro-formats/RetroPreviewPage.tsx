@@ -5,7 +5,7 @@ import type { Retro, RetroItem } from '../../shared/api-entities';
 import { type Spec, context } from '../../api/reducer';
 import { useLocationHash } from '../../hooks/env/useLocationHash';
 import { StaticStateMapProvider } from '../../hooks/useStateMap';
-import { RetroFormatPicker } from './RetroFormatPicker';
+import { RetroFormat } from './RetroFormat';
 import '../common/Header.css';
 import './RetroPreviewPage.css';
 
@@ -25,7 +25,7 @@ export const RetroPreviewPage = memo(() => {
           <h1>{state.name}</h1>
         </header>
         <StaticStateMapProvider data={stateMap}>
-          <RetroFormatPicker
+          <RetroFormat
             className="retro-content"
             retroFormat={state.format}
             retroOptions={state.options}

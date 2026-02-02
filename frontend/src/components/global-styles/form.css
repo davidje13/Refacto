@@ -42,7 +42,7 @@
 
   & input,
   .prefixed-input,
-  .picker-input {
+  .picker-input.list {
     display: block;
     margin: 4px 0 16px;
     padding: 8px;
@@ -57,7 +57,7 @@
   }
 
   & fieldset {
-    margin-top: 8px;
+    margin: 8px 0 32px;
     padding: 8px 8px 0;
     border: 1px solid var(--beige-shadow);
 
@@ -71,7 +71,9 @@
       border: none;
 
       & legend {
+        width: 100%;
         padding: 0;
+        margin-bottom: 4px;
       }
 
       & > :last-child {
@@ -150,7 +152,7 @@
     }
   }
 
-  .picker-input {
+  .picker-input.list {
     padding: 0;
   }
 

@@ -21,17 +21,18 @@ interface PropsT extends Omit<ChildPropsT, 'archive'> {
   archive?: boolean;
 }
 
-const formats = new Map<string, ComponentType<ChildPropsT>>();
-formats.set(
-  'mood',
-  lazy(() =>
-    import('./mood/MoodRetro').then((m) => ({ default: m.MoodRetro })),
-  ),
-);
+const formats = new Map<string, ComponentType<ChildPropsT>>([
+  [
+    'mood',
+    lazy(() =>
+      import('./mood/MoodRetro').then((m) => ({ default: m.MoodRetro })),
+    ),
+  ],
+]);
 
 const LOADER = <LoadingIndicator />;
 
-export const RetroFormatPicker = memo(
+export const RetroFormat = memo(
   ({ retroFormat, archive = false, ...props }: PropsT) => {
     const RetroType = formats.get(retroFormat) || UnknownRetro;
 

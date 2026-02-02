@@ -78,7 +78,7 @@ describe('API retros', () => {
 
       const response = await request(server)
         .post('/api/retros')
-        .send({ slug, name: 'Meh', password: 'password' })
+        .send({ slug, name: 'New Name', password: 'password', format: 'other' })
         .set('Authorization', `Bearer ${userToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -87,6 +87,61 @@ describe('API retros', () => {
 
       expect(response.body.id).toEqual(storedId);
       expect(response.body.token).toBeTruthy();
+
+      const stored = await hooks.retroService.getRetro(storedId!);
+      expect(stored?.slug).toEqual(slug);
+      expect(stored?.name).toEqual('New Name');
+      expect(stored?.format).toEqual('other');
+      expect(stored?.items).toEqual([]);
+      expect(stored?.scheduledDelete).toEqual(0);
+    });
+
+    it('imports an existing retro if specified', async (props) => {
+      const { server, hooks, userToken } = props.getTyped(PROPS);
+
+      const slug = 'imported-retro';
+
+      const response = await request(server)
+        .post('/api/retros')
+        .send({
+          slug,
+          name: 'New Name',
+          password: 'NewPassword',
+          format: 'changed-format',
+          importJson: {
+            url: 'old-slug',
+            name: 'Old Name',
+            current: {
+              format: 'original-format',
+              options: { imported: 7 },
+              items: [
+                {
+                  created: '2000-01-01T00:00:00Z',
+                  category: 'action',
+                  message: 'Old action',
+                  votes: 1,
+                },
+              ],
+            },
+            archives: [],
+          },
+        })
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      const storedId = await hooks.retroService.getRetroIdForSlug(slug);
+
+      expect(response.body.id).toEqual(storedId);
+      expect(response.body.token).toBeTruthy();
+
+      const stored = await hooks.retroService.getRetro(storedId!);
+      expect(stored?.slug).toEqual(slug);
+      expect(stored?.name).toEqual('New Name');
+      expect(stored?.format).toEqual('original-format');
+      expect(stored?.options['imported']).toEqual(7);
+      expect(stored?.items).toHaveLength(1);
+      expect(stored?.scheduledDelete).toEqual(0);
     });
 
     it('responds HTTP Unprocessable Entity if data is missing', async (props) => {
@@ -106,7 +161,12 @@ describe('API retros', () => {
 
       const response = await request(server)
         .post('/api/retros')
-        .send({ slug: 'new-retro', name: '', password: 'password' })
+        .send({
+          slug: 'new-retro',
+          name: '',
+          password: 'password',
+          format: 'mood',
+        })
         .set('Authorization', `Bearer ${userToken}`)
         .expect(400);
 
@@ -118,7 +178,12 @@ describe('API retros', () => {
 
       const response = await request(server)
         .post('/api/retros')
-        .send({ slug: 'my-retro', name: 'Meh', password: 'password' })
+        .send({
+          slug: 'my-retro',
+          name: 'Meh',
+          password: 'password',
+          format: 'mood',
+        })
         .set('Authorization', `Bearer ${userToken}`)
         .expect(409);
 
@@ -514,7 +579,12 @@ describe('API retros with my retros disabled', () => {
 
       const response = await request(server)
         .post('/api/retros')
-        .send({ slug: 'new-retro', name: 'Meh', password: 'password' })
+        .send({
+          slug: 'new-retro',
+          name: 'Meh',
+          password: 'password',
+          format: 'mood',
+        })
         .set('Authorization', `Bearer ${userToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);

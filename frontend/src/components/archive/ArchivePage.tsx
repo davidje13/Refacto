@@ -4,7 +4,7 @@ import { Header } from '../common/Header';
 import { LoadingError, LoadingIndicator } from '../common/Loader';
 import { useArchive } from '../../hooks/data/useArchive';
 import { formatDate } from '../../time/formatters';
-import { RetroFormatPicker } from '../retro-formats/RetroFormatPicker';
+import { RetroFormat } from '../retro-formats/RetroFormat';
 
 type PropsT = Pick<RetroPagePropsT, 'retroAuth' | 'retro'> & {
   archiveId: string;
@@ -39,7 +39,7 @@ export const ArchivePage = memo(
         ) : !archive ? (
           <LoadingIndicator />
         ) : (
-          <RetroFormatPicker
+          <RetroFormat
             retroFormat={archive.format}
             retroOptions={archive.options}
             retroItems={archive.items}

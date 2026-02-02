@@ -4,6 +4,7 @@ interface RetroOptions {
   name: string;
   slug: string;
   password: string;
+  format: string;
   userToken: string;
   importJson?: JsonData | undefined;
 }
@@ -15,10 +16,11 @@ export class RetroService {
     name,
     slug,
     password,
+    format,
     userToken,
     importJson,
   }: RetroOptions): Promise<RetroCreationInfo> {
-    const requestBody: JsonData = { name, slug, password };
+    const requestBody: JsonData = { name, slug, password, format };
     if (importJson) {
       requestBody['importJson'] = importJson;
     }
