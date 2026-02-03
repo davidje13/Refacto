@@ -11,14 +11,14 @@
 
   .gallery-item {
     display: inline-block;
-    overflow: hidden;
+    overflow: clip;
   }
 
   .docs {
     position: relative;
     width: 1300px;
     height: 900px;
-    overflow: hidden;
+    overflow: clip;
 
     .browser {
       position: absolute;

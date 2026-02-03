@@ -18,9 +18,11 @@
 
   &:hover,
   &:focus {
-    box-shadow: 0 2px 4px var(--shadow-1);
-    color: var(--text-color);
-    text-decoration: none;
+    &:not(:disabled, .disabled) {
+      box-shadow: 0 2px 4px var(--shadow-1);
+      color: var(--text-color);
+      text-decoration: none;
+    }
   }
 
   &:active {
@@ -44,6 +46,8 @@
   &:disabled,
   &.disabled {
     background: var(--beige-shadow);
+    color: var(--pale-text-on-white);
+    border: none;
   }
 }
 

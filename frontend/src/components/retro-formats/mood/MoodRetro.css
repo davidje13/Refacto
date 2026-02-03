@@ -64,7 +64,7 @@
         text-shadow:
           0 4px 8px var(--shadow-1),
           0 2px 3px var(--shadow-1);
-        z-index: 1;
+        z-index: 2;
       }
 
       .face-icon.boring {
@@ -377,7 +377,7 @@
       .new-action-item-hold.always-visible {
         margin: calc(var(--add-action-max-scroll) * -1) 0 -8px;
         pointer-events: none;
-        z-index: 2; /* above face icons */
+        z-index: 3; /* above face icons */
 
         &::before {
           content: '';
