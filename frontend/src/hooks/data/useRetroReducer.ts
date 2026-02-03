@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
-import { flushSync } from 'react-dom';
 import type { Retro, RetroAuth } from '../../shared/api-entities';
+import { startViewTransition } from '../../helpers/viewTransition';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import { retroTracker } from '../../api/api';
 
@@ -51,15 +51,7 @@ export function useRetroReducer(
         const animation = events.some(([evt]) => evt === 'archive')
           ? 'archive'
           : null;
-        if (animation && document.startViewTransition) {
-          const viewTransition = document.startViewTransition({
-            update: () => flushSync(() => setRetroState(setter)),
-            types: [animation],
-          });
-          viewTransition.ready.catch(() => {}); // ignore errors (e.g. 'Skipped ViewTransition due to document being hidden')
-        } else {
-          setRetroState(setter);
-        }
+        startViewTransition(animation, () => setRetroState(setter));
       },
       (status) => setStatus(status ? 'connected' : 'reconnecting'),
       async () => {

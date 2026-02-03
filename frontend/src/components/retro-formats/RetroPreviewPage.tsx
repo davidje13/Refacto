@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import { TimeProvider, type Scheduler } from 'react-hook-final-countdown';
 import type { Retro, RetroItem } from '../../shared/api-entities';
+import { startViewTransition } from '../../helpers/viewTransition';
 import { type Spec, context } from '../../api/reducer';
 import { useLocationHash } from '../../hooks/env/useLocationHash';
 import { StaticStateMapProvider } from '../../hooks/useStateMap';
@@ -81,20 +81,13 @@ const useAnimation = (state: State, setState: (v: State) => void) =>
     const tm = setTimeout(
       () => {
         if (frame) {
-          const updated = {
-            ...context.update(state, frame.spec),
-            _frame: state._frame + 1,
-            _time: Date.now(),
-          };
-          if (frame.animation && document.startViewTransition) {
-            const viewTransition = document.startViewTransition({
-              update: () => flushSync(() => setState(updated)),
-              types: [frame.animation],
-            });
-            viewTransition.ready.catch(() => {}); // ignore errors (e.g. 'Skipped ViewTransition due to document being hidden')
-          } else {
-            setState(updated);
-          }
+          startViewTransition(frame.animation, () =>
+            setState({
+              ...context.update(state, frame.spec),
+              _frame: state._frame + 1,
+              _time: Date.now(),
+            }),
+          );
         } else {
           setState({ ...state, ...state._reset, _time: Date.now() });
         }
