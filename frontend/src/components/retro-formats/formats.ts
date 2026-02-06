@@ -5,14 +5,17 @@ import type { RetroItem } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
-export interface RetroFormatProps {
+export interface RetroFormatProps<StateT = Record<string, unknown>> {
   className?: string;
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
-  retroState: Record<string, unknown>;
+  retroState: StateT;
   group?: string | undefined;
   dispatch?: RetroDispatch | undefined;
-  onComplete?: (() => void) | undefined;
+  onArchive?: (() => void) | undefined;
+  onInvite?: (() => void) | undefined;
+  settingsLink?: string | undefined;
+  archivesLink?: string | undefined;
   archive: boolean;
   archiveTime?: number;
 }

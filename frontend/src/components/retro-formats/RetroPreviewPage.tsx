@@ -32,7 +32,6 @@ export const RetroPreviewPage = memo(() => {
             retroItems={state.items}
             retroState={state.state}
             dispatch={MOCK_DISPATCH}
-            onComplete={undefined}
             archive={false}
             archiveTime={state.simulatedTime}
           />

@@ -2,7 +2,6 @@ import { useState, type ReactElement } from 'react';
 import { classNames } from '../../../helpers/classNames';
 import type { RetroItem } from '../../../shared/api-entities';
 import { TabControl } from '../../common/TabControl';
-import type { RetroDispatch } from '../../../api/RetroTracker';
 import {
   addRetroItem,
   editRetroItem,
@@ -27,6 +26,7 @@ import { useActionFactory } from '../../../hooks/useActionFactory';
 import { useGlobalKeyListener } from '../../../hooks/useGlobalKeyListener';
 import { useGate } from '../../../hooks/useGate';
 import { OPTIONS } from '../../../helpers/optionManager';
+import type { RetroFormatProps } from '../formats';
 import { MoodSection } from './categories/MoodSection';
 import { ActionsPane } from './actions/ActionsPane';
 import { ActionToast } from './actions/ActionToast';
@@ -53,18 +53,6 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-interface PropsT {
-  className?: string;
-  retroOptions: Record<string, unknown>;
-  retroItems: RetroItem[];
-  retroState: MoodRetroStateT;
-  group?: string | undefined;
-  dispatch?: RetroDispatch | undefined;
-  onComplete?: (() => void) | undefined;
-  archive: boolean;
-  archiveTime?: number;
-}
-
 const isSmallScreen = ({ width }: Size) => width <= 800;
 
 // Some users click 'next' then select another item to discuss (ignoring the auto facilitated suggestion)
@@ -79,10 +67,10 @@ export const MoodRetro = ({
   retroItems,
   group,
   dispatch,
-  onComplete,
+  onArchive,
   archive,
   archiveTime,
-}: PropsT): ReactElement => {
+}: RetroFormatProps<MoodRetroStateT>): ReactElement => {
   const singleColumn = useWindowSize(isSmallScreen);
   const localDateProvider = useLocalDateProvider(archiveTime);
 
@@ -121,7 +109,7 @@ export const MoodRetro = ({
   const handleGoNext = start.useGated(
     useFacilitatorAction((id?: string) => {
       setAutoAdvanceTime(Date.now());
-      return [...goNext(group, id), ...allItemsDoneCallback(onComplete)];
+      return [...goNext(group, id), ...allItemsDoneCallback(onArchive)];
     }),
   );
   const handleClose = useFacilitatorAction((id?: string) => [
@@ -129,7 +117,7 @@ export const MoodRetro = ({
       expectCurrentId: id,
       setCurrentDone: true,
     }),
-    ...allItemsDoneCallback(onComplete),
+    ...allItemsDoneCallback(onArchive),
   ]);
   const handleGoPrevious = useFacilitatorAction((id?: string) => {
     setAutoAdvanceTime(NEVER);

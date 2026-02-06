@@ -40,7 +40,7 @@ export const RetroPage = memo(
       !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
 
     const canArchive = Boolean(
-      retroDispatch && retro && isArchivable(retro) && canFacilitate && !group,
+      retroDispatch && retro && isArchivable(retro) && !group,
     );
 
     useEffect(() => {
@@ -49,19 +49,24 @@ export const RetroPage = memo(
       }
     }, [canArchive]);
 
+    const onArchive = canArchive ? archivePopupVisible.setTrue : undefined;
+    const onInvite = invitePopupVisible.setTrue;
+    const archivesLink = retroAuth.scopes.includes('readArchives')
+      ? `${basePath}/archives`
+      : undefined;
+    const settingsLink = retroDispatch ? `${basePath}/settings` : undefined;
+
     const links: HeaderLinks = [
-      { label: 'Invite', action: invitePopupVisible.setTrue },
-      retroDispatch
-        ? { label: 'Settings', action: `${basePath}/settings` }
-        : null,
-      canArchive
-        ? { label: 'Create Archive', action: archivePopupVisible.setTrue }
+      onInvite ? { label: 'Invite', action: onInvite } : null,
+      settingsLink ? { label: 'Settings', action: settingsLink } : null,
+      onArchive && canFacilitate
+        ? { label: 'Create Archive', action: onArchive }
         : null,
       {
         label: 'Archives',
-        action: `${basePath}/archives`,
+        action: archivesLink ?? '',
         className: 'archives-link',
-        disabled: !retroAuth.scopes.includes('readArchives'),
+        disabled: !archivesLink,
       },
     ];
 
@@ -81,7 +86,10 @@ export const RetroPage = memo(
           retroState={getState(group, retro)}
           group={group}
           dispatch={retroDispatch ?? undefined}
-          onComplete={canArchive ? archivePopupVisible.setTrue : undefined}
+          onArchive={onArchive}
+          onInvite={onInvite}
+          settingsLink={settingsLink}
+          archivesLink={archivesLink}
           archive={false}
         />
         {retroDispatch ? (
