@@ -91,7 +91,7 @@ export const RestExample = memo(
         );
       }),
       ` HTTP/1.1\n`,
-      `Host: ${base.origin}\n`,
+      `Host: ${base.host}\n`,
     ];
 
     if (def.security?.length) {
