@@ -15,6 +15,13 @@ export const ArchiveListPage = memo(({ retroAuth, retro }: PropsT) => {
     retroAuth.retroToken,
   );
 
+  const formats = new Set([retro.format]);
+  if (archives) {
+    for (const archive of archives) {
+      formats.add(archive.format);
+    }
+  }
+
   return (
     <article className="page-archive-list short-page">
       <Header
@@ -40,13 +47,15 @@ export const ArchiveListPage = memo(({ retroAuth, retro }: PropsT) => {
         >
           Export as JSON
         </ApiDownloadButton>
-        <ApiDownloadButton
-          url={`retros/${encodeURIComponent(retro.id)}/export/csv`}
-          retroAuth={retroAuth}
-          filename={`${retro.slug}-export.csv`}
-        >
-          Export items as CSV
-        </ApiDownloadButton>
+        {formats.has('mood') ? (
+          <ApiDownloadButton
+            url={`retros/${encodeURIComponent(retro.id)}/export/csv-mood`}
+            retroAuth={retroAuth}
+            filename={`${retro.slug}-export.csv`}
+          >
+            Export items as CSV
+          </ApiDownloadButton>
+        ) : null}
       </div>
     </article>
   );

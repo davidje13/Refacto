@@ -55,11 +55,30 @@ describe('API retros', () => {
       );
     });
 
+    it('omits archives if the retro token does not have readArchives scope', async (props) => {
+      const { server, hooks, retroId } = props.getTyped(PROPS);
+
+      const retroToken = await getRetroToken(hooks, retroId, {
+        readArchives: false,
+      });
+
+      const response = await request(server)
+        .get(`/api/retros/${retroId}/export/json`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200)
+        .expect('Content-Disposition', /attachment/)
+        .expect('Content-Type', /application\/json/);
+
+      expect(response.body.url).toEqual('my-retro');
+      expect(response.body.name).toEqual('My Retro');
+      expect(response.body.archives).isUndefined();
+    });
+
     it('returns the retro and its archives in a spreadsheet-friendly CSV format', async (props) => {
       const { server, retroId, retroToken } = props.getTyped(PROPS);
 
       const response = await request(server)
-        .get(`/api/retros/${retroId}/export/csv`)
+        .get(`/api/retros/${retroId}/export/csv-mood`)
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200);
 
@@ -72,6 +91,30 @@ describe('API retros', () => {
       expect(response.text).matches(
         /Archive,Category,Message,Votes,State\n"#1 \([\d\-]+\)",foo,"My item",0,\n/,
       );
+    });
+
+    it('excludes non-mood retros in the csv-mood export', async (props) => {
+      const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+      await hooks.retroArchiveService.createArchive(retroId, {
+        format: 'other',
+        options: {},
+        items: [
+          makeRetroItem({
+            created: 1568400000000,
+            id: 'no',
+            category: 'no',
+            message: 'Nope',
+          }),
+        ],
+      });
+
+      const response = await request(server)
+        .get(`/api/retros/${retroId}/export/csv-mood`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200);
+
+      expect(response.text).not(matches(/Nope/));
     });
 
     it('returns HTTP Not Found if the format is unknown', async (props) => {
@@ -93,7 +136,7 @@ describe('API retros', () => {
         .expect(401);
 
       await request(server)
-        .get(`/api/retros/${retroId}/export/csv`)
+        .get(`/api/retros/${retroId}/export/csv-mood`)
         .expect(401);
     });
 
@@ -106,7 +149,7 @@ describe('API retros', () => {
         .expect(401);
 
       await request(server)
-        .get(`/api/retros/${retroId}/export/csv`)
+        .get(`/api/retros/${retroId}/export/csv-mood`)
         .set('Authorization', 'Bearer Foo')
         .expect(401);
     });
@@ -122,22 +165,8 @@ describe('API retros', () => {
         .expect(403);
 
       await request(server)
-        .get(`/api/retros/${retroId}/export/csv`)
+        .get(`/api/retros/${retroId}/export/csv-mood`)
         .set('Authorization', `Bearer ${retroToken1}`)
-        .expect(403);
-
-      const retroToken2 = await getRetroToken(hooks, retroId, {
-        readArchives: false,
-      });
-
-      await request(server)
-        .get(`/api/retros/${retroId}/export/json`)
-        .set('Authorization', `Bearer ${retroToken2}`)
-        .expect(403);
-
-      await request(server)
-        .get(`/api/retros/${retroId}/export/csv`)
-        .set('Authorization', `Bearer ${retroToken2}`)
         .expect(403);
     });
   });

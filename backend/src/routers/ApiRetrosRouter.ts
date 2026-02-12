@@ -6,6 +6,7 @@ import {
   getPathParameter,
   getPathParameters,
   getQuery,
+  hasAuthScope,
   HTTPError,
   makeAcceptWebSocket,
   makeWebSocketFallbackTokenFetcher,
@@ -42,7 +43,7 @@ import {
   importRetroDataJson,
   importTimestamp,
 } from '../export/RetroJsonExport';
-import { exportRetroTable } from '../export/RetroTableExport';
+import { exportMoodRetroTable } from '../export/RetroTableExport';
 
 export class ApiRetrosRouter extends Router {
   private readonly _activeConnections = new MultiMap<string, IncomingMessage>();
@@ -323,18 +324,23 @@ export class ApiRetrosRouter extends Router {
     retroRouter.get(
       '/export/:format',
       requireAuthScope('read'),
-      requireAuthScope('readArchives'),
       async (req, res) => {
         const { retroId, format } = getPathParameters(req);
+        const includeArchives = hasAuthScope(req, 'readArchives');
 
         const retro = await retroService.getRetro(retroId);
         if (!retro) {
           throw new HTTPError(404, { body: 'Retro not found' });
         }
 
-        analyticsService.event(req, `export ${format}`);
+        analyticsService.event(req, `export ${format}`, {
+          archives: includeArchives,
+        });
 
-        const archives = retroArchiveService.getRetroArchiveList(retroId);
+        const archives = includeArchives
+          ? retroArchiveService.getRetroArchiveList(retroId)
+          : undefined;
+
         try {
           switch (format) {
             case 'json': {
@@ -348,14 +354,15 @@ export class ApiRetrosRouter extends Router {
                 { space: 2 },
               );
             }
-            case 'csv': {
+            case 'csv': // temporary backwards compatibility
+            case 'csv-mood': {
               res.setHeader(
                 'content-disposition',
                 `attachment; filename="${encodeURIComponent(`${retro.slug}-export.csv`)}"`,
               );
               return await sendCSVStream(
                 res,
-                exportRetroTable(retro, archives),
+                exportMoodRetroTable(retro, archives),
                 { headerRow: true },
               );
             }
@@ -363,7 +370,7 @@ export class ApiRetrosRouter extends Router {
               throw new HTTPError(404, { body: 'Unknown format' });
           }
         } finally {
-          await archives.return();
+          await archives?.return();
         }
       },
     );

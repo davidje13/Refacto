@@ -2,7 +2,7 @@ import type { Retro, RetroArchive, RetroItem } from '../shared/api-entities';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 
-function exportItems(
+function exportMoodItems(
   items: RetroItem[],
   archive: RetroArchive | null,
   index: number,
@@ -32,16 +32,20 @@ function dateString(date: Date) {
   return date.toISOString().split('T')[0];
 }
 
-export async function* exportRetroTable(
+export async function* exportMoodRetroTable(
   retro: Retro,
-  archives?: MaybeAsyncIterable<RetroArchive>,
+  archives?: MaybeAsyncIterable<RetroArchive> | undefined,
 ): AsyncGenerator<string[], void, undefined> {
   yield ['Archive', 'Category', 'Message', 'Votes', 'State'];
-  yield* exportItems(retro.items, null, 0);
+  if (retro.format === 'mood') {
+    yield* exportMoodItems(retro.items, null, 0);
+  }
   if (archives) {
     let i = 0;
     for await (const archive of archives) {
-      yield* exportItems(archive.items, archive, i);
+      if (archive.format === 'mood') {
+        yield* exportMoodItems(archive.items, archive, i);
+      }
       ++i;
     }
   }

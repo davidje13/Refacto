@@ -129,7 +129,7 @@ function exportRetroArchive(archive: RetroArchive): RetroArchiveJsonExport {
 
 export function exportRetroJson(
   retro: Retro,
-  archives?: MaybeAsyncIterable<RetroArchive>,
+  archives?: MaybeAsyncIterable<RetroArchive> | undefined,
 ): RetroJsonExport {
   const result: RetroJsonExport = {
     url: retro.slug,

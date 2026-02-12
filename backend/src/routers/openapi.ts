@@ -523,7 +523,7 @@ export const openapi = Buffer.from(
           summary:
             'Export the current retro and all of its archives in a machine-readable JSON format',
           description:
-            'This provides a complete export of a retro in a format which can easily be re-imported. It does not include the retro ID, the owner ID, or the password. Note that this is a relatively expensive operation, so do not use this endpoint unless you need all of the current and archived data. If you do not need the archive data, prefer using GET on the retro itself.',
+            'This provides a complete export of a retro in a format which can easily be re-imported. It does not include the retro ID, the owner ID, or the password. Note that this is a relatively expensive operation, so do not use this endpoint unless you need all of the current and archived data. If you do not need the archive data, prefer using GET on the retro itself. If the provided retro token does not have the `readArchives` scope, the export will only include the current retro.',
           security: [{ retroToken: ['read', 'readArchives'] }],
           parameters: [
             {
@@ -554,10 +554,12 @@ export const openapi = Buffer.from(
           },
         },
       },
-      '/retros/{retro_id}/export/csv': {
+      '/retros/{retro_id}/export/csv-mood': {
         get: {
           summary:
-            'Export the items from the current retro and all of its archives in a spreadsheet-readable CSV format',
+            'Export the mood retro items from the current retro and all of its archives in a spreadsheet-readable CSV format',
+          description:
+            'This provides a partial export of mood retros. Other retro formats are not included, and some internal details are omitted (such as item creation time), meaning this cannot be re-imported; it is only for processing the data in other tools. If the provided retro token does not have the `readArchives` scope, the export will only include the current retro.',
           security: [{ retroToken: ['read', 'readArchives'] }],
           parameters: [
             {
