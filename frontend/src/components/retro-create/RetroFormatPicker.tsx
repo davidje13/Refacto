@@ -13,19 +13,20 @@ export const RetroFormatPicker: FunctionComponent<PropsT> = ({
   legend = 'Format',
   value,
   onChange,
-}) => (
-  <fieldset className="minimal">
-    <legend>{legend}</legend>
-    <PickerInput
-      mode="tiles"
-      className="retro-format-picker"
-      name="format"
-      value={value}
-      onChange={onChange}
-      options={FORMAT_OPTIONS}
-    />
-  </fieldset>
-);
+}) =>
+  FORMAT_OPTIONS.length > 1 ? (
+    <fieldset className="minimal">
+      <legend>{legend}</legend>
+      <PickerInput
+        mode="tiles"
+        className="retro-format-picker"
+        name="format"
+        value={value}
+        onChange={onChange}
+        options={FORMAT_OPTIONS}
+      />
+    </fieldset>
+  ) : null;
 
 const FORMAT_OPTIONS = [...RETRO_FORMATS.entries()].map(
   ([value, { label }]) => ({
