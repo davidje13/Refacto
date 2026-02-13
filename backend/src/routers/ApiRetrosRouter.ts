@@ -22,9 +22,11 @@ import {
 } from 'web-listener';
 import { WebSocketServer } from 'ws';
 import { WebsocketHandlerFactory } from 'shared-reducer/backend';
+import type { Spec } from 'json-immutability-helper';
 import { DuplicateError } from 'collection-storage';
 import type {
   PasswordRequirements,
+  Retro,
   RetroCreationInfo,
 } from '../shared/api-entities';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
@@ -240,22 +242,34 @@ export class ApiRetrosRouter extends Router {
     retroRouter.patch('/', async (req, res) => {
       const { retroId } = getPathParameters(req);
       const body = await getBodyJSON(req, { maxContentBytes: 64 * 1024 });
-      const { change, setPassword, cancelDelete } = json.extractObject(body, {
-        change: json.optional(json.any),
-        setPassword: json.optional(
-          json.object({
-            password: json.string,
-            evictUsers: json.boolean,
-          }),
-        ),
-        cancelDelete: json.optional(json.boolean),
-      });
+      const { archive, setFormat, change, setPassword, cancelDelete } =
+        json.extractObject(body, {
+          archive: json.optional(
+            json.object({
+              preserveRemaining: json.optional(json.boolean),
+            }),
+          ),
+          setFormat: json.optional(json.string),
+          change: json.optional(json.any),
+          setPassword: json.optional(
+            json.object({
+              password: json.string,
+              evictUsers: json.boolean,
+            }),
+          ),
+          cancelDelete: json.optional(json.boolean),
+        });
 
-      // early validation (to avoid partial updates)
+      // check permissions
 
+      if (archive || change) {
+        await requireAuthScope('write').handleRequest(req, res);
+      }
       if (setPassword || cancelDelete) {
         await requireAuthScope('manage').handleRequest(req, res);
       }
+
+      // early validation (to avoid partial updates)
 
       if (setPassword) {
         if (setPassword.password.length < passwordRequirements.minLength) {
@@ -268,11 +282,48 @@ export class ApiRetrosRouter extends Router {
 
       // apply
 
+      if (archive || setFormat) {
+        await retroService.retroBroadcaster.update(
+          retroId,
+          (retro) => {
+            const specs: Spec<Retro>[] = [];
+            specs.push(
+              retroService.getArchiveSpec(
+                retro,
+                (setFormat ? false : archive?.preserveRemaining) ?? false,
+              ),
+            );
+            if (setFormat) {
+              specs.push({ format: ['=', setFormat] });
+            }
+            return retroService.mutationContext.combine(specs);
+          },
+          {
+            before: async (retro) => {
+              if (!archive && !retroArchiveService.needArchive(retro)) {
+                return;
+              }
+              if (!retroArchiveService.canArchive(retro)) {
+                throw new HTTPError(400, { body: 'Nothing to archive' });
+              }
+              await retroArchiveService.createArchive(retroId, {
+                format: retro.format,
+                options: retro.options,
+                items: retro.items,
+              });
+              analyticsService.event(req, 'create archive');
+            },
+            events: [['archive']],
+          },
+        );
+        if (setFormat) {
+          analyticsService.event(req, 'switch format', { format: setFormat });
+        }
+      }
+
       if (change) {
-        await requireAuthScope('write').handleRequest(req, res);
-        const permission = retroService.getPermissions(getAuthScopes(req));
         await retroService.retroBroadcaster.update(retroId, change, {
-          permission,
+          permission: retroService.getPermissions(getAuthScopes(req)),
         });
         analyticsService.event(req, 'patch retro content');
       }

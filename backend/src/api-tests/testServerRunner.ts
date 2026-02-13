@@ -1,5 +1,5 @@
 import type { Server } from 'node:http';
-import { type WebListener } from 'web-listener';
+import type { WebListener } from 'web-listener';
 import type { TypedParameter } from 'lean-test';
 import { App, type TestHooks } from '../app';
 import type { TestLogger } from './TestLogger';

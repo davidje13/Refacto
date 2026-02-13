@@ -99,7 +99,6 @@ export const RetroPage = memo(
           <ArchivePopup
             retroToken={retroAuth.retroToken}
             retro={retro}
-            retroDispatch={retroDispatch}
             isOpen={canArchive && archivePopupVisible.value}
             onClose={archivePopupVisible.setFalse}
           />

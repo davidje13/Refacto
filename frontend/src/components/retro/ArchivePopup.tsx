@@ -4,28 +4,22 @@ import { Popup } from '../common/Popup';
 import { Alert } from '../common/Alert';
 import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
-import { archiveService } from '../../api/api';
-import type { RetroDispatch } from '../../api/RetroTracker';
-import { clearCovered } from '../../actions/retro';
+import { retroService } from '../../api/api';
 import './ArchivePopup.css';
 
 interface PropsT {
   retroToken: string;
   retro: Retro;
-  retroDispatch: RetroDispatch;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const ArchivePopup = memo(
-  ({ retroToken, retro, retroDispatch, isOpen, onClose }: PropsT) => {
+  ({ retroToken, retro, isOpen, onClose }: PropsT) => {
     const [preserveRemaining, setPreserveRemaining] = useState(false);
     const [performArchive, sending, error, resetError] = useSubmissionCallback(
       async () => {
-        await archiveService.create({ retro, retroToken });
-        retroDispatch?.(clearCovered(preserveRemaining), {
-          events: [['archive']],
-        });
+        await retroService.archive(retro.id, retroToken, preserveRemaining);
         onClose();
       },
     );
@@ -36,9 +30,9 @@ export const ArchivePopup = memo(
       }
     }, [isOpen]);
 
-    const hasRemainingItems = retro.items.some(
-      (item) => item.category !== 'action' && !item.doneTime,
-    );
+    const hasRemainingItems =
+      retro.format === 'mood' &&
+      retro.items.some((item) => item.category !== 'action' && !item.doneTime);
 
     return (
       <Popup

@@ -29,6 +29,14 @@ export class RetroArchiveService {
     );
   }
 
+  canArchive(retro: RetroData) {
+    return retro.items.length > 0;
+  }
+
+  needArchive(retro: RetroData) {
+    return retro.items.some((item) => item.category !== 'action');
+  }
+
   async createArchive(
     retroId: string,
     data: RetroData,

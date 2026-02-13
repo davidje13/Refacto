@@ -1,4 +1,5 @@
 import request from 'superwstest';
+import { makeRetroItem } from '../shared/api-entities';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import {
@@ -238,24 +239,18 @@ describe('API retros', () => {
       await hooks.retroService.retroBroadcaster.update(retroId, {
         items: [
           'push',
-          {
+          makeRetroItem({
             id: '00000000-0000-0000-0000-000000000001',
             category: 'happy',
             created: 946684800000,
             message: 'A good thing',
-            attachment: null,
-            votes: 0,
-            doneTime: 0,
-          },
-          {
+          }),
+          makeRetroItem({
             id: '00000000-0000-0000-0000-000000000002',
             category: 'action',
             created: 946684800000,
             message: 'An action',
-            attachment: null,
-            votes: 0,
-            doneTime: 0,
-          },
+          }),
         ],
       });
 
@@ -483,6 +478,106 @@ describe('API retros', () => {
       });
     });
 
+    describe('with archive', () => {
+      it('archives the current retro', async (props) => {
+        const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+        const testItemDone = makeRetroItem({ id: 'done', doneTime: 1 });
+        const testItemNotDone = makeRetroItem({ id: 'not-done', doneTime: 0 });
+        await hooks.retroService.retroBroadcaster.update(retroId, {
+          items: ['push', testItemDone, testItemNotDone],
+        });
+
+        await request(server)
+          .patch(`/api/retros/${retroId}`)
+          .send({ archive: {} })
+          .set('Authorization', `Bearer ${retroToken}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/);
+
+        const retro = await hooks.retroService.getRetro(retroId);
+        expect(retro!.items).equals([]);
+
+        const archives = await fromAsync(
+          hooks.retroArchiveService.getRetroArchiveList(retroId),
+        );
+        expect(archives).hasLength(1);
+        expect(archives[0]!.items).equals([testItemDone, testItemNotDone]);
+      });
+
+      it('preserves items if requested', async (props) => {
+        const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+        const testItemDone = makeRetroItem({ id: 'done', doneTime: 1 });
+        const testItemNotDone = makeRetroItem({ id: 'not-done', doneTime: 0 });
+        await hooks.retroService.retroBroadcaster.update(retroId, {
+          items: ['push', testItemDone, testItemNotDone],
+        });
+
+        await request(server)
+          .patch(`/api/retros/${retroId}`)
+          .send({ archive: { preserveRemaining: true } })
+          .set('Authorization', `Bearer ${retroToken}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/);
+
+        const retro = await hooks.retroService.getRetro(retroId);
+        expect(retro!.items).equals([testItemNotDone]);
+
+        const archives = await fromAsync(
+          hooks.retroArchiveService.getRetroArchiveList(retroId),
+        );
+        expect(archives).hasLength(1);
+        expect(archives[0]!.items).equals([testItemDone, testItemNotDone]);
+      });
+    });
+
+    describe('with new format', () => {
+      it('changes the retro format', async (props) => {
+        const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+        await request(server)
+          .patch(`/api/retros/${retroId}`)
+          .send({ setFormat: 'other' })
+          .set('Authorization', `Bearer ${retroToken}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/);
+
+        const retro = await hooks.retroService.getRetro(retroId);
+        expect(retro!.format).equals('other');
+
+        const archives = await fromAsync(
+          hooks.retroArchiveService.getRetroArchiveList(retroId),
+        );
+        expect(archives).hasLength(0);
+      });
+
+      it('archives the current retro if needed', async (props) => {
+        const { server, hooks, retroId, retroToken } = props.getTyped(PROPS);
+
+        const testItemDone = makeRetroItem({ id: 'done', doneTime: 1 });
+        const testItemNotDone = makeRetroItem({ id: 'not-done', doneTime: 0 });
+        await hooks.retroService.retroBroadcaster.update(retroId, {
+          items: ['push', testItemDone, testItemNotDone],
+        });
+
+        await request(server)
+          .patch(`/api/retros/${retroId}`)
+          .send({ setFormat: 'other' })
+          .set('Authorization', `Bearer ${retroToken}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/);
+
+        const retro = await hooks.retroService.getRetro(retroId);
+        expect(retro!.items).equals([]);
+
+        const archives = await fromAsync(
+          hooks.retroArchiveService.getRetroArchiveList(retroId),
+        );
+        expect(archives).hasLength(1);
+      });
+    });
+
     it('responds HTTP Unauthorized if no credentials are given', async (props) => {
       const { server, retroId } = props.getTyped(PROPS);
 
@@ -645,3 +740,12 @@ describe('delete not permitted', () => {
     expect(await hooks.retroService.getRetro(retroId)).not(toBeNull());
   });
 });
+
+// this can be swapped for Array.fromAsync once Node.js 20.x is out of support
+export async function fromAsync<T>(iterable: AsyncIterable<T>): Promise<T[]> {
+  const r: T[] = [];
+  for await (const item of iterable) {
+    r.push(item);
+  }
+  return r;
+}

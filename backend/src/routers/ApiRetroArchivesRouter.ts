@@ -42,12 +42,12 @@ export class ApiRetroArchivesRouter extends Router<
       if (!data.format) {
         throw new HTTPError(400, { body: 'No format given' });
       }
-      if (!data.items.length) {
-        throw new HTTPError(400, { body: 'No items given' });
+      if (!retroArchiveService.canArchive(data)) {
+        throw new HTTPError(400, { body: 'Nothing to archive' });
       }
       const id = await retroArchiveService.createArchive(retroId, data);
 
-      analyticsService.event(req, 'create archive');
+      analyticsService.event(req, 'create custom archive');
       return sendJSON(res, { id });
     });
 

@@ -87,19 +87,3 @@ export const isArchivable = (retro: Retro) => retro.items.length > 0;
 
 export const needArchive = (retro: Retro) =>
   retro.items.some((item) => item.category !== 'action');
-
-export const clearCovered = (preserveNotDone: boolean): Spec<Retro>[] => [
-  {
-    state: ['=', {}],
-    groupStates: ['=', {}],
-    items: [
-      'delete',
-      [
-        'all',
-        preserveNotDone
-          ? { doneTime: ['>', 0] }
-          : ['or', { category: ['!=', 'action'] }, { doneTime: ['>', 0] }],
-      ],
-    ],
-  },
-];

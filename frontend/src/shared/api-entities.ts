@@ -79,7 +79,6 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
     attachment: null,
     votes: 0,
     doneTime: 0,
-    group: undefined,
     ...details,
   };
 }

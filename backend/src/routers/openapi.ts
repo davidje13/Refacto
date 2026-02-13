@@ -432,6 +432,23 @@ export const openapi = Buffer.from(
                   minProperties: 1,
                   properties: {
                     change: { $ref: '#/components/schemas/ChangeSpec' },
+                    archive: {
+                      type: 'object',
+                      properties: {
+                        preserveRemaining: {
+                          type: 'boolean',
+                          description:
+                            'If `true`, any items which have not been marked as done will remain after the archive is created.',
+                        },
+                      },
+                      description:
+                        "If set, this creates an archive of the current retro content and clears it. Requires a retro token with 'write' access.",
+                    },
+                    setFormat: {
+                      type: 'string',
+                      description:
+                        "If set, this changes the retro format. If the current retro has any content, this will implicitly archive it before changing the format. Requires a retro token with 'write' access.",
+                    },
                     setPassword: {
                       type: 'object',
                       required: ['password', 'evictUsers'],

@@ -96,6 +96,22 @@ export class RetroService {
     return undefined;
   }
 
+  getArchiveSpec(retro: Retro, preserveRemaining: boolean): Spec<Retro> {
+    return {
+      state: ['=', {}],
+      groupStates: ['=', {}],
+      items: [
+        'delete',
+        [
+          'all',
+          retro.format === 'mood' && preserveRemaining
+            ? { doneTime: ['>', 0] }
+            : ['or', { category: ['!=', 'action'] }, { doneTime: ['>', 0] }],
+        ],
+      ],
+    };
+  }
+
   async getRetroIdForSlug(slug: string): Promise<string | null> {
     const retroData = await this.retroCollection
       .where('slug', slug)
@@ -161,5 +177,10 @@ export class RetroService {
   }
 }
 
-const LOCKED_FIELDS: (keyof Retro)[] = ['id', 'ownerId', 'scheduledDelete'];
+const LOCKED_FIELDS: (keyof Retro)[] = [
+  'id',
+  'ownerId',
+  'format',
+  'scheduledDelete',
+];
 const MANAGER_FIELDS: (keyof Retro)[] = ['slug'];

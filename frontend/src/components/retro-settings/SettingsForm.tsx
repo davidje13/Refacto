@@ -7,9 +7,8 @@ import {
   retroAuthService,
   retroAuthTracker,
   userDataTracker,
-  archiveService,
 } from '../../api/api';
-import { clearCovered, needArchive } from '../../actions/retro';
+import { needArchive } from '../../actions/retro';
 import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';
 import { RetroFormatPicker } from '../retro-create/RetroFormatPicker';
@@ -61,21 +60,13 @@ export const SettingsForm = memo(
         );
         await updateRetroToken(retro.id, newPassword);
       }
+      if (format !== retro.format) {
+        await retroService.setFormat(retro.id, retroAuth.retroToken, format);
+      }
       const specs: RetroDispatchSpec = [];
       const events: ChangeEvent[] = [];
       if (name !== retro.name) {
         specs.push({ name: ['=', name] });
-      }
-      if (format !== retro.format) {
-        if (needArchive(retro)) {
-          await archiveService.create({
-            retro,
-            retroToken: retroAuth.retroToken,
-          });
-          specs.push(...clearCovered(false));
-          events.push(['archive']);
-        }
-        specs.push({ format: ['=', format] });
       }
       if (retroAuth.scopes.includes('manage') && slug !== retro.slug) {
         specs.push({ slug: ['=', slug] });
