@@ -7,6 +7,7 @@ import { Header, type HeaderLinks } from '../common/Header';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import { useBoolean } from '../../hooks/useBoolean';
 import { OPTIONS } from '../../helpers/optionManager';
+import { getRetroFormatDetails } from '../retro-formats/formats';
 import { RetroFormat } from '../retro-formats/RetroFormat';
 import { InvitePopup } from './InvitePopup';
 import './RetroPage.css';
@@ -36,8 +37,10 @@ export const RetroPage = memo(
     const invitePopupVisible = useBoolean(false);
     const basePath = `/retros/${encodeURIComponent(retro.slug)}`;
 
-    const canFacilitate =
-      !smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options);
+    const format = getRetroFormatDetails(retro.format);
+    const showCreateArchive =
+      format.showCreateArchive &&
+      (!smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options));
 
     const canArchive = Boolean(
       retroDispatch && retro && isArchivable(retro) && !group,
@@ -59,7 +62,7 @@ export const RetroPage = memo(
     const links: HeaderLinks = [
       onInvite ? { label: 'Invite', action: onInvite } : null,
       settingsLink ? { label: 'Settings', action: settingsLink } : null,
-      onArchive && canFacilitate
+      onArchive && showCreateArchive
         ? { label: 'Create Archive', action: onArchive }
         : null,
       {

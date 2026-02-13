@@ -24,6 +24,7 @@ export interface RetroFormatDetails {
   component: ComponentType<RetroFormatProps>;
   label: string;
   icon: ComponentType<SVGAttributes<SVGSVGElement> & { title?: string }>;
+  showCreateArchive: boolean;
 }
 
 export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
@@ -35,6 +36,7 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
       ),
       label: '3 Column',
       icon: MoodIcon,
+      showCreateArchive: true,
     },
   ],
 ]);
@@ -43,6 +45,7 @@ const UNKNOWN: RetroFormatDetails = {
   component: UnknownRetro,
   label: 'Unknown',
   icon: UnknownIcon,
+  showCreateArchive: false,
 };
 
 export const getRetroFormatDetails = (format: string) =>
