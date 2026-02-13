@@ -1,11 +1,8 @@
 .popup-add-readonly-url.global-form {
-  width: auto;
-  max-width: 600px;
+  width: 800px;
 }
 
 .popup-add-readonly-url {
-  max-width: min(calc(100vw - 64px), 800px);
-
   & p {
     margin: 16px 0;
   }

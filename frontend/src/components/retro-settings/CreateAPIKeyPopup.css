@@ -1,11 +1,4 @@
-.popup-add-api-key.global-form {
-  width: auto;
-  max-width: 600px;
-}
-
 .popup-add-api-key {
-  max-width: calc(100vw - 64px);
-
   & p {
     margin: 16px 0;
   }

@@ -22,9 +22,10 @@
 
 .popup-content {
   background: var(--modal-back);
-  padding: 16px 32px;
+  padding: 16px 8px;
   box-shadow: 0 10px 30px var(--shadow-2);
   transform: scale(0.97);
+  max-width: none;
 
   & h1 {
     font-weight: bolder;
@@ -36,6 +37,10 @@
       /* still visible to screen readers due to aria-labelledby */
       display: none;
     }
+  }
+
+  .global-form {
+    max-width: calc(100vw - 16px);
   }
 }
 
@@ -63,5 +68,15 @@
   .popup-content,
   .popup-content[open] {
     transform: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .popup-content {
+    padding: 16px 32px;
+
+    .global-form {
+      max-width: calc(100vw - 64px);
+    }
   }
 }
