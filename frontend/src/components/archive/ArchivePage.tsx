@@ -43,6 +43,7 @@ export const ArchivePage = memo(
             retroFormat={archive.format}
             retroOptions={archive.options}
             retroItems={archive.items}
+            retroHistory={archive.history}
             retroState={{}}
             group={group}
             archive={true}

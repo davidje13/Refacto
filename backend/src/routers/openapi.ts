@@ -688,7 +688,16 @@ export const openapi = Buffer.from(
             required: true,
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/RetroData' },
+                schema: {
+                  type: 'object',
+                  required: ['format', 'options', 'items', 'history'],
+                  properties: {
+                    format: { $ref: '#/components/schemas/RetroFormat' },
+                    options: { $ref: '#/components/schemas/RetroOptions' },
+                    items: { $ref: '#/components/schemas/RetroItems' },
+                    history: { $ref: '#/components/schemas/RetroHistory' },
+                  },
+                },
               },
             },
           },
@@ -751,6 +760,7 @@ export const openapi = Buffer.from(
                       'format',
                       'options',
                       'items',
+                      'history',
                       'created',
                       'imported',
                     ],
@@ -769,6 +779,7 @@ export const openapi = Buffer.from(
                       format: { $ref: '#/components/schemas/RetroFormat' },
                       options: { $ref: '#/components/schemas/RetroOptions' },
                       items: { $ref: '#/components/schemas/RetroItems' },
+                      history: { $ref: '#/components/schemas/RetroHistory' },
                       created: {
                         type: 'integer',
                         format: 'unix-millis',
@@ -1092,7 +1103,8 @@ export const openapi = Buffer.from(
           example: 'My Retro',
         },
         RetroFormat: {
-          enum: ['mood'],
+          enum: ['health', 'mood'],
+          example: 'mood',
           description: 'The type of the retro.',
         },
         RetroOptions: {
@@ -1133,7 +1145,7 @@ export const openapi = Buffer.from(
           },
           additionalProperties: {},
           description:
-            'Retro-specific settings. The contents of this structure may change in arbitrary ways in future versions.',
+            'Retro-specific settings. The contents of this structure may change in arbitrary ways in future versions. This data is encrypted in the database.',
         },
         RetroTokenScope: {
           enum: ['read', 'readArchives', 'write', 'manage'],
@@ -1245,6 +1257,8 @@ export const openapi = Buffer.from(
             'format',
             'options',
             'items',
+            'history',
+            'scheduledDelete',
           ],
           properties: {
             id: { $ref: '#/components/schemas/RetroID' },
@@ -1267,6 +1281,7 @@ export const openapi = Buffer.from(
             format: { $ref: '#/components/schemas/RetroFormat' },
             options: { $ref: '#/components/schemas/RetroOptions' },
             items: { $ref: '#/components/schemas/RetroItems' },
+            history: { $ref: '#/components/schemas/RetroHistory' },
             scheduledDelete: {
               type: 'integer',
               format: 'unix-millis',
@@ -1296,15 +1311,6 @@ export const openapi = Buffer.from(
           additionalProperties: {},
           description:
             'Arbitrary retro state (such as the ID of the currently selected item). The contents of this structure may change in arbitrary ways in future versions.',
-        },
-        RetroData: {
-          type: 'object',
-          required: ['format', 'options', 'items'],
-          properties: {
-            format: { $ref: '#/components/schemas/RetroFormat' },
-            options: { $ref: '#/components/schemas/RetroOptions' },
-            items: { $ref: '#/components/schemas/RetroItems' },
-          },
         },
         RetroItems: {
           type: 'array',
@@ -1367,6 +1373,31 @@ export const openapi = Buffer.from(
           description:
             'A list of items representing the content of the retro and any action items. This data is encrypted in the database.',
         },
+        RetroHistory: {
+          type: 'array',
+          items: {
+            type: 'object',
+            title: 'Retro History Item',
+            required: ['time', 'format', 'data'],
+            properties: {
+              time: {
+                type: 'integer',
+                format: 'unix-millis',
+                description:
+                  'The point in time which this history item represents.',
+              },
+              format: { $ref: '#/components/schemas/RetroFormat' },
+              data: {
+                type: 'object',
+                additionalProperties: {},
+                description:
+                  'Arbitrary data. The interpretation of this data depends on the `format`.',
+              },
+            },
+          },
+          description:
+            'A list of history items representing past data. Unlike archives, this is live data and can be changed in any way (e.g. a user could amend past data). Unlike retro items, this data is not cleared during archiving. This data is encrypted in the database.',
+        },
         RetroExport: {
           type: 'object',
           required: ['url', 'name', 'current'],
@@ -1405,6 +1436,7 @@ export const openapi = Buffer.from(
             format: { $ref: '#/components/schemas/RetroFormat' },
             options: { $ref: '#/components/schemas/RetroOptions' },
             items: { $ref: '#/components/schemas/RetroExportItems' },
+            history: { $ref: '#/components/schemas/RetroExportHistory' },
           },
         },
         RetroExportItems: {
@@ -1447,6 +1479,30 @@ export const openapi = Buffer.from(
           },
           description:
             'A list of items representing the content of the retro and any action items.',
+        },
+        RetroExportHistory: {
+          type: 'array',
+          items: {
+            type: 'object',
+            title: 'Exported Retro History Item',
+            required: ['time', 'format', 'data'],
+            properties: {
+              time: {
+                type: 'string',
+                format: 'date-time',
+                description:
+                  'The point in time which this history item represents.',
+              },
+              format: { $ref: '#/components/schemas/RetroFormat' },
+              data: {
+                type: 'object',
+                additionalProperties: {},
+                description:
+                  'Arbitrary data. The interpretation of this data depends on the `format`.',
+              },
+            },
+          },
+          description: 'A list of history items representing past data.',
         },
       },
     },

@@ -5,6 +5,7 @@ import type {
   RetroItem,
   RetroItemAttachment,
   RetroArchive,
+  RetroHistoryItem,
 } from '../shared/api-entities';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
@@ -21,14 +22,21 @@ export interface RetroItemJsonExport {
   group?: string | undefined;
   message: string;
   votes: number;
-  completed?: string;
-  attachment?: RetroItemAttachmentJsonExport;
+  completed?: string | undefined;
+  attachment?: RetroItemAttachmentJsonExport | undefined;
+}
+
+export interface RetroHistoryItemJsonExport {
+  time: string;
+  format: string;
+  data: Record<string, unknown>;
 }
 
 export interface RetroDataJsonExport {
   format: string;
   options: Record<string, unknown>;
   items: RetroItemJsonExport[];
+  history?: RetroHistoryItemJsonExport[] | undefined;
 }
 
 export interface RetroArchiveJsonExport {
@@ -40,7 +48,7 @@ export interface RetroJsonExport {
   url: string;
   name: string;
   current: RetroDataJsonExport;
-  archives?: AsyncIterable<RetroArchiveJsonExport>;
+  archives?: AsyncIterable<RetroArchiveJsonExport> | undefined;
 }
 
 function exportTimestamp(timestamp: number): string {
@@ -104,11 +112,32 @@ function importRetroItem(item: RetroItemJsonExport): RetroItem {
   };
 }
 
+function exportRetroHistoryItem(
+  item: RetroHistoryItem,
+): RetroHistoryItemJsonExport {
+  return {
+    time: exportTimestamp(item.time),
+    format: item.format,
+    data: item.data,
+  };
+}
+
+function importRetroHistoryItem(
+  item: RetroHistoryItemJsonExport,
+): RetroHistoryItem {
+  return {
+    time: importTimestamp(item.time),
+    format: item.format,
+    data: item.data,
+  };
+}
+
 function exportRetroData(archive: RetroData): RetroDataJsonExport {
   return {
     format: archive.format,
     options: archive.options,
     items: archive.items.map(exportRetroItem),
+    history: archive.history.map(exportRetroHistoryItem),
   };
 }
 
@@ -117,6 +146,7 @@ export function importRetroDataJson(archive: RetroDataJsonExport): RetroData {
     format: archive.format,
     options: archive.options,
     items: archive.items.map(importRetroItem),
+    history: archive.history?.map(importRetroHistoryItem) ?? [],
   };
 }
 

@@ -31,6 +31,7 @@ export const RetroPreviewPage = memo(() => {
             retroOptions={state.options}
             retroItems={state.items}
             retroState={state.state}
+            retroHistory={state.history}
             dispatch={MOCK_DISPATCH}
             archive={false}
             archiveTime={state.simulatedTime}
@@ -178,6 +179,7 @@ const readRetro = (state: Partial<State>): State => {
     scheduledDelete: 0,
     options: {},
     items: [],
+    history: [],
     localState: {},
     frames: [],
     loopDelay: 10000,

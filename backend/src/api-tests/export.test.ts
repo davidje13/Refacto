@@ -31,6 +31,7 @@ describe('API retros', () => {
           message: 'My item',
         }),
       ],
+      history: [],
     });
 
     return { run: app, hooks, retroId, retroToken };
@@ -107,6 +108,7 @@ describe('API retros', () => {
             message: 'Nope',
           }),
         ],
+        history: [],
       });
 
       const response = await request(server)

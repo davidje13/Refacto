@@ -49,6 +49,15 @@ export const json = {
       return submap(source, path);
     },
 
+  fallback:
+    <T>(submap: Mapper<T>, fallback: T) =>
+    (source: unknown, path = ''): T => {
+      if (source === undefined) {
+        return fallback;
+      }
+      return submap(source, path);
+    },
+
   oneOf:
     <Ts extends unknown[]>(...options: ObjectMapper<Ts>) =>
     (source: unknown, path = ''): Ts[number] => {

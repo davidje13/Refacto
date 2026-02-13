@@ -4,6 +4,7 @@ import type {
   RetroDataJsonExport,
   RetroItemAttachmentJsonExport,
   RetroArchiveJsonExport,
+  RetroHistoryItemJsonExport,
 } from '../export/RetroJsonExport';
 import { json, ValidationError } from './json';
 
@@ -33,10 +34,18 @@ export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
   ),
 });
 
-export const extractExportedRetroData = json.object<RetroDataJsonExport>({
+export const extractExportedRetroHistoryItem =
+  json.exactObject<RetroHistoryItemJsonExport>({
+    time: json.string,
+    format: json.string,
+    data: json.record(json.any),
+  });
+
+export const extractExportedRetroData = json.object<Sync<RetroDataJsonExport>>({
   format: json.string,
   options: json.record(json.any),
   items: json.array(extractExportedRetroItem),
+  history: json.optional(json.array(extractExportedRetroHistoryItem)),
 });
 
 type Sync<T> = {
@@ -61,7 +70,7 @@ export const extractExportedRetro = json.object<Sync<RetroJsonExport>>({
   current: extractExportedRetroData,
   archives: json.optional(
     json.array(
-      json.object<RetroArchiveJsonExport>({
+      json.object<Sync<RetroArchiveJsonExport>>({
         created: jsonIsoDate,
         snapshot: extractExportedRetroData,
       }),

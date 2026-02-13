@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import listCommands from 'json-immutability-helper/commands/list';
 import { context, type Context, type Spec } from 'json-immutability-helper';
 import {
+  cache,
   DuplicateError,
   encryptByRecordWithMasterKey,
   migrate,
@@ -47,18 +48,27 @@ export class RetroService {
     const enc = encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('retro_key'),
-      { keyCache: { capacity: 128 } },
+      { keyCache: { capacity: 128 }, allowRaw: true },
     );
 
-    this.retroCollection = migrate(
-      { groupStates: (v) => v || {}, scheduledDelete: (v) => v || 0 },
-      enc<Retro>()(
-        ['items'],
-        db.getCollection<Wrapped<Retro, 'items', Buffer>>('retro', {
-          slug: { unique: true },
-          ownerId: {},
-        }),
+    this.retroCollection = cache(
+      migrate(
+        {
+          groupStates: (v) => v || {},
+          history: (v) => v || [],
+          scheduledDelete: (v) => v || 0,
+        },
+        enc<Retro>()(
+          ['options', 'items', 'history'],
+          db.getCollection<
+            Wrapped<Retro, 'options' | 'items' | 'history', Buffer>
+          >('retro', {
+            slug: { unique: true },
+            ownerId: {},
+          }),
+        ),
       ),
+      { capacity: 32, maxAge: 10000 },
     );
 
     const model = new CollectionStorageModel(
@@ -142,6 +152,7 @@ export class RetroService {
       format,
       options: {},
       items: [],
+      history: [],
       scheduledDelete: 0,
     });
 

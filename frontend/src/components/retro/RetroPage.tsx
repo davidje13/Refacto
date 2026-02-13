@@ -87,6 +87,7 @@ export const RetroPage = memo(
           retroOptions={retro.options}
           retroItems={retro.items}
           retroState={getState(group, retro)}
+          retroHistory={retro.history}
           group={group}
           dispatch={retroDispatch ?? undefined}
           onArchive={onArchive}

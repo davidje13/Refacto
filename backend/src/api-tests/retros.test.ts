@@ -94,6 +94,7 @@ describe('API retros', () => {
       expect(stored?.name).toEqual('New Name');
       expect(stored?.format).toEqual('other');
       expect(stored?.items).toEqual([]);
+      expect(stored?.history).toEqual([]);
       expect(stored?.scheduledDelete).toEqual(0);
     });
 
@@ -229,6 +230,7 @@ describe('API retros', () => {
         format: 'mood',
         options: {},
         items: [],
+        history: [],
         scheduledDelete: 0,
       });
     });

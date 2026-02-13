@@ -18,12 +18,14 @@ export class RetroArchiveService {
     const enc = encryptByRecordWithMasterKey<string>(
       encryptionKey,
       db.getCollection('archive_key'),
-      { keyCache: { capacity: 128 } },
+      { keyCache: { capacity: 128 }, allowRaw: true },
     );
 
     this.archiveCollection = enc<RetroArchive>()(
-      ['items'],
-      db.getCollection<Wrapped<RetroArchive, 'items', Buffer>>('archive', {
+      ['options', 'items', 'history'],
+      db.getCollection<
+        Wrapped<RetroArchive, 'options' | 'items' | 'history', Buffer>
+      >('archive', {
         retroId: {},
       }),
     );
@@ -53,6 +55,7 @@ export class RetroArchiveService {
       format: data.format,
       options: data.options,
       items: data.items,
+      history: data.history,
     });
 
     return id;

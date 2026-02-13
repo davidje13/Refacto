@@ -10,6 +10,7 @@ describe('MoodRetro', () => {
         retroOptions={{}}
         retroItems={[]}
         retroState={{}}
+        retroHistory={[]}
         archive={false}
         dispatch={nullDispatch}
       />,

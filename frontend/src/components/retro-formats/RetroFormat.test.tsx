@@ -23,6 +23,7 @@ describe('Retro', () => {
         retroOptions={{}}
         retroItems={retroItems}
         retroState={retroState}
+        retroHistory={[]}
       />,
     );
 
@@ -39,6 +40,7 @@ describe('Retro', () => {
         retroOptions={{}}
         retroItems={[]}
         retroState={{}}
+        retroHistory={[]}
       />,
     );
 

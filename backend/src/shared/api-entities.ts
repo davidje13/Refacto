@@ -83,10 +83,17 @@ export function makeRetroItem(details: Partial<RetroItem> = {}): RetroItem {
   };
 }
 
+export interface RetroHistoryItem {
+  time: number;
+  format: string;
+  data: Record<string, unknown>;
+}
+
 export interface RetroData {
   format: string;
   options: Record<string, unknown>;
   items: RetroItem[];
+  history: RetroHistoryItem[];
 }
 
 type AnyState = Record<string, unknown>;
@@ -114,6 +121,7 @@ export function makeRetro(details: Partial<Retro> = {}): Retro {
     format: '',
     options: {},
     items: [],
+    history: [],
     scheduledDelete: 0,
     ...details,
   };
@@ -142,6 +150,7 @@ export function makeRetroArchive(
     format: '',
     options: {},
     items: [],
+    history: [],
     ...details,
   };
 }

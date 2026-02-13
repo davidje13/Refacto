@@ -3,6 +3,7 @@ import type {
   RetroItemAttachment,
   RetroData,
   Retro,
+  RetroHistoryItem,
 } from '../shared/api-entities';
 import { json } from './json';
 
@@ -23,10 +24,17 @@ export const extractRetroItem = json.exactObject<RetroItem>({
   group: json.optional(json.string),
 });
 
+export const extractRetroHistoryItem = json.exactObject<RetroHistoryItem>({
+  time: json.number,
+  format: json.string,
+  data: json.record(json.any),
+});
+
 export const extractRetroData = json.exactObject<RetroData>({
   format: json.string,
   options: json.record(json.any),
   items: json.array(extractRetroItem),
+  history: json.fallback(json.array(extractRetroHistoryItem), []), // temporarily allowed to be omitted for compatibility with old frontend
 });
 
 export const extractRetro = json.exactObject<Retro>({
@@ -39,5 +47,6 @@ export const extractRetro = json.exactObject<Retro>({
   format: json.string,
   options: json.record(json.any),
   items: json.array(extractRetroItem),
+  history: json.array(extractRetroHistoryItem),
   scheduledDelete: json.number,
 });

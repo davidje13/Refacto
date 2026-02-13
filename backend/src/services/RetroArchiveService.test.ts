@@ -13,11 +13,13 @@ describe('RetroArchiveService', () => {
       format: 'foo',
       options: { a: 'x' },
       items: [],
+      history: [],
     });
     await service.createArchive('my-retro-id', {
       format: 'bar',
       options: {},
       items: [],
+      history: [],
     });
   });
 

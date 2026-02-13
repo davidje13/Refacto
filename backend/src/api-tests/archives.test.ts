@@ -20,6 +20,7 @@ describe('API retro archives', () => {
       format: 'mood',
       options: {},
       items: [makeRetroItem({ id: 'z9' })],
+      history: [],
     });
 
     return { run: app, hooks, retroId, retroToken, archiveId };
@@ -78,6 +79,7 @@ describe('API retro archives', () => {
           format: 'foo',
           options: { opt: 'yes' },
           items: [makeRetroItem({ id: 'foo' })],
+          history: [],
         })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200)
@@ -98,7 +100,7 @@ describe('API retro archives', () => {
 
       await request(server)
         .post(`/api/retros/${retroId}/archives`)
-        .send({ format: 'foo', options: {}, items: [] })
+        .send({ format: 'foo', options: {}, items: [], history: [] })
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(400);
     });
@@ -178,7 +180,7 @@ describe('API retro archives', () => {
       const other = await createRetro(hooks);
       const otherArchiveId = await hooks.retroArchiveService.createArchive(
         other.retroId,
-        { format: 'mood', options: {}, items: [] },
+        { format: 'mood', options: {}, items: [], history: [] },
       );
 
       await request(server)

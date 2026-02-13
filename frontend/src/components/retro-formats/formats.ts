@@ -1,7 +1,7 @@
 import { lazy, type ComponentType, type SVGAttributes } from 'react';
 import MoodIcon from '../../../resources/icons/mood.svg';
 import UnknownIcon from '../../../resources/icons/unknown.svg';
-import type { RetroItem } from '../../shared/api-entities';
+import type { RetroHistoryItem, RetroItem } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
@@ -10,6 +10,7 @@ export interface RetroFormatProps<StateT = Record<string, unknown>> {
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: StateT;
+  retroHistory: RetroHistoryItem[];
   group?: string | undefined;
   dispatch?: RetroDispatch | undefined;
   onArchive?: (() => void) | undefined;
