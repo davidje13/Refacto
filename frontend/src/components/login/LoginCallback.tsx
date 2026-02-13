@@ -2,7 +2,7 @@ import { useState, useEffect, memo } from 'react';
 import { useLocation } from 'wouter';
 import { handleLogin } from './handleLogin';
 import { useEvent } from '../../hooks/useEvent';
-import { sessionStore } from '../../helpers/storage';
+import { shortTermStore } from '../../helpers/storage';
 import { Header } from '../common/Header';
 
 interface PropsT {
@@ -19,13 +19,13 @@ export const LoginCallback = memo(({ service }: PropsT) => {
     const ac = new AbortController();
     const { search, hash } = document.location;
     const redirectUri = document.location.href.split('?')[0]!;
-    const localState = sessionStore.getItem('login-state');
+    const localState = shortTermStore.getItem('login-state');
     handleLogin(service, localState, { search, hash, redirectUri }, ac.signal)
       .then((redirect) => {
         if (ac.signal.aborted) {
           return;
         }
-        sessionStore.removeItem('login-state');
+        shortTermStore.removeItem('login-state');
         if (
           new URL(redirect, document.location.href).host !==
           document.location.host
@@ -40,13 +40,13 @@ export const LoginCallback = memo(({ service }: PropsT) => {
           return;
         }
         if (!(err instanceof Error)) {
-          sessionStore.removeItem('login-state');
+          shortTermStore.removeItem('login-state');
           setError(String(err));
         } else if (err.message === 'unrecognised login details') {
           // GitLab shows a bare link to the /sso/login URL on the confirmation page
           stableSetLocation('/', { replace: true });
         } else {
-          sessionStore.removeItem('login-state');
+          shortTermStore.removeItem('login-state');
           setError(err.message);
         }
       });

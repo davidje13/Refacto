@@ -71,16 +71,16 @@ function deleteCookie(key: string) {
 const getLocalStorage = () => window.localStorage;
 const getSessionStorage = () => window.sessionStorage;
 
-export const sessionStore = {
+export const shortTermStore = {
   setItem(key: string, value: string): boolean {
+    // Ideally we would store the value in sessionStorage alone, but this can be
+    // unreliable in some cases, so we store the value in multiple ways in the hope
+    // that at least one will survive. Once we are done, removeItem will clear all
+    // the data.
     let any = false;
-    // sessionStorage is best option for security and privacy
-    if (setStorage(getSessionStorage, key, value)) {
-      any = true;
-    }
-    // if sessionStorage fails for any reason, throw everything at the wall and see what sticks:
+    any = setStorage(getSessionStorage, key, value) || any;
     any = setStorage(getLocalStorage, key, value) || any; // do not short-circuit
-    any = setSessionCookie(key, value) || any;
+    any = setSessionCookie(key, value) || any; // do not short-circuit
     return any;
   },
 
@@ -99,7 +99,7 @@ export const sessionStore = {
   },
 };
 
-export const store = {
+export const localStore = {
   setItem(key: string, value: string): boolean {
     return setStorage(getLocalStorage, key, value);
   },

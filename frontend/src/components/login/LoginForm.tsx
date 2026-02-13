@@ -1,11 +1,11 @@
 import { memo, useLayoutEffect } from 'react';
 import { useConfig } from '../../hooks/data/useConfig';
 import { digest, randomBytes, toB64 } from '../../helpers/crypto';
-import { sessionStore } from '../../helpers/storage';
+import { shortTermStore } from '../../helpers/storage';
 import './LoginForm.css';
 
 function storeState(state: unknown) {
-  if (!sessionStore.setItem('login-state', JSON.stringify(state))) {
+  if (!shortTermStore.setItem('login-state', JSON.stringify(state))) {
     window.alert(
       'You must enable session cookies or storage in your browser settings to log in',
     );
