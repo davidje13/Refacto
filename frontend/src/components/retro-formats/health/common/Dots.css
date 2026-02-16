@@ -1,0 +1,12 @@
+.vote-dots {
+  display: block;
+  white-space: normal;
+  word-wrap: anywhere;
+  font-size: 6px;
+  line-height: 8px;
+  text-align: center;
+}
+
+.vote-dots.n0 {
+  color: var(--pale-text-on-white);
+}

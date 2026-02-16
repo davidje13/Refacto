@@ -1,0 +1,56 @@
+.trendline {
+  display: block;
+  overflow: visible;
+
+  .line {
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.2;
+
+    &.good {
+      stroke: var(--green-back);
+    }
+    &.mid {
+      stroke: var(--yellow-back);
+    }
+    &.bad {
+      stroke: var(--red-back);
+    }
+  }
+
+  .average {
+    fill: none;
+    stroke-width: 2.5px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .pointBack {
+    stroke: #333333;
+    stroke-width: 4.5px;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .point {
+    stroke-width: 3.5px;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  stop.good {
+    stop-color: var(--green-back);
+  }
+  stop.mid {
+    stop-color: var(--yellow-back);
+  }
+  stop.bad {
+    stop-color: var(--red-back);
+  }
+}
+
+.trendline-na {
+  display: block;
+  padding: 0 8px;
+  color: var(--pale-text-on-white);
+  font-size: 0.8em;
+}

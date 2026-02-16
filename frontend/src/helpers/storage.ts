@@ -99,6 +99,20 @@ export const shortTermStore = {
   },
 };
 
+export const sessionStore = {
+  setItem(key: string, value: string): boolean {
+    return setStorage(getSessionStorage, key, value);
+  },
+
+  getItem(key: string): string | null {
+    return getStorage(getSessionStorage, key);
+  },
+
+  removeItem(key: string) {
+    deleteStorage(getSessionStorage, key);
+  },
+};
+
 export const localStore = {
   setItem(key: string, value: string): boolean {
     return setStorage(getLocalStorage, key, value);

@@ -1,4 +1,5 @@
 import { lazy, type ComponentType, type SVGAttributes } from 'react';
+import HealthIcon from '../../../resources/icons/health.svg';
 import MoodIcon from '../../../resources/icons/mood.svg';
 import UnknownIcon from '../../../resources/icons/unknown.svg';
 import type { RetroHistoryItem, RetroItem } from '../../shared/api-entities';
@@ -38,6 +39,19 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
       label: '3 Column',
       icon: MoodIcon,
       showCreateArchive: true,
+    },
+  ],
+  [
+    'health',
+    {
+      component: lazy(() =>
+        import('./health/HealthRetro').then((m) => ({
+          default: m.HealthRetro,
+        })),
+      ),
+      label: 'Health Check',
+      icon: HealthIcon,
+      showCreateArchive: false,
     },
   ],
 ]);

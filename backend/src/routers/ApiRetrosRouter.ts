@@ -310,7 +310,9 @@ export class ApiRetrosRouter extends Router {
                 format: retro.format,
                 options: retro.options,
                 items: retro.items,
-                history: retro.history,
+                history: retro.history.filter(
+                  (item) => item.format === retro.format,
+                ),
               });
               analyticsService.event(req, 'create archive');
             },

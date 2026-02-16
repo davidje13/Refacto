@@ -1,0 +1,161 @@
+.health-discussion-overview {
+  padding-bottom: 64px;
+
+  .back-intro {
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+    color: var(--pale-text-on-white);
+
+    &::before {
+      content: '\2190';
+      padding: 0 4px;
+    }
+  }
+
+  & table {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 800px;
+    border-spacing: 0 8px;
+    margin: 16px auto;
+  }
+
+  & tbody tr {
+    background: var(--primary-back);
+    cursor: pointer;
+    transition:
+      transform 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out;
+
+    &:hover {
+      transform: translate(0, -1px);
+      box-shadow: 0 1px 2px var(--shadow-1);
+    }
+  }
+
+  & th {
+    font-weight: bolder;
+    text-align: center;
+  }
+
+  & th,
+  & td {
+    padding: 8px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .q {
+    padding: 8px 4px 8px 16px;
+    width: 25%;
+    text-align: left;
+  }
+
+  & th.votes {
+    font-size: 2em;
+    line-height: 1;
+    padding: 0;
+  }
+
+  & td.votes {
+    &.good {
+      color: var(--green-text-on-white);
+    }
+    &.mid {
+      color: var(--yellow-text-on-white);
+    }
+    &.bad {
+      color: var(--red-text-on-white);
+    }
+  }
+
+  .t {
+    width: 90px;
+  }
+  td.t {
+    padding: 4px 8px;
+    background: var(--primary-back);
+    text-align: center;
+  }
+
+  .d {
+    width: 32px;
+    padding: 0;
+    color: var(--pale-text-on-white);
+    text-align: center;
+
+    & svg {
+      display: block;
+      width: 21px;
+      height: 21px;
+      margin: 0 auto;
+    }
+
+    &.n-2,
+    &.n-1 {
+      color: var(--red-text-on-white);
+    }
+
+    &.n2,
+    &.n1 {
+      color: var(--green-text-on-white);
+    }
+  }
+
+  .s {
+    width: 32px;
+    padding: 0 4px 0 0;
+  }
+
+  .answer-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    margin: 0 auto;
+
+    &.good {
+      color: var(--green-back);
+    }
+    &.mid {
+      color: var(--yellow-back);
+    }
+    &.bad {
+      color: var(--red-back);
+    }
+    &.skip {
+      color: var(--pale-text-on-white);
+    }
+  }
+
+  .expand {
+    width: 32px;
+
+    & button {
+      width: 24px;
+    }
+  }
+
+  .trendline {
+    width: 100%;
+    height: 30px;
+  }
+
+  .options {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 16px 0 0;
+    gap: 8px 16px;
+    justify-content: center;
+  }
+
+  @media (max-width: 620px) {
+    .t,
+    .expand {
+      display: none;
+    }
+  }
+}

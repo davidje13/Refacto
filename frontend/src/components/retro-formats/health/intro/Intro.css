@@ -1,0 +1,26 @@
+.health-intro {
+  & table {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 400px;
+    border-collapse: collapse;
+    margin: 16px auto 32px;
+
+    & th,
+    & td {
+      padding: 4px 8px;
+    }
+  }
+
+  .q {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .n {
+    width: 80px;
+    text-align: right;
+  }
+}

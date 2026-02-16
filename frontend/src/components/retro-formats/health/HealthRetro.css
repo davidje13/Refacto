@@ -1,0 +1,180 @@
+.retro-format-health {
+  display: grid;
+  align-content: stretch;
+  position: relative;
+  min-height: calc(100vh - 192px - 3rem);
+  padding: 16px 8px 0;
+  overflow: clip;
+  background: var(--beige-back);
+  --card-size-base: min(
+    max(3vw, 11px),
+    max(calc((100vh - 150px) * 0.03), 18px),
+    30px
+  );
+
+  .hold {
+    width: 100%;
+    max-width: 674px;
+    margin: 0 auto;
+
+    &:not(.health-questions) {
+      padding-bottom: 64px;
+    }
+  }
+
+  .tile {
+    position: relative;
+    box-sizing: border-box;
+    max-width: 674px;
+    margin: 0 auto;
+    background: var(--primary-back);
+    color: var(--primary-text);
+    text-align: center;
+    border-radius: 24px;
+    padding: 16px 32px;
+    box-shadow:
+      0 0 1px rgba(0, 0, 0, 0.5),
+      0 3px 8px rgba(0, 0, 0, 0.2);
+
+    & p {
+      margin: 16px 0;
+    }
+
+    .back {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      min-width: 32px;
+      height: 32px;
+      line-height: 1;
+      border-radius: 16px;
+      padding: 0 4px;
+      color: var(--pale-text-on-white);
+
+      &::before {
+        content: '\2190';
+        padding: 0 4px;
+      }
+    }
+
+    .next {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      line-height: 1;
+      border-radius: 100%;
+      color: var(--pale-text-on-white);
+
+      &::before {
+        content: '\2192';
+      }
+    }
+
+    .options {
+      display: flex;
+      flex-flow: row wrap;
+      margin: 16px 0 0;
+      gap: 8px 16px;
+      justify-content: center;
+    }
+
+    & h2 {
+      font-size: 1.7em;
+      margin: 0 16px 16px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .tile {
+      margin: -16px -8px 0;
+      padding: 16px 8px;
+      border-top: 1px solid var(--beige-shadow);
+      border-radius: 0;
+      z-index: 1;
+      box-shadow:
+        0 1px 1px -1px rgba(0, 0, 0, 0.5),
+        0 6px 8px -3px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+html:active-view-transition-type(health-advance, health-next, health-prev) {
+  .retro-format-health .tile {
+    view-transition-name: health-tile;
+  }
+}
+
+html:active-view-transition-type(health-advance) {
+  &::view-transition-old(health-tile) {
+    animation: slide-to-left 0.6s 0.4s ease-in both;
+  }
+
+  &::view-transition-new(health-tile) {
+    animation: slide-to-right 0.6s 0.4s reverse ease-in both;
+  }
+}
+
+html:active-view-transition-type(health-next) {
+  &::view-transition-old(health-tile) {
+    animation: slide-to-left 0.3s ease-in both;
+  }
+
+  &::view-transition-new(health-tile) {
+    animation: slide-to-right 0.3s reverse ease-in both;
+  }
+}
+
+html:active-view-transition-type(health-prev) {
+  &::view-transition-old(health-tile) {
+    animation: slide-to-right 0.3s ease-in both;
+  }
+
+  &::view-transition-new(health-tile) {
+    animation: slide-to-left 0.3s reverse ease-in both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:active-view-transition-type(health-advance, health-next, health-prev) {
+    &::view-transition-old(health-tile),
+    &::view-transition-new(health-tile) {
+      animation-name: health-fade;
+    }
+  }
+}
+
+@keyframes health-fade {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-to-left {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  to {
+    transform: translate(-80%, 16px) rotate(-5deg);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-to-right {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  to {
+    transform: translate(80%, 16px) rotate(5deg);
+    opacity: 0;
+  }
+}

@@ -85,6 +85,23 @@ const GalleryPage = () => (
         className="thumb"
       />
     </div>
+    <div className="gallery-item">
+      <Preview
+        content={{
+          format: 'health',
+          name: 'Health Check',
+          simulatedTime: now,
+          items: [],
+          localState: {
+            'health:own-state-0': { stage: 'answer', user: 'me' },
+            'health-progress:me': 'learning',
+          },
+        }}
+        width={900}
+        height={600}
+        className="thumb"
+      />
+    </div>
   </div>
 );
 

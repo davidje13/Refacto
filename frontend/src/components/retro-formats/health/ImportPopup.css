@@ -1,0 +1,33 @@
+.health-import {
+  & p {
+    margin: 16px 0;
+  }
+
+  .data {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+
+    .topic {
+      width: 80px;
+
+      @media (min-width: 450px) {
+        width: 140px;
+      }
+    }
+
+    & th,
+    & td {
+      padding: 2px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    & input {
+      margin: 0;
+      padding: 4px;
+      font-size: 1rem;
+    }
+  }
+}

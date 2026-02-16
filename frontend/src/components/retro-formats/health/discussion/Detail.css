@@ -1,0 +1,123 @@
+.health-discussion-detail {
+  padding-bottom: 64px;
+
+  .summary {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    .answer-icon {
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+
+      &.good {
+        color: var(--green-back);
+      }
+      &.mid {
+        color: var(--yellow-back);
+      }
+      &.bad {
+        color: var(--red-back);
+      }
+      &.skip {
+        color: var(--pale-text-on-white);
+      }
+    }
+  }
+
+  .votes {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 400px;
+    margin: 8px auto 16px;
+
+    & th {
+      font-weight: bolder;
+      text-align: center;
+    }
+
+    & th {
+      font-size: 2em;
+      line-height: 1;
+      padding: 0;
+    }
+
+    & td {
+      padding: 8px 4px;
+
+      &.good {
+        color: var(--green-text-on-white);
+      }
+      &.mid {
+        color: var(--yellow-text-on-white);
+      }
+      &.bad {
+        color: var(--red-text-on-white);
+      }
+    }
+  }
+
+  .comment {
+    margin: 16px;
+
+    &::before {
+      content: '\201C';
+    }
+    &::after {
+      content: '\201D';
+    }
+
+    &.good {
+      color: var(--green-text-on-white);
+    }
+    &.mid {
+      color: var(--yellow-text-on-white);
+    }
+    &.bad {
+      color: var(--red-text-on-white);
+    }
+  }
+
+  & h3 {
+    margin: 48px 0 8px;
+    font-weight: bolder;
+  }
+
+  .trend-graphic {
+    display: flex;
+    gap: 16px;
+    padding: 8px 16px;
+    border-radius: 2px;
+    border: 1px solid var(--beige-shadow);
+    align-items: center;
+    max-width: 400px;
+    margin: 0 auto 16px;
+
+    .trendline {
+      width: 100%;
+      height: 48px;
+    }
+
+    .arrow {
+      color: var(--pale-text-on-white);
+
+      & svg {
+        display: block;
+        width: 21px;
+        height: 21px;
+      }
+
+      &.n-2,
+      &.n-1 {
+        color: var(--red-back);
+      }
+
+      &.n2,
+      &.n1 {
+        color: var(--green-back);
+      }
+    }
+  }
+}

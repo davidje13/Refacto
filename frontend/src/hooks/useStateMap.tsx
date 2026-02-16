@@ -7,30 +7,41 @@ import {
   useLayoutEffect,
   useState,
   useEffect,
+  useMemo,
 } from 'react';
+import { sessionStore } from '../helpers/storage';
 
-const StateMapContext = createContext(new Map<string, unknown>());
+interface StateMap {
+  map: Map<string, unknown>;
+  scope: string;
+}
+
+const StateMapContext = createContext<StateMap>({ map: new Map(), scope: '' });
 
 interface StateMapProviderProps {
   children: ReactNode;
-  scope?: string;
+  scope: string;
 }
 
 export function StateMapProvider({
   children,
   scope,
 }: StateMapProviderProps): ReactElement {
-  const [[map, latestScope], set] = useState(() => [
-    new Map<string, unknown>(),
+  const [state, setState] = useState<StateMap>(() => ({
+    map: new Map<string, unknown>(),
     scope,
-  ]);
+  }));
+  const latestScope = state.scope;
   useLayoutEffect(() => {
     if (scope !== latestScope) {
-      set([new Map<string, unknown>(), scope]);
+      setState({ map: new Map<string, unknown>(), scope });
     }
   }, [scope, latestScope]);
+
   return (
-    <StateMapContext.Provider value={map}>{children}</StateMapContext.Provider>
+    <StateMapContext.Provider value={state}>
+      {children}
+    </StateMapContext.Provider>
   );
 }
 
@@ -42,38 +53,69 @@ interface StaticStateMapProviderProps {
 export const StaticStateMapProvider = ({
   children,
   data,
-}: StaticStateMapProviderProps) => (
-  <StateMapContext.Provider value={data}>{children}</StateMapContext.Provider>
-);
+}: StaticStateMapProviderProps) => {
+  const wrapped = useMemo(() => ({ map: data, scope: '' }), [data]);
+  return (
+    <StateMapContext.Provider value={wrapped}>
+      {children}
+    </StateMapContext.Provider>
+  );
+};
 
 export function useStateMap<T>(
   identifier: string | undefined,
   subIdentifier: string,
   defaultValue: T,
+  persist = false,
 ): [T, (v: T) => void] {
   const id = identifier ? `${identifier}:${subIdentifier}` : undefined;
-  const map = useContext(StateMapContext);
-  const [value, setValue] = useState(() => {
-    if (!id) {
-      return defaultValue;
-    }
-    return (map.get(id) || defaultValue) as T;
-  });
+  const state = useContext(StateMapContext);
+  const [value, setValue] = useState<T>(() =>
+    readStored(state, id, persist, defaultValue),
+  );
 
   useEffect(() => {
     if (id) {
-      setValue((map.get(id) || defaultValue) as T);
+      setValue(readStored(state, id, persist, defaultValue));
     }
-  }, [map, id]);
+  }, [state, id, persist]);
 
   const setter = useCallback(
     (v: T) => {
       if (id) {
-        map.set(id, v);
+        state.map.set(id, v);
+        if (persist && state.scope) {
+          if (v !== null && v !== undefined) {
+            sessionStore.setItem(`${state.scope}:${id}`, JSON.stringify(v));
+          } else {
+            sessionStore.removeItem(`${state.scope}:${id}`);
+          }
+        }
       }
       setValue(v);
     },
-    [map, id],
+    [state, id, persist],
   );
   return [value, setter];
+}
+
+function readStored<T>(
+  state: StateMap,
+  id: string | undefined,
+  persist: boolean,
+  defaultValue: T,
+): T {
+  if (!id) {
+    return defaultValue;
+  }
+  if (state.map.has(id)) {
+    return state.map.get(id) as T;
+  }
+  if (persist && state.scope) {
+    const stored = sessionStore.getItem(`${state.scope}:${id}`);
+    if (stored !== null) {
+      return JSON.parse(stored) as T;
+    }
+  }
+  return defaultValue;
 }

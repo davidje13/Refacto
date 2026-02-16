@@ -27,15 +27,17 @@ const packages = [
 const builddir = join(basedir, 'build');
 const staticdir = join(builddir, 'static');
 
-await runTask({
-  command: 'diff',
-  args: [
-    join(basedir, 'frontend', 'src', 'shared', 'api-entities.ts'),
-    join(basedir, 'backend', 'src', 'shared', 'api-entities.ts'),
-  ],
-  outputMode: 'fail_atomic',
-  failureMessage: 'Shared api-entities.ts files do not match.',
-});
+for (const file of ['api-entities.ts', 'health.ts']) {
+  await runTask({
+    command: 'diff',
+    args: [
+      join(basedir, 'frontend', 'src', 'shared', file),
+      join(basedir, 'backend', 'src', 'shared', file),
+    ],
+    outputMode: 'fail_atomic',
+    failureMessage: `Shared ${file} files do not match.`,
+  });
+}
 
 await runMultipleTasks(
   packages.map(({ dir, format }) => ({

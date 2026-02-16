@@ -19,6 +19,7 @@ import {
   type EventFilter,
 } from 'shared-reducer/backend';
 import type { Retro, RetroSummary } from '../shared/api-entities';
+import { summariseHealthVotes } from '../shared/health';
 import { extractRetro } from '../helpers/jsonParsers';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_\-]*$/;
@@ -107,7 +108,7 @@ export class RetroService {
   }
 
   getArchiveSpec(retro: Retro, preserveRemaining: boolean): Spec<Retro> {
-    return {
+    const spec: Spec<Retro> = {
       state: ['=', {}],
       groupStates: ['=', {}],
       items: [
@@ -120,6 +121,15 @@ export class RetroService {
         ],
       ],
     };
+
+    if (retro.format === 'health') {
+      const summary = summariseHealthVotes(retro.items);
+      if (summary) {
+        spec.history = ['push', summary];
+      }
+    }
+
+    return spec;
   }
 
   async getRetroIdForSlug(slug: string): Promise<string | null> {

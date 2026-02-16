@@ -1,0 +1,52 @@
+.health-examples {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--beige-shadow) 10%,
+      var(--beige-shadow) 90%,
+      transparent 100%
+    );
+  }
+
+  &::after {
+    content: 'or';
+    position: absolute;
+    font-size: 0.8rem;
+    left: calc(50% - 20px);
+    top: calc(50% - 0.8em);
+    width: 40px;
+    height: 1.6em;
+    background: var(--primary-back);
+    color: var(--beige-shadow);
+  }
+
+  .example {
+    padding: 8px;
+
+    & h3 {
+      margin: 0 0 4px;
+      font-size: 1.1rem;
+      font-weight: bolder;
+    }
+  }
+
+  .good h3 {
+    color: var(--green-text-on-white);
+  }
+
+  .bad h3 {
+    color: var(--red-text-on-white);
+  }
+}
