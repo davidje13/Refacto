@@ -110,8 +110,13 @@ export class ApiRetrosRouter extends Router {
           importJson: json.optional(extractExportedRetro),
         });
 
+        let resolvedFormat = importJson ? importJson.current.format : format;
+
         if (!name) {
           throw new HTTPError(400, { body: 'No name given' });
+        }
+        if (!retroService.isKnownFormat(resolvedFormat)) {
+          throw new HTTPError(400, { body: 'Unknown format' });
         }
         if (password.length < passwordRequirements.minLength) {
           throw new HTTPError(400, { body: 'Password is too short' });
@@ -120,7 +125,12 @@ export class ApiRetrosRouter extends Router {
           throw new HTTPError(400, { body: 'Password is too long' });
         }
 
-        const id = await retroService.createRetro(userId, slug, name, format);
+        const id = await retroService.createRetro(
+          userId,
+          slug,
+          name,
+          resolvedFormat,
+        );
         await retroAuthService.setPassword(id, password);
 
         if (importJson) {
@@ -277,6 +287,11 @@ export class ApiRetrosRouter extends Router {
         }
         if (setPassword.password.length > passwordRequirements.maxLength) {
           throw new HTTPError(400, { body: 'Password is too long' });
+        }
+      }
+      if (setFormat) {
+        if (!retroService.isKnownFormat(setFormat)) {
+          throw new HTTPError(400, { body: 'Unknown format' });
         }
       }
 

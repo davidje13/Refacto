@@ -107,6 +107,10 @@ export class RetroService {
     return undefined;
   }
 
+  isKnownFormat(format: string) {
+    return FORMATS.has(format);
+  }
+
   getArchiveSpec(retro: Retro, preserveRemaining: boolean): Spec<Retro> {
     const spec: Spec<Retro> = {
       state: ['=', {}],
@@ -197,6 +201,8 @@ export class RetroService {
     await this.retroCollection.where('id', retroId).remove();
   }
 }
+
+const FORMATS = new Set(['health', 'mood']);
 
 const LOCKED_FIELDS: (keyof Retro)[] = [
   'id',

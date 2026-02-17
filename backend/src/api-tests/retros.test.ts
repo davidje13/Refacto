@@ -79,7 +79,12 @@ describe('API retros', () => {
 
       const response = await request(server)
         .post('/api/retros')
-        .send({ slug, name: 'New Name', password: 'password', format: 'other' })
+        .send({
+          slug,
+          name: 'New Name',
+          password: 'password',
+          format: 'health',
+        })
         .set('Authorization', `Bearer ${userToken}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -92,7 +97,7 @@ describe('API retros', () => {
       const stored = await hooks.retroService.getRetro(storedId!);
       expect(stored?.slug).toEqual(slug);
       expect(stored?.name).toEqual('New Name');
-      expect(stored?.format).toEqual('other');
+      expect(stored?.format).toEqual('health');
       expect(stored?.items).toEqual([]);
       expect(stored?.history).toEqual([]);
       expect(stored?.scheduledDelete).toEqual(0);
@@ -109,12 +114,12 @@ describe('API retros', () => {
           slug,
           name: 'New Name',
           password: 'NewPassword',
-          format: 'changed-format',
+          format: 'health', // ignored - uses format from importJson
           importJson: {
             url: 'old-slug',
             name: 'Old Name',
             current: {
-              format: 'original-format',
+              format: 'mood',
               options: { imported: 7 },
               items: [
                 {
@@ -140,7 +145,7 @@ describe('API retros', () => {
       const stored = await hooks.retroService.getRetro(storedId!);
       expect(stored?.slug).toEqual(slug);
       expect(stored?.name).toEqual('New Name');
-      expect(stored?.format).toEqual('original-format');
+      expect(stored?.format).toEqual('mood');
       expect(stored?.options['imported']).toEqual(7);
       expect(stored?.items).toHaveLength(1);
       expect(stored?.scheduledDelete).toEqual(0);
@@ -173,6 +178,21 @@ describe('API retros', () => {
         .expect(400);
 
       expect(response.body.error).toEqual('No name given');
+    });
+
+    it('responds HTTP Bad Request if the format is invalid', async (props) => {
+      const { server, userToken } = props.getTyped(PROPS);
+
+      await request(server)
+        .post('/api/retros')
+        .send({
+          slug: 'new-retro',
+          name: 'New Name',
+          password: 'password',
+          format: 'nope',
+        })
+        .set('Authorization', `Bearer ${userToken}`)
+        .expect(400);
     });
 
     it('responds HTTP Conflict if slug is unavailable', async (props) => {
@@ -540,18 +560,28 @@ describe('API retros', () => {
 
         await request(server)
           .patch(`/api/retros/${retroId}`)
-          .send({ setFormat: 'other' })
+          .send({ setFormat: 'health' })
           .set('Authorization', `Bearer ${retroToken}`)
           .expect(200)
           .expect('Content-Type', /application\/json/);
 
         const retro = await hooks.retroService.getRetro(retroId);
-        expect(retro!.format).equals('other');
+        expect(retro!.format).equals('health');
 
         const archives = await fromAsync(
           hooks.retroArchiveService.getRetroArchiveList(retroId),
         );
         expect(archives).hasLength(0);
+      });
+
+      it('rejects unknown formats', async (props) => {
+        const { server, retroId, retroToken } = props.getTyped(PROPS);
+
+        await request(server)
+          .patch(`/api/retros/${retroId}`)
+          .send({ setFormat: 'nope' })
+          .set('Authorization', `Bearer ${retroToken}`)
+          .expect(400);
       });
 
       it('archives the current retro if needed', async (props) => {
@@ -565,7 +595,7 @@ describe('API retros', () => {
 
         await request(server)
           .patch(`/api/retros/${retroId}`)
-          .send({ setFormat: 'other' })
+          .send({ setFormat: 'health' })
           .set('Authorization', `Bearer ${retroToken}`)
           .expect(200)
           .expect('Content-Type', /application\/json/);
