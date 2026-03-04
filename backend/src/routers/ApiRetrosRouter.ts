@@ -8,6 +8,7 @@ import {
   getQuery,
   hasAuthScope,
   HTTPError,
+  loadOnDemand,
   makeAcceptWebSocket,
   makeWebSocketFallbackTokenFetcher,
   requireAuthScope,
@@ -82,12 +83,9 @@ export class ApiRetrosRouter extends Router {
       }
 
       analyticsService.event(req, 'access own retros list');
-      const retros = retroService.getRetroListForUser(userId);
-      try {
-        await sendJSONStream(res, { retros });
-      } finally {
-        retros.return();
-      }
+      await sendJSONStream(res, {
+        retros: loadOnDemand(() => retroService.getRetroListForUser(userId)),
+      });
     });
 
     this.post(

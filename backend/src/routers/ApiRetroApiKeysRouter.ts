@@ -3,6 +3,7 @@ import {
   getPathParameters,
   hasAuthScope,
   HTTPError,
+  loadOnDemand,
   requireAuthScope,
   Router,
   sendJSON,
@@ -49,12 +50,11 @@ export class ApiRetroApiKeysRouter extends Router<
 
     this.get('/', requireAuthScope('manage'), async (req, res) => {
       const { retroId } = getPathParameters(req);
-      const apiKeys = retroAuthService.getApiKeysForRetro(retroId);
-      try {
-        await sendJSONStream(res, { apiKeys });
-      } finally {
-        apiKeys.return();
-      }
+      await sendJSONStream(res, {
+        apiKeys: loadOnDemand(() =>
+          retroAuthService.getApiKeysForRetro(retroId),
+        ),
+      });
     });
 
     this.delete('/:apiKeyId', requireAuthScope('manage'), async (req, res) => {

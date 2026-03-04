@@ -2,6 +2,7 @@ import {
   getBodyJSON,
   getPathParameters,
   HTTPError,
+  loadOnDemand,
   requireAuthScope,
   Router,
   sendJSON,
@@ -26,12 +27,11 @@ export class ApiRetroArchivesRouter extends Router<
 
       analyticsService.event(req, 'access archive list');
 
-      const archives = retroArchiveService.getRetroArchiveSummaries(retroId);
-      try {
-        await sendJSONStream(res, { archives });
-      } finally {
-        archives.return();
-      }
+      await sendJSONStream(res, {
+        archives: loadOnDemand(() =>
+          retroArchiveService.getRetroArchiveSummaries(retroId),
+        ),
+      });
     });
 
     this.post('/', requireAuthScope('write'), async (req, res) => {
