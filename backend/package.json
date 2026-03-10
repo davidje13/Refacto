@@ -19,7 +19,7 @@
     "@rollup/plugin-json": "6.x",
     "@rollup/plugin-node-resolve": "16.x",
     "@rollup/plugin-replace": "6.x",
-    "@rollup/plugin-terser": "0.4.x",
+    "@rollup/plugin-terser": "1.x",
     "@rollup/plugin-typescript": "12.x",
     "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
@@ -28,14 +28,14 @@
     "json-immutability-helper": "4.1.x",
     "jwt-simple": "0.5.x",
     "lean-test": "2.x",
-    "prettier": "3.7.4",
+    "prettier": "3.8.1",
     "pwd-hasher": "2.x",
     "rollup": "4.x",
     "shared-reducer": "6.4.x",
     "supertest": "7.x",
     "superwstest": "2.x",
     "typescript": "5.9.x",
-    "web-listener": "0.19.0",
+    "web-listener": "0.20.0",
     "ws": "8.x"
   }
 }
