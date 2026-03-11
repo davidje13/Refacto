@@ -31,11 +31,12 @@ if (navigator.userAgent === 'HeadlessEndToEndTest') {
   document.body.classList.add('headless');
 }
 
-const root = document.getElementById('root')!;
-
 configService
   .get()
   .then((config) => {
+    const root = document.createElement('div');
+    document.getElementById('pre-load')?.remove();
+    document.body.append(root);
     createRoot(root).render(
       <StrictMode>
         <ConfigProvider value={config}>
@@ -45,6 +46,8 @@ configService
     );
   })
   .catch((e) => {
-    root.innerText = 'Failed to load. Please try again later.';
     diagnosticsService.error('failed to load config', e);
+    document
+      .getElementById('pre-load')
+      ?.replaceChildren('Failed to load. Please try again later.');
   });

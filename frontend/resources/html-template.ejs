@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
 <meta name="application-name" content="<%= htmlWebpackPlugin.options.title %>">
 <meta name="viewport" content="width=device-width">
 <meta name="mobile-web-app-capable" content="yes">
@@ -12,18 +11,16 @@
 <meta name="theme-color" content="#FFFFFF">
 <title><%= htmlWebpackPlugin.options.title %></title>
 <link rel="icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
-<link rel="manifest" href="/app.webmanifest"/>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/app.webmanifest">
 <!-- stylesheet CSP hash: 'sha256-dhQFgDyZCSW+FVxPjFWZQkEnh+5DHADvj1I8rpzmaGU=' -->
 <style>@keyframes fade-in{from{opacity:0}to{opacity:1}}.pre-load{animation:fade-in .2s .5s both}</style>
 </head>
 <body>
-<div id="root">
-  <div class="pre-load">
-    <p class="load">Loading&hellip;</p>
-    <p class="info">Page not loading? Make sure you are using a modern browser such as the latest version of Chrome, Firefox, Edge or Safari.</p>
-    <noscript><p class="noscript"><%= htmlWebpackPlugin.options.title %> requires JavaScript. Please enable scripts to continue.</p></noscript>
-  </div>
+<div id="pre-load">
+  <p class="load">Loading&hellip;</p>
+  <p class="info">Page not loading? Make sure you are using a modern browser such as the latest version of Chrome, Firefox, Edge or Safari.</p>
+  <noscript><p class="nojs"><%= htmlWebpackPlugin.options.title %> requires JavaScript. Please enable scripts to continue.</p></noscript>
 </div>
 </body>
 </html>

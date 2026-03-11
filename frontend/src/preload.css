@@ -1,11 +1,11 @@
-.pre-load {
+#pre-load {
   text-align: center;
   font: 1.2em sans-serif;
   margin: 64px auto;
   max-width: 450px;
   line-height: 1.4;
 
-  .noscript {
+  .nojs {
     background: var(--page-back, white);
     position: absolute;
     top: 0;
