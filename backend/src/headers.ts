@@ -1,5 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { GetClient } from 'web-listener';
+import {
+  type GetClient,
+  PP_BASE_DENY_2026,
+  mergePermissionsPolicy,
+} from 'web-listener';
 
 const devMode = process.env['NODE_ENV'] === 'development';
 
@@ -19,30 +23,7 @@ const CSP = [
   'report-to default',
 ].join('; ');
 
-const PERMISSIONS_POLICY = [
-  'accelerometer=()',
-  'attribution-reporting=()',
-  'autoplay=()',
-  'bluetooth=()',
-  'browsing-topics=()',
-  'camera=()',
-  'compute-pressure=()',
-  'cross-origin-isolated=()',
-  'display-capture=()',
-  'encrypted-media=()',
-  'geolocation=()',
-  'gyroscope=()',
-  'idle-detection=()',
-  'local-fonts=()',
-  'magnetometer=()',
-  'microphone=()',
-  'midi=()',
-  'payment=()',
-  'screen-wake-lock=()',
-  'serial=()',
-  'storage-access=()',
-  'usb=()',
-].join(', ');
+const PERMISSIONS_POLICY = mergePermissionsPolicy(PP_BASE_DENY_2026);
 
 export function addSecurityHeaders(
   req: IncomingMessage,
