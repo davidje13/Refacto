@@ -63,12 +63,13 @@ form.retro-settings {
     .form-actions-shadow {
       position-anchor: --form-bottom;
       position-area: center center;
+      align-self: start;
       pointer-events: none;
       position: absolute;
-      top: 0;
+      top: 1px; /* avoid misalignment in Chrome */
       width: 100%;
       height: 40px;
-      box-shadow: 0 -12px 4px -12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 -13px 4px -12px rgba(0, 0, 0, 0.4);
     }
 
     .bottom-shadow-cover {
