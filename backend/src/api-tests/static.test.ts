@@ -11,7 +11,7 @@ describe('API static content', () => {
       run: await appFactory(new TestLogger(), testConfig()),
     }));
 
-    it('responds with index.html for root requests', async (props) => {
+    it('responds with index for root requests', async (props) => {
       const { server } = props.getTyped(PROPS);
 
       const response = await request(server)
@@ -21,6 +21,25 @@ describe('API static content', () => {
         .expect('Vary', 'accept-encoding');
 
       expect(response.text).toContain('<title>Example Static Resource</title>');
+    });
+
+    it('adds config meta tag to index', async (props) => {
+      const { server } = props.getTyped(PROPS);
+
+      const responseRoot = await request(server)
+        .get('/')
+        .expect(200)
+        .expect('Content-Type', /text\/html/)
+        .expect('Vary', 'accept-encoding');
+      expect(responseRoot.text).toContain('<head data-config="{&quot;');
+
+      const responseDirect = await request(server)
+        .get('/index.html')
+        .expect(200);
+      expect(responseDirect.text).toContain(' data-config="');
+
+      const responseOther = await request(server).get('/foo').expect(200);
+      expect(responseOther.text).toContain(' data-config="');
     });
 
     it('responds with requested file for known requests', async (props) => {
@@ -38,10 +57,10 @@ describe('API static content', () => {
       const { server } = props.getTyped(PROPS);
 
       const response = await request(server)
-        .get('/index-compressed.html')
+        .get('/compressed.txt')
         .set('Accept-Encoding', 'gzip')
         .expect(200)
-        .expect('Content-Type', /text\/html/)
+        .expect('Content-Type', /text\/plain/)
         .expect('Content-Encoding', 'gzip')
         .expect('Vary', 'accept-encoding');
 
@@ -50,7 +69,7 @@ describe('API static content', () => {
       );
     });
 
-    it('responds with index.html for all unknown requests', async (props) => {
+    it('responds with index for all unknown requests', async (props) => {
       const { server } = props.getTyped(PROPS);
 
       const response = await request(server)
@@ -62,7 +81,7 @@ describe('API static content', () => {
       expect(response.text).toContain('<title>Example Static Resource</title>');
     });
 
-    it('responds with index.html.gz for unknown requests if available', async (props) => {
+    it('gzips index if requested', async (props) => {
       const { server } = props.getTyped(PROPS);
 
       const response = await request(server)
@@ -108,6 +127,11 @@ describe('API static content', () => {
 
       await request(server)
         .get('/')
+        .expect('Cache-Control', 'public, max-age=0, stale-if-error=31536000')
+        .expect('ETag', /.+/);
+
+      await request(server)
+        .get('/compressed.txt')
         .expect('Cache-Control', 'public, max-age=600, stale-if-error=86400')
         .expect('ETag', /.+/);
 
@@ -121,7 +145,7 @@ describe('API static content', () => {
 
       await request(server)
         .get('/foobar')
-        .expect('Cache-Control', 'public, max-age=600, stale-if-error=86400')
+        .expect('Cache-Control', 'public, max-age=0, stale-if-error=31536000')
         .expect('ETag', /.+/);
     });
 

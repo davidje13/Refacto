@@ -1,30 +1,9 @@
 import { Router, staticJSON } from 'web-listener';
-import type {
-  ClientConfig,
-  PasswordRequirements,
-} from '../shared/api-entities';
-
-interface ServerConfig {
-  giphy: { apiKey: string };
-}
+import type { ClientConfig } from '../shared/api-entities';
 
 export class ApiConfigRouter extends Router {
-  constructor(
-    serverConfig: ServerConfig,
-    ssoClientConfig: ClientConfig['sso'],
-    passwordRequirements: PasswordRequirements,
-    maxApiKeys: number,
-    deleteRetroDelay: number,
-  ) {
+  constructor(clientConfig: ClientConfig) {
     super();
-
-    const clientConfig: ClientConfig = {
-      sso: ssoClientConfig,
-      giphy: serverConfig.giphy.apiKey !== '',
-      passwordRequirements,
-      maxApiKeys,
-      deleteRetroDelay,
-    };
 
     this.get(
       '/',

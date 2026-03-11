@@ -1,13 +1,10 @@
 import { join } from 'node:path';
 import {
   CONTINUE,
-  fileServer,
   findCause,
   HTTPError,
   jsonErrorHandler,
   makeGetClient,
-  negotiateEncoding,
-  Negotiator,
   proxy,
   Router,
   typedErrorHandler,
@@ -15,6 +12,7 @@ import {
 } from 'web-listener';
 import { Hasher } from 'pwd-hasher';
 import { CollectionStorage } from 'collection-storage';
+import type { ClientConfig } from './shared/api-entities';
 import { ValidationError } from './helpers/json';
 import { ApiSpecRouter } from './routers/ApiSpecRouter';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';
@@ -24,7 +22,7 @@ import { ApiSlugsRouter } from './routers/ApiSlugsRouter';
 import { ApiRetrosRouter } from './routers/ApiRetrosRouter';
 import { ApiPasswordCheckRouter } from './routers/ApiPasswordCheckRouter';
 import { ApiGiphyRouter } from './routers/ApiGiphyRouter';
-import { setCacheHeaders } from './routers/StaticRouter';
+import { addStaticContent } from './routers/StaticRouter';
 import { TokenManager } from './tokens/TokenManager';
 import { PasswordCheckService } from './services/PasswordCheckService';
 import type { Logger } from './services/LogService';
@@ -120,6 +118,14 @@ export const appFactory = async (
 
   const auth = getAuthBackend(config, userAuthService);
 
+  const clientConfig: ClientConfig = {
+    sso: auth.clientConfig,
+    giphy: config.giphy.apiKey !== '',
+    passwordRequirements,
+    maxApiKeys: config.permit.retroApiKeys,
+    deleteRetroDelay: config.deleteRetroDelay,
+  };
+
   const app = new Router();
 
   const getClient = makeGetClient({
@@ -153,16 +159,7 @@ export const appFactory = async (
   );
   app.mount('/api/diagnostics', new ApiDiagnosticsRouter(analyticsService));
   app.mount('/api/slugs', new ApiSlugsRouter(retroService));
-  app.mount(
-    '/api/config',
-    new ApiConfigRouter(
-      config,
-      auth.clientConfig,
-      passwordRequirements,
-      config.permit.retroApiKeys,
-      config.deleteRetroDelay,
-    ),
-  );
+  app.mount('/api/config', new ApiConfigRouter(clientConfig));
   auth.addRoutes(app);
   app.mount(
     '/api/retros',
@@ -202,15 +199,7 @@ export const appFactory = async (
     app.use(proxy(config.forwardHost, { keepAlive: true, maxSockets: 10 }));
   } else {
     // Production mode: all resources are copied into /static
-    app.use(
-      await fileServer(join(basedir, 'static'), {
-        mode: 'static-paths',
-        negotiator: new Negotiator([negotiateEncoding(['br', 'gzip'])]),
-        fallback: { filePath: 'index.html' }, // Single page app: serve index.html for any unknown GET request
-        hide: [/\.(br|gz)^/],
-        callback: setCacheHeaders,
-      }),
-    );
+    await addStaticContent(app, join(basedir, 'static'), clientConfig);
   }
 
   const listener = new WebListener(app);

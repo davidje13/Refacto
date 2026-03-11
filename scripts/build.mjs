@@ -15,7 +15,7 @@ import {
   hasExt,
   printSize,
 } from './helpers/io.mjs';
-import { chmod } from 'node:fs/promises';
+import { chmod, rename } from 'node:fs/promises';
 import { runMultipleTasks, runTask } from './helpers/proc.mjs';
 
 const PARALLEL_BUILD = (process.env['PARALLEL_BUILD'] ?? 'true') === 'true';
@@ -26,6 +26,7 @@ const packages = [
 ];
 const builddir = join(basedir, 'build');
 const staticdir = join(builddir, 'static');
+const resourcesdir = join(staticdir, 'resources');
 
 for (const file of ['api-entities.ts', 'health.ts']) {
   await runTask({
@@ -57,7 +58,8 @@ await deleteDirectory(builddir);
 log('Combining output...');
 await copy(join(basedir, 'backend', 'build'), builddir);
 await deleteDirectory(staticdir);
-await copy(join(basedir, 'frontend', 'build'), staticdir);
+await copy(join(basedir, 'frontend', 'build'), resourcesdir);
+await rename(join(resourcesdir, 'index.html'), join(staticdir, 'index.html'));
 await chmod(join(builddir, 'index.js'), 0o755);
 await copy(
   join(basedir, 'scripts', 'docker', 'Dockerfile'),
@@ -70,7 +72,7 @@ await copy(
 
 log('Compressing static resources...');
 const staticFiles = await Promise.all(
-  (await findFiles(staticdir)).map(compressFile),
+  (await findFiles(resourcesdir)).map(compressFile),
 );
 
 const isCode = hasExt('.js', '.css', '.html');
