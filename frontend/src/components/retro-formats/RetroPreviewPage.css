@@ -1,7 +1,5 @@
 .page-retro-preview {
-  position: absolute;
   width: 100vw;
-  height: 100vh;
   box-sizing: border-box;
   overflow: clip;
   pointer-events: none;

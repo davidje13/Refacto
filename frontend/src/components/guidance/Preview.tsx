@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, type FunctionComponent } from 'react';
 import type { Retro, RetroItem } from '../../shared/api-entities';
+import type { AnswerID } from '../../shared/health';
 import { classNames } from '../../helpers/classNames';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import type { Spec } from '../../api/reducer';
@@ -92,3 +93,76 @@ export const typeItem = (
     spec: { items: ['push', item], localState: { [field]: ['=', ''] } },
   },
 ];
+
+export const answerHealth = (
+  delayOpen: number,
+  userID: string,
+  questionID: string,
+  delayAnswer: number,
+  answerID: AnswerID,
+  message = '',
+): PreviewFrame[] => [
+  {
+    delay: delayOpen,
+    spec: {
+      localState: {
+        'health:own-state-0': ['=', { stage: 'answer', user: userID }],
+        [`health-progress:${userID}`]: ['=', questionID],
+      },
+    },
+  },
+  {
+    delay: delayAnswer,
+    spec: {
+      localState: {
+        [`health-message:${questionID}:${userID}`]: ['=', message],
+      },
+    },
+  },
+  {
+    delay: message ? message.length * 60 + 500 : 0,
+    spec: {
+      items: [
+        'push',
+        {
+          id: `${questionID}:${userID}`,
+          category: answerID,
+          message,
+          created: 0,
+          attachment: null,
+          votes: 0,
+          doneTime: 0,
+        },
+      ],
+    },
+  },
+];
+
+export const healthDiscuss = (): Spec<PreviewContent> => ({
+  localState: { 'health:own-state-0': ['=', { stage: 'discuss' }] },
+});
+
+export const healthFocus = (
+  questionID: string | null,
+): Spec<PreviewContent> => ({
+  state: { focusedItemId: ['=', questionID] },
+});
+
+export const addHealthAnswers = (
+  allAnswers: Record<string, [string, AnswerID, string?][]>,
+): Spec<PreviewContent> => ({
+  items: [
+    'push',
+    ...Object.entries(allAnswers).flatMap(([userID, answers]) =>
+      answers.map(([questionID, answerID, message = '']) => ({
+        id: `${questionID}:${userID}`,
+        category: answerID,
+        message,
+        created: 0,
+        attachment: null,
+        votes: 0,
+        doneTime: 0,
+      })),
+    ),
+  ],
+});

@@ -2,6 +2,10 @@ import { memo } from 'react';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';
 import {
+  addHealthAnswers,
+  answerHealth,
+  healthDiscuss,
+  healthFocus,
   moodFocus,
   Preview,
   typeItem,
@@ -186,19 +190,45 @@ export const GuidancePage = memo(() => (
         </li>
         <li>
           <p>
-            <strong>Timeline.</strong> A timeline retro begins with a horizontal
-            timeline drawn on the whiteboard covering the time period to be
-            discussed (typically spanning from the last timeline retro, which
-            may be a few months earlier, to the current day). Key events are
-            marked on this timeline before the session begins to act as memory
-            prompts during the session. Participants begin by adding important
-            events to the timeline which may have been missed, then each
-            participant draws a &ldquo;mood line&rdquo; from left to right,
-            showing how happy they felt at different times (happier as the line
-            goes higher, less happy as it goes lower). Once all lines have been
-            drawn, the facilitator prompts discussions by looking for patterns
-            (such as several people&rsquo;s lines going higher or lower around
-            the same time) or outliers.
+            <strong>Health check.</strong>
+          </p>
+          <Preview content={HEALTH_RETRO_PREVIEW} />
+          <p>
+            In a team health check, the team members individually answer
+            specific questions about their experiences (answering "good",
+            "middling", or "bad"), then discuss the answers together.
+          </p>
+          <p>
+            Because this is aimed at identifying long-term trends and wider
+            issues, the focus of a health check retro is less about creating
+            actions and more about identifying underlying concerns.
+          </p>
+          <p>
+            This format is mostly useful for reviewing wider trends across an
+            organisation of many teams, or checking changes over time within the
+            same team. Generally health checks can be performed 1&ndash;4 times
+            per year, but each team will find their own preferred cadence.
+          </p>
+          <p>Refacto supports health check retros.</p>
+        </li>
+        <li>
+          <p>
+            <strong>Timeline.</strong>
+          </p>
+          <p>
+            A timeline retro begins with a horizontal timeline drawn on the
+            whiteboard covering the time period to be discussed (typically
+            spanning from the last timeline retro, which may be a few months
+            earlier, to the current day). Key events are marked on this timeline
+            before the session begins to act as memory prompts during the
+            session. Participants begin by adding important events to the
+            timeline which may have been missed, then each participant draws a
+            &ldquo;mood line&rdquo; from left to right, showing how happy they
+            felt at different times (happier as the line goes higher, less happy
+            as it goes lower). Once all lines have been drawn, the facilitator
+            prompts discussions by looking for patterns (such as several
+            people&rsquo;s lines going higher or lower around the same time) or
+            outliers.
           </p>
           <p>
             This format takes a bit of setup and does not work as a frequent
@@ -309,6 +339,7 @@ const MOOD_RETRO_PREVIEW: PreviewContent = {
             attachment: {
               type: 'giphy',
               url: 'https://media3.giphy.com/media/Y4z9olnoVl5QI/200.gif',
+              alt: '',
             },
             votes: 0,
             doneTime: 0,
@@ -383,6 +414,97 @@ const MOOD_RETRO_PREVIEW: PreviewContent = {
           { doneTime: ['=', 1] },
         ],
       },
+    },
+  ],
+};
+
+const HEALTH_RETRO_PREVIEW: PreviewContent = {
+  format: 'health',
+  simulatedTime: now,
+  name: 'Step 1: Answer questions individually',
+  items: [],
+  localState: {
+    'health-progress:me': '.', // prevent animating
+  },
+
+  frames: [
+    ...answerHealth(4000, 'me', 'process', 1000, 'good'),
+    ...answerHealth(300, 'me', 'quality', 700, 'good'),
+    ...answerHealth(300, 'me', 'value', 700, 'mid'),
+    ...answerHealth(
+      300,
+      'me',
+      'release',
+      700,
+      'bad',
+      "Can't release if Pat's on holiday",
+    ),
+    ...answerHealth(300, 'me', 'speed', 700, 'mid'),
+    ...answerHealth(300, 'me', 'support', 700, 'good'),
+    ...answerHealth(300, 'me', 'fun', 700, 'good'),
+    ...answerHealth(300, 'me', 'learning', 700, 'mid'),
+    ...answerHealth(300, 'me', 'mission', 700, 'mid'),
+    ...answerHealth(300, 'me', 'autonomy', 700, 'bad'),
+    {
+      delay: 500,
+      spec: {
+        name: ['=', 'Step 2: Discuss as a team'],
+        ...addHealthAnswers({
+          a: [
+            ['process', 'good'],
+            ['quality', 'mid'],
+            ['value', 'good'],
+            ['release', 'mid'],
+            ['speed', 'good'],
+            ['support', 'good'],
+            ['fun', 'good'],
+            ['learning', 'good'],
+            ['mission', 'good'],
+            ['autonomy', 'mid'],
+          ],
+          b: [
+            ['process', 'good'],
+            ['quality', 'good'],
+            ['value', 'good'],
+            ['release', 'good'],
+            ['speed', 'mid'],
+            ['support', 'bad'],
+            ['fun', 'mid'],
+            ['learning', 'good'],
+            ['mission', 'mid'],
+            ['autonomy', 'mid'],
+          ],
+          c: [
+            ['process', 'mid'],
+            ['quality', 'mid'],
+            ['value', 'mid'],
+            ['release', 'bad'],
+            ['speed', 'mid'],
+            ['support', 'skip'],
+            ['fun', 'bad'],
+            ['learning', 'mid'],
+            ['mission', 'bad'],
+            ['autonomy', 'bad'],
+          ],
+        }),
+        ...healthDiscuss(),
+      },
+    },
+    { delay: 4000, spec: healthFocus('release') },
+    { delay: 4000, spec: healthFocus(null) },
+    { delay: 1000, spec: healthFocus('learning') },
+    { delay: 4000, spec: healthFocus(null) },
+    { delay: 1000, spec: healthFocus('autonomy') },
+    { delay: 4000, spec: healthFocus(null) },
+    { delay: 2000, spec: { name: ['=', 'Step 3: Archive'] } },
+    {
+      delay: 1000,
+      spec: {
+        localState: { 'health:own-state-0': ['=', { stage: 'begin' }] },
+        history: ['push', { format: 'health', time: 1000, data: {} }],
+        items: ['delete', 'all'],
+      },
+      animation: 'archive',
     },
   ],
 };

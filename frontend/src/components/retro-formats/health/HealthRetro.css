@@ -2,7 +2,10 @@
   display: grid;
   align-content: stretch;
   position: relative;
-  min-height: calc(100vh - 192px - 3rem);
+  min-height: max(
+    calc(100vh - 192px - 3rem),
+    min(calc(100vh - 3rem - 28px), 700px)
+  );
   padding: 16px 8px 0;
   overflow: clip;
   background: var(--beige-back);

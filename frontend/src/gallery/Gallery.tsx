@@ -32,6 +32,7 @@ const SAMPLE_RETRO: PreviewContent = {
       attachment: {
         type: 'giphy',
         url: 'https://media3.giphy.com/media/Y4z9olnoVl5QI/200.gif',
+        alt: '',
       },
     },
     { category: 'happy', message: 'That TV show' },
@@ -113,7 +114,10 @@ const MOCK_CONFIG: ClientConfig = {
   giphy: true,
 };
 
-createRoot(document.getElementById('root')!).render(
+const root = document.createElement('div');
+document.getElementById('pre-load')?.remove();
+document.body.append(root);
+createRoot(root).render(
   <Switch>
     <Route path="/preview">
       <ConfigProvider value={MOCK_CONFIG}>
