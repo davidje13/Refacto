@@ -4,6 +4,7 @@ import type { Retro, RetroItem } from '../../shared/api-entities';
 import { startViewTransition } from '../../helpers/viewTransition';
 import { type Spec, context } from '../../api/reducer';
 import { useLocationHash } from '../../hooks/env/useLocationHash';
+import { usePageVisible } from '../../hooks/env/usePageVisible';
 import { StaticStateMapProvider } from '../../hooks/useStateMap';
 import { RetroFormat } from './RetroFormat';
 import '../common/Header.css';
@@ -11,9 +12,10 @@ import './RetroPreviewPage.css';
 
 export const RetroPreviewPage = memo(() => {
   const hash = useLocationHash();
-  const [state, setState] = useState<State>(() => readRetro(readHash(hash)));
-  useEffect(() => setState(readRetro(readHash(hash))), [hash]);
-  useAnimation(state, setState);
+  const [state, setState] = useState<State>(() => readRetroHash(hash));
+  useEffect(() => setState(readRetroHash(hash)), [hash]);
+  const pageVisible = usePageVisible(0.5);
+  useAnimation(state, setState, pageVisible);
 
   const scheduler = useScheduler(state.simulatedTime);
   const stateMap = useAnimatedLocalState(state.localState);
@@ -72,30 +74,60 @@ const useScheduler = (time: number) => {
   return scheduler;
 };
 
-const useAnimation = (state: State, setState: (v: State) => void) =>
+const useAnimation = (
+  state: State,
+  setState: (v: State) => void,
+  playing: boolean,
+) => {
+  const pauseState = useRef<boolean | (() => void)>(false);
+  useEffect(() => {
+    const state = pauseState.current;
+    if (playing) {
+      pauseState.current = false;
+      if (typeof state === 'function') {
+        state();
+      }
+    } else if (!state) {
+      pauseState.current = true;
+    }
+  }, [playing]);
+
   useEffect(() => {
     if (!state.frames.length) {
       return;
     }
     const frame = state.frames[state._frame];
-    const tm = setTimeout(
-      () => {
-        if (frame) {
-          startViewTransition(frame.animation, () =>
-            setState({
-              ...context.update(state, frame.spec),
-              _frame: state._frame + 1,
-              _time: Date.now(),
-            }),
-          );
-        } else {
-          setState({ ...state, ...state._reset, _time: Date.now() });
-        }
-      },
+    const advance = () => {
+      if (pauseState.current) {
+        pauseState.current = () => {
+          tm = setTimeout(advance, 1000);
+        };
+        return;
+      }
+      if (frame) {
+        startViewTransition(frame.animation, () =>
+          setState({
+            ...context.update(state, frame.spec),
+            _frame: state._frame + 1,
+            _time: Date.now(),
+          }),
+        );
+      } else {
+        setState({ ...state, ...state._reset, _time: Date.now() });
+      }
+    };
+    let tm = setTimeout(
+      advance,
       frame ? (frame.delay ?? DEFAULT_FRAME_DELAY) : state.loopDelay,
     );
-    return () => clearTimeout(tm);
+    return () => {
+      if (pauseState.current) {
+        pauseState.current = true;
+      }
+      clearTimeout(tm);
+    };
   }, [state]);
+};
 
 const useAnimatedLocalState = (target: Record<string, unknown>) => {
   const [state, setState] = useState(() => new Map(Object.entries(target)));
@@ -150,7 +182,7 @@ const MOCK_DISPATCH = Object.assign(() => null, {
   sync: () => Promise.reject(),
 });
 
-const readHash = (hash: string) =>
+const readRetroHash = (hash: string) =>
   readRetro(JSON.parse(decodeURIComponent(hash.substring(1)) || '{}'));
 
 interface State extends Retro {
