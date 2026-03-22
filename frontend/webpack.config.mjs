@@ -62,8 +62,10 @@ export default (env, argv) => ({
       {
         test: /\.svg$/,
         exclude: /node_modules/,
-        issuer: /\.[jt]sx?$/,
-        use: [babelLoader, svgrLoader],
+        oneOf: [
+          { issuer: /\.m?[jt]sx?$/, use: [babelLoader, svgrLoader] },
+          { issuer: /\.css$/, type: 'asset/inline' },
+        ],
       },
       {
         test: /\.png$/,
@@ -74,12 +76,6 @@ export default (env, argv) => ({
         test: /\.woff2?$/,
         exclude: /node_modules/,
         type: 'asset/resource',
-      },
-      {
-        test: /\.svg$/,
-        exclude: /node_modules/,
-        issuer: /\.css$/,
-        type: 'asset/inline',
       },
     ],
   },
