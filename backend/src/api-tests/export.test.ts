@@ -75,7 +75,7 @@ describe('API retros', () => {
       expect(response.body.archives).isUndefined();
     });
 
-    it('returns the retro and its archives in a spreadsheet-friendly CSV format', async (props) => {
+    it('returns mood retro and archives in a spreadsheet-friendly CSV format', async (props) => {
       const { server, retroId, retroToken } = props.getTyped(PROPS);
 
       const response = await request(server)
@@ -91,6 +91,50 @@ describe('API retros', () => {
 
       expect(response.text).matches(
         /Archive,Category,Message,Votes,State\n"#1 \([\d\-]+\)",foo,"My item",0,\n/,
+      );
+    });
+
+    it('returns health retro and history in a spreadsheet-friendly CSV format', async (props) => {
+      const { server, retroId, retroToken, hooks } = props.getTyped(PROPS);
+
+      hooks.retroService.retroBroadcaster.update(retroId, {
+        format: ['=', 'health'],
+        items: [
+          'push',
+          {
+            id: 'learning:u1',
+            category: 'good',
+            created: Date.parse('2000-01-02T00:00:00Z'),
+            message: '',
+            doneTime: 0,
+            attachment: null,
+            votes: 0,
+          },
+          {
+            id: 'learning:u2',
+            category: 'mid',
+            created: Date.parse('2000-01-02T00:00:00Z'),
+            message: '',
+            doneTime: 0,
+            attachment: null,
+            votes: 0,
+          },
+        ],
+      });
+
+      const response = await request(server)
+        .get(`/api/retros/${retroId}/export/csv-health`)
+        .set('Authorization', `Bearer ${retroToken}`)
+        .expect(200);
+
+      // A strange bug in supertest caused by `content-type: ...; headers=present`
+      // means we must check headers separately here
+      // See https://github.com/forwardemail/supertest/issues/876
+      expect(response.headers['content-disposition']).matches(/attachment/);
+      expect(response.headers['content-type']).matches(/text\/csv/);
+
+      expect(response.text).matches(
+        /Date,Question,Good,Mid,Bad,Skip\n2000-01-02,learning,1,1,0,0\n/,
       );
     });
 
@@ -140,6 +184,10 @@ describe('API retros', () => {
       await request(server)
         .get(`/api/retros/${retroId}/export/csv-mood`)
         .expect(401);
+
+      await request(server)
+        .get(`/api/retros/${retroId}/export/csv-health`)
+        .expect(401);
     });
 
     it('responds HTTP Unauthorized if credentials are incorrect', async (props) => {
@@ -152,6 +200,11 @@ describe('API retros', () => {
 
       await request(server)
         .get(`/api/retros/${retroId}/export/csv-mood`)
+        .set('Authorization', 'Bearer Foo')
+        .expect(401);
+
+      await request(server)
+        .get(`/api/retros/${retroId}/export/csv-health`)
         .set('Authorization', 'Bearer Foo')
         .expect(401);
     });
@@ -168,6 +221,11 @@ describe('API retros', () => {
 
       await request(server)
         .get(`/api/retros/${retroId}/export/csv-mood`)
+        .set('Authorization', `Bearer ${retroToken1}`)
+        .expect(403);
+
+      await request(server)
+        .get(`/api/retros/${retroId}/export/csv-health`)
         .set('Authorization', `Bearer ${retroToken1}`)
         .expect(403);
     });

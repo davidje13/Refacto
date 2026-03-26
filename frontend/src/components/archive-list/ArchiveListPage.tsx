@@ -51,9 +51,18 @@ export const ArchiveListPage = memo(({ retroAuth, retro }: PropsT) => {
           <ApiDownloadButton
             url={`retros/${encodeURIComponent(retro.id)}/export/csv-mood`}
             retroAuth={retroAuth}
-            filename={`${retro.slug}-export.csv`}
+            filename={`${retro.slug}-3-column-export.csv`}
           >
-            Export items as CSV
+            Export 3-column items as CSV
+          </ApiDownloadButton>
+        ) : null}
+        {formats.has('health') ? (
+          <ApiDownloadButton
+            url={`retros/${encodeURIComponent(retro.id)}/export/csv-health`}
+            retroAuth={retroAuth}
+            filename={`${retro.slug}-health-export.csv`}
+          >
+            Export health check items as CSV
           </ApiDownloadButton>
         ) : null}
       </div>

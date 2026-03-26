@@ -571,6 +571,49 @@ export const openapi = Buffer.from(
           },
         },
       },
+      '/retros/{retro_id}/export/csv-health': {
+        get: {
+          summary:
+            'Export the health check votes from the current retro and all of its history in a spreadsheet-readable CSV format',
+          description:
+            'This provides a partial export of health retros. Other retro formats are not included, and some internal details are omitted (such as item creation time), meaning this cannot be re-imported; it is only for processing the data in other tools.',
+          security: [{ retroToken: ['read'] }],
+          parameters: [
+            {
+              name: 'retro_id',
+              in: 'path',
+              description: 'The ID of the retro.',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
+          responses: {
+            '200': {
+              description:
+                'Export of current retro votes and historic results.',
+              headers: {
+                'Content-Disposition': {
+                  schema: { type: 'string' },
+                  example: 'attachment; filename="my-retro-export.csv"',
+                },
+              },
+              content: {
+                'text/csv; charset=utf-8; header=present': {
+                  schema: {
+                    type: 'string',
+                    description:
+                      'A comma separated values export containing one item per row, using double-quote wrapped cell values to escape special characters. Double quote characters are escaped by doubling: `"my ""quoted"" value"`. Uses UNIX line endings (`\\n`)',
+                  },
+                  example:
+                    'Date,Question,Good,Mid,Bad,Skip\n2000-01-01,learning,4,3,2,1\n2000-01-01,mission,1,2,3,4\n2000-02-01,learning,2,2,1,0',
+                },
+              },
+            },
+            '401': { $ref: '#/components/responses/UnauthorizedError' },
+            '403': { $ref: '#/components/responses/ForbiddenError' },
+          },
+        },
+      },
       '/retros/{retro_id}/export/csv-mood': {
         get: {
           summary:

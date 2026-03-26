@@ -46,7 +46,8 @@ import {
   importRetroDataJson,
   importTimestamp,
 } from '../export/RetroJsonExport';
-import { exportMoodRetroTable } from '../export/RetroTableExport';
+import { exportMoodRetroTable } from '../export/exportMoodRetroTable';
+import { exportHealthRetroTable } from '../export/exportHealthRetroTable';
 
 export class ApiRetrosRouter extends Router {
   private readonly _activeConnections = new MultiMap<string, IncomingMessage>();
@@ -387,6 +388,29 @@ export class ApiRetrosRouter extends Router {
         return sendJSON(res, {});
       }
     });
+
+    retroRouter.get(
+      '/export/csv-health',
+      requireAuthScope('read'),
+      async (req, res) => {
+        const { retroId } = getPathParameters(req);
+
+        const retro = await retroService.getRetro(retroId);
+        if (!retro) {
+          throw new HTTPError(404, { body: 'Retro not found' });
+        }
+
+        analyticsService.event(req, 'export csv-health');
+
+        res.setHeader(
+          'content-disposition',
+          `attachment; filename="${encodeURIComponent(`${retro.slug}-export.csv`)}"`,
+        );
+        return await sendCSVStream(res, exportHealthRetroTable(retro), {
+          headerRow: true,
+        });
+      },
+    );
 
     retroRouter.get(
       '/export/:format',
