@@ -1,6 +1,13 @@
 # Refacto security considerations
 
-## HTTPS
+## Guidance for self-hosting
+
+This section discusses the steps which should be taken to ensure self hosted
+deployments of Refacto are fully secure. See the [Threat model](#threat-model)
+below if you want to understand the security protections which Refacto applies
+internally.
+
+### HTTPS
 
 This application runs a HTTP server which should be deployed behind a reverse
 proxy (such as Apache HTTPD or NGINX) to enable HTTPS. The proxy should also be
@@ -20,12 +27,12 @@ TRUST_PROXY=true ./index.js
 See [Reverse Proxy in the services documentation](./SERVICES.md#reverse-proxy)
 for more details.
 
-## Passwords
+### Passwords
 
 All passwords are protected using the bcrypt hashing algorithm with a work
 factor, individual salts, and a "brute-force salt".
 
-### Work factor
+#### Work factor
 
 If you have a powerful webserver, you can increase the hash work factor:
 
@@ -44,7 +51,7 @@ Increasing this value by 1 will double the time taken to perform a hash
 use of a brute-force salt, this has an effective average value of 12 for a
 successful login and 13 for an unsuccessful login.
 
-### Secret pepper
+#### Secret pepper
 
 For extra security against database breaches, you can also specify a secret
 pepper value. This protects passwords in the event of a database breach if the
@@ -63,7 +70,7 @@ be re-hashed during a successful login.
 **If this value ever changes, all passwords will become invalid. If you specify
 a secret pepper, ensure it will never be lost!**
 
-## NodeJS runtime flags
+### NodeJS runtime flags
 
 When launched with `./index.js`, node hardening flags are applied automatically.
 If you need to customise the NodeJS flags, you should be sure to specify these
@@ -79,7 +86,7 @@ If you do not need to specify custom flags, it is recommended to stick with
 using `./index.js` to launch the application instead of `node index.js`, as the
 former will automatically get new security flags as they are added.
 
-## Data encryption
+### Data encryption
 
 All retro item data is encrypted in the database using aes-256-cbc, regardless
 of database choice. By default, a secret key of all zeros is used, providing no
@@ -115,14 +122,14 @@ Currently it is not possible to cycle this secret value.
 **If this value ever changes, all retro data will be lost. If you specify a
 secret key, ensure it will never be lost!**
 
-## Signed tokens
+### Signed tokens
 
 All user and retro tokens are signed using the RSA256 algorithm. This requires a
 private key for signing, and a public key for verifying. The application will
 automatically generate these keys and store them in the database (a global pair
 for user tokens and a per-retro pair for retro tokens).
 
-### Private key passphrase
+#### Private key passphrase
 
 For extra security against database breaches, you can also specify a private key
 passphrase. This encrypts the private key, protecting your application from
@@ -139,9 +146,9 @@ TOKEN_SECRET_PASSPHRASE="asecretwhichmustnotbeknown" ./index.js
 **If this value ever changes, you will need to regenerate all key pairs. This
 will invalidate any active sessions, forcing all users to reauthenticate.**
 
-## MongoDB
+### MongoDB
 
-### User authentication (access control)
+#### User authentication (access control)
 
 Refacto manages its own database, creating and modifying collections and indices
 automatically. For this reason, it is best to configure mongo access with the
@@ -226,14 +233,14 @@ DB_URL="mongodb://my-refacto-user:<pass>@localhost:27017/my-refacto-db" ./index.
 
 <https://docs.mongodb.com/manual/tutorial/enable-authentication/>
 
-### Encrypted communication
+#### Encrypted communication
 
 If the database is running on a separate server, you should enable encrypted
 communication (to avoid eavesdropping) as well as client and server identity
 checks (to avoid man-in-the-middle attacks). See the
 [MongoDB documentation for guidance](https://www.mongodb.com/docs/manual/tutorial/configure-ssl/).
 
-## Analytics / Diagnostics
+### Analytics / Diagnostics
 
 By default, Refacto will log server and client errors, but will not record
 events or any client details (platform / browser version).
@@ -272,3 +279,101 @@ to `none` and `ANALYTICS_CLIENT_ERROR_DETAIL` were limited to `message` or
 `none`). Removing these users from the logs goes beyond required privacy
 controls (as the details recorded are not shared with third parties), but is
 done to respect user preferences.
+
+## Threat model
+
+This section discusses the threat model which Refacto is built around.
+Understanding these details is not necessary for users or self-hosters, but may
+be useful for compliance checking, pen-testing, or reporting issues.
+
+At its core, Refacto is a collaborative document editing tool. This means that
+user-generated content is visible to other users, so Refacto must ensure that
+the content is not able to compromise viewers' browsers or expose sensitive
+data.
+
+### Roles
+
+The model here considers the following "roles" (which may be humans, or systems
+using the API) in relation to a given retro document:
+
+- **Guest** - a user who does not know anything about the retro, except possibly
+  its "slug".
+- **Viewer** - a user who knows a non-revoked read-only URL for a retro but no
+  other details.
+- **Participant** - a user who knows the "slug" and password for the retro.
+- **Owner** - a user who has logged in using a third-party identity provider,
+  using the same account which first created the retro.
+- **Integration** - a user who has a non-revoked API key for a retro. API keys
+  can have configurable scopes, called out below where relevant.
+
+### In scope
+
+The following restrictions are considered necessary for Refacto's security. If
+you believe you have found a way to bypass a restriction, please raise an issue.
+
+- **Guest**s cannot see any content or metadata of the retro except its internal
+  ID and user-provided "slug".
+- **Guest**s and **Viewer**s cannot modify any content or metadata of the retro.
+- **Guest**s and **Viewer**s cannot cause any data to be sent to the
+  **Viewer**s, **Participant**s, **Owner**s, or **Integration**s of the retro.
+- **Guest**s and **Viewer**s cannot create new API keys or read-only URLs for
+  the retro.
+- If a **Viewer**'s read-only URL or **Integration**'s API key is revoked, they
+  lose access immediately (becoming a **Guest**).
+- **Integration**s without the "read" or "write" scope cannot view current
+  content for the retro.
+- **Integration**s without the "readArchives" scope cannot view archived content
+  for the retro.
+- **Integration**s without the "write" or "manage" scope cannot modify any
+  content of the retro.
+- **Integration**s without the "manage" scope cannot modify the URL, password,
+  or API keys of the retro.
+- **Integration**s with the "manage" scope can only create new API keys with a
+  subset of their own scopes.
+
+It is possible that users with _any role_ may be malicious or compromised. The
+retro content and messages between users cannot be trusted, and must not be able
+to cause:
+
+- Attacker-controlled code execution in a **Viewer**, **Participant**, or
+  **Owner**'s browser (e.g. script injection).
+- Attacker-controlled code execution on the server (e.g. database command
+  injection).
+- Exposure of secrets from a **Viewer**, **Participant**, or **Owner**'s
+  browser.
+- Redirection of a **Viewer**, **Participant**, or **Owner** away from the
+  retro.
+- Exposure of data about another retro.
+
+A legitimate user may also open a malicious or compromised website unrelated to
+Refacto. It must not be possible for an external (cross-origin) site to:
+
+- Discover that a user is logged in to Refacto.
+- Access non-public retro data from Refacto via the user's browser.
+- Modify retro data via the user's browser (e.g. "clickjacking" or CSRF attack).
+- Forcibly log a user in to an unexpected third-party account.
+
+### Out of scope
+
+Note that the following are _not_ in scope as attack vectors:
+
+- **Guest**s can discover retro "slug"s (URLs) through trial-and-error.
+- **Viewer**s can export the contents of a retro.
+- **Participant**s, **Owner**s, and **Integration**s may change a retro in ways
+  which are not possible via the standard UI, including changes which cause a
+  "broken" appearance or error messages (but do not result in compromises as
+  described above). These cases can be reported as bugs, but are not a security
+  priority.
+- Denial-of-Service by sending maliciously large documents is always possible
+  (especially on low-powered devices). These are only considered relevant to
+  security if the slowdown is at least `O(n^2)` (in terms of document size).
+- **Integration**s are responsible for their own security (e.g. ensuring they do
+  not execute JavaScript code embedded in messages, or leak data, etc.).
+- Proxies with an SSL root certificate installed on the user's computer, as well
+  as browser plugins with permissive access, can read and modify all data and
+  code used by Refacto.
+
+### Reporting
+
+Report any security issues to the
+[issue tracker](https://github.com/davidje13/Refacto/issues).
