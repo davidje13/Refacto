@@ -7,6 +7,8 @@ describe('MoodRetro', () => {
   it('can switch between wide and narrow view', () => {
     const { getAllBy } = render(
       <MoodRetro
+        retroId=""
+        retroSlug=""
         retroOptions={{}}
         retroItems={[]}
         retroState={{}}

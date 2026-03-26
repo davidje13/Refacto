@@ -29,6 +29,8 @@ export const RetroPreviewPage = memo(() => {
         <StaticStateMapProvider data={stateMap}>
           <RetroFormat
             className="retro-content"
+            retroId=""
+            retroSlug=""
             retroFormat={state.format}
             retroOptions={state.options}
             retroItems={state.items}

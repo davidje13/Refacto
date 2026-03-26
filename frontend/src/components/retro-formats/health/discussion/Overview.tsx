@@ -1,8 +1,12 @@
 import type { FunctionComponent } from 'react';
-import type { RetroHistoryItem } from '../../../../shared/api-entities';
+import type {
+  RetroAuth,
+  RetroHistoryItem,
+} from '../../../../shared/api-entities';
 import type { HealthSummary } from '../../../../shared/health';
 import type { HealthQuestion } from '../../../../actions/healthRetro';
 import { plural } from '../../../../time/formatters';
+import { ApiDownloadButton } from '../../../common/ApiDownloadButton';
 import { Trendline } from '../common/Trendline';
 import { Dots } from '../common/Dots';
 import { ALL_ANSWERS, getAnswer } from '../answers';
@@ -11,6 +15,9 @@ import { getMood, getTrend, TREND_ARROWS } from './icons';
 import './Overview.css';
 
 interface PropsT {
+  retroId: string;
+  retroSlug: string;
+  retroAuth?: RetroAuth | undefined;
   questions: HealthQuestion[];
   summary: HealthSummary;
   retroHistory: RetroHistoryItem[];
@@ -21,6 +28,9 @@ interface PropsT {
 }
 
 export const Overview: FunctionComponent<PropsT> = ({
+  retroId,
+  retroSlug,
+  retroAuth,
   questions,
   summary,
   retroHistory,
@@ -72,7 +82,16 @@ export const Overview: FunctionComponent<PropsT> = ({
         <button type="button" className="global-button" onClick={onImport}>
           Import Past Results
         </button>
-      ) : undefined}
+      ) : null}
+      {retroAuth ? (
+        <ApiDownloadButton
+          url={`retros/${encodeURIComponent(retroId)}/export/csv-health`}
+          retroAuth={retroAuth}
+          filename={`${retroSlug}-health-export.csv`}
+        >
+          Export as CSV
+        </ApiDownloadButton>
+      ) : null}
       {onArchive ? (
         <button
           type="button"
@@ -81,7 +100,7 @@ export const Overview: FunctionComponent<PropsT> = ({
         >
           Finish and Create Archive
         </button>
-      ) : undefined}
+      ) : null}
     </section>
   </section>
 );

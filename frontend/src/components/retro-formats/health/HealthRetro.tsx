@@ -29,6 +29,9 @@ export const HealthRetro: FunctionComponent<
   RetroFormatProps<HealthRetroStateT>
 > = ({
   className,
+  retroId,
+  retroSlug,
+  retroAuth,
   retroOptions,
   retroState,
   retroItems,
@@ -81,6 +84,9 @@ export const HealthRetro: FunctionComponent<
     return (
       <div className={classNames('retro-format-health archive', className)}>
         <Discussion
+          retroId={retroId}
+          retroSlug={retroSlug}
+          retroAuth={retroAuth}
           questions={questions}
           expanded={localExpanded}
           retroItems={filteredRetroItems}
@@ -128,6 +134,9 @@ export const HealthRetro: FunctionComponent<
         />
       ) : (
         <Discussion
+          retroId={retroId}
+          retroSlug={retroSlug}
+          retroAuth={retroAuth}
           questions={questions}
           expanded={retroState.focusedItemId ?? null}
           retroItems={filteredRetroItems}

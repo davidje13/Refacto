@@ -40,6 +40,9 @@ export const ArchivePage = memo(
           <LoadingIndicator />
         ) : (
           <RetroFormat
+            retroId={retro.id}
+            retroSlug={retro.slug}
+            retroAuth={retroAuth}
             retroFormat={archive.format}
             retroOptions={archive.options}
             retroItems={archive.items}

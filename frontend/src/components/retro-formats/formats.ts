@@ -2,12 +2,19 @@ import { lazy, type ComponentType, type SVGAttributes } from 'react';
 import HealthIcon from '../../../resources/icons/health.svg';
 import MoodIcon from '../../../resources/icons/mood.svg';
 import UnknownIcon from '../../../resources/icons/unknown.svg';
-import type { RetroHistoryItem, RetroItem } from '../../shared/api-entities';
+import type {
+  RetroAuth,
+  RetroHistoryItem,
+  RetroItem,
+} from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
 export interface RetroFormatProps<StateT = Record<string, unknown>> {
   className?: string;
+  retroId: string;
+  retroSlug: string;
+  retroAuth?: RetroAuth | undefined;
   retroOptions: Record<string, unknown>;
   retroItems: RetroItem[];
   retroState: StateT;

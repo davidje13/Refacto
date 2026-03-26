@@ -1,5 +1,6 @@
 import { useMemo, type FunctionComponent } from 'react';
 import type {
+  RetroAuth,
   RetroHistoryItem,
   RetroItem,
 } from '../../../../shared/api-entities';
@@ -10,6 +11,9 @@ import { Overview } from './Overview';
 import { Detail } from './Detail';
 
 interface PropsT {
+  retroId: string;
+  retroSlug: string;
+  retroAuth?: RetroAuth | undefined;
   questions: HealthQuestion[];
   expanded: string | null;
   retroItems: RetroItem[];
@@ -21,6 +25,9 @@ interface PropsT {
 }
 
 export const Discussion: FunctionComponent<PropsT> = ({
+  retroId,
+  retroSlug,
+  retroAuth,
   questions,
   expanded,
   retroItems,
@@ -55,6 +62,9 @@ export const Discussion: FunctionComponent<PropsT> = ({
 
   return (
     <Overview
+      retroId={retroId}
+      retroSlug={retroSlug}
+      retroAuth={retroAuth}
       questions={questions}
       summary={summarised}
       retroHistory={retroHistory}

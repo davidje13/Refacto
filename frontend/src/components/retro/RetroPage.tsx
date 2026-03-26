@@ -83,6 +83,9 @@ export const RetroPage = memo(
         />
         <RetroFormat
           className="retro-content"
+          retroId={retro.id}
+          retroSlug={retro.slug}
+          retroAuth={retroAuth}
           retroFormat={retro.format}
           retroOptions={retro.options}
           retroItems={retro.items}
