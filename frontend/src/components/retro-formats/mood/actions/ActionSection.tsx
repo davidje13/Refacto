@@ -1,8 +1,5 @@
 import { memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../../../../shared/api-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import { actionItemWithinRange } from '../../../../actions/moodRetro';
 import { ItemColumn } from '../ItemColumn';
 import { ActionItem } from './ActionItem';
@@ -14,9 +11,7 @@ interface PropsT {
   rangeFrom?: number;
   rangeTo?: number;
   onSetDone?: ((id: string, done: boolean) => void) | undefined;
-  onEdit?:
-    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
-    | undefined;
+  onEdit?: ((id: string, diff: Partial<RetroItem>) => void) | undefined;
   onDelete?: ((id: string) => void) | undefined;
 }
 

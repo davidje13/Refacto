@@ -1,8 +1,4 @@
-import type {
-  Retro,
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../shared/api-entities';
+import type { Retro, RetroItem } from '../shared/api-entities';
 import type { Spec } from '../api/reducer';
 import { randomUUID } from '../helpers/crypto';
 
@@ -26,7 +22,7 @@ export const setRetroState = (
 export const addRetroItem = (
   category: string,
   group: string | undefined,
-  { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
+  { message, ...rest }: Partial<RetroItem>,
 ): Spec<Retro>[] => {
   const sanitisedMessage = sanitiseInput(message || '');
   if (!sanitisedMessage) {
@@ -57,7 +53,7 @@ const updateItem = (
 
 export const editRetroItem = (
   itemId: string,
-  { message, ...rest }: Partial<UserProvidedRetroItemDetails>,
+  { message, ...rest }: Partial<RetroItem>,
 ): Spec<Retro>[] => {
   const merge: Partial<RetroItem> = { ...rest };
   if (message !== undefined) {

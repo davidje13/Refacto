@@ -1,8 +1,5 @@
 import { memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../../../../shared/api-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import { FaceIcon } from './FaceIcon';
 import { MoodItem } from './MoodItem';
 import { ItemColumn } from '../ItemColumn';
@@ -21,13 +18,11 @@ interface PropsT {
     | ((
         category: string,
         group: string | undefined,
-        itemParts: Partial<UserProvidedRetroItemDetails>,
+        itemParts: Partial<RetroItem>,
       ) => void)
     | undefined;
   onVote?: ((id: string) => void) | undefined;
-  onEdit?:
-    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
-    | undefined;
+  onEdit?: ((id: string, diff: Partial<RetroItem>) => void) | undefined;
   onDelete?: ((id: string) => void) | undefined;
   onSelect?: ((id: string) => void) | undefined;
   onCancel?: ((id: string) => void) | undefined;

@@ -1,8 +1,5 @@
 import { memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../../../../shared/api-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import { classNames } from '../../../../helpers/classNames';
 import { useTypingEvent } from '../../../../hooks/useTypingEvent';
@@ -19,15 +16,10 @@ interface PropsT {
   alwaysShowEntry?: boolean;
   group?: string | undefined;
   onAddItem?:
-    | ((
-        group: string | undefined,
-        itemParts: Partial<UserProvidedRetroItemDetails>,
-      ) => void)
+    | ((group: string | undefined, itemParts: Partial<RetroItem>) => void)
     | undefined;
   onSetDone?: ((id: string, done: boolean) => void) | undefined;
-  onEdit?:
-    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
-    | undefined;
+  onEdit?: ((id: string, diff: Partial<RetroItem>) => void) | undefined;
   onDelete?: ((id: string) => void) | undefined;
 }
 

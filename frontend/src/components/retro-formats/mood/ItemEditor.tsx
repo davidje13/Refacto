@@ -1,8 +1,5 @@
 import { memo, type ReactNode } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../../../shared/api-entities';
+import type { RetroItem } from '../../../shared/api-entities';
 import { useEvent } from '../../../hooks/useEvent';
 import { ExpandingTextEntry } from '../../common/ExpandingTextEntry';
 import { Attachment } from '../../attachments/Attachment';
@@ -15,7 +12,7 @@ import Delete from '../../../../resources/delete.svg';
 interface PropsT {
   defaultItem?: RetroItem;
   identifier?: string | undefined;
-  onSubmit: (itemParts: Partial<UserProvidedRetroItemDetails>) => void;
+  onSubmit: (itemParts: Partial<RetroItem>) => void;
   onCancel?: (() => void) | undefined;
   onDelete?: (() => void) | undefined;
   onChange?: ((value: string) => void) | undefined;

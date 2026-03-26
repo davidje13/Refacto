@@ -61,9 +61,11 @@ export interface UserProvidedRetroItemDetails {
   attachment: RetroItemAttachment | null;
 }
 
-export interface RetroItem extends UserProvidedRetroItemDetails {
+export interface RetroItem {
   id: string;
   category: string;
+  message: string;
+  attachment: RetroItemAttachment | null;
   created: number;
   votes: number;
   doneTime: number;

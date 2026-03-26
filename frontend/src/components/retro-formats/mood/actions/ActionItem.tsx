@@ -1,9 +1,6 @@
 import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../../../../shared/api-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import { ItemEditor } from '../ItemEditor';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
@@ -15,9 +12,7 @@ import './ActionItem.css';
 interface PropsT {
   item: RetroItem;
   onSetDone?: ((id: string, done: boolean) => void) | undefined;
-  onEdit?:
-    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
-    | undefined;
+  onEdit?: ((id: string, diff: Partial<RetroItem>) => void) | undefined;
   onDelete?: ((id: string) => void) | undefined;
 }
 
@@ -28,12 +23,10 @@ export const ActionItem = memo(
     const handleDelete = useOptionalBoundEvent(onDelete, item.id);
 
     const editing = useBoolean(false);
-    const handleSaveEdit = useEvent(
-      (diff: Partial<UserProvidedRetroItemDetails>) => {
-        editing.setFalse();
-        onEdit!(item.id, diff);
-      },
-    );
+    const handleSaveEdit = useEvent((diff: Partial<RetroItem>) => {
+      editing.setFalse();
+      onEdit!(item.id, diff);
+    });
 
     if (editing.value) {
       return (

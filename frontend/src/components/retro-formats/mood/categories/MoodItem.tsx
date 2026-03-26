@@ -1,8 +1,5 @@
 import { memo } from 'react';
-import type {
-  RetroItem,
-  UserProvidedRetroItemDetails,
-} from '../../../../shared/api-entities';
+import type { RetroItem } from '../../../../shared/api-entities';
 import { MoodItemPlain } from './MoodItemPlain';
 import { MoodItemFocused } from './MoodItemFocused';
 import { ItemEditor } from '../ItemEditor';
@@ -17,9 +14,7 @@ interface PropsT {
   focused?: boolean;
   focusedItemTimeout?: number;
   autoScroll?: boolean;
-  onEdit?:
-    | ((id: string, diff: Partial<UserProvidedRetroItemDetails>) => void)
-    | undefined;
+  onEdit?: ((id: string, diff: Partial<RetroItem>) => void) | undefined;
   onAddExtraTime?: ((time: number) => void) | undefined;
   onVote?: ((id: string) => void) | undefined;
   onDelete?: ((id: string) => void) | undefined;
@@ -52,12 +47,10 @@ export const MoodItem = memo(
     const handleContinue = useOptionalBoundEvent(onContinue, item.id);
 
     const editing = useBoolean(false);
-    const handleSaveEdit = useEvent(
-      (diff: Partial<UserProvidedRetroItemDetails>) => {
-        editing.setFalse();
-        onEdit!(item.id, diff);
-      },
-    );
+    const handleSaveEdit = useEvent((diff: Partial<RetroItem>) => {
+      editing.setFalse();
+      onEdit!(item.id, diff);
+    });
 
     if (editing.value && onEdit) {
       return (
