@@ -9,7 +9,7 @@ import './Preview.css';
 interface PreviewFrame {
   delay?: number;
   spec: Spec<PreviewContent>;
-  animation?: string;
+  animation?: string | undefined;
 }
 
 export type PreviewContent = Partial<
@@ -101,6 +101,7 @@ export const answerHealth = (
   delayAnswer: number,
   answerID: AnswerID,
   message = '',
+  animate = true,
 ): PreviewFrame[] => [
   {
     delay: delayOpen,
@@ -110,9 +111,10 @@ export const answerHealth = (
         [`health-progress:${userID}`]: ['=', questionID],
       },
     },
+    animation: animate ? 'health-advance' : undefined,
   },
   {
-    delay: delayAnswer,
+    delay: (animate ? 1700 : 0) + delayAnswer,
     spec: {
       localState: {
         [`health-message:${questionID}:${userID}`]: ['=', message],

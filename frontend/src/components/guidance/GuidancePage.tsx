@@ -440,11 +440,11 @@ const HEALTH_RETRO_PREVIEW: PreviewContent = {
       "Can't release if Pat's on holiday",
     ),
     ...answerHealth(300, 'me', 'speed', 700, 'mid'),
-    ...answerHealth(300, 'me', 'support', 700, 'good'),
-    ...answerHealth(300, 'me', 'fun', 700, 'good'),
-    ...answerHealth(300, 'me', 'learning', 700, 'mid'),
-    ...answerHealth(300, 'me', 'mission', 700, 'mid'),
-    ...answerHealth(300, 'me', 'autonomy', 700, 'bad'),
+    ...answerHealth(300, 'me', 'support', 700, 'good', '', false),
+    ...answerHealth(300, 'me', 'fun', 700, 'good', '', false),
+    ...answerHealth(300, 'me', 'learning', 700, 'mid', '', false),
+    ...answerHealth(300, 'me', 'mission', 700, 'mid', '', false),
+    ...answerHealth(300, 'me', 'autonomy', 700, 'bad', '', false),
     {
       delay: 500,
       spec: {
