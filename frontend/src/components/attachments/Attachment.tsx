@@ -2,15 +2,11 @@ import type { FunctionComponent, ComponentType } from 'react';
 import type { RetroItemAttachment } from '../../shared/api-entities';
 import { GiphyAttachment } from './giphy/GiphyAttachment';
 
-interface ChildPropsT {
-  attachment: RetroItemAttachment;
-}
-
 interface PropsT {
   attachment: RetroItemAttachment | null;
 }
 
-const TYPES = new Map<string, ComponentType<ChildPropsT>>();
+const TYPES = new Map<string, ComponentType<{ attachment: any }>>();
 TYPES.set('giphy', GiphyAttachment);
 
 export const Attachment: FunctionComponent<PropsT> = ({ attachment }) => {

@@ -131,6 +131,15 @@ export const json = {
       ) as T[];
     },
 
+  constant:
+    <T>(value: T) =>
+    (source: unknown, path = ''): T => {
+      if (source !== value) {
+        throw new ValidationError(`Expected ${value}`, path);
+      }
+      return value;
+    },
+
   string: (source: unknown, path = ''): string => {
     if (typeof source !== 'string') {
       throw new ValidationError('Expected string', path);

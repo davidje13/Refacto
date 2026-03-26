@@ -2,9 +2,9 @@ import type {
   RetroItemJsonExport,
   RetroJsonExport,
   RetroDataJsonExport,
-  RetroItemAttachmentJsonExport,
   RetroArchiveJsonExport,
   RetroHistoryItemJsonExport,
+  RetroItemGiphyAttachmentJsonExport,
 } from '../export/RetroJsonExport';
 import { json, ValidationError } from './json';
 
@@ -26,11 +26,13 @@ export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
   votes: json.number,
   completed: json.optional(jsonIsoDate),
   attachment: json.optional(
-    json.object<RetroItemAttachmentJsonExport>({
-      type: json.string,
-      url: json.string,
-      alt: json.optional(json.string),
-    }),
+    json.oneOf(
+      json.object<RetroItemGiphyAttachmentJsonExport>({
+        type: json.constant('giphy'),
+        url: json.string,
+        alt: json.optional(json.string),
+      }),
+    ),
   ),
 });
 

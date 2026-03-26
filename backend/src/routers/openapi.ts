@@ -1287,6 +1287,7 @@ export const openapi = Buffer.from(
               example: 'A waving bear',
             },
           },
+          description: 'A giphy image and metadata.',
         },
         Retro: {
           type: 'object',

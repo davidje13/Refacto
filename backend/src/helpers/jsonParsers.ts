@@ -1,9 +1,9 @@
 import type {
   RetroItem,
-  RetroItemAttachment,
   RetroData,
   Retro,
   RetroHistoryItem,
+  RetroItemGiphyAttachment,
 } from '../shared/api-entities';
 import { json } from './json';
 
@@ -13,11 +13,13 @@ export const extractRetroItem = json.exactObject<RetroItem>({
   created: json.number,
   message: json.string,
   attachment: json.nullable(
-    json.exactObject<RetroItemAttachment>({
-      type: json.string,
-      url: json.string,
-      alt: json.optional(json.string),
-    }),
+    json.oneOf(
+      json.exactObject<RetroItemGiphyAttachment>({
+        type: json.constant('giphy'),
+        url: json.string,
+        alt: json.optional(json.string),
+      }),
+    ),
   ),
   votes: json.number,
   doneTime: json.number,

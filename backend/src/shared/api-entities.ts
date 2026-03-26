@@ -50,8 +50,8 @@ export interface RetroCreationInfo {
   expires: number;
 }
 
-export interface RetroItemAttachment {
-  type: string;
+export interface RetroItemGiphyAttachment {
+  type: 'giphy';
   url: string;
   alt?: string | undefined;
 }
@@ -60,6 +60,8 @@ export interface UserProvidedRetroItemDetails {
   message: string;
   attachment: RetroItemAttachment | null;
 }
+
+export type RetroItemAttachment = RetroItemGiphyAttachment;
 
 export interface RetroItem {
   id: string;

@@ -10,11 +10,13 @@ import type {
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 
-export interface RetroItemAttachmentJsonExport {
-  type: string;
+export interface RetroItemGiphyAttachmentJsonExport {
+  type: 'giphy';
   url: string;
   alt?: string | undefined;
 }
+
+export type RetroItemAttachmentJsonExport = RetroItemGiphyAttachmentJsonExport;
 
 export interface RetroItemJsonExport {
   created: string;
@@ -63,21 +65,19 @@ export function importTimestamp(isoDate: string): number {
 function exportRetroItemAttachment(
   attachment: RetroItemAttachment,
 ): RetroItemAttachmentJsonExport {
-  return {
-    type: attachment.type,
-    url: attachment.url,
-    alt: attachment.alt,
-  };
+  switch (attachment.type) {
+    case 'giphy':
+      return { type: 'giphy', url: attachment.url, alt: attachment.alt };
+  }
 }
 
 function importRetroItemAttachment(
   attachment: RetroItemAttachmentJsonExport,
 ): RetroItemAttachment {
-  return {
-    type: attachment.type,
-    url: attachment.url,
-    alt: attachment.alt,
-  };
+  switch (attachment.type) {
+    case 'giphy':
+      return { type: 'giphy', url: attachment.url, alt: attachment.alt };
+  }
 }
 
 function exportRetroItem(item: RetroItem): RetroItemJsonExport {
