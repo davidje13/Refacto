@@ -17,6 +17,9 @@ const DATETIME_FORMATTER = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit',
 });
 
+export const isoDate = (timestamp: number) =>
+  new Date(timestamp).toISOString().split('T', 1)[0]!;
+
 export const formatDate = (timestamp: number) =>
   DATE_FORMATTER.format(new Date(timestamp));
 

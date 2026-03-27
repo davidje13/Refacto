@@ -4,7 +4,7 @@ import type { Counts, HealthSummary } from '../../../shared/health';
 import { useSubmissionCallback } from '../../../hooks/useSubmissionCallback';
 import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import type { HealthQuestion } from '../../../actions/healthRetro';
-import { formatDate } from '../../../time/formatters';
+import { formatDate, isoDate } from '../../../time/formatters';
 import { realAutoFocus } from '../../../helpers/realAutoFocus';
 import { Popup } from '../../common/Popup';
 import { Alert } from '../../common/Alert';
@@ -93,11 +93,7 @@ export const ImportPopup: FunctionComponent<PropsT> = ({
             ref={realAutoFocus}
             type="date"
             value={date}
-            max={
-              new Date(localDateProvider.getMidnightTimestamp())
-                .toISOString()
-                .split('T')[0]
-            }
+            max={isoDate(localDateProvider.getMidnightTimestamp())}
             onChange={(e) => setDate(e.currentTarget.value)}
             autoComplete="off"
             required

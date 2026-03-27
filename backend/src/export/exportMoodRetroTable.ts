@@ -1,4 +1,5 @@
 import type { Retro, RetroArchive, RetroItem } from '../shared/api-entities';
+import { isoDate } from '../helpers/formatters';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 
@@ -9,7 +10,7 @@ function exportMoodItems(
 ): string[][] {
   let archiveID = 'current';
   if (archive) {
-    archiveID = `#${index + 1} (${dateString(new Date(archive.created))})`;
+    archiveID = `#${index + 1} (${isoDate(archive.created)})`;
   }
   return [...items]
     .sort(RETRO_ITEM_ORDER)
@@ -26,10 +27,6 @@ function exportMoodItems(
           ? 'Discussed'
           : '',
     ]);
-}
-
-function dateString(date: Date) {
-  return date.toISOString().split('T')[0];
 }
 
 export async function* exportMoodRetroTable(

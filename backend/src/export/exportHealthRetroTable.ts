@@ -1,8 +1,9 @@
 import type { Retro } from '../shared/api-entities';
 import { summariseHealthVotes, type HealthSummary } from '../shared/health';
+import { isoDate } from '../helpers/formatters';
 
 function exportHealthItems(summary: HealthSummary): string[][] {
-  const date = new Date(summary.time).toISOString().split('T')[0]!;
+  const date = isoDate(summary.time);
   const items = [...summary.data.questions].sort((a, b) =>
     a.id > b.id ? 1 : -1,
   );
