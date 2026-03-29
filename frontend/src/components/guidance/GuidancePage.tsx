@@ -270,7 +270,7 @@ const MOOD_RETRO_PREVIEW: PreviewContent = {
   name: 'Step 1: Everybody adds items',
 
   frames: [
-    ...typeItem(500, 'new-item-happy:value', {
+    ...typeItem(500, 'new-item-happy', {
       id: 'i0',
       category: 'happy',
       message: 'We can run retros remotely 😃',
@@ -279,7 +279,7 @@ const MOOD_RETRO_PREVIEW: PreviewContent = {
       votes: 0,
       doneTime: 0,
     }),
-    ...typeItem(700, 'new-item-sad:value', {
+    ...typeItem(700, 'new-item-sad', {
       id: 'i2',
       category: 'sad',
       message: 'It rained',
@@ -379,7 +379,7 @@ const MOOD_RETRO_PREVIEW: PreviewContent = {
       delay: 2000,
       spec: { name: ['=', 'Step 2: Discuss the items… and record actions'] },
     },
-    ...typeItem(700, 'new-action:value', {
+    ...typeItem(700, 'new-action', {
       id: 'a0',
       category: 'action',
       message: 'Buy an umbrella ☂️ [Sam]',
@@ -423,9 +423,6 @@ const HEALTH_RETRO_PREVIEW: PreviewContent = {
   simulatedTime: now,
   name: 'Step 1: Answer questions individually',
   items: [],
-  localState: {
-    'health-progress:me': '.', // prevent animating
-  },
 
   frames: [
     ...answerHealth(4000, 'me', 'process', 1000, 'good'),
@@ -500,7 +497,6 @@ const HEALTH_RETRO_PREVIEW: PreviewContent = {
     {
       delay: 1000,
       spec: {
-        localState: { 'health:own-state-0': ['=', { stage: 'begin' }] },
         history: ['push', { format: 'health', time: 1000, data: {} }],
         items: ['delete', 'all'],
       },

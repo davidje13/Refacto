@@ -87,10 +87,16 @@ export const typeItem = (
   field: string,
   item: RetroItem,
 ): PreviewFrame[] => [
-  { delay, spec: { localState: { [field]: ['=', item.message] } } },
+  {
+    delay,
+    spec: { localState: { [field + ':value']: ['=', '...' + item.message] } },
+  },
   {
     delay: item.message.length * 60 + 500,
-    spec: { items: ['push', item], localState: { [field]: ['=', ''] } },
+    spec: {
+      items: ['push', item],
+      localState: { [field + ':value']: ['=', ''] },
+    },
   },
 ];
 
@@ -117,7 +123,7 @@ export const answerHealth = (
     delay: (animate ? 1700 : 0) + delayAnswer,
     spec: {
       localState: {
-        [`health-message:${questionID}:${userID}`]: ['=', message],
+        [`health-message:${questionID}:${userID}`]: ['=', '...' + message],
       },
     },
   },

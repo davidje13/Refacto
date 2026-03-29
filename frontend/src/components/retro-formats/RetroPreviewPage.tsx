@@ -159,18 +159,18 @@ const updateAnimatedState =
     cont.v = false;
     for (const [k, v] of Object.entries(target)) {
       const existing = cur.get(k);
-      if (
-        v !== existing &&
-        typeof v === 'string' &&
-        (existing === undefined ||
-          (typeof existing === 'string' && v.startsWith(existing)))
-      ) {
-        let l = (existing ?? '').length + steps;
-        if ((v.charCodeAt(l - 1) & ~0x03ff) === 0xd800) {
+      if (typeof v === 'string' && v.startsWith('...')) {
+        const actualV = v.substring(3);
+        let l = 0;
+        if (typeof existing === 'string' && actualV.startsWith(existing)) {
+          l = existing.length;
+        }
+        l += steps;
+        if ((actualV.charCodeAt(l - 1) & ~0x03ff) === 0xd800) {
           ++l; // skip past surrogate pair
         }
-        updated.set(k, v.substring(0, l));
-        if (l < v.length) {
+        updated.set(k, actualV.substring(0, l));
+        if (l < actualV.length) {
           cont.v = true;
         }
       } else {
