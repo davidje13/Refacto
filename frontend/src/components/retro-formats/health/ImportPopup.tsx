@@ -4,7 +4,7 @@ import type { Counts, HealthSummary } from '../../../shared/health';
 import { useSubmissionCallback } from '../../../hooks/useSubmissionCallback';
 import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import type { HealthQuestion } from '../../../actions/healthRetro';
-import { formatDate, isoDate } from '../../../time/formatters';
+import { formatDate, isoDate, readIsoDate } from '../../../time/formatters';
 import { realAutoFocus } from '../../../helpers/realAutoFocus';
 import { Popup } from '../../common/Popup';
 import { Alert } from '../../common/Alert';
@@ -31,9 +31,9 @@ export const ImportPopup: FunctionComponent<PropsT> = ({
   const [values, setValues] = useState(new Map<string, string>());
   const [performImport, sending, error, resetError] = useSubmissionCallback(
     () => {
-      const time = Date.parse(`${date}T00:00:00Z`);
+      const time = readIsoDate(date);
       if (
-        Number.isNaN(time) ||
+        !time ||
         time > Date.now() ||
         time < Date.now() - 1000 * 60 * 60 * 24 * 365 * 50
       ) {

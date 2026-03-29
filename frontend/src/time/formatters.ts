@@ -20,6 +20,14 @@ const DATETIME_FORMATTER = new Intl.DateTimeFormat(undefined, {
 export const isoDate = (timestamp: number) =>
   new Date(timestamp).toISOString().split('T', 1)[0]!;
 
+export const readIsoDate = (date: string) => {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const tm = Date.parse(date + 'T00:00:00Z');
+    return Number.isNaN(tm) ? null : tm;
+  }
+  return null;
+};
+
 export const formatDate = (timestamp: number) =>
   DATE_FORMATTER.format(new Date(timestamp));
 
