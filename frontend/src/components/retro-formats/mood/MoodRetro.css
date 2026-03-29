@@ -231,7 +231,7 @@
         width: 1.5em;
         height: 1.5em;
         background: center center / 1.2em 1.2em no-repeat
-          url(../../../../resources/giphy-icon.png);
+          url('../../../../resources/giphy-icon.png');
       }
     }
 

@@ -23,7 +23,7 @@
         transparent
       );
       max-width: min(calc(100vw - 64px), 300px);
-      line-clamp: 4;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
       max-height: calc(5em + 16px);

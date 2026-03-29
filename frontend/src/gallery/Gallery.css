@@ -40,7 +40,7 @@
       width: 472px;
       height: 972px;
       transform: rotate(15deg) scale(0.75);
-      background: url(./iphone.png);
+      background: url('./iphone.png');
       filter: drop-shadow(7px 20px 20px rgba(0, 0, 0, 0.3))
         drop-shadow(2px 10px 40px rgba(0, 0, 0, 0.2));
     }

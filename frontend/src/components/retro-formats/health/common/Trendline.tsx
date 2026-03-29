@@ -96,14 +96,14 @@ export const Trendline = memo<PropsT>(({ samples }) => {
       {DISTRIBUTION_THRESHOLDS.map((m, i) => (
         <path
           key={i}
-          fill={`url(#${gradID})`}
+          fill={`url('#${CSS.escape(gradID)}')`}
           opacity={1 / (DISTRIBUTION_THRESHOLDS.length - i)}
           d={makeDistributionShape(m)}
         />
       ))}
       <path
         className="average"
-        stroke={`url(#${gradID})`}
+        stroke={`url('#${CSS.escape(gradID)}')`}
         d={`M${makeCurve(avg)}`}
       />
       {avg.map((p, i) =>
@@ -116,7 +116,7 @@ export const Trendline = memo<PropsT>(({ samples }) => {
           <path
             key={i}
             className="point"
-            stroke={`url(#${gradID})`}
+            stroke={`url('#${CSS.escape(gradID)}')`}
             d={`M${p.x} ${p.y}v0.0001`}
           />
         ) : null,

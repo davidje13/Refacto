@@ -107,7 +107,7 @@
     width: 1.5rem;
     height: 1.5rem;
     opacity: 0.3;
-    background: center no-repeat url(../../../../../resources/pencil.svg);
+    background: center no-repeat url('../../../../../resources/pencil.svg');
 
     @media (prefers-color-scheme: dark) {
       filter: invert();
