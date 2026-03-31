@@ -1,10 +1,10 @@
 import { render, type RenderResult } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../../shared/api-entities';
+import { LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { css } from '../../../../test-helpers/queries';
 
 import { ActionsPane } from './ActionsPane';
-import { LocalDateProvider } from '../../../../time/LocalDateProvider';
 
 jest.mock('../../../common/ExpandingTextEntry', () => ({
   ExpandingTextEntry: mockElement('mock-expanding-text-entry'),

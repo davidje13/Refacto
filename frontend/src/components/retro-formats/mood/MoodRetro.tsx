@@ -26,10 +26,10 @@ import { useActionFactory } from '../../../hooks/useActionFactory';
 import { useGlobalKeyListener } from '../../../hooks/useGlobalKeyListener';
 import { useGate } from '../../../hooks/useGate';
 import { OPTIONS } from '../../../helpers/optionManager';
+import { ItemToast } from '../../items/ItemToast';
 import type { RetroFormatProps } from '../formats';
 import { MoodSection } from './categories/MoodSection';
 import { ActionsPane } from './actions/ActionsPane';
-import { ActionToast } from './actions/ActionToast';
 import { BeginDiscussionPopup } from './BeginDiscussionPopup';
 import './MoodRetro.css';
 
@@ -194,7 +194,12 @@ export const MoodRetro = ({
   );
 
   const actionToast = archive ? null : (
-    <ActionToast group={group} items={retroItems} />
+    <ItemToast
+      group={group}
+      category="action"
+      items={retroItems}
+      label="Action item: "
+    />
   );
 
   if (singleColumn) {

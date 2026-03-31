@@ -11,7 +11,7 @@ interface PropsT {
   samples: Sample[];
 }
 
-export const Trendline = memo<PropsT>(({ samples }) => {
+export const Trendline = memo(({ samples }: PropsT) => {
   const gradID = useId();
 
   if (samples.length < 2) {

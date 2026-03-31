@@ -6,9 +6,9 @@ import { useTypingEvent } from '../../../../hooks/useTypingEvent';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import type { LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { formatDate } from '../../../../time/formatters';
+import { TypingIndicator } from '../../../common/TypingIndicator';
+import { ItemEditor } from '../../../items/ItemEditor';
 import { ActionSection } from './ActionSection';
-import { TypingIndicator } from './TypingIndicator';
-import { ItemEditor } from '../ItemEditor';
 
 interface PropsT {
   items: RetroItem[];

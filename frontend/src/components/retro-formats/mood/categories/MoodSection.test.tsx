@@ -2,11 +2,11 @@ import { render, act } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
 import { makeRetroItem } from '../../../../shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
-
-import { MoodSection } from './MoodSection';
 import { MoodItem } from './MoodItem';
 
-jest.mock('../ItemColumn', () => ({
+import { MoodSection } from './MoodSection';
+
+jest.mock('../../../items/ItemColumn', () => ({
   ItemColumn: mockElement('mock-item-column'),
 }));
 jest.mock('../../../common/ExpandingTextEntry', () => ({

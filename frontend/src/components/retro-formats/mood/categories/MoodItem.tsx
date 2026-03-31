@@ -1,12 +1,12 @@
 import { memo } from 'react';
+import TickBold from '../../../../../resources/tick-bold.svg';
 import type { RetroItem } from '../../../../shared/api-entities';
-import { MoodItemPlain } from './MoodItemPlain';
-import { MoodItemFocused } from './MoodItemFocused';
-import { ItemEditor } from '../ItemEditor';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
-import TickBold from '../../../../../resources/tick-bold.svg';
+import { ItemEditor } from '../../../items/ItemEditor';
+import { MoodItemPlain } from './MoodItemPlain';
+import { MoodItemFocused } from './MoodItemFocused';
 import './MoodItem.css';
 
 interface PropsT {

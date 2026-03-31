@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { useIsAfter } from 'react-hook-final-countdown';
-import type { RetroItem } from '../../../../shared/api-entities';
-import './ActionToast.css';
+import type { RetroItem } from '../../shared/api-entities';
+import './ItemToast.css';
 
 interface PropsT {
+  category: string;
   group: string | undefined;
+  label: string;
   items: RetroItem[];
 }
 
 const DISPLAY_TIME = 10000;
 const MAX_ITEMS = 3;
 
-export const ActionToast = ({ group, items }: PropsT) => {
+export const ItemToast = ({ category, group, label, items }: PropsT) => {
   const state = useRef<State | null>(null);
   const [notifications, setNotifications] = useState<Note[]>([]);
   const nextExpiry = Math.min(...notifications.map((item) => item.expiry));
@@ -30,7 +32,7 @@ export const ActionToast = ({ group, items }: PropsT) => {
     const newNotes: Note[] = [];
     const expiry = Date.now() + DISPLAY_TIME;
     for (const item of items) {
-      if (item.category === 'action' && !seen.has(item.id)) {
+      if (item.category === category && !seen.has(item.id)) {
         seen.add(item.id);
         if (!group || !item.group || item.group === group) {
           newNotes.push({ id: item.id, message: item.message, expiry });
@@ -48,16 +50,16 @@ export const ActionToast = ({ group, items }: PropsT) => {
         return updated;
       });
     }
-  }, [group, items]);
+  }, [category, group, items]);
 
   return (
-    <section className="action-toast" role="status" aria-live="polite">
+    <section className="item-toast" role="status" aria-live="polite">
       <ul>
         {notifications.map((note) => {
           const latest = items.find((item) => item.id === note.id);
           return (
             <li key={note.id}>
-              Action item:{' '}
+              {label}
               <bdi>{latest ? latest.message : <del>{note.message}</del>}</bdi>
             </li>
           );

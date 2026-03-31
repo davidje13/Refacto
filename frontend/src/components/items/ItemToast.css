@@ -1,4 +1,4 @@
-.action-toast {
+.item-toast {
   position: fixed;
   bottom: 8px;
   left: 8px;
@@ -31,7 +31,7 @@
       text-overflow: ellipsis;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      animation: action-toast-notify 10s forwards;
+      animation: item-toast-notify 10s forwards;
 
       & del {
         text-decoration: line-through;
@@ -46,7 +46,7 @@
   }
 }
 
-@keyframes action-toast-notify {
+@keyframes item-toast-notify {
   from {
     transform: translateX(-150%);
     animation-timing-function: ease-out;

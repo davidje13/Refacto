@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import type { RetroItem } from '../../../../shared/api-entities';
 import { actionItemWithinRange } from '../../../../actions/moodRetro';
-import { ItemColumn } from '../ItemColumn';
+import { ItemColumn } from '../../../items/ItemColumn';
 import { ActionItem } from './ActionItem';
 
 interface PropsT {
@@ -33,11 +33,7 @@ export const ActionSection = memo(
       <ItemColumn
         items={items.filter(actionItemWithinRange(group, rangeFrom, rangeTo))}
         ItemType={ActionItem}
-        itemProps={{
-          onSetDone,
-          onEdit,
-          onDelete,
-        }}
+        itemProps={{ onSetDone, onEdit, onDelete }}
       />
     </section>
   ),

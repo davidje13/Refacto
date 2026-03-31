@@ -1,12 +1,12 @@
 import { memo } from 'react';
+import Tick from '../../../../../resources/tick.svg';
+import TickBold from '../../../../../resources/tick-bold.svg';
 import { classNames } from '../../../../helpers/classNames';
 import type { RetroItem } from '../../../../shared/api-entities';
-import { ItemEditor } from '../ItemEditor';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';
-import Tick from '../../../../../resources/tick.svg';
-import TickBold from '../../../../../resources/tick-bold.svg';
+import { ItemEditor } from '../../../items/ItemEditor';
 import './ActionItem.css';
 
 interface PropsT {

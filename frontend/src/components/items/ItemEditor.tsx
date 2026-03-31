@@ -1,13 +1,13 @@
 import { memo, type ReactNode } from 'react';
-import type { RetroItem } from '../../../shared/api-entities';
-import { useEvent } from '../../../hooks/useEvent';
-import { ExpandingTextEntry } from '../../common/ExpandingTextEntry';
-import { Attachment } from '../../attachments/Attachment';
-import { GiphyButton } from '../../attachments/giphy/GiphyButton';
-import { useConfig } from '../../../hooks/data/useConfig';
-import { useStateMap } from '../../../hooks/useStateMap';
-import Cross from '../../../../resources/cross.svg';
-import Delete from '../../../../resources/delete.svg';
+import Cross from '../../../resources/cross.svg';
+import Delete from '../../../resources/delete.svg';
+import type { RetroItem } from '../../shared/api-entities';
+import { useEvent } from '../../hooks/useEvent';
+import { ExpandingTextEntry } from '../common/ExpandingTextEntry';
+import { Attachment } from '../attachments/Attachment';
+import { GiphyButton } from '../attachments/giphy/GiphyButton';
+import { useConfig } from '../../hooks/data/useConfig';
+import { useStateMap } from '../../hooks/useStateMap';
 
 interface PropsT {
   defaultItem?: RetroItem;
