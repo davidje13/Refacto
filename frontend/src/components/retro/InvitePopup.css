@@ -5,13 +5,19 @@
 
   .link {
     text-align: center;
-    font-size: 1.8em;
+    font-size: 1.2em;
     display: block;
     padding: 10px 20px;
     background: var(--beige-back);
     border-radius: 5px;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     user-select: all;
+    max-width: calc(100vw - 64px);
+
+    @media (min-width: 600px) {
+      font-size: 1.8em;
+      max-width: calc(100vw - 128px);
+    }
   }
 
   .qr-code {
