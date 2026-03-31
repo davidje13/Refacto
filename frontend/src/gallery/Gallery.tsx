@@ -98,7 +98,7 @@ const GalleryPage = () => (
           simulatedTime: now,
           items: [],
           localState: {
-            'health:own-state-0': { stage: 'answer', user: 'me' },
+            'health:own-state': { stage: 'answer', user: 'me' },
             'health-progress:me': 'learning',
           },
         }}

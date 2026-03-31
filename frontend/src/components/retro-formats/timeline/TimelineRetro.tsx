@@ -38,15 +38,11 @@ export const TimelineRetro: FunctionComponent<
   dispatch,
   retroItems,
   retroState,
-  retroHistory,
   group,
   archive,
   archiveTime,
 }) => {
-  const boardNumber = retroHistory.filter(
-    (item) => item.format === 'timeline',
-  ).length; // TODO: add a proper counter to the retro for state like this (also in health retro)
-  const [myID] = useStateMap('timeline', `id-${boardNumber}`, randomUUID, true); // TODO: use single state + reset it, rather than creating new state for each session
+  const [myID] = useStateMap('timeline:id', randomUUID, true);
   const tools = useMemo<Tool[]>(
     () => [
       { type: 'pen', name: 'Pen', colour: colourForID(myID) },
@@ -160,7 +156,7 @@ export const TimelineRetro: FunctionComponent<
     <div className={classNames('retro-format-timeline', className)}>
       <TabControl
         tabs={tabs}
-        persist={archive ? undefined : `timeline-${boardNumber}`}
+        identifier="timeline:tab"
         initial={archive ? 'draw' : 'events'}
       />
       {archive ? null : (

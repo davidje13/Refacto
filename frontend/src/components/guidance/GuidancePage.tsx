@@ -504,6 +504,7 @@ const HEALTH_RETRO_PREVIEW: PreviewContent = {
     {
       delay: 1000,
       spec: {
+        localState: { 'health:own-state': ['=', { stage: 'begin' }] },
         history: ['push', { format: 'health', time: 1000, data: {} }],
         items: ['delete', 'all'],
       },
@@ -538,7 +539,7 @@ const TIMELINE_RETRO_PREVIEW: PreviewContent = {
     addEvent(500, 'e6', day(47), 'Mascot design session'),
     addEvent(600, 'e7', day(40), 'Got an office llama'),
     { delay: 2000, spec: { name: ['=', 'Step 2: Draw mood lines'] } },
-    { delay: 500, spec: { localState: { 'timeline-0:tab': ['=', 'draw'] } } },
+    { delay: 500, spec: { localState: { 'timeline:tab': ['=', 'draw'] } } },
     ...drawMoodLine(
       1000,
       100,
@@ -668,6 +669,7 @@ const TIMELINE_RETRO_PREVIEW: PreviewContent = {
     {
       delay: 1000,
       spec: {
+        localState: { 'timeline:tab': ['=', 'events'] },
         history: [
           'push',
           { format: 'timeline', time: 1000, data: { endTime: now } },

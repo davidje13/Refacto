@@ -44,12 +44,8 @@ export const HealthRetro: FunctionComponent<
   archive,
 }) => {
   const useAction = useActionFactory(dispatch);
-  const surveyNumber = retroHistory.filter(
-    (item) => item.format === 'health' && !item.data['imported'],
-  ).length;
   const [ownState, setOwnState] = useStateMap<OwnState>(
-    'health',
-    `own-state-${surveyNumber}`, // change state key to force a reset when archiving
+    'health:own-state',
     { stage: 'begin' },
     true,
   );

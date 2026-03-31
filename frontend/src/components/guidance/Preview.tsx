@@ -120,7 +120,7 @@ export const answerHealth = (
     delay: delayOpen,
     spec: {
       localState: {
-        'health:own-state-0': ['=', { stage: 'answer', user: userID }],
+        'health:own-state': ['=', { stage: 'answer', user: userID }],
         [`health-progress:${userID}`]: ['=', questionID],
       },
     },
@@ -154,7 +154,7 @@ export const answerHealth = (
 ];
 
 export const healthDiscuss = (): Spec<PreviewContent> => ({
-  localState: { 'health:own-state-0': ['=', { stage: 'discuss' }] },
+  localState: { 'health:own-state': ['=', { stage: 'discuss' }] },
 });
 
 export const healthFocus = (

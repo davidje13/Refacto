@@ -18,14 +18,14 @@ function getActive(tabs: TabT[], activeKey: string): TabT | undefined {
 interface PropsT {
   tabs: TabT[];
   emptyState?: ReactNode;
-  persist?: string | undefined;
+  identifier?: string | undefined;
   initial?: string | undefined;
 }
 
 export const TabControl = memo(
-  ({ tabs, emptyState, persist, initial = '' }: PropsT) => {
+  ({ tabs, emptyState, identifier, initial = '' }: PropsT) => {
     const id = useId();
-    const [activeKey, setActiveKey] = useStateMap(persist, 'tab', initial);
+    const [activeKey, setActiveKey] = useStateMap(identifier, initial, true);
     if (!tabs.length) {
       return emptyState;
     }

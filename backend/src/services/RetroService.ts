@@ -55,6 +55,7 @@ export class RetroService {
     this.retroCollection = cache(
       migrate(
         {
+          sessionId: (v) => v || '00000000-0000-0000-0000-000000000000',
           groupStates: (v) => v || {},
           history: (v) => v || [],
           scheduledDelete: (v) => v || 0,
@@ -113,6 +114,7 @@ export class RetroService {
 
   getArchiveSpec(retro: Retro, preserveRemaining: boolean): Spec<Retro> {
     const spec: Spec<Retro> = {
+      sessionId: ['=', randomUUID()],
       state: ['=', {}],
       groupStates: ['=', {}],
       items: [
@@ -187,6 +189,7 @@ export class RetroService {
 
     await this.retroCollection.add({
       id,
+      sessionId: randomUUID(),
       slug,
       name,
       ownerId,
@@ -235,6 +238,7 @@ const FORMATS = new Set(['health', 'mood', 'timeline']);
 
 const LOCKED_FIELDS: (keyof Retro)[] = [
   'id',
+  'sessionId',
   'ownerId',
   'format',
   'scheduledDelete',

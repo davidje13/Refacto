@@ -94,7 +94,7 @@ export const RetroRouter: FunctionComponent<PropsT> = ({ slug }) => {
 
   return (
     <LiveEventsProvider dispatch={retroDispatch} events={retroState.events}>
-      <StateMapProvider scope={retroId}>
+      <StateMapProvider scope={retroId} persist={retroState.retro.sessionId}>
         <Switch>
           <Route path="/retros/:slug">
             <RetroPage {...retroParams} />

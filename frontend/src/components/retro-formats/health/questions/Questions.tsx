@@ -33,7 +33,7 @@ export const Questions: FunctionComponent<PropsT> = ({
   onCancel,
   onComplete,
 }) => {
-  const [current, setCurrent] = useStateMap('health-progress', userID, '');
+  const [current, setCurrent] = useStateMap(`health-progress:${userID}`, '');
 
   if (!questions.length) {
     return (
@@ -136,8 +136,7 @@ const Question: FunctionComponent<QuestionPropsT> = ({
   onPrev,
 }) => {
   const [message, setMessage] = useStateMap(
-    'health-message',
-    answerID,
+    `health-message:${answerID}`,
     existingAnswer?.message ?? '',
   );
 

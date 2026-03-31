@@ -240,7 +240,8 @@ describe('API retros', () => {
         .set('Authorization', `Bearer ${retroToken}`)
         .expect(200);
 
-      expect(response.body).toEqual({
+      const { sessionId, ...body } = response.body;
+      expect(body).toEqual({
         id,
         slug: 'my-retro',
         name: 'My Retro',
@@ -253,6 +254,7 @@ describe('API retros', () => {
         history: [],
         scheduledDelete: 0,
       });
+      expect(sessionId).toMatch(/^[0-9a-f\-]+$/);
     });
 
     it('filters retro items if requested', async (props) => {

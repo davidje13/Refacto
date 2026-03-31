@@ -220,7 +220,7 @@ export const MoodRetro = ({
 
     return (
       <div className={baseClassName}>
-        <TabControl tabs={tabs} persist="mood" />
+        <TabControl tabs={tabs} identifier="mood:tab" />
         {actionToast}
         {popup}
       </div>

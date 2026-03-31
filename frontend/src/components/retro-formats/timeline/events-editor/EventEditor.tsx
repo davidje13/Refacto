@@ -37,8 +37,7 @@ export const EventEditor = memo(
     ...rest
   }: PropsT) => {
     const [date, setDate] = useStateMap(
-      identifier,
-      'date',
+      identifier ? `${identifier}:date` : undefined,
       defaultItem ? isoDate(defaultItem.doneTime) : '',
     );
     const handleSubmit = useEvent((message: string) => {
@@ -54,7 +53,7 @@ export const EventEditor = memo(
     return (
       <ExpandingTextEntry
         defaultValue={defaultItem?.message ?? ''}
-        identifier={identifier}
+        identifier={identifier ? `${identifier}:value` : undefined}
         onChange={onChange}
         onSubmit={handleSubmit}
         onCancel={onCancel}

@@ -41,8 +41,7 @@ export const ItemEditor = memo(
     const config = useConfig();
 
     const [attachment, setAttachment] = useStateMap(
-      identifier,
-      'attachment',
+      identifier ? `${identifier}:attachment` : undefined,
       defaultItem?.attachment ?? null,
     );
     const handleSubmit = useEvent((message: string) => {
@@ -57,7 +56,7 @@ export const ItemEditor = memo(
     return (
       <ExpandingTextEntry
         defaultValue={defaultItem?.message ?? ''}
-        identifier={identifier}
+        identifier={identifier ? `${identifier}:value` : undefined}
         onChange={onChange}
         onSubmit={handleSubmit}
         onCancel={onCancel}

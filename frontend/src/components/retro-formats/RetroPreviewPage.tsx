@@ -205,6 +205,7 @@ const readRetro = (state: Partial<State>): State => {
     simulatedTime: now,
     ownerId: 'example',
     id: 'example',
+    sessionId: 'example',
     slug: 'example',
     name: 'Example Retro',
     format: '',

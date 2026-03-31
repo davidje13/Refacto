@@ -1318,6 +1318,7 @@ export const openapi = Buffer.from(
           type: 'object',
           required: [
             'id',
+            'sessionId',
             'slug',
             'name',
             'ownerId',
@@ -1331,6 +1332,12 @@ export const openapi = Buffer.from(
           ],
           properties: {
             id: { $ref: '#/components/schemas/RetroID' },
+            sessionId: {
+              type: 'string',
+              format: 'uuid',
+              description:
+                'A unique ID for the current retro session. This will change when the retro is archived.',
+            },
             slug: { $ref: '#/components/schemas/RetroSlug' },
             name: { $ref: '#/components/schemas/RetroName' },
             ownerId: {

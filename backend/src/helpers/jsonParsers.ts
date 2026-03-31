@@ -66,6 +66,7 @@ export const extractRetroData = json.exactObject<RetroData>({
 
 export const extractRetro = json.exactObject<Retro>({
   id: json.string,
+  sessionId: json.string,
   slug: json.string,
   name: json.string,
   ownerId: json.string,

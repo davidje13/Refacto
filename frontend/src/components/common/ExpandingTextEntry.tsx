@@ -59,7 +59,7 @@ export const ExpandingTextEntry = ({
   blurOnCancel = false,
   disabled = false,
 }: PropsT): ReactElement => {
-  const [value, setValue] = useStateMap(identifier, 'value', defaultValue);
+  const [value, setValue] = useStateMap(identifier, defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
   const [form, setForm] = useState<HTMLFormElement | null>(null);
 

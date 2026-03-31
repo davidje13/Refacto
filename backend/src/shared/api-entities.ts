@@ -118,6 +118,7 @@ type AnyState = Record<string, unknown>;
 
 export interface Retro<StateT = AnyState> extends RetroData {
   id: string;
+  sessionId: string;
   slug: string;
   name: string;
   ownerId: string;
@@ -131,6 +132,7 @@ export type RetroSummary = Pick<Retro, 'id' | 'slug' | 'name' | 'format'>;
 export function makeRetro(details: Partial<Retro> = {}): Retro {
   return {
     id: '',
+    sessionId: '',
     slug: '',
     name: '',
     ownerId: '',
