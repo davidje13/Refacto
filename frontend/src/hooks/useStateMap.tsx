@@ -8,6 +8,8 @@ import {
   useState,
   useEffect,
   useMemo,
+  useRef,
+  type MutableRefObject,
 } from 'react';
 import { sessionStore } from '../helpers/storage';
 
@@ -65,57 +67,72 @@ export const StaticStateMapProvider = ({
 export function useStateMap<T>(
   identifier: string | undefined,
   subIdentifier: string,
-  defaultValue: T,
+  defaultValue: T | (() => T),
   persist = false,
 ): [T, (v: T) => void] {
   const id = identifier ? `${identifier}:${subIdentifier}` : undefined;
+  const defaultValueRef = useRef<DefaultValueRef<T>>();
   const state = useContext(StateMapContext);
-  const [value, setValue] = useState<T>(() =>
-    readStored(state, id, persist, defaultValue),
+  const [value, setValue] = useState(() =>
+    readStored(state, id, persist, defaultValueRef, defaultValue),
   );
 
   useEffect(() => {
     if (id) {
-      setValue(readStored(state, id, persist, defaultValue));
+      setValue(readStored(state, id, persist, defaultValueRef, defaultValue));
     }
   }, [state, id, persist]);
 
-  const setter = useCallback(
-    (v: T) => {
-      if (id) {
-        state.map.set(id, v);
-        if (persist && state.scope) {
-          if (v !== null && v !== undefined) {
-            sessionStore.setItem(`${state.scope}:${id}`, JSON.stringify(v));
-          } else {
-            sessionStore.removeItem(`${state.scope}:${id}`);
-          }
+  useEffect(() => {
+    if (id && value[1]) {
+      const v = value[0];
+      state.map.set(id, v);
+      if (persist && state.scope) {
+        if (v !== null && v !== undefined) {
+          sessionStore.setItem(`${state.scope}:${id}`, JSON.stringify(v));
+        } else {
+          sessionStore.removeItem(`${state.scope}:${id}`);
         }
       }
-      setValue(v);
-    },
-    [state, id, persist],
-  );
-  return [value, setter];
+    }
+  }, [id, value, persist]);
+
+  const setter = useCallback((v: T) => setValue([v, true]), []);
+  return [value[0], setter];
+}
+
+interface DefaultValueRef<T> {
+  id: string | undefined;
+  value: T;
 }
 
 function readStored<T>(
   state: StateMap,
   id: string | undefined,
   persist: boolean,
-  defaultValue: T,
-): T {
-  if (!id) {
-    return defaultValue;
-  }
-  if (state.map.has(id)) {
-    return state.map.get(id) as T;
-  }
-  if (persist && state.scope) {
-    const stored = sessionStore.getItem(`${state.scope}:${id}`);
-    if (stored !== null) {
-      return JSON.parse(stored) as T;
+  defaultValueRef: MutableRefObject<DefaultValueRef<T> | undefined>,
+  defaultValue: T | (() => T),
+): [T, boolean] {
+  if (id) {
+    if (state.map.has(id)) {
+      return [state.map.get(id) as T, false];
+    }
+    if (persist && state.scope) {
+      const stored = sessionStore.getItem(`${state.scope}:${id}`);
+      if (stored !== null) {
+        return [JSON.parse(stored) as T, false];
+      }
     }
   }
-  return defaultValue;
+  if (typeof defaultValue !== 'function') {
+    return [defaultValue, false];
+  }
+
+  if (defaultValueRef.current && defaultValueRef.current.id === id) {
+    return [defaultValueRef.current.value, true];
+  }
+
+  const value = (defaultValue as () => T)();
+  defaultValueRef.current = { id, value };
+  return [value, true];
 }

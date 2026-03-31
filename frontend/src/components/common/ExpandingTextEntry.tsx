@@ -37,6 +37,7 @@ interface PropsT {
   clearAfterSubmit?: boolean;
   blurOnSubmit?: boolean;
   blurOnCancel?: boolean;
+  disabled?: boolean;
 }
 
 export const ExpandingTextEntry = ({
@@ -56,6 +57,7 @@ export const ExpandingTextEntry = ({
   clearAfterSubmit = false,
   blurOnSubmit = false,
   blurOnCancel = false,
+  disabled = false,
 }: PropsT): ReactElement => {
   const [value, setValue] = useStateMap(identifier, 'value', defaultValue);
   const [textMultiline, setTextMultiline] = useState(false);
@@ -64,7 +66,7 @@ export const ExpandingTextEntry = ({
   const handleSubmit = useEvent((e?: SyntheticEvent) => {
     e?.preventDefault();
 
-    if (value === '') {
+    if (disabled || value === '') {
       return;
     }
 
@@ -127,7 +129,7 @@ export const ExpandingTextEntry = ({
           type="submit"
           className="submit"
           title={submitButtonTitle}
-          disabled={value === ''}
+          disabled={disabled || value === ''}
         >
           {submitButtonLabel}
         </button>

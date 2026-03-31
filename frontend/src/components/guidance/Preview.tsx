@@ -1,9 +1,16 @@
 import { useLayoutEffect, useRef, type FunctionComponent } from 'react';
-import type { Retro, RetroItem } from '../../shared/api-entities';
+import type {
+  Colour,
+  Curve,
+  CurveElement,
+  Retro,
+  RetroItem,
+} from '../../shared/api-entities';
 import type { AnswerID } from '../../shared/health';
 import { classNames } from '../../helpers/classNames';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import type { Spec } from '../../api/reducer';
+import { isoDate } from '../../time/formatters';
 import './Preview.css';
 
 interface PreviewFrame {
@@ -174,3 +181,123 @@ export const addHealthAnswers = (
     ),
   ],
 });
+
+export const typeEvent = (
+  delay: number,
+  field: string,
+  item: Pick<RetroItem, 'id' | 'message' | 'doneTime'>,
+): PreviewFrame[] => [
+  {
+    delay,
+    spec: { localState: { [field + ':value']: ['=', '...' + item.message] } },
+  },
+  {
+    delay: item.message.length * 60 + 500,
+    spec: { localState: { [field + ':date']: ['=', isoDate(item.doneTime)] } },
+  },
+  {
+    delay: 300,
+    spec: {
+      items: ['push', { category: 'event', ...item }],
+      localState: {
+        [field + ':value']: ['=', ''],
+        [field + ':date']: ['=', ''],
+      },
+    },
+  },
+];
+
+export const addEvent = (
+  delay: number,
+  id: string,
+  time: number,
+  message: string,
+): PreviewFrame => ({
+  delay,
+  spec: {
+    items: [
+      'push',
+      {
+        id,
+        category: 'event',
+        message,
+        created: 0,
+        attachment: null,
+        votes: 0,
+        doneTime: time,
+      },
+    ],
+  },
+});
+
+export const TIME_SCALE = 1 / (1000 * 60 * 60);
+
+export const moodline = (
+  { id, colour }: { id: string; colour: Colour },
+  t: number,
+  y0: number,
+  ...ys: number[]
+): Pick<RetroItem, 'id' | 'category' | 'attachment'> => {
+  t *= TIME_SCALE;
+  const curve: Curve = [[t, y0 * 10]];
+  let prevY = y0;
+  let c1 = y0 + (ys[1]! - y0) / 3;
+  for (let i = 0; i < ys.length; ++i, t += 72) {
+    const y = ys[i]!;
+    const nextY = ys[i + 1] ?? y;
+    const c2 = y - (nextY - prevY) / 6;
+    curve.push([t + 24, c1 * 10, t + 48, c2 * 10, t + 72, y * 10]);
+    prevY = y;
+    c1 = y * 2 - c2;
+  }
+  return {
+    id,
+    category: 'moodline',
+    attachment: { type: 'sketch', colour, curve },
+  };
+};
+
+export const drawMoodLine = (
+  delay: number,
+  segmentDelay: number,
+  item: Pick<RetroItem, 'id' | 'attachment'>,
+  { dx = 0, dy = 0, mx = 1, my = 1 } = {},
+): PreviewFrame[] => {
+  if (item.attachment?.type !== 'sketch') {
+    throw new Error();
+  }
+  const move = (c: CurveElement) =>
+    c.map((p, i) => p * (i & 1 ? my : mx) + (i & 1 ? dy : dx)) as CurveElement;
+  const [c0, ...curve] = item.attachment.curve;
+  return [
+    {
+      delay,
+      spec: {
+        items: [
+          'push',
+          {
+            category: 'moodline',
+            message: '',
+            created: 0,
+            votes: 0,
+            doneTime: 0,
+            ...item,
+            attachment: { ...item.attachment, curve: [move(c0!)] },
+          },
+        ],
+      },
+    },
+    ...curve.map(
+      (seg): PreviewFrame => ({
+        delay: segmentDelay,
+        spec: {
+          items: [
+            'update',
+            ['first', { id: ['=', item.id] }],
+            { attachment: { curve: ['push', move(seg)] } },
+          ],
+        },
+      }),
+    ),
+  ];
+};

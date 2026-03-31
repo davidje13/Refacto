@@ -1,6 +1,7 @@
 import { lazy, type ComponentType, type SVGAttributes } from 'react';
 import HealthIcon from '../../../resources/icons/health.svg';
 import MoodIcon from '../../../resources/icons/mood.svg';
+import TimelineIcon from '../../../resources/icons/timeline.svg';
 import UnknownIcon from '../../../resources/icons/unknown.svg';
 import type {
   RetroAuth,
@@ -59,6 +60,19 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
       label: 'Health Check',
       icon: HealthIcon,
       showCreateArchive: false,
+    },
+  ],
+  [
+    'timeline',
+    {
+      component: lazy(() =>
+        import('./timeline/TimelineRetro').then((m) => ({
+          default: m.TimelineRetro,
+        })),
+      ),
+      label: 'Timeline',
+      icon: TimelineIcon,
+      showCreateArchive: true,
     },
   ],
 ]);

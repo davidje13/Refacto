@@ -6,6 +6,10 @@ import type {
   RetroItemAttachment,
   RetroArchive,
   RetroHistoryItem,
+  Curve,
+  CurveMove,
+  CurveCubicBezier,
+  Colour,
 } from '../shared/api-entities';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
@@ -16,7 +20,15 @@ export interface RetroItemGiphyAttachmentJsonExport {
   alt?: string | undefined;
 }
 
-export type RetroItemAttachmentJsonExport = RetroItemGiphyAttachmentJsonExport;
+export interface RetroItemSketchAttachmentJsonExport {
+  type: 'sketch';
+  curve: string;
+  colour: Colour;
+}
+
+export type RetroItemAttachmentJsonExport =
+  | RetroItemGiphyAttachmentJsonExport
+  | RetroItemSketchAttachmentJsonExport;
 
 export interface RetroItemJsonExport {
   created: string;
@@ -62,12 +74,55 @@ export function importTimestamp(isoDate: string): number {
   return Date.parse(isoDate);
 }
 
+function exportCurve(curve: Curve): string {
+  return curve.map((p) => (p.length === 2 ? 'M' : 'C') + p.join(' ')).join('');
+}
+
+function importCurve(curve: string): Curve {
+  const r: Curve = [];
+  let current: number[] = [];
+  let mode = '';
+  function add() {
+    switch (mode) {
+      case 'M':
+        if (current.length === 2) {
+          r.push(current as CurveMove);
+        }
+        break;
+      case 'C':
+        for (let i = 0; i + 6 <= current.length; i += 6) {
+          r.push(current.slice(i, 6) as CurveCubicBezier);
+        }
+        break;
+    }
+  }
+  for (const part of curve.matchAll(
+    /\s*([a-z])|\s*([+\-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+\-]?\d+)?)/giy,
+  )) {
+    if (part[1]) {
+      add();
+      mode = part[1];
+      current = [];
+    } else {
+      current.push(Number.parseFloat(part[2]!));
+    }
+  }
+  add();
+  return r;
+}
+
 function exportRetroItemAttachment(
   attachment: RetroItemAttachment,
 ): RetroItemAttachmentJsonExport {
   switch (attachment.type) {
     case 'giphy':
       return { type: 'giphy', url: attachment.url, alt: attachment.alt };
+    case 'sketch':
+      return {
+        type: 'sketch',
+        curve: exportCurve(attachment.curve),
+        colour: attachment.colour,
+      };
   }
 }
 
@@ -77,6 +132,12 @@ function importRetroItemAttachment(
   switch (attachment.type) {
     case 'giphy':
       return { type: 'giphy', url: attachment.url, alt: attachment.alt };
+    case 'sketch':
+      return {
+        type: 'sketch',
+        curve: importCurve(attachment.curve),
+        colour: attachment.colour,
+      };
   }
 }
 

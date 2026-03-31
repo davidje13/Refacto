@@ -2,12 +2,17 @@ import { memo } from 'react';
 import { Header } from '../common/Header';
 import { Anchor } from '../common/Anchor';
 import {
+  addEvent,
   addHealthAnswers,
   answerHealth,
+  drawMoodLine,
   healthDiscuss,
   healthFocus,
   moodFocus,
+  moodline,
   Preview,
+  TIME_SCALE,
+  typeEvent,
   typeItem,
   vote,
   type PreviewContent,
@@ -215,6 +220,7 @@ export const GuidancePage = memo(() => (
           <p>
             <strong>Timeline.</strong>
           </p>
+          <Preview content={TIMELINE_RETRO_PREVIEW} />
           <p>
             A timeline retro begins with a horizontal timeline drawn on the
             whiteboard covering the time period to be discussed (typically
@@ -236,6 +242,7 @@ export const GuidancePage = memo(() => (
             once per quarter, or after large tracks of work finish). It focuses
             on long-term trends and big events rather than immediate concerns.
           </p>
+          <p>Refacto supports timeline retros.</p>
         </li>
       </ul>
       <p>
@@ -498,6 +505,173 @@ const HEALTH_RETRO_PREVIEW: PreviewContent = {
       delay: 1000,
       spec: {
         history: ['push', { format: 'health', time: 1000, data: {} }],
+        items: ['delete', 'all'],
+      },
+      animation: 'archive',
+    },
+  ],
+};
+
+const DAY = 1000 * 60 * 60 * 24;
+const day = (n: number) => (Math.floor(now / DAY) + n) * DAY;
+
+const TIMELINE_RETRO_PREVIEW: PreviewContent = {
+  format: 'timeline',
+  simulatedTime: now,
+  name: 'Step 1: Add important dates',
+
+  frames: [
+    ...typeEvent(500, 'event', {
+      id: 'e0',
+      message: 'Kickoff session',
+      doneTime: day(0),
+    }),
+    ...typeEvent(1000, 'event', {
+      id: 'e1',
+      message: 'Release',
+      doneTime: day(18),
+    }),
+    addEvent(700, 'e2', day(3), 'User research'),
+    addEvent(200, 'e3', day(24), '10 Customers'),
+    addEvent(400, 'e4', day(34), 'Angry customer'),
+    addEvent(300, 'e5', day(54), 'Newspaper article'),
+    addEvent(500, 'e6', day(47), 'Mascot design session'),
+    addEvent(600, 'e7', day(40), 'Got an office llama'),
+    { delay: 2000, spec: { name: ['=', 'Step 2: Draw mood lines'] } },
+    { delay: 500, spec: { localState: { 'timeline-0:tab': ['=', 'draw'] } } },
+    ...drawMoodLine(
+      1000,
+      100,
+      moodline(
+        { id: 'l0', colour: { h: 160 } },
+        day(0),
+        30,
+        22,
+        21,
+        22,
+        28,
+        25,
+        5,
+        0,
+        -1,
+        -2,
+        -2,
+        5,
+        80,
+        50,
+        35,
+        26,
+        20,
+        14,
+        8,
+        6,
+      ),
+    ),
+
+    ...drawMoodLine(
+      200,
+      100,
+      moodline(
+        { id: 'l1', colour: { h: 350 } },
+        day(0),
+        60,
+        20,
+        10,
+        5,
+        4,
+        6,
+        8,
+        20,
+        5,
+        20,
+        5,
+        10,
+        50,
+        90,
+        70,
+        50,
+        40,
+        35,
+        15,
+        5,
+      ),
+    ),
+
+    ...drawMoodLine(
+      100,
+      100,
+      moodline(
+        { id: 'l2', colour: { h: 240 } },
+        day(0),
+        40,
+        41,
+        42,
+        42,
+        40,
+        40,
+        39,
+        38,
+        38,
+        39,
+        40,
+        44,
+        45,
+        5,
+        10,
+        40,
+        51,
+        52,
+        46,
+        41,
+      ),
+    ),
+
+    ...drawMoodLine(
+      200,
+      100,
+      {
+        id: 'l3',
+        attachment: {
+          type: 'sketch',
+          colour: { h: 80 },
+          curve: [
+            [-3, -25],
+            [-11, -26, -12, 13, -10, 31],
+            [-9, 42, 9, 47, 10, 26],
+            [10, 0, 12, -38, -1, -33],
+            [-3, -5],
+            [-3, -5, -3, -5, -3, -5],
+            [4, -5],
+            [4, -5, 4, -5, 4, -5],
+            [-1, 12],
+            [-1, 23, 2, 20, 3, 12],
+          ],
+        },
+      },
+      { dx: day(14) * TIME_SCALE, dy: 700, mx: 5, my: 3 },
+    ),
+
+    {
+      delay: 2000,
+      spec: { name: ['=', 'Step 3: Discuss trends, record lessons learned'] },
+    },
+    ...typeItem(1000, 'new-lesson', {
+      id: 'a0',
+      category: 'lesson',
+      message: 'Check for allergies before buying office pets',
+      created: 0,
+      attachment: null,
+      votes: 0,
+      doneTime: 0,
+    }),
+    { delay: 7000, spec: { name: ['=', 'Step 4: Archive'] } },
+    {
+      delay: 1000,
+      spec: {
+        history: [
+          'push',
+          { format: 'timeline', time: 1000, data: { endTime: now } },
+        ],
         items: ['delete', 'all'],
       },
       animation: 'archive',

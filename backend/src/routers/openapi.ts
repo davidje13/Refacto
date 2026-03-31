@@ -1146,7 +1146,7 @@ export const openapi = Buffer.from(
           example: 'My Retro',
         },
         RetroFormat: {
-          enum: ['health', 'mood'],
+          enum: ['health', 'mood', 'timeline'],
           example: 'mood',
           description: 'The type of the retro.',
         },
@@ -1289,6 +1289,31 @@ export const openapi = Buffer.from(
           },
           description: 'A giphy image and metadata.',
         },
+        SketchAttachment: {
+          type: 'object',
+          title: 'Sketch Attachment',
+          required: ['type', 'curve'],
+          properties: {
+            type: {
+              enum: ['sketch'],
+              description: 'The type of the attachment.',
+            },
+            curve: {
+              type: 'array',
+              items: { type: 'array', items: { type: 'number' } },
+              description:
+                'An array of curve commands. Movement (equivalent to SVG `M`) is denoted by a 2-pair (x, y) array. Cubic Béziers (equivalent to SVG `C`) are denoted by a 6-pair (c1x, c1y, c2x, c2y, p3x, p3y) array.',
+              example: [
+                [0, 0],
+                [100, 0, 100, 100, 50, 100],
+                [0, 100, 0, 200, 100, 200],
+              ],
+            },
+            colour: { $ref: '#/components/schemas/Colour' },
+          },
+          description:
+            'A simple line-based sketch with no colour information. Used by the timeline retro to record mood lines.',
+        },
         Retro: {
           type: 'object',
           required: [
@@ -1405,7 +1430,10 @@ export const openapi = Buffer.from(
                 example: 0,
               },
               attachment: {
-                oneOf: [{ $ref: '#/components/schemas/GiphyAttachment' }],
+                oneOf: [
+                  { $ref: '#/components/schemas/GiphyAttachment' },
+                  { $ref: '#/components/schemas/SketchAttachment' },
+                ],
                 nullable: true,
               },
               group: {
@@ -1517,12 +1545,35 @@ export const openapi = Buffer.from(
                   'The time when this item was marked as done (omitted if the item has not been marked as done).',
               },
               attachment: {
-                oneOf: [{ $ref: '#/components/schemas/GiphyAttachment' }],
+                oneOf: [
+                  { $ref: '#/components/schemas/GiphyAttachment' },
+                  { $ref: '#/components/schemas/ExportSketchAttachment' },
+                ],
               },
             },
           },
           description:
             'A list of items representing the content of the retro and any action items.',
+        },
+        ExportSketchAttachment: {
+          type: 'object',
+          title: 'Exported Sketch Attachment',
+          required: ['type', 'curve'],
+          properties: {
+            type: {
+              enum: ['sketch'],
+              description: 'The type of the attachment.',
+            },
+            curve: {
+              type: 'string',
+              description:
+                'An SVG path. Only `M` and `C` commands are supported',
+              example: 'M 0 0 C 100 0 100 100 50 100 C 0 100 0 200 100 200',
+            },
+            colour: { $ref: '#/components/schemas/Colour' },
+          },
+          description:
+            'A simple line-based sketch with no colour information. Used by the timeline retro to record mood lines.',
         },
         RetroExportHistory: {
           type: 'array',
@@ -1547,6 +1598,31 @@ export const openapi = Buffer.from(
             },
           },
           description: 'A list of history items representing past data.',
+        },
+        Colour: {
+          type: 'object',
+          title: 'Colour',
+          required: [],
+          properties: {
+            h: {
+              type: 'number',
+              minimum: 0,
+              maximum: 360,
+              description: 'The hue (0-360).',
+            },
+            s: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              description: 'The saturation (0-1).',
+            },
+            l: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              description: 'The luminosity (0-1).',
+            },
+          },
         },
       },
     },

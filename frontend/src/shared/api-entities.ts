@@ -56,12 +56,26 @@ export interface RetroItemGiphyAttachment {
   alt?: string | undefined;
 }
 
-export interface UserProvidedRetroItemDetails {
-  message: string;
-  attachment: RetroItemAttachment | null;
+export type CurveMove = [number, number];
+export type CurveCubicBezier = [number, number, number, number, number, number];
+export type CurveElement = CurveMove | CurveCubicBezier;
+export type Curve = CurveElement[];
+
+export interface Colour {
+  h?: number | undefined;
+  s?: number | undefined;
+  l?: number | undefined;
 }
 
-export type RetroItemAttachment = RetroItemGiphyAttachment;
+export interface RetroItemSketchAttachment {
+  type: 'sketch';
+  curve: Curve;
+  colour: Colour;
+}
+
+export type RetroItemAttachment =
+  | RetroItemGiphyAttachment
+  | RetroItemSketchAttachment;
 
 export interface RetroItem {
   id: string;

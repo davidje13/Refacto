@@ -1,0 +1,214 @@
+.event-list-editor {
+  padding: 16px 16px 64px;
+  min-height: calc(50vh - 64px);
+
+  .content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  & input[type='date'] {
+    background: var(--beige-back);
+    border: 1px solid var(--beige-shadow);
+  }
+
+  .text-entry {
+    position: relative;
+    border-radius: 4px;
+    box-shadow:
+      inset 0 0 2px rgba(0, 0, 0, 0.08),
+      0 1px 3px rgba(0, 0, 0, 0.1);
+    background: var(--primary-back);
+    justify-content: end;
+
+    &:has(textarea:focus-visible) {
+      box-shadow:
+        inset 0 0 2px rgba(0, 0, 0, 0.08),
+        0 0 0 2px var(--focus-border),
+        0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    & textarea {
+      flex: 200px 1;
+      padding: 16px 12px;
+      font-size: 1.1em;
+      outline: none;
+      max-height: 200px;
+
+      &::placeholder {
+        color: var(--pale-text-on-white);
+      }
+    }
+
+    .datepicker {
+      display: block;
+      align-self: flex-end;
+      white-space: nowrap;
+
+      & input {
+        padding: 1px;
+        border-radius: 2px;
+        background: var(--primary-back);
+      }
+    }
+
+    .buttons {
+      margin: 8px;
+
+      & button {
+        margin-left: 8px;
+      }
+    }
+
+    .cancel {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      margin: 0;
+      padding: 0.375rem;
+      color: var(--pale-text-on-white);
+
+      & svg {
+        display: block;
+        width: 0.75rem;
+        height: 0.75rem;
+      }
+    }
+
+    .submit,
+    .delete {
+      border-radius: 4px;
+      font-size: 0.9em;
+      white-space: nowrap;
+
+      &:disabled {
+        background: var(--beige-shadow);
+        color: var(--pale-text-on-white);
+      }
+    }
+
+    .submit {
+      padding: 12px 20px;
+      font-weight: bolder;
+      background: var(--green-button-back);
+      color: var(--green-button-icon);
+      line-height: 1;
+
+      & svg {
+        width: 1.2em;
+        height: 1.2em;
+        vertical-align: middle;
+      }
+    }
+
+    .delete {
+      padding: 4px 8px;
+      color: var(--red-text-on-white);
+      margin-right: 8px;
+
+      & svg {
+        width: 1.2em;
+        height: 1.2em;
+        vertical-align: -0.2em;
+      }
+    }
+
+    &.multiline textarea {
+      padding-bottom: 0;
+    }
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 16px 0 16px 32px;
+    word-wrap: break-word;
+
+    & li {
+      position: relative;
+      padding: 16px 0 16px 32px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        margin: 0 -2px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        background: var(--green-back);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        margin: -8px;
+        top: 50%;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        border-radius: 100%;
+        border: 4px solid var(--green-back);
+        background: var(--beige-back);
+      }
+
+      &:first-child::before {
+        top: 50%;
+      }
+      &:last-child::before {
+        bottom: 50%;
+      }
+
+      &:first-child,
+      &:last-child {
+        font-weight: bolder;
+
+        &::after {
+          background: var(--green-back);
+        }
+      }
+
+      .edit {
+        display: inline-block;
+        vertical-align: middle;
+        width: 1.5rem;
+        height: 1.5rem;
+        opacity: 0;
+        margin-left: 8px;
+        background: center no-repeat url('../../../../../resources/pencil.svg');
+
+        @media (prefers-color-scheme: dark) {
+          filter: invert();
+        }
+      }
+
+      &:hover .edit {
+        opacity: 0.3;
+
+        @media (prefers-color-scheme: dark) {
+          opacity: 0.6;
+        }
+      }
+
+      .edit:focus,
+      .edit:hover {
+        opacity: 0.9;
+      }
+    }
+
+    .text-entry {
+      & textarea {
+        flex: 100%;
+      }
+
+      .buttons {
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 500px) {
+        .datepicker {
+          flex: 100%;
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import type {
   RetroArchiveJsonExport,
   RetroHistoryItemJsonExport,
   RetroItemGiphyAttachmentJsonExport,
+  RetroItemSketchAttachmentJsonExport,
 } from '../export/RetroJsonExport';
 import { json, ValidationError } from './json';
 
@@ -19,6 +20,12 @@ const jsonIsoDate = (source: unknown, path = ''): string => {
   return source;
 };
 
+export const extractExportedColour = json.exactObject({
+  h: json.optional(json.number),
+  s: json.optional(json.number),
+  l: json.optional(json.number),
+});
+
 export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
   created: jsonIsoDate,
   category: json.string,
@@ -31,6 +38,11 @@ export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
         type: json.constant('giphy'),
         url: json.string,
         alt: json.optional(json.string),
+      }),
+      json.exactObject<RetroItemSketchAttachmentJsonExport>({
+        type: json.constant('sketch'),
+        curve: json.string,
+        colour: extractExportedColour,
       }),
     ),
   ),

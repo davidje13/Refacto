@@ -126,11 +126,40 @@ export class RetroService {
       ],
     };
 
-    if (retro.format === 'health') {
-      const summary = summariseHealthVotes(retro.items);
-      if (summary) {
-        spec.history = ['push', summary];
-      }
+    switch (retro.format) {
+      case 'health':
+        const summary = summariseHealthVotes(retro.items);
+        if (summary) {
+          spec.history = ['push', summary];
+        }
+        break;
+
+      case 'timeline':
+        let rangeEnd = Number.NEGATIVE_INFINITY;
+        for (const item of retro.items) {
+          if (item.category === 'event' && item.doneTime > rangeEnd) {
+            rangeEnd = item.doneTime;
+          }
+        }
+        const endTime = retro.state['endTime'];
+        if (typeof endTime === 'number' && endTime > rangeEnd) {
+          rangeEnd = endTime;
+        }
+        if (Number.isFinite(rangeEnd)) {
+          spec.history = [
+            'seq',
+            ['delete', ['all', { format: ['=', 'timeline'] }]],
+            [
+              'push',
+              {
+                format: 'timeline',
+                time: Date.now(),
+                data: { endTime: rangeEnd },
+              },
+            ],
+          ];
+        }
+        break;
     }
 
     return spec;
@@ -202,7 +231,7 @@ export class RetroService {
   }
 }
 
-const FORMATS = new Set(['health', 'mood']);
+const FORMATS = new Set(['health', 'mood', 'timeline']);
 
 const LOCKED_FIELDS: (keyof Retro)[] = [
   'id',

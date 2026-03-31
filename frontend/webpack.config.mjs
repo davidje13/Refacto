@@ -63,6 +63,7 @@ export default (env, argv) => ({
         test: /\.svg$/,
         exclude: /node_modules/,
         oneOf: [
+          { resourceQuery: /\?source/, type: 'asset/source' },
           { issuer: /\.m?[jt]sx?$/, use: [babelLoader, svgrLoader] },
           { issuer: /\.css$/, type: 'asset/inline' },
         ],

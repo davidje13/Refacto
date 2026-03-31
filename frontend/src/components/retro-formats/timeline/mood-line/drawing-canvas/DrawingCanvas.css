@@ -1,0 +1,51 @@
+.drawing-canvas {
+  user-select: none;
+  overflow: hidden;
+
+  &.live {
+    touch-action: pinch-zoom;
+  }
+
+  .region {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .drawing {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+
+    .line {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 3px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      mix-blend-mode: darken;
+
+      @media (prefers-color-scheme: dark) {
+        mix-blend-mode: lighten;
+      }
+    }
+  }
+
+  .cursor-aug {
+    display: none;
+    position: fixed;
+    pointer-events: none;
+    z-index: 10;
+
+    &.eraser circle {
+      fill: none;
+      stroke: var(--primary-text);
+      opacity: 0.2;
+    }
+  }
+}

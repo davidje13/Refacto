@@ -131,6 +131,21 @@ export const json = {
       ) as T[];
     },
 
+  tuple:
+    <T extends any[]>(...items: { [k in keyof T]: Mapper<T[k]> }) =>
+    (source: unknown, path = ''): T => {
+      if (!Array.isArray(source)) {
+        throw new ValidationError('Expected tuple', path);
+      }
+      if (source.length !== items.length) {
+        throw new ValidationError(
+          `Expected tuple of size ${items.length}`,
+          path,
+        );
+      }
+      return items.map((mapper, i) => mapper(source[i], `${path}[${i}]`)) as T;
+    },
+
   constant:
     <T>(value: T) =>
     (source: unknown, path = ''): T => {

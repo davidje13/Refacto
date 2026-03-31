@@ -1,0 +1,85 @@
+section.lessons {
+  padding: 0 16px 16px;
+  min-height: calc(50vh - 64px);
+
+  .content {
+    margin: 0 auto;
+    max-width: 768px;
+  }
+
+  .item-column {
+    list-style: none;
+
+    .text-entry {
+      position: relative;
+
+      & textarea {
+        margin-bottom: 8px;
+        padding: 20px 12px 0;
+        font-size: 1.1em;
+        outline: none;
+        max-height: 200px;
+      }
+
+      .buttons {
+        margin-right: 8px;
+        margin-bottom: 8px;
+
+        & button {
+          margin-left: 8px;
+        }
+      }
+
+      .cancel {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        margin: 0;
+        padding: 0.375rem;
+        color: var(--pale-text-on-white);
+
+        & svg {
+          display: block;
+          width: 0.75rem;
+          height: 0.75rem;
+        }
+      }
+
+      .submit,
+      .delete {
+        border-radius: 4px;
+        font-size: 0.9em;
+        white-space: nowrap;
+
+        &:disabled {
+          background: var(--beige-shadow);
+          color: var(--pale-text-on-white);
+        }
+      }
+
+      .submit {
+        padding: 12px 20px;
+        font-weight: bolder;
+        background: var(--green-button-back);
+        color: var(--green-button-text);
+
+        & svg {
+          width: 0.9em;
+          height: 0.9em;
+        }
+      }
+
+      .delete {
+        padding: 4px 8px;
+        color: var(--red-text-on-white);
+        margin-right: 8px;
+
+        & svg {
+          width: 1.2em;
+          height: 1.2em;
+          vertical-align: -0.2em;
+        }
+      }
+    }
+  }
+}

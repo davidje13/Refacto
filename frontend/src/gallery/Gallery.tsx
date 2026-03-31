@@ -2,7 +2,11 @@ import { createRoot } from 'react-dom/client';
 import { Route, Switch } from 'wouter';
 import type { ClientConfig } from '../shared/api-entities';
 import { ConfigProvider } from '../hooks/data/useConfig';
-import { Preview, type PreviewContent } from '../components/guidance/Preview';
+import {
+  moodline,
+  Preview,
+  type PreviewContent,
+} from '../components/guidance/Preview';
 import { RetroPreviewPage } from '../components/retro-formats/RetroPreviewPage';
 import { Footer } from '../components/Footer';
 
@@ -103,6 +107,14 @@ const GalleryPage = () => (
         className="thumb"
       />
     </div>
+    <div className="gallery-item">
+      <Preview
+        content={TIMELINE_PREVIEW}
+        width={900}
+        height={600}
+        className="thumb"
+      />
+    </div>
   </div>
 );
 
@@ -112,6 +124,99 @@ const MOCK_CONFIG: ClientConfig = {
   maxApiKeys: 1,
   deleteRetroDelay: 1,
   giphy: true,
+};
+
+const DAY = 1000 * 60 * 60 * 24;
+const day = (n: number) => (Math.floor(now / DAY) + n) * DAY;
+
+const TIMELINE_PREVIEW: PreviewContent = {
+  format: 'timeline',
+  name: 'Timeline',
+  simulatedTime: now,
+  localState: {
+    'timeline:tab': 'draw',
+    'timeline:id': '00000000-0000-0000-0000-000000000000',
+  },
+  state: { endTime: day(56) },
+  items: [
+    { category: 'event', message: 'Kickoff session', doneTime: day(0) },
+    { category: 'event', message: 'Release', doneTime: day(18) },
+    { category: 'event', message: 'Angry customer', doneTime: day(34) },
+    { category: 'event', message: 'Got an office llama', doneTime: day(40) },
+    { category: 'event', message: 'Newspaper article', doneTime: day(54) },
+    moodline(
+      { id: 'l0', colour: { h: 160 } },
+      day(0),
+      30,
+      22,
+      21,
+      22,
+      28,
+      25,
+      5,
+      0,
+      -1,
+      -2,
+      -2,
+      5,
+      80,
+      50,
+      35,
+      26,
+      20,
+      14,
+      8,
+      6,
+    ),
+    moodline(
+      { id: 'l1', colour: { h: 350 } },
+      day(0),
+      60,
+      20,
+      10,
+      5,
+      4,
+      6,
+      8,
+      20,
+      5,
+      20,
+      5,
+      10,
+      50,
+      90,
+      70,
+      50,
+      40,
+      35,
+      15,
+      5,
+    ),
+    moodline(
+      { id: 'l2', colour: { h: 240 } },
+      day(0),
+      40,
+      41,
+      42,
+      42,
+      40,
+      40,
+      39,
+      38,
+      38,
+      39,
+      40,
+      44,
+      45,
+      5,
+      10,
+      40,
+      51,
+      52,
+      46,
+      41,
+    ),
+  ],
 };
 
 const root = document.createElement('div');

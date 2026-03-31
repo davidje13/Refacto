@@ -83,3 +83,9 @@ export const isArchivable = (retro: Retro) => retro.items.length > 0;
 
 export const needArchive = (retro: Retro) =>
   retro.items.some((item) => item.category !== 'action');
+
+export const itemWithCategory =
+  (group: string | undefined, ...categories: string[]) =>
+  (item: RetroItem): boolean =>
+    categories.includes(item.category) &&
+    (!group || !item.group || item.group === group);

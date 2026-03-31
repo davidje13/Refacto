@@ -4,8 +4,16 @@ import type {
   Retro,
   RetroHistoryItem,
   RetroItemGiphyAttachment,
+  RetroItemSketchAttachment,
+  Colour,
 } from '../shared/api-entities';
 import { json } from './json';
+
+export const extractColour = json.exactObject<Colour>({
+  h: json.optional(json.number),
+  s: json.optional(json.number),
+  l: json.optional(json.number),
+});
 
 export const extractRetroItem = json.exactObject<RetroItem>({
   id: json.string,
@@ -18,6 +26,23 @@ export const extractRetroItem = json.exactObject<RetroItem>({
         type: json.constant('giphy'),
         url: json.string,
         alt: json.optional(json.string),
+      }),
+      json.exactObject<RetroItemSketchAttachment>({
+        type: json.constant('sketch'),
+        curve: json.array(
+          json.oneOf(
+            json.tuple(json.number, json.number),
+            json.tuple(
+              json.number,
+              json.number,
+              json.number,
+              json.number,
+              json.number,
+              json.number,
+            ),
+          ),
+        ),
+        colour: extractColour,
       }),
     ),
   ),

@@ -1,0 +1,38 @@
+.lesson-item {
+  background: var(--primary-back);
+  padding: 16px 24px;
+  border-radius: 4px;
+  position: relative;
+
+  &.editing {
+    padding: 0;
+
+    .text-entry {
+      background: none;
+    }
+  }
+
+  .message {
+    padding: 0;
+    overflow-wrap: break-word;
+  }
+
+  .edit {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 1.5rem;
+    height: 1.5rem;
+    opacity: 0.3;
+    background: center no-repeat url('../../../../../resources/pencil.svg');
+
+    @media (prefers-color-scheme: dark) {
+      filter: invert();
+      opacity: 0.6;
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
