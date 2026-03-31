@@ -1,8 +1,9 @@
-import { useState, memo, type ReactNode, useId } from 'react';
+import { memo, type ReactNode, useId } from 'react';
 import { classNames } from '../../helpers/classNames';
+import { useStateMap } from '../../hooks/useStateMap';
 import './TabControl.css';
 
-interface TabT {
+export interface TabT {
   key: string;
   title: ReactNode;
   className?: string;
@@ -17,49 +18,53 @@ function getActive(tabs: TabT[], activeKey: string): TabT | undefined {
 interface PropsT {
   tabs: TabT[];
   emptyState?: ReactNode;
+  persist?: string | undefined;
+  initial?: string | undefined;
 }
 
-export const TabControl = memo(({ tabs, emptyState }: PropsT) => {
-  const id = useId();
-  const [activeKey, setActiveKey] = useState('');
-  if (!tabs.length) {
-    return emptyState;
-  }
+export const TabControl = memo(
+  ({ tabs, emptyState, persist, initial = '' }: PropsT) => {
+    const id = useId();
+    const [activeKey, setActiveKey] = useStateMap(persist, 'tab', initial);
+    if (!tabs.length) {
+      return emptyState;
+    }
 
-  const active = getActive(tabs, activeKey);
+    const active = getActive(tabs, activeKey);
 
-  const tabHeaders = tabs.map(({ key, title, className }) => (
-    <label
-      key={key}
-      className={classNames('tab-item', className, {
-        active: key === active?.key,
-      })}
-    >
-      <input
-        type="radio"
-        role="tab"
-        name={id}
-        id={`${id}-${key}`}
-        value={key}
-        checked={key === active?.key}
-        onChange={(e) => {
-          if (e.currentTarget.checked) {
-            setActiveKey(key);
-          }
-        }}
-      />
-      {title}
-    </label>
-  ));
+    const tabHeaders = tabs.map(({ key, title, className }) => (
+      <label
+        key={key}
+        className={classNames('tab-item', className, {
+          active: key === active?.key,
+        })}
+      >
+        <input
+          type="radio"
+          role="tab"
+          name={id}
+          id={`${id}-${key}`}
+          value={key}
+          checked={key === active?.key}
+          onChange={(e) => {
+            if (e.currentTarget.checked) {
+              setActiveKey(key);
+            }
+          }}
+        />
+        {title}
+      </label>
+    ));
 
-  return (
-    <section className="tab-control">
-      <div className="tab-bar" role="tablist">
-        {tabHeaders}
-      </div>
-      <div className="tab-content" role="tabpanel">
-        {active?.content}
-      </div>
-    </section>
-  );
-});
+    return (
+      <section className="tab-control">
+        <div className="tab-bar" role="tablist">
+          {tabHeaders}
+        </div>
+        <div className="tab-content" role="tabpanel">
+          {active?.content}
+        </div>
+      </section>
+    );
+  },
+);

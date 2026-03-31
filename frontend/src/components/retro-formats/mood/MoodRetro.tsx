@@ -1,7 +1,7 @@
 import { useState, type ReactElement } from 'react';
 import { classNames } from '../../../helpers/classNames';
 import type { RetroItem } from '../../../shared/api-entities';
-import { TabControl } from '../../common/TabControl';
+import { TabControl, type TabT } from '../../common/TabControl';
 import {
   addRetroItem,
   editRetroItem,
@@ -203,7 +203,7 @@ export const MoodRetro = ({
   );
 
   if (singleColumn) {
-    const tabs = [
+    const tabs: TabT[] = [
       ...CATEGORIES.map((category) => ({
         key: category.id,
         title: category.title,
@@ -220,7 +220,7 @@ export const MoodRetro = ({
 
     return (
       <div className={baseClassName}>
-        <TabControl tabs={tabs} />
+        <TabControl tabs={tabs} persist="mood" />
         {actionToast}
         {popup}
       </div>
