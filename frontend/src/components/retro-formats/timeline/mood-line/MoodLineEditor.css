@@ -4,10 +4,10 @@
 
   .drawing-area {
     width: 100%;
-    height: max(min(60lvw, calc(100dvh - 210px)), 300px);
+    height: max(min(60lvw, calc(100dvh - 220px)), 300px);
     font-size: 1rem;
     background: var(--primary-back);
-    padding: calc(24px + 3.5em) 96px calc(8px + 3.5em);
+    padding: calc(40px + 3.5em) 96px calc(8px + 3.5em);
     box-sizing: border-box;
     --x-axis-pad-r: -32px;
     --y-label-size: 32px;
@@ -237,7 +237,7 @@
 @media (max-width: 800px) {
   .mood-line-editor .drawing-area {
     font-size: 0.8rem;
-    padding: calc(24px + 3.5em) 40px calc(8px + 3.5em);
+    padding: calc(40px + 3.5em) 40px calc(8px + 3.5em);
     --x-axis-pad-r: -24px;
     --y-label-size: 24px;
   }

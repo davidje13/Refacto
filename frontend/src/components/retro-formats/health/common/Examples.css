@@ -2,7 +2,11 @@
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 64px;
+  gap: 16px;
+
+  @media (min-width: 600px) {
+    gap: 64px;
+  }
 
   &::before {
     content: '';

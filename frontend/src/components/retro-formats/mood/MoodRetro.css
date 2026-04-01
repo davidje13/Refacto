@@ -133,7 +133,7 @@
 
     &.active {
       margin-top: -2px;
-      padding-bottom: calc(0.8em + 2px);
+      padding-bottom: 14px;
     }
 
     @media (prefers-contrast: more) {
@@ -145,6 +145,7 @@
       }
 
       &.active {
+        margin-top: -3px;
         border-bottom: none;
       }
     }

@@ -1,19 +1,27 @@
 .page-gallery {
-  color-scheme: light;
+  .light {
+    color-scheme: only light;
+  }
 
-  background: conic-gradient(
-      #ffffff 25%,
-      #cccccc 25%,
-      #cccccc 50%,
-      #ffffff 50%,
-      #ffffff 75%,
-      #cccccc 75%
-    )
-    0 / 32px 32px;
+  .dark {
+    color-scheme: only dark;
+  }
 
   .gallery-item {
-    display: inline-block;
+    display: block;
+    float: left;
     overflow: clip;
+    margin: 5px;
+    background: conic-gradient(
+        #ffffff 25%,
+        #cccccc 25%,
+        #cccccc 50%,
+        #ffffff 50%,
+        #ffffff 75%,
+        #cccccc 75%
+      )
+      0 / 32px 32px;
+    border: 2px solid black;
   }
 
   .docs {
@@ -55,7 +63,11 @@
     }
   }
 
-  .thumb {
+  .desktop-thumb {
     width: 240px;
+  }
+
+  .phone-thumb {
+    width: 125px;
   }
 }
