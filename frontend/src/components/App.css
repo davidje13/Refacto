@@ -10,11 +10,13 @@ html {
   --modal-back: #ffffff;
   --primary-back: #ffffff;
   --primary-text: #000000;
-  --selected-back: hsl(200deg, 30%, 84%);
+  --selected-back: Highlight;
+  --selected-text: HighlightText;
 
   --modal-screen: rgba(128, 128, 128, 0.5);
 
-  --focus-border: #005fcc;
+  --focus-border: AccentColor;
+  --focus-text: AccentColor;
   --focus-border-heart: #dd4422;
 
   --green-back: hsl(172deg, 50%, 55%);
@@ -77,11 +79,14 @@ html {
     --modal-back: hsl(30, 3%, 10%);
     --primary-back: hsl(30, 3%, 10%);
     --primary-text: #f8f8f8;
-    --selected-back: hsl(200deg, 72%, 28%);
 
     --modal-screen: rgba(64, 64, 64, 0.5);
 
-    --focus-border: #5599ff;
+    --focus-text: color-mix(
+      in srgb-linear,
+      var(--focus-border) 70%,
+      var(--primary-text)
+    );
     --focus-border-heart: #dd4422;
 
     --beige-back: hsl(30, 3%, 17%);
@@ -146,7 +151,7 @@ dialog {
 
 .global-longform p,
 .global-longform li {
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 article {

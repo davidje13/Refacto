@@ -43,6 +43,7 @@
     > input[type='radio'] {
       &:checked + span {
         background: var(--selected-back);
+        color: var(--selected-text);
       }
 
       &:focus-visible + span {
@@ -80,7 +81,7 @@
         }
 
         .label {
-          color: var(--focus-border);
+          color: var(--focus-text);
           font-weight: bolder;
         }
       }

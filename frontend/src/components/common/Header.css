@@ -19,8 +19,8 @@
   & h1 {
     flex: 1;
     padding: 16px;
-    font-size: 1.5em;
-    line-height: 1.8rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
     font-weight: bolder;
     white-space: nowrap;
     overflow: hidden;
@@ -38,7 +38,7 @@
     padding: 16px 12px;
     box-sizing: border-box;
     background: var(--header-back);
-    line-height: 1.8rem;
+    line-height: 1.75rem;
     height: 100%;
 
     &,
