@@ -156,6 +156,21 @@
   & figure {
     margin-bottom: 4px;
   }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--shadow-2);
+    background: var(--input-back);
+
+    .edit {
+      opacity: 1;
+    }
+
+    .cancel,
+    .close,
+    .continue {
+      border: 1px solid var(--shadow-2);
+    }
+  }
 }
 
 .has-focused .mood-item:not(.focused):not(.editing):not(.done) {

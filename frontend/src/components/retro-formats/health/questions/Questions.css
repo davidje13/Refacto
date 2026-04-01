@@ -18,7 +18,7 @@
     }
 
     & input[type='text'] {
-      background: var(--primary-back);
+      background: var(--input-back);
       color: var(--input-text);
       border: 1px solid var(--beige-shadow);
       box-sizing: border-box;

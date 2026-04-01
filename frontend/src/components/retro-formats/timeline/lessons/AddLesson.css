@@ -55,11 +55,7 @@
     }
 
     &.has-value:not(:focus-within) {
-      background: color-mix(
-        in srgb-linear,
-        var(--primary-back) 80%,
-        transparent
-      );
+      background: color-mix(in srgb-linear, var(--input-back) 80%, transparent);
       box-shadow: none;
 
       & textarea::placeholder {
@@ -69,7 +65,7 @@
 
     &:focus-within,
     .page-retro-preview &.has-value {
-      background: var(--primary-back);
+      background: var(--input-back);
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
       & textarea::placeholder {

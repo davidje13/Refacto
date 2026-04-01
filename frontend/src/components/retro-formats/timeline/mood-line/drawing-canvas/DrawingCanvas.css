@@ -23,7 +23,6 @@
 
     .line {
       fill: none;
-      stroke: currentColor;
       stroke-width: 3px;
       stroke-linecap: round;
       stroke-linejoin: round;

@@ -26,7 +26,7 @@
 }
 
 .picker-input.list {
-  background: var(--primary-back);
+  background: var(--input-back);
   overflow-y: auto;
 
   > label {
@@ -36,8 +36,12 @@
       border-bottom: none;
     }
 
-    > span:hover {
-      background: var(--beige-back);
+    > span {
+      position: relative;
+
+      &:hover {
+        background: var(--beige-back);
+      }
     }
 
     > input[type='radio'] {
@@ -46,8 +50,14 @@
         color: var(--selected-text);
       }
 
-      &:focus-visible + span {
-        box-shadow: inset 0 0 0 2px var(--focus-border);
+      &:focus-visible + span::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid var(--focus-border);
       }
     }
   }
@@ -62,8 +72,9 @@
   > label {
     .tile {
       display: block;
+      box-sizing: border-box;
       width: 100%;
-      box-shadow: 0 0 0 1px var(--beige-shadow);
+      border: 1px solid var(--beige-shadow);
       border-radius: 2px;
     }
 

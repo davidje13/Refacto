@@ -48,14 +48,21 @@ form.retro-settings {
     bottom: 0;
     anchor-name: --form-bottom;
 
+    & button {
+      margin: 0;
+    }
+
     @media (prefers-reduced-transparency) {
       background: var(--beige-back);
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
     }
 
-    & button {
-      margin: 0;
+    @media (prefers-contrast: more) {
+      border-top: 1px solid var(--shadow-2);
+      background: var(--beige-back);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
   }
 
@@ -69,7 +76,11 @@ form.retro-settings {
       top: 1px; /* avoid misalignment in Chrome */
       width: 100%;
       height: 40px;
-      box-shadow: 0 -13px 4px -12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 -13px 4px -12px var(--shadow-2);
+
+      @media (prefers-contrast: more) {
+        display: none;
+      }
     }
 
     .bottom-shadow-cover {

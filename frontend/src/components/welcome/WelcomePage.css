@@ -56,6 +56,10 @@
     .retro-format-icon {
       margin: -4px;
     }
+
+    @media (prefers-contrast: more) {
+      border: 1px solid var(--shadow-2);
+    }
   }
 
   .link-create {

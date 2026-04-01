@@ -42,6 +42,10 @@
   .global-form {
     max-width: calc(100svw - 16px);
   }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--shadow-2);
+  }
 }
 
 .popup-content[open],

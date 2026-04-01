@@ -118,4 +118,17 @@
       opacity: 0.9;
     }
   }
+
+  @media (prefers-contrast: more) {
+    border: 1px solid var(--shadow-2);
+    background: var(--input-back);
+
+    .toggle-done::before {
+      background: var(--input-back);
+    }
+
+    .edit {
+      opacity: 1;
+    }
+  }
 }

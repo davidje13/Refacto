@@ -56,7 +56,8 @@ html {
   --yellow-text-on-white: hsl(45deg, 100%, 35%);
   --red-text-on-white: #cc0000;
   --highlight-text-on-dark: #ffffff;
-  --input-text: #000000;
+  --input-back: Field;
+  --input-text: FieldText;
 
   --link-text: #017767;
   --link-text-hover: #097460;
@@ -117,6 +118,7 @@ html {
     --yellow-text-on-white: hsl(43deg, 100%, 65%);
     --red-text-on-white: #ff5511;
     --highlight-text-on-dark: #ffffff;
+    --input-back: hsl(30, 3%, 10%);
     --input-text: #ffffff;
 
     --link-text: #1de1c7;
@@ -131,6 +133,13 @@ html {
 
     --shadow-1: rgba(0, 0, 0, 0.4);
     --shadow-2: rgba(0, 0, 0, 0.8);
+  }
+}
+
+@media (prefers-contrast: more) {
+  html {
+    --input-back: Field;
+    --input-text: FieldText;
   }
 }
 

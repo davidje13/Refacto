@@ -18,7 +18,7 @@
     box-shadow:
       inset 0 0 2px rgba(0, 0, 0, 0.08),
       0 1px 3px rgba(0, 0, 0, 0.1);
-    background: var(--primary-back);
+    background: var(--input-back);
     justify-content: end;
 
     &:has(textarea:focus-visible) {
@@ -48,7 +48,7 @@
       & input {
         padding: 1px;
         border-radius: 2px;
-        background: var(--primary-back);
+        background: var(--input-back);
       }
     }
 

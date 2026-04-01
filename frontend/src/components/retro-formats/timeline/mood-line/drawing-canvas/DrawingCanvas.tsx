@@ -275,7 +275,7 @@ const DrawnLine = memo(({ col, curve, updates }: DrawnLineProps) => {
   return (
     <>
       {paths.map((path, i) => (
-        <path key={i} className="line" color={col} d={path} />
+        <path key={i} className="line" stroke={col} d={path} />
       ))}
     </>
   );

@@ -34,12 +34,14 @@
   & a,
   & button,
   .disabled-link {
+    position: relative;
     display: inline-block;
     padding: 16px 12px;
     box-sizing: border-box;
     background: var(--header-back);
     line-height: 1.75rem;
     height: 100%;
+    outline: none;
 
     &,
     &:link,
@@ -62,9 +64,24 @@
       }
     }
 
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 2px inset var(--focus-border);
+    &:focus-visible::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 2px solid var(--focus-border);
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    border-bottom: 1px solid var(--shadow-2);
+
+    & a,
+    & button,
+    .disabled-link {
+      background: Canvas;
     }
   }
 }

@@ -14,7 +14,7 @@
       margin: 0;
       padding: 8px 16px;
       flex: 1;
-      background: var(--primary-back);
+      background: var(--input-back);
       color: var(--input-text);
     }
 
