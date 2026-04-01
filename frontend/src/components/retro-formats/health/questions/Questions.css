@@ -215,8 +215,8 @@ html:active-view-transition-type(health-advance) {
 ::view-transition-group(health-answer) {
   animation-duration: 1.7s;
   --card-size-base: min(
-    max(3vw, 11px),
-    max(calc((100vh - 150px) * 0.03), 18px),
+    max(3svw, 11px),
+    max(calc((100svh - 150px) * 0.03), 18px),
     30px
   );
   height: calc(var(--card-size-base) * 13);

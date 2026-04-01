@@ -331,7 +331,7 @@
     .columns {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      min-height: 50vh;
+      min-height: 50lvh;
     }
 
     & section.actions {
@@ -354,7 +354,7 @@
       }
 
       .new-action-item {
-        --entry-width: max(calc(100vw / 3 + 48px), 24rem);
+        --entry-width: max(calc(100svw / 3 + 48px), 24rem);
 
         .text-entry {
           margin: 0 auto;
@@ -363,7 +363,7 @@
 
         .typing-indicator {
           position: absolute;
-          left: calc(50vw + var(--entry-width) / 2);
+          left: calc(50svw + var(--entry-width) / 2);
           padding: 8px 16px;
           bottom: 0;
           font-size: 0.8em;
@@ -435,7 +435,7 @@
 
     .tab-content > section {
       padding-bottom: 192px;
-      min-height: 100vh;
+      min-height: 100lvh;
 
       > section {
         padding-bottom: 20px;

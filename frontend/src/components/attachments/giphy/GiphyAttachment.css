@@ -3,7 +3,7 @@
     display: block;
     margin: 0 auto 8px;
     width: 100%;
-    max-height: clamp(100px, 30vh, 300px);
+    max-height: clamp(100px, 30svh, 300px);
     object-fit: contain;
   }
 

@@ -3,15 +3,15 @@
   align-content: stretch;
   position: relative;
   min-height: max(
-    calc(100vh - 192px - 3rem),
-    min(calc(100vh - 3rem - 28px), 700px)
+    calc(100svh - 192px - 3rem),
+    min(calc(100svh - 3rem - 28px), 700px)
   );
   padding: 16px 8px 0;
   overflow: clip;
   background: var(--beige-back);
   --card-size-base: min(
-    max(3vw, 11px),
-    max(calc((100vh - 150px) * 0.03), 18px),
+    max(3svw, 11px),
+    max(calc((100svh - 150px) * 0.03), 18px),
     30px
   );
 

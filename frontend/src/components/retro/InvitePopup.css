@@ -12,19 +12,19 @@
     border-radius: 5px;
     overflow-wrap: break-word;
     user-select: all;
-    max-width: calc(100vw - 64px);
+    max-width: calc(100svw - 64px);
 
     @media (min-width: 600px) {
       font-size: 1.8em;
-      max-width: calc(100vw - 128px);
+      max-width: calc(100svw - 128px);
     }
   }
 
   .qr-code {
     display: block;
-    width: calc(80vh - 52px - 3.2em);
+    width: calc(80dvh - 52px - 3.2em);
     min-width: 350px;
-    max-width: calc(100vw - 96px);
+    max-width: calc(100svw - 96px);
     aspect-ratio: 1;
     margin: 0 auto;
 

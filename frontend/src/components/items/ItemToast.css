@@ -22,7 +22,7 @@
         var(--notification-back) 70%,
         transparent
       );
-      max-width: min(calc(100vw - 64px), 300px);
+      max-width: min(calc(100svw - 64px), 300px);
       line-clamp: 3;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;

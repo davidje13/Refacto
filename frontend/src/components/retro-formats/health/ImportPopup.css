@@ -3,6 +3,10 @@
     margin: 16px 0;
   }
 
+  input[type='date'] {
+    max-width: calc(100svw - 16px); /* mobile Safari fix */
+  }
+
   .data {
     table-layout: fixed;
     width: 100%;

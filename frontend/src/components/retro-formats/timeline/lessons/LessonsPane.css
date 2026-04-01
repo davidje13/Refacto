@@ -1,6 +1,6 @@
 section.lessons {
   padding: 0 16px 16px;
-  min-height: calc(50vh - 64px);
+  min-height: calc(50lvh - 64px);
 
   .content {
     margin: 0 auto;

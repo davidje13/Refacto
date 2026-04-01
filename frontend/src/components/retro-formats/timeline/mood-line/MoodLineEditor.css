@@ -4,7 +4,7 @@
 
   .drawing-area {
     width: 100%;
-    height: max(min(60vw, calc(100vh - 210px)), 300px);
+    height: max(min(60lvw, calc(100dvh - 210px)), 300px);
     font-size: 1rem;
     background: var(--primary-back);
     padding: calc(24px + 3.5em) 96px calc(8px + 3.5em);

@@ -1,7 +1,7 @@
 .global-form {
   display: block;
   width: 600px;
-  max-width: calc(100vw - 32px);
+  max-width: calc(100svw - 32px);
 
   & label {
     display: block;

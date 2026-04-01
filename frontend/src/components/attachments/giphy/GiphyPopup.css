@@ -3,8 +3,8 @@
   flex-direction: column;
   gap: 8px;
   width: 900px;
-  max-width: calc(100vw - 128px);
-  max-height: calc(100vh - 128px);
+  max-width: calc(100svw - 128px);
+  max-height: calc(100dvh - 128px);
 
   & form {
     display: flex;

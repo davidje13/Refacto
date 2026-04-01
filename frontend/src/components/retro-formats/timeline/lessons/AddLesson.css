@@ -2,7 +2,7 @@
   margin: 16px 0;
   position: relative;
 
-  --entry-width: min(max(calc(100vw / 3 + 48px), 768px), calc(100vw - 32px));
+  --entry-width: min(max(calc(100svw / 3 + 48px), 768px), calc(100svw - 32px));
 
   .text-entry {
     position: relative;

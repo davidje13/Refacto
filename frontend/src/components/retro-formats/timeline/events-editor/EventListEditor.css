@@ -1,6 +1,6 @@
 .event-list-editor {
   padding: 16px 16px 64px;
-  min-height: calc(50vh - 64px);
+  min-height: calc(50lvh - 64px);
 
   .content {
     max-width: 600px;
