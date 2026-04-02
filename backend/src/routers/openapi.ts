@@ -1536,6 +1536,12 @@ export const openapi = Buffer.from(
                   "The type of the item. The meaning of this will vary depending on the type of retro, but 'action' is a common category denoting Action Items.",
                 example: 'happy',
               },
+              for: {
+                type: 'string',
+                description:
+                  'For health check retros, this is the question ID associated with this answer.',
+                example: 'learning',
+              },
               message: {
                 type: 'string',
                 description: 'The user-provided content of the item.',

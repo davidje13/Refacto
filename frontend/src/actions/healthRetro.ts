@@ -1,5 +1,9 @@
 import type { Retro, RetroItem } from '../shared/api-entities';
-import type { AnswerID, HealthSummary } from '../shared/health';
+import {
+  makeUserAnswerID,
+  type AnswerID,
+  type HealthSummary,
+} from '../shared/health';
 import type { Spec } from '../api/reducer';
 import { setRetroState } from './retro';
 
@@ -23,9 +27,6 @@ export const setExpandedSection = (
 export const addHistoricSummary = (summary: HealthSummary): Spec<Retro>[] => [
   { history: ['push', summary] },
 ];
-
-export const makeUserAnswerID = (questionID: string, userID: string) =>
-  `${questionID}:${userID}`;
 
 export const answerQuestion = (
   group: string | undefined,

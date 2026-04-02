@@ -11,6 +11,7 @@ import type {
   CurveCubicBezier,
   Colour,
 } from '../shared/api-entities';
+import { getQuestionID, makeUserAnswerID } from '../shared/health';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 
@@ -34,6 +35,7 @@ export interface RetroItemJsonExport {
   created: string;
   category: string;
   group?: string | undefined;
+  for?: string | undefined;
   message: string;
   votes: number;
   completed?: string | undefined;
@@ -141,7 +143,7 @@ function importRetroItemAttachment(
   }
 }
 
-function exportRetroItem(item: RetroItem): RetroItemJsonExport {
+function exportRetroItem(item: RetroItem, format: string): RetroItemJsonExport {
   const result: RetroItemJsonExport = {
     created: exportTimestamp(item.created),
     category: item.category,
@@ -149,6 +151,9 @@ function exportRetroItem(item: RetroItem): RetroItemJsonExport {
     message: item.message,
     votes: item.votes,
   };
+  if (format === 'health') {
+    result.for = getQuestionID(item);
+  }
   if (item.doneTime > 0) {
     result.completed = exportTimestamp(item.doneTime);
   }
@@ -158,9 +163,12 @@ function exportRetroItem(item: RetroItem): RetroItemJsonExport {
   return result;
 }
 
-function importRetroItem(item: RetroItemJsonExport): RetroItem {
+function importRetroItem(item: RetroItemJsonExport, format: string): RetroItem {
   return {
-    id: randomUUID(),
+    id:
+      format === 'health' && item.for
+        ? makeUserAnswerID(item.for, randomUUID())
+        : randomUUID(),
     created: importTimestamp(item.created),
     category: item.category,
     group: item.group,
@@ -193,21 +201,21 @@ function importRetroHistoryItem(
   };
 }
 
-function exportRetroData(archive: RetroData): RetroDataJsonExport {
+function exportRetroData(retro: RetroData): RetroDataJsonExport {
   return {
-    format: archive.format,
-    options: archive.options,
-    items: archive.items.map(exportRetroItem),
-    history: archive.history.map(exportRetroHistoryItem),
+    format: retro.format,
+    options: retro.options,
+    items: retro.items.map((item) => exportRetroItem(item, retro.format)),
+    history: retro.history.map(exportRetroHistoryItem),
   };
 }
 
-export function importRetroDataJson(archive: RetroDataJsonExport): RetroData {
+export function importRetroDataJson(retro: RetroDataJsonExport): RetroData {
   return {
-    format: archive.format,
-    options: archive.options,
-    items: archive.items.map(importRetroItem),
-    history: archive.history?.map(importRetroHistoryItem) ?? [],
+    format: retro.format,
+    options: retro.options,
+    items: retro.items.map((item) => importRetroItem(item, retro.format)),
+    history: retro.history?.map(importRetroHistoryItem) ?? [],
   };
 }
 

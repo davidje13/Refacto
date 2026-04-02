@@ -1,13 +1,12 @@
 import { useLayoutEffect, type FunctionComponent } from 'react';
 import { Link } from 'wouter';
 import type { RetroItem } from '../../../../shared/api-entities';
-import type { AnswerID } from '../../../../shared/health';
+import { makeUserAnswerID, type AnswerID } from '../../../../shared/health';
 import { startViewTransition } from '../../../../helpers/viewTransition';
 import { classNames } from '../../../../helpers/classNames';
 import { useStateMap } from '../../../../hooks/useStateMap';
 import {
   getQuestionProgress,
-  makeUserAnswerID,
   type HealthQuestion,
 } from '../../../../actions/healthRetro';
 import { Examples } from '../common/Examples';

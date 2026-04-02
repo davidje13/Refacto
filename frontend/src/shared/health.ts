@@ -18,6 +18,11 @@ interface AnswersSummary {
   counts: Counts;
 }
 
+export const getQuestionID = (item: RetroItem) => item.id.split(':')[0]!;
+
+export const makeUserAnswerID = (questionID: string, userID: string) =>
+  `${questionID}:${userID}`;
+
 export function summariseHealthVotes(
   retroItems: RetroItem[],
 ): HealthSummary | null {
@@ -28,7 +33,7 @@ export function summariseHealthVotes(
     if (item.category === 'action') {
       continue;
     }
-    const questionID = item.id.split(':')[0]!;
+    const questionID = getQuestionID(item);
     let answer = answers.get(questionID);
     if (!answer) {
       answer = { id: questionID, counts: { ...ZERO_COUNTS } };

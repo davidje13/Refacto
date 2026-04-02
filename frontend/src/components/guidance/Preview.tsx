@@ -6,7 +6,7 @@ import type {
   Retro,
   RetroItem,
 } from '../../shared/api-entities';
-import type { AnswerID } from '../../shared/health';
+import { makeUserAnswerID, type AnswerID } from '../../shared/health';
 import { classNames } from '../../helpers/classNames';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import type { Spec } from '../../api/reducer';
@@ -130,7 +130,10 @@ export const answerHealth = (
     delay: (animate ? 1700 : 0) + delayAnswer,
     spec: {
       localState: {
-        [`health-message:${questionID}:${userID}`]: ['=', '...' + message],
+        [`health-message:${makeUserAnswerID(questionID, userID)}`]: [
+          '=',
+          '...' + message,
+        ],
       },
     },
   },
@@ -140,7 +143,7 @@ export const answerHealth = (
       items: [
         'push',
         {
-          id: `${questionID}:${userID}`,
+          id: makeUserAnswerID(questionID, userID),
           category: answerID,
           message,
           created: 0,
@@ -170,7 +173,7 @@ export const addHealthAnswers = (
     'push',
     ...Object.entries(allAnswers).flatMap(([userID, answers]) =>
       answers.map(([questionID, answerID, message = '']) => ({
-        id: `${questionID}:${userID}`,
+        id: makeUserAnswerID(questionID, userID),
         category: answerID,
         message,
         created: 0,

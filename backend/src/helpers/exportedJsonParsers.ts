@@ -29,6 +29,8 @@ export const extractExportedColour = json.exactObject({
 export const extractExportedRetroItem = json.object<RetroItemJsonExport>({
   created: jsonIsoDate,
   category: json.string,
+  group: json.optional(json.string),
+  for: json.optional(json.string),
   message: json.string,
   votes: json.number,
   completed: json.optional(jsonIsoDate),
