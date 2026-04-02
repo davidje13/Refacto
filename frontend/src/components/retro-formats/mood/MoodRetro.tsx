@@ -29,12 +29,13 @@ import { OPTIONS } from '../../../helpers/optionManager';
 import { ItemToast } from '../../items/ItemToast';
 import type { RetroFormatProps } from '../formats';
 import { MoodSection } from './categories/MoodSection';
+import type { MoodType } from './categories/FaceIcon';
 import { ActionsPane } from './actions/ActionsPane';
 import { BeginDiscussionPopup } from './BeginDiscussionPopup';
 import './MoodRetro.css';
 
 interface Category {
-  id: string;
+  id: MoodType;
   title: string;
   placeholder: string;
 }

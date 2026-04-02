@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import { getThemes } from './categories/FaceIcon';
+import { drawFaceIcon, getThemes } from './categories/FaceIcon';
 import { PickerInput } from '../../common/PickerInput';
 import { OPTIONS } from '../../../helpers/optionManager';
 import type { RetroFormatOptionsProps } from '../formats';
@@ -13,9 +13,9 @@ export const MoodOptions: FunctionComponent<RetroFormatOptionsProps> = ({
     label: (
       <span className="theme-row">
         <span className="name">{detail.name}</span>
-        <span className="preview">{detail.icons.happy}</span>
-        <span className="preview">{detail.icons.meh}</span>
-        <span className="preview">{detail.icons.sad}</span>
+        <span className="preview">{drawFaceIcon(detail.icons.happy)}</span>
+        <span className="preview">{drawFaceIcon(detail.icons.meh)}</span>
+        <span className="preview">{drawFaceIcon(detail.icons.sad)}</span>
       </span>
     ),
   }));

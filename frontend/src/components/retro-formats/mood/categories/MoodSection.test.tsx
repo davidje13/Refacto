@@ -18,7 +18,7 @@ const nop = () => undefined;
 describe('MoodSection', () => {
   it('displays a given category title', () => {
     const dom = render(
-      <MoodSection category="woo" categoryLabel="woo title" items={[]} />,
+      <MoodSection category="happy" categoryLabel="woo title" items={[]} />,
     );
 
     expect(dom.getBy(css('h2'))).toHaveAttribute('title', 'woo title');
@@ -26,7 +26,12 @@ describe('MoodSection', () => {
 
   it('propagates focused ID', () => {
     const dom = render(
-      <MoodSection category="" categoryLabel="" items={[]} focusedItemId="b" />,
+      <MoodSection
+        category="happy"
+        categoryLabel=""
+        items={[]}
+        focusedItemId="b"
+      />,
     );
 
     const column = dom.getBy(css('mock-item-column'));
@@ -37,11 +42,11 @@ describe('MoodSection', () => {
 
   it('displays a list of MoodItem items', () => {
     const items = [
-      makeRetroItem({ category: 'abc', message: 'foo' }),
-      makeRetroItem({ category: 'abc', message: 'bar' }),
+      makeRetroItem({ category: 'happy', message: 'foo' }),
+      makeRetroItem({ category: 'happy', message: 'bar' }),
     ];
     const dom = render(
-      <MoodSection category="abc" categoryLabel="" items={items} />,
+      <MoodSection category="happy" categoryLabel="" items={items} />,
     );
 
     const column = dom.getBy(css('mock-item-column'));
@@ -54,10 +59,10 @@ describe('MoodSection', () => {
   it('filters out items for other categories', () => {
     const items = [
       makeRetroItem({ category: 'nope', message: 'foo' }),
-      makeRetroItem({ category: 'yay', message: 'bar' }),
+      makeRetroItem({ category: 'meh', message: 'bar' }),
     ];
     const dom = render(
-      <MoodSection category="yay" categoryLabel="" items={items} />,
+      <MoodSection category="meh" categoryLabel="" items={items} />,
     );
 
     const column = dom.getBy(css('mock-item-column'));
@@ -67,14 +72,21 @@ describe('MoodSection', () => {
   });
 
   it('does not render an input field if no callback is provided', () => {
-    const dom = render(<MoodSection category="" categoryLabel="" items={[]} />);
+    const dom = render(
+      <MoodSection category="happy" categoryLabel="" items={[]} />,
+    );
 
     expect(dom).not.toContainElementWith(css('mock-expanding-text-entry'));
   });
 
   it('renders an input field if a callback is provided', () => {
     const dom = render(
-      <MoodSection category="" categoryLabel="" items={[]} onAddItem={nop} />,
+      <MoodSection
+        category="happy"
+        categoryLabel=""
+        items={[]}
+        onAddItem={nop}
+      />,
     );
 
     expect(dom).toContainElementWith(css('mock-expanding-text-entry'));
@@ -84,7 +96,7 @@ describe('MoodSection', () => {
     const onAddItem = jest.fn().mockName('onAddItem');
     const dom = render(
       <MoodSection
-        category="my-category"
+        category="sad"
         categoryLabel=""
         items={[]}
         onAddItem={onAddItem}
@@ -96,7 +108,7 @@ describe('MoodSection', () => {
       textEntry.mockProps['onSubmit']('my message');
     });
 
-    expect(onAddItem).toHaveBeenCalledWith('my-category', undefined, {
+    expect(onAddItem).toHaveBeenCalledWith('sad', undefined, {
       message: 'my message',
       attachment: null,
     });
@@ -106,7 +118,7 @@ describe('MoodSection', () => {
     const onAddItem = jest.fn().mockName('onAddItem');
     const dom = render(
       <MoodSection
-        category="my-category"
+        category="happy"
         group="foo"
         categoryLabel=""
         items={[]}
@@ -119,7 +131,7 @@ describe('MoodSection', () => {
       textEntry.mockProps['onSubmit']('my message');
     });
 
-    expect(onAddItem).toHaveBeenCalledWith('my-category', 'foo', {
+    expect(onAddItem).toHaveBeenCalledWith('happy', 'foo', {
       message: 'my message',
       attachment: null,
     });

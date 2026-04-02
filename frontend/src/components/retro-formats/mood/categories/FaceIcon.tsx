@@ -2,166 +2,81 @@ import { memo } from 'react';
 import { classNames } from '../../../../helpers/classNames';
 import './FaceIcon.css';
 
-type Type = 'happy' | 'meh' | 'sad';
+export type MoodType = 'happy' | 'meh' | 'sad';
 
 interface Theme {
   name: string;
-  icons: Record<Type, string>;
+  icons: Record<MoodType, string>;
   extraClassName?: string;
 }
 
-const THEMES = new Map<string, Theme>();
+const THEMES = new Map<string, Theme>(
+  [
+    'faces:Faces:😃:🤨:😢',
+    'hands:Hands:👍s:🤔:👎s',
+    'intense:Intense:🤩:😑:😵',
+    'silly:Silly:🥳:🤖:🤯',
+    'symbols:Symbols:🎉:❓:💥',
+    'cats:Cats:😻:🐱:😿',
+    'weather:Weather:☀️:⛅️:⛈️',
+    'body:Body Parts:💪s:👀:🫥',
+    'fantasy:Fantasy:🦄:🔮:🧌',
+    'nature:Nature:💐:🌱:🪾',
+    'space:Space:🚀:⭐:☄',
+    'cards:Cards:♠:🎴:🃏',
+    'gestures:Gestures:🙆s:🤷s:🤦s',
+    'poses:Poses:🤸s:🧘s:🧎s',
 
-const FEMALE = '\u200D\u2640';
-const MALE = '\u200D\u2642';
+    'new-year:New Year:✨:🪩:💥',
+    'chinese-new-year:☯\uFE0F Chinese New Year:🧧:🏮:🐲',
+    'eid:☪\uFE0F Eid al-Fitr:🕋:🕌:🌅',
+    'easter:✝\uFE0F Easter:🐣:🐇:🥚',
+    'pride:Pride:🏳️‍🌈:🏳️‍⚧️:🏴‍☠️',
+    'halloween:✝\uFE0F Halloween:👻:🎃:💀',
+    'day-of-the-dead:Day of the Dead:🌼:💀:🥀',
+    'diwali:🕉 Diwali:🎇:🪔:🕯',
+    'hanukkah:✡\uFE0F Hanukkah:🕎:🕍:🕯',
+    'christmas:✝\uFE0F Christmas:🎅s:❄️:🥶',
+  ].map((v) => {
+    const [id, name, happy, meh, sad] = v.split(':') as [
+      string,
+      string,
+      string,
+      string,
+      string,
+    ];
+    return [id, { name, icons: { happy, meh, sad } }];
+  }),
+);
+const THEME_ALIAS = new Map([
+  ['gestures-a', 'gestures'],
+  ['gestures-b', 'gestures'],
+]);
 
-const DEFAULT_THEME: Theme = {
-  name: 'Faces',
-  icons: {
-    happy: '\uD83D\uDE03',
-    meh: '\uD83E\uDD28',
-    sad: '\uD83D\uDE22',
-  },
-};
-
-THEMES.set('faces', DEFAULT_THEME);
-
-THEMES.set('intense', {
-  name: 'Intense',
-  icons: {
-    happy: '\uD83E\uDD29',
-    meh: '\uD83D\uDE11',
-    sad: '\uD83E\uDD2F',
-  },
-});
-
-THEMES.set('symbols', {
-  name: 'Symbols',
-  icons: {
-    happy: '\uD83C\uDF89',
-    meh: '\u2753',
-    sad: '\uD83D\uDCA5',
-  },
-});
-
-THEMES.set('cats', {
-  name: 'Cats',
-  icons: {
-    happy: '\uD83D\uDE3B',
-    meh: '\uD83D\uDC31',
-    sad: '\uD83D\uDE3F',
-  },
-});
-
-THEMES.set('christmas', {
-  name: 'Christmas',
-  icons: {
-    happy: '\uD83C\uDF85',
-    meh: '\u2744\uFE0F',
-    sad: '\uD83E\uDD76',
-  },
-});
-
-THEMES.set('halloween', {
-  name: 'Halloween',
-  icons: {
-    happy: '\uD83D\uDC7B',
-    meh: '\uD83C\uDF83',
-    sad: '\uD83D\uDC80',
-  },
-});
-
-THEMES.set('weather', {
-  name: 'Weather',
-  icons: {
-    happy: '\u2600\uFE0F',
-    meh: '\u26C5\uFE0F',
-    sad: '\u26C8\uFE0F',
-  },
-});
-
-THEMES.set('hands', {
-  name: 'Hands',
-  icons: {
-    happy: '\uD83D\uDC4D',
-    meh: '\uD83E\uDD14',
-    sad: '\uD83D\uDC4E',
-  },
-});
-
-THEMES.set('silly', {
-  name: 'Silly',
-  icons: {
-    happy: '\uD83E\uDD73',
-    meh: '\uD83E\uDD16',
-    sad: '\uD83D\uDCA9',
-  },
-});
-
-THEMES.set('body', {
-  name: 'Body Parts',
-  icons: {
-    happy: '\uD83D\uDCAA',
-    meh: '\uD83D\uDC40',
-    sad: '\uD83E\uDEE5',
-  },
-});
-
-THEMES.set('gestures-a', {
-  name: 'Gestures (A)',
-  icons: {
-    happy: `\uD83D\uDE46${FEMALE}`,
-    meh: `\uD83E\uDD37${MALE}`,
-    sad: `\uD83E\uDD26${FEMALE}`,
-  },
-});
-
-THEMES.set('gestures-b', {
-  name: 'Gestures (B)',
-  icons: {
-    happy: `\uD83D\uDE46${MALE}`,
-    meh: `\uD83E\uDD37${FEMALE}`,
-    sad: `\uD83E\uDD26${MALE}`,
-  },
-});
-
-THEMES.set('poses', {
-  name: 'Poses',
-  icons: {
-    happy: '\uD83E\uDD38',
-    meh: '\uD83E\uDDD8',
-    sad: '\uD83E\uDDCE',
-  },
-});
+const DEFAULT_THEME = THEMES.get('faces')!;
 
 THEMES.set('boring-faces', {
   name: 'Faces (padded)',
-  icons: {
-    happy: '\uD83D\uDE03',
-    meh: '\uD83E\uDD28',
-    sad: '\uD83D\uDE22',
-  },
+  icons: DEFAULT_THEME.icons,
   extraClassName: 'boring',
 });
 
-export function getTheme(name: string): Theme {
-  return THEMES.get(name) || DEFAULT_THEME;
-}
-
-export function getThemes(): [string, Theme][] {
-  return [...THEMES.entries()];
-}
+export const getThemes = (): [string, Theme][] => [...THEMES.entries()];
 
 interface PropsT {
-  type: string;
+  type: MoodType;
   theme: string;
 }
 
+export const drawFaceIcon = (icon: string, skinTone = '') =>
+  icon.replace('s', skinTone) + '\uFE0F';
+
 export const FaceIcon = memo(({ theme, type }: PropsT) => {
-  const { icons, extraClassName } = getTheme(theme);
+  const { icons, extraClassName } =
+    THEMES.get(THEME_ALIAS.get(theme) ?? theme) ?? DEFAULT_THEME;
   return (
     <div className={classNames('face-icon', extraClassName)}>
-      {icons[type as Type]}
+      {drawFaceIcon(icons[type], '')}
     </div>
   );
 });

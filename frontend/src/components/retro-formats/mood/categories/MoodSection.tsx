@@ -4,11 +4,11 @@ import type { RetroItem } from '../../../../shared/api-entities';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { ItemColumn } from '../../../items/ItemColumn';
 import { ItemEditor } from '../../../items/ItemEditor';
-import { FaceIcon } from './FaceIcon';
+import { FaceIcon, type MoodType } from './FaceIcon';
 import { MoodItem } from './MoodItem';
 
 interface PropsT {
-  category: string;
+  category: MoodType;
   categoryLabel: string;
   group?: string | undefined;
   items: RetroItem[];
