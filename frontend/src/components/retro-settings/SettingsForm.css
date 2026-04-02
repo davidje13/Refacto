@@ -46,7 +46,6 @@ form.retro-settings {
     -webkit-backdrop-filter: blur(10px);
     position: sticky;
     bottom: 0;
-    anchor-name: --form-bottom;
 
     & button {
       margin: 0;
@@ -66,32 +65,29 @@ form.retro-settings {
     }
   }
 
-  @supports (position-anchor: --form-bottom) {
-    .form-actions-shadow {
-      position-anchor: --form-bottom;
-      position-area: center center;
-      align-self: start;
-      pointer-events: none;
-      position: absolute;
-      top: 1px; /* avoid misalignment in Chrome */
-      width: 100%;
-      height: 40px;
-      box-shadow: 0 -13px 4px -12px var(--shadow-2);
+  .form-actions-shadow {
+    position: sticky;
+    /* anchor positioning would be better here, but browsers still have lots of bugs */
+    bottom: calc(20px + 16px + 1.68rem + 32px + 1.4rem - 50px);
+    height: 48px;
+    margin: 24px -16px -48px;
+    pointer-events: none;
+    box-shadow: 0 -14px 4px -12px var(--shadow-2);
 
-      @media (prefers-contrast: more) {
-        display: none;
-      }
+    @media (prefers-contrast: more) {
+      visibility: hidden;
     }
+  }
 
-    .bottom-shadow-cover {
-      margin: 0 -16px;
-      height: 24px;
-      background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        var(--beige-back) 80%
-      );
-      position: relative;
-    }
+  .bottom-shadow-cover {
+    position: relative;
+    top: -20px;
+    margin: 0 -16px -32px;
+    height: 32px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--beige-back) 40%
+    );
   }
 }
