@@ -1,5 +1,4 @@
 import type { HealthQuestion } from '../actions/healthRetro';
-import type { Spec } from '../api/reducer';
 
 class OptionType<T> {
   constructor(
@@ -23,11 +22,8 @@ class OptionType<T> {
     return value as T;
   }
 
-  specSet(value: T): Spec<Record<string, unknown>> {
-    if (value === undefined || value === this.def) {
-      return { [this.key]: ['unset'] };
-    }
-    return { [this.key]: ['=', value] };
+  write(value: T): Record<string, unknown> {
+    return { [this.key]: value === this.def ? undefined : value };
   }
 }
 

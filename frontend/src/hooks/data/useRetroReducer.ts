@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { Retro, RetroAuth } from '../../shared/api-entities';
 import { startViewTransition } from '../../helpers/viewTransition';
 import type { RetroDispatch } from '../../api/RetroTracker';
@@ -14,6 +14,7 @@ export function useRetroReducer(
     signal: AbortSignal,
   ) => Promise<boolean> | void,
 ): RetroReducerState {
+  const activeTransition = useRef<Promise<void> | undefined>();
   const [retroState, setRetroState] = useState<RetroState | null>(null);
   const [status, setStatus] = useState<RetroReducerStatus>('init');
   const [retroDispatch, setRetroDispatch] = useState<RetroDispatch | null>(
@@ -51,7 +52,11 @@ export function useRetroReducer(
         const animation = events.some(([evt]) => evt === 'archive')
           ? 'archive'
           : null;
-        startViewTransition(animation, () => setRetroState(setter));
+        activeTransition.current = startViewTransition(
+          animation,
+          () => setRetroState(setter),
+          activeTransition.current,
+        );
       },
       (status) => setStatus(status ? 'connected' : 'reconnecting'),
       async () => {

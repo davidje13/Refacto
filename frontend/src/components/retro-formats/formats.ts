@@ -30,8 +30,14 @@ export interface RetroFormatProps<StateT = Record<string, unknown>> {
   archiveTime?: number;
 }
 
+export interface RetroFormatOptionsProps {
+  retroOptions: Record<string, unknown>;
+  onChangeOption: (overrides: Record<string, unknown>) => void;
+}
+
 export interface RetroFormatDetails {
   component: ComponentType<RetroFormatProps>;
+  options?: ComponentType<RetroFormatOptionsProps>;
   label: string;
   icon: ComponentType<SVGAttributes<SVGSVGElement> & { title?: string }>;
   showCreateArchive: boolean;
@@ -42,7 +48,10 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     'mood',
     {
       component: lazy(() =>
-        import('./mood/MoodRetro').then((m) => ({ default: m.MoodRetro })),
+        import('./mood/index').then((m) => ({ default: m.MoodRetro })),
+      ),
+      options: lazy(() =>
+        import('./mood/index').then((m) => ({ default: m.MoodOptions })),
       ),
       label: '3 Column',
       icon: MoodIcon,
@@ -53,9 +62,7 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     'health',
     {
       component: lazy(() =>
-        import('./health/HealthRetro').then((m) => ({
-          default: m.HealthRetro,
-        })),
+        import('./health/index').then((m) => ({ default: m.HealthRetro })),
       ),
       label: 'Health Check',
       icon: HealthIcon,
@@ -66,9 +73,7 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     'timeline',
     {
       component: lazy(() =>
-        import('./timeline/TimelineRetro').then((m) => ({
-          default: m.TimelineRetro,
-        })),
+        import('./timeline/index').then((m) => ({ default: m.TimelineRetro })),
       ),
       label: 'Timeline',
       icon: TimelineIcon,

@@ -1,5 +1,4 @@
-import { useState, memo, type ReactNode } from 'react';
-import type { ChangeEvent } from 'shared-reducer/frontend';
+import { useState, memo, Suspense, useCallback } from 'react';
 import type { Retro, RetroAuth } from '../../shared/api-entities';
 import type { RetroDispatch, RetroDispatchSpec } from '../../api/RetroTracker';
 import {
@@ -9,14 +8,13 @@ import {
   userDataTracker,
 } from '../../api/api';
 import { needArchive } from '../../actions/retro';
-import { PickerInput } from '../common/PickerInput';
 import { SlugEntry } from '../retro-create/SlugEntry';
 import { RetroFormatPicker } from '../retro-create/RetroFormatPicker';
+import { getRetroFormatDetails } from '../retro-formats/formats';
 import { Alert } from '../common/Alert';
+import { LoadingIndicator } from '../common/Loader';
 import { SetPassword } from '../common/SetPassword';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
-import { OPTIONS } from '../../helpers/optionManager';
-import { getThemes } from '../retro-formats/mood/categories/FaceIcon';
 import { DeleteRetroButton } from './DeleteRetroButton';
 import { APIKeyManager } from './APIKeyManager';
 import './SettingsForm.css';
@@ -37,10 +35,13 @@ export const SettingsForm = memo(
     const [passwordMatches, setPasswordMatches] = useState(false);
     const [evictUsers, setEvictUsers] = useState(true);
     const [newPassword, setNewPassword] = useState('');
-    const [alwaysShowAddAction, setAlwaysShowAddAction] = useState(
-      OPTIONS.alwaysShowAddAction.read(retro.options),
+    const [optionsDiff, setOptionsDiff] = useState<Record<string, unknown>>({});
+
+    const handleChangeFormatOption = useCallback(
+      (overrides: Record<string, unknown>) =>
+        setOptionsDiff((prev) => ({ ...prev, ...overrides })),
+      [],
     );
-    const [theme, setTheme] = useState(OPTIONS.theme.read(retro.options));
 
     const [handleSubmit, sending, error] = useSubmissionCallback(async () => {
       if (!name || !slug) {
@@ -63,69 +64,26 @@ export const SettingsForm = memo(
       if (format !== retro.format) {
         await retroService.setFormat(retro.id, retroAuth.retroToken, format);
       }
+      // TODO: there is a bug here where changing other properties at the same time as changing the format can cause the old state to get "stuck" for the current viewer
       const specs: RetroDispatchSpec = [];
-      const events: ChangeEvent[] = [];
       if (name !== retro.name) {
         specs.push({ name: ['=', name] });
       }
       if (retroAuth.scopes.includes('manage') && slug !== retro.slug) {
         specs.push({ slug: ['=', slug] });
       }
-      if (
-        alwaysShowAddAction !== OPTIONS.alwaysShowAddAction.read(retro.options)
-      ) {
-        specs.push({
-          options: OPTIONS.alwaysShowAddAction.specSet(alwaysShowAddAction),
-        });
+      for (const [key, v] of Object.entries(optionsDiff)) {
+        if (v !== retro.options[key]) {
+          specs.push({
+            options: { [key]: v === undefined ? ['unset'] : ['=', v] },
+          });
+        }
       }
-      if (theme !== OPTIONS.theme.read(retro.options)) {
-        specs.push({ options: OPTIONS.theme.specSet(theme) });
-      }
-      const saved = await dispatch.sync(specs, { events });
+      const saved = await dispatch.sync(specs);
       onSave?.(saved);
     });
 
-    const themeChoices = getThemes().map(([value, detail]) => ({
-      value,
-      label: (
-        <span className="theme-row">
-          <span className="name">{detail.name}</span>
-          <span className="preview">{detail.icons.happy}</span>
-          <span className="preview">{detail.icons.meh}</span>
-          <span className="preview">{detail.icons.sad}</span>
-        </span>
-      ),
-    }));
-
-    let formatOptions: ReactNode = null;
-    if (format === 'mood') {
-      formatOptions = (
-        <>
-          <fieldset className="minimal">
-            <legend>Theme</legend>
-            <PickerInput
-              mode="list"
-              className="theme"
-              name="theme"
-              value={theme}
-              onChange={setTheme}
-              options={themeChoices}
-            />
-          </fieldset>
-          <h2>Behaviour</h2>
-          <label className="checkbox">
-            <input
-              name="always-show-add-action"
-              type="checkbox"
-              checked={alwaysShowAddAction}
-              onChange={(e) => setAlwaysShowAddAction(e.currentTarget.checked)}
-              autoComplete="off"
-            />
-            Sticky &ldquo;add action&rdquo; input
-          </label>
-        </>
-      );
-    }
+    const RetroFormatOptions = getRetroFormatDetails(format).options;
 
     const manageOptions = (
       <>
@@ -215,7 +173,14 @@ export const SettingsForm = memo(
           />
         </label>
         <RetroFormatPicker value={format} onChange={setFormat} />
-        {formatOptions}
+        {RetroFormatOptions ? (
+          <Suspense fallback={<LoadingIndicator />}>
+            <RetroFormatOptions
+              retroOptions={{ ...retro.options, ...optionsDiff }}
+              onChangeOption={handleChangeFormatOption}
+            />
+          </Suspense>
+        ) : null}
         {retroAuth.scopes.includes('manage') ? manageOptions : null}
         <div className="form-actions-shadow" />
         <div className="bottom-shadow-cover" />
