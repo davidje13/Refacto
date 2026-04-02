@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import {
   encryptByRecordWithMasterKey,
+  migrate,
   type Collection,
   type DB,
   type Wrapped,
@@ -21,13 +22,16 @@ export class RetroArchiveService {
       { keyCache: { capacity: 128 }, allowRaw: true },
     );
 
-    this.archiveCollection = enc<RetroArchive>()(
-      ['options', 'items', 'history'],
-      db.getCollection<
-        Wrapped<RetroArchive, 'options' | 'items' | 'history', Buffer>
-      >('archive', {
-        retroId: {},
-      }),
+    this.archiveCollection = migrate(
+      { history: (v) => v || [] },
+      enc<RetroArchive>()(
+        ['options', 'items', 'history'],
+        db.getCollection<
+          Wrapped<RetroArchive, 'options' | 'items' | 'history', Buffer>
+        >('archive', {
+          retroId: {},
+        }),
+      ),
     );
   }
 
