@@ -64,7 +64,6 @@ export const SettingsForm = memo(
       if (format !== retro.format) {
         await retroService.setFormat(retro.id, retroAuth.retroToken, format);
       }
-      // TODO: there is a bug here where changing other properties at the same time as changing the format can cause the old state to get "stuck" for the current viewer
       const specs: RetroDispatchSpec = [];
       if (name !== retro.name) {
         specs.push({ name: ['=', name] });
