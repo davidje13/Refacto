@@ -17,11 +17,10 @@ import {
   type CubicBezier,
   type Pt,
 } from 'curve-ops';
-import {
-  simplifySplice,
+import listCommands, {
   type SpliceSpec,
   type SpliceStep,
-} from 'json-immutability-helper';
+} from 'json-immutability-helper/commands/list';
 import { memo, type MutableRefObject } from 'react';
 import CursorEraser from '../../../../../../resources/cursor-eraser.svg?source';
 import type { Curve, CurveElement } from '../../../../../shared/api-entities';
@@ -111,7 +110,7 @@ export const eraser = (
       p += newSegmentPartCount;
     });
     if (curUpdates.length) {
-      updates = simplifySplice(updates, curUpdates);
+      updates = listCommands.simplifySplice(updates, curUpdates);
       setMyLineUpdate(updates);
       liveEventDispatch?.nagle(() => [liveEventID, updates], 100);
     }

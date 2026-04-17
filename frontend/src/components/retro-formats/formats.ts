@@ -9,6 +9,7 @@ import type {
   RetroItem,
 } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
+import type { Spec } from '../../api/reducer';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
 export interface RetroFormatProps<StateT = Record<string, unknown>> {
@@ -32,7 +33,7 @@ export interface RetroFormatProps<StateT = Record<string, unknown>> {
 
 export interface RetroFormatOptionsProps {
   retroOptions: Record<string, unknown>;
-  onChangeOption: (overrides: Record<string, unknown>) => void;
+  onChangeOption: (spec: Spec<Record<string, unknown>>) => void;
 }
 
 export interface RetroFormatDetails {
@@ -63,6 +64,9 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     {
       component: lazy(() =>
         import('./health/index').then((m) => ({ default: m.HealthRetro })),
+      ),
+      options: lazy(() =>
+        import('./health/index').then((m) => ({ default: m.HealthOptions })),
       ),
       label: 'Health Check',
       icon: HealthIcon,

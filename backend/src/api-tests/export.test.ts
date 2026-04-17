@@ -134,7 +134,7 @@ describe('API retros', () => {
       expect(response.headers['content-type']).matches(/text\/csv/);
 
       expect(response.text).matches(
-        /Date,Question,Good,Mid,Bad,Skip\n2000-01-02,learning,1,1,0,0\n/,
+        /Date,Question,Good,Mid,Bad,Skip\n2000-01-02,Learning,1,1,0,0\n/,
       );
     });
 

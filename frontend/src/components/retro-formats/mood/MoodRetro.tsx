@@ -25,12 +25,13 @@ import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import { useActionFactory } from '../../../hooks/useActionFactory';
 import { useGlobalKeyListener } from '../../../hooks/useGlobalKeyListener';
 import { useGate } from '../../../hooks/useGate';
-import { OPTIONS } from '../../../helpers/optionManager';
+import { optionEnableMobileFacilitation } from '../../../helpers/OptionType';
 import { ItemToast } from '../../items/ItemToast';
 import type { RetroFormatProps } from '../formats';
 import { MoodSection } from './categories/MoodSection';
 import type { MoodType } from './categories/FaceIcon';
 import { ActionsPane } from './actions/ActionsPane';
+import { optionAlwaysShowAddAction, optionTheme } from './moodOptionKeys';
 import { BeginDiscussionPopup } from './BeginDiscussionPopup';
 import './MoodRetro.css';
 
@@ -76,7 +77,7 @@ export const MoodRetro = ({
   const localDateProvider = useLocalDateProvider(archiveTime);
 
   const canFacilitate =
-    !singleColumn || OPTIONS.enableMobileFacilitation.read(retroOptions);
+    !singleColumn || optionEnableMobileFacilitation.read(retroOptions);
 
   const [autoAdvanceTime, setAutoAdvanceTime] = useState(NEVER);
 
@@ -155,7 +156,7 @@ export const MoodRetro = ({
       categoryLabel={category.title}
       category={category.id}
       group={group}
-      theme={OPTIONS.theme.read(retroOptions)}
+      theme={optionTheme.read(retroOptions)}
     />
   );
 
@@ -163,7 +164,7 @@ export const MoodRetro = ({
     <ActionsPane
       items={retroItems}
       group={group}
-      alwaysShowEntry={OPTIONS.alwaysShowAddAction.read(retroOptions)}
+      alwaysShowEntry={optionAlwaysShowAddAction.read(retroOptions)}
       onAddItem={handleAddActionItem}
       onSetDone={handleSetActionItemDone}
       onEdit={handleEditItem}

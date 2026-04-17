@@ -1,8 +1,9 @@
 import type { FunctionComponent } from 'react';
 import { drawFaceIcon, getThemes } from './categories/FaceIcon';
 import { PickerInput } from '../../common/PickerInput';
-import { OPTIONS } from '../../../helpers/optionManager';
 import type { RetroFormatOptionsProps } from '../formats';
+import { optionAlwaysShowAddAction, optionTheme } from './moodOptionKeys';
+import './MoodOptions.css';
 
 export const MoodOptions: FunctionComponent<RetroFormatOptionsProps> = ({
   retroOptions,
@@ -28,8 +29,8 @@ export const MoodOptions: FunctionComponent<RetroFormatOptionsProps> = ({
           mode="list"
           className="theme"
           name="theme"
-          value={OPTIONS.theme.read(retroOptions)}
-          onChange={(theme) => onChangeOption(OPTIONS.theme.write(theme))}
+          value={optionTheme.read(retroOptions)}
+          onChange={(theme) => onChangeOption(optionTheme.specSet(theme))}
           options={themeChoices}
         />
       </fieldset>
@@ -38,10 +39,10 @@ export const MoodOptions: FunctionComponent<RetroFormatOptionsProps> = ({
         <input
           name="always-show-add-action"
           type="checkbox"
-          checked={OPTIONS.alwaysShowAddAction.read(retroOptions)}
+          checked={optionAlwaysShowAddAction.read(retroOptions)}
           onChange={(e) =>
             onChangeOption(
-              OPTIONS.alwaysShowAddAction.write(e.currentTarget.checked),
+              optionAlwaysShowAddAction.specSet(e.currentTarget.checked),
             )
           }
           autoComplete="off"

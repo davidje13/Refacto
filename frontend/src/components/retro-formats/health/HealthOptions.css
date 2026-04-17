@@ -1,0 +1,30 @@
+.health-option-questions {
+  list-style: none;
+
+  .question {
+    margin-top: 24px;
+
+    &.skip summary .label {
+      text-decoration: line-through 1px;
+    }
+
+    & input[type='text'] {
+      font-size: 0.9em;
+      padding: 4px 8px;
+      margin: 4px 0;
+    }
+
+    @media (min-width: 600px) {
+      & label:not(.checkbox) {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: 160px 1fr;
+        align-items: baseline;
+
+        & input[type='text'] {
+          margin: 0 0 4px;
+        }
+      }
+    }
+  }
+}

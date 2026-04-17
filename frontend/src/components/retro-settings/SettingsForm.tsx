@@ -7,6 +7,7 @@ import {
   retroAuthTracker,
   userDataTracker,
 } from '../../api/api';
+import { context, type Spec } from '../../api/reducer';
 import { needArchive } from '../../actions/retro';
 import { SlugEntry } from '../retro-create/SlugEntry';
 import { RetroFormatPicker } from '../retro-create/RetroFormatPicker';
@@ -35,11 +36,13 @@ export const SettingsForm = memo(
     const [passwordMatches, setPasswordMatches] = useState(false);
     const [evictUsers, setEvictUsers] = useState(true);
     const [newPassword, setNewPassword] = useState('');
-    const [optionsDiff, setOptionsDiff] = useState<Record<string, unknown>>({});
+    const [optionsSpec, setOptionsSpec] = useState<
+      Spec<Record<string, unknown>>
+    >({});
 
     const handleChangeFormatOption = useCallback(
-      (overrides: Record<string, unknown>) =>
-        setOptionsDiff((prev) => ({ ...prev, ...overrides })),
+      (spec: Spec<Record<string, unknown>>) =>
+        setOptionsSpec((prev) => context.combine([prev, spec])),
       [],
     );
 
@@ -71,12 +74,8 @@ export const SettingsForm = memo(
       if (retroAuth.scopes.includes('manage') && slug !== retro.slug) {
         specs.push({ slug: ['=', slug] });
       }
-      for (const [key, v] of Object.entries(optionsDiff)) {
-        if (v !== retro.options[key]) {
-          specs.push({
-            options: { [key]: v === undefined ? ['unset'] : ['=', v] },
-          });
-        }
+      if (!context.isNoOp(optionsSpec)) {
+        specs.push({ options: optionsSpec });
       }
       const saved = await dispatch.sync(specs);
       onSave?.(saved);
@@ -175,7 +174,7 @@ export const SettingsForm = memo(
         {RetroFormatOptions ? (
           <Suspense fallback={<LoadingIndicator />}>
             <RetroFormatOptions
-              retroOptions={{ ...retro.options, ...optionsDiff }}
+              retroOptions={context.update(retro.options, optionsSpec)}
               onChangeOption={handleChangeFormatOption}
             />
           </Suspense>

@@ -1,0 +1,92 @@
+import { OptionType } from '../../../helpers/OptionType';
+import type { HealthQuestion } from '../../../actions/healthRetro';
+
+export const DEFAULT_QUESTIONS: HealthQuestion[] = [
+  {
+    id: 'process',
+    title: 'Suitable process',
+    good: 'Our way of working is a good balance of rigour and flexibility.',
+    bad: 'There are too many useless hurdles in our day-to-day work, or too much chaos and inconsistency.',
+    enabled: true,
+  },
+  {
+    id: 'quality',
+    title: 'High quality work',
+    good: 'We\u2019re proud of what we make! New joiners get going quickly and mistakes are caught reliably.',
+    bad: 'Our output is full of problems beneath-the-surface and it is difficult to have any confidence in it.',
+    enabled: true,
+  },
+  {
+    id: 'value',
+    title: 'Useful output',
+    good: 'We make great stuff! We\u2019re proud of it, our customers like it, and our stakeholders are really happy.',
+    bad: 'We\u2019re not helping anyone with what we produce. We feel embarrassed to deliver it.',
+    enabled: true,
+  },
+  {
+    id: 'release',
+    title: 'Easy to release',
+    good: 'Once we\u2019ve finished our work, getting the result into customers\u2019 hands is simple, safe, and painless.',
+    bad: 'Releasing is risky, painful, lots of manual work, and takes forever.',
+    enabled: true,
+  },
+  {
+    id: 'speed',
+    title: 'Quick turnaround',
+    good: 'We get stuff done and available to customers really quickly. No waiting, no delays.',
+    bad: 'Nothing seems to get delivered to customers. We keep getting stuck or interrupted. Work gets held up on dependencies.',
+    enabled: true,
+  },
+  {
+    id: 'support',
+    title: 'Help & support',
+    good: 'We can rely on support from other teams, stakeholders, and external providers whenever we need it.',
+    bad: 'We are frequently stuck because we can\u2019t get the support and help that we ask for.',
+    enabled: true,
+  },
+  {
+    id: 'fun',
+    title: 'Having fun',
+    good: 'We love going to work, and have great fun working together.',
+    bad: 'Work is overwhelming or boring.',
+    enabled: true,
+  },
+  {
+    id: 'learning',
+    title: 'Learning',
+    good: 'There are lots of opportunities to learn new and interesting things.',
+    bad: 'We never have time to learn anything. Mistakes are made due to a lack of understanding.',
+    enabled: true,
+  },
+  {
+    id: 'mission',
+    title: 'Worthwhile mission',
+    good: 'We know exactly why we are here, and we are really excited about it.',
+    bad: 'There is no high level picture or focus. The goals of the team are unclear or uninspiring. Priorities change at random.',
+    enabled: true,
+  },
+  {
+    id: 'autonomy',
+    title: 'Autonomy',
+    good: 'We are in control of our own destiny. We decide what we make and how we make it.',
+    bad: 'We have to do things which make no sense, or are pointless. We have no influence to change anything.',
+    enabled: true,
+  },
+];
+
+export const optionHealthQuestions = new OptionType<HealthQuestion[]>(
+  'health-questions',
+  DEFAULT_QUESTIONS,
+  (v): v is HealthQuestion[] =>
+    Array.isArray(v) &&
+    v.every(
+      (o) =>
+        o &&
+        typeof o === 'object' &&
+        typeof o.id === 'string' &&
+        typeof o.enabled === 'boolean' &&
+        typeof o.title === 'string' &&
+        typeof o.good === 'string' &&
+        typeof o.bad === 'string',
+    ),
+);

@@ -16,8 +16,8 @@ import {
 import { Intro } from './intro/Intro';
 import { Questions } from './questions/Questions';
 import { Discussion } from './discussion/Discussion';
+import { optionHealthQuestions } from './healthOptionKeys';
 import { ImportPopup } from './ImportPopup';
-import { useQuestionSet } from './useQuestionSet';
 import './HealthRetro.css';
 
 type OwnState =
@@ -51,7 +51,11 @@ export const HealthRetro: FunctionComponent<
   );
   const importing = useBoolean(false);
   const [previousUser, setPreviousUser] = useState('');
-  const questions = useQuestionSet(retroOptions);
+  const allQuestions = optionHealthQuestions.read(retroOptions);
+  const questions = useMemo(
+    () => allQuestions.filter((q) => q.enabled),
+    [allQuestions],
+  );
   const filteredRetroItems = useMemo(
     () =>
       group

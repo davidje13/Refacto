@@ -6,7 +6,7 @@ import { ArchivePopup } from './ArchivePopup';
 import { Header, type HeaderLinks } from '../common/Header';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import { useBoolean } from '../../hooks/useBoolean';
-import { OPTIONS } from '../../helpers/optionManager';
+import { optionEnableMobileFacilitation } from '../../helpers/OptionType';
 import { getRetroFormatDetails } from '../retro-formats/formats';
 import { RetroFormat } from '../retro-formats/RetroFormat';
 import { InvitePopup } from './InvitePopup';
@@ -40,7 +40,7 @@ export const RetroPage = memo(
     const format = getRetroFormatDetails(retro.format);
     const showCreateArchive =
       format.showCreateArchive &&
-      (!smallScreen || OPTIONS.enableMobileFacilitation.read(retro.options));
+      (!smallScreen || optionEnableMobileFacilitation.read(retro.options));
 
     const canArchive = Boolean(
       retroDispatch && retro && isArchivable(retro) && !group,
