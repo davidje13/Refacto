@@ -47,7 +47,7 @@
   &.disabled {
     background: var(--beige-shadow);
     color: var(--pale-text-on-white);
-    border: none;
+    border-color: transparent;
   }
 }
 

@@ -10,6 +10,7 @@ import type {
 } from '../../shared/api-entities';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import type { Spec } from '../../api/reducer';
+import { lazyImportError } from '../common/Loader';
 import { UnknownRetro } from './unknown/UnknownRetro';
 
 export interface RetroFormatProps<StateT = Record<string, unknown>> {
@@ -49,10 +50,16 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     'mood',
     {
       component: lazy(() =>
-        import('./mood/index').then((m) => ({ default: m.MoodRetro })),
+        import('./mood/index').then(
+          (m) => ({ default: m.MoodRetro }),
+          lazyImportError,
+        ),
       ),
       options: lazy(() =>
-        import('./mood/index').then((m) => ({ default: m.MoodOptions })),
+        import('./mood/index').then(
+          (m) => ({ default: m.MoodOptions }),
+          lazyImportError,
+        ),
       ),
       label: '3 Column',
       icon: MoodIcon,
@@ -63,10 +70,16 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     'health',
     {
       component: lazy(() =>
-        import('./health/index').then((m) => ({ default: m.HealthRetro })),
+        import('./health/index').then(
+          (m) => ({ default: m.HealthRetro }),
+          lazyImportError,
+        ),
       ),
       options: lazy(() =>
-        import('./health/index').then((m) => ({ default: m.HealthOptions })),
+        import('./health/index').then(
+          (m) => ({ default: m.HealthOptions }),
+          lazyImportError,
+        ),
       ),
       label: 'Health Check',
       icon: HealthIcon,
@@ -77,7 +90,10 @@ export const RETRO_FORMATS = new Map<string, RetroFormatDetails>([
     'timeline',
     {
       component: lazy(() =>
-        import('./timeline/index').then((m) => ({ default: m.TimelineRetro })),
+        import('./timeline/index').then(
+          (m) => ({ default: m.TimelineRetro }),
+          lazyImportError,
+        ),
       ),
       label: 'Timeline',
       icon: TimelineIcon,

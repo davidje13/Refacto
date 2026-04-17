@@ -1,4 +1,8 @@
 .loader {
   margin: 64px 32px;
   text-align: center;
+
+  p {
+    margin-bottom: 16px;
+  }
 }

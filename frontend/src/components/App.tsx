@@ -3,7 +3,7 @@ import { Route, Switch } from 'wouter';
 import { RedirectRoute } from './RedirectRoute';
 import { Footer } from './Footer';
 import { Header } from './common/Header';
-import { LoadingIndicator } from './common/Loader';
+import { lazyImportError, LoadingIndicator } from './common/Loader';
 import { LoginCallback } from './login/LoginCallback';
 import { RetroRouter } from './RetroRouter';
 import { WatchRetro } from './WatchRetro';
@@ -14,17 +14,24 @@ import { NotFoundPage } from './not-found/NotFoundPage';
 import './App.css';
 
 const LazyGuidancePage = lazy(() =>
-  import('./guidance/GuidancePage').then((m) => ({ default: m.GuidancePage })),
+  import('./guidance/GuidancePage').then(
+    (m) => ({ default: m.GuidancePage }),
+    lazyImportError,
+  ),
 );
 
 const LazyApiDocsPage = lazy(() =>
-  import('./api-docs/ApiDocsPage').then((m) => ({ default: m.ApiDocsPage })),
+  import('./api-docs/ApiDocsPage').then(
+    (m) => ({ default: m.ApiDocsPage }),
+    lazyImportError,
+  ),
 );
 
 const LazyRetroPreviewPage = lazy(() =>
-  import('./retro-formats/RetroPreviewPage').then((m) => ({
-    default: m.RetroPreviewPage,
-  })),
+  import('./retro-formats/RetroPreviewPage').then(
+    (m) => ({ default: m.RetroPreviewPage }),
+    lazyImportError,
+  ),
 );
 
 export const App: FunctionComponent = () => (
