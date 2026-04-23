@@ -227,7 +227,7 @@ export const DrawingCanvas: FunctionComponent<DrawingCanvasProps> = ({
             <path
               ref={livePathRef}
               className="line"
-              color={colourSVG(activeTool.colour)}
+              stroke={colourSVG(activeTool.colour)}
             />
           ) : null}
         </svg>

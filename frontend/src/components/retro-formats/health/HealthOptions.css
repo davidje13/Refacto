@@ -22,7 +22,7 @@
         align-items: baseline;
 
         & input[type='text'] {
-          margin: 0 0 4px;
+          margin: 2px 0;
         }
       }
     }
