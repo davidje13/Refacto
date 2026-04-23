@@ -1,7 +1,7 @@
-import type { Pt } from 'curve-ops';
+import type { Point2D } from 'curve-ops';
 
 export interface MovementHandler {
-  move: (pt: Pt, end: boolean) => void;
+  move: (pt: Point2D, end: boolean) => void;
   cancel?: () => void;
 }
 
@@ -11,7 +11,7 @@ export class DragHandler {
 
   constructor(
     private readonly pointRegion: HTMLElement,
-    private readonly onBegin: (pt: Pt) => MovementHandler | null,
+    private readonly onBegin: (pt: Point2D) => MovementHandler | null,
   ) {}
 
   detach(noCancel = false) {

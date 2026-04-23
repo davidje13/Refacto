@@ -39,6 +39,7 @@ export async function addStaticContent(
     mode: 'static-paths',
     negotiator: new Negotiator([negotiateEncoding(['br', 'gzip'])]),
     hide: [/\.(br|gz)^/],
+    dynamicHeaders: ['last-modified'],
     callback: setCacheHeaders,
   });
   app.use(staticFiles);
@@ -80,7 +81,6 @@ function setCacheHeaders(
   file: ResolvedFileInfo,
 ) {
   const encoding = res.getHeader('content-encoding');
-  res.setHeader('last-modified', file.stats.mtime.toUTCString());
   const match = VERSIONED_FILE.exec(file.canonicalPath);
   if (match) {
     res.setHeader('etag', `"${match[1]}-${encoding ?? ''}"`);

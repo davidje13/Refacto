@@ -3,7 +3,7 @@ import {
   penTool,
   ptTransform,
   type CubicBezier,
-  type Pt,
+  type Point2D,
 } from 'curve-ops';
 import CursorPen from '../../../../../../resources/cursor-pen.svg?source';
 import type { Colour, Curve } from '../../../../../shared/api-entities';
@@ -31,7 +31,7 @@ export const pen = (
   liveEventID: string,
   transform: Transform,
   { colour }: Pen,
-  begin: Pt,
+  begin: Point2D,
 ) => {
   let mutableLine: Curve = [];
   let mutableLive: CubicBezier | null = null;

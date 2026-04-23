@@ -1,4 +1,4 @@
-import type { CubicBezier, Pt } from 'curve-ops';
+import type { CubicBezier, Point2D } from 'curve-ops';
 import type {
   Colour,
   CurveCubicBezier,
@@ -15,7 +15,7 @@ export interface Transform {
 export const colourSVG = (c: Colour) =>
   `hsl(${Math.round(c.h ?? 0)}deg,${Math.round((c.s ?? 0.6) * 100)}%,${Math.round((c.l ?? 0.55) * 100)}%)`;
 
-export const convertPoint = (pt: Pt, t: Transform): CurveMove => [
+export const convertPoint = (pt: Point2D, t: Transform): CurveMove => [
   Math.round(pt.x * t.mx + t.dx),
   Math.round(pt.y * t.my + t.dy),
 ];

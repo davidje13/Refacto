@@ -4,18 +4,18 @@ import {
   cutBezier3Circle,
   cutBezier3Rect,
   intersectBezier3CircleFn,
-  isOverlapAABox,
-  isOverlapAABoxCircleR2,
+  isOverlapAABox2,
+  isOverlapAABox2CircleR2,
   movementThrottle,
   ptDist2,
   rectBounds,
-  rectFromLine,
+  rectFromLineSeg2,
   SingleLinkedList,
-  type AxisAlignedBox,
+  type AxisAlignedBox2D,
   type Circle,
   type CircleIntersectionFn,
   type CubicBezier,
-  type Pt,
+  type Point2D,
 } from 'curve-ops';
 import listCommands, {
   type SpliceSpec,
@@ -42,7 +42,7 @@ export const eraser = (
   transform: Transform,
   { radius }: Eraser,
   path: Curve,
-  begin: Pt,
+  begin: Point2D,
 ) => {
   const rr = radius * radius;
   const segments = prepareSegments(path, transform);
@@ -54,11 +54,11 @@ export const eraser = (
     setMyLineUpdate(undefined);
   }
 
-  function doErase(from: Pt, to: Pt, done: boolean) {
+  function doErase(from: Point2D, to: Point2D, done: boolean) {
     const endCap: Circle = { c: to, r: radius };
     const line =
       ptDist2(from, to) > rr * 0.1 * 0.1
-        ? rectFromLine({ p0: from, p1: to }, radius * 2)
+        ? rectFromLineSeg2({ p0: from, p1: to }, radius * 2)
         : null;
     const lineBounds = line ? rectBounds(line) : null;
 
@@ -66,11 +66,11 @@ export const eraser = (
     let p = 0;
     segments.forEach((seg, { next, replace }) => {
       let parts: (CubicBezier & { inside?: boolean })[] = [seg._curve];
-      if (isOverlapAABoxCircleR2(seg._bounds, endCap.c, rr)) {
+      if (isOverlapAABox2CircleR2(seg._bounds, endCap.c, rr)) {
         seg._circFn ??= intersectBezier3CircleFn(seg._curve);
         parts = cutBezier3Circle(seg._curve, endCap, seg._circFn);
       }
-      if (lineBounds && isOverlapAABox(seg._bounds, lineBounds)) {
+      if (lineBounds && isOverlapAABox2(seg._bounds, lineBounds)) {
         parts = parts.flatMap((c) =>
           c.inside ? [c] : cutBezier3Rect(c, line!),
         );
@@ -159,7 +159,7 @@ export const EraserCursorAug = memo(
 interface IntersectionSegment {
   _moveCount: number;
   _curve: CubicBezier;
-  _bounds: AxisAlignedBox;
+  _bounds: AxisAlignedBox2D;
   _circFn: CircleIntersectionFn | null;
 }
 
@@ -169,7 +169,7 @@ function prepareSegments(curve: Curve, { mx, my, dx, dy }: Transform) {
   const idx = -dx * imx;
   const idy = -dy * imy;
   const segments = new SingleLinkedList<IntersectionSegment>();
-  let prev: Pt = { x: 0, y: 0 };
+  let prev: Point2D = { x: 0, y: 0 };
   let moveCount = 0;
   for (const part of curve) {
     if (part.length === 2) {
