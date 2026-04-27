@@ -2,12 +2,9 @@
   "name": "@refacto/frontend",
   "private": true,
   "scripts": {
-    "format": "prettier --write .",
     "build": "webpack --mode production",
     "start": "webpack serve --mode development",
-    "lint": "tsc --pretty && prettier --check .",
     "lint:tsc": "tsc --pretty",
-    "lint:prettier": "prettier --check .",
     "test": "jest",
     "analyze-bundle": "BUNDLE_ANALYSIS=true webpack --mode production --profile --json | npx webpack-bundle-analyzer /dev/stdin build"
   },

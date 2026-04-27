@@ -24,7 +24,7 @@
   ],
   "devDependencies": {
     "lean-test": "2.x",
-    "prettier": "3.8.1",
+    "prettier": "3.8.3",
     "typescript": "6.0.x"
   },
   "config": {

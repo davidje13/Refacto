@@ -2,10 +2,7 @@
   "name": "@refacto/e2e",
   "private": true,
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "tsc --pretty && prettier --check .",
     "lint:tsc": "tsc --pretty",
-    "lint:prettier": "prettier --check .",
     "test": "lean-test --preprocess tsc"
   },
   "config": {

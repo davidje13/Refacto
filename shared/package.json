@@ -6,10 +6,7 @@
     "./health": "./health.ts"
   },
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "tsc --pretty && prettier --check .",
     "lint:tsc": "tsc --pretty",
-    "lint:prettier": "prettier --check .",
     "test": "true"
   },
   "dependencies": {}

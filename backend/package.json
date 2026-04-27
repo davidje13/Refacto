@@ -3,10 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "tsc --pretty && prettier --check .",
     "lint:tsc": "tsc --pretty",
-    "lint:prettier": "prettier --check .",
     "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build && chmod +x build/index.js",
     "build-watch": "rollup --watch --config rollup.config.mjs",
     "test": "lean-test --preprocess tsc --parallel"
