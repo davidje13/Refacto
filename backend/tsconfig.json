@@ -1,17 +1,7 @@
 {
-  "extends": "@tsconfig/strictest/tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "lib": ["es2022"],
-    "types": ["node"],
-    "target": "es2022",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "verbatimModuleSyntax": true,
-    "resolveJsonModule": true,
-    "noEmit": true
-  },
-  "typeAcquisition": {
-    "enable": false
+    "types": ["node"]
   },
   "include": ["src"]
 }

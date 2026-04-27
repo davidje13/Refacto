@@ -18,8 +18,8 @@ import {
   type Permission,
   type EventFilter,
 } from 'shared-reducer/backend';
-import type { Retro, RetroSummary } from '../shared/api-entities';
-import { summariseHealthVotes } from '../shared/health';
+import type { Retro, RetroSummary } from '@refacto/shared/api-entities';
+import { summariseHealthVotes } from '@refacto/shared/health';
 import { extractRetro } from '../helpers/jsonParsers';
 
 const VALID_SLUG = /^[a-z0-9][a-z0-9_\-]*$/;

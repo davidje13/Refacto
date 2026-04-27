@@ -1,9 +1,6 @@
 import type { FunctionComponent } from 'react';
-import type {
-  RetroHistoryItem,
-  RetroItem,
-} from '../../../../shared/api-entities';
-import type { Counts, HealthSummary } from '../../../../shared/health';
+import type { RetroHistoryItem, RetroItem } from '@refacto/shared/api-entities';
+import type { Counts, HealthSummary } from '@refacto/shared/health';
 import type { HealthQuestion } from '../../../../actions/healthRetro';
 import { formatDate, plural } from '../../../../time/formatters';
 import { Trendline } from '../common/Trendline';

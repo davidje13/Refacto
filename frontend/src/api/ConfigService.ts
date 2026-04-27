@@ -1,4 +1,4 @@
-import type { ClientConfig } from '../shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 import { jsonFetch } from './jsonFetch';
 
 export class ConfigService {

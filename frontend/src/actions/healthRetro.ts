@@ -1,9 +1,9 @@
-import type { Retro, RetroItem } from '../shared/api-entities';
+import type { Retro, RetroItem } from '@refacto/shared/api-entities';
 import {
   makeUserAnswerID,
   type AnswerID,
   type HealthSummary,
-} from '../shared/health';
+} from '@refacto/shared/health';
 import type { Spec } from '../api/reducer';
 import { setRetroState } from './retro';
 

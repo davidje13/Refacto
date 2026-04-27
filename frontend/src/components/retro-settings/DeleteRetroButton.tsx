@@ -1,5 +1,5 @@
 import { useEffect, useState, type FunctionComponent } from 'react';
-import type { Retro, RetroAuth } from '../../shared/api-entities';
+import type { Retro, RetroAuth } from '@refacto/shared/api-entities';
 import { useConfig } from '../../hooks/data/useConfig';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { realAutoFocus } from '../../helpers/realAutoFocus';

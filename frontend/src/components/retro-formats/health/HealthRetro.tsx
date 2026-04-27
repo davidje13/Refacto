@@ -1,5 +1,5 @@
 import { useMemo, useState, type FunctionComponent } from 'react';
-import type { AnswerID } from '../../../shared/health';
+import type { AnswerID } from '@refacto/shared/health';
 import { startViewTransition } from '../../../helpers/viewTransition';
 import { classNames } from '../../../helpers/classNames';
 import { randomUUID } from '../../../helpers/crypto';

@@ -1,7 +1,11 @@
 import { memo, useState } from 'react';
 import useAwaited from 'react-hook-awaited';
+import type {
+  Retro,
+  RetroApiKey,
+  RetroAuth,
+} from '@refacto/shared/api-entities';
 import Delete from '../../../resources/delete.svg';
-import type { Retro, RetroApiKey, RetroAuth } from '../../shared/api-entities';
 import { retroApiKeyService } from '../../api/api';
 import { formatDateTime } from '../../time/formatters';
 import { CreateAPIKeyPopup } from './CreateAPIKeyPopup';

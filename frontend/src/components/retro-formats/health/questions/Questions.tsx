@@ -1,7 +1,7 @@
 import { useLayoutEffect, type FunctionComponent } from 'react';
 import { Link } from 'wouter';
-import type { RetroItem } from '../../../../shared/api-entities';
-import { makeUserAnswerID, type AnswerID } from '../../../../shared/health';
+import type { RetroItem } from '@refacto/shared/api-entities';
+import { makeUserAnswerID, type AnswerID } from '@refacto/shared/health';
 import { startViewTransition } from '../../../../helpers/viewTransition';
 import { classNames } from '../../../../helpers/classNames';
 import { useStateMap } from '../../../../hooks/useStateMap';

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FunctionComponent } from 'react';
-import type { RetroHistoryItem } from '../../../shared/api-entities';
-import type { Counts, HealthSummary } from '../../../shared/health';
+import type { RetroHistoryItem } from '@refacto/shared/api-entities';
+import type { Counts, HealthSummary } from '@refacto/shared/health';
 import { useSubmissionCallback } from '../../../hooks/useSubmissionCallback';
 import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import type { HealthQuestion } from '../../../actions/healthRetro';

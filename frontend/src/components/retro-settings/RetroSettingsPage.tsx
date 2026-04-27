@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useLocation } from 'wouter';
+import type { Retro } from '@refacto/shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
-import type { Retro } from '../../shared/api-entities';
 import type { RetroPagePropsT } from '../RetroRouter';
 import { Header } from '../common/Header';
 import { SettingsForm } from './SettingsForm';

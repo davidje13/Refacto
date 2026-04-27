@@ -1,5 +1,5 @@
 import { getBodyJSON, HTTPError, Router } from 'web-listener';
-import type { ErrorReport } from '../shared/api-entities';
+import type { ErrorReport } from '@refacto/shared/api-entities';
 import type { AnalyticsService } from '../services/AnalyticsService';
 import { json } from '../helpers/json';
 

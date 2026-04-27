@@ -5,8 +5,8 @@ import {
   type CubicBezier,
   type Point2D,
 } from 'curve-ops';
+import type { Colour, Curve } from '@refacto/shared/api-entities';
 import CursorPen from '../../../../../../resources/cursor-pen.svg?source';
-import type { Colour, Curve } from '../../../../../shared/api-entities';
 import type { Spec } from '../../../../../api/reducer';
 import type { LiveEventDispatch } from '../../../../../hooks/useLiveEvents';
 import {

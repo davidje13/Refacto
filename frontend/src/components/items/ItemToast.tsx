@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useIsAfter } from 'react-hook-final-countdown';
-import type { RetroItem } from '../../shared/api-entities';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import './ItemToast.css';
 
 interface PropsT {

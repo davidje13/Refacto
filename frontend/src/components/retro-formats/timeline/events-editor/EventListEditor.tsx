@@ -4,8 +4,8 @@ import {
   type FunctionComponent,
   type HTMLProps,
 } from 'react';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import TickBold from '../../../../../resources/tick-bold.svg';
-import type { RetroItem } from '../../../../shared/api-entities';
 import { useBoolean } from '../../../../hooks/useBoolean';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { formatDate, isoDate, readIsoDate } from '../../../../time/formatters';

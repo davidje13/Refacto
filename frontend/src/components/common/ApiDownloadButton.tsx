@@ -1,5 +1,5 @@
 import { useState, memo, type ReactNode, type SyntheticEvent } from 'react';
-import type { RetroAuth } from '../../shared/api-entities';
+import type { RetroAuth } from '@refacto/shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { API_BASE } from '../../api/api';
 import './ApiDownloadButton.css';

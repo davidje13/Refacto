@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { join } from 'node:path';
-import { basedir, deleteDirectory, findFiles, log } from './helpers/io.mjs';
 import { mkdir } from 'node:fs/promises';
+import { basedir, deleteDirectory, findFiles, log } from './helpers/io.mjs';
 import {
   exitWithCode,
   printPrefixed,
@@ -20,16 +20,19 @@ const PARALLEL_E2E =
 const FOCUS_BROWSER = process.env['BROWSER'];
 const SKIP_UNIT = process.argv.slice(2).includes('--only-e2e');
 
-const units = ['frontend', 'backend'];
+const packages = [
+  { name: 'shared', pkg: '@refacto/shared' },
+  { name: 'frontend', pkg: '@refacto/frontend' },
+  { name: 'backend', pkg: '@refacto/backend' },
+];
 
 if (!SKIP_UNIT) {
   await runMultipleTasks(
-    units.map((pkg) => ({
+    packages.map(({ name, pkg }) => ({
       command: 'npm',
-      args: ['test', '--quiet'],
-      cwd: join(basedir, pkg),
-      beginMessage: `\nTesting ${pkg}...\n`,
-      failureMessage: `Unit tests failed: ${pkg}.`,
+      args: ['test', '--workspace=' + pkg, '--quiet'],
+      beginMessage: `\nTesting ${name}...\n`,
+      failureMessage: `Unit tests failed: ${name}.`,
     })),
     { parallel: false },
   );
@@ -124,11 +127,15 @@ if (!testEnv['TARGET_HOST']) {
 // Run tests
 
 try {
+  await runTask({
+    command: 'node',
+    args: [join(basedir, 'node_modules', 'chromedriver', 'install.js')],
+    env: { PATH: process.env['PATH'], DETECT_CHROMEDRIVER_VERSION: 'true' },
+  });
   await runMultipleTasks(
     filteredBrowsers.map(({ browser, format }) => ({
       command: 'npm',
-      args: ['test', '--quiet'],
-      cwd: join(basedir, 'e2e'),
+      args: ['test', '--workspace=@refacto/e2e', '--quiet'],
       env: { ...testEnv, SELENIUM_BROWSER: browser },
       beginMessage: `E2E testing in ${browser}...`,
       failureMessage: `E2E tests failed in ${browser}`,

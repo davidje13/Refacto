@@ -3,8 +3,8 @@ import type {
   RetroAuth,
   RetroHistoryItem,
   RetroItem,
-} from '../../../../shared/api-entities';
-import { summariseHealthVotes } from '../../../../shared/health';
+} from '@refacto/shared/api-entities';
+import { summariseHealthVotes } from '@refacto/shared/health';
 import { type HealthQuestion } from '../../../../actions/healthRetro';
 import { LoadingError } from '../../../common/Loader';
 import { Overview } from './Overview';

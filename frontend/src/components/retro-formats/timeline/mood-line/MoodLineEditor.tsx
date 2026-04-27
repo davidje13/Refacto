@@ -4,7 +4,7 @@ import {
   type FunctionComponent,
   type ReactNode,
 } from 'react';
-import type { Colour, Curve, RetroItem } from '../../../../shared/api-entities';
+import type { Colour, Curve, RetroItem } from '@refacto/shared/api-entities';
 import type { Spec } from '../../../../api/reducer';
 import {
   DrawingCanvas,

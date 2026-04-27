@@ -1,8 +1,8 @@
 import { memo, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'wouter';
+import type { RetroSummary } from '@refacto/shared/api-entities';
 import { Header } from '../common/Header';
 import { LoadingError, LoadingIndicator } from '../common/Loader';
-import type { RetroSummary } from '../../shared/api-entities';
 import { useRetroList } from '../../hooks/data/useRetroList';
 import { useUserData } from '../../hooks/data/useUserData';
 import { useEvent } from '../../hooks/useEvent';

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { join } from 'node:path';
+import { chmod, rename } from 'node:fs/promises';
 import {
   basedir,
   compressFile,
@@ -15,39 +16,25 @@ import {
   hasExt,
   printSize,
 } from './helpers/io.mjs';
-import { chmod, rename } from 'node:fs/promises';
-import { runMultipleTasks, runTask } from './helpers/proc.mjs';
+import { runMultipleTasks } from './helpers/proc.mjs';
 
 const PARALLEL_BUILD = (process.env['PARALLEL_BUILD'] ?? 'true') === 'true';
 
 const packages = [
-  { dir: 'frontend', format: '35' },
-  { dir: 'backend', format: '36' },
+  { name: 'frontend', pkg: '@refacto/frontend', format: '35' },
+  { name: 'backend', pkg: '@refacto/backend', format: '36' },
 ];
 const builddir = join(basedir, 'build');
 const staticdir = join(builddir, 'static');
 const resourcesdir = join(staticdir, 'resources');
 
-for (const file of ['api-entities.ts', 'health.ts']) {
-  await runTask({
-    command: 'diff',
-    args: [
-      join(basedir, 'frontend', 'src', 'shared', file),
-      join(basedir, 'backend', 'src', 'shared', file),
-    ],
-    outputMode: 'fail_atomic',
-    failureMessage: `Shared ${file} files do not match.`,
-  });
-}
-
 await runMultipleTasks(
-  packages.map(({ dir, format }) => ({
+  packages.map(({ name, pkg, format }) => ({
     command: 'npm',
-    args: ['run', 'build', '--quiet'],
-    cwd: join(basedir, dir),
-    beginMessage: `Building ${dir}...`,
-    failureMessage: `Failed to build ${dir}.`,
-    outputPrefix: dir,
+    args: ['run', 'build', '--workspace=' + pkg, '--quiet'],
+    beginMessage: `Building ${name}...`,
+    failureMessage: `Failed to build ${name}.`,
+    outputPrefix: name,
     prefixFormat: format,
   })),
   { parallel: PARALLEL_BUILD },
@@ -90,16 +77,16 @@ log('Generating package.json...');
 const packageJson = await readJSON(join(basedir, 'backend', 'package.json'));
 await writeNiceJSON(join(builddir, 'package.json'), {
   ...packageJson,
-  name: 'refacto-app',
+  name: 'refacto',
   scripts: { start: './index.js' },
   optionalDependencies: undefined,
   devDependencies: undefined,
 });
 await writeNiceJSON(join(builddir, 'package-lock.json'), {
-  name: 'refacto-app',
+  name: 'refacto',
   lockfileVersion: 3,
   requires: true,
-  packages: { '': { name: 'refacto-app' } },
+  packages: { '': { name: 'refacto' } },
 });
 
 log('Build complete.');

@@ -1,7 +1,7 @@
 import { Router } from 'wouter';
 import { memoryLocation } from 'wouter/memory-location';
 import { act, render, placeholderText } from 'flexible-testing-library-react';
-import { makeRetro } from '../../shared/api-entities';
+import { makeRetro } from '@refacto/shared/api-entities';
 import { nullDispatch } from '../../test-helpers/nullDispatch';
 import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 import { mockFetchExpect } from '../../test-helpers/fetch';

@@ -1,7 +1,7 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import type { Collection, DB } from 'collection-storage';
 import type { Hasher } from 'pwd-hasher';
-import type { NewRetroApiKey, RetroApiKey } from '../shared/api-entities';
+import type { NewRetroApiKey, RetroApiKey } from '@refacto/shared/api-entities';
 import type { TokenManager } from '../tokens/TokenManager';
 import { json } from '../helpers/json';
 

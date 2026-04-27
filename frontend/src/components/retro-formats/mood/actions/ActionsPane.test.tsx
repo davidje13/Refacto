@@ -1,6 +1,6 @@
 import { render, type RenderResult } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { makeRetroItem } from '../../../../shared/api-entities';
+import { makeRetroItem } from '@refacto/shared/api-entities';
 import { LocalDateProvider } from '../../../../time/LocalDateProvider';
 import { css } from '../../../../test-helpers/queries';
 

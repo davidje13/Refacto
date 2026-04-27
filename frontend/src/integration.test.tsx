@@ -7,7 +7,7 @@ import {
   type RenderResult,
   getBy,
 } from 'flexible-testing-library-react';
-import { makeRetro } from './shared/api-entities';
+import { makeRetro } from '@refacto/shared/api-entities';
 import {
   staticTitleHook,
   type StaticTitleHook,

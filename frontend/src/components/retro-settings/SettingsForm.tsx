@@ -1,5 +1,5 @@
 import { useState, memo, Suspense, useCallback } from 'react';
-import type { Retro, RetroAuth } from '../../shared/api-entities';
+import type { Retro, RetroAuth } from '@refacto/shared/api-entities';
 import type { RetroDispatch, RetroDispatchSpec } from '../../api/RetroTracker';
 import {
   retroService,

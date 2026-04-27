@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from 'react';
-import type { Retro } from '../../shared/api-entities';
+import type { Retro } from '@refacto/shared/api-entities';
 import { Popup } from '../common/Popup';
 import { Alert } from '../common/Alert';
 import { realAutoFocus } from '../../helpers/realAutoFocus';

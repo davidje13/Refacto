@@ -1,6 +1,6 @@
 import { useState, type ReactElement } from 'react';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import { classNames } from '../../../helpers/classNames';
-import type { RetroItem } from '../../../shared/api-entities';
 import { TabControl, type TabT } from '../../common/TabControl';
 import {
   addRetroItem,

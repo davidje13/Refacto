@@ -1,10 +1,12 @@
 {
-  "name": "refacto-backend",
+  "name": "@refacto/backend",
   "private": true,
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "tsc && prettier --check .",
+    "lint": "tsc --pretty && prettier --check .",
+    "lint:tsc": "tsc --pretty",
+    "lint:prettier": "prettier --check .",
     "build": "rm -rf build && rollup --config rollup.config.mjs && cp -r src/static build && chmod +x build/index.js",
     "build-watch": "rollup --watch --config rollup.config.mjs",
     "test": "lean-test --preprocess tsc --parallel"
@@ -21,20 +23,16 @@
     "@rollup/plugin-replace": "6.x",
     "@rollup/plugin-terser": "1.x",
     "@rollup/plugin-typescript": "12.x",
-    "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
     "authentication-backend": "2.x",
     "collection-storage": "4.x",
     "json-immutability-helper": "4.4.x",
     "jwt-simple": "0.5.x",
-    "lean-test": "2.x",
-    "prettier": "3.8.1",
     "pwd-hasher": "2.x",
     "rollup": "4.x",
     "shared-reducer": "6.4.x",
     "supertest": "7.x",
     "superwstest": "2.x",
-    "typescript": "5.9.x",
     "web-listener": "0.21.0",
     "ws": "8.x"
   }

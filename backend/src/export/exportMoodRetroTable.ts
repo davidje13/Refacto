@@ -1,4 +1,8 @@
-import type { Retro, RetroArchive, RetroItem } from '../shared/api-entities';
+import type {
+  Retro,
+  RetroArchive,
+  RetroItem,
+} from '@refacto/shared/api-entities';
 import { isoDate } from '../helpers/formatters';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;

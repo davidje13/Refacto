@@ -1,5 +1,8 @@
-import type { Retro } from '../shared/api-entities';
-import { summariseHealthVotes, type HealthSummary } from '../shared/health';
+import type { Retro } from '@refacto/shared/api-entities';
+import {
+  summariseHealthVotes,
+  type HealthSummary,
+} from '@refacto/shared/health';
 import { isoDate } from '../helpers/formatters';
 
 function exportHealthItems(

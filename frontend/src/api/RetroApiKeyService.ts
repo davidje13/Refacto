@@ -2,7 +2,7 @@ import type {
   NewRetroApiKey,
   Retro,
   RetroApiKey,
-} from '../shared/api-entities';
+} from '@refacto/shared/api-entities';
 import { jsonFetch } from './jsonFetch';
 
 interface RetroApiKeyList {

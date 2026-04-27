@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { Route, Switch } from 'wouter';
-import type { ClientConfig } from '../shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 import { ConfigProvider } from '../hooks/data/useConfig';
 import { Preview, type PreviewContent } from '../components/guidance/Preview';
 import { RetroPreviewPage } from '../components/retro-formats/RetroPreviewPage';

@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { Route, Switch } from 'wouter';
-import type { Retro, RetroAuth } from '../shared/api-entities';
+import type { Retro, RetroAuth } from '@refacto/shared/api-entities';
 import type { RetroDispatch } from '../api/RetroTracker';
 import {
   retroAuthService,

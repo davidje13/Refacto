@@ -1,6 +1,6 @@
-import type { RetroArchive } from '../../shared/api-entities';
-import { archiveService } from '../../api/api';
 import useAwaited from 'react-hook-awaited';
+import type { RetroArchive } from '@refacto/shared/api-entities';
+import { archiveService } from '../../api/api';
 
 export function useArchive(
   retroId: string | null,

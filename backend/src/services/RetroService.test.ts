@@ -6,7 +6,7 @@ import {
   makeRetroItem,
   type Retro,
   type RetroSummary,
-} from '../shared/api-entities';
+} from '@refacto/shared/api-entities';
 import { RetroService } from './RetroService';
 
 interface CapturedChange {

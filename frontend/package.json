@@ -1,11 +1,13 @@
 {
-  "name": "refacto-frontend",
+  "name": "@refacto/frontend",
   "private": true,
   "scripts": {
     "format": "prettier --write .",
     "build": "webpack --mode production",
     "start": "webpack serve --mode development",
-    "lint": "tsc && prettier --check .",
+    "lint": "tsc --pretty && prettier --check .",
+    "lint:tsc": "tsc --pretty",
+    "lint:prettier": "prettier --check .",
     "test": "jest",
     "analyze-bundle": "BUNDLE_ANALYSIS=true webpack --mode production --profile --json | npx webpack-bundle-analyzer /dev/stdin build"
   },
@@ -30,7 +32,6 @@
     "@svgr/core": "8.x",
     "@svgr/plugin-jsx": "8.x",
     "@testing-library/jest-dom": "6.x",
-    "@tsconfig/strictest": "2.x",
     "@types/jest": "30.x",
     "@types/react": "18.x",
     "@types/react-dom": "18.x",
@@ -44,11 +45,9 @@
     "jest": "30.x",
     "jest-environment-jsdom": "30.x",
     "mini-css-extract-plugin": "2.x",
-    "prettier": "3.8.1",
     "react-mock-element": "1.x",
     "terser-webpack-plugin": "5.x",
     "timezone-mock": "1.3.x",
-    "typescript": "5.9.x",
     "webpack": "5.x",
     "webpack-cli": "6.x",
     "webpack-dev-server": "5.x"

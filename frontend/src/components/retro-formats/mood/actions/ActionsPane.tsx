@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { RetroItem } from '../../../../shared/api-entities';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import { classNames } from '../../../../helpers/classNames';
 import { useTypingEvent } from '../../../../hooks/useTypingEvent';

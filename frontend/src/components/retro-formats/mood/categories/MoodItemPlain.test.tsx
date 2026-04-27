@@ -1,5 +1,5 @@
 import { render, text } from 'flexible-testing-library-react';
-import { makeRetroItem } from '../../../../shared/api-entities';
+import { makeRetroItem } from '@refacto/shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 
 import { MoodItemPlain } from './MoodItemPlain';

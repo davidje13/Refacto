@@ -1,5 +1,5 @@
 import { memo, useEffect } from 'react';
-import type { Retro, RetroApiKey } from '../../shared/api-entities';
+import type { Retro, RetroApiKey } from '@refacto/shared/api-entities';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { realAutoFocus } from '../../helpers/realAutoFocus';
 import { retroApiKeyService } from '../../api/api';

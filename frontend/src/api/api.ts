@@ -1,4 +1,4 @@
-import type { UserData } from '../shared/api-entities';
+import type { UserData } from '@refacto/shared/api-entities';
 import { ConfigService } from './ConfigService';
 import { RetroListTracker } from './RetroListTracker';
 import { SlugTracker } from './SlugTracker';

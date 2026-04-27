@@ -1,4 +1,5 @@
 import { useMemo, type FunctionComponent } from 'react';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import { classNames } from '../../../helpers/classNames';
 import { randomUUID } from '../../../helpers/crypto';
 import {
@@ -18,7 +19,6 @@ import { useOptionalBoundEvent } from '../../../hooks/useBoundEvent';
 import { useStateMap } from '../../../hooks/useStateMap';
 import { useLocalDateProvider } from '../../../hooks/env/useLocalDateProvider';
 import type { LocalDateProvider } from '../../../time/LocalDateProvider';
-import type { RetroItem } from '../../../shared/api-entities';
 import { LoadingError } from '../../common/Loader';
 import { TabControl, type TabT } from '../../common/TabControl';
 import type { RetroFormatProps } from '../formats';

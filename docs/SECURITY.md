@@ -167,7 +167,6 @@ beneficial for a number of reasons:
 To set up user roles from scratch in a MongoDB deployment:
 
 1.  Create an admin user: (this will be used to create the other users)
-
     - Pick a secure password for the admin user, and note it somewhere safe. For
       example:
 

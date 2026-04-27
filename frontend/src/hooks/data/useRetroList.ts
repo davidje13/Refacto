@@ -1,6 +1,6 @@
-import type { RetroSummary, UserData } from '../../shared/api-entities';
-import { retroListTracker } from '../../api/api';
 import useAwaited from 'react-hook-awaited';
+import type { RetroSummary, UserData } from '@refacto/shared/api-entities';
+import { retroListTracker } from '../../api/api';
 
 export function useRetroList(
   userData: UserData | null,

@@ -1,13 +1,13 @@
 import { lazy, type ComponentType, type SVGAttributes } from 'react';
-import HealthIcon from '../../../resources/icons/health.svg';
-import MoodIcon from '../../../resources/icons/mood.svg';
-import TimelineIcon from '../../../resources/icons/timeline.svg';
-import UnknownIcon from '../../../resources/icons/unknown.svg';
 import type {
   RetroAuth,
   RetroHistoryItem,
   RetroItem,
-} from '../../shared/api-entities';
+} from '@refacto/shared/api-entities';
+import HealthIcon from '../../../resources/icons/health.svg';
+import MoodIcon from '../../../resources/icons/mood.svg';
+import TimelineIcon from '../../../resources/icons/timeline.svg';
+import UnknownIcon from '../../../resources/icons/unknown.svg';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import type { Spec } from '../../api/reducer';
 import { lazyImportError } from '../common/Loader';

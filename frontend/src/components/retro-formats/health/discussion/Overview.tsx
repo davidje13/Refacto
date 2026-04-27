@@ -1,9 +1,6 @@
 import type { FunctionComponent } from 'react';
-import type {
-  RetroAuth,
-  RetroHistoryItem,
-} from '../../../../shared/api-entities';
-import type { HealthSummary } from '../../../../shared/health';
+import type { RetroAuth, RetroHistoryItem } from '@refacto/shared/api-entities';
+import type { HealthSummary } from '@refacto/shared/health';
 import type { HealthQuestion } from '../../../../actions/healthRetro';
 import { plural } from '../../../../time/formatters';
 import { ApiDownloadButton } from '../../../common/ApiDownloadButton';

@@ -29,7 +29,7 @@ import type {
   PasswordRequirements,
   Retro,
   RetroCreationInfo,
-} from '../shared/api-entities';
+} from '@refacto/shared/api-entities';
 import { ApiRetroArchivesRouter } from './ApiRetroArchivesRouter';
 import { ApiRetroApiKeysRouter } from './ApiRetroApiKeysRouter';
 import type { UserAuthService } from '../services/UserAuthService';

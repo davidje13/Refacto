@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { RetroItem } from '../../../../shared/api-entities';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import { actionItemWithinRange } from '../../../../actions/moodRetro';
 import { ItemColumn } from '../../../items/ItemColumn';
 import { ActionItem } from './ActionItem';

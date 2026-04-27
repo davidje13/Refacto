@@ -1,6 +1,6 @@
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { makeRetro, makeRetroArchive } from '../../shared/api-entities';
+import { makeRetro, makeRetroArchive } from '@refacto/shared/api-entities';
 import { COMMON_AUTH } from '../../test-helpers/commonAuth';
 import { archiveService } from '../../api/api';
 import { css } from '../../test-helpers/queries';

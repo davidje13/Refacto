@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import type { RetroHistoryItem } from '../../../../shared/api-entities';
+import type { RetroHistoryItem } from '@refacto/shared/api-entities';
 import {
   ZERO_COUNTS,
   type Counts,
   type HealthSummary,
-} from '../../../../shared/health';
+} from '@refacto/shared/health';
 import type { Sample } from '../common/Trendline';
 
 export const useHealthSamples = (

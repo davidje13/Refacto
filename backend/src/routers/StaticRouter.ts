@@ -10,7 +10,7 @@ import {
   staticContent,
   type ResolvedFileInfo,
 } from 'web-listener';
-import type { ClientConfig } from '../shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 
 const VERSIONED_FILE = /\.(.{4,})\.(css|js|woff2?)$/;
 const VERSIONED_CACHE_CONTROL = [

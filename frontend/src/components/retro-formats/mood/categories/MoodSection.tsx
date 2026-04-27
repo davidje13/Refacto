@@ -1,6 +1,6 @@
 import { memo } from 'react';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import TickBold from '../../../../../resources/tick-bold.svg';
-import type { RetroItem } from '../../../../shared/api-entities';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { ItemColumn } from '../../../items/ItemColumn';
 import { ItemEditor } from '../../../items/ItemEditor';

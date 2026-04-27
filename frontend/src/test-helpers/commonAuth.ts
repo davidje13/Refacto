@@ -1,4 +1,4 @@
-import type { RetroAuth } from '../shared/api-entities';
+import type { RetroAuth } from '@refacto/shared/api-entities';
 
 export const COMMON_AUTH: RetroAuth = {
   retroToken: 'my-token',

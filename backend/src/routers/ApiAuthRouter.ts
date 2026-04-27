@@ -6,7 +6,7 @@ import {
   Router,
   sendJSON,
 } from 'web-listener';
-import type { RetroAuth } from '../shared/api-entities';
+import type { RetroAuth } from '@refacto/shared/api-entities';
 import type { RetroAuthService } from '../services/RetroAuthService';
 import type { UserAuthService } from '../services/UserAuthService';
 import type { RetroService } from '../services/RetroService';

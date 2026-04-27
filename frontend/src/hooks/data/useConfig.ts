@@ -1,5 +1,5 @@
-import type { ClientConfig } from '../../shared/api-entities';
 import { createContext, useContext } from 'react';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 
 const ConfigContext = createContext<ClientConfig | null>(null);
 

@@ -6,7 +6,7 @@ import {
   sendJSON,
   type Router,
 } from 'web-listener';
-import type { ClientConfig } from './shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 import type { ConfigT } from './config';
 import type { UserAuthService } from './services/UserAuthService';
 import { addNoCacheHeaders } from './headers';

@@ -1,5 +1,5 @@
 import { Router, staticJSON } from 'web-listener';
-import type { ClientConfig } from '../shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 
 export class ApiConfigRouter extends Router {
   constructor(clientConfig: ClientConfig) {

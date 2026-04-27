@@ -1,4 +1,4 @@
-import type { ErrorReport } from '../shared/api-entities';
+import type { ErrorReport } from '@refacto/shared/api-entities';
 
 export class DiagnosticsService {
   private messagesSent = 0;

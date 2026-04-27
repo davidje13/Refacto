@@ -2,7 +2,7 @@ import { Router } from 'wouter';
 import { memoryLocation } from 'wouter/memory-location';
 import { act, render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import type { ClientConfig } from '../../shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 import { userDataTracker, retroListTracker } from '../../api/api';
 import { ConfigProvider } from '../../hooks/data/useConfig';
 import { css } from '../../test-helpers/queries';

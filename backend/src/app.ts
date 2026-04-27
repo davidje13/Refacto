@@ -12,7 +12,7 @@ import {
 } from 'web-listener';
 import { Hasher } from 'pwd-hasher';
 import { CollectionStorage } from 'collection-storage';
-import type { ClientConfig } from './shared/api-entities';
+import type { ClientConfig } from '@refacto/shared/api-entities';
 import { ValidationError } from './helpers/json';
 import { ApiSpecRouter } from './routers/ApiSpecRouter';
 import { ApiConfigRouter } from './routers/ApiConfigRouter';

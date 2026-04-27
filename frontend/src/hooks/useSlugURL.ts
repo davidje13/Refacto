@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
-import type { Retro } from '../shared/api-entities';
+import type { Retro } from '@refacto/shared/api-entities';
 import { slugTracker } from '../api/api';
 import { useEvent } from './useEvent';
 

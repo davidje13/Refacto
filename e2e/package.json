@@ -1,23 +1,21 @@
 {
-  "name": "refacto-e2e",
+  "name": "@refacto/e2e",
   "private": true,
   "scripts": {
     "format": "prettier --write .",
-    "lint": "tsc && prettier --check .",
+    "lint": "tsc --pretty && prettier --check .",
+    "lint:tsc": "tsc --pretty",
+    "lint:prettier": "prettier --check .",
     "test": "lean-test --preprocess tsc"
   },
   "config": {
     "detect_chromedriver_version": true
   },
   "devDependencies": {
-    "@tsconfig/strictest": "2.x",
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
-    "chromedriver": "146.x",
+    "chromedriver": "147.x",
     "geckodriver": "6.1.x",
-    "lean-test": "2.x",
-    "prettier": "3.8.1",
-    "selenium-webdriver": "4.41.x",
-    "typescript": "5.9.x"
+    "selenium-webdriver": "4.41.x"
   }
 }

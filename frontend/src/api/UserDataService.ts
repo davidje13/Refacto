@@ -1,4 +1,4 @@
-import type { UserData } from '../shared/api-entities';
+import type { UserData } from '@refacto/shared/api-entities';
 import { jsonFetch } from './jsonFetch';
 
 export class UserDataService {

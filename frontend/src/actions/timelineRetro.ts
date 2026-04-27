@@ -1,5 +1,5 @@
+import type { Colour, Curve, Retro } from '@refacto/shared/api-entities';
 import type { Spec } from '../api/reducer';
-import type { Colour, Curve, Retro } from '../shared/api-entities';
 import { setRetroState } from './retro';
 
 export interface TimelineRetroStateT {

@@ -77,9 +77,6 @@ BROWSER=chrome HEADLESS=false npm run test:e2e
 BROWSER=firefox HEADLESS=false npm run test:e2e
 ```
 
-The server logs generated during the end-to-end test run are written to
-`e2e/build/app.log`.
-
 ## Building
 
 ```sh
@@ -115,8 +112,8 @@ production.
 
 ## Dependency management
 
-Add dependencies within the `backend`, `frontend` or `e2e` directories; not in
-the root of the project.
+Most dependencies should be added to the `backend`, `frontend` or `e2e`
+workspaces.
 
 Remember that runtime dependencies should be installed with `--save`, and build
 / test dependencies should be installed with `--save-dev`.
@@ -124,20 +121,17 @@ Remember that runtime dependencies should be installed with `--save`, and build
 ### Examples
 
 ```sh
-cd frontend
-npm install --save react
-npm install --save-dev jest
+npm install --workspace=@refacto/frontend --save react
+npm install --workspace=@refacto/frontend --save-dev jest
 ```
 
 ```sh
-cd backend
-npm install --save web-listener
-npm install --save-dev supertest
+npm install --workspace=@refacto/backend --save web-listener
+npm install --workspace=@refacto/backend --save-dev supertest
 ```
 
 ```sh
-cd e2e
-npm install --save-dev selenium-webdriver
+npm install --workspace=@refacto/e2e --save-dev selenium-webdriver
 ```
 
 ## Browser Support

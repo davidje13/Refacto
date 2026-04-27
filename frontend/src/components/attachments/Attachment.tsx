@@ -1,5 +1,5 @@
 import type { FunctionComponent, ComponentType } from 'react';
-import type { RetroItemAttachment } from '../../shared/api-entities';
+import type { RetroItemAttachment } from '@refacto/shared/api-entities';
 import { GiphyAttachment } from './giphy/GiphyAttachment';
 
 interface PropsT {

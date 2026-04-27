@@ -23,7 +23,7 @@ export default [
     external: [...NODEJS, /\/node_modules\//],
     plugins: [
       nodeResolve({ preferBuiltins: false }),
-      typescript({ tslib: {} }),
+      typescript({ tslib: {}, filterRoot: '..' }),
       terser(),
     ],
   },
@@ -45,7 +45,7 @@ export default [
       commonjs(),
       replace({
         // disable ws optional imports
-        include: ['node_modules/ws/**'],
+        include: ['**/node_modules/ws/**'],
         preventAssignment: true,
         values: {
           'process.env.WS_NO_BUFFER_UTIL': 'true', // performance boosting library is potentially unsafe

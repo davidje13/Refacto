@@ -1,6 +1,6 @@
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import type { RetroItem } from '../../shared/api-entities';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import { css } from '../../test-helpers/queries';
 
 import { RetroFormat } from './RetroFormat';

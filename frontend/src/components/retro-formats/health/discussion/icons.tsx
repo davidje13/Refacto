@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
+import type { Counts, AnswerID } from '@refacto/shared/health';
 import ArrowN from '../../../../../resources/arrow-n.svg';
 import ArrowNE from '../../../../../resources/arrow-ne.svg';
 import ArrowSE from '../../../../../resources/arrow-se.svg';
 import ArrowS from '../../../../../resources/arrow-s.svg';
 import ArrowNone from '../../../../../resources/arrow-none.svg';
-import type { Counts, AnswerID } from '../../../../shared/health';
 import type { Sample } from '../common/Trendline';
 
 export function getMood(counts: Readonly<Counts>): AnswerID {

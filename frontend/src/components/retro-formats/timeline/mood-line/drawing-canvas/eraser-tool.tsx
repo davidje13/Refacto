@@ -22,8 +22,8 @@ import listCommands, {
   type SpliceStep,
 } from 'json-immutability-helper/commands/list';
 import { memo, type MutableRefObject } from 'react';
+import type { Curve, CurveElement } from '@refacto/shared/api-entities';
 import CursorEraser from '../../../../../../resources/cursor-eraser.svg?source';
-import type { Curve, CurveElement } from '../../../../../shared/api-entities';
 import type { Spec } from '../../../../../api/reducer';
 import type { LiveEventDispatch } from '../../../../../hooks/useLiveEvents';
 import { convertCurve, convertPoint, escapeHTML, type Transform } from './svg';

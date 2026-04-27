@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import { useLocation } from 'wouter';
 import { useTimeInterval } from 'react-hook-final-countdown';
-import type { Retro, RetroAuth } from '../../shared/api-entities';
+import type { Retro, RetroAuth } from '@refacto/shared/api-entities';
 import { retroService } from '../../api/api';
 import { useSubmissionCallback } from '../../hooks/useSubmissionCallback';
 import { formatDurationLong } from '../../time/formatters';

@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { TimeProvider, type Scheduler } from 'react-hook-final-countdown';
-import type { Retro, RetroItem } from '../../shared/api-entities';
+import type { Retro, RetroItem } from '@refacto/shared/api-entities';
 import { startViewTransition } from '../../helpers/viewTransition';
 import { type Spec, context } from '../../api/reducer';
 import { useLocationHash } from '../../hooks/env/useLocationHash';

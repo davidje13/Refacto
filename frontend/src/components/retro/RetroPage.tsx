@@ -1,5 +1,5 @@
 import { memo, useEffect } from 'react';
-import type { Retro } from '../../shared/api-entities';
+import type { Retro } from '@refacto/shared/api-entities';
 import { isArchivable } from '../../actions/retro';
 import type { RetroPagePropsT } from '../RetroRouter';
 import { ArchivePopup } from './ArchivePopup';

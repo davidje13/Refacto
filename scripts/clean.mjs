@@ -10,8 +10,10 @@ await deleteDirectory(join(basedir, 'e2e', 'build'));
 await deleteDirectory(join(basedir, 'build'));
 
 log('Cleaning dependencies...');
+await deleteDirectory(join(basedir, 'shared', 'node_modules'));
 await deleteDirectory(join(basedir, 'backend', 'node_modules'));
 await deleteDirectory(join(basedir, 'frontend', 'node_modules'));
 await deleteDirectory(join(basedir, 'e2e', 'node_modules'));
+await deleteDirectory(join(basedir, 'node_modules'));
 
 log('Cleaning complete.');

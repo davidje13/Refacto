@@ -1,4 +1,4 @@
-import type { Retro, RetroItem } from '../shared/api-entities';
+import type { Retro, RetroItem } from '@refacto/shared/api-entities';
 import type { Spec } from '../api/reducer';
 import { randomUUID } from '../helpers/crypto';
 

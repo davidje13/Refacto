@@ -1,8 +1,8 @@
 import { memo } from 'react';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import Tick from '../../../../../resources/tick.svg';
 import TickBold from '../../../../../resources/tick-bold.svg';
 import { classNames } from '../../../../helpers/classNames';
-import type { RetroItem } from '../../../../shared/api-entities';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useOptionalBoundEvent } from '../../../../hooks/useBoundEvent';
 import { useBoolean } from '../../../../hooks/useBoolean';

@@ -6,7 +6,7 @@ import {
   RS256,
   type DecodeOptions,
 } from 'authentication-backend/jwt';
-import type { JsonData } from '../shared/api-entities';
+import type { JsonData } from '@refacto/shared/api-entities';
 
 export interface KeyPair {
   publicKey: string;

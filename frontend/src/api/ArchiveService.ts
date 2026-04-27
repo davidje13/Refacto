@@ -1,4 +1,4 @@
-import type { RetroArchive } from '../shared/api-entities';
+import type { RetroArchive } from '@refacto/shared/api-entities';
 import { jsonFetch } from './jsonFetch';
 
 interface RetroArchiveList {

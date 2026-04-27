@@ -3,16 +3,31 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "SKIP_E2E_DEPS=true scripts/install.mjs && scripts/build.mjs",
+    "build": "npm install && scripts/build.mjs",
     "clean": "scripts/clean.mjs",
-    "install": "scripts/install.mjs --force",
-    "lint": "scripts/install.mjs && scripts/lint.mjs",
-    "start": "SKIP_E2E_DEPS=true scripts/install.mjs && NODE_ENV=development scripts/start.mjs",
-    "test": "scripts/install.mjs && scripts/lint.mjs && scripts/test.mjs",
-    "format": "npm --prefix=backend run format --quiet && npm --prefix=frontend run format --quiet && npm --prefix=e2e run format --quiet",
-    "test:backend": "npm --prefix=backend test --quiet --",
-    "test:frontend": "npm --prefix=frontend test --quiet --",
-    "test:frontend:watch": "npm --prefix=frontend test --quiet -- --watch",
-    "test:e2e": "scripts/install.mjs && scripts/test.mjs --only-e2e"
+    "lint": "scripts/lint.mjs && prettier --check .",
+    "lint:tsc": "scripts/lint.mjs",
+    "lint:prettier": "prettier --check .",
+    "start": "npm install && NODE_ENV=development scripts/start.mjs",
+    "test": "npm install && scripts/lint.mjs && prettier --check . && scripts/test.mjs",
+    "format": "npm run format --workspaces --quiet",
+    "test:backend": "npm test --workspace=@refacto/backend --quiet --",
+    "test:frontend": "npm test --workspace=@refacto/frontend --quiet --",
+    "test:frontend:watch": "npm test --workspace=@refacto/frontend --quiet -- --watchAll",
+    "test:e2e": "scripts/test.mjs --only-e2e"
+  },
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend",
+    "e2e"
+  ],
+  "devDependencies": {
+    "lean-test": "2.x",
+    "prettier": "3.8.1",
+    "typescript": "6.0.x"
+  },
+  "config": {
+    "detect_chromedriver_version": true
   }
 }

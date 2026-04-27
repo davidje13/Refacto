@@ -10,8 +10,8 @@ import type {
   CurveMove,
   CurveCubicBezier,
   Colour,
-} from '../shared/api-entities';
-import { getQuestionID, makeUserAnswerID } from '../shared/health';
+} from '@refacto/shared/api-entities';
+import { getQuestionID, makeUserAnswerID } from '@refacto/shared/health';
 
 type MaybeAsyncIterable<T> = Iterable<T> | AsyncIterable<T>;
 

@@ -1,5 +1,5 @@
 import type { ElementType, ComponentPropsWithRef, ReactElement } from 'react';
-import type { RetroItem } from '../../shared/api-entities';
+import type { RetroItem } from '@refacto/shared/api-entities';
 
 function itemCreatedComparator(a: RetroItem, b: RetroItem): number {
   // sort newer-to-older

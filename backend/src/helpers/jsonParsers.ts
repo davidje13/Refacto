@@ -6,7 +6,7 @@ import type {
   RetroItemGiphyAttachment,
   RetroItemSketchAttachment,
   Colour,
-} from '../shared/api-entities';
+} from '@refacto/shared/api-entities';
 import { json } from './json';
 
 export const extractColour = json.exactObject<Colour>({

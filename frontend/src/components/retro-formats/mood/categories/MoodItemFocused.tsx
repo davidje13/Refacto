@@ -1,5 +1,5 @@
 import { useRef, useEffect, memo } from 'react';
-import type { RetroItem } from '../../../../shared/api-entities';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import { Attachment } from '../../../attachments/Attachment';
 import { VoteCount } from './VoteCount';
 import { Timer } from './timer/Timer';

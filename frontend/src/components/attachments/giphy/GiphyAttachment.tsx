@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import type { RetroItemGiphyAttachment } from '../../../shared/api-entities';
+import type { RetroItemGiphyAttachment } from '@refacto/shared/api-entities';
 import { GiphyAttribution } from './GiphyAttribution';
 import './GiphyAttachment.css';
 

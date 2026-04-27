@@ -1,6 +1,6 @@
 import { render, act } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { makeRetroItem } from '../../../../shared/api-entities';
+import { makeRetroItem } from '@refacto/shared/api-entities';
 import { css } from '../../../../test-helpers/queries';
 import { MoodItem } from './MoodItem';
 

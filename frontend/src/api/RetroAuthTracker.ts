@@ -1,6 +1,6 @@
+import type { RetroAuth } from '@refacto/shared/api-entities';
 import { CacheMap } from '../helpers/CacheMap';
 import { AsyncValue } from '../helpers/AsyncValue';
-import type { RetroAuth } from '../shared/api-entities';
 import { localStore } from '../helpers/storage';
 
 const MINIMUM_VALIDITY = 1000 * 60 * 60 * 12;

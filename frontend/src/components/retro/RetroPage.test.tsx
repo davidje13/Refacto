@@ -1,6 +1,6 @@
 import { render } from 'flexible-testing-library-react';
 import mockElement from 'react-mock-element';
-import { makeRetro } from '../../shared/api-entities';
+import { makeRetro } from '@refacto/shared/api-entities';
 import { css } from '../../test-helpers/queries';
 import { nullDispatch } from '../../test-helpers/nullDispatch';
 import { COMMON_AUTH } from '../../test-helpers/commonAuth';

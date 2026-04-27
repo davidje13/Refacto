@@ -5,8 +5,8 @@ import type {
   CurveElement,
   Retro,
   RetroItem,
-} from '../../shared/api-entities';
-import { makeUserAnswerID, type AnswerID } from '../../shared/health';
+} from '@refacto/shared/api-entities';
+import { makeUserAnswerID, type AnswerID } from '@refacto/shared/health';
 import { classNames } from '../../helpers/classNames';
 import { useWindowSize, type Size } from '../../hooks/env/useWindowSize';
 import type { Spec } from '../../api/reducer';

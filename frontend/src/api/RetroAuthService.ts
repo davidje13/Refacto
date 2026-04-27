@@ -1,4 +1,4 @@
-import type { RetroAuth } from '../shared/api-entities';
+import type { RetroAuth } from '@refacto/shared/api-entities';
 
 async function handleResponse(response: Response): Promise<any> {
   try {

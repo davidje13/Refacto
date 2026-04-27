@@ -3,7 +3,7 @@ import type {
   Colour,
   CurveCubicBezier,
   CurveMove,
-} from '../../../../../shared/api-entities';
+} from '@refacto/shared/api-entities';
 
 export interface Transform {
   mx: number;

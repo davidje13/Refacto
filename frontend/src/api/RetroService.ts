@@ -1,4 +1,4 @@
-import type { JsonData, RetroCreationInfo } from '../shared/api-entities';
+import type { JsonData, RetroCreationInfo } from '@refacto/shared/api-entities';
 
 interface RetroOptions {
   name: string;

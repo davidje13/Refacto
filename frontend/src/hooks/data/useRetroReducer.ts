@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import type { Retro, RetroAuth } from '../../shared/api-entities';
+import type { Retro, RetroAuth } from '@refacto/shared/api-entities';
 import { startViewTransition } from '../../helpers/viewTransition';
 import type { RetroDispatch } from '../../api/RetroTracker';
 import { retroTracker } from '../../api/api';

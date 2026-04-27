@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
+import type { AnswerID } from '@refacto/shared/health';
 import FaceHappy from '../../../../resources/face-happy.svg';
 import FaceMeh from '../../../../resources/face-meh.svg';
 import FaceSad from '../../../../resources/face-sad.svg';
 import FaceBlank from '../../../../resources/face-blank.svg';
-import type { AnswerID } from '../../../shared/health';
 
 interface AnswerDef {
   id: AnswerID;

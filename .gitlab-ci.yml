@@ -22,7 +22,7 @@ build:
     public: true
     expire_in: 6 hours # latest is always kept indefinitely
   cache:
-    - key: { files: ['*/package-lock.json'] }
+    - key: { files: ['package-lock.json'] }
       paths: ['.npm']
 
 .smoke-test: &smoke-test

@@ -1,7 +1,7 @@
 import { memo, type ReactNode } from 'react';
+import type { RetroItem } from '@refacto/shared/api-entities';
 import Cross from '../../../../../resources/cross.svg';
 import Delete from '../../../../../resources/delete.svg';
-import type { RetroItem } from '../../../../shared/api-entities';
 import { isoDate, readIsoDate } from '../../../../time/formatters';
 import { useEvent } from '../../../../hooks/useEvent';
 import { useStateMap } from '../../../../hooks/useStateMap';

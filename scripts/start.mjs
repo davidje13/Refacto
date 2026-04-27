@@ -44,8 +44,7 @@ await runMultipleTasks(
   [
     {
       command: 'npm',
-      args: ['start', '--quiet'],
-      cwd: join(basedir, 'frontend'),
+      args: ['start', '--workspace=@refacto/frontend', '--quiet'],
       env: frontendEnv,
       failureMessage: 'Failed to run frontend',
       outputPrefix: 'frontend',
@@ -53,8 +52,7 @@ await runMultipleTasks(
     },
     {
       command: 'npm',
-      args: ['run', '--quiet', 'build-watch'],
-      cwd: join(basedir, 'backend'),
+      args: ['run', 'build-watch', '--workspace=@refacto/backend', '--quiet'],
       stdinPipe: true, // stdin must remain open for rollup to keep running in watch mode
       allowExit: false, // any exit status means we are no longer watching
       failureMessage: 'Failed to build backend',

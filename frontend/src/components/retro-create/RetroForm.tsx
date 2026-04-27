@@ -1,5 +1,5 @@
 import { useState, memo, type ChangeEvent, type ReactNode } from 'react';
-import type { JsonData } from '../../shared/api-entities';
+import type { JsonData } from '@refacto/shared/api-entities';
 import { useEvent } from '../../hooks/useEvent';
 import { Alert } from '../common/Alert';
 import { SetPassword } from '../common/SetPassword';

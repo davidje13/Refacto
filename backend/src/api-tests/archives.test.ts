@@ -1,5 +1,5 @@
 import request from 'superwstest';
-import { makeRetroItem } from '../shared/api-entities';
+import { makeRetroItem } from '@refacto/shared/api-entities';
 import { TestLogger } from './TestLogger';
 import { testConfig } from './testConfig';
 import {

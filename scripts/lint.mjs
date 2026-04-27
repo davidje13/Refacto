@@ -1,39 +1,23 @@
 #!/usr/bin/env node
 
-import { join } from 'node:path';
-import { basedir, log } from './helpers/io.mjs';
+import { basedir } from './helpers/io.mjs';
 import { runMultipleTasks } from './helpers/proc.mjs';
 
-const packages = ['frontend', 'backend', 'e2e'];
-
-log('Linting...');
-
-const prettierArgs = ['--check', '.'];
-const tscArgs = [];
-if (process.stdout.isTTY) {
-  tscArgs.push('--pretty');
-}
+const packages = [
+  { name: 'shared', pkg: '@refacto/shared' },
+  { name: 'frontend', pkg: '@refacto/frontend' },
+  { name: 'backend', pkg: '@refacto/backend' },
+  { name: 'e2e', pkg: '@refacto/e2e' },
+];
 
 await runMultipleTasks(
-  packages.flatMap((pkg) => [
-    {
-      command: join(basedir, pkg, 'node_modules', '.bin', 'tsc'),
-      args: tscArgs,
-      cwd: join(basedir, pkg),
-      outputMode: 'fail_atomic',
-      successMessage: `Lint ${pkg} (tsc) passed`,
-      failureMessage: `Lint ${pkg} (tsc) failed`,
-    },
-    {
-      command: join(basedir, pkg, 'node_modules', '.bin', 'prettier'),
-      args: prettierArgs,
-      cwd: join(basedir, pkg),
-      outputMode: 'fail_atomic',
-      successMessage: `Lint ${pkg} (prettier) passed`,
-      failureMessage: `Lint ${pkg} (prettier) failed`,
-    },
-  ]),
+  packages.map(({ name, pkg }) => ({
+    command: 'npm',
+    args: ['run', 'lint:tsc', '--workspace=' + pkg, '--quiet'],
+    cwd: basedir,
+    outputMode: 'fail_atomic',
+    successMessage: `Lint ${name} (tsc) passed`,
+    failureMessage: `Lint ${name} (tsc) failed`,
+  })),
   { parallel: true },
 );
-
-log('Linting successful');

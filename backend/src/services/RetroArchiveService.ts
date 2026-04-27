@@ -10,7 +10,7 @@ import type {
   RetroArchive,
   RetroData,
   RetroArchiveSummary,
-} from '../shared/api-entities';
+} from '@refacto/shared/api-entities';
 
 export class RetroArchiveService {
   declare private readonly archiveCollection: Collection<RetroArchive>;

@@ -1,4 +1,4 @@
-import type { Retro, RetroItem } from '../shared/api-entities';
+import type { Retro, RetroItem } from '@refacto/shared/api-entities';
 import type { RetroDispatchSpec } from '../api/RetroTracker';
 import { setRetroItemDone, setRetroState, addRetroItem } from './retro';
 import { autoFacilitate } from './autoFacilitate';

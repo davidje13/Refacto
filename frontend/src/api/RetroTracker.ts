@@ -5,7 +5,7 @@ import {
   type DisconnectDetail,
   type StateListener,
 } from 'shared-reducer/frontend';
-import type { Retro } from '../shared/api-entities';
+import type { Retro } from '@refacto/shared/api-entities';
 import { SubscriptionTracker } from './SubscriptionTracker';
 import { context, type Spec } from './reducer';
 
