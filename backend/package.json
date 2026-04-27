@@ -30,7 +30,7 @@
     "shared-reducer": "6.4.x",
     "supertest": "7.x",
     "superwstest": "2.x",
-    "web-listener": "0.21.0",
+    "web-listener": "1.x",
     "ws": "8.x"
   }
 }

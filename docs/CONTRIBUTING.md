@@ -118,6 +118,10 @@ workspaces.
 Remember that runtime dependencies should be installed with `--save`, and build
 / test dependencies should be installed with `--save-dev`.
 
+By default, this project is configured to only load dependency versions which
+have been published at least 30 days ago. You can override this precaution when
+installing new dependencies or updates by adding `--min-release-age=0`
+
 ### Examples
 
 ```sh
