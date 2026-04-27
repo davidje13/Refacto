@@ -273,11 +273,11 @@ None of these settings involve the use of cookies to track users. Only the
 `User-Agent` header of requests is used.
 
 Any users who set the `DNT` (Do Not Track) or `Sec-GPC` (Global Privacy Control)
-header will not be included in logs (as if `ANALYTICS_EVENT_DETAIL` were limited
-to `none` and `ANALYTICS_CLIENT_ERROR_DETAIL` were limited to `message` or
-`none`). Removing these users from the logs goes beyond required privacy
-controls (as the details recorded are not shared with third parties), but is
-done to respect user preferences.
+header will not have browser information included in logs (as if
+`ANALYTICS_EVENT_DETAIL` and `ANALYTICS_CLIENT_ERROR_DETAIL` were limited to
+`message` or `none`). Removing these details from the logs goes beyond required
+privacy controls (as the details recorded are not shared with third parties),
+but is done to respect user preferences.
 
 ## Threat model
 
