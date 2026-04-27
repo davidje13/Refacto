@@ -65,7 +65,7 @@ jobs:
       - name: Bundle
         run: cd build && tar -czf ../build.tar.gz .
       - name: Upload Bundle
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: refacto
           retention-days: 1
@@ -92,7 +92,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Download Bundle
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: refacto
       - name: Unpack
@@ -137,36 +137,36 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' && github.head_ref == null }}
     steps:
       - name: Download Bundle
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: refacto
       - name: Unpack
         run: tar -xf build.tar.gz && rm build.tar.gz
       - name: Authenticate with Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: docker.io
           username: refacto
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Authenticate with AWS
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-access-key-id: ${{ secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.ECR_PUBLIC_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1 # ECR public is only available via the N. Virginia region
       - name: Authenticate with ECR Public
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: public.ecr.aws
       - name: Set up QEMU for Cross-Architecture Builds
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: arm64
           cache-image: false # this step does not take long anyway, and cache saving step seems to always fail
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
         with:
@@ -259,7 +259,7 @@ jobs:
       contents: write
     steps:
       - name: Download Bundle
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: refacto
       - name: Create GitHub Release
