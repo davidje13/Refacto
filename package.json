@@ -26,8 +26,5 @@
     "lean-test": "2.x",
     "prettier": "3.8.3",
     "typescript": "6.0.x"
-  },
-  "config": {
-    "detect_chromedriver_version": true
   }
 }

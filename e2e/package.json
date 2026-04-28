@@ -5,9 +5,6 @@
     "lint:tsc": "tsc --pretty",
     "test": "lean-test --preprocess tsc"
   },
-  "config": {
-    "detect_chromedriver_version": true
-  },
   "devDependencies": {
     "@types/node": "20.x",
     "@types/selenium-webdriver": "4.x",
