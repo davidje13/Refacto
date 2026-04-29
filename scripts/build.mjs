@@ -79,6 +79,7 @@ await writeNiceJSON(join(builddir, 'package.json'), {
   ...packageJson,
   name: 'refacto',
   scripts: { start: './index.js' },
+  dependencies: undefined,
   optionalDependencies: undefined,
   devDependencies: undefined,
 });

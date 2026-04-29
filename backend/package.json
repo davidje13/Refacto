@@ -8,12 +8,21 @@
     "build-watch": "rollup --watch --config rollup.config.mjs",
     "test": "lean-test --preprocess tsc --parallel"
   },
-  "devDependencies": {
+  "dependencies": {
     "@collection-storage/dynamodb": "4.x",
     "@collection-storage/mongodb": "4.x",
     "@collection-storage/postgresql": "4.x",
     "@collection-storage/redis": "4.x",
     "@collection-storage/sqlite": "4.x",
+    "authentication-backend": "2.x",
+    "collection-storage": "4.x",
+    "json-immutability-helper": "4.4.x",
+    "pwd-hasher": "2.x",
+    "shared-reducer": "6.4.x",
+    "web-listener": "1.x",
+    "ws": "8.x"
+  },
+  "devDependencies": {
     "@rollup/plugin-commonjs": "29.x",
     "@rollup/plugin-json": "6.x",
     "@rollup/plugin-node-resolve": "16.x",
@@ -22,15 +31,8 @@
     "@rollup/plugin-typescript": "12.x",
     "@types/node": "20.x",
     "@types/supertest": "7.x",
-    "authentication-backend": "2.x",
-    "collection-storage": "4.x",
-    "json-immutability-helper": "4.4.x",
-    "pwd-hasher": "2.x",
     "rollup": "4.x",
-    "shared-reducer": "6.4.x",
     "supertest": "7.x",
-    "superwstest": "3.x",
-    "web-listener": "1.x",
-    "ws": "8.x"
+    "superwstest": "3.x"
   }
 }
