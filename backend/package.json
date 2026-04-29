@@ -21,6 +21,7 @@
     "@rollup/plugin-terser": "1.x",
     "@rollup/plugin-typescript": "12.x",
     "@types/node": "20.x",
+    "@types/supertest": "7.x",
     "authentication-backend": "2.x",
     "collection-storage": "4.x",
     "json-immutability-helper": "4.4.x",
@@ -28,7 +29,7 @@
     "rollup": "4.x",
     "shared-reducer": "6.4.x",
     "supertest": "7.x",
-    "superwstest": "2.x",
+    "superwstest": "3.x",
     "web-listener": "1.x",
     "ws": "8.x"
   }
