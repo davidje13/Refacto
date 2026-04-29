@@ -32,8 +32,8 @@ const jsonAny = (source: unknown): unknown => source;
 
 export const json = {
   nullable:
-    <T>(submap: Mapper<T>, path = '') =>
-    (source: unknown): T | null => {
+    <T>(submap: Mapper<T>) =>
+    (source: unknown, path = ''): T | null => {
       if (source === null) {
         return null;
       }
