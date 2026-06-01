@@ -31,6 +31,7 @@
     "@rollup/plugin-typescript": "12.x",
     "@types/node": "20.x",
     "@types/supertest": "7.x",
+    "lean-test": "2.x",
     "rollup": "4.x",
     "supertest": "7.x",
     "superwstest": "3.x"

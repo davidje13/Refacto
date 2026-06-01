@@ -10,6 +10,7 @@
     "@types/selenium-webdriver": "4.x",
     "chromedriver": "147.x",
     "geckodriver": "6.1.x",
+    "lean-test": "2.x",
     "selenium-webdriver": "4.41.x"
   }
 }
