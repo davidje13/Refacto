@@ -5,6 +5,19 @@
 @import url('./global-styles/article.css');
 
 html {
+  /* Blink does not support AccentColor (see https://issues.chromium.org/issues/40229450?pli=1) */
+  --accent-color: #0033cc;
+
+  @supports (color: -webkit-focus-ring-color) {
+    --accent-color: -webkit-focus-ring-color;
+  }
+
+  @supports (color: AccentColor) {
+    --accent-color: AccentColor;
+  }
+}
+
+html {
   --page-back: #ffffff;
   --header-back: #ffffff;
   --modal-back: #ffffff;
@@ -15,8 +28,8 @@ html {
 
   --modal-screen: rgba(128, 128, 128, 0.5);
 
-  --focus-border: AccentColor;
-  --focus-text: AccentColor;
+  --focus-border: var(--accent-color);
+  --focus-text: var(--accent-color);
   --focus-border-heart: #dd4422;
 
   --green-back: hsl(172deg, 50%, 55%);
