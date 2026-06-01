@@ -8,7 +8,7 @@ the official public deployment at <https://retro.davidje13.com/>, or
 
 ## Running Locally
 
-Requires [Node.js 20 or above](https://nodejs.org/en/).
+Requires [Node.js 22 or above](https://nodejs.org/en/).
 
 ```sh
 npm start

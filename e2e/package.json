@@ -6,7 +6,7 @@
     "test": "lean-test --preprocess tsc"
   },
   "devDependencies": {
-    "@types/node": "20.x",
+    "@types/node": "22.x",
     "@types/selenium-webdriver": "4.x",
     "chromedriver": "147.x",
     "geckodriver": "6.1.x",

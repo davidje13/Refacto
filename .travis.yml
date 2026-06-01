@@ -1,9 +1,8 @@
 language: node_js
 node_js:
-  - '20'
   - '22'
   - '24'
-  - '25'
+  - '26'
 os: linux
 addons:
   chrome: stable

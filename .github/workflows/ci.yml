@@ -83,10 +83,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { node: '20' }
           - { node: '22' }
           - { node: '24' }
-          - { node: '25' }
+          - { node: '26' }
     steps:
       - name: Install Node
         uses: actions/setup-node@v6

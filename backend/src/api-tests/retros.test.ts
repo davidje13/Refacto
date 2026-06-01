@@ -522,7 +522,7 @@ describe('API retros', () => {
         const retro = await hooks.retroService.getRetro(retroId);
         expect(retro!.items).equals([]);
 
-        const archives = await fromAsync(
+        const archives = await Array.fromAsync(
           hooks.retroArchiveService.getRetroArchiveList(retroId),
         );
         expect(archives).hasLength(1);
@@ -548,7 +548,7 @@ describe('API retros', () => {
         const retro = await hooks.retroService.getRetro(retroId);
         expect(retro!.items).equals([testItemNotDone]);
 
-        const archives = await fromAsync(
+        const archives = await Array.fromAsync(
           hooks.retroArchiveService.getRetroArchiveList(retroId),
         );
         expect(archives).hasLength(1);
@@ -570,7 +570,7 @@ describe('API retros', () => {
         const retro = await hooks.retroService.getRetro(retroId);
         expect(retro!.format).equals('health');
 
-        const archives = await fromAsync(
+        const archives = await Array.fromAsync(
           hooks.retroArchiveService.getRetroArchiveList(retroId),
         );
         expect(archives).hasLength(0);
@@ -605,7 +605,7 @@ describe('API retros', () => {
         const retro = await hooks.retroService.getRetro(retroId);
         expect(retro!.items).equals([]);
 
-        const archives = await fromAsync(
+        const archives = await Array.fromAsync(
           hooks.retroArchiveService.getRetroArchiveList(retroId),
         );
         expect(archives).hasLength(1);
@@ -774,12 +774,3 @@ describe('delete not permitted', () => {
     expect(await hooks.retroService.getRetro(retroId)).not(toBeNull());
   });
 });
-
-// this can be swapped for Array.fromAsync once Node.js 20.x is out of support
-export async function fromAsync<T>(iterable: AsyncIterable<T>): Promise<T[]> {
-  const r: T[] = [];
-  for await (const item of iterable) {
-    r.push(item);
-  }
-  return r;
-}

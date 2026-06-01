@@ -64,10 +64,6 @@ build:
         false;
       fi;
 
-node:20:
-  <<: *smoke-test
-  image: node:20
-
 node:22:
   <<: *smoke-test
   image: node:22
@@ -76,6 +72,6 @@ node:24:
   <<: *smoke-test
   image: node:24
 
-node:25:
+node:26:
   <<: *smoke-test
-  image: node:25
+  image: node:26
