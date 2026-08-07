@@ -78,6 +78,7 @@ const packageJson = await readJSON(join(basedir, 'backend', 'package.json'));
 await writeNiceJSON(join(builddir, 'package.json'), {
   ...packageJson,
   name: 'refacto',
+  type: 'commonjs', // required until dependencies can be bundled as esm
   scripts: { start: './index.js' },
   dependencies: undefined,
   optionalDependencies: undefined,

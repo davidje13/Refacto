@@ -37,7 +37,7 @@ export default [
           ? `#!/usr/bin/env -S node ${BUILD_RUNTIME_FLAGS.join(' ')}\n`
           : '',
       dir: 'build',
-      format: 'esm',
+      format: 'cjs', // bundled database dependencies (especially Mongo) use dynamic require() calls, which cannot be transpiled to esm. So we must use cjs until they all update.
     },
     watch: false,
     external: NODEJS,
