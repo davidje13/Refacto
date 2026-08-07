@@ -115,17 +115,17 @@ jobs:
         env:
           MONGO_URL: mongodb://mongouser:mongopass@mongo:27017/refacto
           REDIS_URL: redis://redis:6379/15
-          PSQL_URL: postgresql://postgres:postgrespass@pg:5432/refacto
+          PSQL_URL: postgresql://postgres:postgrespass@pg:5432/postgres
           DDB_URL: dynamodb://key:secret@ddb:8000/refacto-?tls=false&consistentRead=true
         run: |
           set -e;
 
           check_launch() {
-            rm output.log || true;
+            rm output.log test-index.html || true;
             ./index.js > output.log 2>&1 & APP_PID="$!";
 
             while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do
-              if ! ps -p "$APP_PID" > /dev/null; then
+              if ! kill -0 "$APP_PID" 2> /dev/null; then
                 APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
                 cat output.log;
                 echo "Application failed to launch (exit code: $APP_EXIT_CODE).";
@@ -134,7 +134,7 @@ jobs:
               sleep 0.1;
             done;
 
-            wget localhost:5000 -O test-index.html;
+            wget http://localhost:5000 -O test-index.html;
             if ! grep '<title>Refacto</title>' < test-index.html > /dev/null; then
               cat output.log;
               echo "Unexpected main page response" >&2;
