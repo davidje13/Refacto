@@ -115,7 +115,7 @@ jobs:
         run: tar -xf build.tar.gz && rm build.tar.gz
       - name: Smoke Test
         env:
-          MONGO_URL: mongodb://mongouser:mongopass@mongo:27017/refacto
+          MONGO_URL: mongodb://mongouser:mongopass@mongo:27017/
           REDIS_URL: redis://redis:6379/15
           PSQL_URL: postgresql://postgres:postgrespass@pg:5432/postgres
           DDB_URL: dynamodb://key:secret@ddb:8000/refacto-?tls=false&consistentRead=true
