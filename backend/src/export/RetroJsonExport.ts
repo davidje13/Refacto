@@ -28,8 +28,7 @@ export interface RetroItemSketchAttachmentJsonExport {
 }
 
 export type RetroItemAttachmentJsonExport =
-  | RetroItemGiphyAttachmentJsonExport
-  | RetroItemSketchAttachmentJsonExport;
+  RetroItemGiphyAttachmentJsonExport | RetroItemSketchAttachmentJsonExport;
 
 export interface RetroItemJsonExport {
   created: string;

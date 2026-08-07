@@ -74,10 +74,10 @@ DB_URL="postgresql://localhost:5432/refacto" ./index.js
 
 ### SQLite
 
-SQLite is also supported for persisting data when running on Node.js 22.13+, but
-does not support concurrent access or load balancing. For very small
-deployments, it may be easier to use SQLite because it does not require any
-external systems, yet still allows persisting data to disk.
+SQLite is also supported for persisting data, but does not support concurrent
+access or load balancing. For very small deployments, it may be easier to use
+SQLite because it does not require any external systems, yet still allows
+persisting data to disk.
 
 ```sh
 DB_URL="sqlite:///absolute/path/to/database/file?timeout=100" ./index.js

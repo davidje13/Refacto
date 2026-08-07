@@ -21,9 +21,7 @@ import { ImportPopup } from './ImportPopup';
 import './HealthRetro.css';
 
 type OwnState =
-  | { stage: 'begin' }
-  | { stage: 'answer'; user: string }
-  | { stage: 'discuss' };
+  { stage: 'begin' } | { stage: 'answer'; user: string } | { stage: 'discuss' };
 
 export const HealthRetro: FunctionComponent<
   RetroFormatProps<HealthRetroStateT>

@@ -78,10 +78,7 @@ export function useRetroReducer(
 }
 
 export type RetroReducerStatus =
-  | 'init'
-  | 'connected'
-  | 'reconnecting'
-  | 'reauthenticate';
+  'init' | 'connected' | 'reconnecting' | 'reauthenticate';
 
 interface RetroState {
   retro: Retro;

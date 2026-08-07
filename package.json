@@ -10,7 +10,7 @@
     "lint:prettier": "prettier --check .",
     "start": "npm install && NODE_ENV=development scripts/start.mjs",
     "test": "npm install && scripts/lint.mjs && prettier --check . && scripts/test.mjs",
-    "format": "npm run format --workspaces --quiet",
+    "format": "prettier --write .",
     "test:backend": "npm test --workspace=@refacto/backend --quiet --",
     "test:frontend": "npm test --workspace=@refacto/frontend --quiet --",
     "test:frontend:watch": "npm test --workspace=@refacto/frontend --quiet -- --watchAll",
@@ -23,7 +23,7 @@
     "e2e"
   ],
   "devDependencies": {
-    "prettier": "3.8.3",
+    "prettier": "3.9.6",
     "typescript": "6.0.x"
   }
 }

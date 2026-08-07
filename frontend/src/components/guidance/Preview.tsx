@@ -290,17 +290,15 @@ export const drawMoodLine = (
         ],
       },
     },
-    ...curve.map(
-      (seg): PreviewFrame => ({
-        delay: segmentDelay,
-        spec: {
-          items: [
-            'update',
-            ['first', { id: ['=', item.id] }],
-            { attachment: { curve: ['push', move(seg)] } },
-          ],
-        },
-      }),
-    ),
+    ...curve.map((seg): PreviewFrame => ({
+      delay: segmentDelay,
+      spec: {
+        items: [
+          'update',
+          ['first', { id: ['=', item.id] }],
+          { attachment: { curve: ['push', move(seg)] } },
+        ],
+      },
+    })),
   ];
 };

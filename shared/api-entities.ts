@@ -1,10 +1,5 @@
 export type JsonData =
-  | { [P: string]: JsonData }
-  | JsonData[]
-  | string
-  | number
-  | boolean
-  | null;
+  { [P: string]: JsonData } | JsonData[] | string | number | boolean | null;
 
 export interface ClientConfig {
   sso: {
@@ -74,8 +69,7 @@ export interface RetroItemSketchAttachment {
 }
 
 export type RetroItemAttachment =
-  | RetroItemGiphyAttachment
-  | RetroItemSketchAttachment;
+  RetroItemGiphyAttachment | RetroItemSketchAttachment;
 
 export interface RetroItem {
   id: string;

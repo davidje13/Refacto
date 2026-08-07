@@ -20,8 +20,7 @@ interface PropsT {
   onChangeRangeEnd?: ((time: number) => void) | undefined;
   onAddEvent?: ((item: Partial<EventItem>) => void) | undefined;
   onEditEvent?:
-    | ((itemId: string, changes: Partial<EventItem>) => void)
-    | undefined;
+    ((itemId: string, changes: Partial<EventItem>) => void) | undefined;
   onDeleteEvent?: ((itemId: string) => void) | undefined;
 }
 
@@ -116,8 +115,7 @@ const SemiControlledInput: FunctionComponent<
 interface EventListItemPropsT {
   item: RetroItem;
   onEditEvent?:
-    | ((itemId: string, changes: Partial<EventItem>) => void)
-    | undefined;
+    ((itemId: string, changes: Partial<EventItem>) => void) | undefined;
   onDeleteEvent?: ((itemId: string) => void) | undefined;
 }
 

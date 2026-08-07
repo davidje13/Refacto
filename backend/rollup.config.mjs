@@ -8,7 +8,7 @@ import { BUILD_RUNTIME_FLAGS } from '../scripts/helpers/flags.mjs';
 
 const NODEJS = [
   /^node:.*/,
-  /^(assert|buffer|child_process|crypto|dns|events|fs|https?|net|os|path|process|stream|string_decoder|timers|tls|tty|url|util|zlib)(\/promises)?$/,
+  /^(assert|buffer|child_process|crypto|dns|events|fs|https?|net|os|path|process|stream|string_decoder|timers|tls|tty|url|util(\/types)?|zlib)(\/promises)?$/,
 ];
 
 export default [

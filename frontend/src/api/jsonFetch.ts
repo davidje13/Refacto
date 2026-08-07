@@ -12,11 +12,7 @@ export async function readJSON<T>(r: Response, errorKey?: string): Promise<T> {
   }
 
   let content: (
-    | { [K in string]?: unknown }
-    | number
-    | boolean
-    | string
-    | null
+    { [K in string]?: unknown } | number | boolean | string | null
   ) &
     T;
   try {

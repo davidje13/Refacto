@@ -81,7 +81,7 @@ function setCacheHeaders(
   file: ResolvedFileInfo,
 ) {
   const encoding = res.getHeader('content-encoding');
-  const match = VERSIONED_FILE.exec(file.canonicalPath);
+  const match = VERSIONED_FILE.exec(file.canonicalFilename);
   if (match) {
     res.setHeader('etag', `"${match[1]}-${encoding ?? ''}"`);
     res.setHeader('cache-control', VERSIONED_CACHE_CONTROL);
