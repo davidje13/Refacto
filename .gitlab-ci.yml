@@ -33,6 +33,9 @@ build:
   services:
     - name: mongo:8.3
       alias: mongo
+      variables:
+        MONGO_INITDB_ROOT_USERNAME: mongouser
+        MONGO_INITDB_ROOT_PASSWORD: mongopass
     - name: redis:8-alpine
       alias: redis
     - name: postgres:18-alpine

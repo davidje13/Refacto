@@ -98,7 +98,7 @@ jobs:
         image: redis:8-alpine
         options: --health-cmd "redis-cli ping" --health-interval 1s --health-timeout 2s --health-retries 50
       pg:
-        image: postgres:15-alpine
+        image: postgres:18-alpine
         env:
           POSTGRES_PASSWORD: postgrespass
         options: --health-cmd pg_isready --health-interval 1s --health-timeout 2s --health-retries 50
