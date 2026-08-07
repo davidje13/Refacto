@@ -109,6 +109,8 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: refacto
+      - name: Install dependencies
+        run: apk add --no-cache coreutils-env
       - name: Unpack
         run: tar -xf build.tar.gz && rm build.tar.gz
       - name: Smoke Test

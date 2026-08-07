@@ -48,6 +48,7 @@ build:
     PSQL_URL: postgresql://postgres:postgrespass@pg:5432/postgres
     DDB_URL: dynamodb://key:secret@ddb:8000/refacto-?tls=false&consistentRead=true
   before_script:
+    - apk add --no-cache coreutils-env
     - tar -xf build.tar.gz && rm build.tar.gz
   script:
     - |
