@@ -10,6 +10,7 @@ const COMMON_FLAGS = [
   '--force-node-api-uncaught-exceptions-policy',
   '--no-addons',
   '--disallow-code-generation-from-strings',
+  '--disable-sigusr1',
 ];
 
 export const BUILD_RUNTIME_FLAGS = [...COMMON_FLAGS, '--disable-proto=delete'];
