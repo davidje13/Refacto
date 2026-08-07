@@ -86,11 +86,25 @@ jobs:
           - { node: '22' }
           - { node: '24' }
           - { node: '26' }
+    container: node:${{ matrix.node }}-alpine
+    services:
+      mongo:
+        image: mongo:8.3
+        env:
+          MONGO_INITDB_ROOT_USERNAME: mongouser
+          MONGO_INITDB_ROOT_PASSWORD: mongopass
+        options: --health-cmd "mongosh mongodb://mongouser:mongopass@localhost:27017/ --eval 'db.runCommand({ping:1})' --quiet" --health-interval 1s --health-timeout 2s --health-retries 50
+      redis:
+        image: redis:8-alpine
+        options: --health-cmd "redis-cli ping" --health-interval 1s --health-timeout 2s --health-retries 50
+      pg:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_PASSWORD: postgrespass
+        options: --health-cmd pg_isready --health-interval 1s --health-timeout 2s --health-retries 50
+      ddb:
+        image: amazon/dynamodb-local:latest
     steps:
-      - name: Install Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ matrix.node }}
       - name: Download Bundle
         uses: actions/download-artifact@v8
         with:
@@ -98,35 +112,64 @@ jobs:
       - name: Unpack
         run: tar -xf build.tar.gz && rm build.tar.gz
       - name: Smoke Test
+        env:
+          MONGO_URL: mongodb://mongouser:mongopass@mongo:27017/refacto
+          REDIS_URL: redis://redis:6379/15
+          PSQL_URL: postgresql://postgres:postgrespass@pg:5432/refacto
+          DDB_URL: dynamodb://key:secret@ddb:8000/refacto-?tls=false&consistentRead=true
         run: |
           set -e;
-          ./index.js > output.log 2>&1 & APP_PID="$!";
 
-          while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do
-            if ! ps -p "$APP_PID" > /dev/null; then
-              APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
+          check_launch() {
+            rm output.log || true;
+            ./index.js > output.log 2>&1 & APP_PID="$!";
+
+            while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do
+              if ! ps -p "$APP_PID" > /dev/null; then
+                APP_EXIT_CODE="$(wait "$APP_PID" > /dev/null; echo "$?")";
+                cat output.log;
+                echo "Application failed to launch (exit code: $APP_EXIT_CODE).";
+                return 1;
+              fi;
+              sleep 0.1;
+            done;
+
+            wget localhost:5000 -O test-index.html;
+            if ! grep '<title>Refacto</title>' < test-index.html > /dev/null; then
               cat output.log;
-              echo "Application failed to launch (exit code: $APP_EXIT_CODE).";
-              false;
+              echo "Unexpected main page response" >&2;
+              cat test-index.html;
+              return 1;
             fi;
-            sleep 0.1;
-          done;
 
-          wget localhost:5000 -O test-index.html;
-          if ! grep '<title>Refacto</title>' < test-index.html > /dev/null; then
-            cat output.log;
-            echo "Unexpected main page response" >&2;
-            cat test-index.html;
-            false;
-          fi;
+            kill -2 "$APP_PID";
+            wait "$APP_PID";
+            if ! grep 'Shutdown complete' < output.log > /dev/null; then
+              cat output.log;
+              echo "Application failed to shut down" >&2;
+              return 1;
+            fi;
 
-          kill -2 "$APP_PID";
-          wait "$APP_PID";
-          if ! grep 'Shutdown complete' < output.log > /dev/null; then
-            cat output.log;
-            echo "Application failed to shut down" >&2;
-            false;
-          fi;
+            return 0;
+          }
+
+          echo "Checking launch with in-memory DB";
+          check_launch;
+
+          echo "Checking launch with SQLite";
+          DB_URL="sqlite://$(pwd)/sqlite.db" check_launch;
+
+          echo "Checking launch with PostgreSQL";
+          DB_URL="$PSQL_URL" check_launch;
+
+          echo "Checking launch with Redis";
+          DB_URL="$REDIS_URL" check_launch;
+
+          echo "Checking launch with MongoDB";
+          DB_URL="$MONGO_URL" check_launch;
+
+          echo "Checking launch with DynamoDB";
+          DB_URL="$DDB_URL" check_launch;
 
   create_docker_release:
     needs:
