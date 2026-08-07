@@ -123,7 +123,7 @@ jobs:
           set -e;
 
           check_launch() {
-            rm output.log test-index.html || true;
+            rm output.log test-index.html 2> /dev/null || true;
             ./index.js > output.log 2>&1 & APP_PID="$!";
 
             while [ ! -f output.log ] || ! grep 'Available at' < output.log > /dev/null 2>&1; do
@@ -136,7 +136,8 @@ jobs:
               sleep 0.1;
             done;
 
-            wget http://localhost:5000 -O test-index.html;
+            echo "Startup successful. Checking served content...";
+            wget http://localhost:5000 -O test-index.html 2> /dev/null;
             if ! grep '<title>Refacto</title>' < test-index.html > /dev/null; then
               cat output.log;
               echo "Unexpected main page response" >&2;
@@ -144,6 +145,7 @@ jobs:
               return 1;
             fi;
 
+            echo "Shutting down...";
             kill -2 "$APP_PID";
             wait "$APP_PID";
             if ! grep 'Shutdown complete' < output.log > /dev/null; then
@@ -155,22 +157,22 @@ jobs:
             return 0;
           }
 
-          echo "Checking launch with in-memory DB";
+          echo "Checking launch with in-memory DB...";
           check_launch;
 
-          echo "Checking launch with SQLite";
+          echo "Checking launch with SQLite...";
           DB_URL="sqlite://$(pwd)/sqlite.db" check_launch;
 
-          echo "Checking launch with PostgreSQL";
+          echo "Checking launch with PostgreSQL...";
           DB_URL="$PSQL_URL" check_launch;
 
-          echo "Checking launch with Redis";
+          echo "Checking launch with Redis...";
           DB_URL="$REDIS_URL" check_launch;
 
-          echo "Checking launch with MongoDB";
+          echo "Checking launch with MongoDB...";
           DB_URL="$MONGO_URL" check_launch;
 
-          echo "Checking launch with DynamoDB";
+          echo "Checking launch with DynamoDB...";
           DB_URL="$DDB_URL" check_launch;
 
   create_docker_release:
