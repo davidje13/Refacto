@@ -11,6 +11,8 @@ on:
 
 # Deployment requirements:
 # - secrets.DOCKERHUB_TOKEN is a Personal Access Token for hub.docker.com with Read & Write access
+# - secrets.DEPLOY_SIGNING_KEY & secrets.DEPLOY_SIGNING_KEY_PASS hold the private key for
+#   https://github.com/davidje13/Website/blob/main/web-listener/deploy/public.pem, used to trigger a deploy after building
 # - secrets.ECR_PUBLIC_AWS_ACCESS_KEY_ID & secrets.ECR_PUBLIC_AWS_SECRET_ACCESS_KEY are for an AWS IAM User with the policy:
 #   {
 #     "Version": "2012-10-17",
@@ -333,3 +335,17 @@ jobs:
             "$UPLOAD_URL?name=build.tar.gz" -O release-file.json;
           cat release-file.json;
           echo "Done.";
+      - name: Deploy
+        env:
+          DEPLOY_SIGNING_KEY: ${{ secrets.DEPLOY_SIGNING_KEY }}
+          DEPLOY_SIGNING_KEY_PASS: ${{ secrets.DEPLOY_SIGNING_KEY_PASS }}
+        run: |
+          set -e;
+          umask 0177;
+          echo "$DEPLOY_SIGNING_KEY" > private.pem;
+          unset DEPLOY_SIGNING_KEY;
+          umask 0022;
+          POST_DETAIL="$(date -u '+%Y-%m-%dT%H:%M:%SZ');refacto";
+          POST_SIGN="$(printf '%s' "$POST_DETAIL" | openssl dgst -sha256 -sign "private.pem" -passin "pass:$DEPLOY_SIGNING_KEY_PASS" -binary - | base64)";
+          unset DEPLOY_SIGNING_KEY_PASS;
+          curl -X POST --data-urlencode "detail=$POST_DETAIL" --data-urlencode "signature=$POST_SIGN" --fail-with-body 'https://davidje13.com/cd/deploy';
