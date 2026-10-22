@@ -31,7 +31,7 @@ build:
   dependencies: [build]
   timeout: 10 minutes
   services:
-    - name: mongo:8.3
+    - name: mongo:9.0
       alias: mongo
       variables:
         MONGO_INITDB_ROOT_USERNAME: mongouser

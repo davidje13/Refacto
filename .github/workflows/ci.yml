@@ -91,7 +91,7 @@ jobs:
     container: node:${{ matrix.node }}-alpine
     services:
       mongo:
-        image: mongo:8.3
+        image: mongo:9.0
         env:
           MONGO_INITDB_ROOT_USERNAME: mongouser
           MONGO_INITDB_ROOT_PASSWORD: mongopass
