@@ -28,7 +28,7 @@ export const ImportPopup: FunctionComponent<PropsT> = ({
 }) => {
   const localDateProvider = useLocalDateProvider();
   const [date, setDate] = useState('');
-  const [values, setValues] = useState(new Map<string, string>());
+  const [values, setValues] = useState(new Map<string, [string, number]>());
   const [performImport, sending, error, resetError] = useSubmissionCallback(
     () => {
       const time = readIsoDate(date);
@@ -50,11 +50,16 @@ export const ImportPopup: FunctionComponent<PropsT> = ({
             id: q.id,
             counts: Object.fromEntries(
               ALL_ANSWERS.map((a) => {
-                const raw = values.get(`${q.id}:${a.id}`) || '0';
-                if (!/^[0-9]+$/.test(raw)) {
+                let [text, num] = values.get(`${q.id}:${a.id}`) ?? ['', 0];
+                if (!text) {
+                  num = 0;
+                } else {
+                  num ??= Number.parseInt(text || '0');
+                }
+                if ((num | 0) !== num) {
                   throw new Error('Invalid value');
                 }
-                return [a.id, Number.parseInt(raw, 10)];
+                return [a.id, num];
               }),
             ) as Counts,
           })),
@@ -68,7 +73,7 @@ export const ImportPopup: FunctionComponent<PropsT> = ({
   useEffect(() => {
     if (isOpen) {
       setDate('');
-      setValues(new Map<string, string>());
+      setValues(new Map());
       resetError();
     }
   }, [isOpen]);
@@ -120,12 +125,18 @@ export const ImportPopup: FunctionComponent<PropsT> = ({
                       type="number"
                       min="0"
                       placeholder="0"
-                      value={values.get(`${q.id}:${a.id}`) ?? ''}
+                      value={values.get(`${q.id}:${a.id}`)?.[0] ?? ''}
                       onChange={(e) =>
                         setValues(
                           new Map([
                             ...values,
-                            [`${q.id}:${a.id}`, e.currentTarget.value],
+                            [
+                              `${q.id}:${a.id}`,
+                              [
+                                e.currentTarget.value,
+                                e.currentTarget.valueAsNumber,
+                              ],
+                            ],
                           ]),
                         )
                       }
