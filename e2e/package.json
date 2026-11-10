@@ -8,9 +8,9 @@
   "devDependencies": {
     "@types/node": "22.x",
     "@types/selenium-webdriver": "4.x",
-    "chromedriver": "151.x",
-    "geckodriver": "6.1.x",
+    "chromedriver": "155.x",
+    "geckodriver": "8.0.x",
     "lean-test": "2.x",
-    "selenium-webdriver": "4.45.x"
+    "selenium-webdriver": "4.51.x"
   }
 }
