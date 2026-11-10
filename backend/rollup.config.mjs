@@ -138,6 +138,11 @@ const SAFE_CIRCULAR_DEPENDENCIES = [
     'mongodb/lib/cmap/wire_protocol/compression.js',
   ],
   [
+    'mongodb/lib/cmap/commands.js',
+    'mongodb/lib/cmap/wire_protocol/compression.js',
+    'mongodb/lib/cmap/commands.js',
+  ],
+  [
     'mongodb/lib/mongo_client.js',
     'mongodb/lib/connection_string.js',
     'mongodb/lib/encrypter.js',
