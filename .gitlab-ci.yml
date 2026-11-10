@@ -6,7 +6,7 @@ variables:
 build:
   stage: build
   dependencies: []
-  image: node:24
+  image: node:26
   timeout: 20 minutes
   before_script:
     - apt-get update

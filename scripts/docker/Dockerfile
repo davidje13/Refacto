@@ -1,4 +1,4 @@
-FROM node:24-alpine
+FROM node:26-alpine
 
 # install coreutils-env (to support env's -S argument), copy application files, set /data owner
 # (all done as one step to reduce the number of filesystem layers in the final image, for best performance)

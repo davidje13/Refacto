@@ -59,7 +59,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: '26'
           cache: npm
           cache-dependency-path: package-lock.json
       - name: Build and Test
@@ -238,7 +238,7 @@ jobs:
             org.opencontainers.image.url=https://retro.davidje13.com/
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.licenses=GPL-3.0-or-later
-            org.opencontainers.image.base.name=docker.io/node:24-alpine
+            org.opencontainers.image.base.name=docker.io/node:26-alpine
       - name: Prune old ECR images
         # work around lack of support for lifecycle policies in ECR Public (see https://github.com/aws/containers-roadmap/issues/1268)
         run: |
